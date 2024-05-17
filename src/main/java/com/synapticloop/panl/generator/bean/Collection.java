@@ -65,7 +65,7 @@ public class Collection {
 		PanlProperty panlParamNumrows = new PanlProperty("panl.param.numrows", "n", lpseNumber);
 		PANL_PROPERTIES.put("$panl.param.numrows", panlParamNumrows);
 
-		PanlProperty panlLpseNum = new PanlProperty("panl.lpse.num", "" + lpseNumber, 1);
+		PanlProperty panlLpseNum = new PanlProperty("panl.lpse.num", "" + lpseNumber);
 		PANL_PROPERTIES.put("$panl.lpse.num", panlLpseNum);
 
 		CODES_AVAILABLE.remove(panlParamNumrows.getPanlCode());
@@ -82,9 +82,10 @@ public class Collection {
 				LOGGER.info("Assigned field '{}' to panl code '{}'", fieldName, possibleCode);
 				CODES_AVAILABLE.remove(possibleCode);
 			} else if(CODES_AVAILABLE.contains(possibleCode.toUpperCase())){
-				fields.add(new Field(possibleCode, fieldName));
-				LOGGER.info("Assigned field '{}' to panl code '{}'", fieldName, possibleCode.toUpperCase());
-				CODES_AVAILABLE.remove(possibleCode.toUpperCase());
+				String nextPossibleCode = possibleCode.toUpperCase();
+				fields.add(new Field(nextPossibleCode, fieldName));
+				LOGGER.info("Assigned field '{}' to panl code '{}'", fieldName, nextPossibleCode);
+				CODES_AVAILABLE.remove(nextPossibleCode);
 			} else {
 				LOGGER.warn("No nice panl code for field '{}', '{}' and '{}' already taken", fieldName, possibleCode, possibleCode.toUpperCase());
 				unassignedFieldNames.add(fieldName);
@@ -111,14 +112,26 @@ public class Collection {
 		}
 
 		// last but not least, we need to put the lpse order
-		StringBuilder sb = new StringBuilder();
+		StringBuilder panlLpseOrder = new StringBuilder();
+		StringBuilder panlLpseFields = new StringBuilder();
 		for(Field field: fields) {
-			sb.append(field.getCode());
-			sb.append(",");
+			panlLpseOrder.append(field.getCode());
+			panlLpseOrder.append(",");
+			panlLpseFields.append(field.toProperties());
 		}
+
+		panlLpseOrder.append(panlParamPage.getPanlCode());
+		panlLpseOrder.append(",");
+		panlLpseOrder.append(panlParamNumrows.getPanlCode());
+		panlLpseOrder.append(",");
+		panlLpseOrder.append(panlParamSort.getPanlCode());
+		panlLpseOrder.append(",");
+		panlLpseOrder.append(panlParamQuery.getPanlCode());
 
 		// put in the other parameters (query etc)
 
+		PANL_PROPERTIES.put("$panl.lpse.order", new PanlProperty("panl.lpse.order", panlLpseOrder.toString()));
+		PANL_PROPERTIES.put("$panl.lpse.fields", new PanlProperty("panl.lpse.fields", panlLpseFields.toString()));
 
 	}
 

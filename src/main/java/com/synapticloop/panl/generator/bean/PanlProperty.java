@@ -2,13 +2,11 @@ package com.synapticloop.panl.generator.bean;
 
 public class PanlProperty {
 	private final String panlProperty;
-	private final String code;
 	private final int lpseNum;
 	private final String panlCode;
 
 	public PanlProperty(String panlProperty, String code, int lpseNum) {
 		this.panlProperty = panlProperty;
-		this.code = code;
 		this.lpseNum = lpseNum;
 
 		StringBuilder sb = new StringBuilder();
@@ -16,6 +14,12 @@ public class PanlProperty {
 			sb.append(code);
 		}
 		panlCode = sb.toString();
+	}
+
+	public PanlProperty(String panlProperty, String value) {
+		this.panlProperty = panlProperty;
+		this.panlCode = value;
+		this.lpseNum = 0;
 	}
 
 	public String getPanlCode() {
