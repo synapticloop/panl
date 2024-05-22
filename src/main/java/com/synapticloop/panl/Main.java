@@ -2,6 +2,7 @@ package com.synapticloop.panl;
 
 import com.synapticloop.panl.exception.CommandLineOptionException;
 import com.synapticloop.panl.exception.PanlGenerateException;
+import com.synapticloop.panl.exception.PanlServerException;
 import com.synapticloop.panl.generator.PanlGenerator;
 import com.synapticloop.panl.server.PanlServer;
 
@@ -42,7 +43,7 @@ public class Main {
 		this.args = args;
 	}
 
-	private void parseCommandLine() throws CommandLineOptionException, PanlGenerateException {
+	private void parseCommandLine() throws CommandLineOptionException, PanlGenerateException, PanlServerException {
 		if(args.length < 1) {
 			usage("Could not determine command, should be one of 'server' or 'generate'");
 		}
@@ -72,7 +73,7 @@ public class Main {
 		}
 	}
 
-	private void parseServerCommands() throws CommandLineOptionException, PanlGenerateException {
+	private void parseServerCommands() throws CommandLineOptionException, PanlServerException {
 		this.propertiesFileLocation = OPTIONS_MAP.getOrDefault("-properties", DEFAULT_PANL_PROPERTIES);
 		String portNumberString = OPTIONS_MAP.getOrDefault("-port", DEFAULT_PORT_NUMBER);
 		try {
@@ -142,7 +143,7 @@ public class Main {
 		throw new CommandLineOptionException("Invalid command line options.");
 	}
 
-	public static void main(String[] args) throws CommandLineOptionException, PanlGenerateException {
+	public static void main(String[] args) throws CommandLineOptionException, PanlGenerateException, PanlServerException {
 		Main main = new Main(args);
 		main.parseCommandLine();
 	}

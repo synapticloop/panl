@@ -2,31 +2,41 @@ package com.synapticloop.panl.generator.bean;
 
 public class PanlProperty {
 	private final String panlProperty;
-	private final int lpseNum;
-	private final String panlCode;
+	private final String panlValue;
+	private final boolean hideProperty;
 
-	public PanlProperty(String panlProperty, String code, int lpseNum) {
+	public PanlProperty(String panlProperty, String panlValue, int lpseNum) {
 		this.panlProperty = panlProperty;
-		this.lpseNum = lpseNum;
 
 		StringBuilder sb = new StringBuilder();
 		for(int i = 0; i < lpseNum; i ++) {
-			sb.append(code);
+			sb.append(panlValue);
 		}
-		panlCode = sb.toString();
+		this.panlValue = sb.toString();
+		this.hideProperty = false;
 	}
 
-	public PanlProperty(String panlProperty, String value) {
+	public PanlProperty(String panlProperty, String panlValue) {
 		this.panlProperty = panlProperty;
-		this.panlCode = value;
-		this.lpseNum = 0;
+		this.panlValue = panlValue;
+		this.hideProperty = false;
 	}
 
-	public String getPanlCode() {
-		return(panlCode);
+	public PanlProperty(String panlProperty, String panlValue, boolean hideProperty) {
+		this.panlProperty = panlProperty;
+		this.panlValue = panlValue;
+		this.hideProperty = hideProperty;
+	}
+
+	public String getPanlValue() {
+		return(panlValue);
 	}
 
 	public String toProperties() {
-		return(panlProperty + "=" + panlCode);
+		if(hideProperty) {
+			return(panlValue);
+		} else {
+			return (panlProperty + "=" + panlValue);
+		}
 	}
 }

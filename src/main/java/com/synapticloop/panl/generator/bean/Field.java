@@ -3,10 +3,12 @@ package com.synapticloop.panl.generator.bean;
 public class Field {
 	private final String code;
 	private final String field;
+	private final String schemaXml;
 
-	public Field(String code, String field) {
+	public Field(String code, String field, String schemaXml) {
 		this.code = code;
 		this.field = field;
+		this.schemaXml = schemaXml;
 	}
 
 	private String getPrettyName(String name) {
@@ -32,7 +34,10 @@ public class Field {
 	}
 
 	public String toProperties() {
-		return("panl.field." +
+		return("\n# " +
+				schemaXml +
+				"\n" +
+				"panl.field." +
 				code +
 				"=" +
 				field +

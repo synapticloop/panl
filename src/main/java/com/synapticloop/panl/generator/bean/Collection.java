@@ -1,6 +1,5 @@
 package com.synapticloop.panl.generator.bean;
 
-import com.synapticloop.panl.Main;
 import com.synapticloop.panl.exception.PanlGenerateException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -9,6 +8,7 @@ import javax.xml.namespace.QName;
 import javax.xml.stream.XMLEventReader;
 import javax.xml.stream.XMLInputFactory;
 import javax.xml.stream.XMLStreamException;
+import javax.xml.stream.events.Attribute;
 import javax.xml.stream.events.StartElement;
 import javax.xml.stream.events.XMLEvent;
 import java.io.File;
@@ -18,15 +18,17 @@ import java.util.*;
 
 public class Collection {
 	private static final Logger LOGGER = LoggerFactory.getLogger(Collection.class);
+
 	private String collectionName;
-	private List<String> fieldNames = new ArrayList<>();
-	private List<Field> fields = new ArrayList<>();
-	private List<String> unassignedFieldNames = new ArrayList<>();
+	private final List<String> facetFieldNames = new ArrayList<>();
+	private final List<String> resultFieldNames = new ArrayList<>();
+	private final List<Field> fields = new ArrayList<>();
+	private final List<String> unassignedFieldNames = new ArrayList<>();
+	private final Map<String, String> fieldXmlMap = new HashMap<>();
 
 	private int lpseNumber = 1;
 
 	private static final String CODES = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz01234567890";
-	private static final Set<String> CODES_USED = new HashSet<>();
 	private static final Set<String> CODES_AVAILABLE = new HashSet<>();
 	private static final Map<String, PanlProperty> PANL_PROPERTIES = new HashMap<>();
 
@@ -40,15 +42,15 @@ public class Collection {
 		//		panl.param.numrows=n
 
 		// each character can be one of the letters and numbers
-		this.lpseNumber = fieldNames.size() / 62;
+		this.lpseNumber = facetFieldNames.size() / 62;
 
 		// don't forget that we have 4 pre-defined 'params'
-		if ((fieldNames.size() % 62 - 4) > 0) {
+		if ((facetFieldNames.size() % 62 - 4) > 0) {
 			this.lpseNumber++;
 		}
 
 		LOGGER.info("Collection: {}", this.collectionName);
-		LOGGER.info("Have {} fields, lpseNum is set to {}", fieldNames.size(), this.lpseNumber);
+		LOGGER.info("Have {} fields, lpseNum is set to {}", facetFieldNames.size(), this.lpseNumber);
 
 		generateCodesForFields();
 
@@ -68,22 +70,22 @@ public class Collection {
 		PanlProperty panlLpseNum = new PanlProperty("panl.lpse.num", "" + lpseNumber);
 		PANL_PROPERTIES.put("$panl.lpse.num", panlLpseNum);
 
-		CODES_AVAILABLE.remove(panlParamNumrows.getPanlCode());
-		CODES_AVAILABLE.remove(panlParamPage.getPanlCode());
-		CODES_AVAILABLE.remove(panlParamSort.getPanlCode());
-		CODES_AVAILABLE.remove(panlParamQuery.getPanlCode());
+		CODES_AVAILABLE.remove(panlParamNumrows.getPanlValue());
+		CODES_AVAILABLE.remove(panlParamPage.getPanlValue());
+		CODES_AVAILABLE.remove(panlParamSort.getPanlValue());
+		CODES_AVAILABLE.remove(panlParamQuery.getPanlValue());
 
 		// now go through to fields and assign a code which is close to what they want...
-		for(String fieldName: fieldNames) {
+		for (String fieldName : facetFieldNames) {
 			String cleanedName = fieldName.replaceAll("[^A-Za-z0-9]", "");
 			String possibleCode = cleanedName.substring(0, lpseNumber);
-			if(CODES_AVAILABLE.contains(possibleCode)) {
-				fields.add(new Field(possibleCode, fieldName));
+			if (CODES_AVAILABLE.contains(possibleCode)) {
+				fields.add(new Field(possibleCode, fieldName, fieldXmlMap.get(fieldName)));
 				LOGGER.info("Assigned field '{}' to panl code '{}'", fieldName, possibleCode);
 				CODES_AVAILABLE.remove(possibleCode);
-			} else if(CODES_AVAILABLE.contains(possibleCode.toUpperCase())){
+			} else if (CODES_AVAILABLE.contains(possibleCode.toUpperCase())) {
 				String nextPossibleCode = possibleCode.toUpperCase();
-				fields.add(new Field(nextPossibleCode, fieldName));
+				fields.add(new Field(nextPossibleCode, fieldName, fieldXmlMap.get(fieldName)));
 				LOGGER.info("Assigned field '{}' to panl code '{}'", fieldName, nextPossibleCode);
 				CODES_AVAILABLE.remove(nextPossibleCode);
 			} else {
@@ -94,15 +96,15 @@ public class Collection {
 
 		// at this point, we are going to go through all unassigned field names and
 		// try and determine what we should mark them as
-		for(String unassignedFieldName: unassignedFieldNames) {
+		for (String unassignedFieldName : unassignedFieldNames) {
 			int size = CODES_AVAILABLE.size();
 			int item = new Random().nextInt(size); // In real life, the Random object should be rather more shared than this
 			int i = 0;
 			String assignedCode = null;
-			for(String code : CODES_AVAILABLE) {
+			for (String code : CODES_AVAILABLE) {
 				if (i == item) {
 					assignedCode = code;
-					fields.add(new Field(assignedCode, unassignedFieldName));
+					fields.add(new Field(assignedCode, unassignedFieldName, fieldXmlMap.get(unassignedFieldName)));
 					LOGGER.info("Assigned field '{}' to RANDOM panl code '{}'", unassignedFieldName, assignedCode);
 					break;
 				}
@@ -114,25 +116,39 @@ public class Collection {
 		// last but not least, we need to put the lpse order
 		StringBuilder panlLpseOrder = new StringBuilder();
 		StringBuilder panlLpseFields = new StringBuilder();
-		for(Field field: fields) {
+		for (Field field : fields) {
 			panlLpseOrder.append(field.getCode());
 			panlLpseOrder.append(",");
 			panlLpseFields.append(field.toProperties());
 		}
 
-		panlLpseOrder.append(panlParamPage.getPanlCode());
+		panlLpseOrder.append(panlParamPage.getPanlValue());
 		panlLpseOrder.append(",");
-		panlLpseOrder.append(panlParamNumrows.getPanlCode());
+		panlLpseOrder.append(panlParamNumrows.getPanlValue());
 		panlLpseOrder.append(",");
-		panlLpseOrder.append(panlParamSort.getPanlCode());
+		panlLpseOrder.append(panlParamSort.getPanlValue());
 		panlLpseOrder.append(",");
-		panlLpseOrder.append(panlParamQuery.getPanlCode());
+		panlLpseOrder.append(panlParamQuery.getPanlValue());
+
+		// we do not put in the collection facet - as this is done automatically by the server
 
 		// put in the other parameters (query etc)
 
 		PANL_PROPERTIES.put("$panl.lpse.order", new PanlProperty("panl.lpse.order", panlLpseOrder.toString()));
-		PANL_PROPERTIES.put("$panl.lpse.fields", new PanlProperty("panl.lpse.fields", panlLpseFields.toString()));
+		PANL_PROPERTIES.put("$panl.lpse.fields", new PanlProperty("panl.lpse.fields", panlLpseFields.toString(), true));
 
+		boolean isFirst = true;
+		StringBuilder panlResultsFields = new StringBuilder();
+		for (String resultsFieldName: resultFieldNames) {
+			if(!isFirst) {
+				panlResultsFields.append(",");
+			}
+			isFirst = false;
+			panlResultsFields.append(resultsFieldName);
+		}
+		panlResultsFields.append("\n");
+
+		PANL_PROPERTIES.put("$panl.results.fields.all", new PanlProperty("panl.results.fields.all", panlResultsFields.toString()));
 	}
 
 	private void generateCodesForFields() {
@@ -171,14 +187,35 @@ public class Collection {
 							LOGGER.info("Found collection name of {}", this.collectionName);
 							break;
 						case "field":
-							String indexed = startElement.getAttributeByName(new QName("indexed")).getValue();
+							StringBuilder sb = new StringBuilder("<field ");
+
 							String name = startElement.getAttributeByName(new QName("name")).getValue();
-							// TODO - may not neet to do this
-							if (indexed.equals("true")) {
-								LOGGER.info("Adding field name '{}' as it is indexed", name);
-								this.fieldNames.add(name);
+							String indexed = startElement.getAttributeByName(new QName("indexed")).getValue();
+							String stored = startElement.getAttributeByName(new QName("stored")).getValue();
+
+							Iterator<Attribute> attributes = startElement.getAttributes();
+							while (attributes.hasNext()) {
+								Attribute attribute = attributes.next();
+								String attributeName = attribute.getName().toString();
+								String attributeValue = attribute.getValue().toString();
+								sb.append("\"")
+										.append(attributeName)
+										.append("\"=\"")
+										.append(attributeValue)
+										.append("\" ");
+							}
+							sb.append("/>");
+							fieldXmlMap.put(name, sb.toString());
+
+							if (stored.equals("true")) {
+								// then this can be returned as a field in the results
+								this.resultFieldNames.add(name);
+								if(indexed.equals("true")) {
+									LOGGER.info("Adding field name '{}' as it is indexed and stored", name);
+									this.facetFieldNames.add(name);
+								}
 							} else {
-								LOGGER.info("NOT Adding field name '{}' as it is not indexed", name);
+								LOGGER.info("NOT Adding field name '{}' as it is not indexed and stored", name);
 							}
 							break;
 					}
@@ -191,10 +228,10 @@ public class Collection {
 
 	public String getPanlProperty(String key) {
 		PanlProperty panlProperty = PANL_PROPERTIES.get(key);
-		if(null == panlProperty) {
-			return("\n");
+		if (null == panlProperty) {
+			return ("\n");
 		} else {
-			return(panlProperty.toProperties());
+			return (panlProperty.toProperties());
 		}
 	}
 

@@ -2,13 +2,17 @@ package com.synapticloop.panl.generator;
 
 import com.synapticloop.panl.exception.PanlGenerateException;
 import com.synapticloop.panl.generator.bean.Collection;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.*;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.List;
 
 public class PanlGenerator {
+	private static final Logger LOGGER = LoggerFactory.getLogger(PanlGenerator.class);
 	private final String propertiesFileLocation;
 	private final String schemaFileLocations;
 	private final List<File> schemasToParse = new ArrayList<>();
@@ -74,31 +78,44 @@ public class PanlGenerator {
 	}
 
 	private void generateCollectionDotPanlDotProperties(Collection collection) {
-		StringBuilder sb = new StringBuilder();
+		StringBuilder outputString = new StringBuilder();
 
 		try (
 				InputStream inputStream = PanlGenerator.class.getResourceAsStream("/collection.panl.template.properties");
 				InputStreamReader streamReader = new InputStreamReader(inputStream, StandardCharsets.UTF_8);
-				BufferedReader reader = new BufferedReader(streamReader)) {
+				BufferedReader reader = new BufferedReader(streamReader);
+				OutputStream outputStream = Files.newOutputStream(new File(collection.getCollectionName() + ".panl.properties").toPath());
+				OutputStreamWriter outputStreamWriter = new OutputStreamWriter(outputStream);
+				BufferedWriter writer = new BufferedWriter(outputStreamWriter)) {
 
 			String line;
 			while ((line = reader.readLine()) != null) {
 				if (line.startsWith("$")) {
-					System.out.println(collection.getPanlProperty(line));
+					outputString.append(collection.getPanlProperty(line))
+							.append("\n");
 				} else {
-					System.out.println(line);
+					outputString.append(line)
+							.append("\n");
 				}
 			}
 
+			LOGGER.info("Writing out file {}.panl.properties", collection.getCollectionName());
+			writer.write(outputString.toString());
+			writer.flush();
+			LOGGER.info("Done writing out file {}.panl.properties", collection.getCollectionName());
+
 		} catch (IOException e) {
+			LOGGER.error("IOException with writing <collection>.panl.properties file", e);
 		}
 	}
 
 	private void generatePanlDotProperties() {
-		StringBuilder sb = new StringBuilder();
+		StringBuilder outputString = new StringBuilder();
+
+		StringBuilder collectionPropertyFiles = new StringBuilder();
 		for (Collection collection : collections) {
 			String niceCollectionName = collection.getCollectionName().toLowerCase().replaceAll("[^a-z0-9]", "-");
-			sb.append("panl.collection.")
+			collectionPropertyFiles.append("panl.collection.")
 					.append(niceCollectionName)
 					.append("=")
 					.append(niceCollectionName)
@@ -108,18 +125,30 @@ public class PanlGenerator {
 		try (
 				InputStream inputStream = PanlGenerator.class.getResourceAsStream("/panl.template.properties");
 				InputStreamReader streamReader = new InputStreamReader(inputStream, StandardCharsets.UTF_8);
-				BufferedReader reader = new BufferedReader(streamReader)) {
+				BufferedReader reader = new BufferedReader(streamReader);
+				OutputStream outputStream = Files.newOutputStream(new File("panl.properties").toPath());
+				OutputStreamWriter outputStreamWriter = new OutputStreamWriter(outputStream);
+				BufferedWriter writer = new BufferedWriter(outputStreamWriter)) {
 
 			String line;
 			while ((line = reader.readLine()) != null) {
 				if (line.startsWith("$panl.collection")) {
-					System.out.println(sb.toString());
+					outputString.append(collectionPropertyFiles)
+							.append("\n");
 				} else {
-					System.out.println(line);
+					outputString.append(line)
+							.append("\n");
+
 				}
 			}
 
+			LOGGER.info("Writing out file panl.properties");
+			writer.write(outputString.toString());
+			writer.flush();
+			LOGGER.info("Done writing out file panl.properties");
+
 		} catch (IOException e) {
+			LOGGER.error("IOException with writing panl.properties file", e);
 		}
 
 	}
