@@ -49,11 +49,10 @@ public class PanlServer {
 			throw new PanlServerException(e.getMessage());
 		}
 
-		solrSearchServerUrl = properties.getProperty("solr.search.server.url");
-		solrSearchIndexerUrl = properties.getProperty("solr.search.indexer.url");
-		solrFacetEnabled = properties.getProperty("solr.facet.enabled");
-		solrFacetMinCount = properties.getProperty("solr.facet.min.count");
-		solrRows = properties.getProperty("solr.rows");
+		BaseProperties baseProperties = new BaseProperties(properties);
+
+		File file = new File(propertiesFileLocation);
+		File propertiesFileDirectory = file.getAbsoluteFile().getParentFile();
 
 		Enumeration<Object> keys = properties.keys();
 		while (keys.hasMoreElements()) {
@@ -62,10 +61,15 @@ public class PanlServer {
 				// we have found a new collection
 				String collectionName = key.substring("panl.collection.".length());
 				LOGGER.info("Found collection of '{}', binding to '/{}'", collectionName, collectionName);
-				collections.add(new Collection(collectionName, properties.getProperty(key)));
+				Properties collectionProperties = new Properties();
+				try {
+					collectionProperties.load(new FileReader(propertiesFileDirectory + File.separator + properties.getProperty(key)));
+					collections.add(new Collection(collectionName, baseProperties, collectionProperties));
+				} catch (IOException e) {
+					throw new PanlServerException(e.getMessage());
+				}
 			}
 		}
-
 	}
 
 	public void start() {
@@ -75,7 +79,7 @@ public class PanlServer {
 		On.port(portNumber);
 
 		for(Collection collection: collections) {
-			On.get("/" + collection.getCollectionName() + "/*").json(new PanlReqRespHandler(collection));
+			On.get("/" + collection.getCollectionName() + "/*").json(() -> new PanlReqRespHandler(collection));
 		}
 	}
 }

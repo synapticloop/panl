@@ -1,5 +1,7 @@
 package com.synapticloop.panl.server;
 
+import com.synapticloop.panl.util.PropertyHelper;
+
 import java.util.Properties;
 
 public class BaseProperties {
@@ -7,20 +9,19 @@ public class BaseProperties {
 	private final int facetMinCount;
 	private final int resultRows;
 	private final String panlResultsViewerUrl;
+	private final String solrjClient;
+	private final String solrSearchServerUrl;
+
 	public BaseProperties(Properties properties) {
-		facetEnabled = properties.getProperty("solr.facet.enabled", "true").equals("true");
-		facetMinCount = getIntProperty(properties, "solr.facet.min.count", 1);
-		resultRows = getIntProperty(properties, "solr.rows", 10);
-		panlResultsViewerUrl = properties.getProperty("panl.results.viewer.url", "/panl-results-viewer/");
+		this.facetEnabled = properties.getProperty("solr.facet.enabled", "true").equals("true");
+		this.facetMinCount = PropertyHelper.getIntProperty(properties, "solr.facet.min.count", 1);
+		this.resultRows = PropertyHelper.getIntProperty(properties, "solr.rows", 10);
+		this.panlResultsViewerUrl = properties.getProperty("panl.results.viewer.url", "/panl-results-viewer/");
+		this.solrjClient = properties.getProperty("solrj.client", "CloudSolrClient");
+		this.solrSearchServerUrl = properties.getProperty("solr.search.server.url", "http://localhost:8983/solr");
 	}
 
-	private int getIntProperty(Properties properties, String key, int defaultValue) {
-		try {
-			return(Integer.parseInt(properties.getProperty(key, defaultValue + "")));
-		} catch(NumberFormatException e) {
-			return(defaultValue);
-		}
-	}
+
 
 	public boolean getFacetEnabled() {
 		return facetEnabled;
@@ -36,5 +37,11 @@ public class BaseProperties {
 
 	public String getPanlResultsViewerUrl() {
 		return panlResultsViewerUrl;
+	}
+
+	public String getSolrjClient() { return (solrjClient); }
+
+	public String getSolrSearchServerUrl() {
+		return (solrSearchServerUrl);
 	}
 }

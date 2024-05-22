@@ -22,7 +22,6 @@ public class PanlReqRespHandler implements ReqRespHandler {
 
 	@Override
 	public Object execute(Req req, Resp resp) throws Exception {
-		collection.convertUri(req.uri());
-		return(collection.request());
+		return(collection.request(req));
 	}
 }
