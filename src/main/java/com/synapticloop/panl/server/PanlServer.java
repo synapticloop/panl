@@ -20,7 +20,10 @@ import java.util.Properties;
 import java.util.concurrent.TimeUnit;
 
 /**
- * This is the runner for the PANL server
+ * <p>This is the PANL server which parses the <code>panl.properties</code> file, loads all
+ * the <code>collection.panl.properties</code> files.  If there are any errors with either
+ * of the files, a PanlServerException will be thrown and the server will refuse to start.</p>
+ *
  * @author synapticloop
  */
 public class PanlServer {
@@ -29,15 +32,25 @@ public class PanlServer {
 
 	private final String propertiesFileLocation;
 	private final int portNumber;
+	private BaseProperties baseProperties;
 
 	private final List<CollectionRequestHandler> collectionRequestHandlers = new ArrayList<>();
 
+	/**
+	 * <p>Instantiate a new PanlServ er instance.</p>
+	 *
+	 * @param propertiesFileLocation The location of the panl.properties to load
+	 * @param portNumber The port number from the command line option (or
+	 *                   default of 8181)
+	 * @throws PanlServerException If there was an error parsing the properties
+	 */
 	public PanlServer(String propertiesFileLocation, int portNumber) throws PanlServerException {
 		this.propertiesFileLocation = propertiesFileLocation;
 		this.portNumber = portNumber;
 
 		parsePropertiesFile();
 	}
+
 
 	private void parsePropertiesFile() throws PanlServerException {
 		Properties properties = new Properties();
@@ -47,7 +60,7 @@ public class PanlServer {
 			throw new PanlServerException(e.getMessage());
 		}
 
-		BaseProperties baseProperties = new BaseProperties(properties);
+		baseProperties = new BaseProperties(properties);
 
 		File file = new File(propertiesFileLocation);
 		File propertiesFileDirectory = file.getAbsoluteFile().getParentFile();
@@ -78,9 +91,17 @@ public class PanlServer {
 	}
 
 	/**
-	 * Start the PANL server, which relies on the Apache HttpComponents HttpSever
+	 * <p>Start the PANL server, which relies on the Apache HttpComponents HttpSever.</p>
 	 *
-	 * @throws PanlServerException I
+	 * <p>This sets up a servlet for each of the collections and binds it to the
+	 * correct URL.</p>
+	 *
+	 * <p>It then sets up the panl results viewer servlet</p>
+	 *
+	 * <p>Finally, it starts the server on the passed in port number (of default
+	 * port of 8181).</p>
+	 *
+	 * @throws PanlServerException If there was an error starting the server
 	 */
 	public void start() throws PanlServerException {
 
@@ -97,6 +118,10 @@ public class PanlServer {
 			}
 		}
 
+		// get the panl viewer servlet
+//		baseProperties.getPanlResultsViewerUrl();
+
+
 		HttpServer httpServer = bootstrap.create();
 
 		try {
@@ -105,7 +130,7 @@ public class PanlServer {
 			Runtime.getRuntime().addShutdownHook(new Thread(httpServer::stop));
 			httpServer.awaitTermination(Long.MAX_VALUE, TimeUnit.DAYS);
 		} catch (IOException | InterruptedException e) {
-			throw new PanlServerException("could not start the server.", e);
+			throw new PanlServerException("Could not start the server.", e);
 		}
 	}
 }

@@ -10,8 +10,6 @@ repositories {
 }
 
 dependencies {
-    implementation 'org.rapidoid:rapidoid-http-server:5.5.5'
-
     // note - the following map to the solrj dependencies
     implementation 'org.eclipse.jetty.http2:http2-server:10.0.20'
     implementation 'org.eclipse.jetty:jetty-servlet:10.0.20'

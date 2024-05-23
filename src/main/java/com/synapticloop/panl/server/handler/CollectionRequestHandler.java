@@ -43,7 +43,6 @@ public class CollectionRequestHandler {
 	public CollectionRequestHandler(String collectionName, BaseProperties baseProperties, CollectionProperties collectionProperties) throws PanlServerException {
 		this.collectionName = collectionName;
 		this.collectionProperties = collectionProperties;
-//		JSONObject jsonObject = new JSONObject()
 
 		LOGGER.info("[{}] Initialising collection", collectionName);
 
@@ -80,8 +79,8 @@ public class CollectionRequestHandler {
 
 	public String request(String uri, String query) throws PanlServerException {
 
-		String[] splits = uri.split("/");
-		String resultFields = splits[2];
+		String[] searchQuery = uri.split("/");
+		String resultFields = searchQuery[2];
 
 
 		try(SolrClient solrClient = panlClient.getClient()) {
@@ -89,13 +88,22 @@ public class CollectionRequestHandler {
 			for (String fieldName : collectionProperties.getResultFieldsForName(resultFields)) {
 				solrQuery.addField(fieldName);
 			}
-			solrQuery.setFacetMinCount(1);
+
+			solrQuery.setFacetMinCount(collectionProperties.getFacetMinCount());
+			solrQuery.setRows(collectionProperties.getResultRows());
 
 			solrQuery.addFacetField(collectionProperties.getFacetFields());
 
+			// now we need to go through the panl facets
 
+			if(searchQuery.length > 3) {
+				String encoding = searchQuery[searchQuery.length - 1];
+				for (int i = 0; i < encoding.length(); i = i + collectionProperties.getPanlLpseNum()) {
 
-			final QueryResponse response = solrClient.query(collectionName, solrQuery);
+				}
+			}
+
+			final QueryResponse response = solrClient.query(this.collectionName, solrQuery);
 			return(parseResponse(response));
 		} catch (IOException | SolrServerException e) {
 			throw new PanlServerException("Could not query the Solr instance.", e);

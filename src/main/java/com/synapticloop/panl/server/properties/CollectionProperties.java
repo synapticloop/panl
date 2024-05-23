@@ -16,6 +16,11 @@ public class CollectionProperties {
 	public static final String PROPERTY_KEY_PANL_RESULTS_FIELDS = "panl.results.fields.";
 
 	private final String collectionName;
+
+	private boolean facetEnabled;
+	private int facetMinCount;
+	private int resultRows;
+
 	private int panlLpseNum;
 	private String panlParamQuery;
 	private String panlParamSort;
@@ -39,10 +44,17 @@ public class CollectionProperties {
 	public CollectionProperties(String collectionName, Properties properties) throws PanlServerException {
 		this.collectionName = collectionName;
 
+		parseBaseProperties(properties);
 		parseDefaultProperties(properties);
 		parseFacetFields(properties);
 		parseLpseOrder(properties);
 		parseResultFields(properties);
+	}
+
+	private void parseBaseProperties(Properties properties) {
+		this.facetEnabled = properties.getProperty("solr.facet.enabled", "true").equals("true");
+		this.facetMinCount = PropertyHelper.getIntProperty(properties, "solr.facet.min.count", 1);
+		this.resultRows = PropertyHelper.getIntProperty(properties, "solr.numrows", 10);
 	}
 
 	private void parseDefaultProperties(Properties properties) {
@@ -196,6 +208,18 @@ public class CollectionProperties {
 		jsonObject.put("valid_urls", jsonArray);
 
 		return(jsonObject.toString());
+	}
+
+	public boolean getFacetEnabled() {
+		return facetEnabled;
+	}
+
+	public int getFacetMinCount() {
+		return facetMinCount;
+	}
+
+	public int getResultRows() {
+		return resultRows;
 	}
 
 	public String[] getFacetFields() {
