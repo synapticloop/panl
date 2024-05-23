@@ -1,4 +1,4 @@
-package com.synapticloop.panl.server;
+package com.synapticloop.panl.server.properties;
 
 import com.synapticloop.panl.util.PropertyHelper;
 

@@ -30,11 +30,6 @@ public class PanlGenerator {
 		}
 
 		checkSchemaFileLocations();
-
-		// at this point we are ready to parse and generate the panl.properties
-		// files.
-
-		// go through all of the
 	}
 
 	private void checkSchemaFileLocations() throws PanlGenerateException {
@@ -150,6 +145,5 @@ public class PanlGenerator {
 		} catch (IOException e) {
 			LOGGER.error("IOException with writing panl.properties file", e);
 		}
-
 	}
 }

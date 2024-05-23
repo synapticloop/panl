@@ -11,6 +11,12 @@ repositories {
 
 dependencies {
     implementation 'org.rapidoid:rapidoid-http-server:5.5.5'
+
+    // note - the following map to the solrj dependencies
+    implementation 'org.eclipse.jetty.http2:http2-server:10.0.20'
+    implementation 'org.eclipse.jetty:jetty-servlet:10.0.20'
+
+    implementation 'org.slf4j:slf4j-api:2.0.13'
     implementation 'org.slf4j:slf4j-api:2.0.13'
     implementation 'org.apache.logging.log4j:log4j-core:2.23.1'
     implementation 'org.apache.logging.log4j:log4j-api:2.23.1'

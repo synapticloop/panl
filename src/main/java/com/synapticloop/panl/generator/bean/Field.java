@@ -37,7 +37,7 @@ public class Field {
 		return("\n# " +
 				schemaXml +
 				"\n" +
-				"panl.field." +
+				"panl.facet." +
 				code +
 				"=" +
 				field +

@@ -6,7 +6,7 @@
 hopefully match
 
 For explicit instructions, see the [Solr tutorial for the techproducts](https://solr.apache.org/guide/solr/latest/getting-started/tutorial-techproducts.html), 
-**NOTE** that the instructions here use a different `collection` name than `techproducts` - 
+**NOTE** that the instructions here use a different `collectionRequestHandler` name than `techproducts` - 
 
 
 # Apache Solr
@@ -15,7 +15,7 @@ For explicit instructions, see the [Solr tutorial for the techproducts](https://
 
 [Download Apache Solr for your platform](https://solr.apache.org/downloads.html)
 
-## 2. Initialise the ~~'techproducts'~~ 'example' collection
+## 2. Initialise the ~~'techproducts'~~ 'example' collectionRequestHandler
 
 _Windows_
 
@@ -34,12 +34,12 @@ For each of the prompts:
 1. press `enter` for the prompt `To begin, how many Solr nodes would you like to run in your local cluster? (specify 1-4 nodes) [2]:` 
 2. press `enter` for the prompt `Please enter the port for node1 [8983]:`
 3. press `enter` for the prompt `Please enter the port for node2 [7574]:`
-4. type `example` and press `enter` for the prompt `Please provide a name for your new collection: [gettingstarted]`
+4. type `example` and press `enter` for the prompt `Please provide a name for your new collectionRequestHandler: [gettingstarted]`
 5. press `enter` for the prompt `How many shards would you like to split example into? [2]`
 6. press `enter` for the prompt `How many replicas per shard would you like to create? [2]`
-7. type `sample_techproducts_configs` and press `enter` for the prompt `Please choose a configuration for the example collection, available options are: _default or sample_techproducts_configs [_default]`
+7. type `sample_techproducts_configs` and press `enter` for the prompt `Please choose a configuration for the example collectionRequestHandler, available options are: _default or sample_techproducts_configs [_default]`
 
-## 3. Index the ~~'techproducts'~~ 'example' collection
+## 3. Index the ~~'techproducts'~~ 'example' collectionRequestHandler
 
 _Windows_
 
