@@ -2,7 +2,9 @@ package com.synapticloop.panl.server;
 
 import com.synapticloop.panl.exception.PanlServerException;
 import com.synapticloop.panl.server.handler.CollectionRequestHandler;
+import com.synapticloop.panl.server.handler.PanlDefaultHandler;
 import com.synapticloop.panl.server.handler.PanlRequestHandler;
+import com.synapticloop.panl.server.handler.PanlResultsViewerHandler;
 import com.synapticloop.panl.server.properties.BaseProperties;
 import com.synapticloop.panl.server.properties.CollectionProperties;
 import org.apache.http.impl.bootstrap.HttpServer;
@@ -109,6 +111,16 @@ public class PanlServer {
 				.bootstrap()
 				.setListenerPort(portNumber);
 
+		// register the default Panl handler which returns a 404
+		bootstrap.registerHandler("/*", new PanlDefaultHandler(collectionRequestHandlers));
+
+		// register the panl results viewer - if one is available
+		String panlResultsViewerUrl = baseProperties.getPanlResultsViewerUrl();
+		if(null != panlResultsViewerUrl) {
+			bootstrap.registerHandler(panlResultsViewerUrl, new PanlResultsViewerHandler(collectionRequestHandlers));
+		}
+
+		// finally register the collection handlers
 		for(CollectionRequestHandler collectionRequestHandler : collectionRequestHandlers) {
 			String collectionName = collectionRequestHandler.getCollectionName();
 			bootstrap.registerHandler("/" + collectionName + "/*", new PanlRequestHandler(collectionRequestHandler));
@@ -118,12 +130,10 @@ public class PanlServer {
 			}
 		}
 
-		// get the panl viewer servlet
-//		baseProperties.getPanlResultsViewerUrl();
-
-
+		// create the server
 		HttpServer httpServer = bootstrap.create();
 
+		// Attempt to start the server
 		try {
 			httpServer.start();
 			LOGGER.info("Server started on port {}", httpServer.getLocalPort());

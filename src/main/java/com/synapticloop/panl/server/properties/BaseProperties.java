@@ -10,7 +10,19 @@ public class BaseProperties {
 	private final String solrSearchServerUrl;
 
 	public BaseProperties(Properties properties) {
-		this.panlResultsViewerUrl = properties.getProperty("panl.results.viewer.url", "/panl-results-viewer/");
+		// this property does not need to be set;
+
+		String panlResultsViewerUrlTemp = properties.getProperty("panl.results.viewer.url", null);
+		if(null != panlResultsViewerUrlTemp) {
+			if(!panlResultsViewerUrlTemp.endsWith("*")) {
+				this.panlResultsViewerUrl = panlResultsViewerUrlTemp + "*";
+			} else {
+				this.panlResultsViewerUrl = panlResultsViewerUrlTemp;
+			}
+		} else {
+			this.panlResultsViewerUrl = null;
+		}
+
 		this.solrjClient = properties.getProperty("solrj.client", "CloudSolrClient");
 		this.solrSearchServerUrl = properties.getProperty("solr.search.server.url", "http://localhost:8983/solr");
 	}

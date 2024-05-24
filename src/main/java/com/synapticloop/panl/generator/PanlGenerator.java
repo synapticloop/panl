@@ -127,7 +127,7 @@ public class PanlGenerator {
 
 			String line;
 			while ((line = reader.readLine()) != null) {
-				if (line.startsWith("$panl.collection")) {
+				if (line.startsWith("$panl.collections")) {
 					outputString.append(collectionPropertyFiles)
 							.append("\n");
 				} else {

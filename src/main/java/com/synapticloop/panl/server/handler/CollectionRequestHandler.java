@@ -4,14 +4,7 @@ import com.synapticloop.panl.exception.PanlServerException;
 import com.synapticloop.panl.server.client.*;
 import com.synapticloop.panl.server.properties.BaseProperties;
 import com.synapticloop.panl.server.properties.CollectionProperties;
-import org.apache.http.HttpException;
-import org.apache.http.HttpRequest;
-import org.apache.http.HttpResponse;
-import org.apache.http.HttpStatus;
-import org.apache.http.entity.ContentType;
-import org.apache.http.entity.StringEntity;
-import org.apache.http.protocol.HttpContext;
-import org.apache.http.protocol.HttpRequestHandler;
+import com.synapticloop.panl.server.handler.field.BaseField;
 import org.apache.solr.client.solrj.SolrClient;
 import org.apache.solr.client.solrj.SolrQuery;
 import org.apache.solr.client.solrj.SolrServerException;
@@ -82,6 +75,10 @@ public class CollectionRequestHandler {
 		String[] searchQuery = uri.split("/");
 		String resultFields = searchQuery[2];
 
+		LpseHandler lpseHandler = new LpseHandler(collectionProperties.getLpseFields(), collectionProperties.getPanlLpseNum());
+		lpseHandler.populate(uri, query);
+
+
 
 		try(SolrClient solrClient = panlClient.getClient()) {
 			SolrQuery solrQuery = panlClient.getQuery(query);
@@ -94,14 +91,8 @@ public class CollectionRequestHandler {
 
 			solrQuery.addFacetField(collectionProperties.getFacetFields());
 
-			// now we need to go through the panl facets
+			// now we need to go through the panl facets and add them
 
-			if(searchQuery.length > 3) {
-				String encoding = searchQuery[searchQuery.length - 1];
-				for (int i = 0; i < encoding.length(); i = i + collectionProperties.getPanlLpseNum()) {
-
-				}
-			}
 
 			final QueryResponse response = solrClient.query(this.collectionName, solrQuery);
 			return(parseResponse(response));

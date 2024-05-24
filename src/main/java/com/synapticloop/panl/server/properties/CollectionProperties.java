@@ -1,6 +1,9 @@
 package com.synapticloop.panl.server.properties;
 
 import com.synapticloop.panl.exception.PanlServerException;
+import com.synapticloop.panl.server.handler.field.BaseField;
+import com.synapticloop.panl.server.handler.field.FacetField;
+import com.synapticloop.panl.server.handler.field.MetaDataField;
 import com.synapticloop.panl.util.PropertyHelper;
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -34,6 +37,7 @@ public class CollectionProperties {
 	private String solrSortDesc;
 
 	private List<String> lpseOrder = new ArrayList<>();
+	private List<BaseField> lpseFields = new ArrayList<>();
 
 	private Set<String> metadataMap = new HashSet<>();
 	private Map<String, String> facetFieldMap = new HashMap<>();
@@ -108,8 +112,12 @@ public class CollectionProperties {
 		}
 
 		for (String lpseCode : panlLpseOrder.split(",")) {
-			if(facetFieldMap.containsKey(lpseCode) || metadataMap.contains(lpseCode)) {
+			if(facetFieldMap.containsKey(lpseCode)) {
 				lpseOrder.add(lpseCode);
+				lpseFields.add(new FacetField(lpseCode));
+			} else if(metadataMap.contains(lpseCode)) {
+				lpseOrder.add(lpseCode);
+				lpseFields.add(new MetaDataField(lpseCode));
 			} else {
 				throw new PanlServerException("Could not find the panl code '" + lpseCode + "' in the panl.lpse.order property.");
 			}
@@ -224,5 +232,9 @@ public class CollectionProperties {
 
 	public String[] getFacetFields() {
 		return (facetFields);
+	}
+
+	public List<BaseField> getLpseFields() {
+		return (lpseFields);
 	}
 }

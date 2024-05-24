@@ -33,7 +33,8 @@ public class PanlRequestHandler implements HttpRequestHandler {
 	}
 
 	/**
-	 * <p>So some initial checking on the </p>
+	 * <p>Do some initial checking on the request (including the query string if
+	 * one is available) and pass it off to the CollectionRequestHandler.</p>
 	 *
 	 * @param request  the HTTP request.
 	 * @param response the HTTP response.
@@ -50,8 +51,8 @@ public class PanlRequestHandler implements HttpRequestHandler {
 		int startParam = uri.indexOf('?');
 		String query = "";
 		if (startParam != -1) {
+			query = uri.substring(startParam + 1);
 			uri = uri.substring(0, startParam);
-			query = uri.substring(startParam);
 		}
 
 		String[] paths = uri.split("/");
@@ -60,13 +61,17 @@ public class PanlRequestHandler implements HttpRequestHandler {
 				!collectionRequestHandler.isValidResultsFields(paths[2])) {
 
 			response.setStatusCode(HttpStatus.SC_NOT_FOUND);
-			response.setEntity(new StringEntity(collectionRequestHandler.getValidUrlsJSON(), CONTENT_TYPE_JSON));
+			response.setEntity(
+					new StringEntity(
+							collectionRequestHandler.getValidUrlsJSON(),
+							CONTENT_TYPE_JSON));
 			return;
 		}
 
 		try {
 			response.setStatusCode(HttpStatus.SC_OK);
-			response.setEntity(new StringEntity(
+			response.setEntity(
+					new StringEntity(
 					collectionRequestHandler.request(uri, query),
 					CONTENT_TYPE_JSON)
 			);
