@@ -1,7 +1,6 @@
 package com.synapticloop.panl.server.handler.token;
 
 import com.synapticloop.panl.server.properties.CollectionProperties;
-import org.apache.http.client.utils.URLEncodedUtils;
 import org.apache.solr.client.solrj.SolrQuery;
 
 import java.net.URLDecoder;

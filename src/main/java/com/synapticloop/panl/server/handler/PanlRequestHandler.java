@@ -1,6 +1,5 @@
 package com.synapticloop.panl.server.handler;
 
-import com.synapticloop.panl.exception.PanlServerException;
 import org.apache.http.HttpException;
 import org.apache.http.HttpRequest;
 import org.apache.http.HttpResponse;
@@ -44,7 +43,7 @@ public class PanlRequestHandler implements HttpRequestHandler {
 	 * @throws IOException   If there was an error processing the request by the
 	 *                       collectionHandler
 	 */
-	@Override public void handle(HttpRequest request, HttpResponse response, HttpContext context) throws HttpException, IOException {
+	@Override public void handle(HttpRequest request, HttpResponse response, HttpContext context) {
 
 		// the first thing that we are going to do is to ensure that we have a
 		// valid request

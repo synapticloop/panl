@@ -12,12 +12,10 @@ import org.apache.solr.client.solrj.response.FacetField;
 import org.apache.solr.client.solrj.response.QueryResponse;
 import org.apache.solr.common.SolrDocumentList;
 import org.json.JSONArray;
+import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import org.json.JSONObject;
-
-import java.io.IOException;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.util.*;
@@ -35,8 +33,6 @@ public class CollectionRequestHandler {
 	private final String collectionName;
 	private final CollectionProperties collectionProperties;
 	private final PanlClient panlClient;
-
-	private final String validUrls = "";
 
 	public CollectionRequestHandler(String collectionName, BaseProperties baseProperties, CollectionProperties collectionProperties) throws PanlServerException {
 		this.collectionName = collectionName;
@@ -87,9 +83,7 @@ public class CollectionRequestHandler {
 
 		startNanos = System.nanoTime();
 
-		SolrClient solrClient = null;
-		try {
-			solrClient = panlClient.getClient();
+		try (SolrClient solrClient = panlClient.getClient()) {
 
 			// we set the default query - to be overridden later if one exists
 			// TODO - get rid of this
@@ -126,15 +120,9 @@ public class CollectionRequestHandler {
 					parseNanos,
 					buildNanos,
 					requestNanos));
+
 		} catch (Exception e) {
 			throw new PanlServerException("Could not query the Solr instance, message was: " + e.getMessage(), e);
-		} finally {
-			if (null != solrClient) {
-				try {
-					solrClient.close();
-				} catch (IOException ignored) {
-				}
-			}
 		}
 	}
 
@@ -144,7 +132,8 @@ public class CollectionRequestHandler {
 	 * @param panlTokens        The parsed URI and panl tokens
 	 * @param response          The Solrj response to be parsed
 	 * @param parseRequestNanos The start time for this query in nanoseconds
-	 * @param sendRequestNanos
+	 * @param buildRequestNanos The number of nanos it took to build the request
+	 * @param sendRequestNanos  The number of nanos it took to send the request
 	 * @return a JSON Object as a string with the appended panl response
 	 */
 	private String parseResponse(
@@ -153,15 +142,21 @@ public class CollectionRequestHandler {
 			long parseRequestNanos,
 			long buildRequestNanos,
 			long sendRequestNanos) {
+
+		// set up the JSON response object
 		JSONObject solrJsonObject = new JSONObject(response.jsonStr());
 		JSONObject panlObject = new JSONObject();
+
+		// add in some statistics
 		panlObject.put("panl_parse_request_time", TimeUnit.NANOSECONDS.toMillis(parseRequestNanos));
 		panlObject.put("panl_build_request_time", TimeUnit.NANOSECONDS.toMillis(buildRequestNanos));
 		panlObject.put("panl_send_request_time", TimeUnit.NANOSECONDS.toMillis(sendRequestNanos));
 
+
 		long startNanos = System.nanoTime();
 
 
+		// set up the data structures
 		Map<String, Set<String>> panlLookupMap = new HashMap<>();
 		for (PanlToken panlToken : panlTokens) {
 			String panlLpseValue = panlToken.getPanlLpseValue();
@@ -197,6 +192,7 @@ public class CollectionRequestHandler {
 
 
 		JSONArray panlFacets = new JSONArray();
+		Map<String, JSONObject> panlFacetOrderMap = new HashMap<>();
 
 		for (FacetField facetField : response.getFacetFields()) {
 			if (facetField.getValueCount() != 0) {
@@ -235,12 +231,18 @@ public class CollectionRequestHandler {
 					if (null != panlCodeFromSolrFacetName) {
 						facetObject.put("uris",
 								getAdditionURI(
-										new PanlFacetToken(
-												panlCodeFromSolrFacetName),
+										new PanlFacetToken(panlCodeFromSolrFacetName),
 										panlTokenMap));
 					}
-					panlFacets.put(facetObject);
+					panlFacetOrderMap.put(panlCodeFromSolrFacetName, facetObject);
 				}
+			}
+		}
+
+		// put it into the facet array in the requested order
+		for (String lpseCode : collectionProperties.getLpseOrder()) {
+			if (panlFacetOrderMap.containsKey(lpseCode)) {
+				panlFacets.put(panlFacetOrderMap.get(lpseCode));
 			}
 		}
 
@@ -270,6 +272,7 @@ public class CollectionRequestHandler {
 
 		for (String lpseOrder : collectionProperties.getLpseOrder()) {
 			// do we currently have some codes for this?
+
 			if (panlTokenMap.containsKey(lpseOrder)) {
 				for (PanlToken token : panlTokenMap.get(lpseOrder)) {
 					lpseUri.append(token.getUriComponent());
@@ -332,10 +335,12 @@ public class CollectionRequestHandler {
 			valueTokeniser.nextToken();
 			valueTokeniser.nextToken();
 
+			boolean hasQuery = false;
 			while (lpseTokeniser.hasMoreTokens()) {
 				String token = lpseTokeniser.nextToken();
 
 				if (token.equals(collectionProperties.getPanlParamQuery())) {
+					hasQuery = true;
 					panlTokens.add(
 							new PanlQueryToken(
 									query,
@@ -369,6 +374,11 @@ public class CollectionRequestHandler {
 									lpseTokeniser,
 									valueTokeniser));
 				}
+			}
+			if (!hasQuery && !query.isBlank()) {
+				panlTokens.add(new PanlQueryToken(query,
+						collectionProperties.getPanlParamQuery(),
+						valueTokeniser));
 			}
 		}
 

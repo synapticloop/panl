@@ -7,6 +7,7 @@ import org.apache.solr.client.solrj.SolrClient;
 import org.apache.solr.client.solrj.impl.CloudHttp2SolrClient;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class PanlCloudSolrClient extends PanlClient {
@@ -15,9 +16,7 @@ public class PanlCloudSolrClient extends PanlClient {
 	public PanlCloudSolrClient(String collectionName, BaseProperties baseProperties, CollectionProperties collectionProperties) throws PanlServerException {
 		super(collectionName, baseProperties, collectionProperties);
 
-		for (String url : baseProperties.getSolrSearchServerUrl().split(",")) {
-			solrUrls.add(url);
-		}
+		Collections.addAll(solrUrls, baseProperties.getSolrSearchServerUrl().split(","));
 }
 
 	@Override

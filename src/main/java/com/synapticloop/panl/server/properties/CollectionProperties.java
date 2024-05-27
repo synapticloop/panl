@@ -39,14 +39,14 @@ public class CollectionProperties {
 
 	private SolrQuery.ORDER defaultOrder = SolrQuery.ORDER.asc;
 
-	private List<String> lpseOrder = new ArrayList<>();
-	private List<BaseField> lpseFields = new ArrayList<>();
+	private final List<String> lpseOrder = new ArrayList<>();
+	private final List<BaseField> lpseFields = new ArrayList<>();
 
-	private Set<String> metadataMap = new HashSet<>();
-	private Map<String, String> facetFieldMap = new HashMap<>();
-	private Map<String, String> facetNameMap = new HashMap<>();
-	private Map<String, String> solrFacetNameToPanlCodeMap = new HashMap<>();
-	private Map<String, String> solrFacetNameToPanlName = new HashMap<>();
+	private final Set<String> metadataMap = new HashSet<>();
+	private final Map<String, String> facetFieldMap = new HashMap<>();
+	private final Map<String, String> facetNameMap = new HashMap<>();
+	private final Map<String, String> solrFacetNameToPanlCodeMap = new HashMap<>();
+	private final Map<String, String> solrFacetNameToPanlName = new HashMap<>();
 	private final Map<String, List<String>> resultFieldsMap = new HashMap<>();
 	private String[] facetFields;
 

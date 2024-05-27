@@ -2,8 +2,6 @@ package com.synapticloop.panl.server.handler.token;
 
 import org.apache.solr.client.solrj.SolrQuery;
 
-import java.util.StringTokenizer;
-
 public abstract class PanlToken {
 	protected final String panlLpseCode;
 	protected String value;

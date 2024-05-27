@@ -3,9 +3,6 @@ package com.synapticloop.panl.server.handler.token;
 import com.synapticloop.panl.server.properties.CollectionProperties;
 import org.apache.solr.client.solrj.SolrQuery;
 
-import java.util.List;
-import java.util.StringTokenizer;
-
 /**
  * <p>The sort token defines the sort order for the returned results.</p>
  *

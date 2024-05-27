@@ -1,17 +1,14 @@
 package com.synapticloop.panl.server.handler.token;
 
-import com.synapticloop.panl.server.properties.CollectionProperties;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.utils.URLEncodedUtils;
-import org.apache.http.params.HttpParams;
 import org.apache.solr.client.solrj.SolrQuery;
 
 import java.nio.charset.StandardCharsets;
-import java.util.List;
 import java.util.StringTokenizer;
 
 public class PanlQueryToken extends PanlToken {
-	private String value;
+	private String value = null;
 	private boolean isOverride;
 
 	public PanlQueryToken(String panlLpseCode) {
@@ -23,7 +20,10 @@ public class PanlQueryToken extends PanlToken {
 			String panlLpseCode,
 			StringTokenizer valueTokeniser) {
 		super(panlLpseCode);
-		this.value = valueTokeniser.nextToken();
+
+		if(valueTokeniser.hasMoreTokens()) {
+			this.value = valueTokeniser.nextToken();
+		}
 
 		for (NameValuePair nameValuePair : URLEncodedUtils.parse(queryFromUri, StandardCharsets.UTF_8)) {
 			// TODO - do we want to allow people to change this???
@@ -36,11 +36,19 @@ public class PanlQueryToken extends PanlToken {
 	}
 
 	@Override public String getUriComponent() {
-		return(value + "/");
+		if(null != value) {
+			return (value + "/");
+		} else {
+			return("");
+		}
 	}
 
 	@Override public String getLpseComponent() {
-		return(panlLpseCode);
+		if(null != value) {
+			return (panlLpseCode);
+		} else {
+			return("");
+		}
 	}
 
 	@Override public String explain() {

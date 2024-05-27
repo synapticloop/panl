@@ -3,7 +3,6 @@ package com.synapticloop.panl.server.client;
 import com.synapticloop.panl.exception.PanlServerException;
 import com.synapticloop.panl.server.properties.BaseProperties;
 import com.synapticloop.panl.server.properties.CollectionProperties;
-import org.apache.http.HttpRequest;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.utils.URLEncodedUtils;
 import org.apache.solr.client.solrj.SolrClient;
@@ -11,9 +10,7 @@ import org.apache.solr.client.solrj.SolrQuery;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
-import java.util.*;
 
 public abstract class PanlClient {
 	public static final Logger LOGGER = LoggerFactory.getLogger(PanlClient.class);
@@ -22,7 +19,7 @@ public abstract class PanlClient {
 	protected final BaseProperties baseProperties;
 	protected final CollectionProperties collectionProperties;
 
-	public PanlClient(String collectionName, BaseProperties baseProperties, CollectionProperties collectionProperties) throws PanlServerException {
+	public PanlClient(String collectionName, BaseProperties baseProperties, CollectionProperties collectionProperties) {
 		this.collectionName = collectionName;
 		this.baseProperties = baseProperties;
 		this.collectionProperties = collectionProperties;

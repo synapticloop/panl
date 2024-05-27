@@ -207,7 +207,7 @@ public class Collection {
 							while (attributes.hasNext()) {
 								Attribute attribute = attributes.next();
 								String attributeName = attribute.getName().toString();
-								String attributeValue = attribute.getValue().toString();
+								String attributeValue = attribute.getValue();
 								sb.append("\"")
 										.append(attributeName)
 										.append("\"=\"")

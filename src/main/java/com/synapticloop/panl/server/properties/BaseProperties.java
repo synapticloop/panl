@@ -1,7 +1,5 @@
 package com.synapticloop.panl.server.properties;
 
-import com.synapticloop.panl.util.PropertyHelper;
-
 import java.util.Properties;
 
 public class BaseProperties {
