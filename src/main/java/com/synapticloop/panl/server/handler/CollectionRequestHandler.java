@@ -147,10 +147,6 @@ public class CollectionRequestHandler {
 		JSONObject solrJsonObject = new JSONObject(response.jsonStr());
 		JSONObject panlObject = new JSONObject();
 
-		// add in some statistics
-		panlObject.put("panl_parse_request_time", TimeUnit.NANOSECONDS.toMillis(parseRequestNanos));
-		panlObject.put("panl_build_request_time", TimeUnit.NANOSECONDS.toMillis(buildRequestNanos));
-		panlObject.put("panl_send_request_time", TimeUnit.NANOSECONDS.toMillis(sendRequestNanos));
 
 
 		long startNanos = System.nanoTime();
@@ -247,14 +243,22 @@ public class CollectionRequestHandler {
 		}
 
 		panlObject.put("facet_fields", panlFacets);
+
+		JSONObject timingsObject = new JSONObject();
+		// add in some statistics
+		timingsObject.put("panl_parse_request_time", TimeUnit.NANOSECONDS.toMillis(parseRequestNanos));
+		timingsObject.put("panl_build_request_time", TimeUnit.NANOSECONDS.toMillis(buildRequestNanos));
+		timingsObject.put("panl_send_request_time", TimeUnit.NANOSECONDS.toMillis(sendRequestNanos));
+
 		long buildResponse = System.nanoTime() - startNanos;
-		panlObject.put("panl_build_response_time", TimeUnit.NANOSECONDS.toMillis(buildResponse));
-		panlObject.put("panl_total_time", TimeUnit.NANOSECONDS.toMillis(
+		timingsObject.put("panl_build_response_time", TimeUnit.NANOSECONDS.toMillis(buildResponse));
+		timingsObject.put("panl_total_time", TimeUnit.NANOSECONDS.toMillis(
 				parseRequestNanos +
 						buildRequestNanos +
 						sendRequestNanos +
 						buildResponse
 		));
+		panlObject.put("timings", timingsObject);
 
 		solrJsonObject.put("error", false);
 
