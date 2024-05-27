@@ -139,7 +139,7 @@ public class PanlServer {
 			LOGGER.info("Server started on port {}", httpServer.getLocalPort());
 			Runtime.getRuntime().addShutdownHook(new Thread(httpServer::stop));
 			httpServer.awaitTermination(Long.MAX_VALUE, TimeUnit.DAYS);
-		} catch (IOException | InterruptedException e) {
+		} catch (Exception e) {
 			throw new PanlServerException("Could not start the server.", e);
 		}
 	}

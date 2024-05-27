@@ -6,8 +6,11 @@ import org.apache.solr.client.solrj.SolrQuery;
 import java.util.StringTokenizer;
 
 public class PanlNumRowsToken extends PanlToken {
-	private final int numRows;
+	private int numRows;
 	private boolean isValid = true;
+	public PanlNumRowsToken(String panlLpseCode) {
+		super(panlLpseCode);
+	}
 
 	public PanlNumRowsToken(CollectionProperties collectionProperties, String panlLpseCode, StringTokenizer valueTokenizer) {
 		super(panlLpseCode);

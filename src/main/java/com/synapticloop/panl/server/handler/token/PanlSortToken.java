@@ -15,10 +15,14 @@ import java.util.StringTokenizer;
  * @author synapticloop
  */
 public class PanlSortToken extends PanlToken {
-	private final String panlFacetCode;
-	private final String solrFacetField;
-	private final SolrQuery.ORDER sortOrder;
+	private String panlFacetCode;
+	private String solrFacetField;
+	private SolrQuery.ORDER sortOrder;
 	private boolean isValid = true;
+
+	public PanlSortToken(String panlLpseCode) {
+		super(panlLpseCode);
+	}
 
 	public PanlSortToken(
 			CollectionProperties collectionProperties,

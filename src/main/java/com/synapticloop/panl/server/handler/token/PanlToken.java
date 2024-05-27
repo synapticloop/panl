@@ -6,12 +6,18 @@ import java.util.StringTokenizer;
 
 public abstract class PanlToken {
 	protected final String panlLpseCode;
+	protected String value;
 
 	public PanlToken(String panlLpseCode) {
 		this.panlLpseCode = panlLpseCode;
 	}
+
 	public String getPanlLpseCode() {
 		return(panlLpseCode);
+	}
+
+	public String getPanlLpseValue() {
+		return(value);
 	}
 
 	public abstract String getUriComponent();

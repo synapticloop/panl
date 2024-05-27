@@ -8,11 +8,9 @@ import com.synapticloop.panl.server.properties.BaseProperties;
 import com.synapticloop.panl.server.properties.CollectionProperties;
 import org.apache.solr.client.solrj.SolrClient;
 import org.apache.solr.client.solrj.SolrQuery;
-import org.apache.solr.client.solrj.SolrServerException;
 import org.apache.solr.client.solrj.response.FacetField;
 import org.apache.solr.client.solrj.response.QueryResponse;
 import org.apache.solr.common.SolrDocumentList;
-import org.apache.solr.common.util.NamedList;
 import org.json.JSONArray;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -20,7 +18,10 @@ import org.slf4j.LoggerFactory;
 import org.json.JSONObject;
 
 import java.io.IOException;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.util.*;
+import java.util.concurrent.TimeUnit;
 
 /**
  * <p>The collection request handler acts as the intermediary between the
@@ -75,15 +76,23 @@ public class CollectionRequestHandler {
 
 
 	public String request(String uri, String query) throws PanlServerException {
+		long startNanos = System.nanoTime();
 
 		String[] searchQuery = uri.split("/");
 		String resultFields = searchQuery[2];
 
 		List<PanlToken> panlTokens = parseLpse(uri, query);
 
-		try (SolrClient solrClient = panlClient.getClient()) {
-			// we set the default query - to be overridden later if one exists
+		long parseNanos = System.nanoTime() - startNanos;
 
+		startNanos = System.nanoTime();
+
+		SolrClient solrClient = null;
+		try {
+			solrClient = panlClient.getClient();
+
+			// we set the default query - to be overridden later if one exists
+			// TODO - get rid of this
 			SolrQuery solrQuery = panlClient.getQuery(query);
 			for (String fieldName : collectionProperties.getResultFieldsForName(resultFields)) {
 				solrQuery.addField(fieldName);
@@ -98,44 +107,91 @@ public class CollectionRequestHandler {
 
 			// now we need to go through the panl facets and add them
 
-			for(PanlToken panlToken: panlTokens) {
+			for (PanlToken panlToken : panlTokens) {
 				panlToken.applyToQuery(solrQuery);
 			}
 
+			long buildNanos = System.nanoTime() - startNanos;
+			startNanos = System.nanoTime();
+
+			// TODO - this needs to be set properly
+			solrQuery.setParam("q.op", "AND");
+
 			final QueryResponse response = solrClient.query(this.collectionName, solrQuery);
-			return (parseResponse(panlTokens, response));
-		} catch (IOException | SolrServerException e) {
-			throw new PanlServerException("Could not query the Solr instance.", e);
+
+			long requestNanos = System.nanoTime() - startNanos;
+			return (parseResponse(
+					panlTokens,
+					response,
+					parseNanos,
+					buildNanos,
+					requestNanos));
+		} catch (Exception e) {
+			throw new PanlServerException("Could not query the Solr instance, message was: " + e.getMessage(), e);
+		} finally {
+			if (null != solrClient) {
+				try {
+					solrClient.close();
+				} catch (IOException ignored) {
+				}
+			}
 		}
 	}
 
 	/**
 	 * <p>Parse the solrj response and add the panl information to it</p>
 	 *
-	 * @param panlTokens The parsed URI and panl tokens
-	 * @param response The Solrj response to be parsed
+	 * @param panlTokens        The parsed URI and panl tokens
+	 * @param response          The Solrj response to be parsed
+	 * @param parseRequestNanos The start time for this query in nanoseconds
+	 * @param sendRequestNanos
 	 * @return a JSON Object as a string with the appended panl response
 	 */
-	private String parseResponse(List<PanlToken> panlTokens, QueryResponse response) {
+	private String parseResponse(
+			List<PanlToken> panlTokens,
+			QueryResponse response,
+			long parseRequestNanos,
+			long buildRequestNanos,
+			long sendRequestNanos) {
+		JSONObject solrJsonObject = new JSONObject(response.jsonStr());
+		JSONObject panlObject = new JSONObject();
+		panlObject.put("panl_parse_request_time", TimeUnit.NANOSECONDS.toMillis(parseRequestNanos));
+		panlObject.put("panl_build_request_time", TimeUnit.NANOSECONDS.toMillis(buildRequestNanos));
+		panlObject.put("panl_send_request_time", TimeUnit.NANOSECONDS.toMillis(sendRequestNanos));
+
+		long startNanos = System.nanoTime();
+
+
+		Map<String, Set<String>> panlLookupMap = new HashMap<>();
+		for (PanlToken panlToken : panlTokens) {
+			String panlLpseValue = panlToken.getPanlLpseValue();
+			if (null != panlLpseValue) {
+				String panlLpseCode = panlToken.getPanlLpseCode();
+				Set<String> valueSet = panlLookupMap.get(panlLpseCode);
+
+				if (null == valueSet) {
+					valueSet = new HashSet<>();
+				}
+				valueSet.add(panlLpseValue);
+				panlLookupMap.put(panlLpseCode, valueSet);
+			}
+		}
 
 		// set up the data structure
 		Map<String, List<PanlToken>> panlTokenMap = new HashMap<>();
-		for(PanlToken panlToken: panlTokens) {
+		for (PanlToken panlToken : panlTokens) {
 			String panlLpseCode = panlToken.getPanlLpseCode();
 
 			List<PanlToken> panlTokenList = panlTokenMap.get(panlLpseCode);
-			if(null == panlTokenList) {
-				panlTokenList = new ArrayList<PanlToken>();
+			if (null == panlTokenList) {
+				panlTokenList = new ArrayList<>();
 			}
 			panlTokenList.add(panlToken);
 			panlTokenMap.put(panlLpseCode, panlTokenList);
 		}
 
-		JSONObject solrJsonObject = new JSONObject(response.jsonStr());
-		JSONObject panlObject = new JSONObject();
 
-
-		SolrDocumentList solrDocuments = (SolrDocumentList)response.getResponse().get("response");
+		SolrDocumentList solrDocuments = (SolrDocumentList) response.getResponse().get("response");
 		long numFound = solrDocuments.getNumFound();
 		long start = solrDocuments.getStart();
 
@@ -143,28 +199,96 @@ public class CollectionRequestHandler {
 		JSONArray panlFacets = new JSONArray();
 
 		for (FacetField facetField : response.getFacetFields()) {
-			if(facetField.getValueCount() != 0) {
+			if (facetField.getValueCount() != 0) {
 				JSONObject facetObject = new JSONObject();
-				facetObject.put("name", facetField.getName());
+				facetObject.put("facet_name", facetField.getName());
+				facetObject.put("name", collectionProperties.getPanlNameFromSolrFacetName(facetField.getName()));
 
 				JSONArray facetValueArrays = new JSONArray();
+				String panlCodeFromSolrFacetName = collectionProperties.getPanlCodeFromSolrFacetName(facetField.getName());
 				for (FacetField.Count value : facetField.getValues()) {
-					JSONObject facetValueObject = new JSONObject();
-					facetValueObject.put("value", String.format("%s", value.getName()));
-					facetValueObject.put("count", value.getCount());
-					facetValueArrays.put(facetValueObject);
+					// at this point - we need to see whether we already have the 'value'
+					// as a facet - as there is no need to have it again
+
+					boolean shouldAdd = true;
+
+					String valueName = value.getName();
+
+					if (panlLookupMap.containsKey(panlCodeFromSolrFacetName)) {
+						if (panlLookupMap.get(panlCodeFromSolrFacetName).contains(valueName)) {
+							shouldAdd = false;
+						}
+					}
+
+					if (shouldAdd) {
+						JSONObject facetValueObject = new JSONObject();
+						facetValueObject.put("value", valueName);
+						facetValueObject.put("count", value.getCount());
+						facetValueObject.put("encoded", URLEncoder.encode(valueName, StandardCharsets.UTF_8));
+						facetValueArrays.put(facetValueObject);
+					}
 				}
 
-				facetObject.put("values", facetValueArrays);
-				panlFacets.put(facetObject);
+				// if we don't have any values for this facet, don't put it in
+				if (!facetValueArrays.isEmpty()) {
+					facetObject.put("values", facetValueArrays);
+					if (null != panlCodeFromSolrFacetName) {
+						facetObject.put("uris",
+								getAdditionURI(
+										new PanlFacetToken(
+												panlCodeFromSolrFacetName),
+										panlTokenMap));
+					}
+					panlFacets.put(facetObject);
+				}
 			}
 		}
 
 		panlObject.put("facet_fields", panlFacets);
+		long buildResponse = System.nanoTime() - startNanos;
+		panlObject.put("panl_build_response_time", TimeUnit.NANOSECONDS.toMillis(buildResponse));
+		panlObject.put("panl_total_time", TimeUnit.NANOSECONDS.toMillis(
+				parseRequestNanos +
+						buildRequestNanos +
+						sendRequestNanos +
+						buildResponse
+		));
+
+		solrJsonObject.put("error", false);
 
 		solrJsonObject.put("panl", panlObject);
 
 		return (solrJsonObject.toString());
+	}
+
+	private JSONObject getAdditionURI(PanlToken panlToken, Map<String, List<PanlToken>> panlTokenMap) {
+		JSONObject jsonObject = new JSONObject();
+		StringBuilder lpseUri = new StringBuilder("/");
+		StringBuilder lpse = new StringBuilder();
+
+		String panlLpseCode = panlToken.getPanlLpseCode();
+
+		for (String lpseOrder : collectionProperties.getLpseOrder()) {
+			// do we currently have some codes for this?
+			if (panlTokenMap.containsKey(lpseOrder)) {
+				for (PanlToken token : panlTokenMap.get(lpseOrder)) {
+					lpseUri.append(token.getUriComponent());
+					lpse.append(token.getLpseComponent());
+				}
+			}
+
+			// if the current panl token's lpse matches that of the panlLpseOrder,
+			// then we need to add to lpseCode and the uri
+			if (panlLpseCode.equals(lpseOrder)) {
+				jsonObject.put("before", lpseUri.toString());
+				// clear the sting builder
+				lpseUri.setLength(0);
+				lpse.append(panlToken.getLpseComponent());
+			}
+		}
+
+		jsonObject.put("after", "/" + lpseUri + lpse + "/");
+		return (jsonObject);
 	}
 
 	/**
@@ -252,7 +376,7 @@ public class CollectionRequestHandler {
 			System.out.println(panlToken.explain());
 		}
 
-		return(panlTokens);
+		return (panlTokens);
 	}
 
 	public String getValidUrlsJSON() {

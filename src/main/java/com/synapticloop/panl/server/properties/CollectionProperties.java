@@ -45,6 +45,8 @@ public class CollectionProperties {
 	private Set<String> metadataMap = new HashSet<>();
 	private Map<String, String> facetFieldMap = new HashMap<>();
 	private Map<String, String> facetNameMap = new HashMap<>();
+	private Map<String, String> solrFacetNameToPanlCodeMap = new HashMap<>();
+	private Map<String, String> solrFacetNameToPanlName = new HashMap<>();
 	private final Map<String, List<String>> resultFieldsMap = new HashMap<>();
 	private String[] facetFields;
 
@@ -120,6 +122,8 @@ public class CollectionProperties {
 				LOGGER.info("[{}] Found a name for panl facet code '{}', using '{}'", collectionName, panlFacetCode, panlFacetName);
 			}
 			facetNameMap.put(panlFacetCode, panlFacetName);
+			solrFacetNameToPanlCodeMap.put(panlFieldValue, panlFacetCode);
+			solrFacetNameToPanlName.put(panlFieldValue, panlFacetName);
 		}
 		this.facetFields = facetFieldList.toArray(new String[0]);
 	}
@@ -275,5 +279,13 @@ public class CollectionProperties {
 
 	public boolean hasFacetCode(String panlfacet)   {
 		return(facetFieldMap.containsKey(panlfacet));
+	}
+
+	public String getPanlCodeFromSolrFacetName(String name) {
+		return(solrFacetNameToPanlCodeMap.get(name));
+	}
+
+	public String getPanlNameFromSolrFacetName(String name) {
+		return(solrFacetNameToPanlName.get(name));
 	}
 }

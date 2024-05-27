@@ -4,14 +4,24 @@ import com.synapticloop.panl.server.properties.CollectionProperties;
 import org.apache.http.client.utils.URLEncodedUtils;
 import org.apache.solr.client.solrj.SolrQuery;
 
+import java.net.URLDecoder;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.util.StringTokenizer;
 
 public class PanlFacetToken extends PanlToken {
 	private String solrField = null;
-	private final String value;
 	private boolean isValid = true;
+
+	/**
+	 * <p>Create a new Panl Facet Token for use with generating URLs.</p>
+	 *
+	 * @param panlLpseCode The code to create for the lpse part of the URL
+	 */
+	public PanlFacetToken(String panlLpseCode) {
+		super(panlLpseCode);
+	}
+
 	public PanlFacetToken(
 			CollectionProperties collectionProperties,
 			String panlLpseCode,
@@ -19,7 +29,7 @@ public class PanlFacetToken extends PanlToken {
 			StringTokenizer valueTokeniser) {
 		super(panlLpseCode);
 
-		this.value = valueTokeniser.nextToken();
+		this.value = URLDecoder.decode(valueTokeniser.nextToken(), StandardCharsets.UTF_8);
 		if(collectionProperties.hasFacetCode(panlLpseCode)) {
 			this.solrField = collectionProperties.getNameFromCode(panlLpseCode);
 		} else {
@@ -28,11 +38,19 @@ public class PanlFacetToken extends PanlToken {
 	}
 
 	@Override public String getUriComponent() {
-		return null;
+		if(isValid) {
+			return (this.value + "/");
+		} else {
+			return("");
+		}
 	}
 
 	@Override public String getLpseComponent() {
-		return null;
+		if(isValid) {
+			return(panlLpseCode);
+		} else {
+			return("");
+		}
 	}
 
 	@Override public String explain() {

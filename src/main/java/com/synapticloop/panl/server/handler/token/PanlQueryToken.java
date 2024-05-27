@@ -14,6 +14,10 @@ public class PanlQueryToken extends PanlToken {
 	private String value;
 	private boolean isOverride;
 
+	public PanlQueryToken(String panlLpseCode) {
+		super(panlLpseCode);
+	}
+
 	public PanlQueryToken(
 			String queryFromUri,
 			String panlLpseCode,

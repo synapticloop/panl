@@ -9,6 +9,7 @@ import org.apache.http.entity.ContentType;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.protocol.HttpContext;
 import org.apache.http.protocol.HttpRequestHandler;
+import org.json.JSONObject;
 
 import java.io.IOException;
 
@@ -75,8 +76,12 @@ public class PanlRequestHandler implements HttpRequestHandler {
 					collectionRequestHandler.request(uri, query),
 					CONTENT_TYPE_JSON)
 			);
-		} catch (PanlServerException e) {
-			throw new IOException(e);
+		} catch (Exception e) {
+			response.setStatusCode(HttpStatus.SC_INTERNAL_SERVER_ERROR);
+			JSONObject jsonObject = new JSONObject();
+			jsonObject.put("error", true);
+			jsonObject.put("message", e.getMessage());
+			response.setEntity(new StringEntity(jsonObject.toString(),CONTENT_TYPE_JSON));
 		}
 	}
 }
