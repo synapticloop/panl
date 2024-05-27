@@ -5,6 +5,7 @@ import com.synapticloop.panl.server.handler.field.BaseField;
 import com.synapticloop.panl.server.handler.field.FacetField;
 import com.synapticloop.panl.server.handler.field.MetaDataField;
 import com.synapticloop.panl.util.PropertyHelper;
+import org.apache.solr.client.solrj.SolrQuery;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.slf4j.Logger;
@@ -36,6 +37,8 @@ public class CollectionProperties {
 	private String solrSortAsc;
 	private String solrSortDesc;
 
+	private SolrQuery.ORDER defaultOrder = SolrQuery.ORDER.asc;
+
 	private List<String> lpseOrder = new ArrayList<>();
 	private List<BaseField> lpseFields = new ArrayList<>();
 
@@ -53,6 +56,22 @@ public class CollectionProperties {
 		parseFacetFields(properties);
 		parseLpseOrder(properties);
 		parseResultFields(properties);
+		parseDefaultSortOrder(properties);
+	}
+
+	private void parseDefaultSortOrder(Properties properties) {
+		String property = properties.getProperty("solr.default.modifier");
+		switch(property) {
+			case "+":
+				this.defaultOrder = SolrQuery.ORDER.asc;
+				break;
+			case "-":
+				this.defaultOrder = SolrQuery.ORDER.desc;
+				break;
+			default:
+				LOGGER.warn("Unknown solr.default.modifier of '{}', using default sort order of SolrQuery.ORDER.asc.", property);
+				this.defaultOrder = SolrQuery.ORDER.asc;
+		}
 	}
 
 	private void parseBaseProperties(Properties properties) {
@@ -236,5 +255,25 @@ public class CollectionProperties {
 
 	public List<BaseField> getLpseFields() {
 		return (lpseFields);
+	}
+
+	public boolean isMetadataToken(String token) {
+		return(metadataMap.contains(token));
+	}
+
+	public SolrQuery.ORDER getDefaultOrder() {
+		return (defaultOrder);
+	}
+
+	public boolean hasSortField(String panlCode) {
+		return(facetFieldMap.containsKey(panlCode));
+	}
+
+	public String getNameFromCode(String panlCode) {
+		return(facetFieldMap.get(panlCode));
+	}
+
+	public boolean hasFacetCode(String panlfacet)   {
+		return(facetFieldMap.containsKey(panlfacet));
 	}
 }

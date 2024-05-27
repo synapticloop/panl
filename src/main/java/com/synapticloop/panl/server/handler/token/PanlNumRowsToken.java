@@ -1,0 +1,53 @@
+package com.synapticloop.panl.server.handler.token;
+
+import com.synapticloop.panl.server.properties.CollectionProperties;
+import org.apache.solr.client.solrj.SolrQuery;
+
+import java.util.StringTokenizer;
+
+public class PanlNumRowsToken extends PanlToken {
+	private final int numRows;
+	private boolean isValid = true;
+
+	public PanlNumRowsToken(CollectionProperties collectionProperties, String panlLpseCode, StringTokenizer valueTokenizer) {
+		super(panlLpseCode);
+
+		int numRowsTemp;
+		if (valueTokenizer.hasMoreTokens()) {
+			try {
+				numRowsTemp = Integer.valueOf(valueTokenizer.nextToken());
+			} catch (NumberFormatException e) {
+				isValid = false;
+				numRowsTemp = collectionProperties.getResultRows();
+			}
+		} else {
+			isValid = false;
+			numRowsTemp = collectionProperties.getResultRows();
+		}
+		this.numRows = numRowsTemp;
+	}
+
+	@Override public String getUriComponent() {
+		return null;
+	}
+
+	@Override public String getLpseComponent() {
+		return null;
+	}
+
+	@Override public String explain() {
+		return ("PANL " +
+				(this.isValid ? "[  VALID  ]" : "[ INVALID ]") +
+				" <rows>  LPSE code '" +
+				this.panlLpseCode +
+				"' using " +
+				(this.isValid ? "parsed" : "default") +
+				" value of '" +
+				this.numRows +
+				"'.");
+	}
+
+	@Override public void applyToQuery(SolrQuery solrQuery) {
+		solrQuery.setRows(this.numRows);
+	}
+}

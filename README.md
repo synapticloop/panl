@@ -78,4 +78,18 @@ java -jar synapticloop-panl.jar server
 
 # Next Steps
 
-Learn more about Synapticloop Panl 
+Learn more about Synapticloop Panl
+
+## Starting up the example cloud
+
+_Windows_
+```
+bin\solr start -cloud -p 8983 -s "example\cloud\node1\solr"
+bin\solr start -cloud -p 7574 -s "example\cloud\node2\solr" -z localhost:9983
+```
+
+_*NIX_
+```
+bin/solr start -cloud -p 8983 -s "example/cloud/node1/solr"
+bin/solr start -cloud -p 7574 -s "example/cloud/node2/solr" -z localhost:9983
+```

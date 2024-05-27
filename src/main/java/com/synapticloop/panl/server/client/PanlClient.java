@@ -41,7 +41,7 @@ public abstract class PanlClient {
 	 * @return The Solr query with the query set
 	 */
 	public SolrQuery getQuery(String query) {
-		String thisQuery = "*.*";
+		String thisQuery = "*:*";
 
 		for (NameValuePair nameValuePair : URLEncodedUtils.parse(query, StandardCharsets.UTF_8)) {
 			if(nameValuePair.getName().equals("q")) {

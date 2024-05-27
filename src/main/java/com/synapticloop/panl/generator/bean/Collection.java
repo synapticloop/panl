@@ -28,7 +28,8 @@ public class Collection {
 
 	private int lpseNumber = 1;
 
-	private static final String CODES = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz01234567890";
+	public static final String CODES = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz01234567890";
+	public static final String CODES_AND_METADATA = CODES + "[].+-";
 	private static final Set<String> CODES_AVAILABLE = new HashSet<>();
 	private static final Map<String, PanlProperty> PANL_PROPERTIES = new HashMap<>();
 
