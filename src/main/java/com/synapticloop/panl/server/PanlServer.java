@@ -94,15 +94,20 @@ public class PanlServer {
 	}
 
 	/**
-	 * <p>Start the PANL server, which relies on the Apache HttpComponents HttpSever.</p>
+	 * <p>Start the PANL server, initialising the required Servlets and handlers
+	 * for URLs.</p>
+	 *
+	 * <p>There are three types of request handlers.</p>
+	 *
+	 * <ol>
+	 *   <li></li>
+	 * </ol>
 	 *
 	 * <p>This sets up a servlet for each of the collections and binds it to the
 	 * correct URL.</p>
 	 *
 	 * <p>It then sets up the panl results viewer servlet if it enabled.</p>
 	 *
-	 * <p>A default servlet is registered which will catch any un-registered URLs
-	 * and it returns a simple <code>404</code> status with a JSON message body.</p>
 	 *
 	 * <p>Finally, it starts the server on the passed in port number (or default
 	 * port of 8181).</p>
