@@ -28,6 +28,7 @@ public class CollectionProperties {
 	private int panlLpseNum;
 
 	private boolean panlIncludeSingleFacets;
+	private boolean panlIncludeSameNumberFacets;
 	private String panlParamQuery;
 	private String panlParamSort;
 	private String panlParamPage;
@@ -103,6 +104,8 @@ public class CollectionProperties {
 
 	private void parseDefaultProperties(Properties properties) {
 		this.panlIncludeSingleFacets = properties.getProperty("panl.include.single.facets", "false").equals("true");
+		this.panlIncludeSameNumberFacets = properties.getProperty("panl.include.same.number.facets", "false").equals("true");
+
 		this.panlLpseNum = PropertyHelper.getIntProperty(properties, "panl.lpse.num", 1);
 
 		this.panlParamQuery = properties.getProperty("panl.param.query", "q");
@@ -314,6 +317,10 @@ public class CollectionProperties {
 
 	public boolean getPanlIncludeSingleFacets() {
 		return (panlIncludeSingleFacets);
+	}
+
+	public boolean getPanlIncludeSameNumberFacets() {
+		return(panlIncludeSameNumberFacets);
 	}
 
 	/**

@@ -79,7 +79,7 @@ public class CollectionRequestHandler {
 
 		List<PanlToken> panlTokens = parseLpse(uri, query);
 
-		long parseNanos = System.nanoTime() - startNanos;
+		long parseRequestNanos = System.nanoTime() - startNanos;
 
 		startNanos = System.nanoTime();
 
@@ -105,21 +105,22 @@ public class CollectionRequestHandler {
 				panlToken.applyToQuery(solrQuery);
 			}
 
-			long buildNanos = System.nanoTime() - startNanos;
-			startNanos = System.nanoTime();
 
 			// TODO - this needs to be set properly
 			solrQuery.setParam("q.op", "AND");
 
+			long buildRequestNanos = System.nanoTime() - startNanos;
+			startNanos = System.nanoTime();
+
 			final QueryResponse response = solrClient.query(this.collectionName, solrQuery);
 
-			long requestNanos = System.nanoTime() - startNanos;
+			long sendAnReceiveNanos = System.nanoTime() - startNanos;
 			return (parseResponse(
 					panlTokens,
 					response,
-					parseNanos,
-					buildNanos,
-					requestNanos));
+					parseRequestNanos,
+					buildRequestNanos,
+					sendAnReceiveNanos));
 
 		} catch (Exception e) {
 			throw new PanlServerException("Could not query the Solr instance, message was: " + e.getMessage(), e);
@@ -133,7 +134,7 @@ public class CollectionRequestHandler {
 	 * @param response          The Solrj response to be parsed
 	 * @param parseRequestNanos The start time for this query in nanoseconds
 	 * @param buildRequestNanos The number of nanos it took to build the request
-	 * @param sendRequestNanos  The number of nanos it took to send the request
+	 * @param sendAndReceiveNanos  The number of nanos it took to send the request
 	 * @return a JSON Object as a string with the appended panl response
 	 */
 	private String parseResponse(
@@ -141,7 +142,7 @@ public class CollectionRequestHandler {
 			QueryResponse response,
 			long parseRequestNanos,
 			long buildRequestNanos,
-			long sendRequestNanos) {
+			long sendAndReceiveNanos) {
 
 		// set up the JSON response object
 		JSONObject solrJsonObject = new JSONObject(response.jsonStr());
@@ -185,6 +186,7 @@ public class CollectionRequestHandler {
 
 		SolrDocumentList solrDocuments = (SolrDocumentList) response.getResponse().get("response");
 		long numFound = solrDocuments.getNumFound();
+		boolean numFoundExact = solrDocuments.getNumFoundExact();
 		long start = solrDocuments.getStart();
 
 
@@ -203,7 +205,6 @@ public class CollectionRequestHandler {
 				for (FacetField.Count value : facetField.getValues()) {
 					// at this point - we need to see whether we already have the 'value'
 					// as a facet - as there is no need to have it again
-
 					boolean shouldAdd = true;
 
 					String valueName = value.getName();
@@ -213,6 +214,16 @@ public class CollectionRequestHandler {
 							shouldAdd = false;
 						}
 					}
+
+					// also, if the count of the number of found results is the same as
+					// the number of the count of the facet - then we may not need to
+					// include it
+					if(!collectionProperties.getPanlIncludeSameNumberFacets() &&
+							numFound == value.getCount() &&
+							numFoundExact) {
+						shouldAdd = false;
+					}
+
 
 					if (shouldAdd) {
 						JSONObject facetValueObject = new JSONObject();
@@ -261,25 +272,26 @@ public class CollectionRequestHandler {
 
 		availableObjects.put("facets", panlFacets);
 
+		panlObject.put("active", getRemovalURI(panlTokens));
+		panlObject.put("available", availableObjects);
+
+		solrJsonObject.put("error", false);
+
 		JSONObject timingsObject = new JSONObject();
 		// add in some statistics
 		timingsObject.put("panl_parse_request_time", TimeUnit.NANOSECONDS.toMillis(parseRequestNanos));
 		timingsObject.put("panl_build_request_time", TimeUnit.NANOSECONDS.toMillis(buildRequestNanos));
-		timingsObject.put("panl_send_request_time", TimeUnit.NANOSECONDS.toMillis(sendRequestNanos));
+		timingsObject.put("panl_send_request_time", TimeUnit.NANOSECONDS.toMillis(sendAndReceiveNanos));
 
 		long buildResponse = System.nanoTime() - startNanos;
 		timingsObject.put("panl_build_response_time", TimeUnit.NANOSECONDS.toMillis(buildResponse));
 		timingsObject.put("panl_total_time", TimeUnit.NANOSECONDS.toMillis(
 				parseRequestNanos +
 						buildRequestNanos +
-						sendRequestNanos +
+						sendAndReceiveNanos +
 						buildResponse
 		));
 		panlObject.put("timings", timingsObject);
-		panlObject.put("active", getRemovalURI(panlTokens));
-		panlObject.put("available", availableObjects);
-
-		solrJsonObject.put("error", false);
 
 		solrJsonObject.put("panl", panlObject);
 
