@@ -67,7 +67,7 @@ public class PanlSortToken extends PanlToken {
 	}
 
 	/**
-	 * <p>The Sort Order Panl Token does not have a Uri Part</p>
+	 * <p>The Sort Order Panl Token does not have a URI Part</p>
 	 *
 	 * @return ALWAYS returns an empty string
 	 */
@@ -76,7 +76,7 @@ public class PanlSortToken extends PanlToken {
 	}
 
 	/**
-	 * <p>Get the lpse component.  This will only return a value if there is a
+	 * <p>Get the LPSE component.  This will only return a value if there is a
 	 * valid sort field available.</p>
 	 *
 	 * @return The LPSE component, or an empty string if not valid
@@ -91,6 +91,21 @@ public class PanlSortToken extends PanlToken {
 		}
 	}
 
+	/**
+	 * <p>This will return a human readable string of the format:</p>
+	 *
+	 * <pre>
+	 *   PANL [  VALID  ] &lt;sort&gt;  LPSE code 'm' (solr field 'manu'), sorted ASCending
+	 * </pre>
+	 *
+	 * <p>or, for an invalid LPSE code:</p>
+	 *
+	 * <pre>
+	 *   PANL [ INVALID ] &lt;sort&gt;  LPSE code 'I' (solr field 'null'), sorted ASCending
+	 * </pre>
+	 *
+	 * @return The human-readable explanation
+	 */
 	@Override public String explain() {
 		return ("PANL " +
 				(this.isValid ? "[  VALID  ]" : "[ INVALID ]") +
@@ -102,6 +117,16 @@ public class PanlSortToken extends PanlToken {
 				(this.sortOrder == SolrQuery.ORDER.asc ? "ASCending" : "DESCending"));
 	}
 
+	/**
+	 * <p>If the token is valid (i.e. it is a valid solr field to sort on), add
+	 * a sort order to the solrQuery.</p>
+	 *
+	 * <p><code>solrQuery.addSort(String field, ORDER order)</code></p>
+	 *
+	 * <p>If the token is invalid - nothing is performed.</p>
+	 *
+	 * @param solrQuery The Solr Query to apply the sort order to
+	 */
 	@Override public void applyToQuery(SolrQuery solrQuery) {
 		if (isValid) {
 			solrQuery.addSort(this.solrFacetField, sortOrder);

@@ -31,11 +31,11 @@ public class PanlNumRowsToken extends PanlToken {
 	}
 
 	@Override public String getUriComponent() {
-		return null;
+		return(this.numRows + "/");
 	}
 
 	@Override public String getLpseComponent() {
-		return null;
+		return(panlLpseCode);
 	}
 
 	@Override public String explain() {

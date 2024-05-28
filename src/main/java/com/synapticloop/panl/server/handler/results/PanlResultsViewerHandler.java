@@ -1,10 +1,10 @@
-package com.synapticloop.panl.server.handler;
+package com.synapticloop.panl.server.handler.results;
 
+import com.synapticloop.panl.server.handler.CollectionRequestHandler;
+import com.synapticloop.panl.server.handler.util.ResourceHelper;
 import org.apache.http.HttpRequest;
 import org.apache.http.HttpResponse;
-import org.apache.http.HttpStatus;
 import org.apache.http.entity.ContentType;
-import org.apache.http.entity.StringEntity;
 import org.apache.http.protocol.HttpContext;
 import org.apache.http.protocol.HttpRequestHandler;
 import org.json.JSONArray;
@@ -27,9 +27,6 @@ public class PanlResultsViewerHandler implements HttpRequestHandler {
 	}
 
 	@Override public void handle(HttpRequest request, HttpResponse response, HttpContext context) {
-		response.setStatusCode(HttpStatus.SC_NOT_FOUND);
-		response.setEntity(
-				new StringEntity("{}",
-						CONTENT_TYPE_JSON));
+		ResourceHelper.serveResource("/panl-results-viewer/index.html", response);
 	}
 }

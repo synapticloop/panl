@@ -11,6 +11,7 @@ import java.util.StringTokenizer;
 public class PanlFacetToken extends PanlToken {
 	private String solrField = null;
 	private boolean isValid = true;
+	private CollectionProperties collectionProperties;
 
 	/**
 	 * <p>Create a new Panl Facet Token for use with generating URLs.</p>
@@ -27,8 +28,16 @@ public class PanlFacetToken extends PanlToken {
 			PanlStringTokeniser lpseTokeniser,
 			StringTokenizer valueTokeniser) {
 		super(panlLpseCode);
+		this.collectionProperties = collectionProperties;
 
-		this.value = URLDecoder.decode(valueTokeniser.nextToken(), StandardCharsets.UTF_8);
+		this.value = collectionProperties
+				.getDePrefixSuffixForValue(
+						panlLpseCode,
+						URLDecoder.decode(
+								valueTokeniser.nextToken(),
+								StandardCharsets.UTF_8));
+
+
 		if(collectionProperties.hasFacetCode(panlLpseCode)) {
 			this.solrField = collectionProperties.getNameFromCode(panlLpseCode);
 		} else {
@@ -38,7 +47,13 @@ public class PanlFacetToken extends PanlToken {
 
 	@Override public String getUriComponent() {
 		if(isValid) {
-			return (this.value + "/");
+			return (
+					URLEncoder.encode(
+							collectionProperties.getPrefixSuffixForValue(
+									panlLpseCode,
+									this.value),
+							StandardCharsets.UTF_8) +
+							"/");
 		} else {
 			return("");
 		}

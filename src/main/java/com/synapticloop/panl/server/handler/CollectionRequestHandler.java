@@ -146,7 +146,8 @@ public class CollectionRequestHandler {
 		// set up the JSON response object
 		JSONObject solrJsonObject = new JSONObject(response.jsonStr());
 		JSONObject panlObject = new JSONObject();
-
+		JSONObject activeObjects = new JSONObject();
+		JSONObject availableObjects = new JSONObject();
 
 
 		long startNanos = System.nanoTime();
@@ -198,6 +199,7 @@ public class CollectionRequestHandler {
 
 				JSONArray facetValueArrays = new JSONArray();
 				String panlCodeFromSolrFacetName = collectionProperties.getPanlCodeFromSolrFacetName(facetField.getName());
+				facetObject.put("panl_code", panlCodeFromSolrFacetName);
 				for (FacetField.Count value : facetField.getValues()) {
 					// at this point - we need to see whether we already have the 'value'
 					// as a facet - as there is no need to have it again
@@ -216,13 +218,28 @@ public class CollectionRequestHandler {
 						JSONObject facetValueObject = new JSONObject();
 						facetValueObject.put("value", valueName);
 						facetValueObject.put("count", value.getCount());
-						facetValueObject.put("encoded", URLEncoder.encode(valueName, StandardCharsets.UTF_8));
+						facetValueObject.put("encoded", URLEncoder.encode(
+								collectionProperties.getPrefixSuffixForValue(
+										panlCodeFromSolrFacetName,
+										valueName), StandardCharsets.UTF_8));
 						facetValueArrays.put(facetValueObject);
 					}
 				}
 
+				int length = facetValueArrays.length();
+				boolean shouldIncludeFacet = true;
+				switch (length) {
+					case 0:
+						shouldIncludeFacet = false;
+						break;
+					case 1:
+						shouldIncludeFacet = collectionProperties.getPanlIncludeSingleFacets();
+						break;
+				}
+
 				// if we don't have any values for this facet, don't put it in
-				if (!facetValueArrays.isEmpty()) {
+
+				if (shouldIncludeFacet) {
 					facetObject.put("values", facetValueArrays);
 					if (null != panlCodeFromSolrFacetName) {
 						facetObject.put("uris",
@@ -242,7 +259,7 @@ public class CollectionRequestHandler {
 			}
 		}
 
-		panlObject.put("facet_fields", panlFacets);
+		availableObjects.put("facets", panlFacets);
 
 		JSONObject timingsObject = new JSONObject();
 		// add in some statistics
@@ -259,6 +276,8 @@ public class CollectionRequestHandler {
 						buildResponse
 		));
 		panlObject.put("timings", timingsObject);
+		panlObject.put("active", activeObjects);
+		panlObject.put("available", availableObjects);
 
 		solrJsonObject.put("error", false);
 
@@ -299,12 +318,13 @@ public class CollectionRequestHandler {
 	}
 
 	/**
-	 * <p>Parse the uri and optional query string.</p>
+	 * <p>Parse the uri and optionally the query string if it exists.</p>
 	 *
-	 * <p>If the query string is not empty, then this will overwrite any query
-	 * that is set in the lpse URI.</p>
+	 * <p><strong>NOTE:</strong> If the query string is not empty, then this will
+	 * overwrite any query that is set in the lpse URI.</p>
 	 *
 	 * <p>The URI will always be of the form</p>
+	 *
 	 * <pre>
 	 * /&lt;collection_name&gt;
 	 *   /&lt;field_set&gt;
@@ -324,6 +344,7 @@ public class CollectionRequestHandler {
 	 * @param query the query to parse - if the query string exists, then this
 	 *              query will replace any existing query in the lpse encoded
 	 *              URI
+	 * @return The parse URI as a List of <code>PanlToken</code>
 	 */
 	public List<PanlToken> parseLpse(String uri, String query) {
 		List<PanlToken> panlTokens = new ArrayList<>();
@@ -332,7 +353,9 @@ public class CollectionRequestHandler {
 
 		if (searchQuery.length > 3) {
 			String lpseEncoding = searchQuery[searchQuery.length - 1];
+
 			PanlStringTokeniser lpseTokeniser = new PanlStringTokeniser(lpseEncoding, Collection.CODES_AND_METADATA, true);
+
 			StringTokenizer valueTokeniser = new StringTokenizer(uri, "/", false);
 			// we need to skip the first two - as they will be the collection and the
 			// field set
@@ -370,6 +393,7 @@ public class CollectionRequestHandler {
 					while (token.length() < collectionProperties.getPanlLpseNum()) {
 						facet.append(lpseTokeniser.nextToken());
 					}
+
 					// now we have the facetField
 					panlTokens.add(
 							new PanlFacetToken(
@@ -379,6 +403,8 @@ public class CollectionRequestHandler {
 									valueTokeniser));
 				}
 			}
+
+			// If we don't have a query - then parse the query
 			if (!hasQuery && !query.isBlank()) {
 				panlTokens.add(new PanlQueryToken(query,
 						collectionProperties.getPanlParamQuery(),

@@ -1,10 +1,10 @@
 package com.synapticloop.panl.server;
 
 import com.synapticloop.panl.exception.PanlServerException;
-import com.synapticloop.panl.server.handler.CollectionRequestHandler;
-import com.synapticloop.panl.server.handler.PanlDefaultHandler;
-import com.synapticloop.panl.server.handler.PanlRequestHandler;
-import com.synapticloop.panl.server.handler.PanlResultsViewerHandler;
+import com.synapticloop.panl.server.handler.*;
+import com.synapticloop.panl.server.handler.results.PanlResultsScriptHandler;
+import com.synapticloop.panl.server.handler.results.PanlResultsStaticHandler;
+import com.synapticloop.panl.server.handler.results.PanlResultsViewerHandler;
 import com.synapticloop.panl.server.properties.BaseProperties;
 import com.synapticloop.panl.server.properties.CollectionProperties;
 import org.apache.http.impl.bootstrap.HttpServer;
@@ -39,7 +39,7 @@ public class PanlServer {
 	private final List<CollectionRequestHandler> collectionRequestHandlers = new ArrayList<>();
 
 	/**
-	 * <p>Instantiate a new PanlServ er instance.</p>
+	 * <p>Instantiate a new PanlServer instance.  This will parse the properties file</p>
 	 *
 	 * @param propertiesFileLocation The location of the panl.properties to load
 	 * @param portNumber The port number from the command line option (or
@@ -115,9 +115,11 @@ public class PanlServer {
 		bootstrap.registerHandler("/*", new PanlDefaultHandler(collectionRequestHandlers));
 
 		// register the panl results viewer - if one is available
-		String panlResultsViewerUrl = baseProperties.getPanlResultsViewerUrl();
-		if(null != panlResultsViewerUrl) {
-			bootstrap.registerHandler(panlResultsViewerUrl, new PanlResultsViewerHandler(collectionRequestHandlers));
+
+		if(baseProperties.getPanlResultsViewerUrl()) {
+			bootstrap.registerHandler("/panl-results-viewer/*", new PanlResultsViewerHandler(collectionRequestHandlers));
+			bootstrap.registerHandler("/panl-results-viewer/static/*", new PanlResultsStaticHandler());
+			bootstrap.registerHandler("/panl-results-viewer/script/", new PanlResultsScriptHandler(collectionRequestHandlers));
 		}
 
 		// finally register the collection handlers

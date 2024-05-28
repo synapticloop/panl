@@ -20,12 +20,14 @@ public class CollectionProperties {
 	public static final String PROPERTY_KEY_PANL_RESULTS_FIELDS = "panl.results.fields.";
 
 	private final String collectionName;
+	private final String validUrls; // the
 
-	private boolean facetEnabled;
 	private int facetMinCount;
 	private int resultRows;
 
 	private int panlLpseNum;
+
+	private boolean panlIncludeSingleFacets;
 	private String panlParamQuery;
 	private String panlParamSort;
 	private String panlParamPage;
@@ -50,6 +52,9 @@ public class CollectionProperties {
 	private final Map<String, List<String>> resultFieldsMap = new HashMap<>();
 	private String[] facetFields;
 
+	private final Map<String, String> panlFacetPrefixMap = new HashMap<>();
+	private final Map<String, String> panlFacetSuffixMap = new HashMap<>();
+
 	public CollectionProperties(String collectionName, Properties properties) throws PanlServerException {
 		this.collectionName = collectionName;
 
@@ -59,6 +64,16 @@ public class CollectionProperties {
 		parseLpseOrder(properties);
 		parseResultFields(properties);
 		parseDefaultSortOrder(properties);
+
+		JSONObject jsonObject = new JSONObject();
+		JSONArray jsonArray = new JSONArray();
+		for (String resultFieldsName : getResultFieldsNames()) {
+			jsonArray.put("/" + collectionName + "/" + resultFieldsName + "/");
+		}
+
+		jsonObject.put("valid_urls", jsonArray);
+
+		this.validUrls =  jsonObject.toString();
 	}
 
 	private void parseDefaultSortOrder(Properties properties) {
@@ -77,12 +92,12 @@ public class CollectionProperties {
 	}
 
 	private void parseBaseProperties(Properties properties) {
-		this.facetEnabled = properties.getProperty("solr.facet.enabled", "true").equals("true");
 		this.facetMinCount = PropertyHelper.getIntProperty(properties, "solr.facet.min.count", 1);
 		this.resultRows = PropertyHelper.getIntProperty(properties, "solr.numrows", 10);
 	}
 
 	private void parseDefaultProperties(Properties properties) {
+		this.panlIncludeSingleFacets = properties.getProperty("panl.include.single.facets", "false").equals("true");
 		this.panlLpseNum = PropertyHelper.getIntProperty(properties, "panl.lpse.num", 1);
 
 		this.panlParamQuery = properties.getProperty("panl.param.query", "q");
@@ -108,6 +123,7 @@ public class CollectionProperties {
 		for (String panlFieldKey : PropertyHelper.getPropertiesByPrefix(properties, PROPERTY_KEY_PANL_FACET)) {
 			String panlFieldValue = properties.getProperty(panlFieldKey);
 			String panlFacetCode = panlFieldKey.substring(PROPERTY_KEY_PANL_FACET.length());
+
 			if(panlFacetCode.length() != panlLpseNum) {
 				throw new PanlServerException(PROPERTY_KEY_PANL_FACET + panlFacetCode + " property key is of invalid length - should be " + panlLpseNum);
 			}
@@ -122,6 +138,17 @@ public class CollectionProperties {
 				LOGGER.info("[{}] Found a name for panl facet code '{}', using '{}'", collectionName, panlFacetCode, panlFacetName);
 			}
 			facetNameMap.put(panlFacetCode, panlFacetName);
+
+			// now we need to look at the suffixes and prefixes
+			String facetPrefix = properties.getProperty("panl.prefix." + panlFacetCode);
+			if(null != facetPrefix) {
+				panlFacetPrefixMap.put(panlFacetCode, facetPrefix);
+			}
+			String facetSuffix = properties.getProperty("panl.suffix." + panlFacetCode);
+			if(null != facetSuffix) {
+				panlFacetSuffixMap.put(panlFacetCode, facetSuffix);
+			}
+
 			solrFacetNameToPanlCodeMap.put(panlFieldValue, panlFacetCode);
 			solrFacetNameToPanlName.put(panlFieldValue, panlFacetName);
 		}
@@ -230,19 +257,7 @@ public class CollectionProperties {
 	}
 
 	public String getValidUrlsJson() {
-		JSONObject jsonObject = new JSONObject();
-		JSONArray jsonArray = new JSONArray();
-		for (String resultFieldsName : getResultFieldsNames()) {
-			jsonArray.put("/" + collectionName + "/" + resultFieldsName + "/");
-		}
-
-		jsonObject.put("valid_urls", jsonArray);
-
-		return(jsonObject.toString());
-	}
-
-	public boolean getFacetEnabled() {
-		return facetEnabled;
+		return(this.validUrls);
 	}
 
 	public int getFacetMinCount() {
@@ -288,4 +303,46 @@ public class CollectionProperties {
 	public String getPanlNameFromSolrFacetName(String name) {
 		return(solrFacetNameToPanlName.get(name));
 	}
+
+	public boolean getPanlIncludeSingleFacets() {
+		return (panlIncludeSingleFacets);
+	}
+
+	/**
+	 * <p>Remove any suffixes, or prefixes from a URI parameter, should they
+	 * be defined for the LPSE code</p>
+	 *
+	 * @param panlFacetCode The panl LPSE code to lookup
+	 * @param value the value
+	 *
+	 * @return the de-suffixed, and de-prefixed value.
+	 */
+	public String getDePrefixSuffixForValue(String panlFacetCode, String value) {
+		String temp = value;
+		if(panlFacetPrefixMap.containsKey(panlFacetCode)) {
+			temp = temp.substring(panlFacetPrefixMap.get(panlFacetCode).length());
+		}
+
+		if(panlFacetSuffixMap.containsKey(panlFacetCode)) {
+			temp = temp.substring(0, temp.length() - panlFacetSuffixMap.get(panlFacetCode).length());
+		}
+
+		return(temp);
+	}
+	public String getPrefixSuffixForValue(String panlFacetCode, String value) {
+		StringBuilder sb = new StringBuilder();
+
+		if(panlFacetPrefixMap.containsKey(panlFacetCode)) {
+			sb.append(panlFacetPrefixMap.get(panlFacetCode));
+		}
+
+		sb.append(value);
+
+		if(panlFacetSuffixMap.containsKey(panlFacetCode)) {
+			sb.append(panlFacetSuffixMap.get(panlFacetCode));
+		}
+
+		return(sb.toString());
+	}
+
 }

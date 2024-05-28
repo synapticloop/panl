@@ -1,6 +1,5 @@
 package com.synapticloop.panl.server.handler;
 
-import org.apache.http.HttpException;
 import org.apache.http.HttpRequest;
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
@@ -9,8 +8,6 @@ import org.apache.http.entity.StringEntity;
 import org.apache.http.protocol.HttpContext;
 import org.apache.http.protocol.HttpRequestHandler;
 import org.json.JSONObject;
-
-import java.io.IOException;
 
 /**
  * <p>This is the default handler for all requests and simply passes the
@@ -38,10 +35,7 @@ public class PanlRequestHandler implements HttpRequestHandler {
 	 *
 	 * @param request  the HTTP request.
 	 * @param response the HTTP response.
-	 * @param context  the HTTP execution context.
-	 * @throws HttpException If there was an error with the request
-	 * @throws IOException   If there was an error processing the request by the
-	 *                       collectionHandler
+	 * @param context  the HTTP execution context. (which is ignored by this processor)
 	 */
 	@Override public void handle(HttpRequest request, HttpResponse response, HttpContext context) {
 
