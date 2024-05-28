@@ -1,8 +1,7 @@
 package com.synapticloop.panl.server.handler.results;
 
 import com.synapticloop.panl.server.handler.CollectionRequestHandler;
-import com.synapticloop.panl.server.handler.util.ResourceHelper;
-import com.synapticloop.panl.server.properties.CollectionProperties;
+import com.synapticloop.panl.server.handler.results.util.ResourceHelper;
 import org.apache.http.HttpRequest;
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
@@ -22,7 +21,7 @@ public class PanlResultsScriptHandler implements HttpRequestHandler {
 		for (CollectionRequestHandler collectionRequestHandler : collectionRequestHandlers) {
 			String collectionName = collectionRequestHandler.getCollectionName();
 			for (String resultFieldsName : collectionRequestHandler.getResultFieldsNames()) {
-				collectionUrls.add("/" + collectionName + "/" + resultFieldsName + "/");
+				collectionUrls.add("/" + collectionName + "/" + resultFieldsName);
 			}
 		}
 	}

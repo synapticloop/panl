@@ -108,4 +108,6 @@ public abstract class PanlToken {
 	 * @param solrQuery The Solr Query to apply the token to
 	 */
 	public abstract void applyToQuery(SolrQuery solrQuery);
+
+	public abstract String getType();
 }

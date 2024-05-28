@@ -1,7 +1,7 @@
 package com.synapticloop.panl.server.handler.results;
 
 import com.synapticloop.panl.server.handler.CollectionRequestHandler;
-import com.synapticloop.panl.server.handler.util.ResourceHelper;
+import com.synapticloop.panl.server.handler.results.util.ResourceHelper;
 import org.apache.http.HttpRequest;
 import org.apache.http.HttpResponse;
 import org.apache.http.entity.ContentType;

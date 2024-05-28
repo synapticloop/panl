@@ -6,19 +6,19 @@ $(document).ready(function() {
 
 	// test to see whether we are ready to invoke the panl search service
 	var uris = window.location.pathname.split("/");
-	if(uris.length >= 5) {
+	if(uris.length >= 4) {
 		// we have a collection, and field set
 		var collection = uris[2];
 		var fieldset = uris[3];
 		if(isValidUrl(collection, fieldset)) {
-			$("#collection").append("/" + collection + "/" + fieldset + "/");
+			$("#collection").append("/" + collection + "/" + fieldset);
 			panlSearch();
 		}
 	}
 });
 
 function isValidUrl(collection, fieldset) {
-	var fullUrl = "/" + collection + "/" + fieldset + "/";
+	var fullUrl = "/" + collection + "/" + fieldset;
 	for (const collectionUrl of collections) {
 		if(collectionUrl === fullUrl) {
 			return(true);
@@ -67,7 +67,48 @@ function populatePanlResults(panlJsonData) {
 		$("#documents").append("<p class\"doc_result\">" + JSON.stringify(document) + "</p>");
 	}
 
+	addActiveFilters(panlJsonData.panl.active);
 	addAvailableFilters(panlJsonData.panl.available);
+}
+
+function addActiveFilters(activeObject) {
+	const active = $("#active");
+	// first up the query
+	if(activeObject.query !== undefined) {
+		active.append("<li><strong>Query <em>(" + activeObject.query[0].panl_code + ")</em></strong></li>");
+		active.append("<li><a href=\"" + panlResultsViewerUrl +
+                        $("#collection").text() +
+                        activeObject.query[0].uri +
+                        "\">[remove]</a>&nbsp;" +
+                  			activeObject.query[0].value +
+                  			"</li><li><hr /></li>");
+	}
+
+	// now for the facets
+	if(activeObject.facet !== undefined) {
+		addActiveFacets(activeObject.facet);
+	}
+}
+
+function addActiveFacets(facets) {
+	const active = $("#active");
+	// facets first
+	var currentFacetName = "";
+
+	for(const facet of facets) {
+		if(facet.facet_name !== currentFacetName) {
+			active.append("<li><strong>" + facet.name + " <em>(" + facet.panl_code + ")</em></strong></li>");
+			currentFacetName = facet.facet_name;
+		}
+		active.append("<li><a href=\"" + panlResultsViewerUrl +
+                        $("#collection").text() +
+                        facet.uri +
+                        "\">[remove]</a>&nbsp;" +
+                  			facet.value +
+                  			"</li>");
+
+	}
+	active.append("<li><hr /></li>");
 }
 
 function addAvailableFilters(availableObject) {
@@ -87,7 +128,7 @@ function addAvailableFilters(availableObject) {
 			"&nbsp;(" + value.count + ")</li>";
 		}
 		innerUl += "</ul>"
-		available.append("<li>" + facet.name + " <em>(" + facet.panl_code + ")</em>" + innerUl + "</li>");
+		available.append("<li><strong>" + facet.name + " <em>(" + facet.panl_code + ")</em></strong>" + innerUl + "</li>");
 	}
 
 }

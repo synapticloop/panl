@@ -53,4 +53,9 @@ public class PanlNumRowsToken extends PanlToken {
 	@Override public void applyToQuery(SolrQuery solrQuery) {
 		solrQuery.setRows(this.numRows);
 	}
+
+	@Override public String getType() {
+		return("rows");
+	}
+
 }

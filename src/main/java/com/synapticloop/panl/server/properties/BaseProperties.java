@@ -8,10 +8,7 @@ public class BaseProperties {
 	private final String solrSearchServerUrl;
 
 	public BaseProperties(Properties properties) {
-		// this property does not need to be set;
-
-		panlResultsViewerUrl = properties.getProperty("panl.results.viewer.url", "false").equals("true");
-
+		this.panlResultsViewerUrl = properties.getProperty("panl.results.viewer.url", "false").equals("true");
 		this.solrjClient = properties.getProperty("solrj.client", "CloudSolrClient");
 		this.solrSearchServerUrl = properties.getProperty("solr.search.server.url", "http://localhost:8983/solr");
 	}

@@ -22,4 +22,8 @@ public class PanlPageToken extends PanlToken {
 	@Override public void applyToQuery(SolrQuery solrQuery) {
 //		solrQuery.setStart()
 	}
+	@Override public String getType() {
+		return("page");
+	}
+
 }

@@ -4,7 +4,7 @@ import com.synapticloop.panl.exception.PanlServerException;
 import com.synapticloop.panl.server.handler.field.BaseField;
 import com.synapticloop.panl.server.handler.field.FacetField;
 import com.synapticloop.panl.server.handler.field.MetaDataField;
-import com.synapticloop.panl.util.PropertyHelper;
+import com.synapticloop.panl.server.properties.util.PropertyHelper;
 import org.apache.solr.client.solrj.SolrQuery;
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -45,13 +45,18 @@ public class CollectionProperties {
 	private final List<BaseField> lpseFields = new ArrayList<>();
 
 	private final Set<String> metadataMap = new HashSet<>();
-	private final Map<String, String> facetFieldMap = new HashMap<>();
-	private final Map<String, String> facetNameMap = new HashMap<>();
+
+	private final Map<String, String> panlCodeToSolrFieldNameMap = new HashMap<>();
+	private final Map<String, String> panlCodeToPanlNameMap = new HashMap<>();
 	private final Map<String, String> solrFacetNameToPanlCodeMap = new HashMap<>();
 	private final Map<String, String> solrFacetNameToPanlName = new HashMap<>();
+
 	private final Map<String, List<String>> resultFieldsMap = new HashMap<>();
 	private String[] facetFields;
 
+	/**
+	 * <p>This is the prefix map for each panl code</p>
+	 */
 	private final Map<String, String> panlFacetPrefixMap = new HashMap<>();
 	private final Map<String, String> panlFacetSuffixMap = new HashMap<>();
 
@@ -127,7 +132,7 @@ public class CollectionProperties {
 			if(panlFacetCode.length() != panlLpseNum) {
 				throw new PanlServerException(PROPERTY_KEY_PANL_FACET + panlFacetCode + " property key is of invalid length - should be " + panlLpseNum);
 			}
-			facetFieldMap.put(panlFacetCode, panlFieldValue);
+			panlCodeToSolrFieldNameMap.put(panlFacetCode, panlFieldValue);
 			facetFieldList.add(panlFieldValue);
 			LOGGER.info("[{}] Mapping facet '{}' to panl key '{}'", collectionName, panlFieldValue, panlFacetCode);
 			String panlFacetName = properties.getProperty(PROPERTY_KEY_PANL_NAME + panlFacetCode, null);
@@ -137,7 +142,7 @@ public class CollectionProperties {
 			} else {
 				LOGGER.info("[{}] Found a name for panl facet code '{}', using '{}'", collectionName, panlFacetCode, panlFacetName);
 			}
-			facetNameMap.put(panlFacetCode, panlFacetName);
+			panlCodeToPanlNameMap.put(panlFacetCode, panlFacetName);
 
 			// now we need to look at the suffixes and prefixes
 			String facetPrefix = properties.getProperty("panl.prefix." + panlFacetCode);
@@ -162,7 +167,7 @@ public class CollectionProperties {
 		}
 
 		for (String lpseCode : panlLpseOrder.split(",")) {
-			if(facetFieldMap.containsKey(lpseCode)) {
+			if(panlCodeToSolrFieldNameMap.containsKey(lpseCode)) {
 				lpseOrder.add(lpseCode);
 				lpseFields.add(new FacetField(lpseCode));
 			} else if(metadataMap.contains(lpseCode)) {
@@ -285,15 +290,15 @@ public class CollectionProperties {
 	}
 
 	public boolean hasSortField(String panlCode) {
-		return(facetFieldMap.containsKey(panlCode));
+		return(panlCodeToSolrFieldNameMap.containsKey(panlCode));
 	}
 
 	public String getNameFromCode(String panlCode) {
-		return(facetFieldMap.get(panlCode));
+		return(panlCodeToSolrFieldNameMap.get(panlCode));
 	}
 
 	public boolean hasFacetCode(String panlfacet)   {
-		return(facetFieldMap.containsKey(panlfacet));
+		return(panlCodeToSolrFieldNameMap.containsKey(panlfacet));
 	}
 
 	public String getPanlCodeFromSolrFacetName(String name) {
@@ -302,6 +307,9 @@ public class CollectionProperties {
 
 	public String getPanlNameFromSolrFacetName(String name) {
 		return(solrFacetNameToPanlName.get(name));
+	}
+	public String getPanlNameFromPanlCode(String name) {
+		return(panlCodeToPanlNameMap.get(name));
 	}
 
 	public boolean getPanlIncludeSingleFacets() {
@@ -329,6 +337,7 @@ public class CollectionProperties {
 
 		return(temp);
 	}
+
 	public String getPrefixSuffixForValue(String panlFacetCode, String value) {
 		StringBuilder sb = new StringBuilder();
 

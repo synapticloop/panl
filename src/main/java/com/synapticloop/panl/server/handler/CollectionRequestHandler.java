@@ -276,7 +276,7 @@ public class CollectionRequestHandler {
 						buildResponse
 		));
 		panlObject.put("timings", timingsObject);
-		panlObject.put("active", activeObjects);
+		panlObject.put("active", getRemovalURI(panlTokens));
 		panlObject.put("available", availableObjects);
 
 		solrJsonObject.put("error", false);
@@ -284,6 +284,57 @@ public class CollectionRequestHandler {
 		solrJsonObject.put("panl", panlObject);
 
 		return (solrJsonObject.toString());
+	}
+
+	private JSONObject getRemovalURI(List<PanlToken> panlTokens) {
+		JSONObject jsonObject = new JSONObject();
+
+		// go through each of the tokens and generate the removal URL
+
+		List<String> uriComponents = new ArrayList<>();
+		List<String> lpseComponents = new ArrayList<>();
+
+		for(PanlToken panlToken: panlTokens) {
+			uriComponents.add(panlToken.getUriComponent());
+			lpseComponents.add(panlToken.getLpseComponent());
+		}
+		int i = 0;
+		for(PanlToken panlToken: panlTokens) {
+			String tokenType = panlToken.getType();
+			JSONArray jsonArray = jsonObject.optJSONArray(tokenType, new JSONArray());
+
+			JSONObject removeObject = new JSONObject();
+			removeObject.put("value", panlToken.getPanlLpseValue());
+			removeObject.put("uri", getRemoveURIFromPath(i, uriComponents, lpseComponents));
+
+			String panlLpseCode = panlToken.getPanlLpseCode();
+			removeObject.put("panl_code", panlLpseCode);
+			removeObject.put("facet_name", collectionProperties.getNameFromCode(panlLpseCode));
+			removeObject.put("name", collectionProperties.getPanlNameFromPanlCode(panlLpseCode));
+			jsonArray.put(removeObject);
+			i++;
+			jsonObject.put(tokenType, jsonArray);
+		}
+		return(jsonObject);
+	}
+
+	private String getRemoveURIFromPath(int skipNumber, List<String> uriComponents, List<String> lpseComponents) {
+		StringBuilder uri = new StringBuilder();
+		StringBuilder lpse = new StringBuilder();
+		for(int i = 0; i < uriComponents.size(); i++) {
+			if(i != skipNumber) {
+				uri.append(uriComponents.get(i));
+				lpse.append(lpseComponents.get(i));
+			}
+		}
+
+		String test = "/" + uri + lpse + "/";
+
+		if(test.equals("//")) {
+			return("/");
+		} else {
+			return test;
+		}
 	}
 
 	private JSONObject getAdditionURI(PanlToken panlToken, Map<String, List<PanlToken>> panlTokenMap) {
@@ -351,6 +402,8 @@ public class CollectionRequestHandler {
 
 		String[] searchQuery = uri.split("/");
 
+		boolean hasQuery = false;
+
 		if (searchQuery.length > 3) {
 			String lpseEncoding = searchQuery[searchQuery.length - 1];
 
@@ -362,7 +415,6 @@ public class CollectionRequestHandler {
 			valueTokeniser.nextToken();
 			valueTokeniser.nextToken();
 
-			boolean hasQuery = false;
 			while (lpseTokeniser.hasMoreTokens()) {
 				String token = lpseTokeniser.nextToken();
 
@@ -405,11 +457,9 @@ public class CollectionRequestHandler {
 			}
 
 			// If we don't have a query - then parse the query
-			if (!hasQuery && !query.isBlank()) {
-				panlTokens.add(new PanlQueryToken(query,
-						collectionProperties.getPanlParamQuery(),
-						valueTokeniser));
-			}
+		}
+		if (!hasQuery && !query.isBlank()) {
+			panlTokens.add(new PanlQueryToken(query, collectionProperties.getPanlParamQuery()));
 		}
 
 		for (PanlToken panlToken : panlTokens) {

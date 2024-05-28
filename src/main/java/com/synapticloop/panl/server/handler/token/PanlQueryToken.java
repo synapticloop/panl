@@ -8,7 +8,6 @@ import java.nio.charset.StandardCharsets;
 import java.util.StringTokenizer;
 
 public class PanlQueryToken extends PanlToken {
-	private String value = null;
 	private boolean isOverride;
 
 	public PanlQueryToken(String panlLpseCode) {
@@ -17,11 +16,17 @@ public class PanlQueryToken extends PanlToken {
 
 	public PanlQueryToken(
 			String queryFromUri,
+			String panlLpseCode) {
+		this(queryFromUri, panlLpseCode, null);
+	}
+
+	public PanlQueryToken(
+			String queryFromUri,
 			String panlLpseCode,
 			StringTokenizer valueTokeniser) {
 		super(panlLpseCode);
 
-		if(valueTokeniser.hasMoreTokens()) {
+		if(null != valueTokeniser && valueTokeniser.hasMoreTokens()) {
 			this.value = valueTokeniser.nextToken();
 		}
 
@@ -64,4 +69,9 @@ public class PanlQueryToken extends PanlToken {
 	@Override public void applyToQuery(SolrQuery solrQuery) {
 		solrQuery.setQuery(value);
 	}
+
+	@Override public String getType() {
+		return("query");
+	}
+
 }

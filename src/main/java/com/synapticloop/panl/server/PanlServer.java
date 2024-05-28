@@ -30,6 +30,7 @@ import java.util.concurrent.TimeUnit;
  */
 public class PanlServer {
 	private static final Logger LOGGER = LoggerFactory.getLogger(PanlServer.class);
+
 	public static final String PROPERTY_KEY_PANL_COLLECTION = "panl.collection.";
 
 	private final String propertiesFileLocation;
@@ -98,9 +99,12 @@ public class PanlServer {
 	 * <p>This sets up a servlet for each of the collections and binds it to the
 	 * correct URL.</p>
 	 *
-	 * <p>It then sets up the panl results viewer servlet</p>
+	 * <p>It then sets up the panl results viewer servlet if it enabled.</p>
 	 *
-	 * <p>Finally, it starts the server on the passed in port number (of default
+	 * <p>A default servlet is registered which will catch any un-registered URLs
+	 * and it returns a simple <code>404</code> status with a JSON message body.</p>
+	 *
+	 * <p>Finally, it starts the server on the passed in port number (or default
 	 * port of 8181).</p>
 	 *
 	 * @throws PanlServerException If there was an error starting the server
@@ -114,7 +118,7 @@ public class PanlServer {
 		// register the default Panl handler which returns a 404
 		bootstrap.registerHandler("/*", new PanlDefaultHandler(collectionRequestHandlers));
 
-		// register the panl results viewer - if one is available
+		// register the panl results viewer - if it enabled
 
 		if(baseProperties.getPanlResultsViewerUrl()) {
 			bootstrap.registerHandler("/panl-results-viewer/*", new PanlResultsViewerHandler(collectionRequestHandlers));

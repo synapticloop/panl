@@ -132,4 +132,8 @@ public class PanlSortToken extends PanlToken {
 			solrQuery.addSort(this.solrFacetField, sortOrder);
 		}
 	}
+	@Override public String getType() {
+		return("sort");
+	}
+
 }
