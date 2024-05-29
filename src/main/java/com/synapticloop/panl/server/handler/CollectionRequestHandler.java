@@ -230,7 +230,7 @@ public class CollectionRequestHandler {
 						facetValueObject.put("value", valueName);
 						facetValueObject.put("count", value.getCount());
 						facetValueObject.put("encoded", URLEncoder.encode(
-								collectionProperties.getPrefixSuffixForValue(
+								collectionProperties.getConvertedToPanlValue(
 										panlCodeFromSolrFacetName,
 										valueName), StandardCharsets.UTF_8));
 						facetValueArrays.put(facetValueObject);

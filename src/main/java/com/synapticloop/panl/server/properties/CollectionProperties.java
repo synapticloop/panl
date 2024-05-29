@@ -33,7 +33,7 @@ public class CollectionProperties {
 	private String panlParamSort;
 	private String panlParamPage;
 	private String panlParamNumRows;
-	
+
 	private String solrModifierAnd;
 	private String solrModifierOr;
 	private String solrDefaultModifier;
@@ -52,13 +52,41 @@ public class CollectionProperties {
 	private final Map<String, String> solrFacetNameToPanlCodeMap = new HashMap<>();
 	private final Map<String, String> solrFacetNameToPanlName = new HashMap<>();
 
+	/**
+	 * <p>The Set of all boolean facets that are available within this
+	 * collection.  If it is a boolean facet, then it this facet may have
+	 * replacements for the true/false values.</p>
+	 */
+	private final Set<String> panlBooleanFacets = new HashSet<>();
+	/**
+	 * <p>The hashmap of true String values for a boolean panl facet - if they
+	 * are defined for this facet. This map is keyed on
+	 * <code>&lt;lpseCode&gt</code> with the replacement value as the
+	 * stored value.</p>
+	 */
+	private final Map<String, String> panlBooleanFacetTrueValues = new HashMap<>();
+	/**
+	 * <p>The hashmap of false String values for a boolean panl facet - if they
+	 * are defined for this facet. This map is keyed on
+	 * <code>&lt;lpseCode&gt;</code> with the replacement value as the
+	 * stored value.</p>
+	 */
+	private final Map<String, String> panlBooleanFacetFalseValues = new HashMap<>();
+
 	private final Map<String, List<String>> resultFieldsMap = new HashMap<>();
 	private String[] facetFields;
 
 	/**
-	 * <p>This is the prefix map for each panl code</p>
+	 * <p>This is the prefix map for each panl code, it is keyed on
+	 * <code>&lt;lpseCode&gt;</code> with the value as the String prefix for this
+	 * facet.</p>
 	 */
 	private final Map<String, String> panlFacetPrefixMap = new HashMap<>();
+	/**
+	 * <p>This is the suffix map for each panl code, it is keyed on
+	 * <code>&lt;lpseCode&gt;</code> with the value as the String suffix for this
+	 * facet.</p>
+	 */
 	private final Map<String, String> panlFacetSuffixMap = new HashMap<>();
 
 	public CollectionProperties(String collectionName, Properties properties) throws PanlServerException {
@@ -79,12 +107,12 @@ public class CollectionProperties {
 
 		jsonObject.put("valid_urls", jsonArray);
 
-		this.validUrls =  jsonObject.toString();
+		this.validUrls = jsonObject.toString();
 	}
 
 	private void parseDefaultSortOrder(Properties properties) {
 		String property = properties.getProperty("solr.default.modifier");
-		switch(property) {
+		switch (property) {
 			case "+":
 				this.defaultOrder = SolrQuery.ORDER.asc;
 				break;
@@ -124,6 +152,18 @@ public class CollectionProperties {
 		this.solrSortDesc = properties.getProperty("solr.sort.DESC", "D");
 	}
 
+	/**
+	 * <p>Parse the properties files and extract all properties that begin with
+	 * the panl facet property key</p>
+	 *
+	 * <p> See the
+	 * {@link  CollectionProperties#PROPERTY_KEY_PANL_FACET PROPERTY_KEY_PANL_FACET}
+	 * static String for the panl prefix property</p>
+	 *
+	 * @param properties The properties to look up the keys from
+	 * @throws PanlServerException If there was an error looking up the properties,
+	 *                             or with the found property and its associated values
+	 */
 	private void parseFacetFields(Properties properties) throws PanlServerException {
 		List<String> facetFieldList = new ArrayList<>();
 
@@ -132,14 +172,15 @@ public class CollectionProperties {
 			String panlFieldValue = properties.getProperty(panlFieldKey);
 			String panlFacetCode = panlFieldKey.substring(PROPERTY_KEY_PANL_FACET.length());
 
-			if(panlFacetCode.length() != panlLpseNum) {
+			if (panlFacetCode.length() != panlLpseNum) {
 				throw new PanlServerException(PROPERTY_KEY_PANL_FACET + panlFacetCode + " property key is of invalid length - should be " + panlLpseNum);
 			}
+
 			panlCodeToSolrFieldNameMap.put(panlFacetCode, panlFieldValue);
 			facetFieldList.add(panlFieldValue);
 			LOGGER.info("[{}] Mapping facet '{}' to panl key '{}'", collectionName, panlFieldValue, panlFacetCode);
 			String panlFacetName = properties.getProperty(PROPERTY_KEY_PANL_NAME + panlFacetCode, null);
-			if(null == panlFacetName) {
+			if (null == panlFacetName) {
 				LOGGER.warn("[{}] Could not find a name for panl facet code '{}', using field name '{}'", collectionName, panlFacetCode, panlFieldValue);
 				panlFacetName = panlFieldValue;
 			} else {
@@ -149,12 +190,23 @@ public class CollectionProperties {
 
 			// now we need to look at the suffixes and prefixes
 			String facetPrefix = properties.getProperty("panl.prefix." + panlFacetCode);
-			if(null != facetPrefix) {
+			if (null != facetPrefix) {
 				panlFacetPrefixMap.put(panlFacetCode, facetPrefix);
 			}
 			String facetSuffix = properties.getProperty("panl.suffix." + panlFacetCode);
-			if(null != facetSuffix) {
+			if (null != facetSuffix) {
 				panlFacetSuffixMap.put(panlFacetCode, facetSuffix);
+			}
+
+			// finally - we are going to look at the replacement - but only if there
+			// is a type of solr.BoolField and values are actually assigned
+
+			String facetClassName = properties.getProperty("panl.type." + panlFacetCode);
+			if (null != facetClassName && facetClassName.equals("solr.BoolField")) {
+				// see if we have a true, or false value for it
+				panlBooleanFacets.add(panlFacetCode);
+				panlBooleanFacetTrueValues.put(panlFacetCode, properties.getProperty("panl.bool." + panlFacetCode + ".true", "true"));
+				panlBooleanFacetFalseValues.put(panlFacetCode, properties.getProperty("panl.bool." + panlFacetCode + ".false", "false"));
 			}
 
 			solrFacetNameToPanlCodeMap.put(panlFieldValue, panlFacetCode);
@@ -165,15 +217,15 @@ public class CollectionProperties {
 
 	private void parseLpseOrder(Properties properties) throws PanlServerException {
 		String panlLpseOrder = properties.getProperty("panl.lpse.order", null);
-		if(null == panlLpseOrder) {
+		if (null == panlLpseOrder) {
 			throw new PanlServerException("Could not find the panl.lpse.order");
 		}
 
 		for (String lpseCode : panlLpseOrder.split(",")) {
-			if(panlCodeToSolrFieldNameMap.containsKey(lpseCode)) {
+			if (panlCodeToSolrFieldNameMap.containsKey(lpseCode)) {
 				lpseOrder.add(lpseCode);
 				lpseFields.add(new FacetField(lpseCode));
-			} else if(metadataMap.contains(lpseCode)) {
+			} else if (metadataMap.contains(lpseCode)) {
 				lpseOrder.add(lpseCode);
 				lpseFields.add(new MetaDataField(lpseCode));
 			} else {
@@ -184,13 +236,13 @@ public class CollectionProperties {
 
 	private void parseResultFields(Properties properties) throws PanlServerException {
 		List<String> resultFieldProperties = PropertyHelper.getPropertiesByPrefix(properties, PROPERTY_KEY_PANL_RESULTS_FIELDS);
-		for(String resultFieldProperty: resultFieldProperties) {
+		for (String resultFieldProperty : resultFieldProperties) {
 			addResultsFields(resultFieldProperty.substring(PROPERTY_KEY_PANL_RESULTS_FIELDS.length()), properties.getProperty(resultFieldProperty));
 		}
 	}
 
 	private void addResultsFields(String resultFieldsName, String resultFields) throws PanlServerException {
-		if(resultFieldsMap.containsKey(resultFieldsName)) {
+		if (resultFieldsMap.containsKey(resultFieldsName)) {
 			throw new PanlServerException("panl.results.fields.'" + resultFieldsName + "' is already defined.");
 		}
 
@@ -249,11 +301,11 @@ public class CollectionProperties {
 	}
 
 	public List<String> getResultFieldsNames() {
-		return(new ArrayList<>(resultFieldsMap.keySet()));
+		return (new ArrayList<>(resultFieldsMap.keySet()));
 	}
 
 	public List<String> getResultFieldsForName(String name) {
-		return(resultFieldsMap.get(name));
+		return (resultFieldsMap.get(name));
 	}
 
 	public Map<String, List<String>> getResultFieldsMap() {
@@ -261,11 +313,11 @@ public class CollectionProperties {
 	}
 
 	public boolean isValidResultFieldsName(String name) {
-		return(resultFieldsMap.containsKey(name));
+		return (resultFieldsMap.containsKey(name));
 	}
 
 	public String getValidUrlsJson() {
-		return(this.validUrls);
+		return (this.validUrls);
 	}
 
 	public int getFacetMinCount() {
@@ -285,7 +337,7 @@ public class CollectionProperties {
 	}
 
 	public boolean isMetadataToken(String token) {
-		return(metadataMap.contains(token));
+		return (metadataMap.contains(token));
 	}
 
 	public SolrQuery.ORDER getDefaultOrder() {
@@ -293,26 +345,27 @@ public class CollectionProperties {
 	}
 
 	public boolean hasSortField(String panlCode) {
-		return(panlCodeToSolrFieldNameMap.containsKey(panlCode));
+		return (panlCodeToSolrFieldNameMap.containsKey(panlCode));
 	}
 
 	public String getNameFromCode(String panlCode) {
-		return(panlCodeToSolrFieldNameMap.get(panlCode));
+		return (panlCodeToSolrFieldNameMap.get(panlCode));
 	}
 
-	public boolean hasFacetCode(String panlfacet)   {
-		return(panlCodeToSolrFieldNameMap.containsKey(panlfacet));
+	public boolean hasFacetCode(String panlfacet) {
+		return (panlCodeToSolrFieldNameMap.containsKey(panlfacet));
 	}
 
 	public String getPanlCodeFromSolrFacetName(String name) {
-		return(solrFacetNameToPanlCodeMap.get(name));
+		return (solrFacetNameToPanlCodeMap.get(name));
 	}
 
 	public String getPanlNameFromSolrFacetName(String name) {
-		return(solrFacetNameToPanlName.get(name));
+		return (solrFacetNameToPanlName.get(name));
 	}
+
 	public String getPanlNameFromPanlCode(String name) {
-		return(panlCodeToPanlNameMap.get(name));
+		return (panlCodeToPanlNameMap.get(name));
 	}
 
 	public boolean getPanlIncludeSingleFacets() {
@@ -320,45 +373,76 @@ public class CollectionProperties {
 	}
 
 	public boolean getPanlIncludeSameNumberFacets() {
-		return(panlIncludeSameNumberFacets);
+		return (panlIncludeSameNumberFacets);
 	}
 
 	/**
+	 * <p>The panl value (from the URI) can have a prefix or suffix, or both
+	 * applied to it.</p>
+	 *
 	 * <p>Remove any suffixes, or prefixes from a URI parameter, should they
-	 * be defined for the LPSE code</p>
+	 * be defined for the LPSE code.</p>
+	 *
+	 * <p>Additionally, if this is a boolean field, it may be that there also is
+	 * a replacement for true/false for it.</p>
 	 *
 	 * @param panlFacetCode The panl LPSE code to lookup
-	 * @param value the value
-	 *
-	 * @return the de-suffixed, and de-prefixed value.
+	 * @param value         the value to convert if any conversions are required
+	 * @return the de-suffixed, de-prefixed, and de-replaced value.
 	 */
-	public String getDePrefixSuffixForValue(String panlFacetCode, String value) {
+	public String getConvertedFromPanlValue(String panlFacetCode, String value) {
 		String temp = value;
-		if(panlFacetPrefixMap.containsKey(panlFacetCode)) {
+		if (panlFacetPrefixMap.containsKey(panlFacetCode)) {
 			temp = temp.substring(panlFacetPrefixMap.get(panlFacetCode).length());
 		}
 
-		if(panlFacetSuffixMap.containsKey(panlFacetCode)) {
+		if (panlFacetSuffixMap.containsKey(panlFacetCode)) {
 			temp = temp.substring(0, temp.length() - panlFacetSuffixMap.get(panlFacetCode).length());
 		}
 
-		return(temp);
+		if (panlBooleanFacets.contains(panlFacetCode)) {
+			// we might have a boolean replacement
+			if (panlBooleanFacetFalseValues.containsKey(panlFacetCode) &&
+					panlBooleanFacetFalseValues.getOrDefault(panlFacetCode, "").equals(value)) {
+				return ("false");
+			}
+			// we might have a boolean replacement
+			if (panlBooleanFacetTrueValues.containsKey(panlFacetCode) &&
+					panlBooleanFacetTrueValues.getOrDefault(panlFacetCode, "").equals(value)) {
+				return ("true");
+			}
+		}
+
+		return (temp);
 	}
 
-	public String getPrefixSuffixForValue(String panlFacetCode, String value) {
+	public String getConvertedToPanlValue(String panlFacetCode, String value) {
 		StringBuilder sb = new StringBuilder();
 
-		if(panlFacetPrefixMap.containsKey(panlFacetCode)) {
+		if (panlFacetPrefixMap.containsKey(panlFacetCode)) {
 			sb.append(panlFacetPrefixMap.get(panlFacetCode));
 		}
 
-		sb.append(value);
+		if (panlBooleanFacets.contains(panlFacetCode)) {
+			// we might have a boolean replacement
+			if (panlBooleanFacetFalseValues.containsKey(panlFacetCode) && value.equalsIgnoreCase("false")) {
+				sb.append(panlBooleanFacetFalseValues.getOrDefault(panlFacetCode, "false"));
+			} else if (panlBooleanFacetTrueValues.containsKey(panlFacetCode) && value.equalsIgnoreCase("true")) {
+				sb.append(panlBooleanFacetTrueValues.getOrDefault(panlFacetCode, "true"));
+			} else {
+				// we don;t have a boolean replacement
+				sb.append(value);
+			}
 
-		if(panlFacetSuffixMap.containsKey(panlFacetCode)) {
+		} else {
+			sb.append(value);
+		}
+
+		if (panlFacetSuffixMap.containsKey(panlFacetCode)) {
 			sb.append(panlFacetSuffixMap.get(panlFacetCode));
 		}
 
-		return(sb.toString());
+		return (sb.toString());
 	}
 
 }

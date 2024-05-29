@@ -31,7 +31,7 @@ public class PanlFacetToken extends PanlToken {
 		this.collectionProperties = collectionProperties;
 
 		this.value = collectionProperties
-				.getDePrefixSuffixForValue(
+				.getConvertedFromPanlValue(
 						panlLpseCode,
 						URLDecoder.decode(
 								valueTokeniser.nextToken(),
@@ -49,7 +49,7 @@ public class PanlFacetToken extends PanlToken {
 		if(isValid) {
 			return (
 					URLEncoder.encode(
-							collectionProperties.getPrefixSuffixForValue(
+							collectionProperties.getConvertedToPanlValue(
 									panlLpseCode,
 									this.value),
 							StandardCharsets.UTF_8) +
