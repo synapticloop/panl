@@ -4,7 +4,7 @@ import com.synapticloop.panl.exception.PanlServerException;
 import com.synapticloop.panl.generator.bean.Collection;
 import com.synapticloop.panl.server.client.*;
 import com.synapticloop.panl.server.handler.token.*;
-import com.synapticloop.panl.server.properties.BaseProperties;
+import com.synapticloop.panl.server.properties.PanlProperties;
 import com.synapticloop.panl.server.properties.CollectionProperties;
 import org.apache.solr.client.solrj.SolrClient;
 import org.apache.solr.client.solrj.SolrQuery;
@@ -34,27 +34,27 @@ public class CollectionRequestHandler {
 	private final CollectionProperties collectionProperties;
 	private final PanlClient panlClient;
 
-	public CollectionRequestHandler(String collectionName, BaseProperties baseProperties, CollectionProperties collectionProperties) throws PanlServerException {
+	public CollectionRequestHandler(String collectionName, PanlProperties panlProperties, CollectionProperties collectionProperties) throws PanlServerException {
 		this.collectionName = collectionName;
 		this.collectionProperties = collectionProperties;
 
 		LOGGER.info("[{}] Initialising collection", collectionName);
 
-		String solrjClient = baseProperties.getSolrjClient();
+		String solrjClient = panlProperties.getSolrjClient();
 		LOGGER.info("[{}] Utilising solrjClient of '{}'", collectionName, solrjClient);
 
 		switch (solrjClient) {
 			case "Http2SolrClient":
-				panlClient = new PanlHttp2SolrClient(collectionName, baseProperties, collectionProperties);
+				panlClient = new PanlHttp2SolrClient(collectionName, panlProperties, collectionProperties);
 				break;
 			case "HttpJdkSolrClient":
-				panlClient = new PanlHttpJdkSolrClient(collectionName, baseProperties, collectionProperties);
+				panlClient = new PanlHttpJdkSolrClient(collectionName, panlProperties, collectionProperties);
 				break;
 			case "LBHttp2SolrClient":
-				panlClient = new PanlLBHttp2SolrClient(collectionName, baseProperties, collectionProperties);
+				panlClient = new PanlLBHttp2SolrClient(collectionName, panlProperties, collectionProperties);
 				break;
 			case "CloudSolrClient":
-				panlClient = new PanlCloudSolrClient(collectionName, baseProperties, collectionProperties);
+				panlClient = new PanlCloudSolrClient(collectionName, panlProperties, collectionProperties);
 				break;
 			default:
 				throw new PanlServerException("Unknown property value for 'solrj.client' of '" + solrjClient + "', available values are 'Http2SolrClient', 'HttpJdkSolrClient', 'LBHttp2SolrClient', or 'CloudSolrClient'.");

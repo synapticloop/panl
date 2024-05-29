@@ -1,7 +1,6 @@
 package com.synapticloop.panl.server.client;
 
-import com.synapticloop.panl.exception.PanlServerException;
-import com.synapticloop.panl.server.properties.BaseProperties;
+import com.synapticloop.panl.server.properties.PanlProperties;
 import com.synapticloop.panl.server.properties.CollectionProperties;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.utils.URLEncodedUtils;
@@ -16,12 +15,12 @@ public abstract class PanlClient {
 	public static final Logger LOGGER = LoggerFactory.getLogger(PanlClient.class);
 	public static final String PROPERTY_KEY_PANL_RESULTS_FIELDS = "panl.results.fields.";
 	protected final String collectionName;
-	protected final BaseProperties baseProperties;
+	protected final PanlProperties panlProperties;
 	protected final CollectionProperties collectionProperties;
 
-	public PanlClient(String collectionName, BaseProperties baseProperties, CollectionProperties collectionProperties) {
+	public PanlClient(String collectionName, PanlProperties panlProperties, CollectionProperties collectionProperties) {
 		this.collectionName = collectionName;
-		this.baseProperties = baseProperties;
+		this.panlProperties = panlProperties;
 		this.collectionProperties = collectionProperties;
 	}
 

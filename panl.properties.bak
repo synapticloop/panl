@@ -58,20 +58,17 @@ solrj.client=CloudSolrClient
 solr.search.server.url=http://localhost:8983/solr,http://localhost:7574/solr
 solr.indexer.server.url=http://localhost:8983/solr
 
-
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 #
-# The panl results viewer url, this is a simple web app which will allow you to
-# test the collections, and the URLs that are generated, including field
-# inclusion, faceting, querying, and results.
-#
-# If this property does not exist, or if it is set to false, then no results
-# viewer will be available.  You may wish to remove this property for production
-# (or perhaps just disallow access to it.)
-#
-# The URL is __ALWAYS__ /panl-results-viewer/
+# SOLR configuration variables
+#  solr.facet.enabled - whether to turn on faceting - without faceting, this
+#      would be pretty useless
+#  solr.facet.min.count - the minimum number of items within each facet before
+#      the facet will be returned
 #
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
+solr.facet.enabled=true
+solr.facet.min.count=1
 
 panl.results.viewer.url=true
 

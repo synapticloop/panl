@@ -4,6 +4,7 @@ public class PanlProperty {
 	private final String panlProperty;
 	private final String panlValue;
 	private final boolean hideProperty;
+	private String solrClassName;
 
 	public PanlProperty(String panlProperty, String panlValue, int lpseNum) {
 		this.panlProperty = panlProperty;
@@ -38,5 +39,9 @@ public class PanlProperty {
 		} else {
 			return (panlProperty + "=" + panlValue);
 		}
+	}
+
+	public void setSolrClassName(String solrClassName) {
+		this.solrClassName = solrClassName;
 	}
 }

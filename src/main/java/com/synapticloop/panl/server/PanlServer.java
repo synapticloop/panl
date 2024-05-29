@@ -5,7 +5,7 @@ import com.synapticloop.panl.server.handler.*;
 import com.synapticloop.panl.server.handler.results.PanlResultsScriptHandler;
 import com.synapticloop.panl.server.handler.results.PanlResultsStaticHandler;
 import com.synapticloop.panl.server.handler.results.PanlResultsViewerHandler;
-import com.synapticloop.panl.server.properties.BaseProperties;
+import com.synapticloop.panl.server.properties.PanlProperties;
 import com.synapticloop.panl.server.properties.CollectionProperties;
 import org.apache.http.impl.bootstrap.HttpServer;
 import org.apache.http.impl.bootstrap.ServerBootstrap;
@@ -35,7 +35,7 @@ public class PanlServer {
 
 	private final String propertiesFileLocation;
 	private final int portNumber;
-	private BaseProperties baseProperties;
+	private PanlProperties panlProperties;
 
 	private final List<CollectionRequestHandler> collectionRequestHandlers = new ArrayList<>();
 
@@ -63,7 +63,7 @@ public class PanlServer {
 			throw new PanlServerException(e.getMessage());
 		}
 
-		baseProperties = new BaseProperties(properties);
+		panlProperties = new PanlProperties(properties);
 
 		File file = new File(propertiesFileLocation);
 		File propertiesFileDirectory = file.getAbsoluteFile().getParentFile();
@@ -82,7 +82,7 @@ public class PanlServer {
 					collectionProperties.load(new FileReader(fileName));
 					collectionRequestHandlers.add(new CollectionRequestHandler(
 							collectionName,
-							baseProperties,
+							panlProperties,
 							new CollectionProperties(
 									collectionName,
 									collectionProperties)));
@@ -125,7 +125,7 @@ public class PanlServer {
 
 		// register the panl results viewer - if it enabled
 
-		if(baseProperties.getPanlResultsViewerUrl()) {
+		if(panlProperties.getPanlResultsViewerUrl()) {
 			bootstrap.registerHandler("/panl-results-viewer/*", new PanlResultsViewerHandler(collectionRequestHandlers));
 			bootstrap.registerHandler("/panl-results-viewer/static/*", new PanlResultsStaticHandler());
 			bootstrap.registerHandler("/panl-results-viewer/script/", new PanlResultsScriptHandler(collectionRequestHandlers));

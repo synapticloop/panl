@@ -25,13 +25,14 @@ public class Collection {
 	private final List<Field> fields = new ArrayList<>();
 	private final List<String> unassignedFieldNames = new ArrayList<>();
 	private final Map<String, String> fieldXmlMap = new HashMap<>();
-
 	private int lpseNumber = 1;
 
 	public static final String CODES = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz01234567890";
 	public static final String CODES_AND_METADATA = CODES + "[].+-";
 	private static final Set<String> CODES_AVAILABLE = new HashSet<>();
 	private static final Map<String, PanlProperty> PANL_PROPERTIES = new HashMap<>();
+	private static final Map<String, String> SOLR_FIELD_TYPE_NAME_TO_SOLR_CLASS = new HashMap<>();
+	private static final Map<String, String> SOLR_FIELD_NAME_TO_SOLR_FIELD_TYPE = new HashMap<>();
 
 	public Collection(File schema) throws PanlGenerateException {
 		parseSchemaFile(schema);
@@ -81,12 +82,20 @@ public class Collection {
 			String cleanedName = fieldName.replaceAll("[^A-Za-z0-9]", "");
 			String possibleCode = cleanedName.substring(0, lpseNumber);
 			if (CODES_AVAILABLE.contains(possibleCode)) {
-				fields.add(new Field(possibleCode, fieldName, fieldXmlMap.get(fieldName)));
+				fields.add(new Field(
+						possibleCode,
+						fieldName,
+						fieldXmlMap.get(fieldName),
+						SOLR_FIELD_TYPE_NAME_TO_SOLR_CLASS.get(SOLR_FIELD_NAME_TO_SOLR_FIELD_TYPE.get(fieldName))));
 				LOGGER.info("Assigned field '{}' to panl code '{}'", fieldName, possibleCode);
 				CODES_AVAILABLE.remove(possibleCode);
 			} else if (CODES_AVAILABLE.contains(possibleCode.toUpperCase())) {
 				String nextPossibleCode = possibleCode.toUpperCase();
-				fields.add(new Field(nextPossibleCode, fieldName, fieldXmlMap.get(fieldName)));
+				fields.add(new Field(
+						nextPossibleCode,
+						fieldName,
+						fieldXmlMap.get(fieldName),
+						SOLR_FIELD_TYPE_NAME_TO_SOLR_CLASS.get(SOLR_FIELD_NAME_TO_SOLR_FIELD_TYPE.get(fieldName))));
 				LOGGER.info("Assigned field '{}' to panl code '{}'", fieldName, nextPossibleCode);
 				CODES_AVAILABLE.remove(nextPossibleCode);
 			} else {
@@ -105,7 +114,12 @@ public class Collection {
 			for (String code : CODES_AVAILABLE) {
 				if (i == item) {
 					assignedCode = code;
-					fields.add(new Field(assignedCode, unassignedFieldName, fieldXmlMap.get(unassignedFieldName)));
+					fields.add(new Field(
+							assignedCode,
+							unassignedFieldName,
+							fieldXmlMap.get(unassignedFieldName),
+							SOLR_FIELD_TYPE_NAME_TO_SOLR_CLASS.get(SOLR_FIELD_NAME_TO_SOLR_FIELD_TYPE.get(unassignedFieldName))));
+
 					LOGGER.info("Assigned field '{}' to RANDOM panl code '{}'", unassignedFieldName, assignedCode);
 					break;
 				}
@@ -196,12 +210,21 @@ public class Collection {
 							this.collectionName = startElement.getAttributeByName(new QName("name")).getValue();
 							LOGGER.info("Found collection name of {}", this.collectionName);
 							break;
+						case "fieldType":
+							String fieldTypeName = startElement.getAttributeByName(new QName("name")).getValue();
+							String fieldClass = startElement.getAttributeByName(new QName("class")).getValue();
+							SOLR_FIELD_TYPE_NAME_TO_SOLR_CLASS.put(fieldTypeName, fieldClass);
+							LOGGER.info("Mapping solr field type '{}' to solr class '{}'.", fieldTypeName, fieldClass);
+							break;
 						case "field":
 							StringBuilder sb = new StringBuilder("<field ");
 
 							String name = startElement.getAttributeByName(new QName("name")).getValue();
 							String indexed = startElement.getAttributeByName(new QName("indexed")).getValue();
 							String stored = startElement.getAttributeByName(new QName("stored")).getValue();
+							String type = startElement.getAttributeByName(new QName("type")).getValue();
+
+							SOLR_FIELD_NAME_TO_SOLR_FIELD_TYPE.put(name, type);
 
 							Iterator<Attribute> attributes = startElement.getAttributes();
 							while (attributes.hasNext()) {
@@ -216,16 +239,23 @@ public class Collection {
 							}
 							sb.append("/>");
 							fieldXmlMap.put(name, sb.toString());
+							boolean isIndexedOrStored = false;
+
+							if(indexed.equals("true")) {
+								LOGGER.info("Adding facet field name '{}' as it is indexed.", name);
+								isIndexedOrStored = true;
+								this.facetFieldNames.add(name);
+							}
 
 							if (stored.equals("true")) {
 								// then this can be returned as a field in the results
+								LOGGER.info("Adding result field name '{}' as it is stored.", name);
+								isIndexedOrStored = true;
 								this.resultFieldNames.add(name);
-								if(indexed.equals("true")) {
-									LOGGER.info("Adding field name '{}' as it is indexed and stored", name);
-									this.facetFieldNames.add(name);
-								}
-							} else {
-								LOGGER.info("NOT Adding field name '{}' as it is not indexed and stored", name);
+							}
+
+							if(!isIndexedOrStored){
+								LOGGER.info("NOT Adding field name '{}' as it is neither indexed nor stored.", name);
 							}
 							break;
 					}
