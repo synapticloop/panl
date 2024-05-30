@@ -127,7 +127,7 @@ public class CollectionProperties {
 
 	private void parseBaseProperties(Properties properties) {
 		this.facetMinCount = PropertyHelper.getIntProperty(properties, "solr.facet.min.count", 1);
-		this.resultRows = PropertyHelper.getIntProperty(properties, "solr.numrows", 10);
+		this.resultRows = PropertyHelper.getIntProperty(properties, "solr.numrows.default", 10);
 	}
 
 	private void parseDefaultProperties(Properties properties) {
