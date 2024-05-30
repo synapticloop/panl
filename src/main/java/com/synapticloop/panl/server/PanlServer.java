@@ -43,8 +43,8 @@ public class PanlServer {
 	 * <p>Instantiate a new PanlServer instance.  This will parse the properties file</p>
 	 *
 	 * @param propertiesFileLocation The location of the panl.properties to load
-	 * @param portNumber The port number from the command line option (or
-	 *                   default of 8181)
+	 * @param portNumber             The port number from the command line option (or
+	 *                               default of 8181)
 	 * @throws PanlServerException If there was an error parsing the properties
 	 */
 	public PanlServer(String propertiesFileLocation, int portNumber) throws PanlServerException {
@@ -55,6 +55,14 @@ public class PanlServer {
 	}
 
 
+	/**
+	 * <p>Parse the properties file extracting the required properties.  This
+	 * also instantiates new CollectionRequestHandlers</p>
+	 *
+	 * @throws PanlServerException If there was an error parsing the properties
+	 *                             file.
+	 * @see CollectionRequestHandler#CollectionRequestHandler(String, PanlProperties, CollectionProperties)
+	 */
 	private void parsePropertiesFile() throws PanlServerException {
 		Properties properties = new Properties();
 		try {
@@ -70,8 +78,8 @@ public class PanlServer {
 
 		Enumeration<Object> keys = properties.keys();
 		while (keys.hasMoreElements()) {
-			String key = (String)keys.nextElement();
-			if(key.startsWith(PROPERTY_KEY_PANL_COLLECTION)) {
+			String key = (String) keys.nextElement();
+			if (key.startsWith(PROPERTY_KEY_PANL_COLLECTION)) {
 				// we have found a new collection
 				String collectionName = key.substring(PROPERTY_KEY_PANL_COLLECTION.length());
 				Properties collectionProperties = new Properties();
@@ -100,19 +108,49 @@ public class PanlServer {
 	 * <p>There are three types of request handlers.</p>
 	 *
 	 * <ol>
-	 *   <li></li>
+	 *   <li>The Default Handler - the default handler for requests that do not
+	 *   match any other request.</li>
+	 *   <li>(Optional) The Panl Results View Handler - the in-built test webapp
+	 *   to view the results and the LPSE URIs</li>
+	 *   <li>The Panl Request Handler - one for each of the collections.</li>
 	 * </ol>
 	 *
-	 * <p>This sets up a servlet for each of the collections and binds it to the
-	 * correct URL.</p>
+	 * <p><strong>The Default Handler:</strong> Bound to the root context (i.e.
+	 * <code>/*</code>) which will always return a HTTP status code of 404 and
+	 * the body content will be of the format:</p>
 	 *
-	 * <p>It then sets up the panl results viewer servlet if it enabled.</p>
+	 * <pre>
+	 * {
+	 *   "error":404,
+	 *   "message":"Could not find a PANL request url, see 'valid_urls' array.",
+	 *   "valid_urls":[
+	 *     "/example/*"
+	 *   ]
+	 * }
+	 * </pre>
+	 * <p><strong>The Panl Results View Handler:</strong> <em>(Optional)</em>
+	 * Bound to the context <code>/panl-results-viewer/*</code>, it provides a
+	 * way to look at all panl contexts and see the results, with search and
+	 * faceting.</p>
 	 *
+	 * <p>Note that this will only be available if the property
+	 * <code>panl.results.viewer.url=true</code> in the
+	 * <code>panl.properties</code> file.</p>
+	 *
+	 * <p><strong>The Panl Request Handler:</strong> Will bind itself to the
+	 * context <code>/&lt;collection_name&gt;/&lt;field_set&gt;/*</code> for
+	 * each collection and fieldset that is configured for the Panl Server.</p>
 	 *
 	 * <p>Finally, it starts the server on the passed in port number (or default
-	 * port of 8181).</p>
+	 * port of 8181) and waits for incoming requests.</p>
 	 *
 	 * @throws PanlServerException If there was an error starting the server
+	 * @see PanlDefaultHandler PanlDefaultHandler - the default handler
+	 * @see PanlResultsViewerHandler PanlResultsViewerHandler - the results
+	 * viewer handler
+	 * @see PanlRequestHandler PanlRequestHandler - the Panl request handler for each of the
+	 * collections
+	 *
 	 */
 	public void start() throws PanlServerException {
 
@@ -125,14 +163,14 @@ public class PanlServer {
 
 		// register the panl results viewer - if it enabled
 
-		if(panlProperties.getPanlResultsViewerUrl()) {
+		if (panlProperties.getPanlResultsViewerUrl()) {
 			bootstrap.registerHandler("/panl-results-viewer/*", new PanlResultsViewerHandler(collectionRequestHandlers));
 			bootstrap.registerHandler("/panl-results-viewer/static/*", new PanlResultsStaticHandler());
 			bootstrap.registerHandler("/panl-results-viewer/script/", new PanlResultsScriptHandler(collectionRequestHandlers));
 		}
 
 		// finally register the collection handlers
-		for(CollectionRequestHandler collectionRequestHandler : collectionRequestHandlers) {
+		for (CollectionRequestHandler collectionRequestHandler : collectionRequestHandlers) {
 			String collectionName = collectionRequestHandler.getCollectionName();
 			bootstrap.registerHandler("/" + collectionName + "/*", new PanlRequestHandler(collectionRequestHandler));
 			LOGGER.info("Binding collection of '{}' to /{}/*", collectionName, collectionName);

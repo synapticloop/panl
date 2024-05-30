@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <schema name="mechanical-pencils" version="1.6">
 	<field name="_version_" type="plong" indexed="false" stored="false"/>
-	<field name="id" type="string" indexed="true" stored="true" required="true" multiValued="false" />
+	<field name="id" type="string" stored="true" required="true" multiValued="false" />
 
 	<field name="brand" type="string" indexed="true" stored="true" multiValued="false" />
 	<field name="name" type="string" indexed="true" stored="true" multiValued="false" />
@@ -41,7 +41,7 @@
 	<field name="in_built_sharpener" type="boolean" indexed="true" stored="false" multiValued="false" />
 
 	<field name="colours" type="string" indexed="true" stored="true" multiValued="true" />
-	<field name="variants" type="string" indexed="true" stored="true" multiValued="true" />
+	<field name="variants" type="string" stored="true" multiValued="true" />
 
 	<uniqueKey>id</uniqueKey>
 
