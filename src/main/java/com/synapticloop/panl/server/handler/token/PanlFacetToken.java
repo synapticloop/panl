@@ -31,8 +31,8 @@ public class PanlFacetToken extends PanlToken {
 		super(panlLpseCode);
 		this.collectionProperties = collectionProperties;
 
-		StringBuilder sb = new StringBuilder();
-		int i = 0;
+		StringBuilder sb = new StringBuilder(panlLpseCode);
+		int i = 1;
 		while (i < collectionProperties.getPanlLpseNum()) {
 			if (lpseTokeniser.hasMoreTokens()) {
 				sb.append(lpseTokeniser.nextToken());

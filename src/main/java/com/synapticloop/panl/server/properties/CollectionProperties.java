@@ -16,22 +16,38 @@ import java.util.*;
 public class CollectionProperties {
 	private static final Logger LOGGER = LoggerFactory.getLogger(CollectionProperties.class);
 
+	// STATIC strings
 	public static final String PROPERTY_KEY_PANL_FACET = "panl.facet.";
 	public static final String PROPERTY_KEY_PANL_NAME = "panl.name.";
 	public static final String PROPERTY_KEY_PANL_RESULTS_FIELDS = "panl.results.fields.";
 
+	/**
+	 * <p>The name of this collection</p>
+	 */
 	private final String collectionName;
+	/**
+	 * <p>The collection.panl.properties that drive this collection</p>
+	 */
 	private final Properties properties;
 
-	private final String validUrls; // the
-
+	/**
+	 * <p>The minimum number of results that have this facet value to include</p>
+	 */
 	private int facetMinCount;
-	private int resultRows;
+	/**
+	 * <p>The number of results returned per search/page</p>
+	 */
+	private int numResultsPerPage;
 
+	/**
+	 * <p>The number of characters that make up the LPSE code </p>
+	 */
 	private Integer panlLpseNum;
 
 	private boolean panlIncludeSingleFacets;
 	private boolean panlIncludeSameNumberFacets;
+
+	private final String validUrls; // the
 
 	private String panlPropertyValue;
 	private String panlParamSort;
@@ -79,7 +95,12 @@ public class CollectionProperties {
 	private final Map<String, String> panlBooleanFacetFalseValues = new HashMap<>();
 
 	private final Map<String, List<String>> resultFieldsMap = new HashMap<>();
-	private String[] facetFields;
+	/**
+	 * <p>The list of all the named Solr facet fields - Note that this is not
+	 * used as a FieldSet - it is all of the Solr fields that will be
+	 * faceted on.</p>
+	 */
+	private String[] solrFacetFields;
 
 	/**
 	 * <p>This is the prefix map for each panl code, it is keyed on
@@ -129,6 +150,7 @@ public class CollectionProperties {
 				this.defaultOrder = SolrQuery.ORDER.asc;
 		}
 	}
+
 	/**
 	 * <p>Parse the default properties for a collection.</p>
 	 *
@@ -140,7 +162,7 @@ public class CollectionProperties {
 		this.panlIncludeSameNumberFacets = properties.getProperty("panl.include.same.number.facets", "false").equals("true");
 
 		this.facetMinCount = PropertyHelper.getIntProperty(properties, "solr.facet.min.count", 1);
-		this.resultRows = PropertyHelper.getIntProperty(properties, "solr.numrows.default", 10);
+		this.numResultsPerPage = PropertyHelper.getIntProperty(properties, "solr.numrows.default", 10);
 
 
 		this.panlLpseNum = PropertyHelper.getIntProperty(properties, "panl.lpse.num", null);
@@ -150,7 +172,7 @@ public class CollectionProperties {
 		LOGGER.info("[{}] LPSE number set to '{}'", collectionName, panlLpseNum);
 
 		this.panlPropertyValue = initialiseStringProperty("panl.param.query", true, false);
-		this.panlParamSort = initialiseStringProperty("panl.param.sort", true,false);
+		this.panlParamSort = initialiseStringProperty("panl.param.sort", true, false);
 		this.panlParamPage = initialiseStringProperty("panl.param.page", true, true);
 		this.panlParamNumRows = initialiseStringProperty("panl.param.numrows", true, true);
 		this.panlParamPassthrough = initialiseStringProperty("panl.param.passthrough", false, false);
@@ -177,18 +199,17 @@ public class CollectionProperties {
 	 *
 	 * <p>Finally, if the property is found it will be added to the metadatMap.</p>
 	 *
-	 * @param propertyName The property name to look up
-	 * @param isMandatory Whether this is a mandatory property - if it is, and
-	 *                    it doesn't exist, then this will throw a PanlServerException
+	 * @param propertyName    The property name to look up
+	 * @param isMandatory     Whether this is a mandatory property - if it is, and
+	 *                        it doesn't exist, then this will throw a PanlServerException
 	 * @param hasPrefixSuffix Whether this property can also
 	 * @return the initialised property, or null if it doesn't exist
-	 *
 	 * @throws PanlServerException If a mandatory property was not found
 	 */
 	private String initialiseStringProperty(String propertyName, boolean isMandatory, boolean hasPrefixSuffix) throws PanlServerException {
 		String panlPropertyValue = properties.getProperty(propertyName, null);
 		if (null == panlPropertyValue) {
-			if(isMandatory) {
+			if (isMandatory) {
 				throw new PanlServerException(
 						"MANDATORY PROPERTY MISSING: Could not find the '" +
 								propertyName +
@@ -196,14 +217,14 @@ public class CollectionProperties {
 								this.collectionName +
 								"' Panl properties file.'");
 			} else {
-				return(null);
+				return (null);
 			}
 		}
 
 		LOGGER.info("[{}] {} set to '{}'", collectionName, propertyName, panlPropertyValue);
 		metadataMap.add(panlPropertyValue);
 
-		if(hasPrefixSuffix) {
+		if (hasPrefixSuffix) {
 			// now for the suffix and prefix
 			String paramPrefix = properties.getProperty(propertyName + ".prefix", null);
 			if (null != paramPrefix && !paramPrefix.isEmpty()) {
@@ -217,7 +238,7 @@ public class CollectionProperties {
 				panlFacetSuffixMap.put(panlPropertyValue, paramSuffix);
 			}
 		}
-		return(panlPropertyValue);
+		return (panlPropertyValue);
 	}
 
 	/**
@@ -279,7 +300,8 @@ public class CollectionProperties {
 			solrFacetNameToPanlCodeMap.put(panlFieldValue, panlFacetCode);
 			solrFacetNameToPanlName.put(panlFieldValue, panlFacetName);
 		}
-		this.facetFields = facetFieldList.toArray(new String[0]);
+
+		this.solrFacetFields = facetFieldList.toArray(new String[0]);
 	}
 
 	/**
@@ -400,12 +422,12 @@ public class CollectionProperties {
 		return facetMinCount;
 	}
 
-	public int getResultRows() {
-		return resultRows;
+	public int getNumResultsPerPage() {
+		return numResultsPerPage;
 	}
 
-	public String[] getFacetFields() {
-		return (facetFields);
+	public String[] getSolrFacetFields() {
+		return (solrFacetFields);
 	}
 
 	public List<BaseField> getLpseFields() {
@@ -477,8 +499,8 @@ public class CollectionProperties {
 		}
 
 		if (panlFacetSuffixMap.containsKey(panlFacetCode)) {
-			String suffix =  panlFacetSuffixMap.get(panlFacetCode);
-			if(temp.endsWith(suffix)) {
+			String suffix = panlFacetSuffixMap.get(panlFacetCode);
+			if (temp.endsWith(suffix)) {
 				temp = temp.substring(0, temp.length() - panlFacetSuffixMap.get(panlFacetCode).length());
 			}
 		}

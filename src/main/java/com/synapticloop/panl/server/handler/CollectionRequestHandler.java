@@ -86,9 +86,9 @@ public class CollectionRequestHandler {
 			solrQuery.setFacetMinCount(collectionProperties.getFacetMinCount());
 
 			// this may be overridden by the lpse status
-			solrQuery.setRows(collectionProperties.getResultRows());
+			solrQuery.setRows(collectionProperties.getNumResultsPerPage());
 
-			solrQuery.addFacetField(collectionProperties.getFacetFields());
+			solrQuery.addFacetField(collectionProperties.getSolrFacetFields());
 
 			// now we need to go through the panl facets and add them
 
@@ -105,7 +105,7 @@ public class CollectionRequestHandler {
 
 			// we may not have a numrows start
 			if (numRows == 0) {
-				numRows = collectionProperties.getResultRows();
+				numRows = collectionProperties.getNumResultsPerPage();
 			}
 			if (pageNum == 0) {
 				pageNum = 1;
@@ -396,7 +396,7 @@ public class CollectionRequestHandler {
 
 		// we may not have a numrows start
 		if (numPerPage == 0) {
-			numPerPage = collectionProperties.getResultRows();
+			numPerPage = collectionProperties.getNumResultsPerPage();
 		}
 		if (pageNum == 0) {
 			pageNum = 1;
@@ -550,20 +550,16 @@ public class CollectionRequestHandler {
 		StringBuilder lpse = new StringBuilder();
 
 		for (String lpseOrder : collectionProperties.getLpseOrder()) {
-			// do we currently have some codes for this?
 			if (!panlLpseCode.equals(lpseOrder)) {
 				if (panlTokenMap.containsKey(lpseOrder)) {
-					// TODO - need to order these alphabetically...
 					for (PanlToken token : panlTokenMap.get(lpseOrder)) {
 						lpseUri.append(token.getResetUriComponent());
 						lpse.append(token.getLpseComponent());
 					}
 				}
-			}
-
-			// if the current panl token's lpse matches that of the panlLpseOrder,
-			// then we need to add to lpseCode and the uri
-			if (panlLpseCode.equals(lpseOrder)) {
+			} else {
+				// if the current panl token's lpse matches that of the panlLpseOrder,
+				// then we need to add to lpseCode and the uri
 				jsonObject.put("before", lpseUri + collectionProperties.getPrefixForLpseCode(panlLpseCode));
 				// clear the sting builder
 				lpseUri.setLength(0);

@@ -35,11 +35,11 @@ public class PanlNumRowsToken extends PanlToken {
 				numRowsTemp = Integer.parseInt(numRowsTempString);
 			} catch (NumberFormatException e) {
 				isValid = false;
-				numRowsTemp = collectionProperties.getResultRows();
+				numRowsTemp = collectionProperties.getNumResultsPerPage();
 			}
 		} else {
 			isValid = false;
-			numRowsTemp = collectionProperties.getResultRows();
+			numRowsTemp = collectionProperties.getNumResultsPerPage();
 		}
 		this.numRows = numRowsTemp;
 	}
@@ -59,6 +59,7 @@ public class PanlNumRowsToken extends PanlToken {
 	}
 
 	@Override public String explain() {
+		// TODO - suffix and prefix
 		return ("PANL " +
 				(this.isValid ? "[  VALID  ]" : "[ INVALID ]") +
 				" <rows>        LPSE code '" +

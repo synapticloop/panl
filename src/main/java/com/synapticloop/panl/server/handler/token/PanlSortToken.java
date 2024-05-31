@@ -31,8 +31,8 @@ public class PanlSortToken extends PanlToken {
 		super(panlLpseCode);
 
 		// at this point - we are going to sort by the facetField
-		StringBuilder sb = new StringBuilder();
-		int i = 0;
+		StringBuilder sb = new StringBuilder(panlLpseCode);
+		int i = 1;
 		while (i < collectionProperties.getPanlLpseNum()) {
 			if (lpseTokeniser.hasMoreTokens()) {
 				sb.append(lpseTokeniser.nextToken());
