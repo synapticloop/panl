@@ -42,9 +42,14 @@ public class PropertyHelper {
 	 * @return The parsed property (if it exists), or the default value if it
 	 *    does not exist, or it cannot be parsed.
 	 */
-	public static int getIntProperty(Properties properties, String key, int defaultValue) {
+	public static Integer getIntProperty(Properties properties, String key, Integer defaultValue) {
 		try {
-			return(Integer.parseInt(properties.getProperty(key, defaultValue + "")));
+			String property = properties.getProperty(key, null);
+			if(null == property) {
+				return(defaultValue);
+			}
+
+			return(Integer.parseInt(properties.getProperty(key)));
 		} catch(NumberFormatException e) {
 			return(defaultValue);
 		}

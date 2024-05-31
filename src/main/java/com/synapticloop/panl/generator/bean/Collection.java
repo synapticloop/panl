@@ -42,6 +42,7 @@ public class Collection {
 		//		panl.param.sort=s
 		//		panl.param.page=p
 		//		panl.param.numrows=n
+		//		panl.param.passthrough=z
 
 		// each character can be one of the letters and numbers
 		this.lpseNumber = facetFieldNames.size() / 62;

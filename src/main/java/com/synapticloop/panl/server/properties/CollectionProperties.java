@@ -25,7 +25,7 @@ public class CollectionProperties {
 	private int facetMinCount;
 	private int resultRows;
 
-	private int panlLpseNum;
+	private Integer panlLpseNum;
 
 	private boolean panlIncludeSingleFacets;
 	private boolean panlIncludeSameNumberFacets;
@@ -131,22 +131,49 @@ public class CollectionProperties {
 		this.resultRows = PropertyHelper.getIntProperty(properties, "solr.numrows.default", 10);
 	}
 
-	private void parseDefaultProperties(Properties properties) {
+	private void parseDefaultProperties(Properties properties) throws PanlServerException {
 		this.panlIncludeSingleFacets = properties.getProperty("panl.include.single.facets", "false").equals("true");
 		this.panlIncludeSameNumberFacets = properties.getProperty("panl.include.same.number.facets", "false").equals("true");
 
-		this.panlLpseNum = PropertyHelper.getIntProperty(properties, "panl.lpse.num", 1);
+		this.panlLpseNum = PropertyHelper.getIntProperty(properties, "panl.lpse.num", null);
+		if(null == panlLpseNum) {
+			throw new PanlServerException("MANDATORY PROPERTY MISSING: Could not find the 'panl.lpse.num' property in the '" + this.collectionName + "' Panl properties file.'");
+		}
+		LOGGER.info("[{}] LPSE number set to '{}'", collectionName, panlLpseNum);
 
-		this.panlParamQuery = properties.getProperty("panl.param.query", "q");
+		this.panlParamQuery = properties.getProperty("panl.param.query", null);
+		if(null == panlParamQuery) {
+			throw new PanlServerException("MANDATORY PROPERTY MISSING: Could not find the 'panl.param.query' property in the '" + this.collectionName + "' Panl properties file.'");
+		}
+		LOGGER.info("[{}] panl.param.query set to '{}'", collectionName, panlParamQuery);
 		metadataMap.add(this.panlParamQuery);
-		this.panlParamSort = properties.getProperty("panl.param.sort", "s");
+
+		this.panlParamSort = properties.getProperty("panl.param.sort", null);
+		if(null == panlParamSort) {
+			throw new PanlServerException("MANDATORY PROPERTY MISSING: Could not find the 'panl.param.sort' property in the '" + this.collectionName + "' Panl properties file.'");
+		}
+		LOGGER.info("[{}] panl.param.sort set to '{}'", collectionName, panlParamSort);
 		metadataMap.add(this.panlParamSort);
-		this.panlParamPage = properties.getProperty("panl.param.page", "p");
+
+		this.panlParamPage = properties.getProperty("panl.param.page", null);
+		if(null == panlParamPage) {
+			throw new PanlServerException("MANDATORY PROPERTY MISSING: Could not find the 'panl.param.page' property in the '" + this.collectionName + "' Panl properties file.'");
+		}
+		LOGGER.info("[{}] panl.param.page set to '{}'", collectionName, panlParamPage);
 		metadataMap.add(this.panlParamPage);
-		this.panlParamNumRows = properties.getProperty("panl.param.numrows", "n");
+
+		this.panlParamNumRows = properties.getProperty("panl.param.numrows", null);
+		if(null == panlParamNumRows) {
+			throw new PanlServerException("MANDATORY PROPERTY MISSING: Could not find the 'panl.param.numrows' property in the '" + this.collectionName + "' Panl properties file.'");
+		}
+		LOGGER.info("[{}] panl.param.numrows set to '{}'", collectionName, panlParamNumRows);
 		metadataMap.add(this.panlParamNumRows);
-		this.panlParamPassthrough = properties.getProperty("panl.param.passthrough", "z");
-		metadataMap.add(this.panlParamPassthrough);
+
+		this.panlParamPassthrough = properties.getProperty("panl.param.passthrough", null);
+		if(null != panlParamPassthrough) {
+			LOGGER.info("[{}] panl.param.passthrough set to '{}'", collectionName, panlParamPassthrough);
+			metadataMap.add(this.panlParamPassthrough);
+		}
 
 		this.solrModifierAnd = properties.getProperty("solr.modifier.AND", "+");
 		this.solrModifierOr = properties.getProperty("solr.modifier.OR", "-");
