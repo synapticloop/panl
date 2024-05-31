@@ -9,6 +9,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.StringTokenizer;
 
 public class PanlFacetToken extends PanlToken {
+	private String panlFacetCode;
 	private String solrField = null;
 	private boolean isValid = true;
 	private CollectionProperties collectionProperties;
@@ -30,6 +31,17 @@ public class PanlFacetToken extends PanlToken {
 		super(panlLpseCode);
 		this.collectionProperties = collectionProperties;
 
+		StringBuilder sb = new StringBuilder();
+		int i = 0;
+		while (i < collectionProperties.getPanlLpseNum()) {
+			if (lpseTokeniser.hasMoreTokens()) {
+				sb.append(lpseTokeniser.nextToken());
+			}
+			i++;
+		}
+
+		this.panlFacetCode = sb.toString();
+
 		this.value = collectionProperties
 				.getConvertedFromPanlValue(
 						panlLpseCode,
@@ -50,7 +62,7 @@ public class PanlFacetToken extends PanlToken {
 			return (
 					URLEncoder.encode(
 							collectionProperties.getConvertedToPanlValue(
-									panlLpseCode,
+									this.panlFacetCode,
 									this.value),
 							StandardCharsets.UTF_8) +
 							"/");
@@ -61,7 +73,7 @@ public class PanlFacetToken extends PanlToken {
 
 	@Override public String getLpseComponent() {
 		if(isValid) {
-			return(panlLpseCode);
+			return(this.panlFacetCode);
 		} else {
 			return("");
 		}

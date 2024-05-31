@@ -286,9 +286,10 @@ public class CollectionRequestHandler {
 
 		availableObjects.put("facets", panlFacets);
 
-		panlObject.put("active", getRemovalURI(panlTokens));
+		panlObject.put("active", getRemovalURIPaths(panlTokens));
 		panlObject.put("available", panlFacets);
-		panlObject.put("pagination", getPaginationURIs(panlTokens, panlTokenMap, numFound));
+		panlObject.put("pagination", getPaginationURIPaths(panlTokens, panlTokenMap, numFound));
+		panlObject.put("sorting", getSortingURIPaths(panlTokens, panlTokenMap));
 
 		solrJsonObject.put("error", false);
 
@@ -315,6 +316,45 @@ public class CollectionRequestHandler {
 		return (solrJsonObject.toString());
 	}
 
+	/**
+	 * <p>There are two Sorting URIs - An additive URI, and a replacement URI,
+	 * unlike other LPSE codes - these are a finite, set number of sort fields
+	 * which are defined by the panl.sort.fields property.</p>
+	 *
+	 * @param panlTokens
+	 * @param panlTokenMap
+	 * @return
+	 */
+	private JSONObject getSortingURIPaths(List<PanlToken> panlTokens, Map<String, List<PanlToken>> panlTokenMap) {
+		JSONObject jsonObject = new JSONObject();
+		StringBuilder lpseUri = new StringBuilder("/");
+		StringBuilder lpse = new StringBuilder();
+
+		String panlLpseCode = collectionProperties.getPanlParamSort();
+
+		// the replacement URIs are the easiest
+		for (String lpseOrder : collectionProperties.getLpseOrder()) {
+			if (panlLpseCode.equals(lpseOrder)) {
+				jsonObject.put("before", lpseUri.toString());
+				// clear the sting builder
+				lpseUri.setLength(0);
+			} else {
+				// do we currently have some codes for this?
+
+				if (panlTokenMap.containsKey(lpseOrder)) {
+					for (PanlToken token : panlTokenMap.get(lpseOrder)) {
+						lpseUri.append(token.getResetUriComponent());
+						lpse.append(token.getLpseComponent());
+					}
+				}
+			}
+		}
+
+		// no go through all of the sort field
+		jsonObject.put("", "/" + lpseUri + lpse + "/");
+		return (jsonObject);
+	}
+
 	private String getCanonicalUri(Map<String, List<PanlToken>> panlTokenMap) {
 		StringBuilder lpseUri = new StringBuilder("/");
 		StringBuilder lpse = new StringBuilder();
@@ -330,16 +370,16 @@ public class CollectionRequestHandler {
 
 
 		String retVal = lpseUri.toString() + lpse + "/";
-		if(retVal.length() == 2) {
+		if (retVal.length() == 2) {
 			// in this instance, there is no URI paths, or LPSE codes, so just
 			// return a single slash
-			return("/");
+			return ("/");
 		}
 
 		return retVal;
 	}
 
-	private JSONObject getPaginationURIs(List<PanlToken> panlTokens, Map<String, List<PanlToken>> panlTokenMap, long numFound) {
+	private JSONObject getPaginationURIPaths(List<PanlToken> panlTokens, Map<String, List<PanlToken>> panlTokenMap, long numFound) {
 		JSONObject paginationObject = new JSONObject();
 		JSONObject jsonObject = new JSONObject();
 
@@ -415,7 +455,7 @@ public class CollectionRequestHandler {
 		return (paginationObject);
 	}
 
-	private JSONObject getRemovalURI(List<PanlToken> panlTokens) {
+	private JSONObject getRemovalURIPaths(List<PanlToken> panlTokens) {
 		JSONObject jsonObject = new JSONObject();
 
 		// go through each of the tokens and generate the removal URL

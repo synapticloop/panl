@@ -15,11 +15,14 @@ import java.util.*;
 
 public class CollectionProperties {
 	private static final Logger LOGGER = LoggerFactory.getLogger(CollectionProperties.class);
+
 	public static final String PROPERTY_KEY_PANL_FACET = "panl.facet.";
 	public static final String PROPERTY_KEY_PANL_NAME = "panl.name.";
 	public static final String PROPERTY_KEY_PANL_RESULTS_FIELDS = "panl.results.fields.";
 
 	private final String collectionName;
+	private final Properties properties;
+
 	private final String validUrls; // the
 
 	private int facetMinCount;
@@ -29,7 +32,8 @@ public class CollectionProperties {
 
 	private boolean panlIncludeSingleFacets;
 	private boolean panlIncludeSameNumberFacets;
-	private String panlParamQuery;
+
+	private String panlPropertyValue;
 	private String panlParamSort;
 	private String panlParamPage;
 	private String panlParamNumRows;
@@ -92,13 +96,13 @@ public class CollectionProperties {
 
 	public CollectionProperties(String collectionName, Properties properties) throws PanlServerException {
 		this.collectionName = collectionName;
+		this.properties = properties;
 
-		parseBaseProperties(properties);
-		parseDefaultProperties(properties);
-		parseFacetFields(properties);
-		parseLpseOrder(properties);
-		parseResultFields(properties);
-		parseDefaultSortOrder(properties);
+		parseDefaultProperties();
+		parseFacetFields();
+		parseLpseOrder();
+		parseResultFields();
+		parseDefaultSortOrder();
 
 		JSONObject jsonObject = new JSONObject();
 		JSONArray jsonArray = new JSONArray();
@@ -111,7 +115,7 @@ public class CollectionProperties {
 		this.validUrls = jsonObject.toString();
 	}
 
-	private void parseDefaultSortOrder(Properties properties) {
+	private void parseDefaultSortOrder() {
 		String property = properties.getProperty("solr.default.modifier");
 		switch (property) {
 			case "+":
@@ -125,22 +129,19 @@ public class CollectionProperties {
 				this.defaultOrder = SolrQuery.ORDER.asc;
 		}
 	}
-
-	private void parseBaseProperties(Properties properties) {
-		this.facetMinCount = PropertyHelper.getIntProperty(properties, "solr.facet.min.count", 1);
-		this.resultRows = PropertyHelper.getIntProperty(properties, "solr.numrows.default", 10);
-	}
-
 	/**
 	 * <p>Parse the default properties for a collection.</p>
 	 *
-	 * @param properties The properties to interrogate
 	 * @throws PanlServerException If a mandatory property was not found, or
 	 *                             could not be adequately parsed
 	 */
-	private void parseDefaultProperties(Properties properties) throws PanlServerException {
+	private void parseDefaultProperties() throws PanlServerException {
 		this.panlIncludeSingleFacets = properties.getProperty("panl.include.single.facets", "false").equals("true");
 		this.panlIncludeSameNumberFacets = properties.getProperty("panl.include.same.number.facets", "false").equals("true");
+
+		this.facetMinCount = PropertyHelper.getIntProperty(properties, "solr.facet.min.count", 1);
+		this.resultRows = PropertyHelper.getIntProperty(properties, "solr.numrows.default", 10);
+
 
 		this.panlLpseNum = PropertyHelper.getIntProperty(properties, "panl.lpse.num", null);
 		if (null == panlLpseNum) {
@@ -148,68 +149,75 @@ public class CollectionProperties {
 		}
 		LOGGER.info("[{}] LPSE number set to '{}'", collectionName, panlLpseNum);
 
-		this.panlParamQuery = properties.getProperty("panl.param.query", null);
-		if (null == panlParamQuery) {
-			throw new PanlServerException("MANDATORY PROPERTY MISSING: Could not find the 'panl.param.query' property in the '" + this.collectionName + "' Panl properties file.'");
-		}
-		LOGGER.info("[{}] panl.param.query set to '{}'", collectionName, panlParamQuery);
-		metadataMap.add(this.panlParamQuery);
-
-		this.panlParamSort = properties.getProperty("panl.param.sort", null);
-		if (null == panlParamSort) {
-			throw new PanlServerException("MANDATORY PROPERTY MISSING: Could not find the 'panl.param.sort' property in the '" + this.collectionName + "' Panl properties file.'");
-		}
-		LOGGER.info("[{}] panl.param.sort set to '{}'", collectionName, panlParamSort);
-		metadataMap.add(this.panlParamSort);
-
-		this.panlParamPage = properties.getProperty("panl.param.page", null);
-		if (null == panlParamPage) {
-			throw new PanlServerException("MANDATORY PROPERTY MISSING: Could not find the 'panl.param.page' property in the '" + this.collectionName + "' Panl properties file.'");
-		}
-		LOGGER.info("[{}] panl.param.page set to '{}'", collectionName, panlParamPage);
-		metadataMap.add(this.panlParamPage);
-
-		// now for the suffix and prefix
-		String pageParamPrefix = properties.getProperty("panl.param.page.prefix", null);
-		if (null != pageParamPrefix && !pageParamPrefix.isEmpty()) {
-			panlFacetPrefixMap.put(panlParamPage, pageParamPrefix);
-		}
-
-		String pageParamSuffix = properties.getProperty("panl.param.page.suffix", null);
-		if (null != pageParamSuffix && !pageParamSuffix.isEmpty()) {
-			panlFacetSuffixMap.put(panlParamPage, pageParamSuffix);
-		}
-
-		this.panlParamNumRows = properties.getProperty("panl.param.numrows", null);
-		if (null == panlParamNumRows) {
-			throw new PanlServerException("MANDATORY PROPERTY MISSING: Could not find the 'panl.param.numrows' property in the '" + this.collectionName + "' Panl properties file.'");
-		}
-		LOGGER.info("[{}] panl.param.numrows set to '{}'", collectionName, panlParamNumRows);
-		metadataMap.add(this.panlParamNumRows);
-
-		// now for the suffix and prefix
-		String pageParamNumRowsPrefix = properties.getProperty("panl.param.numrows.prefix", null);
-		if (null != pageParamNumRowsPrefix  && !pageParamNumRowsPrefix.isEmpty()) {
-			panlFacetPrefixMap.put(panlParamNumRows, pageParamNumRowsPrefix);
-		}
-
-		String pageParamNumRowsSuffix = properties.getProperty("panl.param.numrows.suffix", null);
-		if (null != pageParamNumRowsSuffix && !pageParamNumRowsSuffix.isEmpty()) {
-			panlFacetSuffixMap.put(panlParamNumRows, pageParamNumRowsSuffix);
-		}
-
-
-		this.panlParamPassthrough = properties.getProperty("panl.param.passthrough", null);
-		if (null != panlParamPassthrough) {
-			LOGGER.info("[{}] panl.param.passthrough set to '{}'", collectionName, panlParamPassthrough);
-			metadataMap.add(this.panlParamPassthrough);
-		}
+		this.panlPropertyValue = initialiseStringProperty("panl.param.query", true, false);
+		this.panlParamSort = initialiseStringProperty("panl.param.sort", true,false);
+		this.panlParamPage = initialiseStringProperty("panl.param.page", true, true);
+		this.panlParamNumRows = initialiseStringProperty("panl.param.numrows", true, true);
+		this.panlParamPassthrough = initialiseStringProperty("panl.param.passthrough", false, false);
 
 		this.solrModifierAnd = properties.getProperty("solr.modifier.AND", "+");
 		this.solrModifierOr = properties.getProperty("solr.modifier.OR", "-");
 		this.solrDefaultModifier = properties.getProperty("solr.default.modifier", "+");
 		this.solrSortAsc = properties.getProperty("solr.sort.ASC", "U");
 		this.solrSortDesc = properties.getProperty("solr.sort.DESC", "D");
+	}
+
+	/**
+	 * <p>Initialise a string property from the properties file.</p>
+	 *
+	 * <p>This will look up the property from the properties.  If it doesn't
+	 * exist and is a mandatory property, it will throw an exception.  If the
+	 * property isn't mandatory, then it will return null,</p>
+	 *
+	 * <p>If the hasPrefixSuffix parameter is set, then it will also look for a
+	 * property with the key of <code>propertyName + ".prefix"</code> and if it
+	 * exists, it will add it to the prefix map.  If there is a property with the
+	 * key of <code>propertyName + ".suffix</code>, then it will be added to the
+	 * suffix map.</p>
+	 *
+	 * <p>Finally, if the property is found it will be added to the metadatMap.</p>
+	 *
+	 * @param propertyName The property name to look up
+	 * @param isMandatory Whether this is a mandatory property - if it is, and
+	 *                    it doesn't exist, then this will throw a PanlServerException
+	 * @param hasPrefixSuffix Whether this property can also
+	 * @return the initialised property, or null if it doesn't exist
+	 *
+	 * @throws PanlServerException If a mandatory property was not found
+	 */
+	private String initialiseStringProperty(String propertyName, boolean isMandatory, boolean hasPrefixSuffix) throws PanlServerException {
+		String panlPropertyValue = properties.getProperty(propertyName, null);
+		if (null == panlPropertyValue) {
+			if(isMandatory) {
+				throw new PanlServerException(
+						"MANDATORY PROPERTY MISSING: Could not find the '" +
+								propertyName +
+								"' property in the '" +
+								this.collectionName +
+								"' Panl properties file.'");
+			} else {
+				return(null);
+			}
+		}
+
+		LOGGER.info("[{}] {} set to '{}'", collectionName, propertyName, panlPropertyValue);
+		metadataMap.add(panlPropertyValue);
+
+		if(hasPrefixSuffix) {
+			// now for the suffix and prefix
+			String paramPrefix = properties.getProperty(propertyName + ".prefix", null);
+			if (null != paramPrefix && !paramPrefix.isEmpty()) {
+				LOGGER.info("[{}] {}.prefix set to '{}'", collectionName, propertyName, panlPropertyValue);
+				panlFacetPrefixMap.put(panlPropertyValue, paramPrefix);
+			}
+
+			String paramSuffix = properties.getProperty(propertyName + ".suffix", null);
+			if (null != paramSuffix && !paramSuffix.isEmpty()) {
+				LOGGER.info("[{}] {}.suffix set to '{}'", collectionName, propertyName, panlPropertyValue);
+				panlFacetSuffixMap.put(panlPropertyValue, paramSuffix);
+			}
+		}
+		return(panlPropertyValue);
 	}
 
 	/**
@@ -220,11 +228,10 @@ public class CollectionProperties {
 	 * {@link  CollectionProperties#PROPERTY_KEY_PANL_FACET PROPERTY_KEY_PANL_FACET}
 	 * static String for the panl prefix property</p>
 	 *
-	 * @param properties The properties to look up the keys from
 	 * @throws PanlServerException If there was an error looking up the properties,
 	 *                             or with the found property and its associated values
 	 */
-	private void parseFacetFields(Properties properties) throws PanlServerException {
+	private void parseFacetFields() throws PanlServerException {
 		List<String> facetFieldList = new ArrayList<>();
 
 		// now parse the fields
@@ -278,10 +285,9 @@ public class CollectionProperties {
 	/**
 	 * <p></p>
 	 *
-	 * @param properties The properties file to interrogate
 	 * @throws PanlServerException if the panl.lpse.order does not exist
 	 */
-	private void parseLpseOrder(Properties properties) throws PanlServerException {
+	private void parseLpseOrder() throws PanlServerException {
 		String panlLpseOrder = properties.getProperty("panl.lpse.order", null);
 		if (null == panlLpseOrder) {
 			throw new PanlServerException("Could not find the panl.lpse.order");
@@ -300,7 +306,7 @@ public class CollectionProperties {
 		}
 	}
 
-	private void parseResultFields(Properties properties) throws PanlServerException {
+	private void parseResultFields() throws PanlServerException {
 		List<String> resultFieldProperties = PropertyHelper.getPropertiesByPrefix(properties, PROPERTY_KEY_PANL_RESULTS_FIELDS);
 		for (String resultFieldProperty : resultFieldProperties) {
 			addResultsFields(resultFieldProperty.substring(PROPERTY_KEY_PANL_RESULTS_FIELDS.length()), properties.getProperty(resultFieldProperty));
@@ -327,7 +333,7 @@ public class CollectionProperties {
 	}
 
 	public String getPanlParamQuery() {
-		return (panlParamQuery);
+		return (panlPropertyValue);
 	}
 
 	public String getPanlParamSort() {

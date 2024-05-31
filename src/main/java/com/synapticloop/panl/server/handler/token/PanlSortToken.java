@@ -4,7 +4,9 @@ import com.synapticloop.panl.server.properties.CollectionProperties;
 import org.apache.solr.client.solrj.SolrQuery;
 
 /**
- * <p>The sort token defines the sort order for the returned results.</p>
+ * <p>The sort token defines the sort order for the returned results.  By
+ * default the results are already sorted in relevance order in descending
+ * order</p>
  *
  * <p>There may be multiple sort tokens, and they are add the the solr query
  * in order of appearance.</p>
