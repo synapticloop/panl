@@ -283,7 +283,7 @@ public class CollectionRequestHandler {
 		availableObjects.put("facets", panlFacets);
 
 		panlObject.put("active", getRemovalURI(panlTokens));
-		panlObject.put("available", availableObjects);
+		panlObject.put("available", panlFacets);
 		panlObject.put("pagination", getPaginationURIs(panlTokens, panlTokenMap, numFound));
 
 		solrJsonObject.put("error", false);

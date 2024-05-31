@@ -110,7 +110,7 @@ $("#num_per_page_links").append("<a href=\"" +
   paginationObject.num_per_page_uris.before +
   number +
   paginationObject.num_per_page_uris.after +
-  "\">" + number +"</a>&nbsp;&nbsp;");
+  "\">" + number +"</a>&nbsp;");
 }
 
 function addActiveFilters(activeObject) {
@@ -153,10 +153,10 @@ function addActiveFacets(facets) {
 	active.append("<li><hr /></li>");
 }
 
-function addAvailableFilters(availableObject) {
+function addAvailableFilters(availableArray) {
 	// first up the facets
 	const available = $("#available");
-	for(const facet of availableObject.facets) {
+	for(const facet of availableArray) {
 		var innerUl = "<ul>";
 		for(const value of facet.values) {
 			innerUl += "<li>" +
