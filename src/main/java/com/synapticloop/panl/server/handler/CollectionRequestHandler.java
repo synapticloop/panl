@@ -191,6 +191,10 @@ public class CollectionRequestHandler {
 			panlTokenMap.put(panlLpseCode, panlTokenList);
 		}
 
+		for (String key : panlTokenMap.keySet()) {
+			List<PanlToken> panlTokenTemp = panlTokenMap.get(key);
+			panlTokenTemp.sort(Comparator.comparing(PanlToken::getPanlLpseValue));
+		}
 
 		SolrDocumentList solrDocuments = (SolrDocumentList) response.getResponse().get("response");
 		long numFound = solrDocuments.getNumFound();
@@ -304,9 +308,27 @@ public class CollectionRequestHandler {
 		));
 		panlObject.put("timings", timingsObject);
 
+		panlObject.put("canonical_uri", getCanonicalUri(panlTokenMap));
+
 		solrJsonObject.put("panl", panlObject);
 
 		return (solrJsonObject.toString());
+	}
+
+	private String getCanonicalUri(Map<String, List<PanlToken>> panlTokenMap) {
+		StringBuilder lpseUri = new StringBuilder();
+		StringBuilder lpse = new StringBuilder();
+
+		for (String lpseOrder : collectionProperties.getLpseOrder()) {
+			if (panlTokenMap.containsKey(lpseOrder)) {
+				for (PanlToken token : panlTokenMap.get(lpseOrder)) {
+					lpseUri.append(token.getResetUriComponent());
+					lpse.append(token.getLpseComponent());
+				}
+			}
+		}
+
+		return("/" + lpseUri + lpse + "/");
 	}
 
 	private JSONObject getPaginationURIs(List<PanlToken> panlTokens, Map<String, List<PanlToken>> panlTokenMap, long numFound) {
