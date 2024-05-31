@@ -316,7 +316,7 @@ public class CollectionRequestHandler {
 	}
 
 	private String getCanonicalUri(Map<String, List<PanlToken>> panlTokenMap) {
-		StringBuilder lpseUri = new StringBuilder();
+		StringBuilder lpseUri = new StringBuilder("/");
 		StringBuilder lpse = new StringBuilder();
 
 		for (String lpseOrder : collectionProperties.getLpseOrder()) {
@@ -328,7 +328,15 @@ public class CollectionRequestHandler {
 			}
 		}
 
-		return("/" + lpseUri + lpse + "/");
+
+		String retVal = lpseUri.toString() + lpse + "/";
+		if(retVal.length() == 2) {
+			// in this instance, there is no URI paths, or LPSE codes, so just
+			// return a single slash
+			return("/");
+		}
+
+		return retVal;
 	}
 
 	private JSONObject getPaginationURIs(List<PanlToken> panlTokens, Map<String, List<PanlToken>> panlTokenMap, long numFound) {
@@ -516,15 +524,14 @@ public class CollectionRequestHandler {
 			// if the current panl token's lpse matches that of the panlLpseOrder,
 			// then we need to add to lpseCode and the uri
 			if (panlLpseCode.equals(lpseOrder)) {
-				jsonObject.put("before", lpseUri.toString());
+				jsonObject.put("before", lpseUri + collectionProperties.getPrefixForLpseCode(panlLpseCode));
 				// clear the sting builder
 				lpseUri.setLength(0);
 				lpse.append(panlLpseCode);
 			}
 		}
 
-
-		jsonObject.put("after", "/" + lpseUri + lpse + "/");
+		jsonObject.put("after", collectionProperties.getSuffixForLpseCode(panlLpseCode) + "/" + lpseUri + lpse + "/");
 		return (jsonObject);
 	}
 

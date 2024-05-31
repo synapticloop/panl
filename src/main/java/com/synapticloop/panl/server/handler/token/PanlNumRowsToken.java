@@ -3,11 +3,15 @@ package com.synapticloop.panl.server.handler.token;
 import com.synapticloop.panl.server.properties.CollectionProperties;
 import org.apache.solr.client.solrj.SolrQuery;
 
+import java.net.URLDecoder;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.util.StringTokenizer;
 
 public class PanlNumRowsToken extends PanlToken {
 	private int numRows;
 	private boolean isValid = true;
+	private CollectionProperties collectionProperties;
 
 	public PanlNumRowsToken(String panlLpseCode) {
 		super(panlLpseCode);
@@ -15,11 +19,20 @@ public class PanlNumRowsToken extends PanlToken {
 
 	public PanlNumRowsToken(CollectionProperties collectionProperties, String panlLpseCode, StringTokenizer valueTokenizer) {
 		super(panlLpseCode);
+		this.collectionProperties = collectionProperties;
 
 		int numRowsTemp;
+
 		if (valueTokenizer.hasMoreTokens()) {
+			String numRowsTempString = collectionProperties
+				.getConvertedFromPanlValue(
+						panlLpseCode,
+						URLDecoder.decode(
+								valueTokenizer.nextToken(),
+								StandardCharsets.UTF_8));
+
 			try {
-				numRowsTemp = Integer.parseInt(valueTokenizer.nextToken());
+				numRowsTemp = Integer.parseInt(numRowsTempString);
 			} catch (NumberFormatException e) {
 				isValid = false;
 				numRowsTemp = collectionProperties.getResultRows();
@@ -32,7 +45,13 @@ public class PanlNumRowsToken extends PanlToken {
 	}
 
 	@Override public String getUriComponent() {
-		return(this.numRows + "/");
+		return (
+				URLEncoder.encode(
+						collectionProperties.getConvertedToPanlValue(
+								panlLpseCode,
+								Integer.toString(numRows)),
+						StandardCharsets.UTF_8) +
+						"/");
 	}
 
 	@Override public String getLpseComponent() {
@@ -62,5 +81,4 @@ public class PanlNumRowsToken extends PanlToken {
 	public int getNumRows() {
 		return(this.numRows);
 	}
-
 }

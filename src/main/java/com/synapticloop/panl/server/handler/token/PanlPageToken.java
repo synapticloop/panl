@@ -21,16 +21,17 @@ public class PanlPageToken extends PanlToken {
 		super(panlLpseCode);
 		this.collectionProperties = collectionProperties;
 
-		// might have a prefix - or suffix
-		String pageNumTempString = collectionProperties
-				.getConvertedFromPanlValue(
-						panlLpseCode,
-						URLDecoder.decode(
-								valueTokenizer.nextToken(),
-								StandardCharsets.UTF_8));
-
 		int pageNumTemp;
+
 		if (valueTokenizer.hasMoreTokens()) {
+			// might have a prefix - or suffix
+			String pageNumTempString = collectionProperties
+					.getConvertedFromPanlValue(
+							panlLpseCode,
+							URLDecoder.decode(
+									valueTokenizer.nextToken(),
+									StandardCharsets.UTF_8));
+
 			try {
 				pageNumTemp = Integer.parseInt(pageNumTempString);
 			} catch (NumberFormatException e) {

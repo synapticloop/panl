@@ -171,12 +171,12 @@ public class CollectionProperties {
 
 		// now for the suffix and prefix
 		String pageParamPrefix = properties.getProperty("panl.param.page.prefix", null);
-		if (null != pageParamPrefix) {
+		if (null != pageParamPrefix && !pageParamPrefix.isEmpty()) {
 			panlFacetPrefixMap.put(panlParamPage, pageParamPrefix);
 		}
 
 		String pageParamSuffix = properties.getProperty("panl.param.page.suffix", null);
-		if (null != pageParamPrefix) {
+		if (null != pageParamSuffix && !pageParamSuffix.isEmpty()) {
 			panlFacetSuffixMap.put(panlParamPage, pageParamSuffix);
 		}
 
@@ -186,6 +186,18 @@ public class CollectionProperties {
 		}
 		LOGGER.info("[{}] panl.param.numrows set to '{}'", collectionName, panlParamNumRows);
 		metadataMap.add(this.panlParamNumRows);
+
+		// now for the suffix and prefix
+		String pageParamNumRowsPrefix = properties.getProperty("panl.param.numrows.prefix", null);
+		if (null != pageParamNumRowsPrefix  && !pageParamNumRowsPrefix.isEmpty()) {
+			panlFacetPrefixMap.put(panlParamNumRows, pageParamNumRowsPrefix);
+		}
+
+		String pageParamNumRowsSuffix = properties.getProperty("panl.param.numrows.suffix", null);
+		if (null != pageParamNumRowsSuffix && !pageParamNumRowsSuffix.isEmpty()) {
+			panlFacetSuffixMap.put(panlParamNumRows, pageParamNumRowsSuffix);
+		}
+
 
 		this.panlParamPassthrough = properties.getProperty("panl.param.passthrough", null);
 		if (null != panlParamPassthrough) {
@@ -263,6 +275,12 @@ public class CollectionProperties {
 		this.facetFields = facetFieldList.toArray(new String[0]);
 	}
 
+	/**
+	 * <p></p>
+	 *
+	 * @param properties The properties file to interrogate
+	 * @throws PanlServerException if the panl.lpse.order does not exist
+	 */
 	private void parseLpseOrder(Properties properties) throws PanlServerException {
 		String panlLpseOrder = properties.getProperty("panl.lpse.order", null);
 		if (null == panlLpseOrder) {
@@ -277,7 +295,7 @@ public class CollectionProperties {
 				lpseOrder.add(lpseCode);
 				lpseFields.add(new MetaDataField(lpseCode));
 			} else {
-				throw new PanlServerException("Could not find the panl code '" + lpseCode + "' in the panl.lpse.order property.");
+				LOGGER.warn("Found a panl code of '{}' in the panl.lpse.order property, yet it is not a defined field.  This will be ignored...", lpseCode);
 			}
 		}
 	}
