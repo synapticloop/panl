@@ -43,7 +43,28 @@
 	<field name="colours" type="string" indexed="true" stored="true" multiValued="true" />
 	<field name="variants" type="string" stored="true" multiValued="true" />
 
+	<field name="text" type="text_general" indexed="true" stored="true" multiValued="true"/>
+
 	<uniqueKey>id</uniqueKey>
+
+	<copyField source="brand" dest="text" />
+	<copyField source="name" dest="text" />
+	<copyField source="mechanism_type" dest="text" />
+	<copyField source="nib_shape" dest="text" />
+	<copyField source="body_shape" dest="text" />
+	<copyField source="grip_type" dest="text" />
+	<copyField source="grip_shape" dest="text" />
+	<copyField source="cap_shape" dest="text" />
+	<copyField source="category" dest="text" />
+	<copyField source="nib_material" dest="text" />
+	<copyField source="mechanism_material" dest="text" />
+	<copyField source="grip_material" dest="text" />
+	<copyField source="body_material" dest="text" />
+	<copyField source="tubing_material" dest="text" />
+	<copyField source="clip_material" dest="text" />
+	<copyField source="cap_material" dest="text" />
+	<copyField source="colours" dest="text" />
+	<copyField source="variants" dest="text" />
 
 
 	<!-- The StrField type is not analyzed, but indexed/stored verbatim. -->
