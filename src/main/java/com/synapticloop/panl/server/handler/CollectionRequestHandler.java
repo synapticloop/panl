@@ -111,7 +111,6 @@ public class CollectionRequestHandler {
 
 			long buildRequestNanos = System.nanoTime() - startNanos;
 			startNanos = System.nanoTime();
-			System.out.println(solrQuery);
 			final QueryResponse response = solrClient.query(this.collectionName, solrQuery);
 
 			long sendAnReceiveNanos = System.nanoTime() - startNanos;
@@ -448,6 +447,12 @@ public class CollectionRequestHandler {
 				} else if (token.equals(collectionProperties.getPanlParamNumRows())) {
 					panlTokens.add(
 							new PanlNumRowsToken(
+									collectionProperties,
+									token,
+									valueTokeniser));
+				} else if (token.equals(collectionProperties.getPanlParamPassthrough())) {
+					panlTokens.add(
+							new PanlPassthroughToken(
 									collectionProperties,
 									token,
 									valueTokeniser));

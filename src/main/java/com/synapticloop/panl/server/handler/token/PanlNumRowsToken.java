@@ -41,7 +41,7 @@ public class PanlNumRowsToken extends PanlToken {
 	@Override public String explain() {
 		return ("PANL " +
 				(this.isValid ? "[  VALID  ]" : "[ INVALID ]") +
-				" <rows>  LPSE code '" +
+				" <rows>        LPSE code '" +
 				this.panlLpseCode +
 				"' using " +
 				(this.isValid ? "parsed" : "default") +

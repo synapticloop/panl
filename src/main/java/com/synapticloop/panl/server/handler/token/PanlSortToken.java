@@ -109,7 +109,7 @@ public class PanlSortToken extends PanlToken {
 	@Override public String explain() {
 		return ("PANL " +
 				(this.isValid ? "[  VALID  ]" : "[ INVALID ]") +
-				" <sort>  LPSE code '" +
+				" <sort>        LPSE code '" +
 				this.panlFacetCode +
 				"' (solr field '" +
 				this.solrFacetField +

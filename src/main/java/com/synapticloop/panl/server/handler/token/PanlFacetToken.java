@@ -70,7 +70,7 @@ public class PanlFacetToken extends PanlToken {
 	@Override public String explain() {
 			return ("PANL " +
 					(this.isValid ? "[  VALID  ]" : "[ INVALID ]") +
-					" <facet> LPSE code '" +
+					" <facet>       LPSE code '" +
 					this.panlLpseCode +
 					"' (solr field '" +
 					this.solrField +

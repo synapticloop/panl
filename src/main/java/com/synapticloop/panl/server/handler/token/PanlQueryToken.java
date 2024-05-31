@@ -57,7 +57,7 @@ public class PanlQueryToken extends PanlToken {
 	}
 
 	@Override public String explain() {
-		return ("PANL [  VALID  ] <query> LPSE code '" +
+		return ("PANL [  VALID  ] <query>       LPSE code '" +
 				this.panlLpseCode +
 				"' with value '" +
 				value +

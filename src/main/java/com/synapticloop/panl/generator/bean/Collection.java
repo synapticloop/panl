@@ -47,7 +47,7 @@ public class Collection {
 		this.lpseNumber = facetFieldNames.size() / 62;
 
 		// don't forget that we have 4 pre-defined 'params'
-		if ((facetFieldNames.size() % 62 - 4) > 0) {
+		if ((facetFieldNames.size() % 62 - 5) > 0) {
 			this.lpseNumber++;
 		}
 
@@ -69,6 +69,9 @@ public class Collection {
 		PanlProperty panlParamNumrows = new PanlProperty("panl.param.numrows", "n", lpseNumber);
 		PANL_PROPERTIES.put("$panl.param.numrows", panlParamNumrows);
 
+		PanlProperty panlParamPassthrough = new PanlProperty("panl.param.passthrough", "z", lpseNumber);
+		PANL_PROPERTIES.put("$panl.param.passthrough", panlParamPassthrough);
+
 		PanlProperty panlLpseNum = new PanlProperty("panl.lpse.num", "" + lpseNumber);
 		PANL_PROPERTIES.put("$panl.lpse.num", panlLpseNum);
 
@@ -76,6 +79,7 @@ public class Collection {
 		CODES_AVAILABLE.remove(panlParamPage.getPanlValue());
 		CODES_AVAILABLE.remove(panlParamSort.getPanlValue());
 		CODES_AVAILABLE.remove(panlParamQuery.getPanlValue());
+		CODES_AVAILABLE.remove(panlParamPassthrough.getPanlValue());
 
 		// now go through to fields and assign a code which is close to what they want...
 		for (String fieldName : facetFieldNames) {

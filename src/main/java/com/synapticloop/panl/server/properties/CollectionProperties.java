@@ -33,6 +33,7 @@ public class CollectionProperties {
 	private String panlParamSort;
 	private String panlParamPage;
 	private String panlParamNumRows;
+	private String panlParamPassthrough;
 
 	private String solrModifierAnd;
 	private String solrModifierOr;
@@ -144,6 +145,8 @@ public class CollectionProperties {
 		metadataMap.add(this.panlParamPage);
 		this.panlParamNumRows = properties.getProperty("panl.param.numrows", "n");
 		metadataMap.add(this.panlParamNumRows);
+		this.panlParamPassthrough = properties.getProperty("panl.param.passthrough", "z");
+		metadataMap.add(this.panlParamPassthrough);
 
 		this.solrModifierAnd = properties.getProperty("solr.modifier.AND", "+");
 		this.solrModifierOr = properties.getProperty("solr.modifier.OR", "-");
@@ -266,6 +269,10 @@ public class CollectionProperties {
 
 	public String getPanlParamSort() {
 		return (panlParamSort);
+	}
+
+	public String getPanlParamPassthrough() {
+		return (panlParamPassthrough);
 	}
 
 	public String getPanlParamPage() {
@@ -433,7 +440,6 @@ public class CollectionProperties {
 				// we don;t have a boolean replacement
 				sb.append(value);
 			}
-
 		} else {
 			sb.append(value);
 		}
