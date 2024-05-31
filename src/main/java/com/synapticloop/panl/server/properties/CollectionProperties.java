@@ -131,46 +131,64 @@ public class CollectionProperties {
 		this.resultRows = PropertyHelper.getIntProperty(properties, "solr.numrows.default", 10);
 	}
 
+	/**
+	 * <p>Parse the default properties for a collection.</p>
+	 *
+	 * @param properties The properties to interrogate
+	 * @throws PanlServerException If a mandatory property was not found, or
+	 *                             could not be adequately parsed
+	 */
 	private void parseDefaultProperties(Properties properties) throws PanlServerException {
 		this.panlIncludeSingleFacets = properties.getProperty("panl.include.single.facets", "false").equals("true");
 		this.panlIncludeSameNumberFacets = properties.getProperty("panl.include.same.number.facets", "false").equals("true");
 
 		this.panlLpseNum = PropertyHelper.getIntProperty(properties, "panl.lpse.num", null);
-		if(null == panlLpseNum) {
+		if (null == panlLpseNum) {
 			throw new PanlServerException("MANDATORY PROPERTY MISSING: Could not find the 'panl.lpse.num' property in the '" + this.collectionName + "' Panl properties file.'");
 		}
 		LOGGER.info("[{}] LPSE number set to '{}'", collectionName, panlLpseNum);
 
 		this.panlParamQuery = properties.getProperty("panl.param.query", null);
-		if(null == panlParamQuery) {
+		if (null == panlParamQuery) {
 			throw new PanlServerException("MANDATORY PROPERTY MISSING: Could not find the 'panl.param.query' property in the '" + this.collectionName + "' Panl properties file.'");
 		}
 		LOGGER.info("[{}] panl.param.query set to '{}'", collectionName, panlParamQuery);
 		metadataMap.add(this.panlParamQuery);
 
 		this.panlParamSort = properties.getProperty("panl.param.sort", null);
-		if(null == panlParamSort) {
+		if (null == panlParamSort) {
 			throw new PanlServerException("MANDATORY PROPERTY MISSING: Could not find the 'panl.param.sort' property in the '" + this.collectionName + "' Panl properties file.'");
 		}
 		LOGGER.info("[{}] panl.param.sort set to '{}'", collectionName, panlParamSort);
 		metadataMap.add(this.panlParamSort);
 
 		this.panlParamPage = properties.getProperty("panl.param.page", null);
-		if(null == panlParamPage) {
+		if (null == panlParamPage) {
 			throw new PanlServerException("MANDATORY PROPERTY MISSING: Could not find the 'panl.param.page' property in the '" + this.collectionName + "' Panl properties file.'");
 		}
 		LOGGER.info("[{}] panl.param.page set to '{}'", collectionName, panlParamPage);
 		metadataMap.add(this.panlParamPage);
 
+		// now for the suffix and prefix
+		String pageParamPrefix = properties.getProperty("panl.param.page.prefix", null);
+		if (null != pageParamPrefix) {
+			panlFacetPrefixMap.put(panlParamPage, pageParamPrefix);
+		}
+
+		String pageParamSuffix = properties.getProperty("panl.param.page.suffix", null);
+		if (null != pageParamPrefix) {
+			panlFacetSuffixMap.put(panlParamPage, pageParamSuffix);
+		}
+
 		this.panlParamNumRows = properties.getProperty("panl.param.numrows", null);
-		if(null == panlParamNumRows) {
+		if (null == panlParamNumRows) {
 			throw new PanlServerException("MANDATORY PROPERTY MISSING: Could not find the 'panl.param.numrows' property in the '" + this.collectionName + "' Panl properties file.'");
 		}
 		LOGGER.info("[{}] panl.param.numrows set to '{}'", collectionName, panlParamNumRows);
 		metadataMap.add(this.panlParamNumRows);
 
 		this.panlParamPassthrough = properties.getProperty("panl.param.passthrough", null);
-		if(null != panlParamPassthrough) {
+		if (null != panlParamPassthrough) {
 			LOGGER.info("[{}] panl.param.passthrough set to '{}'", collectionName, panlParamPassthrough);
 			metadataMap.add(this.panlParamPassthrough);
 		}
@@ -426,12 +444,19 @@ public class CollectionProperties {
 	 */
 	public String getConvertedFromPanlValue(String panlFacetCode, String value) {
 		String temp = value;
+
 		if (panlFacetPrefixMap.containsKey(panlFacetCode)) {
-			temp = temp.substring(panlFacetPrefixMap.get(panlFacetCode).length());
+			String prefix = panlFacetPrefixMap.get(panlFacetCode);
+			if (temp.startsWith(prefix)) {
+				temp = temp.substring(prefix.length());
+			}
 		}
 
 		if (panlFacetSuffixMap.containsKey(panlFacetCode)) {
-			temp = temp.substring(0, temp.length() - panlFacetSuffixMap.get(panlFacetCode).length());
+			String suffix =  panlFacetSuffixMap.get(panlFacetCode);
+			if(temp.endsWith(suffix)) {
+				temp = temp.substring(0, temp.length() - panlFacetSuffixMap.get(panlFacetCode).length());
+			}
 		}
 
 		if (panlBooleanFacets.contains(panlFacetCode)) {
@@ -478,4 +503,11 @@ public class CollectionProperties {
 		return (sb.toString());
 	}
 
+	public String getSuffixForLpseCode(String code) {
+		return (panlFacetSuffixMap.getOrDefault(code, ""));
+	}
+
+	public String getPrefixForLpseCode(String code) {
+		return (panlFacetPrefixMap.getOrDefault(code, ""));
+	}
 }

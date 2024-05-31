@@ -72,6 +72,10 @@ public abstract class PanlToken {
 	 */
 	public abstract String getUriComponent();
 
+	public String getResetUriComponent() {
+		return(getUriComponent());
+	}
+
 	/**
 	 * <p>Get the LPSE component, which may have additional operands associated
 	 * with it.</p>

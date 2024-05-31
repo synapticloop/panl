@@ -44,7 +44,7 @@ function populatePanlResults(panlJsonData) {
 	$("#num_results")
 		.append("- Found " +
 			panlJsonData.response.numFound +
-			" results " +
+			" result(s) " +
 			(panlJsonData.response.numFoundExact ? "(exact)" : "estimated)"));
 
 	// now for the timings
@@ -58,17 +58,44 @@ function populatePanlResults(panlJsonData) {
 				"ms.  Total time " + timings.panl_total_time + "ms.");
 
 	// now the number that we are showing
-	$("#num_shown")
-		.append(panlJsonData.response.docs.length +
-			" results ");
+	$("#num_shown").append(panlJsonData.response.docs.length);
 
 	// add in the results
 	for(const document of panlJsonData.response.docs) {
 		$("#documents").append("<p class\"doc_result\">" + JSON.stringify(document) + "</p>");
 	}
 
+	addPagination(panlJsonData.panl.pagination);
 	addActiveFilters(panlJsonData.panl.active);
 	addAvailableFilters(panlJsonData.panl.available);
+}
+
+function addPagination(paginationObject) {
+	$("#page_num").append(paginationObject.page_num);
+	$("#num_pages").append(paginationObject.num_pages);
+	$("#num_per_page").append(paginationObject.num_per_page);
+
+	if(paginationObject.uris.next) {
+		$("#next").append(
+			"<a href=\"" +
+			panlResultsViewerUrl +
+			$("#collection").text() +
+			paginationObject.uris.next +
+			"\"/>NEXT</a> &raquo;");
+	} else {
+		$("#next").append("NEXT &raquo;");
+	}
+
+	if(paginationObject.uris.previous) {
+		$("#previous").append(
+			"&laquo; <a href=\"" +
+			panlResultsViewerUrl +
+			$("#collection").text() +
+			paginationObject.uris.previous +
+			"\"/>PREV</a>");
+	} else {
+		$("#previous").append("&laquo; PREV");
+	}
 }
 
 function addActiveFilters(activeObject) {

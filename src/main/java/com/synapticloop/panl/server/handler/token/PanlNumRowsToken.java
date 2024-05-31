@@ -8,6 +8,7 @@ import java.util.StringTokenizer;
 public class PanlNumRowsToken extends PanlToken {
 	private int numRows;
 	private boolean isValid = true;
+
 	public PanlNumRowsToken(String panlLpseCode) {
 		super(panlLpseCode);
 	}
@@ -18,7 +19,7 @@ public class PanlNumRowsToken extends PanlToken {
 		int numRowsTemp;
 		if (valueTokenizer.hasMoreTokens()) {
 			try {
-				numRowsTemp = Integer.valueOf(valueTokenizer.nextToken());
+				numRowsTemp = Integer.parseInt(valueTokenizer.nextToken());
 			} catch (NumberFormatException e) {
 				isValid = false;
 				numRowsTemp = collectionProperties.getResultRows();
@@ -56,6 +57,10 @@ public class PanlNumRowsToken extends PanlToken {
 
 	@Override public String getType() {
 		return("rows");
+	}
+
+	public int getNumRows() {
+		return(this.numRows);
 	}
 
 }
