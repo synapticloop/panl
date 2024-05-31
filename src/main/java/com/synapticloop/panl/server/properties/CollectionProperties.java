@@ -1,9 +1,10 @@
 package com.synapticloop.panl.server.properties;
 
 import com.synapticloop.panl.exception.PanlServerException;
-import com.synapticloop.panl.server.handler.field.BaseField;
-import com.synapticloop.panl.server.handler.field.FacetField;
-import com.synapticloop.panl.server.handler.field.MetaDataField;
+//import com.synapticloop.panl.server.handler.field.BaseField;
+//import com.synapticloop.panl.server.handler.field.FacetField;
+//import com.synapticloop.panl.server.handler.field.MetaDataField;
+import com.synapticloop.panl.server.properties.field.FacetField;
 import com.synapticloop.panl.server.properties.util.PropertyHelper;
 import org.apache.solr.client.solrj.SolrQuery;
 import org.json.JSONArray;
@@ -44,6 +45,7 @@ public class CollectionProperties {
 	 */
 	private Integer panlLpseNum;
 
+	private List<FacetField> FACET_FIELDS = new ArrayList<>();
 	private boolean panlIncludeSingleFacets;
 	private boolean panlIncludeSameNumberFacets;
 
@@ -64,7 +66,7 @@ public class CollectionProperties {
 	private SolrQuery.ORDER defaultOrder = SolrQuery.ORDER.asc;
 
 	private final List<String> lpseOrder = new ArrayList<>();
-	private final List<BaseField> lpseFields = new ArrayList<>();
+//	private final List<BaseField> lpseFields = new ArrayList<>();
 
 	private final Set<String> metadataMap = new HashSet<>();
 
@@ -115,6 +117,8 @@ public class CollectionProperties {
 	 */
 	private final Map<String, String> panlFacetSuffixMap = new HashMap<>();
 
+	private final List<String> panlLpseCodeSortFields = new ArrayList<>();
+
 	public CollectionProperties(String collectionName, Properties properties) throws PanlServerException {
 		this.collectionName = collectionName;
 		this.properties = properties;
@@ -124,6 +128,8 @@ public class CollectionProperties {
 		parseLpseOrder();
 		parseResultFields();
 		parseDefaultSortOrder();
+		parseSortFields();
+
 
 		JSONObject jsonObject = new JSONObject();
 		JSONArray jsonArray = new JSONArray();
@@ -134,6 +140,19 @@ public class CollectionProperties {
 		jsonObject.put("valid_urls", jsonArray);
 
 		this.validUrls = jsonObject.toString();
+	}
+
+	private void parseSortFields() {
+		String sortFieldsTemp = properties.getProperty("panl.sort.fields", "");
+		for (String sortField : sortFieldsTemp.split(",")) {
+			String panlLpseCode = solrFacetNameToPanlCodeMap.getOrDefault(sortField, null);
+			if(null == panlLpseCode) {
+				LOGGER.warn("[{}] '{}' Could not look up the Panl LPSE code for Solr field name '{}', ignoring...", collectionName, "panl.sort.fields", sortField);
+			} else {
+				LOGGER.info("[{}] Adding Panl LPSE code '{}' for Solr field name '{}'.", collectionName, panlLpseCode, sortField);
+				panlLpseCodeSortFields.add(panlLpseCode);
+			}
+		}
 	}
 
 	private void parseDefaultSortOrder() {
@@ -254,6 +273,9 @@ public class CollectionProperties {
 	 */
 	private void parseFacetFields() throws PanlServerException {
 		List<String> facetFieldList = new ArrayList<>();
+		for (String panlFieldKey : PropertyHelper.getPropertiesByPrefix(properties, PROPERTY_KEY_PANL_FACET)) {
+			FACET_FIELDS.add(new FacetField(panlFieldKey, properties, collectionName, panlLpseNum));
+		}
 
 		// now parse the fields
 		for (String panlFieldKey : PropertyHelper.getPropertiesByPrefix(properties, PROPERTY_KEY_PANL_FACET)) {
@@ -316,12 +338,13 @@ public class CollectionProperties {
 		}
 
 		for (String lpseCode : panlLpseOrder.split(",")) {
+			lpseCode = lpseCode.trim();
 			if (panlCodeToSolrFieldNameMap.containsKey(lpseCode)) {
 				lpseOrder.add(lpseCode);
-				lpseFields.add(new FacetField(lpseCode));
+//				lpseFields.add(new FacetField(lpseCode));
 			} else if (metadataMap.contains(lpseCode)) {
 				lpseOrder.add(lpseCode);
-				lpseFields.add(new MetaDataField(lpseCode));
+//				lpseFields.add(new MetaDataField(lpseCode));
 			} else {
 				LOGGER.warn("Found a panl code of '{}' in the panl.lpse.order property, yet it is not a defined field.  This will be ignored...", lpseCode);
 			}
@@ -430,9 +453,9 @@ public class CollectionProperties {
 		return (solrFacetFields);
 	}
 
-	public List<BaseField> getLpseFields() {
-		return (lpseFields);
-	}
+//	public List<BaseField> getLpseFields() {
+//		return (lpseFields);
+//	}
 
 	public boolean isMetadataToken(String token) {
 		return (metadataMap.contains(token));
@@ -444,6 +467,10 @@ public class CollectionProperties {
 
 	public boolean hasSortField(String panlCode) {
 		return (panlCodeToSolrFieldNameMap.containsKey(panlCode));
+	}
+
+	public String getSolrFacetNameFromPanlLpseCode(String name) {
+		return(panlCodeToSolrFieldNameMap.get(name));
 	}
 
 	public String getNameFromCode(String panlCode) {
@@ -555,5 +582,9 @@ public class CollectionProperties {
 
 	public String getPrefixForLpseCode(String code) {
 		return (panlFacetPrefixMap.getOrDefault(code, ""));
+	}
+
+	public List<String> getSortFields() {
+		return(panlLpseCodeSortFields);
 	}
 }

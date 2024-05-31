@@ -3,6 +3,7 @@ package com.synapticloop.panl.server.handler;
 import com.synapticloop.panl.exception.PanlServerException;
 import com.synapticloop.panl.generator.bean.Collection;
 import com.synapticloop.panl.server.client.*;
+import com.synapticloop.panl.server.handler.helper.CollectionHelper;
 import com.synapticloop.panl.server.handler.token.*;
 import com.synapticloop.panl.server.properties.PanlProperties;
 import com.synapticloop.panl.server.properties.CollectionProperties;
@@ -35,34 +36,16 @@ public class CollectionRequestHandler {
 	private final PanlClient panlClient;
 
 	public CollectionRequestHandler(String collectionName, PanlProperties panlProperties, CollectionProperties collectionProperties) throws PanlServerException {
+		LOGGER.info("[{}] Initialising collection", collectionName);
+
 		this.collectionName = collectionName;
 		this.collectionProperties = collectionProperties;
 
-		LOGGER.info("[{}] Initialising collection", collectionName);
-
-		String solrjClient = panlProperties.getSolrjClient();
-		LOGGER.info("[{}] Utilising solrjClient of '{}'", collectionName, solrjClient);
-
-		switch (solrjClient) {
-			case "Http2SolrClient":
-				panlClient = new PanlHttp2SolrClient(collectionName, panlProperties, collectionProperties);
-				break;
-			case "HttpJdkSolrClient":
-				panlClient = new PanlHttpJdkSolrClient(collectionName, panlProperties, collectionProperties);
-				break;
-			case "LBHttp2SolrClient":
-				panlClient = new PanlLBHttp2SolrClient(collectionName, panlProperties, collectionProperties);
-				break;
-			case "CloudSolrClient":
-				panlClient = new PanlCloudSolrClient(collectionName, panlProperties, collectionProperties);
-				break;
-			default:
-				throw new PanlServerException("Unknown property value for 'solrj.client' of '" + solrjClient + "', available values are 'Http2SolrClient', 'HttpJdkSolrClient', 'LBHttp2SolrClient', or 'CloudSolrClient'.");
-		}
+		panlClient = CollectionHelper.getPanlClient(panlProperties.getSolrjClient(), collectionName, panlProperties, collectionProperties);
 	}
 
 
-	public String request(String uri, String query) throws PanlServerException {
+	public String handleRequest(String uri, String query) throws PanlServerException {
 		long startNanos = System.nanoTime();
 
 		String[] searchQuery = uri.split("/");
@@ -329,29 +312,43 @@ public class CollectionRequestHandler {
 		JSONObject jsonObject = new JSONObject();
 		StringBuilder lpseUri = new StringBuilder("/");
 		StringBuilder lpse = new StringBuilder();
+		String before = "";
 
 		String panlLpseCode = collectionProperties.getPanlParamSort();
 
 		// the replacement URIs are the easiest
 		for (String lpseOrder : collectionProperties.getLpseOrder()) {
-			if (panlLpseCode.equals(lpseOrder)) {
-				jsonObject.put("before", lpseUri.toString());
-				// clear the sting builder
-				lpseUri.setLength(0);
-			} else {
-				// do we currently have some codes for this?
-
-				if (panlTokenMap.containsKey(lpseOrder)) {
+			// we are going to add
+			if (panlTokenMap.containsKey(lpseOrder)) {
+				if (!panlLpseCode.equals(lpseOrder)) {
 					for (PanlToken token : panlTokenMap.get(lpseOrder)) {
 						lpseUri.append(token.getResetUriComponent());
 						lpse.append(token.getLpseComponent());
 					}
+				} else {
+					before = lpse.toString();
+					lpse.setLength(0);
 				}
 			}
 		}
 
 		// no go through all of the sort field
-		jsonObject.put("", "/" + lpseUri + lpse + "/");
+		String finalBefore = lpseUri + before + panlLpseCode;
+		JSONObject relevanceSort = new JSONObject();
+		relevanceSort.put("replace_desc", finalBefore + collectionProperties.getSolrSortDesc() + lpse);
+		relevanceSort.put("replace_asc", finalBefore + collectionProperties.getSolrSortAsc() + lpse);
+		relevanceSort.put("name", "Relevance");
+		jsonObject.put("relevance", relevanceSort);
+
+		for (String sortFieldLpse : collectionProperties.getSortFields()) {
+			JSONObject sortObject = new JSONObject();
+			String sortFieldName = collectionProperties.getSolrFacetNameFromPanlLpseCode(sortFieldLpse);
+			sortObject.put("name", collectionProperties.getPanlNameFromPanlCode(sortFieldLpse));
+			sortObject.put("replace_desc", finalBefore + sortFieldLpse + collectionProperties.getSolrSortDesc() + lpse);
+			sortObject.put("replace_asc", finalBefore + sortFieldLpse + collectionProperties.getSolrSortAsc() + lpse);
+			jsonObject.put(sortFieldName, sortObject);
+		}
+
 		return (jsonObject);
 	}
 
