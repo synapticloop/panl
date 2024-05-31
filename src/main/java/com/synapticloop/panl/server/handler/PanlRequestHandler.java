@@ -36,6 +36,9 @@ public class PanlRequestHandler implements HttpRequestHandler {
 	 * <p>Do some initial checking on the request (including the query string if
 	 * one is available) and pass it off to the CollectionRequestHandler.</p>
 	 *
+	 * <p>This request handler also returns the 500 internal error status if
+	 * there was an error processing the request.</p>
+	 *
 	 * @param request  the HTTP request.
 	 * @param response the HTTP response.
 	 * @param context  the HTTP execution context. (which is ignored by this processor)

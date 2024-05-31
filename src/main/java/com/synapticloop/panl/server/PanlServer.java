@@ -172,7 +172,7 @@ public class PanlServer {
 		// finally register the collection handlers
 		for (CollectionRequestHandler collectionRequestHandler : collectionRequestHandlers) {
 			String collectionName = collectionRequestHandler.getCollectionName();
-			bootstrap.registerHandler("/" + collectionName + "/*", new PanlRequestHandler(collectionRequestHandler));
+			bootstrap.registerHandler("/" + collectionName + "/*", new PanlRequestHandler(panlProperties, collectionRequestHandler));
 			LOGGER.info("Binding collection of '{}' to /{}/*", collectionName, collectionName);
 			for (String resultFieldsName : collectionRequestHandler.getResultFieldsNames()) {
 				LOGGER.info("Results will be available on /{}/{}/*", collectionName, resultFieldsName);
