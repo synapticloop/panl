@@ -1,5 +1,6 @@
 package com.synapticloop.panl.server.handler;
 
+import com.synapticloop.panl.server.properties.PanlProperties;
 import org.apache.http.HttpRequest;
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
@@ -38,18 +39,24 @@ public class PanlDefaultHandler implements HttpRequestHandler {
 	 * <p>In effect, this will create the JSON response at instantiation time,
 	 * which will then be statically served for every request.</p>
 	 *
+	 * @param panlProperties The panl properties
 	 * @param collectionRequestHandlers The collection request handlers to iterate
 	 *        through to build the static response.
 	 */
-	public PanlDefaultHandler(List<CollectionRequestHandler> collectionRequestHandlers) {
+	public PanlDefaultHandler(PanlProperties panlProperties, List<CollectionRequestHandler> collectionRequestHandlers) {
 		JSONObject jsonObject = new JSONObject();
-		jsonObject.put("error", 404);
-		jsonObject.put("message", "Could not find a PANL request url, see 'valid_urls' array.");
-		JSONArray validUrls = new JSONArray();
-		for (CollectionRequestHandler collectionRequestHandler: collectionRequestHandlers) {
-			validUrls.put("/" +collectionRequestHandler.getCollectionName() + "/*");
+		jsonObject.put("error", true);
+		jsonObject.put("status", 404);
+		if(panlProperties.getPanlStatus404Verbose()) {
+			jsonObject.put("message", "Could not find a PANL request url, see 'valid_urls' array.");
+			JSONArray validUrls = new JSONArray();
+			for (CollectionRequestHandler collectionRequestHandler : collectionRequestHandlers) {
+				validUrls.put("/" + collectionRequestHandler.getCollectionName() + "/*");
+			}
+			jsonObject.put("valid_urls", validUrls);
+		} else {
+			jsonObject.put("message", "Not Found");
 		}
-		jsonObject.put("valid_urls", validUrls);
 
 		json404ErrorString = jsonObject.toString();
 	}

@@ -1,5 +1,6 @@
 package com.synapticloop.panl.server.handler;
 
+import com.synapticloop.panl.server.properties.PanlProperties;
 import org.apache.http.HttpRequest;
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
@@ -17,6 +18,7 @@ import org.json.JSONObject;
  */
 public class PanlRequestHandler implements HttpRequestHandler {
 	public static final ContentType CONTENT_TYPE_JSON = ContentType.create("application/json", "UTF-8");
+	private final PanlProperties panlProperties;
 	private final CollectionRequestHandler collectionRequestHandler;
 
 	/**
@@ -24,8 +26,9 @@ public class PanlRequestHandler implements HttpRequestHandler {
 	 *
 	 * @param collectionRequestHandler The collection that will handle this request
 	 */
-	public PanlRequestHandler(CollectionRequestHandler collectionRequestHandler) {
+	public PanlRequestHandler(PanlProperties panlProperties, CollectionRequestHandler collectionRequestHandler) {
 		super();
+		this.panlProperties = panlProperties;
 		this.collectionRequestHandler = collectionRequestHandler;
 	}
 
@@ -73,8 +76,13 @@ public class PanlRequestHandler implements HttpRequestHandler {
 			response.setStatusCode(HttpStatus.SC_INTERNAL_SERVER_ERROR);
 			JSONObject jsonObject = new JSONObject();
 			jsonObject.put("error", true);
-			jsonObject.put("message", e.getMessage());
-			response.setEntity(new StringEntity(jsonObject.toString(),CONTENT_TYPE_JSON));
+			jsonObject.put("status", 500);
+			if(panlProperties.getPanlStatus500Verbose()) {
+				jsonObject.put("message", e.getMessage());
+				response.setEntity(new StringEntity(jsonObject.toString(), CONTENT_TYPE_JSON));
+			} else {
+				jsonObject.put("message", "Internal Server Error");
+			}
 		}
 	}
 }

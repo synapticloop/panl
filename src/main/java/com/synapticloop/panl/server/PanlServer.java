@@ -159,7 +159,7 @@ public class PanlServer {
 				.setListenerPort(portNumber);
 
 		// register the default Panl handler which returns a 404
-		bootstrap.registerHandler("/*", new PanlDefaultHandler(collectionRequestHandlers));
+		bootstrap.registerHandler("/*", new PanlDefaultHandler(panlProperties, collectionRequestHandlers));
 
 		// register the panl results viewer - if it enabled
 
