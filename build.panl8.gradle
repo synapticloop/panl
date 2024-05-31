@@ -38,9 +38,9 @@ application {
 
 distributions {
     main {
-        distributionBaseName = 'panl9'
+        distributionBaseName = 'panl8'
         contents {
-            from 'src/panl9/'
+            from 'src/panl8/'
         }
     }
 }
