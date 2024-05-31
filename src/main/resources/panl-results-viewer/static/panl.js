@@ -75,27 +75,42 @@ function addPagination(paginationObject) {
 	$("#num_pages").append(paginationObject.num_pages);
 	$("#num_per_page").append(paginationObject.num_per_page);
 
-	if(paginationObject.uris.next) {
+	if(paginationObject.page_uris.next) {
 		$("#next").append(
 			"<a href=\"" +
 			panlResultsViewerUrl +
 			$("#collection").text() +
-			paginationObject.uris.next +
+			paginationObject.page_uris.next +
 			"\"/>NEXT</a> &raquo;");
 	} else {
 		$("#next").append("NEXT &raquo;");
 	}
 
-	if(paginationObject.uris.previous) {
+	if(paginationObject.page_uris.previous) {
 		$("#previous").append(
 			"&laquo; <a href=\"" +
 			panlResultsViewerUrl +
 			$("#collection").text() +
-			paginationObject.uris.previous +
+			paginationObject.page_uris.previous +
 			"\"/>PREV</a>");
 	} else {
 		$("#previous").append("&laquo; PREV");
 	}
+
+	// now for the per_page_uris
+	addPerPage(paginationObject, "3");
+	addPerPage(paginationObject, "5");
+	addPerPage(paginationObject, "10");
+}
+
+function addPerPage(paginationObject, number) {
+$("#num_per_page_links").append("<a href=\"" +
+	panlResultsViewerUrl +
+  $("#collection").text() +
+  paginationObject.num_per_page_uris.before +
+  number +
+  paginationObject.num_per_page_uris.after +
+  "\">" + number +"</a>&nbsp;&nbsp;");
 }
 
 function addActiveFilters(activeObject) {

@@ -376,7 +376,10 @@ public class CollectionRequestHandler {
 			jsonObject.put("previous", jsonObject.getString("before") + (pageNum - 1) + jsonObject.getString("after"));
 		}
 
-		paginationObject.put("uris", jsonObject);
+		paginationObject.put("page_uris", jsonObject);
+		paginationObject.put("num_per_page_uris",
+				getAdditionURI(collectionProperties.getPanlParamNumRows(),
+						panlTokenMap));
 
 		return (paginationObject);
 	}
