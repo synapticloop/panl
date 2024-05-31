@@ -341,7 +341,7 @@ public class CollectionRequestHandler {
 
 		paginationObject.put("num_pages", numPages);
 
-		// now for the URI
+		// now for the pagination URI path
 		StringBuilder lpseUri = new StringBuilder("/");
 		StringBuilder lpse = new StringBuilder();
 
@@ -368,17 +368,18 @@ public class CollectionRequestHandler {
 
 		jsonObject.put("after", collectionProperties.getSuffixForLpseCode(panlLpseCode) + "/" + lpseUri + lpse + "/");
 
-		if(pageNum < numPages) {
+		if (pageNum < numPages) {
 			jsonObject.put("next", jsonObject.getString("before") + (pageNum + 1) + jsonObject.getString("after"));
 		}
 
-		if(pageNum > 1) {
+		if (pageNum > 1) {
 			jsonObject.put("previous", jsonObject.getString("before") + (pageNum - 1) + jsonObject.getString("after"));
 		}
 
 		paginationObject.put("page_uris", jsonObject);
 		paginationObject.put("num_per_page_uris",
-				getAdditionURI(collectionProperties.getPanlParamNumRows(),
+				getReplacementURI(
+						collectionProperties.getPanlParamNumRows(),
 						panlTokenMap));
 
 		return (paginationObject);
@@ -441,7 +442,6 @@ public class CollectionRequestHandler {
 	 *
 	 * @param panlLpseCode The LPSE code to add to the URI
 	 * @param panlTokenMap The Map of existing tokens that are already in the URI
-	 *
 	 * @return The addition URI
 	 */
 	private JSONObject getAdditionURI(String panlLpseCode, Map<String, List<PanlToken>> panlTokenMap) {
@@ -469,6 +469,38 @@ public class CollectionRequestHandler {
 				lpse.append(panlLpseCode);
 			}
 		}
+
+		jsonObject.put("after", "/" + lpseUri + lpse + "/");
+		return (jsonObject);
+	}
+
+	private JSONObject getReplacementURI(String panlLpseCode, Map<String, List<PanlToken>> panlTokenMap) {
+		JSONObject jsonObject = new JSONObject();
+		StringBuilder lpseUri = new StringBuilder("/");
+		StringBuilder lpse = new StringBuilder();
+
+		for (String lpseOrder : collectionProperties.getLpseOrder()) {
+			// do we currently have some codes for this?
+			if (!panlLpseCode.equals(lpseOrder)) {
+				if (panlTokenMap.containsKey(lpseOrder)) {
+					// TODO - need to order these alphabetically...
+					for (PanlToken token : panlTokenMap.get(lpseOrder)) {
+						lpseUri.append(token.getResetUriComponent());
+						lpse.append(token.getLpseComponent());
+					}
+				}
+			}
+
+			// if the current panl token's lpse matches that of the panlLpseOrder,
+			// then we need to add to lpseCode and the uri
+			if (panlLpseCode.equals(lpseOrder)) {
+				jsonObject.put("before", lpseUri.toString());
+				// clear the sting builder
+				lpseUri.setLength(0);
+				lpse.append(panlLpseCode);
+			}
+		}
+
 
 		jsonObject.put("after", "/" + lpseUri + lpse + "/");
 		return (jsonObject);
