@@ -40,6 +40,9 @@ function panlSearch() {
 
 function populatePanlResults(panlJsonData) {
 	console.log(panlJsonData);
+
+	$("#canonical_uri").append(panlJsonData.panl.canonical_uri);
+
 	// first up the total results
 	$("#num_results")
 		.append("- Found " +
