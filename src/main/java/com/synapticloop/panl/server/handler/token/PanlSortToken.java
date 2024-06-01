@@ -30,6 +30,34 @@ public class PanlSortToken extends PanlToken {
 
 		super(panlLpseCode);
 
+		// this is going to be either a +, -, or a facet field
+		if (lpseTokeniser.hasMoreTokens()) {
+			String sortCode = lpseTokeniser.nextToken();
+			switch (sortCode) {
+				case "+":
+					this.sortOrder = SolrQuery.ORDER.asc;
+					break;
+				case "-":
+					this.sortOrder = SolrQuery.ORDER.desc;
+					break;
+				default:
+					// this is a facet field, so collect all characters after this
+					this.sortOrder = collectionProperties.getDefaultOrder();
+					StringBuilder sb = new StringBuilder(sortCode);
+					int i = 1;
+					while (i < collectionProperties.getPanlLpseNum()) {
+						if (lpseTokeniser.hasMoreTokens()) {
+							sb.append(lpseTokeniser.nextToken());
+						}
+						i++;
+					}
+					// at this point we should have a +, or a -
+					lpseTokeniser.decrementCurrentPosition();
+			}
+		} else {
+			this.sortOrder = collectionProperties.getDefaultOrder();
+		}
+
 		// at this point - we are going to sort by the facetField
 		StringBuilder sb = new StringBuilder(panlLpseCode);
 		int i = 1;
@@ -50,22 +78,6 @@ public class PanlSortToken extends PanlToken {
 
 		// lastly - we have a sort order (either ascending, or descending) - although
 		// this may not exist
-		if (lpseTokeniser.hasMoreTokens()) {
-			String sortCode = lpseTokeniser.nextToken();
-			switch (sortCode) {
-				case "+":
-					this.sortOrder = SolrQuery.ORDER.asc;
-					break;
-				case "-":
-					this.sortOrder = SolrQuery.ORDER.desc;
-					break;
-				default:
-					this.sortOrder = collectionProperties.getDefaultOrder();
-					lpseTokeniser.decrementCurrentPosition();
-			}
-		} else {
-			this.sortOrder = collectionProperties.getDefaultOrder();
-		}
 	}
 
 	/**

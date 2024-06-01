@@ -309,34 +309,44 @@ public class CollectionRequestHandler {
 	 * @return
 	 */
 	private JSONObject getSortingURIPaths(List<PanlToken> panlTokens, Map<String, List<PanlToken>> panlTokenMap) {
+//		JSONObject jsonObject = new JSONObject();
+//		StringBuilder lpseUri = new StringBuilder("/");
+//		StringBuilder lpse = new StringBuilder();
+		String before = "";
+		String after = "";
+		String panlLpseCode = collectionProperties.getPanlParamSort();
+
+		// Run through the sorting order
 		JSONObject jsonObject = new JSONObject();
 		StringBuilder lpseUri = new StringBuilder("/");
 		StringBuilder lpse = new StringBuilder();
-		String before = "";
 
-		String panlLpseCode = collectionProperties.getPanlParamSort();
-
-		// the replacement URIs are the easiest
 		for (String lpseOrder : collectionProperties.getLpseOrder()) {
-			// we are going to add
+			// because the sort order does not have any URI path component, we can
+			// just add all of the URI components to it safely
 			if (panlTokenMap.containsKey(lpseOrder)) {
-				if (!panlLpseCode.equals(lpseOrder)) {
-					for (PanlToken token : panlTokenMap.get(lpseOrder)) {
-						lpseUri.append(token.getResetUriComponent());
-						lpse.append(token.getLpseComponent());
-					}
-				} else {
-					before = lpse.toString();
-					lpse.setLength(0);
+				for (PanlToken token : panlTokenMap.get(lpseOrder)) {
+					lpseUri.append(token.getResetUriComponent());
+					lpse.append(token.getLpseComponent());
 				}
+				}
+			if (!panlLpseCode.equals(lpseOrder)) {
+				// then add the LPSE code to the lpse stringbuffer
+
+			} else {
+				// we have found the sort order token
+				before = lpse.toString();
+				lpse.setLength(0);
 			}
 		}
+		lpse.append("/");
 
-		// no go through all of the sort field
-		String finalBefore = lpseUri + before + panlLpseCode;
+		// no go through all of the sort fields
+		String finalBefore = lpseUri + before + collectionProperties.getPanlParamSort();
+
 		JSONObject relevanceSort = new JSONObject();
-		relevanceSort.put("replace_desc", finalBefore + collectionProperties.getSolrSortDesc() + lpse);
-		relevanceSort.put("replace_asc", finalBefore + collectionProperties.getSolrSortAsc() + lpse);
+		relevanceSort.put("replace_desc",  finalBefore + collectionProperties.getSolrSortDesc() + lpse);
+		relevanceSort.put("replace_asc", finalBefore  + collectionProperties.getSolrSortAsc() + lpse);
 		relevanceSort.put("name", "Relevance");
 		jsonObject.put("relevance", relevanceSort);
 
