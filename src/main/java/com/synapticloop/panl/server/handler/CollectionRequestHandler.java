@@ -375,6 +375,7 @@ public class CollectionRequestHandler {
 			}
 		}
 
+		// we need to add all metadata components to the URI path as well
 
 		String retVal = lpseUri.toString() + lpse + "/";
 		if (retVal.length() == 2) {

@@ -1,4 +1,4 @@
-package com.synapticloop.panl.server.handler.results;
+package com.synapticloop.panl.server.handler.results.viewer;
 
 import com.synapticloop.panl.server.handler.CollectionRequestHandler;
 import com.synapticloop.panl.server.handler.results.util.ResourceHelper;
@@ -13,11 +13,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-public class PanlResultsScriptHandler implements HttpRequestHandler {
+public class PanlResultsViewerScriptHandler implements HttpRequestHandler {
 
 	private final List<String> collectionUrls = new ArrayList<>();
 
-	public PanlResultsScriptHandler(List<CollectionRequestHandler> collectionRequestHandlers) {
+	public PanlResultsViewerScriptHandler(List<CollectionRequestHandler> collectionRequestHandlers) {
 		for (CollectionRequestHandler collectionRequestHandler : collectionRequestHandlers) {
 			String collectionName = collectionRequestHandler.getCollectionName();
 			for (String resultFieldsName : collectionRequestHandler.getResultFieldsNames()) {

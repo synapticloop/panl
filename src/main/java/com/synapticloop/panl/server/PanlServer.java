@@ -2,9 +2,9 @@ package com.synapticloop.panl.server;
 
 import com.synapticloop.panl.exception.PanlServerException;
 import com.synapticloop.panl.server.handler.*;
-import com.synapticloop.panl.server.handler.results.PanlResultsScriptHandler;
+import com.synapticloop.panl.server.handler.results.viewer.PanlResultsViewerScriptHandler;
 import com.synapticloop.panl.server.handler.results.PanlResultsStaticHandler;
-import com.synapticloop.panl.server.handler.results.PanlResultsViewerHandler;
+import com.synapticloop.panl.server.handler.results.viewer.PanlResultsViewerHandler;
 import com.synapticloop.panl.server.properties.PanlProperties;
 import com.synapticloop.panl.server.properties.CollectionProperties;
 import org.apache.http.impl.bootstrap.HttpServer;
@@ -134,7 +134,7 @@ public class PanlServer {
 	 * faceting.</p>
 	 *
 	 * <p>Note that this will only be available if the property
-	 * <code>panl.results.viewer.url=true</code> in the
+	 * <code>panl.results.testing.urls=true</code> in the
 	 * <code>panl.properties</code> file.</p>
 	 *
 	 * <p><strong>The Panl Request Handler:</strong> Will bind itself to the
@@ -163,10 +163,15 @@ public class PanlServer {
 
 		// register the panl results viewer - if it enabled
 
-		if (panlProperties.getPanlResultsViewerUrl()) {
+		if (panlProperties.getPanlResultsTestingUrls()) {
+			bootstrap.registerHandler("/panl-results/static/*", new PanlResultsStaticHandler());
+
+			// the simple search and querying webappp
 			bootstrap.registerHandler("/panl-results-viewer/*", new PanlResultsViewerHandler(collectionRequestHandlers));
-			bootstrap.registerHandler("/panl-results-viewer/static/*", new PanlResultsStaticHandler());
-			bootstrap.registerHandler("/panl-results-viewer/script/", new PanlResultsScriptHandler(collectionRequestHandlers));
+			bootstrap.registerHandler("/panl-results-viewer/script/", new PanlResultsViewerScriptHandler(collectionRequestHandlers));
+
+			// the simple results explainer
+			bootstrap.registerHandler("/panl-results-explainer/*", new PanlResultsViewerHandler(collectionRequestHandlers));
 		}
 
 		// finally register the collection handlers
