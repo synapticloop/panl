@@ -71,7 +71,7 @@ public class QueryLpseToken extends LpseToken {
 	}
 
 	@Override public String getType() {
-		return("Query LPSE code");
+		return("query");
 	}
 
 }

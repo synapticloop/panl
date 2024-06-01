@@ -9,9 +9,9 @@ import java.nio.charset.StandardCharsets;
 import java.util.StringTokenizer;
 
 public class NumRowsLpseToken extends LpseToken {
-	private int numRows;
-	private boolean isValid = true;
 	private CollectionProperties collectionProperties;
+
+	private int numRows;
 
 	public NumRowsLpseToken(String panlLpseCode) {
 		super(panlLpseCode);
@@ -76,7 +76,7 @@ public class NumRowsLpseToken extends LpseToken {
 	}
 
 	@Override public String getType() {
-		return("Number of results per page LPSE code");
+		return("numrows");
 	}
 
 	public int getNumRows() {

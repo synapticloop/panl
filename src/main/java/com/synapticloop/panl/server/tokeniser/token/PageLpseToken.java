@@ -10,7 +10,6 @@ import java.util.StringTokenizer;
 
 public class PageLpseToken extends LpseToken {
 	private int pageNum = 0;
-	private boolean isValid = true;
 	private CollectionProperties collectionProperties;
 
 	public PageLpseToken(String panlLpseCode) {
@@ -93,7 +92,7 @@ public class PageLpseToken extends LpseToken {
 	}
 
 	@Override public String getType() {
-		return ("Page LPSE code");
+		return ("page");
 	}
 
 	public int getPageNum() {

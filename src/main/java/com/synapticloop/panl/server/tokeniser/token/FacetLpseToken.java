@@ -97,6 +97,6 @@ public class FacetLpseToken extends LpseToken {
 	}
 
 	@Override public String getType() {
-		return("Facet LPSE code");
+		return("facet");
 	}
 }

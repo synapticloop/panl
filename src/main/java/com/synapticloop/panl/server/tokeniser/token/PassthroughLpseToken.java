@@ -60,6 +60,6 @@ public class PassthroughLpseToken extends LpseToken {
 	}
 
 	@Override public String getType() {
-		return ("Pass-through LPSE code");
+		return ("passthrough");
 	}
 }

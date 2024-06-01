@@ -18,7 +18,6 @@ public class SortLpseToken extends LpseToken {
 	private String panlFacetCode;
 	private String solrFacetField;
 	private SolrQuery.ORDER sortOrder;
-	private boolean isValid = true;
 
 	public SortLpseToken(String panlLpseCode) {
 		super(panlLpseCode);
@@ -135,7 +134,7 @@ public class SortLpseToken extends LpseToken {
 	}
 
 	@Override public String getType() {
-		return ("Sort LPSE code");
+		return ("sort");
 	}
 
 }

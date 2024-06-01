@@ -4,7 +4,6 @@ import com.synapticloop.panl.exception.PanlServerException;
 import com.synapticloop.panl.generator.bean.Collection;
 import com.synapticloop.panl.server.client.*;
 import com.synapticloop.panl.server.handler.helper.CollectionHelper;
-import com.synapticloop.panl.server.handler.tokeniser.*;
 import com.synapticloop.panl.server.properties.PanlProperties;
 import com.synapticloop.panl.server.properties.CollectionProperties;
 import com.synapticloop.panl.server.tokeniser.PanlTokeniser;
@@ -311,9 +310,6 @@ public class CollectionRequestHandler {
 	 * @return
 	 */
 	private JSONObject getSortingURIPaths(List<LpseToken> lpseTokens, Map<String, List<LpseToken>> panlTokenMap) {
-//		JSONObject jsonObject = new JSONObject();
-//		StringBuilder lpseUri = new StringBuilder("/");
-//		StringBuilder lpse = new StringBuilder();
 		String before = "";
 		String after = "";
 		String panlLpseCode = collectionProperties.getPanlParamSort();
@@ -352,14 +348,18 @@ public class CollectionRequestHandler {
 		relevanceSort.put("name", "Relevance");
 		jsonObject.put("relevance", relevanceSort);
 
+		JSONObject sortFieldsObject = new JSONObject();
+
 		for (String sortFieldLpse : collectionProperties.getSortFields()) {
 			JSONObject sortObject = new JSONObject();
 			String sortFieldName = collectionProperties.getSolrFacetNameFromPanlLpseCode(sortFieldLpse);
 			sortObject.put("name", collectionProperties.getPanlNameFromPanlCode(sortFieldLpse));
 			sortObject.put("replace_desc", finalBefore + sortFieldLpse + collectionProperties.getSolrSortDesc() + lpse);
 			sortObject.put("replace_asc", finalBefore + sortFieldLpse + collectionProperties.getSolrSortAsc() + lpse);
-			jsonObject.put(sortFieldName, sortObject);
+			sortFieldsObject.put(sortFieldName, sortObject);
 		}
+
+		jsonObject.put("fields", sortFieldsObject);
 
 		return (jsonObject);
 	}
