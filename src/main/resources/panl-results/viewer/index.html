@@ -39,6 +39,11 @@
 
 	div#footer { border-top: 1px solid #afafaf; margin: 84px auto 0 auto; padding: 6px 0; background-color: #efefef; clear: both; position: relative; height: 80px; margin-top: -80px; width: 1024px; }
 	div#footer p { text-align: center; text-justify: none }
+
+	.left { float: left; }
+	.right { float: right; }
+	.clear { clear: left; }
+	#timings { padding-top: 12px; border-top: 1px solid #efefef; }
 	</style>
 </head>
 <body>
@@ -64,13 +69,16 @@
 				<strong>Showing </strong> <span id="num_per_page"></span> results per page
 				<strong>This page has </strong> <span id="num_shown"></span> result(s)
 			</p>
-			<p>
-				<span id="previous"></span> <span id="next"></span> ||
-				<strong>Show </strong> <span id="num_per_page_links"></span> per page ||
-				<strong>Sort by </strong> <span id="sorting_options"></span>
-			</p>
+			<p><strong>Sort by </strong> <span id="sorting_options"></span></p>
+			<div>
+				<p>
+					<span class="left"><span id="previous"></span> <span id="next"></span></span>
 
-			<p class="info" id="timings"></p>
+					<span class="right"><strong>Show </strong> <span id="num_per_page_links"></span> per page</span>
+				</p>
+			</div>
+
+			<p class="info clear" id="timings"></p>
 			<div id="documents"></div>
 		</div>
 	</div>

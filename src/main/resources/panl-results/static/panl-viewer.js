@@ -68,9 +68,44 @@ function populatePanlResults(panlJsonData) {
 		$("#documents").append("<p class\"doc_result\">" + JSON.stringify(document) + "</p>");
 	}
 
+	addSortingOptions(panlJsonData.panl.sorting);
 	addPagination(panlJsonData.panl.pagination);
 	addActiveFilters(panlJsonData.panl.active);
 	addAvailableFilters(panlJsonData.panl.available);
+}
+
+function addSortingOptions(sortingObject) {
+	$("#sorting_options").append(
+		"Relevance: <a href=\"" +
+    panlResultsViewerUrl +
+    $("#collection").text() +
+    sortingObject.replace_asc +
+    "\"/>ASC</a>&nbsp;");
+
+	$("#sorting_options").append(
+		"<a href=\"" +
+    panlResultsViewerUrl +
+    $("#collection").text() +
+    sortingObject.replace_desc +
+    "\"/>DESC</a>&nbsp;");
+
+	for(const sortName in sortingObject.fields) {
+	$("#sorting_options").append(
+		"||&nbsp;" +
+		sortingObject.fields[sortName].name +
+		": <a href=\"" +
+    panlResultsViewerUrl +
+    $("#collection").text() +
+    sortingObject.fields[sortName].replace_asc +
+    "\"/>ASC</a>&nbsp;");
+
+	$("#sorting_options").append(
+		"<a href=\"" +
+    panlResultsViewerUrl +
+    $("#collection").text() +
+    sortingObject.fields[sortName].replace_desc +
+    "\"/>DESC</a>&nbsp;");
+	}
 }
 
 function addPagination(paginationObject) {
