@@ -1,4 +1,4 @@
-package com.synapticloop.panl.server.handler.token;
+package com.synapticloop.panl.server.tokeniser.token;
 
 import org.apache.solr.client.solrj.SolrQuery;
 
@@ -34,16 +34,17 @@ import org.apache.solr.client.solrj.SolrQuery;
  * @author synapticloop
  */
 public abstract class LpseToken {
-	protected String panlLpseCode;
+	protected String lpseCode;
 	protected String value;
+	protected boolean isValid = true;
 
 	/**
 	 * <p>Instantiate a PanlToken which responds to a specific LPSE code.</p>
 	 *
-	 * @param panlLpseCode The LPSE code to assign this facet or query operand to
+	 * @param lpseCode The LPSE code to assign this facet or query operand to
 	 */
-	public LpseToken(String panlLpseCode) {
-		this.panlLpseCode = panlLpseCode;
+	public LpseToken(String lpseCode) {
+		this.lpseCode = lpseCode;
 	}
 
 	/**
@@ -51,16 +52,16 @@ public abstract class LpseToken {
 	 *
 	 * @return The LPSE code for this token
 	 */
-	public String getPanlLpseCode() {
-		return(panlLpseCode);
+	public String getLpseCode() {
+		return(lpseCode);
 	}
 
 	/**
-	 * <p>Get the LPSE value for this code.  The value comes from the URI.</p>
+	 * <p>Get the UIR path value for this token.</p>
 	 *
 	 * @return The LPSE value
 	 */
-	public String getPanlLpseValue() {
+	public String getValue() {
 		return(value);
 	}
 
@@ -70,10 +71,16 @@ public abstract class LpseToken {
 	 *
 	 * @return The URI component
 	 */
-	public abstract String getUriComponent();
+	public abstract String getUriPathComponent();
 
-	public String getResetUriComponent() {
-		return(getUriComponent());
+	/**
+	 * <p>Return the URI Path component if this is to be reset, for example the
+	 * page number if any other num per page or sort order changes.</p>
+	 *
+	 * @return The URI path component for a reset
+	 */
+	public String getResetUriPathComponent() {
+		return(getUriPathComponent());
 	}
 
 	/**
@@ -113,5 +120,10 @@ public abstract class LpseToken {
 	 */
 	public abstract void applyToQuery(SolrQuery solrQuery);
 
+	/**
+	 * <p>Return the human-readable type for this token.</p>
+	 *
+	 * @return The human-readable type for this token.
+	 */
 	public abstract String getType();
 }

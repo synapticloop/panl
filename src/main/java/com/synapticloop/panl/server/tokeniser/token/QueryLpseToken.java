@@ -1,4 +1,4 @@
-package com.synapticloop.panl.server.handler.token;
+package com.synapticloop.panl.server.tokeniser.token;
 
 import org.apache.http.NameValuePair;
 import org.apache.http.client.utils.URLEncodedUtils;
@@ -40,7 +40,7 @@ public class QueryLpseToken extends LpseToken {
 		}
 	}
 
-	@Override public String getUriComponent() {
+	@Override public String getUriPathComponent() {
 		if(null != value) {
 			return (value + "/");
 		} else {
@@ -50,7 +50,7 @@ public class QueryLpseToken extends LpseToken {
 
 	@Override public String getLpseComponent() {
 		if(null != value) {
-			return (panlLpseCode);
+			return (lpseCode);
 		} else {
 			return("");
 		}
@@ -58,7 +58,7 @@ public class QueryLpseToken extends LpseToken {
 
 	@Override public String explain() {
 		return ("PANL [  VALID  ] <query>       LPSE code '" +
-				this.panlLpseCode +
+				this.lpseCode +
 				"' with value '" +
 				value +
 				"'" +

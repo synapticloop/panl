@@ -1,4 +1,4 @@
-package com.synapticloop.panl.server.handler.token;
+package com.synapticloop.panl.server.tokeniser.token;
 
 import com.synapticloop.panl.server.properties.CollectionProperties;
 import org.apache.solr.client.solrj.SolrQuery;
@@ -33,23 +33,23 @@ public class PassthroughLpseToken extends LpseToken {
 				StandardCharsets.UTF_8);
 	}
 
-	@Override public String getUriComponent() {
+	@Override public String getUriPathComponent() {
 		return (
 				URLEncoder.encode(
 						collectionProperties.getConvertedToPanlValue(
-								panlLpseCode,
+								lpseCode,
 								this.value),
 						StandardCharsets.UTF_8) +
 						"/");
 	}
 
 	@Override public String getLpseComponent() {
-		return (panlLpseCode);
+		return (lpseCode);
 	}
 
 	@Override public String explain() {
 		return ("PANL [  VALID  ] <passthrough> LPSE code '" +
-				this.panlLpseCode +
+				this.lpseCode +
 				"' with value '" +
 				value +
 				"'.");

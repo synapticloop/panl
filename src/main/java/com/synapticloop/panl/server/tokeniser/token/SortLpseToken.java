@@ -1,5 +1,6 @@
-package com.synapticloop.panl.server.handler.token;
+package com.synapticloop.panl.server.tokeniser.token;
 
+import com.synapticloop.panl.server.tokeniser.PanlTokeniser;
 import com.synapticloop.panl.server.properties.CollectionProperties;
 import org.apache.solr.client.solrj.SolrQuery;
 
@@ -26,7 +27,7 @@ public class SortLpseToken extends LpseToken {
 	public SortLpseToken(
 			CollectionProperties collectionProperties,
 			String panlLpseCode,
-			PanlStringTokeniser lpseTokeniser) {
+			PanlTokeniser lpseTokeniser) {
 
 		super(panlLpseCode);
 
@@ -71,7 +72,7 @@ public class SortLpseToken extends LpseToken {
 	 *
 	 * @return ALWAYS returns an empty string
 	 */
-	@Override public String getUriComponent() {
+	@Override public String getUriPathComponent() {
 		return ("");
 	}
 
@@ -83,7 +84,7 @@ public class SortLpseToken extends LpseToken {
 	 */
 	@Override public String getLpseComponent() {
 		if (isValid) {
-			return (this.panlLpseCode +
+			return (this.lpseCode +
 					this.panlFacetCode +
 					this.sortOrder);
 		} else {

@@ -4,9 +4,11 @@ import com.synapticloop.panl.exception.PanlServerException;
 import com.synapticloop.panl.generator.bean.Collection;
 import com.synapticloop.panl.server.client.*;
 import com.synapticloop.panl.server.handler.helper.CollectionHelper;
-import com.synapticloop.panl.server.handler.token.*;
+import com.synapticloop.panl.server.handler.tokeniser.*;
 import com.synapticloop.panl.server.properties.PanlProperties;
 import com.synapticloop.panl.server.properties.CollectionProperties;
+import com.synapticloop.panl.server.tokeniser.PanlTokeniser;
+import com.synapticloop.panl.server.tokeniser.token.*;
 import org.apache.solr.client.solrj.SolrClient;
 import org.apache.solr.client.solrj.SolrQuery;
 import org.apache.solr.client.solrj.response.FacetField;
@@ -147,9 +149,9 @@ public class CollectionRequestHandler {
 		// set up the data structures
 		Map<String, Set<String>> panlLookupMap = new HashMap<>();
 		for (LpseToken lpseToken : lpseTokens) {
-			String panlLpseValue = lpseToken.getPanlLpseValue();
+			String panlLpseValue = lpseToken.getValue();
 			if (null != panlLpseValue) {
-				String panlLpseCode = lpseToken.getPanlLpseCode();
+				String panlLpseCode = lpseToken.getLpseCode();
 				Set<String> valueSet = panlLookupMap.get(panlLpseCode);
 
 				if (null == valueSet) {
@@ -164,7 +166,7 @@ public class CollectionRequestHandler {
 		// set up the data structure
 		Map<String, List<LpseToken>> panlTokenMap = new HashMap<>();
 		for (LpseToken lpseToken : lpseTokens) {
-			String panlLpseCode = lpseToken.getPanlLpseCode();
+			String panlLpseCode = lpseToken.getLpseCode();
 
 			List<LpseToken> lpseTokenList = panlTokenMap.get(panlLpseCode);
 			if (null == lpseTokenList) {
@@ -176,7 +178,7 @@ public class CollectionRequestHandler {
 
 		for (String key : panlTokenMap.keySet()) {
 			List<LpseToken> lpseTokenTemp = panlTokenMap.get(key);
-			lpseTokenTemp.sort(Comparator.comparing(LpseToken::getPanlLpseValue));
+			lpseTokenTemp.sort(Comparator.comparing(LpseToken::getValue));
 		}
 
 		SolrDocumentList solrDocuments = (SolrDocumentList) response.getResponse().get("response");
@@ -326,7 +328,7 @@ public class CollectionRequestHandler {
 			// just add all of the URI components to it safely
 			if (panlTokenMap.containsKey(lpseOrder)) {
 				for (LpseToken token : panlTokenMap.get(lpseOrder)) {
-					lpseUri.append(token.getResetUriComponent());
+					lpseUri.append(token.getResetUriPathComponent());
 					lpse.append(token.getLpseComponent());
 				}
 				}
@@ -369,7 +371,7 @@ public class CollectionRequestHandler {
 		for (String lpseOrder : collectionProperties.getLpseOrder()) {
 			if (panlTokenMap.containsKey(lpseOrder)) {
 				for (LpseToken token : panlTokenMap.get(lpseOrder)) {
-					lpseUri.append(token.getResetUriComponent());
+					lpseUri.append(token.getResetUriPathComponent());
 					lpse.append(token.getLpseComponent());
 				}
 			}
@@ -437,7 +439,7 @@ public class CollectionRequestHandler {
 				if (panlTokenMap.containsKey(lpseOrder)) {
 					// this is not additive - it is replacement
 					for (LpseToken token : panlTokenMap.get(lpseOrder)) {
-						lpseUri.append(token.getUriComponent());
+						lpseUri.append(token.getUriPathComponent());
 						lpse.append(token.getLpseComponent());
 					}
 				}
@@ -472,7 +474,7 @@ public class CollectionRequestHandler {
 		List<String> lpseComponents = new ArrayList<>();
 
 		for (LpseToken lpseToken : lpseTokens) {
-			uriComponents.add(lpseToken.getUriComponent());
+			uriComponents.add(lpseToken.getUriPathComponent());
 			lpseComponents.add(lpseToken.getLpseComponent());
 		}
 		int i = 0;
@@ -481,10 +483,10 @@ public class CollectionRequestHandler {
 			JSONArray jsonArray = jsonObject.optJSONArray(tokenType, new JSONArray());
 
 			JSONObject removeObject = new JSONObject();
-			removeObject.put("value", lpseToken.getPanlLpseValue());
+			removeObject.put("value", lpseToken.getValue());
 			removeObject.put("uri", getRemoveURIFromPath(i, uriComponents, lpseComponents));
 
-			String panlLpseCode = lpseToken.getPanlLpseCode();
+			String panlLpseCode = lpseToken.getLpseCode();
 			removeObject.put("panl_code", panlLpseCode);
 			removeObject.put("facet_name", collectionProperties.getNameFromCode(panlLpseCode));
 			removeObject.put("name", collectionProperties.getPanlNameFromPanlCode(panlLpseCode));
@@ -533,7 +535,7 @@ public class CollectionRequestHandler {
 			if (panlTokenMap.containsKey(lpseOrder)) {
 				// TODO - need to order these alphabetically...
 				for (LpseToken token : panlTokenMap.get(lpseOrder)) {
-					lpseUri.append(token.getResetUriComponent());
+					lpseUri.append(token.getResetUriPathComponent());
 					lpse.append(token.getLpseComponent());
 				}
 			}
@@ -561,7 +563,7 @@ public class CollectionRequestHandler {
 			if (!panlLpseCode.equals(lpseOrder)) {
 				if (panlTokenMap.containsKey(lpseOrder)) {
 					for (LpseToken token : panlTokenMap.get(lpseOrder)) {
-						lpseUri.append(token.getResetUriComponent());
+						lpseUri.append(token.getResetUriPathComponent());
 						lpse.append(token.getLpseComponent());
 					}
 				}
@@ -618,7 +620,7 @@ public class CollectionRequestHandler {
 		if (searchQuery.length > 3) {
 			String lpseEncoding = searchQuery[searchQuery.length - 1];
 
-			PanlStringTokeniser lpseTokeniser = new PanlStringTokeniser(lpseEncoding, Collection.CODES_AND_METADATA, true);
+			PanlTokeniser lpseTokeniser = new PanlTokeniser(lpseEncoding, Collection.CODES_AND_METADATA, true);
 
 			StringTokenizer valueTokeniser = new StringTokenizer(uri, "/", false);
 			// we need to skip the first two - as they will be the collection and the

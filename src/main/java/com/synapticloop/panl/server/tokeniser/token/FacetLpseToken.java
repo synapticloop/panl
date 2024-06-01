@@ -1,5 +1,6 @@
-package com.synapticloop.panl.server.handler.token;
+package com.synapticloop.panl.server.tokeniser.token;
 
+import com.synapticloop.panl.server.tokeniser.PanlTokeniser;
 import com.synapticloop.panl.server.properties.CollectionProperties;
 import org.apache.solr.client.solrj.SolrQuery;
 
@@ -10,7 +11,6 @@ import java.util.StringTokenizer;
 
 public class FacetLpseToken extends LpseToken {
 	private String solrField = null;
-	private boolean isValid = true;
 	private CollectionProperties collectionProperties;
 
 	/**
@@ -25,7 +25,7 @@ public class FacetLpseToken extends LpseToken {
 	public FacetLpseToken(
 			CollectionProperties collectionProperties,
 			String panlLpseCode,
-			PanlStringTokeniser lpseTokeniser,
+			PanlTokeniser lpseTokeniser,
 			StringTokenizer valueTokeniser) {
 		super(panlLpseCode);
 		this.collectionProperties = collectionProperties;
@@ -39,7 +39,7 @@ public class FacetLpseToken extends LpseToken {
 			i++;
 		}
 
-		this.panlLpseCode = sb.toString();
+		this.lpseCode = sb.toString();
 
 		this.value = collectionProperties
 				.getConvertedFromPanlValue(
@@ -56,12 +56,12 @@ public class FacetLpseToken extends LpseToken {
 		}
 	}
 
-	@Override public String getUriComponent() {
+	@Override public String getUriPathComponent() {
 		if(isValid) {
 			return (
 					URLEncoder.encode(
 							collectionProperties.getConvertedToPanlValue(
-									this.panlLpseCode,
+									this.lpseCode,
 									this.value),
 							StandardCharsets.UTF_8) +
 							"/");
@@ -72,7 +72,7 @@ public class FacetLpseToken extends LpseToken {
 
 	@Override public String getLpseComponent() {
 		if(isValid) {
-			return(this.panlLpseCode);
+			return(this.lpseCode);
 		} else {
 			return("");
 		}
@@ -82,7 +82,7 @@ public class FacetLpseToken extends LpseToken {
 			return ("PANL " +
 					(this.isValid ? "[  VALID  ]" : "[ INVALID ]") +
 					" <facet>       LPSE code '" +
-					this.panlLpseCode +
+					this.lpseCode +
 					"' (solr field '" +
 					this.solrField +
 					"') with value '" +

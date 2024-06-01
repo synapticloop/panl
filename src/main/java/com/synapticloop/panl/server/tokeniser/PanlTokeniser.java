@@ -1,4 +1,4 @@
-package com.synapticloop.panl.server.handler.token;
+package com.synapticloop.panl.server.tokeniser;
 
 /*
  * Copyright (c) 1994, 2004, Oracle and/or its affiliates. All rights reserved.
@@ -110,7 +110,7 @@ import java.util.NoSuchElementException;
  * @see     java.io.StreamTokenizer
  * @since   1.0
  */
-public class PanlStringTokeniser {
+public class PanlTokeniser {
 	private int currentPosition;
 	private int newPosition;
 	private final int maxPosition;
@@ -201,7 +201,7 @@ public class PanlStringTokeniser {
 	 *                         as tokens.
 	 * @exception NullPointerException if str is {@code null}
 	 */
-	public PanlStringTokeniser(String str, String delim, boolean returnDelims) {
+	public PanlTokeniser(String str, String delim, boolean returnDelims) {
 		currentPosition = 0;
 		newPosition = -1;
 		delimsChanged = false;
@@ -227,7 +227,7 @@ public class PanlStringTokeniser {
 	 * @param   delim   the delimiters.
 	 * @exception NullPointerException if str is {@code null}
 	 */
-	public PanlStringTokeniser(String str, String delim) {
+	public PanlTokeniser(String str, String delim) {
 		this(str, delim, false);
 	}
 
@@ -242,7 +242,7 @@ public class PanlStringTokeniser {
 	 * @param   str   a string to be parsed.
 	 * @exception NullPointerException if str is {@code null}
 	 */
-	public PanlStringTokeniser(String str) {
+	public PanlTokeniser(String str) {
 		this(str, " \t\n\r\f", false);
 	}
 

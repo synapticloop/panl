@@ -1,4 +1,4 @@
-package com.synapticloop.panl.server.handler.token;
+package com.synapticloop.panl.server.tokeniser.token;
 
 import com.synapticloop.panl.server.properties.CollectionProperties;
 import org.apache.solr.client.solrj.SolrQuery;
@@ -50,7 +50,7 @@ public class PageLpseToken extends LpseToken {
 		this.pageNum = pageNumTemp;
 	}
 
-	@Override public String getUriComponent() {
+	@Override public String getUriPathComponent() {
 		return (getURIComponentFromPageNumber(this.pageNum));
 	}
 
@@ -58,24 +58,24 @@ public class PageLpseToken extends LpseToken {
 		return (
 				URLEncoder.encode(
 						collectionProperties.getConvertedToPanlValue(
-								panlLpseCode,
+								lpseCode,
 								Integer.toString(pageNum)),
 						StandardCharsets.UTF_8) +
 						"/");
 	}
-	public String getResetUriComponent() {
+	public String getResetUriPathComponent() {
 		return (getURIComponentFromPageNumber(1));
 	}
 
 	@Override public String getLpseComponent() {
-		return (panlLpseCode);
+		return (lpseCode);
 	}
 
 	@Override public String explain() {
 		return ("PANL " +
 				(this.isValid ? "[  VALID  ]" : "[ INVALID ]") +
 				" <page>        LPSE code '" +
-				this.panlLpseCode +
+				this.lpseCode +
 				"' using " +
 				(this.isValid ? "parsed" : "default") +
 				" value of '" +
