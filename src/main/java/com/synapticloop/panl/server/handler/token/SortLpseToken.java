@@ -13,27 +13,33 @@ import org.apache.solr.client.solrj.SolrQuery;
  *
  * @author synapticloop
  */
-public class PanlSortToken extends PanlToken {
+public class SortLpseToken extends LpseToken {
 	private String panlFacetCode;
 	private String solrFacetField;
 	private SolrQuery.ORDER sortOrder;
 	private boolean isValid = true;
 
-	public PanlSortToken(String panlLpseCode) {
+	public SortLpseToken(String panlLpseCode) {
 		super(panlLpseCode);
 	}
 
-	public PanlSortToken(
+	public SortLpseToken(
 			CollectionProperties collectionProperties,
 			String panlLpseCode,
 			PanlStringTokeniser lpseTokeniser) {
 
 		super(panlLpseCode);
 
-		// this is going to be either a +, -, or a facet field
-		if (lpseTokeniser.hasMoreTokens()) {
-			String sortCode = lpseTokeniser.nextToken();
-			switch (sortCode) {
+		// Sort URI path will either be sorted on relevance and will look
+		// like /s-/ or /s+/
+		// or will be sorted on a facet code /sb+/ or /sb-/
+
+		// consume all tokens until we find a + or a -
+		StringBuilder sb = new StringBuilder();
+
+		while (lpseTokeniser.hasMoreTokens()) {
+			String sortLpseToken = lpseTokeniser.nextToken();
+			switch (sortLpseToken) {
 				case "+":
 					this.sortOrder = SolrQuery.ORDER.asc;
 					break;
@@ -41,32 +47,12 @@ public class PanlSortToken extends PanlToken {
 					this.sortOrder = SolrQuery.ORDER.desc;
 					break;
 				default:
-					// this is a facet field, so collect all characters after this
-					this.sortOrder = collectionProperties.getDefaultOrder();
-					StringBuilder sb = new StringBuilder(sortCode);
-					int i = 1;
-					while (i < collectionProperties.getPanlLpseNum()) {
-						if (lpseTokeniser.hasMoreTokens()) {
-							sb.append(lpseTokeniser.nextToken());
-						}
-						i++;
-					}
-					// at this point we should have a +, or a -
-					lpseTokeniser.decrementCurrentPosition();
+					sb.append(sortLpseToken);
 			}
-		} else {
-			this.sortOrder = collectionProperties.getDefaultOrder();
 		}
 
-		// at this point - we are going to sort by the facetField
-		StringBuilder sb = new StringBuilder(panlLpseCode);
-		int i = 1;
-		while (i < collectionProperties.getPanlLpseNum()) {
-			if (lpseTokeniser.hasMoreTokens()) {
-				sb.append(lpseTokeniser.nextToken());
-			}
-			i++;
-		}
+		// at this point, the string builder will either be length 0 - i.e. this
+		// is a relevance search, or will be the facet field.
 
 		this.panlFacetCode = sb.toString();
 		if (!collectionProperties.hasSortField(this.panlFacetCode)) {
@@ -146,8 +132,9 @@ public class PanlSortToken extends PanlToken {
 			solrQuery.addSort(this.solrFacetField, sortOrder);
 		}
 	}
+
 	@Override public String getType() {
-		return("sort");
+		return ("Sort LPSE code");
 	}
 
 }

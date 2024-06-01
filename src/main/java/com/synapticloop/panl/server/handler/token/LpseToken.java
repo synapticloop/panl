@@ -33,8 +33,8 @@ import org.apache.solr.client.solrj.SolrQuery;
  *
  * @author synapticloop
  */
-public abstract class PanlToken {
-	protected final String panlLpseCode;
+public abstract class LpseToken {
+	protected String panlLpseCode;
 	protected String value;
 
 	/**
@@ -42,7 +42,7 @@ public abstract class PanlToken {
 	 *
 	 * @param panlLpseCode The LPSE code to assign this facet or query operand to
 	 */
-	public PanlToken(String panlLpseCode) {
+	public LpseToken(String panlLpseCode) {
 		this.panlLpseCode = panlLpseCode;
 	}
 

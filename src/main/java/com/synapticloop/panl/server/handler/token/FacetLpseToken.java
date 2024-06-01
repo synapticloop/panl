@@ -8,8 +8,7 @@ import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.util.StringTokenizer;
 
-public class PanlFacetToken extends PanlToken {
-	private String panlFacetCode;
+public class FacetLpseToken extends LpseToken {
 	private String solrField = null;
 	private boolean isValid = true;
 	private CollectionProperties collectionProperties;
@@ -19,11 +18,11 @@ public class PanlFacetToken extends PanlToken {
 	 *
 	 * @param panlLpseCode The code to create for the lpse part of the URL
 	 */
-	public PanlFacetToken(String panlLpseCode) {
+	public FacetLpseToken(String panlLpseCode) {
 		super(panlLpseCode);
 	}
 
-	public PanlFacetToken(
+	public FacetLpseToken(
 			CollectionProperties collectionProperties,
 			String panlLpseCode,
 			PanlStringTokeniser lpseTokeniser,
@@ -40,7 +39,7 @@ public class PanlFacetToken extends PanlToken {
 			i++;
 		}
 
-		this.panlFacetCode = sb.toString();
+		this.panlLpseCode = sb.toString();
 
 		this.value = collectionProperties
 				.getConvertedFromPanlValue(
@@ -62,7 +61,7 @@ public class PanlFacetToken extends PanlToken {
 			return (
 					URLEncoder.encode(
 							collectionProperties.getConvertedToPanlValue(
-									this.panlFacetCode,
+									this.panlLpseCode,
 									this.value),
 							StandardCharsets.UTF_8) +
 							"/");
@@ -73,7 +72,7 @@ public class PanlFacetToken extends PanlToken {
 
 	@Override public String getLpseComponent() {
 		if(isValid) {
-			return(this.panlFacetCode);
+			return(this.panlLpseCode);
 		} else {
 			return("");
 		}
@@ -98,6 +97,6 @@ public class PanlFacetToken extends PanlToken {
 	}
 
 	@Override public String getType() {
-		return("facet");
+		return("Facet LPSE code");
 	}
 }

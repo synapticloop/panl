@@ -8,16 +8,16 @@ import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.util.StringTokenizer;
 
-public class PanlPageToken extends PanlToken {
+public class PageLpseToken extends LpseToken {
 	private int pageNum = 0;
 	private boolean isValid = true;
 	private CollectionProperties collectionProperties;
 
-	public PanlPageToken(String panlLpseCode) {
+	public PageLpseToken(String panlLpseCode) {
 		super(panlLpseCode);
 	}
 
-	public PanlPageToken(CollectionProperties collectionProperties, String panlLpseCode, StringTokenizer valueTokenizer) {
+	public PageLpseToken(CollectionProperties collectionProperties, String panlLpseCode, StringTokenizer valueTokenizer) {
 		super(panlLpseCode);
 		this.collectionProperties = collectionProperties;
 
@@ -93,7 +93,7 @@ public class PanlPageToken extends PanlToken {
 	}
 
 	@Override public String getType() {
-		return ("page");
+		return ("Page LPSE code");
 	}
 
 	public int getPageNum() {

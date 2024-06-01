@@ -7,20 +7,20 @@ import org.apache.solr.client.solrj.SolrQuery;
 import java.nio.charset.StandardCharsets;
 import java.util.StringTokenizer;
 
-public class PanlQueryToken extends PanlToken {
+public class QueryLpseToken extends LpseToken {
 	private boolean isOverride;
 
-	public PanlQueryToken(String panlLpseCode) {
+	public QueryLpseToken(String panlLpseCode) {
 		super(panlLpseCode);
 	}
 
-	public PanlQueryToken(
+	public QueryLpseToken(
 			String queryFromUri,
 			String panlLpseCode) {
 		this(queryFromUri, panlLpseCode, null);
 	}
 
-	public PanlQueryToken(
+	public QueryLpseToken(
 			String queryFromUri,
 			String panlLpseCode,
 			StringTokenizer valueTokeniser) {
@@ -71,7 +71,7 @@ public class PanlQueryToken extends PanlToken {
 	}
 
 	@Override public String getType() {
-		return("query");
+		return("Query LPSE code");
 	}
 
 }

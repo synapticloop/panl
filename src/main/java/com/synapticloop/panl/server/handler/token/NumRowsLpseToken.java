@@ -8,16 +8,16 @@ import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.util.StringTokenizer;
 
-public class PanlNumRowsToken extends PanlToken {
+public class NumRowsLpseToken extends LpseToken {
 	private int numRows;
 	private boolean isValid = true;
 	private CollectionProperties collectionProperties;
 
-	public PanlNumRowsToken(String panlLpseCode) {
+	public NumRowsLpseToken(String panlLpseCode) {
 		super(panlLpseCode);
 	}
 
-	public PanlNumRowsToken(CollectionProperties collectionProperties, String panlLpseCode, StringTokenizer valueTokenizer) {
+	public NumRowsLpseToken(CollectionProperties collectionProperties, String panlLpseCode, StringTokenizer valueTokenizer) {
 		super(panlLpseCode);
 		this.collectionProperties = collectionProperties;
 
@@ -76,7 +76,7 @@ public class PanlNumRowsToken extends PanlToken {
 	}
 
 	@Override public String getType() {
-		return("rows");
+		return("Number of results per page LPSE code");
 	}
 
 	public int getNumRows() {
