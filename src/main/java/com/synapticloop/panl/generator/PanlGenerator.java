@@ -8,8 +8,7 @@ import org.slf4j.LoggerFactory;
 import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 public class PanlGenerator {
 	private static final Logger LOGGER = LoggerFactory.getLogger(PanlGenerator.class);
@@ -54,9 +53,38 @@ public class PanlGenerator {
 		}
 	}
 
+	private Map<String, String> panlParamMap = new HashMap<>();
+
 	public void generate() throws PanlGenerateException {
 		// we need to parse each of the schema files before writing out the top
 		// level panl.properties file
+
+		// now ask the questions:
+
+		//		$panl.param.query
+		String panlParamQuery = getParameterInput("The search query parameter", "panl.param.query", "q", null);
+		panlParamMap.put(panlParamQuery, "panl.param.query");
+
+		//		$panl.param.sort
+		String panlParamSort = getParameterInput("The results sorting parameter", "panl.param.sort", "s", null);
+		panlParamMap.put(panlParamSort, "panl.param.sort");
+
+		//		$panl.param.page
+		String panlParamPage = getParameterInput("The page number", "panl.param.page", "p", null);
+		panlParamMap.put(panlParamPage, "panl.param.page");
+
+		//		$panl.param.numrows
+		String panlParamNumRows = getParameterInput("The number of results to return per page", "panl.param.numrows", "n", null);
+		panlParamMap.put(panlParamNumRows, "panl.param.numrows");
+
+		//		$panl.param.operand
+		String panlParamOperand = getParameterInput("The default query operand (q.op)", "panl.param.operand", "o", null);
+		panlParamMap.put(panlParamOperand, "panl.param.operand");
+
+		//		$panl.param.passthrough
+		String panlParamPassthrough = getParameterInput("The URI path passthrough", "panl.param.passthrough", "z", null);
+		panlParamMap.put(panlParamPassthrough, "panl.param.passthrough");
+
 
 		for (File schema : schemasToParse) {
 			collections.add(new Collection(schema));
@@ -70,6 +98,34 @@ public class PanlGenerator {
 			generateCollectionDotPanlDotProperties(collection);
 		}
 
+	}
+
+	private String getParameterInput(String description, String paramName, String defaultValue, String errorPrompt) {
+		if (null != errorPrompt) {
+			System.out.printf("Invalid value. %s, please try again.\n", errorPrompt);
+		}
+		System.out.printf("Enter the 1 character property value for '%s' (%s), default [%s]: ", paramName, description, defaultValue);
+		Scanner in = new Scanner(System.in);
+		String temp = in.nextLine();
+		if (temp.isBlank()) {
+			System.out.printf("Property '%s' set to default value of '%s'\n", paramName, defaultValue);
+			return (defaultValue);
+		}
+
+		if (temp.length() != 1) {
+			return(getParameterInput(paramName, description, defaultValue, "Value must be exactly 1 character."));
+		} else {
+			if(panlParamMap.containsKey(temp)) {
+				return(getParameterInput(
+						paramName,
+						description,
+						defaultValue,
+						String.format("Value '%s' already assigned to property '%s'.", temp, panlParamMap.get(temp))));
+
+			}
+			System.out.printf("Property '%s' set to value '%s'.\n", paramName, temp);
+			return (temp);
+		}
 	}
 
 	private void generateCollectionDotPanlDotProperties(Collection collection) {

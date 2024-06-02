@@ -3,27 +3,6 @@
 #              LAST PAGE SEGMENT ENCODING (LPSE) CONFIGURATION
 #              ---- ---- ------- -------- ------ -------------
 #
-# It uses (L)ast (P)ath (S)eparator (E)ncoding which will use the URI path and
-# convert it to a Solr search query.  An LPSE encoded URI path will be of the
-# following format:
-#
-#   /something/something-else/se/
-#
-# rather than ?firstfield=something&secondfield=something-else
-#
-# The following characters may be used in the url for the encoding of the
-# facets and queries.
-#
-# A B C D E F G H I J K L M N O P Q R S T U V W X Y Z
-# a b c d e f g h i j k l m n o p q r s t u v w x y z
-# 0 1 2 3 4 5 6 7 8 9
-#
-# The following are reserved characters and should not be used as they may be
-# HTTP encoded - note that the plus ('+') character is still used without
-# encoding.
-#
-# ! * ' ( ) ; : @ & = + $ , / ? % # [ ]
-#
 # The following configuration values determine how the LPSE is configured.  The
 # LPSE is made up of the following types:
 #     - query term parameter - the actual query entered by the user of the site
@@ -40,10 +19,9 @@
 # be started.  This defaults to a single character if not set - i.e.
 #   panl.lpse.num=1
 #
-#
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 
-$panl.lpse.num
+panl.lpse.num=1
 
 #                                Panl Metadata
 #                                ---- --------
@@ -52,12 +30,18 @@ $panl.lpse.num
 # be the same size as the panl.lpse.num property above.  These define what the
 # query parameter will be and __MUST NOT__ be the same as any of the facets
 
-$panl.param.query
-$panl.param.sort
-$panl.param.page
-$panl.param.numrows
-$panl.param.operand
-$panl.param.passthrough
+panl.param.query=q
+panl.param.sort=s
+
+panl.param.page=p
+panl.param.page.prefix=page-
+panl.param.page.suffix=
+
+panl.param.numrows=n
+panl.param.numrows.prefix=
+panl.param.numrows.suffix=-per-page
+
+panl.param.passthrough=z
 
 #                     Whether to include single facets
 #                     ------- -- ------- ------ ------
@@ -99,8 +83,8 @@ solr.modifier.OR=-
 
 solr.default.modifier=+
 
-solr.sort.ASC=U
-solr.sort.DESC=D
+solr.sort.ASC=+
+solr.sort.DESC=-
 
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 #
@@ -113,7 +97,7 @@ solr.sort.DESC=D
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 
 solr.facet.min.count=1
-solr.numrows.default=10
+solr.numrows=10
 
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 #
@@ -186,7 +170,173 @@ solr.numrows.default=10
 #
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 
-$panl.lpse.fields
+
+# <field "indexed"="true" "stored"="true" "name"="id" "type"="string" "multiValued"="false" "required"="true" />
+panl.facet.i=id
+panl.name.i=Id
+panl.type.i=solr.StrField
+
+# <field "indexed"="true" "stored"="true" "name"="brand" "type"="string" "multiValued"="false" />
+panl.facet.b=brand
+panl.name.b=Brand
+panl.type.b=solr.StrField
+panl.prefix.b=Manufactured by 
+panl.suffix.b=\ Company
+
+# <field "indexed"="true" "stored"="true" "name"="name" "type"="string" "multiValued"="false" />
+#panl.facet.N=name
+#panl.name.N=Name
+#panl.type.N=solr.StrField
+
+# <field "indexed"="true" "stored"="true" "name"="mechanism_type" "type"="string" "multiValued"="false" />
+panl.facet.m=mechanism_type
+panl.name.m=Mechanism Type
+panl.type.m=solr.StrField
+
+# <field "indexed"="true" "stored"="true" "name"="body_shape" "type"="string" "multiValued"="false" />
+panl.facet.B=body_shape
+panl.name.B=Body Shape
+panl.type.B=solr.StrField
+
+# <field "indexed"="true" "stored"="true" "name"="grip_type" "type"="string" "multiValued"="false" />
+panl.facet.g=grip_type
+panl.name.g=Grip Type
+panl.type.g=solr.StrField
+
+# <field "indexed"="true" "stored"="true" "name"="grip_shape" "type"="string" "multiValued"="false" />
+panl.facet.G=grip_shape
+panl.name.G=Grip Shape
+panl.type.G=solr.StrField
+
+# <field "indexed"="true" "stored"="true" "name"="cap_shape" "type"="string" "multiValued"="false" />
+#panl.facet.c=cap_shape
+#panl.name.c=Cap Shape
+#panl.type.c=solr.StrField
+
+# <field "indexed"="true" "stored"="true" "name"="category" "type"="string" "multiValued"="false" />
+panl.facet.C=category
+panl.name.C=Category
+panl.type.C=solr.StrField
+
+# <field "indexed"="true" "stored"="true" "name"="length" "type"="pint" "multiValued"="false" />
+#panl.facet.l=length
+#panl.name.l=Length
+#panl.type.l=solr.IntPointField
+
+# <field "indexed"="true" "stored"="true" "name"="relative_length" "type"="pint" "multiValued"="false" />
+panl.facet.r=relative_length
+panl.name.r=Relative Length
+panl.type.r=solr.IntPointField
+
+# <field "indexed"="true" "stored"="true" "name"="diameter" "type"="pint" "multiValued"="false" />
+panl.facet.d=diameter
+panl.name.d=Diameter
+panl.type.d=solr.IntPointField
+
+# <field "indexed"="true" "stored"="true" "name"="weight" "type"="pint" "multiValued"="false" />
+#panl.facet.w=weight
+#panl.name.w=Weight
+#panl.type.w=solr.IntPointField
+
+# <field "indexed"="true" "stored"="true" "name"="relative_weight" "type"="pint" "multiValued"="false" />
+panl.facet.R=relative_weight
+panl.name.R=Relative Weight
+panl.type.R=solr.IntPointField
+
+# <field "indexed"="true" "stored"="true" "name"="lead_length" "type"="pint" "multiValued"="false" />
+panl.facet.L=lead_length
+panl.name.L=Lead Length
+panl.type.L=solr.IntPointField
+
+# <field "indexed"="true" "stored"="true" "name"="disassemble" "type"="boolean" "multiValued"="false" />
+panl.facet.D=disassemble
+panl.name.D=Disassemble
+panl.type.D=solr.BoolField
+# Because this is a Boolean field, you can change these values to something more human-readable
+panl.bool.D.true=able to be disassembled
+panl.bool.D.false=cannot be disassembled
+
+# <field "indexed"="true" "stored"="true" "name"="mechanism_material" "type"="string" "multiValued"="false" />
+#panl.facet.M=mechanism_material
+#panl.name.M=Mechanism Material
+#panl.type.M=solr.StrField
+
+# <field "indexed"="true" "stored"="true" "name"="tubing_material" "type"="string" "multiValued"="false" />
+#panl.facet.t=tubing_material
+#panl.name.t=Tubing Material
+#panl.type.t=solr.StrField
+
+# <field "indexed"="true" "stored"="true" "name"="hardness_indicator" "type"="string" "multiValued"="false" />
+panl.facet.h=hardness_indicator
+panl.name.h=Hardness Indicator
+panl.type.h=solr.StrField
+
+# <field "indexed"="true" "stored"="false" "name"="in_built_eraser" "type"="boolean" "multiValued"="false" />
+panl.facet.I=in_built_eraser
+panl.name.I=In Built Eraser
+panl.type.I=solr.BoolField
+# Because this is a Boolean field, you can change these values to something more human-readable
+panl.bool.I.true=is-in_built_eraser
+panl.bool.I.false=is-not-in_built_eraser
+
+# <field "indexed"="true" "stored"="true" "name"="variants" "type"="string" "multiValued"="true" />
+#panl.facet.v=variants
+#panl.name.v=Variants
+#panl.type.v=solr.StrField
+
+# <field "indexed"="true" "stored"="true" "name"="nib_shape" "type"="string" "multiValued"="false" />
+panl.facet.e=nib_shape
+panl.name.e=Nib Shape
+panl.type.e=solr.StrField
+
+# <field "indexed"="true" "stored"="true" "name"="nib_material" "type"="string" "multiValued"="false" />
+#panl.facet.x=nib_material
+#panl.name.x=Nib Material
+#panl.type.x=solr.StrField
+
+# <field "indexed"="true" "stored"="true" "name"="grip_material" "type"="string" "multiValued"="false" />
+#panl.facet.X=grip_material
+#panl.name.X=Grip Material
+#panl.type.X=solr.StrField
+
+# <field "indexed"="true" "stored"="true" "name"="body_material" "type"="string" "multiValued"="false" />
+#panl.facet.K=body_material
+#panl.name.K=Body Material
+#panl.type.K=solr.StrField
+
+# <field "indexed"="true" "stored"="true" "name"="clip_material" "type"="string" "multiValued"="false" />
+#panl.facet.A=clip_material
+#panl.name.A=Clip Material
+#panl.type.A=solr.StrField
+
+# <field "indexed"="true" "stored"="true" "name"="cap_material" "type"="string" "multiValued"="false" />
+#panl.facet.f=cap_material
+#panl.name.f=Cap Material
+#panl.type.f=solr.StrField
+
+# <field "indexed"="true" "stored"="true" "name"="lead_grade_indicator" "type"="string" "multiValued"="false" />
+panl.facet.u=lead_grade_indicator
+panl.name.u=Lead Grade Indicator
+panl.type.u=solr.StrField
+
+# <field "indexed"="true" "stored"="true" "name"="lead_size_indicator" "type"="string" "multiValued"="false" />
+panl.facet.Z=lead_size_indicator
+panl.name.Z=Lead Size Indicator
+panl.type.Z=solr.StrField
+
+# <field "indexed"="true" "stored"="false" "name"="in_built_sharpener" "type"="boolean" "multiValued"="false" />
+panl.facet.9=in_built_sharpener
+panl.name.9=In Built Sharpener
+panl.type.9=solr.BoolField
+# Because this is a Boolean field, you can change these values to something more human-readable
+panl.bool.9.true=is-in_built_sharpener
+panl.bool.9.false=is-not-in_built_sharpener
+
+# <field "indexed"="true" "stored"="true" "name"="colours" "type"="string" "multiValued"="true" />
+panl.facet.W=colours
+panl.name.W=Colours
+panl.type.W=solr.StrField
+
 
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 #
@@ -210,7 +360,7 @@ $panl.lpse.fields
 #
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 
-$panl.lpse.order
+panl.lpse.order=z,b,m,W,B,g,G,C,r,R,d,L,D,h,I,e,u,Z,9,s,p,n,q
 
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 #
@@ -234,7 +384,8 @@ $panl.lpse.order
 #
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 
-$panl.results.fields.all
-$panl.results.fields.firstfive
+panl.results.fields.all=brand,name,mechanism_type,nib_shape,body_shape,grip_type,grip_shape,cap_shape,category,length,relative_length,diameter,weight,relative_weight,lead_length,disassemble,nib_material,mechanism_material,grip_material,body_material,tubing_material,clip_material,cap_material,hardness_indicator,lead_grade_indicator,lead_size_indicator,colours,variants
 
-$panl.sort.fields
+panl.results.fields.firstfive=brand,name,category,mechanism_type,nib_shape
+
+panl.sort.fields=brand,relative_length,relative_weight
