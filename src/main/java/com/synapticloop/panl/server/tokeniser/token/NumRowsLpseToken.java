@@ -62,7 +62,7 @@ public class NumRowsLpseToken extends LpseToken {
 		// TODO - suffix and prefix
 		return ("PANL " +
 				(this.isValid ? "[  VALID  ]" : "[ INVALID ]") +
-				" <rows>        LPSE code '" +
+				" <rows>          LPSE code '" +
 				this.lpseCode +
 				"' using " +
 				(this.isValid ? "parsed" : "default") +
