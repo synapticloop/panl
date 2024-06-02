@@ -65,7 +65,13 @@ function populatePanlResults(panlJsonData) {
 
 	// add in the results
 	for(const document of panlJsonData.response.docs) {
-		$("#documents").append("<p class\"doc_result\">" + JSON.stringify(document) + "</p>");
+		var innerList = "";
+		for(const fieldName in document) {
+			innerList += "<dt>" + panlJsonData.panl.fields[fieldName] + " (" + fieldName + ")</dt>";
+			innerList += "<dd>" + document[fieldName] + "</dd>";
+		}
+
+		$("#documents").append("<dl>" + innerList + "</dl>");
 	}
 
 	addSortingOptions(panlJsonData.panl.sorting);

@@ -295,6 +295,14 @@ public class CollectionRequestHandler {
 
 		panlObject.put("canonical_uri", getCanonicalUri(panlTokenMap));
 
+		// last thing - we want to put the panl to solr field mappings in
+		JSONObject solrFieldMappings = new JSONObject();
+		// TODO - this should be statically generated at runtime
+		for (String solrFacetField : collectionProperties.getSolrFacetFields()) {
+			solrFieldMappings.put(solrFacetField, collectionProperties.getPanlNameFromSolrFacetName(solrFacetField));
+		}
+
+		panlObject.put("fields", solrFieldMappings);
 		solrJsonObject.put("panl", panlObject);
 
 		return (solrJsonObject.toString());

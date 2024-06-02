@@ -3,18 +3,18 @@
 	<field name="_version_" type="plong" indexed="false" stored="false"/>
 	<field name="id" type="string" stored="true" required="true" multiValued="false" />
 
-	<field name="brand" type="string" indexed="true" stored="true" multiValued="false" />
-	<field name="name" type="string" indexed="true" stored="true" multiValued="false" />
+	<field name="brand" type="text_general" indexed="true" stored="true" multiValued="false" />
+	<field name="name" type="text_general" indexed="true" stored="true" multiValued="false" />
 
 	<field name="mechanism_type" type="string" indexed="true" stored="true" multiValued="false" />
 
-	<field name="nib_shape" type="string" indexed="true" stored="true" multiValued="false" />
-	<field name="body_shape" type="string" indexed="true" stored="true" multiValued="false" />
-	<field name="grip_type" type="string" indexed="true" stored="true" multiValued="false" />
-	<field name="grip_shape" type="string" indexed="true" stored="true" multiValued="false" />
-	<field name="cap_shape" type="string" indexed="true" stored="true" multiValued="false" />
+	<field name="nib_shape" type="text_general" indexed="true" stored="true" multiValued="false" />
+	<field name="body_shape" type="text_general" indexed="true" stored="true" multiValued="false" />
+	<field name="grip_type" type="text_general" indexed="true" stored="true" multiValued="false" />
+	<field name="grip_shape" type="text_general" indexed="true" stored="true" multiValued="false" />
+	<field name="cap_shape" type="text_general" indexed="true" stored="true" multiValued="false" />
 
-	<field name="category" type="string" indexed="true" stored="true" multiValued="false" />
+	<field name="category" type="text_general" indexed="true" stored="true" multiValued="false" />
 
 	<field name="length" type="pint" indexed="true" stored="true" multiValued="false" />
 	<field name="relative_length" type="pint" indexed="true" stored="true" multiValued="false" />
@@ -25,17 +25,17 @@
 
 	<field name="disassemble" type="boolean" indexed="true" stored="true" multiValued="false" />
 
-	<field name="nib_material" type="string" indexed="true" stored="true" multiValued="false" />
-	<field name="mechanism_material" type="string" indexed="true" stored="true" multiValued="false" />
-	<field name="grip_material" type="string" indexed="true" stored="true" multiValued="false" />
-	<field name="body_material" type="string" indexed="true" stored="true" multiValued="false" />
-	<field name="tubing_material" type="string" indexed="true" stored="true" multiValued="false" />
-	<field name="clip_material" type="string" indexed="true" stored="true" multiValued="false" />
-	<field name="cap_material" type="string" indexed="true" stored="true" multiValued="false" />
+	<field name="nib_material" type="text_general" indexed="true" stored="true" multiValued="false" />
+	<field name="mechanism_material" type="text_general" indexed="true" stored="true" multiValued="false" />
+	<field name="grip_material" type="text_general" indexed="true" stored="true" multiValued="false" />
+	<field name="body_material" type="text_general" indexed="true" stored="true" multiValued="false" />
+	<field name="tubing_material" type="text_general" indexed="true" stored="true" multiValued="false" />
+	<field name="clip_material" type="text_general" indexed="true" stored="true" multiValued="false" />
+	<field name="cap_material" type="text_general" indexed="true" stored="true" multiValued="false" />
 
-	<field name="hardness_indicator" type="string" indexed="true" stored="true" multiValued="false" />
-	<field name="lead_grade_indicator" type="string" indexed="true" stored="true" multiValued="false" />
-	<field name="lead_size_indicator" type="string" indexed="true" stored="true" multiValued="false" />
+	<field name="hardness_indicator" type="text_general" indexed="true" stored="true" multiValued="false" />
+	<field name="lead_grade_indicator" type="text_general" indexed="true" stored="true" multiValued="false" />
+	<field name="lead_size_indicator" type="text_general" indexed="true" stored="true" multiValued="false" />
 
 	<field name="in_built_eraser" type="boolean" indexed="true" stored="false" multiValued="false" />
 	<field name="in_built_sharpener" type="boolean" indexed="true" stored="false" multiValued="false" />
