@@ -31,6 +31,7 @@ import java.util.concurrent.TimeUnit;
  */
 public class CollectionRequestHandler {
 	private static final Logger LOGGER = LoggerFactory.getLogger(CollectionRequestHandler.class);
+	public static final String SOLR_PARAM_Q_OP = "q.op";
 
 	private final String collectionName;
 	private final CollectionProperties collectionProperties;
@@ -64,7 +65,8 @@ public class CollectionRequestHandler {
 			// TODO - get rid of this
 			SolrQuery solrQuery = panlClient.getQuery(query);
 			// set the operand - to be over-ridden later if it is in the URI path
-			solrQuery.setParam("q.op", collectionProperties.getSolrDefaultQueryOperand());
+			solrQuery.setParam(SOLR_PARAM_Q_OP, collectionProperties.getSolrDefaultQueryOperand());
+			solrQuery.setFacetLimit(collectionProperties.getSolrFacetLimit());
 
 			for (String fieldName : collectionProperties.getResultFieldsForName(resultFields)) {
 				solrQuery.addField(fieldName);

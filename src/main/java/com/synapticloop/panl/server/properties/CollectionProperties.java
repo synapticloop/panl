@@ -58,6 +58,7 @@ public class CollectionProperties {
 	private String panlParamPassthrough;
 
 	private String solrDefaultQueryOperand;
+	private int solrFacetLimit;
 
 	private final List<String> lpseOrder = new ArrayList<>();
 //	private final List<BaseField> lpseFields = new ArrayList<>();
@@ -160,6 +161,7 @@ public class CollectionProperties {
 
 		this.facetMinCount = PropertyHelper.getIntProperty(properties, "solr.facet.min.count", 1);
 		this.numResultsPerPage = PropertyHelper.getIntProperty(properties, "solr.numrows.default", 10);
+		this.solrFacetLimit = PropertyHelper.getIntProperty(properties, "solr.facet.limit", 100);
 
 
 		this.panlLpseNum = PropertyHelper.getIntProperty(properties, "panl.lpse.num", null);
@@ -554,5 +556,9 @@ public class CollectionProperties {
 
 	public List<String> getSortFields() {
 		return(panlLpseCodeSortFields);
+	}
+
+	public int getSolrFacetLimit() {
+		return(solrFacetLimit);
 	}
 }
