@@ -102,6 +102,7 @@ public class CollectionRequestHandler {
 
 			// now we need to set the start
 			solrQuery.setStart((pageNum - 1) * numRows);
+			System.out.println(solrQuery);
 
 			long buildRequestNanos = System.nanoTime() - startNanos;
 			startNanos = System.nanoTime();

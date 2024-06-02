@@ -26,7 +26,7 @@ public class PanlGenerator {
 	private static final String PANL_PARAM_SORT = "panl.param.sort";
 	private static final String PANL_PARAM_PAGE = "panl.param.page";
 	private static final String PANL_PARAM_NUMROWS = "panl.param.numrows";
-	private static final String PANL_PARAM_OPERAND = "panl.param.operand";
+	private static final String PANL_PARAM_QUERY_OPERAND = "panl.param.query.operand";
 	public static final String PANL_PARAM_PASSTHROUGH = "panl.param.passthrough";
 
 	private final String propertiesFileLocation;
@@ -110,7 +110,7 @@ public class PanlGenerator {
 	 *   <li><code>panl.param.sort</code> - The results sorting parameter</li>
 	 *   <li><code>panl.param.page</code> - The page number</li>
 	 *   <li><code>panl.param.numrows</code> - The number of results to return per page/li>
-	 *   <li><code>panl.param.operand</code> - The default query operand (q.op)</li>
+	 *   <li><code>panl.param.query.operand</code> - The default query operand (q.op)</li>
 	 *   <li><code>panl.param.passthrough</code> - The URI path passthrough</li>
 	 * </ul>
 	 *
@@ -135,8 +135,8 @@ public class PanlGenerator {
 		//		$panl.param.sort
 		getParameterInput("The results sorting parameter", PANL_PARAM_SORT, "s", null);
 
-		//		$panl.param.operand
-		getParameterInput("The default query operand (q.op)", PANL_PARAM_OPERAND, "o", null);
+		//		$panl.param.query.operand
+		getParameterInput("The default query operand (q.op)", PANL_PARAM_QUERY_OPERAND, "o", null);
 
 		//		$panl.param.passthrough
 		getParameterInput("The URI path passthrough", PANL_PARAM_PASSTHROUGH, "z", null);

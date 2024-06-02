@@ -181,7 +181,7 @@ public class CollectionProperties {
 		this.panlParamSort = initialiseStringProperty("panl.param.sort", true, false);
 		this.panlParamPage = initialiseStringProperty("panl.param.page", true, true);
 		this.panlParamNumRows = initialiseStringProperty("panl.param.numrows", true, true);
-		this.panlParamQueryOperand = initialiseStringProperty("panl.param.operand", true, false);
+		this.panlParamQueryOperand = initialiseStringProperty("panl.param.query.operand", true, false);
 		this.panlParamPassthrough = initialiseStringProperty("panl.param.passthrough", false, false);
 	}
 
