@@ -1,6 +1,7 @@
 package com.synapticloop.panl.generator.bean;
 
 import com.synapticloop.panl.exception.PanlGenerateException;
+import com.synapticloop.panl.generator.PanlGenerator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -27,60 +28,41 @@ public class Collection {
 	private final Map<String, String> fieldXmlMap = new HashMap<>();
 	private int lpseNumber = 1;
 
-	public static final String CODES = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz01234567890";
-	public static final String CODES_AND_METADATA = CODES + "[].+-";
+	public static String CODES = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz01234567890";
+	public static String CODES_AND_METADATA = CODES + "[].+-";
 	private static final Set<String> CODES_AVAILABLE = new HashSet<>();
 	private static final Map<String, PanlProperty> PANL_PROPERTIES = new HashMap<>();
 	private static final Map<String, String> SOLR_FIELD_TYPE_NAME_TO_SOLR_CLASS = new HashMap<>();
 	private static final Map<String, String> SOLR_FIELD_NAME_TO_SOLR_FIELD_TYPE = new HashMap<>();
 
-	public Collection(File schema) throws PanlGenerateException {
+	public Collection(File schema, Map<String, String> panlReplacementPropertyMap) throws PanlGenerateException {
 		parseSchemaFile(schema);
-
-		// at this point, all going well, we have the collection name and the
-		//		panl.param.query=q
-		//		panl.param.sort=s
-		//		panl.param.page=p
-		//		panl.param.numrows=n
-		//		panl.param.passthrough=z
 
 		// each character can be one of the letters and numbers
 		this.lpseNumber = facetFieldNames.size() / 62;
 
-		// don't forget that we have 4 pre-defined 'params'
-		if ((facetFieldNames.size() % 62 - 5) > 0) {
+		// don't forget that we have pre-defined 'params'
+		if ((facetFieldNames.size() % 62 - panlReplacementPropertyMap.size()) > 0) {
 			this.lpseNumber++;
 		}
 
 		LOGGER.info("Collection: {}", this.collectionName);
 		LOGGER.info("Have {} fields, lpseNum is set to {}", facetFieldNames.size(), this.lpseNumber);
 
-		generateCodesForFields();
+		// now we are going to remove all codes that are in use by the panl replacement map
+		for (String code : panlReplacementPropertyMap.values()) {
+			CODES = CODES.replace(code, "");
+		}
 
-		// now we are going to add the in-built fields that we require to run panl
-		PanlProperty panlParamQuery = new PanlProperty("panl.param.query", "q", lpseNumber);
-		PANL_PROPERTIES.put("$panl.param.query", panlParamQuery);
-
-		PanlProperty panlParamPage = new PanlProperty("panl.param.page", "p", lpseNumber);
-		PANL_PROPERTIES.put("$panl.param.page", panlParamPage);
-
-		PanlProperty panlParamSort = new PanlProperty("panl.param.sort", "s", lpseNumber);
-		PANL_PROPERTIES.put("$panl.param.sort", panlParamSort);
-
-		PanlProperty panlParamNumrows = new PanlProperty("panl.param.numrows", "n", lpseNumber);
-		PANL_PROPERTIES.put("$panl.param.numrows", panlParamNumrows);
-
-		PanlProperty panlParamPassthrough = new PanlProperty("panl.param.passthrough", "z", lpseNumber);
-		PANL_PROPERTIES.put("$panl.param.passthrough", panlParamPassthrough);
+		generateAvailableCodesForFields();
 
 		PanlProperty panlLpseNum = new PanlProperty("panl.lpse.num", "" + lpseNumber);
 		PANL_PROPERTIES.put("$panl.lpse.num", panlLpseNum);
 
-		CODES_AVAILABLE.remove(panlParamNumrows.getPanlValue());
-		CODES_AVAILABLE.remove(panlParamPage.getPanlValue());
-		CODES_AVAILABLE.remove(panlParamSort.getPanlValue());
-		CODES_AVAILABLE.remove(panlParamQuery.getPanlValue());
-		CODES_AVAILABLE.remove(panlParamPassthrough.getPanlValue());
+		for (String property : panlReplacementPropertyMap.keySet()) {
+			PanlProperty temp = new PanlProperty(property.substring(1), panlReplacementPropertyMap.get(property));
+			PANL_PROPERTIES.put(property, temp);
+		}
 
 		// now go through to fields and assign a code which is close to what they want...
 		for (String fieldName : facetFieldNames) {
@@ -133,26 +115,32 @@ public class Collection {
 			CODES_AVAILABLE.remove(assignedCode);
 		}
 
-		// last but not least, we need to put the lpse order
+
 		StringBuilder panlLpseOrder = new StringBuilder();
+		// we are going to put the passthrough parameter first
+		panlLpseOrder.append(panlReplacementPropertyMap.get("$" + PanlGenerator.PANL_PARAM_PASSTHROUGH))
+						.append(",\\\n");
+
+		panlReplacementPropertyMap.remove("$" + PanlGenerator.PANL_PARAM_PASSTHROUGH);
+
+		// last but not least, we need to put the lpse order
 		StringBuilder panlLpseFields = new StringBuilder();
 		for (Field field : fields) {
 			panlLpseOrder.append(field.getCode());
-			panlLpseOrder.append(",");
+			panlLpseOrder.append(",\\\n");
 			panlLpseFields.append(field.toProperties());
 		}
 
-		panlLpseOrder.append(panlParamPage.getPanlValue());
-		panlLpseOrder.append(",");
-		panlLpseOrder.append(panlParamNumrows.getPanlValue());
-		panlLpseOrder.append(",");
-		panlLpseOrder.append(panlParamSort.getPanlValue());
-		panlLpseOrder.append(",");
-		panlLpseOrder.append(panlParamQuery.getPanlValue());
-
-		// we do not put in the collection facet - as this is done automatically by the server
-
 		// put in the other parameters (query etc)
+		// we are doing this as it is a linked hashmap on the order in which it was inserted
+		for (String key : panlReplacementPropertyMap.keySet()) {
+			panlLpseOrder.append(panlReplacementPropertyMap.get(key))
+							.append(",\\\n");
+		}
+
+		// remove the trailing comma
+		panlLpseOrder.setLength(panlLpseOrder.length() - 3);
+
 
 		PANL_PROPERTIES.put("$panl.lpse.order", new PanlProperty("panl.lpse.order", panlLpseOrder.toString()));
 		PANL_PROPERTIES.put("$panl.lpse.fields", new PanlProperty("panl.lpse.fields", panlLpseFields.toString(), true));
@@ -163,11 +151,11 @@ public class Collection {
 		int i = 0;
 		for (String resultsFieldName: resultFieldNames) {
 			if(i != 0) {
-				panlResultsFieldsAll.append(",");
+				panlResultsFieldsAll.append(",\\\n");
 			}
 			if(i < 5) {
 				if(i != 0) {
-					panlResultsFieldsFirstFive.append(",");
+					panlResultsFieldsFirstFive.append(",\\\n");
 				}
 				panlResultsFieldsFirstFive.append(resultsFieldName);
 			}
@@ -180,7 +168,7 @@ public class Collection {
 		PANL_PROPERTIES.put("$panl.results.fields.firstfive", new PanlProperty("panl.results.fields.firstfive", panlResultsFieldsFirstFive.toString()));
 	}
 
-	private void generateCodesForFields() {
+	private void generateAvailableCodesForFields() {
 		// generate the codes
 		for (int i = 0; i < lpseNumber; i++) {
 			for (char c : CODES.toCharArray()) {

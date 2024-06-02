@@ -1,43 +1,43 @@
 package com.synapticloop.panl.generator.bean;
 
 public class PanlProperty {
-	private final String panlProperty;
-	private final String panlValue;
+	private final String panlPropertyName;
+	private final String panlPropertyValue;
 	private final boolean hideProperty;
 	private String solrClassName;
 
-	public PanlProperty(String panlProperty, String panlValue, int lpseNum) {
-		this.panlProperty = panlProperty;
+	public PanlProperty(String panlPropertyName, String panlPropertyValue, int lpseNum) {
+		this.panlPropertyName = panlPropertyName;
 
 		StringBuilder sb = new StringBuilder();
 		for(int i = 0; i < lpseNum; i ++) {
-			sb.append(panlValue);
+			sb.append(panlPropertyValue);
 		}
-		this.panlValue = sb.toString();
+		this.panlPropertyValue = sb.toString();
 		this.hideProperty = false;
 	}
 
-	public PanlProperty(String panlProperty, String panlValue) {
-		this.panlProperty = panlProperty;
-		this.panlValue = panlValue;
+	public PanlProperty(String panlPropertyName, String panlPropertyValue) {
+		this.panlPropertyName = panlPropertyName;
+		this.panlPropertyValue = panlPropertyValue;
 		this.hideProperty = false;
 	}
 
-	public PanlProperty(String panlProperty, String panlValue, boolean hideProperty) {
-		this.panlProperty = panlProperty;
-		this.panlValue = panlValue;
+	public PanlProperty(String panlPropertyName, String panlPropertyValue, boolean hideProperty) {
+		this.panlPropertyName = panlPropertyName;
+		this.panlPropertyValue = panlPropertyValue;
 		this.hideProperty = hideProperty;
 	}
 
-	public String getPanlValue() {
-		return(panlValue);
+	public String getPanlPropertyValue() {
+		return(panlPropertyValue);
 	}
 
 	public String toProperties() {
 		if(hideProperty) {
-			return(panlValue);
+			return(panlPropertyValue);
 		} else {
-			return (panlProperty + "=" + panlValue);
+			return (panlPropertyName + "=" + panlPropertyValue);
 		}
 	}
 
