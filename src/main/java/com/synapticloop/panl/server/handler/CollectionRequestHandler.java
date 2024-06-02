@@ -63,6 +63,9 @@ public class CollectionRequestHandler {
 			// we set the default query - to be overridden later if one exists
 			// TODO - get rid of this
 			SolrQuery solrQuery = panlClient.getQuery(query);
+			// set the operand - to be over-ridden later if it is in the URI path
+			solrQuery.setParam("q.op", collectionProperties.getSolrDefaultQueryOperand());
+
 			for (String fieldName : collectionProperties.getResultFieldsForName(resultFields)) {
 				solrQuery.addField(fieldName);
 			}
@@ -97,10 +100,6 @@ public class CollectionRequestHandler {
 
 			// now we need to set the start
 			solrQuery.setStart((pageNum - 1) * numRows);
-
-
-			// TODO - this needs to be set properly
-			solrQuery.setParam("q.op", "AND");
 
 			long buildRequestNanos = System.nanoTime() - startNanos;
 			startNanos = System.nanoTime();
@@ -351,8 +350,8 @@ public class CollectionRequestHandler {
 		String finalBefore = lpseUri + before + collectionProperties.getPanlParamSort();
 
 		JSONObject relevanceSort = new JSONObject();
-		relevanceSort.put("replace_desc",  finalBefore + collectionProperties.getSolrSortDesc() + lpse);
-		relevanceSort.put("replace_asc", finalBefore  + collectionProperties.getSolrSortAsc() + lpse);
+		relevanceSort.put("replace_desc",  finalBefore + "+" + lpse);
+		relevanceSort.put("replace_asc", finalBefore  + "-" + lpse);
 		relevanceSort.put("name", "Relevance");
 		jsonObject.put("relevance", relevanceSort);
 
@@ -362,8 +361,8 @@ public class CollectionRequestHandler {
 			JSONObject sortObject = new JSONObject();
 			String sortFieldName = collectionProperties.getSolrFacetNameFromPanlLpseCode(sortFieldLpse);
 			sortObject.put("name", collectionProperties.getPanlNameFromPanlCode(sortFieldLpse));
-			sortObject.put("replace_desc", finalBefore + sortFieldLpse + collectionProperties.getSolrSortDesc() + lpse);
-			sortObject.put("replace_asc", finalBefore + sortFieldLpse + collectionProperties.getSolrSortAsc() + lpse);
+			sortObject.put("replace_desc", finalBefore + sortFieldLpse + "+" + lpse);
+			sortObject.put("replace_asc", finalBefore + sortFieldLpse + "-" + lpse);
 			sortFieldsObject.put(sortFieldName, sortObject);
 		}
 
@@ -649,10 +648,17 @@ public class CollectionRequestHandler {
 
 				} else if (token.equals(collectionProperties.getPanlParamSort())) {
 					lpseTokens.add(
-							new SortLpseToken(
-									collectionProperties,
-									token,
-									lpseTokeniser));
+									new SortLpseToken(
+													collectionProperties,
+													token,
+													lpseTokeniser));
+
+				} else if (token.equals(collectionProperties.getPanlParamQueryOperand())) {
+					lpseTokens.add(
+									new QueryOperandLpseToken(
+													collectionProperties,
+													token,
+													lpseTokeniser));
 
 				} else if (token.equals(collectionProperties.getPanlParamNumRows())) {
 					lpseTokens.add(

@@ -56,7 +56,7 @@ panl.include.single.facets=false
 solr.modifier.AND=+
 solr.modifier.OR=-
 
-solr.default.modifier=+
+solr.default.query.operand=+
 
 solr.sort.ASC=U
 solr.sort.DESC=D

@@ -6,7 +6,6 @@ import com.synapticloop.panl.exception.PanlServerException;
 //import com.synapticloop.panl.server.handler.field.MetaDataField;
 import com.synapticloop.panl.server.properties.field.FacetField;
 import com.synapticloop.panl.server.properties.util.PropertyHelper;
-import org.apache.solr.client.solrj.SolrQuery;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.slf4j.Logger;
@@ -51,19 +50,14 @@ public class CollectionProperties {
 
 	private final String validUrls; // the
 
-	private String panlPropertyValue;
+	private String panlParamQuery;
 	private String panlParamSort;
 	private String panlParamPage;
 	private String panlParamNumRows;
+	private String panlParamQueryOperand;
 	private String panlParamPassthrough;
 
-	private String solrModifierAnd;
-	private String solrModifierOr;
-	private String solrDefaultModifier;
-	private String solrSortAsc;
-	private String solrSortDesc;
-
-	private SolrQuery.ORDER defaultOrder = SolrQuery.ORDER.asc;
+	private String solrDefaultQueryOperand;
 
 	private final List<String> lpseOrder = new ArrayList<>();
 //	private final List<BaseField> lpseFields = new ArrayList<>();
@@ -127,7 +121,6 @@ public class CollectionProperties {
 		parseFacetFields();
 		parseLpseOrder();
 		parseResultFields();
-		parseDefaultSortOrder();
 		parseSortFields();
 
 
@@ -155,21 +148,6 @@ public class CollectionProperties {
 		}
 	}
 
-	private void parseDefaultSortOrder() {
-		String property = properties.getProperty("solr.default.modifier");
-		switch (property) {
-			case "+":
-				this.defaultOrder = SolrQuery.ORDER.asc;
-				break;
-			case "-":
-				this.defaultOrder = SolrQuery.ORDER.desc;
-				break;
-			default:
-				LOGGER.warn("Unknown solr.default.modifier of '{}', using default sort order of SolrQuery.ORDER.asc.", property);
-				this.defaultOrder = SolrQuery.ORDER.asc;
-		}
-	}
-
 	/**
 	 * <p>Parse the default properties for a collection.</p>
 	 *
@@ -190,17 +168,19 @@ public class CollectionProperties {
 		}
 		LOGGER.info("[{}] LPSE number set to '{}'", collectionName, panlLpseNum);
 
-		this.panlPropertyValue = initialiseStringProperty("panl.param.query", true, false);
+		this.solrDefaultQueryOperand = properties.getProperty("solr.default.query.operand", "+");
+		if(!(this.solrDefaultQueryOperand.equals("+") || this.solrDefaultQueryOperand.equals("-"))) {
+			throw new PanlServerException("Property solr.default.query.operand __MUST__ be one of '+', or '-'.");
+		} else {
+			LOGGER.info("[{}] default query operand set to '{}'", collectionName, solrDefaultQueryOperand);
+		}
+
+		this.panlParamQuery = initialiseStringProperty("panl.param.query", true, false);
 		this.panlParamSort = initialiseStringProperty("panl.param.sort", true, false);
 		this.panlParamPage = initialiseStringProperty("panl.param.page", true, true);
 		this.panlParamNumRows = initialiseStringProperty("panl.param.numrows", true, true);
+		this.panlParamQueryOperand = initialiseStringProperty("panl.param.operand", true, false);
 		this.panlParamPassthrough = initialiseStringProperty("panl.param.passthrough", false, false);
-
-		this.solrModifierAnd = properties.getProperty("solr.modifier.AND", "+");
-		this.solrModifierOr = properties.getProperty("solr.modifier.OR", "-");
-		this.solrDefaultModifier = properties.getProperty("solr.default.modifier", "+");
-		this.solrSortAsc = properties.getProperty("solr.sort.ASC", "U");
-		this.solrSortDesc = properties.getProperty("solr.sort.DESC", "D");
 	}
 
 	/**
@@ -378,7 +358,11 @@ public class CollectionProperties {
 	}
 
 	public String getPanlParamQuery() {
-		return (panlPropertyValue);
+		return (panlParamQuery);
+	}
+
+	public String getPanlParamQueryOperand() {
+		return (panlParamQueryOperand);
 	}
 
 	public String getPanlParamSort() {
@@ -397,24 +381,12 @@ public class CollectionProperties {
 		return (panlParamNumRows);
 	}
 
-	public String getSolrModifierAnd() {
-		return (solrModifierAnd);
-	}
-
-	public String getSolrModifierOr() {
-		return (solrModifierOr);
-	}
-
-	public String getSolrDefaultModifier() {
-		return (solrDefaultModifier);
-	}
-
-	public String getSolrSortAsc() {
-		return (solrSortAsc);
-	}
-
-	public String getSolrSortDesc() {
-		return (solrSortDesc);
+	public String getSolrDefaultQueryOperand() {
+		if(solrDefaultQueryOperand.equals("-")) {
+			return("OR");
+		} else {
+			return("AND");
+		}
 	}
 
 	public List<String> getLpseOrder() {
@@ -459,10 +431,6 @@ public class CollectionProperties {
 
 	public boolean isMetadataToken(String token) {
 		return (metadataMap.contains(token));
-	}
-
-	public SolrQuery.ORDER getDefaultOrder() {
-		return (defaultOrder);
 	}
 
 	public boolean hasSortField(String panlCode) {
