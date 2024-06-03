@@ -200,7 +200,7 @@ public class CollectionRequestHandler {
 				facetObject.put("name", collectionProperties.getPanlNameFromSolrFieldName(facetField.getName()));
 
 				JSONArray facetValueArrays = new JSONArray();
-				String panlCodeFromSolrFacetName = collectionProperties.getPanlCodeFromSolrFacetName(facetField.getName());
+				String panlCodeFromSolrFacetName = collectionProperties.getPanlCodeFromSolrFacetFieldName(facetField.getName());
 				facetObject.put("panl_code", panlCodeFromSolrFacetName);
 				for (FacetField.Count value : facetField.getValues()) {
 					// at this point - we need to see whether we already have the 'value'
@@ -298,17 +298,7 @@ public class CollectionRequestHandler {
 		panlObject.put("canonical_uri", getCanonicalUri(panlTokenMap));
 
 		// last thing - we want to put the panl to solr field mappings in
-		JSONObject solrFieldMappings = new JSONObject();
-		// TODO - this should be statically generated at runtime
-		for (String solrFacetField : collectionProperties.getSolrFacetFields()) {
-			solrFieldMappings.put(solrFacetField, collectionProperties.getPanlNameFromSolrFieldName(solrFacetField));
-		}
-
-		for(String solrField : collectionProperties.getSolrFields()) {
-			solrFieldMappings.put(solrField, collectionProperties.getPanlNameFromSolrFieldName(solrField));
-		}
-
-		panlObject.put("fields", solrFieldMappings);
+		panlObject.put("fields", collectionProperties.getSolrFieldToPanlNameLookup());
 		solrJsonObject.put("panl", panlObject);
 
 		return (solrJsonObject.toString());
@@ -502,7 +492,7 @@ public class CollectionRequestHandler {
 
 			String panlLpseCode = lpseToken.getLpseCode();
 			removeObject.put("panl_code", panlLpseCode);
-			removeObject.put("facet_name", collectionProperties.getNameFromCode(panlLpseCode));
+			removeObject.put("facet_name", collectionProperties.getSolrFieldNameFromPanlLpseCode(panlLpseCode));
 			removeObject.put("name", collectionProperties.getPanlNameFromPanlCode(panlLpseCode));
 			jsonArray.put(removeObject);
 			i++;
@@ -715,8 +705,8 @@ public class CollectionRequestHandler {
 		return (lpseTokens);
 	}
 
-	public String getValidUrlsJSON() {
-		return (collectionProperties.getValidUrlsJson());
+	public String getValidUrlString() {
+		return (collectionProperties.getValidUrlsString());
 	}
 
 	public boolean isValidResultsFields(String path) {

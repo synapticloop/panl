@@ -13,7 +13,7 @@ public class Field {
 	private static final String PROPERTY_KEY_PANL_NAME = "panl.name.";
 
 	private final String panlLpseCode;
-	private final String panlFacetName;
+	private final String panlFieldName;
 	private final String solrFieldName;
 
 	public Field(String panlFacetProperty, Properties properties, String collectionName, int panlLpseNum) throws PanlServerException {
@@ -26,13 +26,13 @@ public class Field {
 
 		LOGGER.info("[{}] Mapping Solr field named '{}' to panl key '{}'", collectionName, solrFieldName, panlLpseCode);
 
-		String panlFacetNameTemp = properties.getProperty(PROPERTY_KEY_PANL_NAME + panlLpseCode, null);
-		if (null == panlFacetNameTemp) {
+		String panlFieldNameTemp = properties.getProperty(PROPERTY_KEY_PANL_NAME + panlLpseCode, null);
+		if (null == panlFieldNameTemp) {
 			LOGGER.warn("[{}] Could not find a name for Panl field LPSE code '{}', using Solr field name '{}'", collectionName, panlLpseCode, solrFieldName);
-			this.panlFacetName = solrFieldName;
+			this.panlFieldName = solrFieldName;
 		} else {
-			this.panlFacetName = panlFacetNameTemp;
-			LOGGER.info("[{}] Found a name for Panl field LPSE code '{}', using '{}'", collectionName, panlLpseCode, panlFacetName);
+			this.panlFieldName = panlFieldNameTemp;
+			LOGGER.info("[{}] Found a name for Panl field LPSE code '{}', using '{}'", collectionName, panlLpseCode, panlFieldName);
 		}
 	}
 
@@ -41,8 +41,8 @@ public class Field {
 		return panlLpseCode;
 	}
 
-	public String getPanlFacetName() {
-		return panlFacetName;
+	public String getPanlFieldName() {
+		return panlFieldName;
 	}
 
 	public String getSolrFieldName() {

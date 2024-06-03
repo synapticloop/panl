@@ -19,7 +19,7 @@ public class FacetField {
 	public static final String BOOLEAN_FALSE_VALUE = "false";
 
 	private final String panlLpseCode;
-	private final String panlFacetName;
+	private final String panlFieldName;
 	private final String solrFieldName;
 	private final String panlPrefix;
 	private final String panlSuffix;
@@ -42,10 +42,10 @@ public class FacetField {
 		String panlFacetNameTemp = properties.getProperty(PROPERTY_KEY_PANL_NAME + panlLpseCode, null);
 		if (null == panlFacetNameTemp) {
 			LOGGER.warn("[{}] Could not find a name for Panl facet LPSE code '{}', using Solr field name '{}'", collectionName, panlLpseCode, solrFieldName);
-			this.panlFacetName = solrFieldName;
+			this.panlFieldName = solrFieldName;
 		} else {
-			this.panlFacetName = panlFacetNameTemp;
-			LOGGER.info("[{}] Found a name for Panl facet LPSE code '{}', using '{}'", collectionName, panlLpseCode, panlFacetName);
+			this.panlFieldName = panlFacetNameTemp;
+			LOGGER.info("[{}] Found a name for Panl facet LPSE code '{}', using '{}'", collectionName, panlLpseCode, panlFieldName);
 		}
 
 		// now we need to look at the suffixes and prefixes
@@ -163,8 +163,8 @@ public class FacetField {
 		return panlLpseCode;
 	}
 
-	public String getPanlFacetName() {
-		return panlFacetName;
+	public String getPanlFieldName() {
+		return panlFieldName;
 	}
 
 	public String getSolrFieldName() {
