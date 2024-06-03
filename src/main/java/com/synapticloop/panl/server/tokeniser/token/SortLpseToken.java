@@ -17,7 +17,7 @@ import org.apache.solr.client.solrj.SolrQuery;
 public class SortLpseToken extends LpseToken {
 	private String panlFacetCode;
 	private String solrFacetField;
-	private SolrQuery.ORDER sortOrder;
+	private SolrQuery.ORDER sortOrder = SolrQuery.ORDER.desc;
 
 	public SortLpseToken(String panlLpseCode) {
 		super(panlLpseCode);

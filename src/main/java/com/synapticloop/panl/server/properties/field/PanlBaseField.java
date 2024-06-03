@@ -2,46 +2,64 @@ package com.synapticloop.panl.server.properties.field;
 
 import com.synapticloop.panl.exception.PanlServerException;
 import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.util.Properties;
 
-public class FacetField extends BaseField {
-	private static final Logger LOGGER = LoggerFactory.getLogger(FacetField.class);
-
+public abstract class PanlBaseField {
+	protected static final String PROPERTY_KEY_PANL_FIELD = "panl.field.";
+	protected static final String PROPERTY_KEY_PANL_NAME = "panl.name.";
 	private static final String PROPERTY_KEY_PANL_FACET = "panl.facet.";
 	private static final String PROPERTY_KEY_PANL_TYPE = "panl.type.";
 	private static final String PROPERTY_KEY_PANL_PREFIX = "panl.prefix.";
 	private static final String PROPERTY_KEY_PANL_SUFFIX = "panl.suffix.";
 
-	public static final String BOOLEAN_TRUE_VALUE = "true";
-	public static final String BOOLEAN_FALSE_VALUE = "false";
+	private static final String BOOLEAN_TRUE_VALUE = "true";
+	private static final String BOOLEAN_FALSE_VALUE = "false";
 
 	private final String panlPrefix;
 	private final String panlSuffix;
-	private final String solrFieldType;
 
 	private final boolean isBooleanSolrFieldType;
 	private final String booleanTrueReplacement;
 	private final String booleanFalseReplacement;
 
-	public FacetField(String panlFacetProperty, Properties properties, String collectionName, int panlLpseNum) throws PanlServerException {
-		this.solrFieldName = properties.getProperty(panlFacetProperty);
-		this.panlLpseCode = panlFacetProperty.substring(PROPERTY_KEY_PANL_FACET.length());
+	private final String panlLpseCode;
+	private final String panlFieldName;
+	private final String solrFieldName;
+	private final String solrFieldType;
+
+	public PanlBaseField(
+					String lpseCode,
+					String propertyKey,
+					Properties properties,
+					String collectionName) throws PanlServerException {
+		this(lpseCode, propertyKey, properties, collectionName, 1);
+	}
+
+	public PanlBaseField(
+					String lpseCode,
+					String propertyKey,
+					Properties properties,
+					String collectionName,
+					int panlLpseNum) throws PanlServerException {
+		this.solrFieldName = properties.getProperty(propertyKey);
+		this.panlLpseCode = lpseCode;
 
 		if (panlLpseCode.length() != panlLpseNum) {
-			throw new PanlServerException(PROPERTY_KEY_PANL_FACET + panlLpseCode + " property key is of invalid length - should be " + panlLpseNum);
+			throw new PanlServerException(propertyKey + " has invalid lpse length of " + lpseCode.length() + " is of invalid length - should be " + panlLpseNum);
 		}
 
-		LOGGER.info("[{}] Mapping Solr facet named '{}' to panl key '{}'", collectionName, solrFieldName, panlLpseCode);
+		getLogger().info("[{}] [{}] Mapping Solr field name '{}' to panl key '{}', LPSE length {}",
+						collectionName, this.getClass().getSimpleName(),
+						solrFieldName,
+						panlLpseCode,
+						panlLpseNum);
 
 		String panlFacetNameTemp = properties.getProperty(PROPERTY_KEY_PANL_NAME + panlLpseCode, null);
 		if (null == panlFacetNameTemp) {
-			LOGGER.warn("[{}] Could not find a name for Panl facet LPSE code '{}', using Solr field name '{}'", collectionName, panlLpseCode, solrFieldName);
 			this.panlFieldName = solrFieldName;
 		} else {
 			this.panlFieldName = panlFacetNameTemp;
-			LOGGER.info("[{}] Found a name for Panl facet LPSE code '{}', using '{}'", collectionName, panlLpseCode, panlFieldName);
 		}
 
 		// now we need to look at the suffixes and prefixes
@@ -62,6 +80,20 @@ public class FacetField extends BaseField {
 			this.booleanFalseReplacement = null;
 			this.isBooleanSolrFieldType = false;
 		}
+	}
+
+	public abstract Logger getLogger();
+
+	public String getPanlLpseCode() {
+		return panlLpseCode;
+	}
+
+	public String getPanlFieldName() {
+		return panlFieldName;
+	}
+
+	public String getSolrFieldName() {
+		return solrFieldName;
 	}
 
 	public String getConvertedFromPanlValue(String value) {

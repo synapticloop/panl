@@ -117,6 +117,7 @@ public class CollectionRequestHandler {
 							sendAnReceiveNanos));
 
 		} catch (Exception e) {
+			e.printStackTrace();
 			throw new PanlServerException("Could not query the Solr instance, message was: " + e.getMessage(), e);
 		}
 	}
@@ -416,6 +417,14 @@ public class CollectionRequestHandler {
 					lpseUri.append(token.getResetUriPathComponent());
 					lpse.append(token.getLpseComponent());
 				}
+			} else {
+				if (collectionProperties.isMetaData(lpseOrder)) {
+					LpseToken token = collectionProperties.getTokenForLpseCode(lpseOrder);
+					if (null != token) {
+						lpseUri.append(token.getCanonicalUriPathComponent());
+						lpse.append(token.getCanonicalLpseComponent());
+					}
+				}
 			}
 		}
 
@@ -709,7 +718,7 @@ public class CollectionRequestHandler {
 													valueTokeniser));
 				} else if (token.equals(collectionProperties.getPanlParamPassThrough())) {
 					lpseTokens.add(
-									new PassthroughLpseToken(
+									new PassThroughLpseToken(
 													collectionProperties,
 													token,
 													valueTokeniser));

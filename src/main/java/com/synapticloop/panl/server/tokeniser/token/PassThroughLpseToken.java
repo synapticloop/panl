@@ -8,7 +8,7 @@ import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.util.StringTokenizer;
 
-public class PassthroughLpseToken extends LpseToken {
+public class PassThroughLpseToken extends LpseToken {
 	private CollectionProperties collectionProperties;
 
 	/**
@@ -16,11 +16,11 @@ public class PassthroughLpseToken extends LpseToken {
 	 *
 	 * @param panlLpseCode The code to create for the lpse part of the URL
 	 */
-	public PassthroughLpseToken(String panlLpseCode) {
+	public PassThroughLpseToken(String panlLpseCode) {
 		super(panlLpseCode);
 	}
 
-	public PassthroughLpseToken(
+	public PassThroughLpseToken(
 			CollectionProperties collectionProperties,
 			String panlLpseCode,
 			StringTokenizer valueTokeniser) {
@@ -41,6 +41,14 @@ public class PassthroughLpseToken extends LpseToken {
 								this.value),
 						StandardCharsets.UTF_8) +
 						"/");
+	}
+
+	@Override public String getCanonicalUriPathComponent() {
+		return("");
+	}
+
+	@Override public String getCanonicalLpseComponent() {
+		return("");
 	}
 
 	@Override public String getLpseComponent() {
