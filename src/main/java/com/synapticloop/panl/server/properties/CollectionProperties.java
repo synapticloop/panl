@@ -5,6 +5,7 @@ import com.synapticloop.panl.exception.PanlServerException;
 //import com.synapticloop.panl.server.handler.field.FacetField;
 //import com.synapticloop.panl.server.handler.field.MetaDataField;
 import com.synapticloop.panl.server.properties.field.FacetField;
+import com.synapticloop.panl.server.properties.field.Field;
 import com.synapticloop.panl.server.properties.util.PropertyHelper;
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -45,6 +46,16 @@ public class CollectionProperties {
 	private Integer panlLpseNum;
 
 	private List<FacetField> FACET_FIELDS = new ArrayList<>();
+	private List<Field> NON_FACET_FIELDS = new ArrayList<>();
+
+	private Map<String, FacetField> PANL_CODE_TO_FACET_FIELD_MAP = new HashMap();
+	private Map<String, FacetField> PANL_NAME_TO_FACET_FIELD_MAP = new HashMap();
+	private Map<String, FacetField> SOLR_NAME_TO_FACET_FIELD_MAP = new HashMap();
+	private Map<String, Field> PANL_CODE_TO_FIELD_MAP = new HashMap();
+	private Map<String, Field> PANL_NAME_TO_FIELD_MAP = new HashMap();
+	private Map<String, Field> SOLR_NAME_TO_FIELD_MAP = new HashMap();
+
+
 	private boolean panlIncludeSingleFacets;
 	private boolean panlIncludeSameNumberFacets;
 
@@ -55,7 +66,7 @@ public class CollectionProperties {
 	private String panlParamPage;
 	private String panlParamNumRows;
 	private String panlParamQueryOperand;
-	private String panlParamPassthrough;
+	private String panlParamPassThrough;
 
 	private String solrDefaultQueryOperand;
 	private int solrFacetLimit;
@@ -120,6 +131,7 @@ public class CollectionProperties {
 
 		parseDefaultProperties();
 		parseFacetFields();
+		parseFields();
 		parseLpseOrder();
 		parseResultFields();
 		parseSortFields();
@@ -140,7 +152,7 @@ public class CollectionProperties {
 		String sortFieldsTemp = properties.getProperty("panl.sort.fields", "");
 		for (String sortField : sortFieldsTemp.split(",")) {
 			String panlLpseCode = solrFacetNameToPanlCodeMap.getOrDefault(sortField, null);
-			if(null == panlLpseCode) {
+			if (null == panlLpseCode) {
 				LOGGER.warn("[{}] '{}' Could not look up the Panl LPSE code for Solr field name '{}', ignoring...", collectionName, "panl.sort.fields", sortField);
 			} else {
 				LOGGER.info("[{}] Adding Panl LPSE code '{}' for Solr field name '{}'.", collectionName, panlLpseCode, sortField);
@@ -150,10 +162,21 @@ public class CollectionProperties {
 	}
 
 	/**
-	 * <p>Parse the default properties for a collection.</p>
+	 * <p>Parse the default properties for a collection, which affect all search
+	 * queries.</p>
+	 *
+	 * <p>Some parameters have default values: </p>
+	 *
+	 * <ul>
+	 *   <li><code>panl.include.single.facets</code> - default value <code>false</code></li>
+	 *   <li><code>panl.include.same.number.facets</code> - default value <code>false</code></li>
+	 *   <li><code>solr.facet.min.count</code> - default value <code>1</code></li>
+	 *   <li><code>solr.numrows.default</code> - default value <code>10</code></li>
+	 *   <li><code>solr.facet.limit</code> - default value <code>100</code></li>
+	 * </ul>
 	 *
 	 * @throws PanlServerException If a mandatory property was not found, or
-	 *                             could not be adequately parsed
+	 * 				could not be adequately parsed
 	 */
 	private void parseDefaultProperties() throws PanlServerException {
 		this.panlIncludeSingleFacets = properties.getProperty("panl.include.single.facets", "false").equals("true");
@@ -171,7 +194,7 @@ public class CollectionProperties {
 		LOGGER.info("[{}] LPSE number set to '{}'", collectionName, panlLpseNum);
 
 		this.solrDefaultQueryOperand = properties.getProperty("solr.default.query.operand", "+");
-		if(!(this.solrDefaultQueryOperand.equals("+") || this.solrDefaultQueryOperand.equals("-"))) {
+		if (!(this.solrDefaultQueryOperand.equals("+") || this.solrDefaultQueryOperand.equals("-"))) {
 			throw new PanlServerException("Property solr.default.query.operand __MUST__ be one of '+', or '-'.");
 		} else {
 			LOGGER.info("[{}] default query operand set to '{}'", collectionName, solrDefaultQueryOperand);
@@ -182,7 +205,7 @@ public class CollectionProperties {
 		this.panlParamPage = initialiseStringProperty("panl.param.page", true, true);
 		this.panlParamNumRows = initialiseStringProperty("panl.param.numrows", true, true);
 		this.panlParamQueryOperand = initialiseStringProperty("panl.param.query.operand", true, false);
-		this.panlParamPassthrough = initialiseStringProperty("panl.param.passthrough", false, false);
+		this.panlParamPassThrough = initialiseStringProperty("panl.param.passthrough", false, false);
 	}
 
 	/**
@@ -200,9 +223,9 @@ public class CollectionProperties {
 	 *
 	 * <p>Finally, if the property is found it will be added to the metadatMap.</p>
 	 *
-	 * @param propertyName    The property name to look up
-	 * @param isMandatory     Whether this is a mandatory property - if it is, and
-	 *                        it doesn't exist, then this will throw a PanlServerException
+	 * @param propertyName The property name to look up
+	 * @param isMandatory Whether this is a mandatory property - if it is, and
+	 * 				it doesn't exist, then this will throw a PanlServerException
 	 * @param hasPrefixSuffix Whether this property can also
 	 * @return the initialised property, or null if it doesn't exist
 	 * @throws PanlServerException If a mandatory property was not found
@@ -212,11 +235,11 @@ public class CollectionProperties {
 		if (null == panlPropertyValue) {
 			if (isMandatory) {
 				throw new PanlServerException(
-						"MANDATORY PROPERTY MISSING: Could not find the '" +
-								propertyName +
-								"' property in the '" +
-								this.collectionName +
-								"' Panl properties file.'");
+								"MANDATORY PROPERTY MISSING: Could not find the '" +
+												propertyName +
+												"' property in the '" +
+												this.collectionName +
+												"' Panl properties file.'");
 			} else {
 				return (null);
 			}
@@ -244,19 +267,25 @@ public class CollectionProperties {
 
 	/**
 	 * <p>Parse the properties files and extract all properties that begin with
-	 * the panl facet property key</p>
+	 * the panl facet property key.</p>
 	 *
 	 * <p> See the
 	 * {@link  CollectionProperties#PROPERTY_KEY_PANL_FACET PROPERTY_KEY_PANL_FACET}
 	 * static String for the panl prefix property</p>
 	 *
 	 * @throws PanlServerException If there was an error looking up the properties,
-	 *                             or with the found property and its associated values
+	 * 				or with the found property and its associated values
 	 */
 	private void parseFacetFields() throws PanlServerException {
 		List<String> facetFieldList = new ArrayList<>();
 		for (String panlFieldKey : PropertyHelper.getPropertiesByPrefix(properties, PROPERTY_KEY_PANL_FACET)) {
-			FACET_FIELDS.add(new FacetField(panlFieldKey, properties, collectionName, panlLpseNum));
+			FacetField facetField = new FacetField(panlFieldKey, properties, collectionName, panlLpseNum);
+
+			FACET_FIELDS.add(facetField);
+
+			PANL_CODE_TO_FACET_FIELD_MAP.put(facetField.getPanlLpseCode(), facetField);
+			PANL_NAME_TO_FACET_FIELD_MAP.put(facetField.getPanlFacetName(), facetField);
+			SOLR_NAME_TO_FACET_FIELD_MAP.put(facetField.getSolrFieldName(), facetField);
 		}
 
 		// now parse the fields
@@ -309,10 +338,29 @@ public class CollectionProperties {
 	}
 
 	/**
-	 * <p></p>
+	 * <p>Parse the fields - these are not able to be be used as a facet, however
+	 * it will allow sort ordering.</p>
 	 *
-	 * @throws PanlServerException if the panl.lpse.order does not exist
+	 * @throws PanlServerException If there was an error parsing the field
 	 */
+	private void parseFields() throws PanlServerException {
+		for (String panlFieldKey : PropertyHelper.getPropertiesByPrefix(properties, PROPERTY_KEY_PANL_FACET)) {
+			Field field = new Field(panlFieldKey, properties, collectionName, panlLpseNum);
+			NON_FACET_FIELDS.add(field);
+
+			PANL_CODE_TO_FIELD_MAP.put(field.getPanlLpseCode(), field);
+			PANL_NAME_TO_FIELD_MAP.put(field.getPanlFacetName(), field);
+			SOLR_NAME_TO_FIELD_MAP.put(field.getSolrFieldName(), field);
+
+		}
+
+	}
+
+		/**
+		 * <p></p>
+		 *
+		 * @throws PanlServerException if the panl.lpse.order does not exist
+		 */
 	private void parseLpseOrder() throws PanlServerException {
 		String panlLpseOrder = properties.getProperty("panl.lpse.order", null);
 		if (null == panlLpseOrder) {
@@ -371,8 +419,8 @@ public class CollectionProperties {
 		return (panlParamSort);
 	}
 
-	public String getPanlParamPassthrough() {
-		return (panlParamPassthrough);
+	public String getPanlParamPassThrough() {
+		return (panlParamPassThrough);
 	}
 
 	public String getPanlParamPage() {
@@ -384,10 +432,10 @@ public class CollectionProperties {
 	}
 
 	public String getSolrDefaultQueryOperand() {
-		if(solrDefaultQueryOperand.equals("-")) {
-			return("OR");
+		if (solrDefaultQueryOperand.equals("-")) {
+			return ("OR");
 		} else {
-			return("AND");
+			return ("AND");
 		}
 	}
 
@@ -440,7 +488,7 @@ public class CollectionProperties {
 	}
 
 	public String getSolrFacetNameFromPanlLpseCode(String name) {
-		return(panlCodeToSolrFieldNameMap.get(name));
+		return (panlCodeToSolrFieldNameMap.get(name));
 	}
 
 	public String getNameFromCode(String panlCode) {
@@ -482,7 +530,7 @@ public class CollectionProperties {
 	 * a replacement for true/false for it.</p>
 	 *
 	 * @param panlFacetCode The panl LPSE code to lookup
-	 * @param value         the value to convert if any conversions are required
+	 * @param value the value to convert if any conversions are required
 	 * @return the de-suffixed, de-prefixed, and de-replaced value.
 	 */
 	public String getConvertedFromPanlValue(String panlFacetCode, String value) {
@@ -505,12 +553,12 @@ public class CollectionProperties {
 		if (panlBooleanFacets.contains(panlFacetCode)) {
 			// we might have a boolean replacement
 			if (panlBooleanFacetFalseValues.containsKey(panlFacetCode) &&
-					panlBooleanFacetFalseValues.getOrDefault(panlFacetCode, "").equals(value)) {
+							panlBooleanFacetFalseValues.getOrDefault(panlFacetCode, "").equals(value)) {
 				return ("false");
 			}
 			// we might have a boolean replacement
 			if (panlBooleanFacetTrueValues.containsKey(panlFacetCode) &&
-					panlBooleanFacetTrueValues.getOrDefault(panlFacetCode, "").equals(value)) {
+							panlBooleanFacetTrueValues.getOrDefault(panlFacetCode, "").equals(value)) {
 				return ("true");
 			}
 		}
@@ -555,10 +603,10 @@ public class CollectionProperties {
 	}
 
 	public List<String> getSortFields() {
-		return(panlLpseCodeSortFields);
+		return (panlLpseCodeSortFields);
 	}
 
 	public int getSolrFacetLimit() {
-		return(solrFacetLimit);
+		return (solrFacetLimit);
 	}
 }

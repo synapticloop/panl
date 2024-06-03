@@ -675,7 +675,7 @@ public class CollectionRequestHandler {
 									collectionProperties,
 									token,
 									valueTokeniser));
-				} else if (token.equals(collectionProperties.getPanlParamPassthrough())) {
+				} else if (token.equals(collectionProperties.getPanlParamPassThrough())) {
 					lpseTokens.add(
 							new PassthroughLpseToken(
 									collectionProperties,
