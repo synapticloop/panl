@@ -63,7 +63,7 @@ public class PanlRequestHandler implements HttpRequestHandler {
 			response.setStatusCode(HttpStatus.SC_NOT_FOUND);
 			response.setEntity(
 					new StringEntity(
-							collectionRequestHandler.getValidUrlsJSON(),
+							collectionRequestHandler.getValidUrlString(),
 							CONTENT_TYPE_JSON));
 			return;
 		}

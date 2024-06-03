@@ -6,11 +6,10 @@ import org.slf4j.LoggerFactory;
 
 import java.util.Properties;
 
-public class FacetField {
+public class FacetField extends BaseField {
 	private static final Logger LOGGER = LoggerFactory.getLogger(FacetField.class);
 
 	private static final String PROPERTY_KEY_PANL_FACET = "panl.facet.";
-	private static final String PROPERTY_KEY_PANL_NAME = "panl.name.";
 	private static final String PROPERTY_KEY_PANL_TYPE = "panl.type.";
 	private static final String PROPERTY_KEY_PANL_PREFIX = "panl.prefix.";
 	private static final String PROPERTY_KEY_PANL_SUFFIX = "panl.suffix.";
@@ -18,9 +17,6 @@ public class FacetField {
 	public static final String BOOLEAN_TRUE_VALUE = "true";
 	public static final String BOOLEAN_FALSE_VALUE = "false";
 
-	private final String panlLpseCode;
-	private final String panlFacetName;
-	private final String solrFieldName;
 	private final String panlPrefix;
 	private final String panlSuffix;
 	private final String solrFieldType;
@@ -42,26 +38,16 @@ public class FacetField {
 		String panlFacetNameTemp = properties.getProperty(PROPERTY_KEY_PANL_NAME + panlLpseCode, null);
 		if (null == panlFacetNameTemp) {
 			LOGGER.warn("[{}] Could not find a name for Panl facet LPSE code '{}', using Solr field name '{}'", collectionName, panlLpseCode, solrFieldName);
-			this.panlFacetName = solrFieldName;
+			this.panlFieldName = solrFieldName;
 		} else {
-			this.panlFacetName = panlFacetNameTemp;
-			LOGGER.info("[{}] Found a name for Panl facet LPSE code '{}', using '{}'", collectionName, panlLpseCode, panlFacetName);
+			this.panlFieldName = panlFacetNameTemp;
+			LOGGER.info("[{}] Found a name for Panl facet LPSE code '{}', using '{}'", collectionName, panlLpseCode, panlFieldName);
 		}
 
 		// now we need to look at the suffixes and prefixes
-		String facetPrefix = properties.getProperty(PROPERTY_KEY_PANL_PREFIX + panlLpseCode);
-		if (null != facetPrefix) {
-			this.panlPrefix = facetPrefix;
-		} else {
-			this.panlPrefix = null;
-		}
+		this.panlPrefix = properties.getProperty(PROPERTY_KEY_PANL_PREFIX + panlLpseCode);
 
-		String facetSuffix = properties.getProperty(PROPERTY_KEY_PANL_SUFFIX + panlLpseCode);
-		if (null != facetSuffix) {
-			this.panlSuffix = facetSuffix;
-		} else {
-			this.panlSuffix = null;
-		}
+		this.panlSuffix = properties.getProperty(PROPERTY_KEY_PANL_SUFFIX + panlLpseCode);
 
 		// finally - we are going to look at the replacement - but only if there
 		// is a type of solr.BoolField and values are actually assigned
@@ -157,18 +143,6 @@ public class FacetField {
 
 	private boolean hasBooleanFalseReplacement() {
 		return (null != this.booleanFalseReplacement);
-	}
-
-	public String getPanlLpseCode() {
-		return panlLpseCode;
-	}
-
-	public String getPanlFacetName() {
-		return panlFacetName;
-	}
-
-	public String getSolrFieldName() {
-		return solrFieldName;
 	}
 
 	public String getSolrFieldType() {

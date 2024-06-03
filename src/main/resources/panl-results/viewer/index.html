@@ -41,6 +41,8 @@
 
 	div#content { float: right; width: 700px; }
 
+	div.padding { padding-bottom: 14px;}
+
 	div#footer { border-top: 1px solid #afafaf; margin: 84px auto 0 auto; padding: 6px 0; background-color: #efefef; clear: both; position: relative; height: 80px; margin-top: -80px; width: 1024px; }
 	div#footer p { text-align: center; text-justify: none }
 
@@ -67,8 +69,13 @@
 	</div>
 	<div id="wrapper">
 		<div id="content">
-			<p><strong>Search Results</strong> <span id="num_results"></span></p>
-			<p>
+			<div class="padding">
+				<p>
+					<span id="num_results" class="left"><strong>Search Results</strong> </span>
+					<span id="query_operand" class="right"><strong>q.op</strong> </span>
+				</p>
+			</div>
+			<p class="clear">
 				<strong>Page </strong> <span id="page_num"></span> of <span id="num_pages"></span>
 				<strong>Showing </strong> <span id="num_per_page"></span> results per page
 				<strong>This page has </strong> <span id="num_shown"></span> result(s)

@@ -74,25 +74,41 @@ function populatePanlResults(panlJsonData) {
 		$("#documents").append("<dl>" + innerList + "</dl>");
 	}
 
+	addQueryOperand(panlJsonData.panl.query_operand);
 	addSortingOptions(panlJsonData.panl.sorting);
 	addPagination(panlJsonData.panl.pagination);
 	addActiveFilters(panlJsonData.panl.active);
 	addAvailableFilters(panlJsonData.panl.available);
 }
 
+function addQueryOperand(queryOperand) {
+	$("#query_operand").append(
+		"<a href=\"" +
+    panlResultsViewerUrl +
+    $("#collection").text() +
+    queryOperand.AND +
+    "\"/>AND</a>&nbsp;");
+	$("#query_operand").append(
+		" || <a href=\"" +
+    panlResultsViewerUrl +
+    $("#collection").text() +
+    queryOperand.OR +
+    "\"/>OR</a>&nbsp;");
+
+}
 function addSortingOptions(sortingObject) {
 	$("#sorting_options").append(
 		"Relevance: <a href=\"" +
     panlResultsViewerUrl +
     $("#collection").text() +
-    sortingObject.replace_asc +
+    sortingObject.relevance.replace_asc +
     "\"/>ASC</a>&nbsp;");
 
 	$("#sorting_options").append(
 		"<a href=\"" +
     panlResultsViewerUrl +
     $("#collection").text() +
-    sortingObject.replace_desc +
+    sortingObject.relevance.replace_desc +
     "\"/>DESC</a>&nbsp;");
 
 	for(const sortName in sortingObject.fields) {

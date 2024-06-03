@@ -50,7 +50,7 @@ public class FacetLpseToken extends LpseToken {
 
 
 		if(collectionProperties.hasFacetCode(panlLpseCode)) {
-			this.solrField = collectionProperties.getNameFromCode(panlLpseCode);
+			this.solrField = collectionProperties.getSolrFieldNameFromPanlLpseCode(panlLpseCode);
 		} else {
 			this.isValid = false;
 		}
