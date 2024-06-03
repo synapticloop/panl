@@ -24,9 +24,9 @@ public class SortLpseToken extends LpseToken {
 	}
 
 	public SortLpseToken(
-			CollectionProperties collectionProperties,
-			String panlLpseCode,
-			PanlTokeniser lpseTokeniser) {
+					CollectionProperties collectionProperties,
+					String panlLpseCode,
+					PanlTokeniser lpseTokeniser) {
 
 		super(panlLpseCode);
 
@@ -37,14 +37,17 @@ public class SortLpseToken extends LpseToken {
 		// consume all tokens until we find a + or a -
 		StringBuilder sb = new StringBuilder();
 
-		while (lpseTokeniser.hasMoreTokens()) {
+		boolean hasFound = false;
+		while (!hasFound && lpseTokeniser.hasMoreTokens()) {
 			String sortLpseToken = lpseTokeniser.nextToken();
 			switch (sortLpseToken) {
 				case "+":
 					this.sortOrder = SolrQuery.ORDER.asc;
+					hasFound = true;
 					break;
 				case "-":
 					this.sortOrder = SolrQuery.ORDER.desc;
+					hasFound = true;
 					break;
 				default:
 					sb.append(sortLpseToken);
@@ -59,7 +62,7 @@ public class SortLpseToken extends LpseToken {
 			this.isValid = false;
 		}
 
-		this.solrFacetField = collectionProperties.getNameFromCode(this.panlFacetCode);
+		this.solrFacetField = collectionProperties.getSolrFieldNameFromPanlLpseCode(this.panlFacetCode);
 
 
 		// lastly - we have a sort order (either ascending, or descending) - although
@@ -71,7 +74,8 @@ public class SortLpseToken extends LpseToken {
 	 *
 	 * @return ALWAYS returns an empty string
 	 */
-	@Override public String getUriPathComponent() {
+	@Override
+	public String getUriPathComponent() {
 		return ("");
 	}
 
@@ -81,11 +85,13 @@ public class SortLpseToken extends LpseToken {
 	 *
 	 * @return The LPSE component, or an empty string if not valid
 	 */
-	@Override public String getLpseComponent() {
+	@Override
+	public String getLpseComponent() {
 		if (isValid) {
 			return (this.lpseCode +
-					this.panlFacetCode +
-					this.sortOrder);
+							this.panlFacetCode +
+							(this.sortOrder.equals(SolrQuery.ORDER.asc) ? "+" : "-"));
+
 		} else {
 			return ("");
 		}
@@ -106,15 +112,16 @@ public class SortLpseToken extends LpseToken {
 	 *
 	 * @return The human-readable explanation
 	 */
-	@Override public String explain() {
+	@Override
+	public String explain() {
 		return ("PANL " +
-				(this.isValid ? "[  VALID  ]" : "[ INVALID ]") +
-				" <sort>          LPSE code '" +
-				this.panlFacetCode +
-				"' (solr field '" +
-				this.solrFacetField +
-				"'), sorted " +
-				(this.sortOrder == SolrQuery.ORDER.asc ? "ASCending" : "DESCending"));
+						(this.isValid ? "[  VALID  ]" : "[ INVALID ]") +
+						" <sort>          LPSE code '" +
+						this.panlFacetCode +
+						"' (solr field '" +
+						this.solrFacetField +
+						"'), sorted " +
+						(this.sortOrder == SolrQuery.ORDER.asc ? "ASCending" : "DESCending"));
 	}
 
 	/**
@@ -127,13 +134,15 @@ public class SortLpseToken extends LpseToken {
 	 *
 	 * @param solrQuery The Solr Query to apply the sort order to
 	 */
-	@Override public void applyToQuery(SolrQuery solrQuery) {
+	@Override
+	public void applyToQuery(SolrQuery solrQuery) {
 		if (isValid) {
 			solrQuery.addSort(this.solrFacetField, sortOrder);
 		}
 	}
 
-	@Override public String getType() {
+	@Override
+	public String getType() {
 		return ("sort");
 	}
 

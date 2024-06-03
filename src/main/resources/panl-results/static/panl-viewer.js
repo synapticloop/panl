@@ -85,14 +85,14 @@ function addSortingOptions(sortingObject) {
 		"Relevance: <a href=\"" +
     panlResultsViewerUrl +
     $("#collection").text() +
-    sortingObject.replace_asc +
+    sortingObject.relevance.replace_asc +
     "\"/>ASC</a>&nbsp;");
 
 	$("#sorting_options").append(
 		"<a href=\"" +
     panlResultsViewerUrl +
     $("#collection").text() +
-    sortingObject.replace_desc +
+    sortingObject.relevance.replace_desc +
     "\"/>DESC</a>&nbsp;");
 
 	for(const sortName in sortingObject.fields) {
