@@ -6,6 +6,7 @@ import com.synapticloop.panl.server.client.*;
 import com.synapticloop.panl.server.handler.helper.CollectionHelper;
 import com.synapticloop.panl.server.properties.PanlProperties;
 import com.synapticloop.panl.server.properties.CollectionProperties;
+import com.synapticloop.panl.server.properties.field.BaseField;
 import com.synapticloop.panl.server.tokeniser.PanlTokeniser;
 import com.synapticloop.panl.server.tokeniser.token.*;
 import org.apache.solr.client.solrj.SolrClient;
@@ -297,7 +298,7 @@ public class CollectionRequestHandler {
 		));
 		panlObject.put("timings", timingsObject);
 
-		panlObject.put("canonical_uri", getCanonicalUri(panlTokenMap));
+		panlObject.put("canonical_uri", getCanonicalUriPath(panlTokenMap));
 
 		// last thing - we want to put the panl to solr field mappings in
 		panlObject.put("fields", collectionProperties.getSolrFieldToPanlNameLookup());
@@ -326,7 +327,7 @@ public class CollectionRequestHandler {
 		for (String lpseOrder : collectionProperties.getLpseOrder()) {
 			// because the sort order does not have any URI path component, we can
 			// just add the URI components to it safely
-			if(!panlLpseCode.equals(lpseOrder)) {
+			if (!panlLpseCode.equals(lpseOrder)) {
 				// keep on adding things
 				if (panlTokenMap.containsKey(lpseOrder)) {
 					for (LpseToken token : panlTokenMap.get(lpseOrder)) {
@@ -382,7 +383,7 @@ public class CollectionRequestHandler {
 		for (String lpseOrder : collectionProperties.getLpseOrder()) {
 			// because the sort order does not have any URI path component, we can
 			// just add the URI components to it safely
-			if(!panlLpseCode.equals(lpseOrder)) {
+			if (!panlLpseCode.equals(lpseOrder)) {
 				// keep on adding things
 				if (panlTokenMap.containsKey(lpseOrder)) {
 					for (LpseToken token : panlTokenMap.get(lpseOrder)) {
@@ -407,37 +408,35 @@ public class CollectionRequestHandler {
 		return (jsonObject);
 	}
 
-	private String getCanonicalUri(Map<String, List<LpseToken>> panlTokenMap) {
-		StringBuilder lpseUri = new StringBuilder("/");
-		StringBuilder lpse = new StringBuilder();
+	/**
+	 * <p>Get the canonical URI Path for the query.  This will always return more
+	 * than an empty path as it includes the following default LPSE path
+	 * components:</p>
+	 *
+	 * <ul>
+	 *   <li>The Sort order - sorted by relevance by default.</li>
+	 *   <li>The page number - page 1 by default</li>
+	 *   <li>The number of results per page - this is defined, or 10 by default</li>
+	 *   <li>The query operand - this is defined, or 10 by default</li>
+	 * </ul>
+	 *
+	 * <p><strong>NOTE:</strong> The pass-through parameter, if defined, will
+	 * never be included.</p>
+	 *
+	 * @param panlTokenMap The panlToken map for the query
+	 *
+	 * @return The canonical URI path for this query
+	 */
+	private String getCanonicalUriPath(Map<String, List<LpseToken>> panlTokenMap) {
+		StringBuilder canonicalUri = new StringBuilder("/");
+		StringBuilder canonicalLpse = new StringBuilder();
 
-		for (String lpseOrder : collectionProperties.getLpseOrder()) {
-			if (panlTokenMap.containsKey(lpseOrder)) {
-				for (LpseToken token : panlTokenMap.get(lpseOrder)) {
-					lpseUri.append(token.getResetUriPathComponent());
-					lpse.append(token.getLpseComponent());
-				}
-			} else {
-				if (collectionProperties.isMetaData(lpseOrder)) {
-					LpseToken token = collectionProperties.getTokenForLpseCode(lpseOrder);
-					if (null != token) {
-						lpseUri.append(token.getCanonicalUriPathComponent());
-						lpse.append(token.getCanonicalLpseComponent());
-					}
-				}
-			}
+		for(BaseField baseField: collectionProperties.getLpseFields()) {
+			canonicalUri.append(baseField.getCanonicalUriPath(panlTokenMap, collectionProperties));
+			canonicalLpse.append(baseField.getCanonicalLpsePath(panlTokenMap, collectionProperties));
 		}
 
-		// we need to add all metadata components to the URI path as well
-
-		String retVal = lpseUri.toString() + lpse + "/";
-		if (retVal.length() == 2) {
-			// in this instance, there is no URI paths, or LPSE codes, so just
-			// return a single slash
-			return ("/");
-		}
-
-		return retVal;
+		return(canonicalUri.toString() + canonicalLpse+ "/");
 	}
 
 	private JSONObject getPaginationURIPaths(List<LpseToken> lpseTokens, Map<String, List<LpseToken>> panlTokenMap, long numFound) {

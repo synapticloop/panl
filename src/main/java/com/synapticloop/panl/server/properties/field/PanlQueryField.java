@@ -6,34 +6,16 @@ import org.slf4j.LoggerFactory;
 
 import java.util.Properties;
 
-public class PanlQueryField extends PanlBaseField {
+public class PanlQueryField extends BaseField {
 	private static final Logger LOGGER = LoggerFactory.getLogger(PanlQueryField.class);
 
-	public PanlQueryField(String panlFacetProperty, Properties properties, String collectionName) throws PanlServerException {
-		super(panlFacetProperty, properties, collectionName);
+	public PanlQueryField(String lpseCode, String propertyKey, Properties properties, String collectionName) throws PanlServerException {
+		super(lpseCode, propertyKey, collectionName);
 	}
 
 	@Override
 	public Logger getLogger() {
 		return(LOGGER);
-	}
-
-	@Override
-	public String getConvertedToPanlValue(String value) {
-		return "";
-	}
-
-	@Override
-	public String getConvertedFromPanlValue(String value) {
-		return "";
-	}
-
-	public String getURIPathComponent(String value) {
-		return("");
-	}
-
-	public String getLpsePathComponent(String value) {
-		return("");
 	}
 
 }

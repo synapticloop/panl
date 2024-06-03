@@ -43,14 +43,6 @@ public class PassThroughLpseToken extends LpseToken {
 						"/");
 	}
 
-	@Override public String getCanonicalUriPathComponent() {
-		return("");
-	}
-
-	@Override public String getCanonicalLpseComponent() {
-		return("");
-	}
-
 	@Override public String getLpseComponent() {
 		return (lpseCode);
 	}

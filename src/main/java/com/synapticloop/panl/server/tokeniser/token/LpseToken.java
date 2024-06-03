@@ -83,14 +83,6 @@ public abstract class LpseToken {
 		return(getUriPathComponent());
 	}
 
-	public String getCanonicalUriPathComponent() {
-		return(getResetUriPathComponent());
-	}
-
-	public String getCanonicalLpseComponent() {
-		return(getLpseComponent());
-	}
-
 	/**
 	 * <p>Get the LPSE component, which may have additional operands associated
 	 * with it.</p>
@@ -134,4 +126,8 @@ public abstract class LpseToken {
 	 * @return The human-readable type for this token.
 	 */
 	public abstract String getType();
+
+	public boolean getIsValid() {
+		return(isValid);
+	}
 }

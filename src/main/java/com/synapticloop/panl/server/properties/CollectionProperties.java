@@ -51,22 +51,22 @@ public class CollectionProperties {
 	 * <p>This is the list of all facet fields that are registered with panl.
 	 * These fields may be used as facets.</p>
 	 */
-	private final List<FacetFieldPanl> FACET_FIELDS = new ArrayList<>();
+	private final List<PanlFacetField> FACET_FIELDS = new ArrayList<>();
 
 	/**
 	 * <p>This is the list of all fields that are registered with panl. Unlike
 	 * faceted fields, these may not be used as a facet, but will be able to be
 	 * sorted.</p>
 	 */
-	private final List<FieldPanl> NON_FACET_FIELDS = new ArrayList<>();
+	private final List<PanlField> NON_FACET_FIELDS = new ArrayList<>();
 
 	private final Set<String> LPSE_FACET_FIELDS = new HashSet<>();
 	private final Set<String> LPSE_FIELDS = new HashSet<>();
 
-	private final Map<String, FacetFieldPanl> PANL_CODE_TO_FACET_FIELD_MAP = new HashMap<>();
-	private final Map<String, FacetFieldPanl> SOLR_NAME_TO_FACET_FIELD_MAP = new HashMap<>();
-	private final Map<String, FieldPanl> PANL_CODE_TO_FIELD_MAP = new HashMap<>();
-	private final Map<String, FieldPanl> SOLR_NAME_TO_FIELD_MAP = new HashMap<>();
+	private final Map<String, PanlFacetField> PANL_CODE_TO_FACET_FIELD_MAP = new HashMap<>();
+	private final Map<String, PanlFacetField> SOLR_NAME_TO_FACET_FIELD_MAP = new HashMap<>();
+	private final Map<String, PanlField> PANL_CODE_TO_FIELD_MAP = new HashMap<>();
+	private final Map<String, PanlField> SOLR_NAME_TO_FIELD_MAP = new HashMap<>();
 
 
 	private boolean panlIncludeSingleFacets;
@@ -85,8 +85,7 @@ public class CollectionProperties {
 	private int solrFacetLimit;
 
 	private final List<String> lpseOrder = new ArrayList<>();
-//	private final List<BaseField> lpseFields = new ArrayList<>();
-
+	private final List<BaseField> lpseFields = new ArrayList<>();
 	private final Set<String> LPSE_METADATA = new HashSet<>();
 
 	/**
@@ -136,9 +135,7 @@ public class CollectionProperties {
 
 	private final JSONObject solrFieldToPanlNameLookup = new JSONObject();
 
-	private final Map<String, LpseToken> panlLpseCodeToTokenMap = new HashMap<>();
-
-	private final Map<String, PanlBaseField> staticFieldMap = new HashMap<>();
+	private final Map<String, BaseField> staticFieldMap = new HashMap<>();
 
 	public CollectionProperties(String collectionName, Properties properties) throws PanlServerException {
 		this.collectionName = collectionName;
@@ -147,9 +144,9 @@ public class CollectionProperties {
 		parseDefaultProperties();
 		parseFacetFields();
 		parseFields();
-		parseLpseOrder();
 		parseResultFields();
 		parseSortFields();
+		parseLpseOrder();
 
 
 		// Generate some static information
@@ -163,11 +160,11 @@ public class CollectionProperties {
 		this.validUrlString = temp.toString();
 
 		// now for the solr field to panl name lookup
-		for (FacetFieldPanl facetField : FACET_FIELDS) {
+		for (PanlFacetField facetField : FACET_FIELDS) {
 			solrFieldToPanlNameLookup.put(facetField.getSolrFieldName(), facetField.getPanlFieldName());
 		}
 
-		for (FieldPanl field : NON_FACET_FIELDS) {
+		for (PanlField field : NON_FACET_FIELDS) {
 			solrFieldToPanlNameLookup.put(field.getSolrFieldName(), field.getPanlFieldName());
 		}
 	}
@@ -233,26 +230,22 @@ public class CollectionProperties {
 		LPSE_METADATA.add(this.solrDefaultQueryOperand);
 
 		this.panlParamQuery = initialiseStringProperty("panl.param.query", true, false);
-		panlLpseCodeToTokenMap.put(this.panlParamQuery, new QueryLpseToken(this.panlParamQuery));
+		staticFieldMap.put(this.panlParamQuery, new PanlQueryField(panlParamQuery, "panl.param.query", properties, collectionName));
 
 		this.panlParamSort = initialiseStringProperty("panl.param.sort", true, false);
-		panlLpseCodeToTokenMap.put(this.panlParamSort, new SortLpseToken(this.panlParamSort));
+		staticFieldMap.put(this.panlParamSort, new PanlSortField(panlParamSort, "panl.param.sort", properties, collectionName));
 
 		this.panlParamPage = initialiseStringProperty("panl.param.page", true, true);
-		panlLpseCodeToTokenMap.put(this.panlParamPage, new PageLpseToken(this.panlParamPage));
-		staticFieldMap.put(this.panlParamPage, new PanlPassThroughField(panlParamPage, properties, collectionName));
+		staticFieldMap.put(this.panlParamPage, new PanlPageNumField(panlParamPage, "panl.param.page", properties, collectionName));
 
 		this.panlParamNumRows = initialiseStringProperty("panl.param.numrows", true, true);
-		panlLpseCodeToTokenMap.put(this.panlParamNumRows, new NumRowsLpseToken(this.panlParamNumRows));
-		staticFieldMap.put(this.panlParamNumRows, new PanlNumRowsField(panlParamNumRows, properties, collectionName));
+		staticFieldMap.put(this.panlParamNumRows, new PanlNumRowsField(panlParamNumRows, "panl.param.numrows", properties, collectionName));
 
 		this.panlParamQueryOperand = initialiseStringProperty("panl.param.query.operand", true, false);
-		panlLpseCodeToTokenMap.put(this.panlParamQueryOperand, new QueryOperandLpseToken(this.panlParamQueryOperand));
-		staticFieldMap.put(this.panlParamQueryOperand, new PanlQueryField(panlParamQueryOperand, properties, collectionName));
+		staticFieldMap.put(this.panlParamQueryOperand, new PanlQueryOperandField(panlParamQueryOperand, "panl.param.query.operand", properties, collectionName));
 
 		this.panlParamPassThrough = initialiseStringProperty("panl.param.passthrough", false, false);
-		panlLpseCodeToTokenMap.put(this.panlParamPassThrough, new PassThroughLpseToken(this.panlParamPassThrough));
-		staticFieldMap.put(this.panlParamPassThrough, new PanlPassThroughField(panlParamPassThrough, properties, collectionName));
+		staticFieldMap.put(this.panlParamPassThrough, new PanlPassThroughField(panlParamPassThrough, "panl.param.passthrough", properties, collectionName));
 	}
 
 	/**
@@ -325,12 +318,13 @@ public class CollectionProperties {
 	 */
 	private void parseFacetFields() throws PanlServerException {
 		for (String panlFieldKey : PropertyHelper.getPropertiesByPrefix(properties, PROPERTY_KEY_PANL_FACET)) {
-			FacetFieldPanl facetField = new FacetFieldPanl(panlFieldKey, properties, collectionName, panlLpseNum);
+			String lpseCode = panlFieldKey.substring(panlFieldKey.lastIndexOf(".") + 1);
+			PanlFacetField facetField = new PanlFacetField(lpseCode, panlFieldKey, properties, collectionName, panlLpseNum);
 
 			FACET_FIELDS.add(facetField);
 			LPSE_FACET_FIELDS.add(facetField.getPanlLpseCode());
 
-			this.panlLpseCodeToTokenMap.put(facetField.getPanlLpseCode(), new FacetLpseToken(facetField.getPanlLpseCode()));
+			staticFieldMap.put(lpseCode, facetField);
 
 			PANL_CODE_TO_FACET_FIELD_MAP.put(facetField.getPanlLpseCode(), facetField);
 			SOLR_NAME_TO_FACET_FIELD_MAP.put(facetField.getSolrFieldName(), facetField);
@@ -379,7 +373,7 @@ public class CollectionProperties {
 		}
 
 		List<String> temp = new ArrayList<>();
-		for(FacetFieldPanl facetField: FACET_FIELDS) {
+		for(PanlFacetField facetField: FACET_FIELDS) {
 			temp.add(facetField.getSolrFieldName());
 		}
 
@@ -394,16 +388,18 @@ public class CollectionProperties {
 	 */
 	private void parseFields() throws PanlServerException {
 		for (String panlFieldKey : PropertyHelper.getPropertiesByPrefix(properties, PROPERTY_KEY_PANL_FIELD)) {
-			FieldPanl field = new FieldPanl(panlFieldKey, properties, collectionName, panlLpseNum);
+			String lpseCode = panlFieldKey.substring(panlFieldKey.lastIndexOf(".") + 1);
+			PanlField field = new PanlField(lpseCode, panlFieldKey, properties, collectionName, panlLpseNum);
 			NON_FACET_FIELDS.add(field);
 			LPSE_FIELDS.add(field.getPanlLpseCode());
+			staticFieldMap.put(lpseCode, field);
 
 			PANL_CODE_TO_FIELD_MAP.put(field.getPanlLpseCode(), field);
 			SOLR_NAME_TO_FIELD_MAP.put(field.getSolrFieldName(), field);
 		}
 
 		List<String> temp = new ArrayList<>();
-		for(FieldPanl field: NON_FACET_FIELDS) {
+		for(PanlField field: NON_FACET_FIELDS) {
 			temp.add(field.getSolrFieldName());
 		}
 
@@ -423,6 +419,10 @@ public class CollectionProperties {
 
 		for (String lpseCode : panlLpseOrder.split(",")) {
 			lpseCode = lpseCode.trim();
+			if(staticFieldMap.containsKey(lpseCode)) {
+				lpseFields.add(staticFieldMap.get(lpseCode));
+			}
+
 			if(LPSE_FACET_FIELDS.contains(lpseCode) ||
 					LPSE_FIELDS.contains(lpseCode) ||
 					LPSE_METADATA.contains(lpseCode)) {
@@ -489,6 +489,10 @@ public class CollectionProperties {
 		} else {
 			return ("AND");
 		}
+	}
+
+	public String getDefaultQueryOperand() {
+		return(solrDefaultQueryOperand);
 	}
 
 	public List<String> getLpseOrder() {
@@ -680,7 +684,7 @@ public class CollectionProperties {
 		return(LPSE_METADATA.contains(lpseOrder));
 	}
 
-	public LpseToken getTokenForLpseCode(String lpseCode) {
-		return(panlLpseCodeToTokenMap.get(lpseCode));
+	public List<BaseField> getLpseFields() {
+		return(lpseFields);
 	}
 }

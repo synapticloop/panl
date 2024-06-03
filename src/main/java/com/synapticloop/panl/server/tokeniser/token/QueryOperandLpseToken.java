@@ -100,4 +100,8 @@ public class QueryOperandLpseToken extends LpseToken {
 		return ("sort");
 	}
 
+	public String getQueryOperand() {
+		return(this.queryOperand);
+	}
+
 }

@@ -18,6 +18,7 @@ public class SortLpseToken extends LpseToken {
 	private String panlFacetCode;
 	private String solrFacetField;
 	private SolrQuery.ORDER sortOrder = SolrQuery.ORDER.desc;
+	private String sortCode = "-";
 
 	public SortLpseToken(String panlLpseCode) {
 		super(panlLpseCode);
@@ -42,10 +43,12 @@ public class SortLpseToken extends LpseToken {
 			String sortLpseToken = lpseTokeniser.nextToken();
 			switch (sortLpseToken) {
 				case "+":
+					this.sortCode = "+";
 					this.sortOrder = SolrQuery.ORDER.asc;
 					hasFound = true;
 					break;
 				case "-":
+					this.sortCode = "-";
 					this.sortOrder = SolrQuery.ORDER.desc;
 					hasFound = true;
 					break;
@@ -63,10 +66,6 @@ public class SortLpseToken extends LpseToken {
 		}
 
 		this.solrFacetField = collectionProperties.getSolrFieldNameFromPanlLpseCode(this.panlFacetCode);
-
-
-		// lastly - we have a sort order (either ascending, or descending) - although
-		// this may not exist
 	}
 
 	/**
@@ -146,4 +145,11 @@ public class SortLpseToken extends LpseToken {
 		return ("sort");
 	}
 
+	public String getPanlFacetCode() {
+		return(panlFacetCode);
+	}
+
+	public String getSortCode() {
+		return(sortCode);
+	}
 }
