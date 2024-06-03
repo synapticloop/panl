@@ -6,15 +6,8 @@ import org.slf4j.LoggerFactory;
 
 import java.util.Properties;
 
-public class Field {
+public class Field extends BaseField {
 	private static final Logger LOGGER = LoggerFactory.getLogger(Field.class);
-
-	private static final String PROPERTY_KEY_PANL_FIELD = "panl.field.";
-	private static final String PROPERTY_KEY_PANL_NAME = "panl.name.";
-
-	private final String panlLpseCode;
-	private final String panlFieldName;
-	private final String solrFieldName;
 
 	public Field(String panlFacetProperty, Properties properties, String collectionName, int panlLpseNum) throws PanlServerException {
 		this.solrFieldName = properties.getProperty(panlFacetProperty);
@@ -34,18 +27,5 @@ public class Field {
 			this.panlFieldName = panlFieldNameTemp;
 			LOGGER.info("[{}] Found a name for Panl field LPSE code '{}', using '{}'", collectionName, panlLpseCode, panlFieldName);
 		}
-	}
-
-
-	public String getPanlLpseCode() {
-		return panlLpseCode;
-	}
-
-	public String getPanlFieldName() {
-		return panlFieldName;
-	}
-
-	public String getSolrFieldName() {
-		return solrFieldName;
 	}
 }

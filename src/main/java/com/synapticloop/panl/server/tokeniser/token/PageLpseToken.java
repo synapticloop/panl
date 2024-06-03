@@ -50,10 +50,10 @@ public class PageLpseToken extends LpseToken {
 	}
 
 	@Override public String getUriPathComponent() {
-		return (getURIComponentFromPageNumber(this.pageNum));
+		return (getURIComponentForPageNumber(this.pageNum));
 	}
 
-	private String getURIComponentFromPageNumber(int pageNum) {
+	private String getURIComponentForPageNumber(int pageNum) {
 		return (
 				URLEncoder.encode(
 						collectionProperties.getConvertedToPanlValue(
@@ -63,7 +63,7 @@ public class PageLpseToken extends LpseToken {
 						"/");
 	}
 	public String getResetUriPathComponent() {
-		return (getURIComponentFromPageNumber(1));
+		return (getURIComponentForPageNumber(1));
 	}
 
 	@Override public String getLpseComponent() {

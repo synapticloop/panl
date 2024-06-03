@@ -276,6 +276,7 @@ public class CollectionRequestHandler {
 		panlObject.put("available", panlFacets);
 		panlObject.put("pagination", getPaginationURIPaths(lpseTokens, panlTokenMap, numFound));
 		panlObject.put("sorting", getSortingURIPaths(panlTokenMap));
+		panlObject.put("query_operand", getQueryOperandURIPaths(panlTokenMap));
 
 		solrJsonObject.put("error", false);
 
@@ -364,6 +365,43 @@ public class CollectionRequestHandler {
 		}
 
 		jsonObject.put("fields", sortFieldsObject);
+
+		return (jsonObject);
+	}
+
+	private JSONObject getQueryOperandURIPaths(Map<String, List<LpseToken>> panlTokenMap) {
+		String before = "";
+		String panlLpseCode = collectionProperties.getPanlParamQueryOperand();
+
+		// Run through the sorting order
+		JSONObject jsonObject = new JSONObject();
+		StringBuilder lpseUri = new StringBuilder("/");
+		StringBuilder lpse = new StringBuilder();
+
+		for (String lpseOrder : collectionProperties.getLpseOrder()) {
+			// because the sort order does not have any URI path component, we can
+			// just add the URI components to it safely
+			if(!panlLpseCode.equals(lpseOrder)) {
+				// keep on adding things
+				if (panlTokenMap.containsKey(lpseOrder)) {
+					for (LpseToken token : panlTokenMap.get(lpseOrder)) {
+						lpseUri.append(token.getResetUriPathComponent());
+						// however we do not want to add the lpse component
+						lpse.append(token.getLpseComponent());
+					}
+				}
+			} else {
+				before = lpse.toString();
+				lpse.setLength(0);
+			}
+		}
+		lpse.append("/");
+
+		// This is the default sorting order (by relevance)
+		String finalBefore = lpseUri + before + collectionProperties.getPanlParamQueryOperand();
+
+		jsonObject.put("OR", finalBefore + "-" + lpse);
+		jsonObject.put("AND", finalBefore + "+" + lpse);
 
 		return (jsonObject);
 	}

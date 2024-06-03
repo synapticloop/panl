@@ -74,12 +74,28 @@ function populatePanlResults(panlJsonData) {
 		$("#documents").append("<dl>" + innerList + "</dl>");
 	}
 
+	addQueryOperand(panlJsonData.panl.query_operand);
 	addSortingOptions(panlJsonData.panl.sorting);
 	addPagination(panlJsonData.panl.pagination);
 	addActiveFilters(panlJsonData.panl.active);
 	addAvailableFilters(panlJsonData.panl.available);
 }
 
+function addQueryOperand(queryOperand) {
+	$("#query_operand").append(
+		"<a href=\"" +
+    panlResultsViewerUrl +
+    $("#collection").text() +
+    queryOperand.AND +
+    "\"/>AND</a>&nbsp;");
+	$("#query_operand").append(
+		" || <a href=\"" +
+    panlResultsViewerUrl +
+    $("#collection").text() +
+    queryOperand.OR +
+    "\"/>OR</a>&nbsp;");
+
+}
 function addSortingOptions(sortingObject) {
 	$("#sorting_options").append(
 		"Relevance: <a href=\"" +
