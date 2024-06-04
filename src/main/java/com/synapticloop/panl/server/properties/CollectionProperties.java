@@ -87,27 +87,6 @@ public class CollectionProperties {
 	private final List<BaseField> lpseFields = new ArrayList<>();
 	private final Set<String> LPSE_METADATA = new HashSet<>();
 
-	/**
-	 * <p>The Set of all boolean facets that are available within this
-	 * collection.  If it is a boolean facet, then it this facet may have
-	 * replacements for the true/false values.</p>
-	 */
-	private final Set<String> panlBooleanFacets = new HashSet<>();
-	/**
-	 * <p>The hashmap of true String values for a boolean panl facet - if they
-	 * are defined for this facet. This map is keyed on
-	 * <code>&lt;lpseCode&gt</code> with the replacement value as the
-	 * stored value.</p>
-	 */
-	private final Map<String, String> panlBooleanFacetTrueValues = new HashMap<>();
-	/**
-	 * <p>The hashmap of false String values for a boolean panl facet - if they
-	 * are defined for this facet. This map is keyed on
-	 * <code>&lt;lpseCode&gt;</code> with the replacement value as the
-	 * stored value.</p>
-	 */
-	private final Map<String, String> panlBooleanFacetFalseValues = new HashMap<>();
-
 	private final Map<String, List<String>> resultFieldsMap = new HashMap<>();
 	/**
 	 * <p>The list of all the named Solr facet fields - Note that this is not
@@ -378,13 +357,6 @@ public class CollectionProperties {
 			// finally - we are going to look at the replacement - but only if there
 			// is a type of solr.BoolField and values are actually assigned
 
-			String facetClassName = properties.getProperty("panl.type." + panlFacetCode);
-			if (null != facetClassName && facetClassName.equals("solr.BoolField")) {
-				// see if we have a true, or false value for it
-				panlBooleanFacets.add(panlFacetCode);
-				panlBooleanFacetTrueValues.put(panlFacetCode, properties.getProperty("panl.bool." + panlFacetCode + ".true", "true"));
-				panlBooleanFacetFalseValues.put(panlFacetCode, properties.getProperty("panl.bool." + panlFacetCode + ".false", "false"));
-			}
 		}
 
 		List<String> temp = new ArrayList<>();
@@ -510,7 +482,7 @@ public class CollectionProperties {
 		return (solrDefaultQueryOperand);
 	}
 
-	@Deprecated public List<String> getLpseOrder() {
+	public List<String> getLpseOrder() {
 		return (lpseOrder);
 	}
 
