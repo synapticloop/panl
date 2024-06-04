@@ -7,8 +7,6 @@ import com.synapticloop.panl.server.tokeniser.token.NumRowsLpseToken;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.net.URLEncoder;
-import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
@@ -32,9 +30,9 @@ public class PanlNumRowsField extends BaseField {
 		StringBuilder sb = new StringBuilder();
 		if (panlTokenMap.containsKey(panlLpseCode)) {
 			NumRowsLpseToken numRowsLpseToken = (NumRowsLpseToken) panlTokenMap.get(panlLpseCode).get(0);
-			sb.append(URLEncoder.encode(getConvertedToPanlValue(numRowsLpseToken.getNumRows() + ""), StandardCharsets.UTF_8));
+			sb.append(getEncodedPanlValue(Integer.toString(numRowsLpseToken.getNumRows())));
 		} else {
-			sb.append(URLEncoder.encode(getConvertedToPanlValue(collectionProperties.getNumResultsPerPage() + ""), StandardCharsets.UTF_8));
+			sb.append(getEncodedPanlValue(Integer.toString(collectionProperties.getNumResultsPerPage())));
 		}
 
 		sb.append("/");

@@ -9,9 +9,14 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 
 public class ActiveProcessor extends Processor {
+	public static final String JSON_KEY_VALUE = "value";
+	public static final String JSON_KEY_URI = "uri";
+	public static final String JSON_KEY_PANL_CODE = "panl_code";
+	public static final String JSON_KEY_FACET_NAME = "facet_name";
+	public static final String JSON_KEY_NAME = "name";
+
 	public ActiveProcessor(CollectionProperties collectionProperties) {
 		super(collectionProperties);
 	}
@@ -22,9 +27,13 @@ public class ActiveProcessor extends Processor {
 		// Get all the LPSE tokens
 		List<LpseToken> lpseTokens = new ArrayList<>();
 		for (BaseField lpseField : collectionProperties.getLpseFields()) {
-			lpseTokens.addAll(panlTokenMap.getOrDefault(lpseField.getPanlLpseCode(), new ArrayList<>()));
+			List<LpseToken> lpseTokenList = panlTokenMap.getOrDefault(lpseField.getPanlLpseCode(), new ArrayList<>());
+			for(LpseToken lpseToken: lpseTokenList) {
+				if(lpseToken.getIsValid()) {
+					lpseTokens.add(lpseToken);
+				}
+			}
 		}
-
 
 		// go through each of the tokens and generate the removal URL
 
@@ -33,7 +42,7 @@ public class ActiveProcessor extends Processor {
 
 		for (LpseToken lpseToken : lpseTokens) {
 			BaseField lpseField = collectionProperties.getLpseField(lpseToken.getLpseCode());
-			if(null != lpseField) {
+			if(null != lpseField && lpseToken.getIsValid()) {
 				lpseComponents.add(lpseField.getLpseCode(lpseToken, collectionProperties));
 				uriComponents.add(lpseField.getURIPath(lpseToken, collectionProperties));
 			}
@@ -45,13 +54,13 @@ public class ActiveProcessor extends Processor {
 			JSONArray jsonArray = jsonObject.optJSONArray(tokenType, new JSONArray());
 
 			JSONObject removeObject = new JSONObject();
-			removeObject.put("value", lpseToken.getValue());
-			removeObject.put("uri", getRemoveURIFromPath(i, uriComponents, lpseComponents));
+			removeObject.put(JSON_KEY_VALUE, lpseToken.getValue());
+			removeObject.put(JSON_KEY_URI, getRemoveURIFromPath(i, uriComponents, lpseComponents));
 
 			String panlLpseCode = lpseToken.getLpseCode();
-			removeObject.put("panl_code", panlLpseCode);
-			removeObject.put("facet_name", collectionProperties.getSolrFieldNameFromPanlLpseCode(panlLpseCode));
-			removeObject.put("name", collectionProperties.getPanlNameFromPanlCode(panlLpseCode));
+			removeObject.put(JSON_KEY_PANL_CODE, panlLpseCode);
+			removeObject.put(JSON_KEY_FACET_NAME, collectionProperties.getSolrFieldNameFromPanlLpseCode(panlLpseCode));
+			removeObject.put(JSON_KEY_NAME, collectionProperties.getPanlNameFromPanlCode(panlLpseCode));
 			jsonArray.put(removeObject);
 			i++;
 			jsonObject.put(tokenType, jsonArray);

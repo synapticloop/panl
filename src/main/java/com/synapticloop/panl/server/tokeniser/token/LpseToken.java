@@ -40,6 +40,7 @@ import org.apache.solr.client.solrj.SolrQuery;
  */
 public abstract class LpseToken {
 	protected String lpseCode;
+	protected String originalValue;
 	protected String value;
 	protected boolean isValid = true;
 

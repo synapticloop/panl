@@ -5,6 +5,7 @@ import com.synapticloop.panl.server.properties.CollectionProperties;
 import com.synapticloop.panl.server.tokeniser.token.LpseToken;
 import org.slf4j.Logger;
 
+import java.net.URLDecoder;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
@@ -86,7 +87,7 @@ public abstract class BaseField {
 	}
 
 	protected void populateSolrFieldType(Properties properties, String lpseCode) {
-		if(null != this.solrFieldType) {
+		if(null == this.solrFieldType) {
 			this.solrFieldType = properties.getProperty(PROPERTY_KEY_PANL_TYPE + panlLpseCode);
 		}
 	}
@@ -175,18 +176,22 @@ public abstract class BaseField {
 	 * @param value the value to convert if any conversions are required
 	 * @return the de-suffixed, de-prefixed, and de-replaced value.
 	 */
-	public String getConvertedFromPanlValue(String value) {
+	public String getDecodedValue(String value) {
 		String temp = value;
 
 		if (hasPrefix) {
 			if (temp.startsWith(panlPrefix)) {
 				temp = temp.substring(panlPrefix.length());
+			} else {
+				return(null);
 			}
 		}
 
 		if (hasSuffix) {
 			if (temp.endsWith(panlSuffix)) {
 				temp = temp.substring(0, temp.length() - panlSuffix.length());
+			} else {
+				return(null);
 			}
 		}
 
@@ -201,16 +206,22 @@ public abstract class BaseField {
 
 			// if we get to this point, and we cannot determine whether it is true or false
 			if (BOOLEAN_TRUE_VALUE.equalsIgnoreCase(value)) {
-				return BOOLEAN_TRUE_VALUE;
+				return(BOOLEAN_TRUE_VALUE);
+			} else if (BOOLEAN_FALSE_VALUE.equalsIgnoreCase(value)) {
+				return(BOOLEAN_FALSE_VALUE);
 			} else {
-				return BOOLEAN_FALSE_VALUE;
+				return(null);
 			}
 		}
 
-		return (temp);
+		return (URLDecoder.decode(temp, StandardCharsets.UTF_8));
 	}
 
-public String getConvertedToPanlValue(String value) {
+public String getEncodedPanlValue(String value) {
+		if(null == value) {
+			return("");
+		}
+
 		StringBuilder sb = new StringBuilder();
 
 		if(hasPrefix) {
@@ -237,7 +248,7 @@ public String getConvertedToPanlValue(String value) {
 			sb.append(panlSuffix);
 		}
 
-		return (sb.toString());
+		return (URLEncoder.encode(sb.toString(), StandardCharsets.UTF_8));
 	}
 
 	private boolean hasBooleanTrueReplacement() {
@@ -254,7 +265,7 @@ public String getConvertedToPanlValue(String value) {
 
 	public String getURIPath(LpseToken token, CollectionProperties collectionProperties) {
 		StringBuilder sb = new StringBuilder();
-		sb.append(URLEncoder.encode(getConvertedToPanlValue(token.getValue()), StandardCharsets.UTF_8));
+		sb.append(getEncodedPanlValue(token.getValue()));
 		sb.append("/");
 		return(sb.toString());
 	}
@@ -268,7 +279,7 @@ public String getConvertedToPanlValue(String value) {
 		if(panlTokenMap.containsKey(panlLpseCode)) {
 			for(LpseToken lpseToken : panlTokenMap.get(panlLpseCode)) {
 				if(lpseToken.getIsValid()) {
-					sb.append(URLEncoder.encode(getConvertedToPanlValue(lpseToken.getValue()), StandardCharsets.UTF_8));
+					sb.append(getEncodedPanlValue(lpseToken.getValue()));
 					sb.append("/");
 				}
 			}

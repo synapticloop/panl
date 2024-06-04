@@ -5,7 +5,6 @@ import com.synapticloop.panl.server.properties.field.BaseField;
 import org.apache.solr.client.solrj.SolrQuery;
 
 import java.net.URLDecoder;
-import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.util.StringTokenizer;
 
@@ -28,9 +27,7 @@ public class NumRowsLpseToken extends LpseToken {
 			String numRowsTempString = "";
 			BaseField lpseField = collectionProperties.getLpseField(panlLpseCode);
 			if(null != lpseField) {
-				numRowsTempString = lpseField.getConvertedFromPanlValue(URLDecoder.decode(
-								valueTokenizer.nextToken(),
-								StandardCharsets.UTF_8));
+				numRowsTempString = lpseField.getDecodedValue(valueTokenizer.nextToken());
 			} else {
 				this.isValid = false;
 			}
@@ -50,13 +47,11 @@ public class NumRowsLpseToken extends LpseToken {
 	}
 
 	@Override public String getUriPathComponent() {
-		return (
-				URLEncoder.encode(
-						collectionProperties.getConvertedToPanlValue(
-								lpseCode,
-								Integer.toString(numRows)),
-						StandardCharsets.UTF_8) +
-						"/");
+		if(isValid) {
+			return (collectionProperties.getLpseField(lpseCode).getEncodedPanlValue(Integer.toString(numRows)) + "/");
+		} else {
+			return("");
+		}
 	}
 
 	@Override public String getLpseComponent() {

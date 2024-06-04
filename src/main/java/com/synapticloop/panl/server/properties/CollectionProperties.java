@@ -331,6 +331,7 @@ public class CollectionProperties {
 			SOLR_NAME_TO_FACET_FIELD_MAP.put(facetField.getSolrFieldName(), facetField);
 		}
 
+		// TODO - this should probably be removed....
 		List<String> facetFieldList = new ArrayList<>();
 		// now parse the fields
 		for (String panlFieldKey : PropertyHelper.getPropertiesByPrefix(properties, PROPERTY_KEY_PANL_FACET)) {
@@ -496,8 +497,7 @@ public class CollectionProperties {
 		return (solrDefaultQueryOperand);
 	}
 
-	@Deprecated
-	public List<String> getLpseOrder() {
+	@Deprecated public List<String> getLpseOrder() {
 		return (lpseOrder);
 	}
 
@@ -580,35 +580,6 @@ public class CollectionProperties {
 
 	public boolean getPanlIncludeSameNumberFacets() {
 		return (panlIncludeSameNumberFacets);
-	}
-
-
-	public String getConvertedToPanlValue(String panlFacetCode, String value) {
-		StringBuilder sb = new StringBuilder();
-
-		if (panlFacetPrefixMap.containsKey(panlFacetCode)) {
-			sb.append(panlFacetPrefixMap.get(panlFacetCode));
-		}
-
-		if (panlBooleanFacets.contains(panlFacetCode)) {
-			// we might have a boolean replacement
-			if (panlBooleanFacetFalseValues.containsKey(panlFacetCode) && value.equalsIgnoreCase("false")) {
-				sb.append(panlBooleanFacetFalseValues.getOrDefault(panlFacetCode, "false"));
-			} else if (panlBooleanFacetTrueValues.containsKey(panlFacetCode) && value.equalsIgnoreCase("true")) {
-				sb.append(panlBooleanFacetTrueValues.getOrDefault(panlFacetCode, "true"));
-			} else {
-				// we don;t have a boolean replacement
-				sb.append(value);
-			}
-		} else {
-			sb.append(value);
-		}
-
-		if (panlFacetSuffixMap.containsKey(panlFacetCode)) {
-			sb.append(panlFacetSuffixMap.get(panlFacetCode));
-		}
-
-		return (sb.toString());
 	}
 
 	public List<String> getSortFieldLpseCodes() {

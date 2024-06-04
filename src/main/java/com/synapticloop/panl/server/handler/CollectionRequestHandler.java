@@ -285,50 +285,39 @@ public class CollectionRequestHandler {
 
 			while (lpseTokeniser.hasMoreTokens()) {
 				String token = lpseTokeniser.nextToken();
-
+				LpseToken lpseToken = null;
 				if (token.equals(collectionProperties.getPanlParamQuery())) {
 					hasQuery = true;
-					lpseTokens.add(
-							new QueryLpseToken(
-									query,
-									token,
-									valueTokeniser));
-
+					LpseToken queryLpseToken = new QueryLpseToken(
+							query,
+							token,
+							valueTokeniser);
 				} else if (token.equals(collectionProperties.getPanlParamSort())) {
-					lpseTokens.add(
-							new SortLpseToken(
-									collectionProperties,
-									token,
-									lpseTokeniser));
-
+					lpseToken = new SortLpseToken(
+							collectionProperties,
+							token,
+							lpseTokeniser);
 				} else if (token.equals(collectionProperties.getPanlParamQueryOperand())) {
-					lpseTokens.add(
-							new QueryOperandLpseToken(
-									collectionProperties,
-									token,
-									lpseTokeniser));
-
+					lpseToken = new QueryOperandLpseToken(
+							collectionProperties,
+							token,
+							lpseTokeniser);
 				} else if (token.equals(collectionProperties.getPanlParamNumRows())) {
-					lpseTokens.add(
-							new NumRowsLpseToken(
-									collectionProperties,
-									token,
-									valueTokeniser));
-
+					lpseToken = new NumRowsLpseToken(
+							collectionProperties,
+							token,
+							valueTokeniser);
 				} else if (token.equals(collectionProperties.getPanlParamPage())) {
-					lpseTokens.add(
-							new PageLpseToken(
-									collectionProperties,
-									token,
-									valueTokeniser));
+					lpseToken = new PageLpseToken(
+							collectionProperties,
+							token,
+							valueTokeniser);
 
 				} else if (token.equals(collectionProperties.getPanlParamPassThrough())) {
-					lpseTokens.add(
-							new PassThroughLpseToken(
+					lpseToken = new PassThroughLpseToken(
 									collectionProperties,
 									token,
-									valueTokeniser));
-
+									valueTokeniser);
 				} else {
 					StringBuilder facet = new StringBuilder(token);
 					// it is a facet field
@@ -337,13 +326,14 @@ public class CollectionRequestHandler {
 					}
 
 					// now we have the facetField
-					lpseTokens.add(
-							new FacetLpseToken(
+					lpseToken = new FacetLpseToken(
 									collectionProperties,
 									facet.toString(),
 									lpseTokeniser,
-									valueTokeniser));
+									valueTokeniser);
 				}
+
+				lpseTokens.add(lpseToken);
 			}
 		}
 

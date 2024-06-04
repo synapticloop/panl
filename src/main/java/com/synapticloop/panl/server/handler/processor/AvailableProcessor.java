@@ -9,8 +9,6 @@ import org.apache.solr.common.SolrDocumentList;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-import java.net.URLEncoder;
-import java.nio.charset.StandardCharsets;
 import java.util.*;
 
 public class AvailableProcessor extends Processor {
@@ -83,15 +81,13 @@ public class AvailableProcessor extends Processor {
 						shouldAdd = false;
 					}
 
+					BaseField lpseField = collectionProperties.getLpseField(panlCodeFromSolrFacetName);
 
 					if (shouldAdd) {
 						JSONObject facetValueObject = new JSONObject();
 						facetValueObject.put("value", valueName);
 						facetValueObject.put("count", value.getCount());
-						facetValueObject.put("encoded", URLEncoder.encode(
-								collectionProperties.getConvertedToPanlValue(
-										panlCodeFromSolrFacetName,
-										valueName), StandardCharsets.UTF_8));
+						facetValueObject.put("encoded", lpseField.getEncodedPanlValue(valueName));
 						facetValueArrays.put(facetValueObject);
 					}
 				}
