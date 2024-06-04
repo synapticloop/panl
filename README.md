@@ -4,6 +4,32 @@
 
 Usable, but not released... yet...
 
+**BECAUSE**
+
+`/Caran+d'Ache/true/Black/bDW/` looks nicer than
+`q=*:*&facet.mincount=1&rows=10&facet.field=lead_size_indicator&facet.field=grip_material&facet.field=colours&facet.field=nib_shape&facet.field=diameter&facet.field=cap_shape&facet.field=brand&facet.field=mechanism_type&facet.field=length&facet.field=hardness_indicator&facet.field=grip_type&facet.field=cap_material&facet.field=lead_grade_indicator&facet.field=tubing_material&facet.field=in_built_sharpener&facet.field=disassemble&facet.field=category&facet.field=body_shape&facet.field=clip_material&facet.field=mechanism_material&facet.field=lead_length&facet.field=body_material&facet.field=in_built_eraser&facet.field=grip_shape&facet.field=relative_weight&facet.field=name&facet.field=nib_material&facet.field=weight&facet.field=variants&facet=true&fq=brand:"Caran+d'Ache"&fq=disassemble:"true"&fq=colours:"Black"&q.op=AND`
+
+# Why Synapticloop Panl?
+Panl was designed to convert rather long and unfriendly (both in human readable and SEO terms) to shorter, nicer, and friendlier URI paths.
+
+Working with a Solr schema, the Panl configuration files translate unwieldy URI parameters into concise and precise URI paths.
+
+## Additional Panl Niceties
+1. **PREFIXES and SUFFIXES** - Panl can also add prefixes and suffixes to the URI path to increase readability, for example, with configuration.  For the example LPSE URI path of `/Caran+d'Ache/true/Black/bDW/` could also have the brand Solr field prefixed with ‘Manufactured By ’ and suffixed by ‘ Company’ to produce the URI path
+`/Manufactured+By+The+Caran+d'Ache+Company/true/Black/bDW/`
+
+1. **BOOLEAN field translations**, for any Solr field that is defined as a solr.BoolField, then an additional translation can be performed.  ‘True’ and ‘false’ values can be replaced with arbitrary text, which will be transparently converted between Panl and Solr.  For the LPSE URI path of `/Caran+d'Ache/true/Black/bDW/` the true value (which is defined as whether the mechanical pencil can be disassembled could be changed to ‘Able to be disassembled’ for true values, and ‘Cannot be disassembled’ for false values.  The above URI path would then become
+`/Caran+d'Ache/Able+to+be+disassembled/Black/bDW/`
+
+1. **FIELD VALUE validation** - By default, Solr can error when an invalid value is passed through - for example, if Solr is expecting a numeric value and it could not be parsed.  Panl can protect against this, by attempting to parse the value as best it can, and silently dropping the parameter if it cannot be sensibly parsed.
+
+1. **SORTING options** - sort by any of the Solr fields, either ascending, or descending
+
+1. **PAGINATION** - easy to generate pagination URI paths giving you control of how you would like to implement it.
+
+1. **STATIC SITE GENERATION** - without a query parameter, the entire available links for every conceivable URI path can be statically generated ahead of time, with canonical URLs
+
+
 # Quick Start - The 5 Steps
 
 ---
