@@ -213,7 +213,11 @@ public class Collection {
 							StringBuilder sb = new StringBuilder("<field ");
 
 							String name = startElement.getAttributeByName(new QName("name")).getValue();
-							String indexed = startElement.getAttributeByName(new QName("indexed")).getValue();
+							Attribute indexedAttribute = startElement.getAttributeByName(new QName("indexed"));
+							String indexed = "false";
+							if(null != indexedAttribute) {
+								indexed = indexedAttribute.getValue();
+							}
 							String stored = startElement.getAttributeByName(new QName("stored")).getValue();
 							String type = startElement.getAttributeByName(new QName("type")).getValue();
 
