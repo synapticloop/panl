@@ -1,5 +1,29 @@
 package com.synapticloop.panl.server.properties;
 
+/*
+ * Copyright (c) 2008-2024 synapticloop.
+ *
+ * https://github.com/synapticloop/panl
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the “Software”), to
+ * deal in the Software without restriction, including without limitation the
+ * rights to use, copy, modify, merge, publish, distribute, sublicense, and/or
+ * sell copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in
+ * all copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED “AS IS”, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+ * FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
+ *  IN THE SOFTWARE.
+ */
+
 import com.synapticloop.panl.exception.PanlServerException;
 //import com.synapticloop.panl.server.handler.field.BaseField;
 //import com.synapticloop.panl.server.handler.field.FacetField;
@@ -44,7 +68,7 @@ public class CollectionProperties {
 	/**
 	 * <p>The number of characters that make up the LPSE code </p>
 	 */
-	private Integer panlLpseNum;
+	private Integer panlLpseLength;
 
 	/**
 	 * <p>This is the list of all facet fields that are registered with panl.
@@ -206,11 +230,11 @@ public class CollectionProperties {
 		this.solrFacetLimit = PropertyHelper.getIntProperty(properties, "solr.facet.limit", 100);
 
 
-		this.panlLpseNum = PropertyHelper.getIntProperty(properties, "panl.lpse.num", null);
-		if (null == panlLpseNum) {
-			throw new PanlServerException("MANDATORY PROPERTY MISSING: Could not find the 'panl.lpse.num' property in the '" + this.collectionName + "' Panl properties file.'");
+		this.panlLpseLength = PropertyHelper.getIntProperty(properties, "panl.lpse.length", null);
+		if (null == panlLpseLength) {
+			throw new PanlServerException("MANDATORY PROPERTY MISSING: Could not find the 'panl.lpse.length' property in the '" + this.collectionName + "' Panl properties file.'");
 		}
-		LOGGER.info("[{}] LPSE length set to '{}'", collectionName, panlLpseNum);
+		LOGGER.info("[{}] LPSE length set to '{}'", collectionName, panlLpseLength);
 
 		this.solrDefaultQueryOperand = properties.getProperty("solr.default.query.operand", "+");
 		if (!(this.solrDefaultQueryOperand.equals("+") || this.solrDefaultQueryOperand.equals("-"))) {
@@ -312,7 +336,7 @@ public class CollectionProperties {
 	private void parseFacetFields() throws PanlServerException {
 		for (String panlFieldKey : PropertyHelper.getPropertiesByPrefix(properties, PROPERTY_KEY_PANL_FACET)) {
 			String lpseCode = panlFieldKey.substring(panlFieldKey.lastIndexOf(".") + 1);
-			PanlFacetField facetField = new PanlFacetField(lpseCode, panlFieldKey, properties, collectionName, panlLpseNum);
+			PanlFacetField facetField = new PanlFacetField(lpseCode, panlFieldKey, properties, collectionName, panlLpseLength);
 
 			FACET_FIELDS.add(facetField);
 			LPSE_FACET_FIELDS.add(facetField.getPanlLpseCode());
@@ -330,8 +354,8 @@ public class CollectionProperties {
 			String panlFieldValue = properties.getProperty(panlFieldKey);
 			String panlFacetCode = panlFieldKey.substring(PROPERTY_KEY_PANL_FACET.length());
 
-			if (panlFacetCode.length() != panlLpseNum) {
-				throw new PanlServerException(PROPERTY_KEY_PANL_FACET + panlFacetCode + " property key is of invalid length - should be " + panlLpseNum);
+			if (panlFacetCode.length() != panlLpseLength) {
+				throw new PanlServerException(PROPERTY_KEY_PANL_FACET + panlFacetCode + " property key is of invalid length - should be " + panlLpseLength);
 			}
 
 			facetFieldList.add(panlFieldValue);
@@ -376,7 +400,7 @@ public class CollectionProperties {
 	private void parseFields() throws PanlServerException {
 		for (String panlFieldKey : PropertyHelper.getPropertiesByPrefix(properties, PROPERTY_KEY_PANL_FIELD)) {
 			String lpseCode = panlFieldKey.substring(panlFieldKey.lastIndexOf(".") + 1);
-			PanlField field = new PanlField(lpseCode, panlFieldKey, properties, collectionName, panlLpseNum);
+			PanlField field = new PanlField(lpseCode, panlFieldKey, properties, collectionName, panlLpseLength);
 			NON_FACET_FIELDS.add(field);
 			LPSE_FIELDS.add(field.getPanlLpseCode());
 			lpseFieldLookup.put(lpseCode, field);
@@ -442,8 +466,8 @@ public class CollectionProperties {
 		return (collectionName);
 	}
 
-	public int getPanlLpseNum() {
-		return (panlLpseNum);
+	public int getPanlLpseLength() {
+		return (panlLpseLength);
 	}
 
 	public String getPanlParamQuery() {

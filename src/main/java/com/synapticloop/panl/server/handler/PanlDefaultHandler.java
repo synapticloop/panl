@@ -1,5 +1,29 @@
 package com.synapticloop.panl.server.handler;
 
+/*
+ * Copyright (c) 2008-2024 synapticloop.
+ *
+ * https://github.com/synapticloop/panl
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the “Software”), to
+ * deal in the Software without restriction, including without limitation the
+ * rights to use, copy, modify, merge, publish, distribute, sublicense, and/or
+ * sell copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in
+ * all copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED “AS IS”, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+ * FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
+ *  IN THE SOFTWARE.
+ */
+
 import com.synapticloop.panl.server.properties.PanlProperties;
 import org.apache.http.HttpRequest;
 import org.apache.http.HttpResponse;
@@ -31,6 +55,11 @@ import java.util.List;
  */
 public class PanlDefaultHandler implements HttpRequestHandler {
 	public static final ContentType CONTENT_TYPE_JSON = ContentType.create("application/json", "UTF-8");
+	public static final String JSON_KEY_ERROR = "error";
+	public static final String JSON_KEY_STATUS = "status";
+	public static final String JSON_KEY_404_MESSAGE = "message";
+	public static final String JSON_KEY_VALID_URLS = "valid_urls";
+	public static final String JSON_VALUE_NOT_FOUND = "Not Found";
 	private static String json404ErrorString;
 
 	/**
@@ -45,17 +74,19 @@ public class PanlDefaultHandler implements HttpRequestHandler {
 	 */
 	public PanlDefaultHandler(PanlProperties panlProperties, List<CollectionRequestHandler> collectionRequestHandlers) {
 		JSONObject jsonObject = new JSONObject();
-		jsonObject.put("error", true);
-		jsonObject.put("status", 404);
+		jsonObject.put(JSON_KEY_ERROR, true);
+		jsonObject.put(JSON_KEY_STATUS, 404);
+
+		// do we want verbose messaging for 404 http status codes
 		if(panlProperties.getPanlStatus404Verbose()) {
-			jsonObject.put("message", "Could not find a PANL request url, see 'valid_urls' array.");
+			jsonObject.put(JSON_KEY_404_MESSAGE, "Could not find a PANL request url, see 'valid_urls' array.");
 			JSONArray validUrls = new JSONArray();
 			for (CollectionRequestHandler collectionRequestHandler : collectionRequestHandlers) {
 				validUrls.put("/" + collectionRequestHandler.getCollectionName() + "/*");
 			}
-			jsonObject.put("valid_urls", validUrls);
+			jsonObject.put(JSON_KEY_VALID_URLS, validUrls);
 		} else {
-			jsonObject.put("message", "Not Found");
+			jsonObject.put(JSON_KEY_404_MESSAGE, JSON_VALUE_NOT_FOUND);
 		}
 
 		json404ErrorString = jsonObject.toString();

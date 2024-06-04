@@ -1,5 +1,29 @@
 package com.synapticloop.panl.server;
 
+/*
+ * Copyright (c) 2008-2024 synapticloop.
+ *
+ * https://github.com/synapticloop/panl
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the “Software”), to
+ * deal in the Software without restriction, including without limitation the
+ * rights to use, copy, modify, merge, publish, distribute, sublicense, and/or
+ * sell copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in
+ * all copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED “AS IS”, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+ * FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
+ *  IN THE SOFTWARE.
+ */
+
 import com.synapticloop.panl.exception.PanlServerException;
 import com.synapticloop.panl.server.handler.*;
 import com.synapticloop.panl.server.handler.results.explainer.PanlResultsExplainerExplainHandler;
@@ -42,10 +66,16 @@ public class PanlServer {
 
 	private final List<CollectionRequestHandler> collectionRequestHandlers = new ArrayList<>();
 	private final List<CollectionProperties> collectionPropertiesList = new ArrayList<>();
+
 	/**
-	 * <p>Instantiate a new PanlServer instance.  This will parse the properties file</p>
+	 * <p>Instantiate a new PanlServer instance.  This will parse the
+	 * <code>properties.properties</code> and any linked
+	 * <code>collection.panl.properties</code> files which are referenced by the
+	 * list of properties with the property key starting with
+	 * <code>panl.collection.*</code>.</p>
 	 *
-	 * @param propertiesFileLocation The location of the panl.properties to load
+	 * @param propertiesFileLocation The location of the <code>panl.properties</code>
+	 * 		file to load
 	 * @param portNumber The port number from the command line option (or
 	 * 		default of 8181)
 	 *
@@ -60,8 +90,8 @@ public class PanlServer {
 
 
 	/**
-	 * <p>Parse the properties file extracting the required properties.  This
-	 * also instantiates new CollectionRequestHandlers</p>
+	 * <p>Parse the <code>panl.properties</code> file parsing, validating, and
+	 * setting the fields This also instantiates new CollectionRequestHandlers</p>
 	 *
 	 * @throws PanlServerException If there was an error parsing the properties
 	 * 		file.
@@ -178,6 +208,7 @@ public class PanlServer {
 			// the simple search and querying webappp
 			bootstrap.registerHandler("/panl-results-viewer/*", new PanlResultsViewerHandler(collectionRequestHandlers));
 			bootstrap.registerHandler("/panl-results-viewer/script/", new PanlResultsViewerScriptHandler(collectionRequestHandlers));
+
 			bootstrap.registerHandler("/panl-results-explainer/*", new PanlResultsExplainerHandler(collectionPropertiesList, collectionRequestHandlers));
 			bootstrap.registerHandler("/panl-results-explainer/explain/*", new PanlResultsExplainerExplainHandler(collectionPropertiesList, collectionRequestHandlers));
 		}

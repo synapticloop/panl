@@ -17,17 +17,17 @@
 #
 # definitions, else a FATAL encoding error will occur and the server will not
 # be started.  This defaults to a single character if not set - i.e.
-#   panl.lpse.num=1
+#   panl.lpse.length=1
 #
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 
-panl.lpse.num=1
+panl.lpse.length=1
 
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 #
 # The following are considered metadata that changes what results are returned
 # and in what format.  These are not considered facets, however they do need to
-# be the same size as the panl.lpse.num property above.  These define what the
+# be the same size as the panl.lpse.length property above.  These define what the
 # query parameter will be and __MUST NOT__ be the same as any of the facets
 #
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
@@ -83,7 +83,7 @@ solr.numrows=10
 #
 # where:
 #       <code> is the LPSE code and __MUST__ be the same length as the
-#              panl.lpse.num
+#              panl.lpse.length
 # <solr_field> is the solr field name which __MUST__ map to the Solr field
 #              name in the configuration file
 # <field_name> is the name of the facet in a more human friendly version, will

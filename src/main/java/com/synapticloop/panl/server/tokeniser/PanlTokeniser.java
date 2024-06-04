@@ -24,6 +24,7 @@ package com.synapticloop.panl.server.tokeniser;
  * or visit www.oracle.com if you need additional information or have any
  * questions.
  */
+
 import java.util.NoSuchElementException;
 
 
@@ -48,10 +49,10 @@ import java.util.NoSuchElementException;
  * or {@code false}:</p>
  *
  * <ul>
- * <li>If the flag is {@code false}, delimiter characters serve to
+ *  <li>If the flag is {@code false}, delimiter characters serve to
  *     separate tokens. A token is a maximal sequence of consecutive
  *     characters that are not delimiters.</li>
- * <li>If the flag is {@code true}, delimiter characters are themselves
+ *  <li>If the flag is {@code true}, delimiter characters are themselves
  *     considered to be tokens. A token is thus either one delimiter
  *     character, or a maximal sequence of consecutive characters that are
  *     not delimiters.</li>
@@ -105,10 +106,10 @@ import java.util.NoSuchElementException;
  *     test
  * </pre></blockquote>
  *
- * @author  unascribed
+ * @author unascribed
  * @author synapticloop
- * @see     java.io.StreamTokenizer
- * @since   1.0
+ * @see java.io.StreamTokenizer
+ * @since 1.0
  */
 public class PanlTokeniser {
 	private int currentPosition;
@@ -123,7 +124,7 @@ public class PanlTokeniser {
 	 * maxDelimCodePoint stores the value of the delimiter character with the
 	 * highest value. It is used to optimize the detection of delimiter
 	 * characters.
-	 *
+	 * <p>
 	 * It is unlikely to provide any optimization benefit in the
 	 * hasSurrogates case because most string characters will be
 	 * smaller than the limit, but we keep it so that the two code
@@ -195,11 +196,12 @@ public class PanlTokeniser {
 	 * resulting {@code StringTokenizer} may result in a
 	 * {@code NullPointerException}.
 	 *
-	 * @param   str            a string to be parsed.
-	 * @param   delim          the delimiters.
-	 * @param   returnDelims   flag indicating whether to return the delimiters
-	 *                         as tokens.
-	 * @exception NullPointerException if str is {@code null}
+	 * @param str a string to be parsed.
+	 * @param delim the delimiters.
+	 * @param returnDelims flag indicating whether to return the delimiters
+	 * 		as tokens.
+	 *
+	 * @throws NullPointerException if str is {@code null}
 	 */
 	public PanlTokeniser(String str, String delim, boolean returnDelims) {
 		currentPosition = 0;
@@ -223,9 +225,10 @@ public class PanlTokeniser {
 	 * resulting {@code StringTokenizer} may result in a
 	 * {@code NullPointerException}.
 	 *
-	 * @param   str     a string to be parsed.
-	 * @param   delim   the delimiters.
-	 * @exception NullPointerException if str is {@code null}
+	 * @param str a string to be parsed.
+	 * @param delim the delimiters.
+	 *
+	 * @throws NullPointerException if str is {@code null}
 	 */
 	public PanlTokeniser(String str, String delim) {
 		this(str, delim, false);
@@ -239,8 +242,9 @@ public class PanlTokeniser {
 	 * and the form-feed character. Delimiter characters themselves will
 	 * not be treated as tokens.
 	 *
-	 * @param   str   a string to be parsed.
-	 * @exception NullPointerException if str is {@code null}
+	 * @param str a string to be parsed.
+	 *
+	 * @throws NullPointerException if str is {@code null}
 	 */
 	public PanlTokeniser(String str) {
 		this(str, " \t\n\r\f", false);
@@ -320,9 +324,9 @@ public class PanlTokeniser {
 	 * If this method returns {@code true}, then a subsequent call to
 	 * {@code nextToken} with no argument will successfully return a token.
 	 *
-	 * @return  {@code true} if and only if there is at least one token
-	 *          in the string after the current position; {@code false}
-	 *          otherwise.
+	 * @return {@code true} if and only if there is at least one token
+	 * 		in the string after the current position; {@code false}
+	 * 		otherwise.
 	 */
 	public boolean hasMoreTokens() {
 		/*
@@ -337,9 +341,10 @@ public class PanlTokeniser {
 	/**
 	 * Returns the next token from this string tokenizer.
 	 *
-	 * @return     the next token from this string tokenizer.
-	 * @exception  NoSuchElementException  if there are no more tokens in this
-	 *               tokenizer's string.
+	 * @return the next token from this string tokenizer.
+	 *
+	 * @throws NoSuchElementException if there are no more tokens in this
+	 * 		tokenizer's string.
 	 */
 	public String nextToken() {
 		/*
@@ -371,11 +376,13 @@ public class PanlTokeniser {
 	 * advanced beyond the recognized token.  The new delimiter set
 	 * remains the default after this call.
 	 *
-	 * @param      delim   the new delimiters.
-	 * @return     the next token, after switching to the new delimiter set.
-	 * @exception  NoSuchElementException  if there are no more tokens in this
-	 *               tokenizer's string.
-	 * @exception NullPointerException if delim is {@code null}
+	 * @param delim the new delimiters.
+	 *
+	 * @return the next token, after switching to the new delimiter set.
+	 *
+	 * @throws NoSuchElementException if there are no more tokens in this
+	 * 		tokenizer's string.
+	 * @throws NullPointerException if delim is {@code null}
 	 */
 	public String nextToken(String delim) {
 		delimiters = delim;
@@ -392,10 +399,11 @@ public class PanlTokeniser {
 	 * method. It exists so that this class can implement the
 	 * {@code Enumeration} interface.
 	 *
-	 * @return  {@code true} if there are more tokens;
-	 *          {@code false} otherwise.
-	 * @see     java.util.Enumeration
-	 * @see     java.util.StringTokenizer#hasMoreTokens()
+	 * @return {@code true} if there are more tokens;
+	 *    {@code false} otherwise.
+	 *
+	 * @see java.util.Enumeration
+	 * @see java.util.StringTokenizer#hasMoreTokens()
 	 */
 	public boolean hasMoreElements() {
 		return hasMoreTokens();
@@ -407,11 +415,12 @@ public class PanlTokeniser {
 	 * {@code String}. It exists so that this class can implement the
 	 * {@code Enumeration} interface.
 	 *
-	 * @return     the next token in the string.
-	 * @exception  NoSuchElementException  if there are no more tokens in this
-	 *               tokenizer's string.
-	 * @see        java.util.Enumeration
-	 * @see        java.util.StringTokenizer#nextToken()
+	 * @return the next token in the string.
+	 *
+	 * @throws NoSuchElementException if there are no more tokens in this
+	 * 		tokenizer's string.
+	 * @see java.util.Enumeration
+	 * @see java.util.StringTokenizer#nextToken()
 	 */
 	public Object nextElement() {
 		return nextToken();
@@ -422,9 +431,10 @@ public class PanlTokeniser {
 	 * {@code nextToken} method can be called before it generates an
 	 * exception. The current position is not advanced.
 	 *
-	 * @return  the number of tokens remaining in the string using the current
-	 *          delimiter set.
-	 * @see     java.util.StringTokenizer#nextToken()
+	 * @return the number of tokens remaining in the string using the current
+	 * 		delimiter set.
+	 *
+	 * @see java.util.StringTokenizer#nextToken()
 	 */
 	public int countTokens() {
 		int count = 0;
@@ -441,7 +451,7 @@ public class PanlTokeniser {
 
 	public void decrementCurrentPosition() {
 		this.currentPosition--;
-		if(this.currentPosition < 0) {
+		if (this.currentPosition < 0) {
 			this.currentPosition = 0;
 		}
 	}

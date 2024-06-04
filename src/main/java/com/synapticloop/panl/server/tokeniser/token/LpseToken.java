@@ -1,5 +1,29 @@
 package com.synapticloop.panl.server.tokeniser.token;
 
+/*
+ * Copyright (c) 2008-2024 synapticloop.
+ *
+ * https://github.com/synapticloop/panl
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the “Software”), to
+ * deal in the Software without restriction, including without limitation the
+ * rights to use, copy, modify, merge, publish, distribute, sublicense, and/or
+ * sell copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in
+ * all copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED “AS IS”, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+ * FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
+ *  IN THE SOFTWARE.
+ */
+
 import com.synapticloop.panl.server.properties.CollectionProperties;
 import com.synapticloop.panl.server.tokeniser.PanlTokeniser;
 import org.apache.solr.client.solrj.SolrQuery;
@@ -49,16 +73,20 @@ public abstract class LpseToken {
 	protected boolean isValid = true;
 
 	/**
-	 * <p>Instantiate a PanlToken which responds to a specific LPSE code.  This
-	 * code may be updated by the child classes. as there may be different
-	 * lengths of LPSE codes.</p>
+	 * <p>Factory method for getting the correct LPSE token for a particular
+	 * code.</p>
 	 *
-	 * @param lpseCode The LPSE code to assign this facet or query operand to
+	 * <p>Any unknown tokens become a <code>FacetLpseToken</code>, whether it is
+	 * valid or not.</p>
+	 *
+	 * @param collectionProperties The collection properties
+	 * @param token The token
+	 * @param query The query string (this may be blank or null)
+	 * @param valueTokeniser The LPSE URI tokeniser
+	 * @param lpseTokeniser The LPSE code tokeniser
+	 *
+	 * @return The LpseToken for this LPSE code.
 	 */
-	public LpseToken(String lpseCode) {
-		this.lpseCode = lpseCode;
-	}
-
 	public static LpseToken getLpseToken(
 			CollectionProperties collectionProperties,
 			String token,
@@ -102,7 +130,7 @@ public abstract class LpseToken {
 		} else {
 			StringBuilder facet = new StringBuilder(token);
 			// it is a facet field
-			while (token.length() < collectionProperties.getPanlLpseNum()) {
+			while (token.length() < collectionProperties.getPanlLpseLength()) {
 				facet.append(lpseTokeniser.nextToken());
 			}
 
@@ -113,6 +141,17 @@ public abstract class LpseToken {
 					lpseTokeniser,
 					valueTokeniser));
 		}
+	}
+
+	/**
+	 * <p>Instantiate a LpseToken which responds to a specific LPSE code.  This
+	 * code may be updated by the child classes. as there may be different
+	 * lengths of LPSE codes.</p>
+	 *
+	 * @param lpseCode The LPSE code to assign this facet or query operand to
+	 */
+	public LpseToken(String lpseCode) {
+		this.lpseCode = lpseCode;
 	}
 
 	/**
@@ -159,7 +198,7 @@ public abstract class LpseToken {
 	 *
 	 * @return The LPSE component
 	 */
-	@Deprecated
+
 	public abstract String getLpseComponent();
 
 	/**

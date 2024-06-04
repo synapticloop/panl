@@ -1,5 +1,29 @@
 package com.synapticloop.panl.server.handler;
 
+/*
+ * Copyright (c) 2008-2024 synapticloop.
+ *
+ * https://github.com/synapticloop/panl
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the “Software”), to
+ * deal in the Software without restriction, including without limitation the
+ * rights to use, copy, modify, merge, publish, distribute, sublicense, and/or
+ * sell copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in
+ * all copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED “AS IS”, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+ * FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
+ *  IN THE SOFTWARE.
+ */
+
 import com.synapticloop.panl.exception.PanlServerException;
 import com.synapticloop.panl.generator.bean.Collection;
 import com.synapticloop.panl.server.client.PanlClient;
@@ -35,6 +59,8 @@ public class CollectionRequestHandler {
 	private final CollectionProperties collectionProperties;
 	private final PanlClient panlClient;
 
+	// These are the processors, which processes the Solr response and creates
+	// the Panl response object
 	private final ActiveProcessor activeProcessor;
 	private final PaginationProcessor paginationProcessor;
 	private final TimingsProcessor timingsProcessor;
@@ -44,6 +70,20 @@ public class CollectionRequestHandler {
 	private final AvailableProcessor availableProcessor;
 	private final CanonicalURIProcessor canonicalURIProcessor;
 
+	/**
+	 * <p>The collection request handler which maps a single collection and its
+	 * related fieldsets to a URI path</p>
+	 *
+	 * <p>The URI path is made up of
+	 * <code>&lt;collection_name&gt;/&lt;field_set_name&gt;/</code></p>
+	 *
+	 * @param collectionName The collection name
+	 * @param panlProperties The panl base properties, for connection to the Solr
+	 * 		server
+	 * @param collectionProperties The collection properties
+	 *
+	 * @throws PanlServerException If there was an error with the request
+	 */
 	public CollectionRequestHandler(String collectionName, PanlProperties panlProperties, CollectionProperties collectionProperties) throws PanlServerException {
 		LOGGER.info("[{}] Initialising collection", collectionName);
 
@@ -282,8 +322,10 @@ public class CollectionRequestHandler {
 			while (lpseTokeniser.hasMoreTokens()) {
 				String token = lpseTokeniser.nextToken();
 				LpseToken lpseToken = LpseToken.getLpseToken(collectionProperties, token, query, valueTokeniser, lpseTokeniser);
+				if(lpseToken instanceof QueryLpseToken) {
+					hasQuery = true;
+				}
 
-				// TODO - some sort of logic here...
 				if (!hasQuery && !query.isBlank()) {
 					lpseTokens.add(new QueryLpseToken(query, collectionProperties.getPanlParamQuery()));
 				}
