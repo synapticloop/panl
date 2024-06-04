@@ -41,6 +41,8 @@ panl.param.numrows=n
 panl.param.numrows.prefix=
 panl.param.numrows.suffix=-per-page
 
+panl.param.query.operand=o
+
 panl.param.passthrough=z
 
 #                     Whether to include single facets
@@ -77,14 +79,8 @@ panl.include.same.number.facets=false
 #
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 
-# probs don't need this....
-solr.modifier.AND=+
-solr.modifier.OR=-
 
 solr.default.query.operand=+
-
-solr.sort.ASC=+
-solr.sort.DESC=-
 
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 #
@@ -180,13 +176,14 @@ panl.type.i=solr.StrField
 panl.facet.b=brand
 panl.name.b=Brand
 panl.type.b=solr.StrField
-panl.prefix.b=Manufactured by 
+panl.prefix.b=Manufactured by
 panl.suffix.b=\ Company
+panl.or.b=true
 
 # <field "indexed"="true" "stored"="true" "name"="name" "type"="string" "multiValued"="false" />
-#panl.facet.N=name
-#panl.name.N=Name
-#panl.type.N=solr.StrField
+panl.field.N=name
+panl.name.N=Name
+panl.type.N=solr.StrField
 
 # <field "indexed"="true" "stored"="true" "name"="mechanism_type" "type"="string" "multiValued"="false" />
 panl.facet.m=mechanism_type
@@ -360,7 +357,7 @@ panl.type.W=solr.StrField
 #
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 
-panl.lpse.order=z,b,m,W,B,g,G,C,r,R,d,L,D,h,I,e,u,Z,9,s,p,n,q
+panl.lpse.order=z,b,m,W,B,g,G,C,r,R,d,L,D,h,I,e,u,Z,9,s,p,n,o,q
 
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 #
@@ -388,4 +385,4 @@ panl.results.fields.all=brand,name,mechanism_type,nib_shape,body_shape,grip_type
 
 panl.results.fields.firstfive=brand,name,category,mechanism_type,nib_shape
 
-panl.sort.fields=brand,relative_length,relative_weight
+panl.sort.fields=brand,name

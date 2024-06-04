@@ -3,8 +3,8 @@ package com.synapticloop.panl.server.properties.field;
 import com.synapticloop.panl.exception.PanlServerException;
 import com.synapticloop.panl.server.properties.CollectionProperties;
 import com.synapticloop.panl.server.tokeniser.token.LpseToken;
-import com.synapticloop.panl.server.tokeniser.token.PageLpseToken;
 import com.synapticloop.panl.server.tokeniser.token.QueryOperandLpseToken;
+import org.apache.solr.client.solrj.SolrQuery;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -50,5 +50,11 @@ public class PanlQueryOperandField extends BaseField {
 		return("The query operand which maps to the 'q.op' parameter of Solr");
 	}
 
+	public void applyToQueryInternal(SolrQuery solrQuery, Map<String, List<LpseToken>> panlTokenMap) {
+		if(panlTokenMap.containsKey(panlLpseCode)) {
+			QueryOperandLpseToken lpseToken = (QueryOperandLpseToken)panlTokenMap.get(panlLpseCode).get(0);
+			solrQuery.setParam("q.op", lpseToken.getQOpValue());
+		}
+	}
 
 }

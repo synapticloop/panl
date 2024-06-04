@@ -53,6 +53,7 @@ function isValidUrl(collection, fieldset) {
 }
 
 function populateExplainResults(panlJsonData) {
+	$("#documents").empty();
 	$("#documents").append("<h1>Request Explainer</h1>");
 	for(const expl of panlJsonData.explanation) {
 		$("#documents").append("<pre class=\"explain\">" + escapeHTML(expl) + "</pre>")

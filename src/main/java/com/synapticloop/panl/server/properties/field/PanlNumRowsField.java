@@ -4,6 +4,7 @@ import com.synapticloop.panl.exception.PanlServerException;
 import com.synapticloop.panl.server.properties.CollectionProperties;
 import com.synapticloop.panl.server.tokeniser.token.LpseToken;
 import com.synapticloop.panl.server.tokeniser.token.NumRowsLpseToken;
+import org.apache.solr.client.solrj.SolrQuery;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -44,6 +45,10 @@ public class PanlNumRowsField extends BaseField {
 	}
 	@Override public String getExplainDescription() {
 		return("The number of results to return per query.");
+	}
+
+	public void applyToQueryInternal(SolrQuery solrQuery, Map<String, List<LpseToken>> panlTokenMap) {
+		// do nothing - this relies on other data and is set by the handler
 	}
 
 }

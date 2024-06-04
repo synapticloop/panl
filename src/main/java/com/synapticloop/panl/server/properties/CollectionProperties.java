@@ -136,6 +136,8 @@ public class CollectionProperties {
 
 	private final Map<String, BaseField> lpseFieldLookup = new HashMap<>();
 
+	private boolean hasOrFacetFields = false;
+
 	public CollectionProperties(String collectionName, Properties properties) throws PanlServerException {
 		this.collectionName = collectionName;
 		this.properties = properties;
@@ -166,6 +168,17 @@ public class CollectionProperties {
 		for (PanlField field : NON_FACET_FIELDS) {
 			solrFieldToPanlNameLookup.put(field.getSolrFieldName(), field.getPanlFieldName());
 		}
+
+		// finally - do we have any or fields
+		for (String key : lpseFieldLookup.keySet()) {
+			BaseField baseField = lpseFieldLookup.get(key);
+			if(baseField.getIsOrFacet()) {
+				this.hasOrFacetFields = true;
+				break;
+			}
+		}
+
+
 	}
 
 	private void parseSortFields() {
@@ -600,5 +613,9 @@ public class CollectionProperties {
 
 	public BaseField getLpseField(String lpseCode) {
 		return (lpseFieldLookup.get(lpseCode));
+	}
+
+	public boolean getHasOrFacetFields() {
+		return hasOrFacetFields;
 	}
 }

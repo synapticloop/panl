@@ -3,6 +3,7 @@ package com.synapticloop.panl.server.properties.field;
 import com.synapticloop.panl.exception.PanlServerException;
 import com.synapticloop.panl.server.properties.CollectionProperties;
 import com.synapticloop.panl.server.tokeniser.token.LpseToken;
+import org.apache.solr.client.solrj.SolrQuery;
 import org.slf4j.Logger;
 
 import java.net.URLDecoder;
@@ -17,17 +18,21 @@ public abstract class BaseField {
 	protected static final String PROPERTY_KEY_PANL_FIELD = "panl.field.";
 	protected static final String PROPERTY_KEY_PANL_NAME = "panl.name.";
 	protected static final String PROPERTY_KEY_PANL_FACET = "panl.facet.";
+	protected static final String PROPERTY_KEY_PANL_OR_FACET = "panl.or.facet.";
 	protected static final String PROPERTY_KEY_PANL_TYPE = "panl.type.";
 	protected static final String PROPERTY_KEY_PANL_PREFIX = "panl.prefix.";
 	protected static final String PROPERTY_KEY_PANL_SUFFIX = "panl.suffix.";
 
 	protected static final String BOOLEAN_TRUE_VALUE = "true";
 	protected static final String BOOLEAN_FALSE_VALUE = "false";
+	public static final String PROPERTY_KEY_SOLR_FACET_MIN_COUNT = "solr.facet.min.count";
 
 	private boolean hasPrefix = false;
 	private boolean hasSuffix = false;
 	private String panlPrefix;
 	private String panlSuffix;
+
+	protected boolean isOrFacet = false;
 
 	private boolean isBooleanSolrFieldType;
 	private boolean hasBooleanTrueReplacement;
@@ -44,17 +49,17 @@ public abstract class BaseField {
 	private final String collectionName;
 
 	public BaseField(
-					String lpseCode,
-					String propertyKey,
-					String collectionName) throws PanlServerException {
+			String lpseCode,
+			String propertyKey,
+			String collectionName) throws PanlServerException {
 		this(lpseCode, propertyKey, collectionName, 1);
 	}
 
 	public BaseField(
-					String lpseCode,
-					String propertyKey,
-					String collectionName,
-					int panlLpseNum) throws PanlServerException {
+			String lpseCode,
+			String propertyKey,
+			String collectionName,
+			int panlLpseNum) throws PanlServerException {
 
 		this.panlLpseCode = lpseCode;
 		this.propertyKey = propertyKey;
@@ -65,11 +70,28 @@ public abstract class BaseField {
 		}
 
 		getLogger().info("[{}] [{}] Mapping Solr field name '{}' to panl key '{}', LPSE length {}",
-						collectionName,
-						this.getClass().getSimpleName(),
-						solrFieldName,
-						panlLpseCode,
-						panlLpseNum);
+				collectionName,
+				this.getClass().getSimpleName(),
+				solrFieldName,
+				panlLpseCode,
+				panlLpseNum);
+	}
+
+	protected void populateFacetOr(Properties properties, String lpseCode) {
+		this.isOrFacet = properties.getProperty(PROPERTY_KEY_PANL_OR_FACET + lpseCode, "false").equalsIgnoreCase("true");
+		if(this.isOrFacet) {
+			String propertyFacetMinCount = properties.getProperty(PROPERTY_KEY_SOLR_FACET_MIN_COUNT, null);
+			if (null != propertyFacetMinCount) {
+				try {
+					int minCount = Integer.parseInt(propertyFacetMinCount);
+					if (minCount != 0) {
+						getLogger().warn("Property '{}' __MUST__ be set to zero for '{}{}' to be enabled.", PROPERTY_KEY_SOLR_FACET_MIN_COUNT, PROPERTY_KEY_PANL_OR_FACET, lpseCode);
+					}
+				} catch (NumberFormatException e) {
+					getLogger().error("Property '{}' must be set", PROPERTY_KEY_SOLR_FACET_MIN_COUNT);
+				}
+			}
+		}
 	}
 
 	protected void populateBooleanReplacements(Properties properties, String lpseCode) {
@@ -80,14 +102,14 @@ public abstract class BaseField {
 
 		if (null != solrFieldType && solrFieldType.equals("solr.BoolField")) {
 			this.booleanTrueReplacement = properties.getProperty("panl.bool." + panlLpseCode + ".true", null);
-			if(null != this.booleanTrueReplacement) {
+			if (null != this.booleanTrueReplacement) {
 				hasBooleanTrueReplacement = true;
 			} else {
 				this.booleanTrueReplacement = BOOLEAN_TRUE_VALUE;
 			}
 
 			this.booleanFalseReplacement = properties.getProperty("panl.bool." + panlLpseCode + ".false", null);
-			if(null != this.booleanFalseReplacement) {
+			if (null != this.booleanFalseReplacement) {
 				hasBooleanFalseReplacement = true;
 			} else {
 				this.booleanFalseReplacement = BOOLEAN_FALSE_VALUE;
@@ -102,7 +124,7 @@ public abstract class BaseField {
 	}
 
 	protected void populateSolrFieldType(Properties properties, String lpseCode) {
-		if(null == this.solrFieldType) {
+		if (null == this.solrFieldType) {
 			this.solrFieldType = properties.getProperty(PROPERTY_KEY_PANL_TYPE + lpseCode);
 		}
 	}
@@ -110,7 +132,7 @@ public abstract class BaseField {
 	protected void populatePanlAndSolrFieldNames(Properties properties, String lpseCode) {
 		this.solrFieldName = properties.getProperty(PROPERTY_KEY_PANL_FACET + lpseCode);
 
-		if(null == this.solrFieldName) {
+		if (null == this.solrFieldName) {
 			this.solrFieldName = properties.getProperty(PROPERTY_KEY_PANL_FIELD + lpseCode);
 		}
 
@@ -139,28 +161,28 @@ public abstract class BaseField {
 	}
 
 	private void checkPrefixSuffix() {
-		if(this.panlPrefix != null && !this.panlPrefix.isEmpty()) {
+		if (this.panlPrefix != null && !this.panlPrefix.isEmpty()) {
 			hasPrefix = true;
 		}
 
-		if(this.panlSuffix != null && !this.panlSuffix.isEmpty()) {
+		if (this.panlSuffix != null && !this.panlSuffix.isEmpty()) {
 			hasSuffix = true;
 		}
 	}
 
 	public String getPanlPrefix() {
-		if(hasPrefix) {
-			return(panlPrefix);
+		if (hasPrefix) {
+			return (panlPrefix);
 		} else {
-			return("");
+			return ("");
 		}
 	}
 
 	public String getPanlSuffix() {
-		if(hasSuffix) {
-			return(panlSuffix);
+		if (hasSuffix) {
+			return (panlSuffix);
 		} else {
-			return("");
+			return ("");
 		}
 	}
 
@@ -189,6 +211,7 @@ public abstract class BaseField {
 	 * a replacement for true/false for it.</p>
 	 *
 	 * @param value the value to convert if any conversions are required
+	 *
 	 * @return the de-suffixed, de-prefixed, and de-replaced value.
 	 */
 	public String getDecodedValue(String value) {
@@ -198,7 +221,7 @@ public abstract class BaseField {
 			if (temp.startsWith(panlPrefix)) {
 				temp = temp.substring(panlPrefix.length());
 			} else {
-				return(null);
+				return (null);
 			}
 		}
 
@@ -206,7 +229,7 @@ public abstract class BaseField {
 			if (temp.endsWith(panlSuffix)) {
 				temp = temp.substring(0, temp.length() - panlSuffix.length());
 			} else {
-				return(null);
+				return (null);
 			}
 		}
 
@@ -221,45 +244,45 @@ public abstract class BaseField {
 
 			// if we get to this point, and we cannot determine whether it is true or false
 			if (BOOLEAN_TRUE_VALUE.equalsIgnoreCase(value)) {
-				return(BOOLEAN_TRUE_VALUE);
+				return (BOOLEAN_TRUE_VALUE);
 			} else if (BOOLEAN_FALSE_VALUE.equalsIgnoreCase(value)) {
-				return(BOOLEAN_FALSE_VALUE);
+				return (BOOLEAN_FALSE_VALUE);
 			} else {
-				return(null);
+				return (null);
 			}
 		}
 
 		return (temp);
 	}
 
-public String getEncodedPanlValue(String value) {
-		if(null == value) {
-			return("");
+	public String getEncodedPanlValue(String value) {
+		if (null == value) {
+			return ("");
 		}
 
 		StringBuilder sb = new StringBuilder();
 
-		if(hasPrefix) {
+		if (hasPrefix) {
 			sb.append(panlPrefix);
 		}
 
-		if(isBooleanSolrFieldType) {
-			if(hasBooleanTrueReplacement && value.equalsIgnoreCase(BOOLEAN_TRUE_VALUE)) {
+		if (isBooleanSolrFieldType) {
+			if (hasBooleanTrueReplacement && value.equalsIgnoreCase(BOOLEAN_TRUE_VALUE)) {
 				sb.append(booleanTrueReplacement);
-			} else if(hasBooleanFalseReplacement && value.equalsIgnoreCase(BOOLEAN_FALSE_VALUE)) {
+			} else if (hasBooleanFalseReplacement && value.equalsIgnoreCase(BOOLEAN_FALSE_VALUE)) {
 				sb.append(booleanFalseReplacement);
 			} else {
 				if (BOOLEAN_TRUE_VALUE.equalsIgnoreCase(value)) {
-					sb.append (BOOLEAN_TRUE_VALUE);
+					sb.append(BOOLEAN_TRUE_VALUE);
 				} else {
-					sb.append (BOOLEAN_FALSE_VALUE);
+					sb.append(BOOLEAN_FALSE_VALUE);
 				}
 			}
 		} else {
 			sb.append(value);
 		}
 
-		if(hasSuffix) {
+		if (hasSuffix) {
 			sb.append(panlSuffix);
 		}
 
@@ -271,55 +294,55 @@ public String getEncodedPanlValue(String value) {
 	}
 
 	public String getURIPath(LpseToken token, CollectionProperties collectionProperties) {
-		return(getEncodedPanlValue(token.getValue()) + "/");
+		return (getEncodedPanlValue(token.getValue()) + "/");
 	}
 
 	public String getLpseCode(LpseToken token, CollectionProperties collectionProperties) {
-		return(token.getLpseCode());
+		return (token.getLpseCode());
 	}
 
 	public String getURIPath(Map<String, List<LpseToken>> panlTokenMap, CollectionProperties collectionProperties) {
 		StringBuilder sb = new StringBuilder();
-		if(panlTokenMap.containsKey(panlLpseCode)) {
-			for(LpseToken lpseToken : panlTokenMap.get(panlLpseCode)) {
-				if(lpseToken.getIsValid()) {
+		if (panlTokenMap.containsKey(panlLpseCode)) {
+			for (LpseToken lpseToken : panlTokenMap.get(panlLpseCode)) {
+				if (lpseToken.getIsValid()) {
 					sb.append(getEncodedPanlValue(lpseToken.getValue()));
 					sb.append("/");
 				}
 			}
 		}
-		return(sb.toString());
+		return (sb.toString());
 	}
 
 	public String getLpseCode(Map<String, List<LpseToken>> panlTokenMap, CollectionProperties collectionProperties) {
 		StringBuilder sb = new StringBuilder();
-		if(panlTokenMap.containsKey(panlLpseCode)) {
-			for(LpseToken lpseToken : panlTokenMap.get(panlLpseCode)) {
-				if(lpseToken.getIsValid()) {
+		if (panlTokenMap.containsKey(panlLpseCode)) {
+			for (LpseToken lpseToken : panlTokenMap.get(panlLpseCode)) {
+				if (lpseToken.getIsValid()) {
 					sb.append(lpseToken.getLpseCode());
 				}
 			}
 		}
-		return(sb.toString());
+		return (sb.toString());
 	}
 
 	public String getCanonicalUriPath(Map<String, List<LpseToken>> panlTokenMap, CollectionProperties collectionProperties) {
-		return(getURIPath(panlTokenMap, collectionProperties));
+		return (getURIPath(panlTokenMap, collectionProperties));
 	}
 
 	public String getCanonicalLpseCode(Map<String, List<LpseToken>> panlTokenMap, CollectionProperties collectionProperties) {
-		return(getLpseCode(panlTokenMap, collectionProperties));
+		return (getLpseCode(panlTokenMap, collectionProperties));
 	}
 
 	public String getResetUriPath(Map<String, List<LpseToken>> panlTokenMap, CollectionProperties collectionProperties) {
-		return(getURIPath(panlTokenMap, collectionProperties));
+		return (getURIPath(panlTokenMap, collectionProperties));
 	}
 
 	public String getResetLpseCode(Map<String, List<LpseToken>> panlTokenMap, CollectionProperties collectionProperties) {
-		return(getLpseCode(panlTokenMap, collectionProperties));
+		return (getLpseCode(panlTokenMap, collectionProperties));
 	}
 
-	public abstract String getExplainDescription();
+	@Deprecated public abstract String getExplainDescription();
 
 	public List<String> explain() {
 		List<String> temp = new ArrayList<>();
@@ -332,20 +355,41 @@ public String getEncodedPanlValue(String value) {
 				"' of type '" +
 				solrFieldType +
 				"'.");
-		if(hasPrefix) {
+
+		if (hasPrefix) {
 			temp.add("             Prefix: '" + panlPrefix + "'.");
 		}
-		if(hasSuffix) {
+
+		if (hasSuffix) {
 			temp.add("             Suffix: '" + panlSuffix + "'.");
 		}
-		if(hasBooleanTrueReplacement) {
+
+		if (hasBooleanTrueReplacement) {
 			temp.add("             '" + booleanTrueReplacement + "' maps to 'true'.");
 		}
-		if(hasBooleanFalseReplacement) {
+
+		if (hasBooleanFalseReplacement) {
 			temp.add("             '" + booleanFalseReplacement + "' maps to 'false'.");
 		}
 
+		if (isOrFacet) {
+			temp.add("             Is an OR facet, allowing multiple selections of this facet.");
+		}
+
 		temp.add("DESCRIPTION: " + getExplainDescription());
-		return(temp);
+		return (temp);
 	}
+
+	public boolean getIsOrFacet() {
+		return isOrFacet;
+	}
+
+	public void applyToQuery(SolrQuery solrQuery, Map<String, List<LpseToken>> panlTokenMap) {
+		// no facets, no query, all is good :)
+		if (panlTokenMap.containsKey(getPanlLpseCode())) {
+			applyToQueryInternal(solrQuery, panlTokenMap);
+		}
+	}
+
+	protected abstract void applyToQueryInternal(SolrQuery solrQuery, Map<String, List<LpseToken>> panlTokenMap);
 }

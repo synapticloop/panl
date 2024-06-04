@@ -39,13 +39,18 @@ public class Field {
 		String booleanFieldText = "";
 		if(solrClassName.equals("solr.BoolField")) {
 			booleanFieldText = "# Because this is a Boolean field, you can change these values to something more human-readable\n" +
-					String.format("panl.bool.%s.true=is-%s\n", code, field) +
-					String.format("panl.bool.%s.false=is-not-%s\n", code, field);
+					"# Either, or both of these properties may be set\n" +
+					String.format("#panl.bool.%s.true=is-%s\n", code, field) +
+					String.format("#panl.bool.%s.false=is-not-%s\n", code, field);
 		}
+
 		return (String.format("\n# %s\n", schemaXml) +
 				String.format("panl.facet.%s=%s\n", code, field) +
 				String.format("panl.name.%s=%s\n", code, getPrettyName(field)) +
 				String.format("panl.type.%s=%s\n", code, solrClassName) +
+				"# The following two properties are optional and the values should be changed\n" +
+				String.format("#panl.prefix.%s=prefix\n", code) +
+				String.format("#panl.suffix.%s=suffix\n", code) +
 				booleanFieldText
 		);
 	}
