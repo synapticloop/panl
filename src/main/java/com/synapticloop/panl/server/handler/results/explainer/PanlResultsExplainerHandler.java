@@ -16,10 +16,10 @@ import java.util.List;
 
 public class PanlResultsExplainerHandler implements HttpRequestHandler {
 	public static final ContentType CONTENT_TYPE_JSON = ContentType.create("application/json", "UTF-8");
-	private final CollectionProperties collectionProperties;
+	private final List<CollectionProperties> collectionPropertiesList;
 
-	public PanlResultsExplainerHandler(CollectionProperties collectionProperties, List<CollectionRequestHandler> collectionRequestHandlers) {
-		this.collectionProperties = collectionProperties;
+	public PanlResultsExplainerHandler(List<CollectionProperties> collectionPropertiesList, List<CollectionRequestHandler> collectionRequestHandlers) {
+		this.collectionPropertiesList = collectionPropertiesList;
 		JSONObject jsonObject = new JSONObject();
 		jsonObject.put("error", 404);
 		jsonObject.put("message", "Could not find a PANL request url, see 'valid_urls' array.");

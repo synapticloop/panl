@@ -23,10 +23,10 @@ import java.util.StringTokenizer;
 
 
 public class PanlResultsExplainerExplainHandler implements HttpRequestHandler {
-	private final CollectionProperties collectionProperties;
+	private final List<CollectionProperties> collectionPropertiesList;
 	
-	public PanlResultsExplainerExplainHandler(CollectionProperties collectionProperties, List<CollectionRequestHandler> collectionRequestHandlers) {
-		this.collectionProperties = collectionProperties;
+	public PanlResultsExplainerExplainHandler(List<CollectionProperties> collectionPropertiesList, List<CollectionRequestHandler> collectionRequestHandlers) {
+		this.collectionPropertiesList = collectionPropertiesList;
 
 		JSONObject jsonObject = new JSONObject();
 		jsonObject.put("error", 404);
@@ -47,16 +47,21 @@ public class PanlResultsExplainerExplainHandler implements HttpRequestHandler {
 			uri = uri.substring(0, startParam);
 		}
 
-		List<LpseToken> lpseTokens = parseLpse(uri, query);
+		uri.split("/");
+
+		// TODO - this most certainly is wrong
+		CollectionProperties collectionProperties = collectionPropertiesList.get(0);
+		List<LpseToken> lpseTokens = parseLpse(collectionProperties, uri, query);
 		JSONArray jsonArray = new JSONArray();
 		for (LpseToken lpseToken : lpseTokens) {
 			jsonArray.put(lpseToken.explain());
 		}
 
+
 		JSONObject jsonObject = new JSONObject();
 		jsonObject.put("explanation", jsonArray);
 
-		jsonObject.put("configuration", getConfiguration());
+		jsonObject.put("configuration", getConfiguration(collectionProperties));
 
 		response.setStatusCode(HttpStatus.SC_OK);
 		response.setEntity(
@@ -65,7 +70,7 @@ public class PanlResultsExplainerExplainHandler implements HttpRequestHandler {
 
 	}
 
-	private JSONArray getConfiguration() {
+	private JSONArray getConfiguration(CollectionProperties collectionProperties) {
 		JSONArray jsonArray = new JSONArray();
 
 		for (BaseField lpseField : collectionProperties.getLpseFields()) {
@@ -76,7 +81,7 @@ public class PanlResultsExplainerExplainHandler implements HttpRequestHandler {
 		return(jsonArray);
 	}
 
-	private List<LpseToken> parseLpse(String uri, String query) {
+	private List<LpseToken> parseLpse(CollectionProperties collectionProperties, String uri, String query) {
 		List<LpseToken> lpseTokens = new ArrayList<>();
 
 		String[] searchQuery = uri.split("/");

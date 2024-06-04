@@ -59,6 +59,7 @@ function populateExplainResults(panlJsonData) {
 	}
 
 	$("#documents").append("<h1>Configuration Explainer</h1>");
+	$("#documents").append("<p>In order of URI path</p>");
 	for(const conf of panlJsonData.configuration) {
 		var innerPre = "";
 		for(const inner of conf) {

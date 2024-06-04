@@ -42,9 +42,12 @@ public class PanlQueryOperandField extends BaseField {
 		return("");
 	}
 
-	@Override
-	public Logger getLogger() {
+	@Override public Logger getLogger() {
 		return(LOGGER);
+	}
+
+	@Override public String getExplainDescription() {
+		return("The query operand which maps to the 'q.op' parameter of Solr");
 	}
 
 

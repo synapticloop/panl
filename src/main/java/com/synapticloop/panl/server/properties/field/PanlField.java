@@ -37,4 +37,8 @@ public class PanlField extends BaseField {
 		return (LOGGER);
 	}
 
+	@Override public String getExplainDescription() {
+		return("A Solr field that can be configured to be sorted by, or returned in the field set.");
+	}
+
 }

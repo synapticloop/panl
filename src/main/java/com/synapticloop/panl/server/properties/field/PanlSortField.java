@@ -9,6 +9,7 @@ import org.slf4j.LoggerFactory;
 
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
@@ -71,6 +72,21 @@ public class PanlSortField extends BaseField {
 
 	@Override public Logger getLogger() {
 		return(LOGGER);
+	}
+
+	@Override public List<String> explain() {
+		List<String> temp = new ArrayList<>();
+		temp.add("FIELD CONFIG [ " +
+				this.getClass().getSimpleName() +
+				" ] LPSE code '" +
+				panlLpseCode +
+				"'.");
+
+		return(temp);
+	}
+
+	@Override public String getExplainDescription() {
+		return("The sort order (default is relevance descending), but can be any PanlField, or PanlFacet.");
 	}
 
 }

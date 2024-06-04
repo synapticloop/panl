@@ -319,6 +319,8 @@ public String getEncodedPanlValue(String value) {
 		return(getLpseCode(panlTokenMap, collectionProperties));
 	}
 
+	public abstract String getExplainDescription();
+
 	public List<String> explain() {
 		List<String> temp = new ArrayList<>();
 		temp.add("FIELD CONFIG [ " +
@@ -343,6 +345,7 @@ public String getEncodedPanlValue(String value) {
 			temp.add("             '" + booleanFalseReplacement + "' maps to 'false'.");
 		}
 
+		temp.add("DESCRIPTION: " + getExplainDescription());
 		return(temp);
 	}
 }

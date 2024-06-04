@@ -18,4 +18,8 @@ public class PanlQueryField extends BaseField {
 		return(LOGGER);
 	}
 
+	@Override public String getExplainDescription() {
+		return("The text query which maps to the 'q' parameter of Solr.");
+	}
+
 }

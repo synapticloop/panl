@@ -41,7 +41,7 @@ public class PanlServer {
 	private CollectionProperties collectionProperties;
 
 	private final List<CollectionRequestHandler> collectionRequestHandlers = new ArrayList<>();
-
+	private final List<CollectionProperties> collectionPropertiesList = new ArrayList<>();
 	/**
 	 * <p>Instantiate a new PanlServer instance.  This will parse the properties file</p>
 	 *
@@ -95,6 +95,8 @@ public class PanlServer {
 					collectionProperties = new CollectionProperties(
 							collectionName,
 							fileCollectionProperties);
+
+					collectionPropertiesList.add(collectionProperties);
 				} catch (IOException e) {
 					throw new PanlServerException(e.getMessage());
 				}
@@ -176,8 +178,8 @@ public class PanlServer {
 			// the simple search and querying webappp
 			bootstrap.registerHandler("/panl-results-viewer/*", new PanlResultsViewerHandler(collectionRequestHandlers));
 			bootstrap.registerHandler("/panl-results-viewer/script/", new PanlResultsViewerScriptHandler(collectionRequestHandlers));
-			bootstrap.registerHandler("/panl-results-explainer/*", new PanlResultsExplainerHandler(collectionProperties, collectionRequestHandlers));
-			bootstrap.registerHandler("/panl-results-explainer/explain/*", new PanlResultsExplainerExplainHandler(collectionProperties, collectionRequestHandlers));
+			bootstrap.registerHandler("/panl-results-explainer/*", new PanlResultsExplainerHandler(collectionPropertiesList, collectionRequestHandlers));
+			bootstrap.registerHandler("/panl-results-explainer/explain/*", new PanlResultsExplainerExplainHandler(collectionPropertiesList, collectionRequestHandlers));
 		}
 
 		// finally register the collection handlers

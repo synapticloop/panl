@@ -28,7 +28,11 @@ public class PanlFacetField extends BaseField {
 		return(LOGGER);
 	}
 
-//	@Override
+	@Override public String getExplainDescription() {
+		return("A Solr field that can be used as a facet, returned in the field set, or configured to be sorted by.");
+	}
+
+	//	@Override
 //	public void applyToSolrQuery(SolrQuery solrQuery, Map<String, List<LpseToken>> panlTokenMap) {
 //		// TODO - need to do the OR filtering....
 //		if (panlTokenMap.containsKey(getPanlLpseCode())) {

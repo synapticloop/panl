@@ -42,4 +42,8 @@ public class PanlNumRowsField extends BaseField {
 	@Override public String getCanonicalLpseCode(Map<String, List<LpseToken>> panlTokenMap, CollectionProperties collectionProperties) {
 		return(panlLpseCode);
 	}
+	@Override public String getExplainDescription() {
+		return("The number of results to return per query.");
+	}
+
 }

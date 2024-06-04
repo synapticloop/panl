@@ -58,4 +58,8 @@ public class PanlPageNumField extends BaseField {
 		return(LOGGER);
 	}
 
+	@Override public String getExplainDescription() {
+		return("The page number of the results (works in conjunction with the number of results).");
+	}
+
 }
