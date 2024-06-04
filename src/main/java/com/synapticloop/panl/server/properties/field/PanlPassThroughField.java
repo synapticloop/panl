@@ -23,7 +23,7 @@ public class PanlPassThroughField extends BaseField {
 		return("");
 	}
 
-	@Override public String getCanonicalLpsePath(Map<String, List<LpseToken>> panlTokenMap, CollectionProperties collectionProperties) {
+	@Override public String getCanonicalLpseCode(Map<String, List<LpseToken>> panlTokenMap, CollectionProperties collectionProperties) {
 		return("");
 	}
 

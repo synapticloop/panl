@@ -1,6 +1,7 @@
 package com.synapticloop.panl.server.tokeniser.token;
 
 import com.synapticloop.panl.server.properties.CollectionProperties;
+import com.synapticloop.panl.server.properties.field.BaseField;
 import org.apache.solr.client.solrj.SolrQuery;
 
 import java.net.URLDecoder;
@@ -24,12 +25,15 @@ public class NumRowsLpseToken extends LpseToken {
 		int numRowsTemp;
 
 		if (valueTokenizer.hasMoreTokens()) {
-			String numRowsTempString = collectionProperties
-				.getConvertedFromPanlValue(
-						panlLpseCode,
-						URLDecoder.decode(
+			String numRowsTempString = "";
+			BaseField lpseField = collectionProperties.getLpseField(panlLpseCode);
+			if(null != lpseField) {
+				numRowsTempString = lpseField.getConvertedFromPanlValue(URLDecoder.decode(
 								valueTokenizer.nextToken(),
 								StandardCharsets.UTF_8));
+			} else {
+				this.isValid = false;
+			}
 
 			try {
 				numRowsTemp = Integer.parseInt(numRowsTempString);
@@ -41,6 +45,7 @@ public class NumRowsLpseToken extends LpseToken {
 			isValid = false;
 			numRowsTemp = collectionProperties.getNumResultsPerPage();
 		}
+		this.value = Integer.toString(numRowsTemp);
 		this.numRows = numRowsTemp;
 	}
 

@@ -3,7 +3,6 @@ package com.synapticloop.panl.server.properties.field;
 import com.synapticloop.panl.exception.PanlServerException;
 import com.synapticloop.panl.server.properties.CollectionProperties;
 import com.synapticloop.panl.server.tokeniser.token.LpseToken;
-import org.apache.solr.client.solrj.SolrQuery;
 import org.slf4j.Logger;
 
 import java.net.URLEncoder;
@@ -133,6 +132,22 @@ public abstract class BaseField {
 		}
 	}
 
+	public String getPanlPrefix() {
+		if(hasPrefix) {
+			return(panlPrefix);
+		} else {
+			return("");
+		}
+	}
+
+	public String getPanlSuffix() {
+		if(hasSuffix) {
+			return(panlSuffix);
+		} else {
+			return("");
+		}
+	}
+
 	public abstract Logger getLogger();
 
 	public String getPanlLpseCode() {
@@ -224,30 +239,56 @@ public abstract class BaseField {
 		return solrFieldType;
 	}
 
-	public String getURIPathComponent(String value) {
-		return(getConvertedToPanlValue(value));
+	public String getURIPath(LpseToken token, CollectionProperties collectionProperties) {
+		StringBuilder sb = new StringBuilder();
+		sb.append(URLEncoder.encode(getConvertedToPanlValue(token.getValue()), StandardCharsets.UTF_8));
+		sb.append("/");
+		return(sb.toString());
 	}
 
-	public String getLpsePathComponent(String value) {
-		return(panlLpseCode);
+	public String getLpseCode(LpseToken token, CollectionProperties collectionProperties) {
+		return(token.getLpseCode());
 	}
 
-	public String getCanonicalUriPath(Map<String, List<LpseToken>> panlTokenMap, CollectionProperties collectionProperties) {
+	public String getURIPath(Map<String, List<LpseToken>> panlTokenMap, CollectionProperties collectionProperties) {
 		StringBuilder sb = new StringBuilder();
 		if(panlTokenMap.containsKey(panlLpseCode)) {
 			for(LpseToken lpseToken : panlTokenMap.get(panlLpseCode)) {
-				sb.append(URLEncoder.encode(getConvertedToPanlValue(lpseToken.getValue()), StandardCharsets.UTF_8));
-				sb.append("/");
+				if(lpseToken.getIsValid()) {
+					sb.append(URLEncoder.encode(getConvertedToPanlValue(lpseToken.getValue()), StandardCharsets.UTF_8));
+					sb.append("/");
+				}
 			}
 		}
 		return(sb.toString());
 	}
 
-	public String getCanonicalLpsePath(Map<String, List<LpseToken>> panlTokenMap, CollectionProperties collectionProperties) {
+	public String getLpseCode(Map<String, List<LpseToken>> panlTokenMap, CollectionProperties collectionProperties) {
+		StringBuilder sb = new StringBuilder();
 		if(panlTokenMap.containsKey(panlLpseCode)) {
-			return (panlLpseCode);
-		} else {
-			return("");
+			for(LpseToken lpseToken : panlTokenMap.get(panlLpseCode)) {
+				if(lpseToken.getIsValid()) {
+					sb.append(lpseToken.getLpseCode());
+				}
+			}
 		}
+		return(sb.toString());
 	}
+
+	public String getCanonicalUriPath(Map<String, List<LpseToken>> panlTokenMap, CollectionProperties collectionProperties) {
+		return(getURIPath(panlTokenMap, collectionProperties));
+	}
+
+	public String getCanonicalLpseCode(Map<String, List<LpseToken>> panlTokenMap, CollectionProperties collectionProperties) {
+		return(getLpseCode(panlTokenMap, collectionProperties));
+	}
+
+	public String getResetUriPath(Map<String, List<LpseToken>> panlTokenMap, CollectionProperties collectionProperties) {
+		return(getURIPath(panlTokenMap, collectionProperties));
+	}
+
+	public String getResetLpseCode(Map<String, List<LpseToken>> panlTokenMap, CollectionProperties collectionProperties) {
+		return(getLpseCode(panlTokenMap, collectionProperties));
+	}
+
 }

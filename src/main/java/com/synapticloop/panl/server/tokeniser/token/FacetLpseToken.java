@@ -1,5 +1,6 @@
 package com.synapticloop.panl.server.tokeniser.token;
 
+import com.synapticloop.panl.server.properties.field.BaseField;
 import com.synapticloop.panl.server.tokeniser.PanlTokeniser;
 import com.synapticloop.panl.server.properties.CollectionProperties;
 import org.apache.solr.client.solrj.SolrQuery;
@@ -41,13 +42,14 @@ public class FacetLpseToken extends LpseToken {
 
 		this.lpseCode = sb.toString();
 
-		this.value = collectionProperties
-				.getConvertedFromPanlValue(
-						panlLpseCode,
-						URLDecoder.decode(
-								valueTokeniser.nextToken(),
-								StandardCharsets.UTF_8));
-
+		BaseField lpseField = collectionProperties.getLpseField(this.lpseCode);
+		if(null != lpseField) {
+			this.value = lpseField.getConvertedFromPanlValue(URLDecoder.decode(
+							valueTokeniser.nextToken(),
+							StandardCharsets.UTF_8));
+		} else {
+			this.isValid = false;
+		}
 
 		if(collectionProperties.hasFacetCode(panlLpseCode)) {
 			this.solrField = collectionProperties.getSolrFieldNameFromPanlLpseCode(panlLpseCode);

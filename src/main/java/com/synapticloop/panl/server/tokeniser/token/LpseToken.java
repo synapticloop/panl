@@ -3,7 +3,9 @@ package com.synapticloop.panl.server.tokeniser.token;
 import org.apache.solr.client.solrj.SolrQuery;
 
 /**
- * <p>The LPSE token encapsulates the URI part and the encoding part.</p>
+ * <p>The LPSE token encapsulates the URI part and the encoding part and
+ * validates whether this token is valid.</p>
+ *
  * <pre>
  *   /something/else/a value/another/2/dfgtn/
  *   --------------------------------- -----
@@ -12,6 +14,9 @@ import org.apache.solr.client.solrj.SolrQuery;
  *                                       |
  *                   This is the LPSE code
  * </pre>
+ *
+ * <p>If this token is marked as invalid, it will not generate any URI paths or
+ * of LPSE codes.</p>
  *
  * <p>For the above, the URI part would be mapped to individual LPSE codes
  * thusly:</p>
@@ -39,7 +44,9 @@ public abstract class LpseToken {
 	protected boolean isValid = true;
 
 	/**
-	 * <p>Instantiate a PanlToken which responds to a specific LPSE code.</p>
+	 * <p>Instantiate a PanlToken which responds to a specific LPSE code.  This
+	 * code may be updated by the child classes. as there may be different
+	 * lengths of LPSE codes.</p>
 	 *
 	 * @param lpseCode The LPSE code to assign this facet or query operand to
 	 */
@@ -71,6 +78,7 @@ public abstract class LpseToken {
 	 *
 	 * @return The URI component
 	 */
+	@Deprecated
 	public abstract String getUriPathComponent();
 
 	/**
@@ -79,6 +87,7 @@ public abstract class LpseToken {
 	 *
 	 * @return The URI path component for a reset
 	 */
+	@Deprecated
 	public String getResetUriPathComponent() {
 		return(getUriPathComponent());
 	}
@@ -89,6 +98,7 @@ public abstract class LpseToken {
 	 *
 	 * @return The LPSE component
 	 */
+	@Deprecated
 	public abstract String getLpseComponent();
 
 	/**
@@ -118,6 +128,7 @@ public abstract class LpseToken {
 	 *
 	 * @param solrQuery The Solr Query to apply the token to
 	 */
+	@Deprecated
 	public abstract void applyToQuery(SolrQuery solrQuery);
 
 	/**

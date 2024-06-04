@@ -48,6 +48,19 @@ public class CollectionRequestHandler {
 	}
 
 
+	/**
+	 * <p>Handle the request: split the URI path and (optionally a query
+	 * parameter) into Lpse tokens, build the SolrQuery, send it to the Solr
+	 * server and parse the response.</p>
+	 *
+	 * @param uri The URI of the request
+	 * @param query The query parameter
+	 *
+	 * @return The string body of the request
+	 *
+	 * @throws PanlServerException If there was an error parsing or connecting to
+	 * 		the Solr server.
+	 */
 	public String handleRequest(String uri, String query) throws PanlServerException {
 		long startNanos = System.nanoTime();
 
@@ -111,11 +124,11 @@ public class CollectionRequestHandler {
 
 			long sendAnReceiveNanos = System.nanoTime() - startNanos;
 			return (parseResponse(
-							lpseTokens,
-							response,
-							parseRequestNanos,
-							buildRequestNanos,
-							sendAnReceiveNanos));
+					lpseTokens,
+					response,
+					parseRequestNanos,
+					buildRequestNanos,
+					sendAnReceiveNanos));
 
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -131,14 +144,15 @@ public class CollectionRequestHandler {
 	 * @param parseRequestNanos The start time for this query in nanoseconds
 	 * @param buildRequestNanos The number of nanos it took to build the request
 	 * @param sendAndReceiveNanos The number of nanos it took to send the request
+	 *
 	 * @return a JSON Object as a string with the appended panl response
 	 */
 	private String parseResponse(
-					List<LpseToken> lpseTokens,
-					QueryResponse response,
-					long parseRequestNanos,
-					long buildRequestNanos,
-					long sendAndReceiveNanos) {
+			List<LpseToken> lpseTokens,
+			QueryResponse response,
+			long parseRequestNanos,
+			long buildRequestNanos,
+			long sendAndReceiveNanos) {
 
 		// set up the JSON response object
 		JSONObject solrJsonObject = new JSONObject(response.jsonStr());
@@ -147,7 +161,6 @@ public class CollectionRequestHandler {
 
 
 		long startNanos = System.nanoTime();
-
 
 		// set up the data structures
 		Map<String, Set<String>> panlLookupMap = new HashMap<>();
@@ -179,6 +192,8 @@ public class CollectionRequestHandler {
 			panlTokenMap.put(panlLpseCode, lpseTokenList);
 		}
 
+		// we are going to sort the tokens alphabetically by value to build the
+		// canonical URI
 		for (String key : panlTokenMap.keySet()) {
 			List<LpseToken> lpseTokenTemp = panlTokenMap.get(key);
 			lpseTokenTemp.sort(Comparator.comparing(LpseToken::getValue));
@@ -187,13 +202,71 @@ public class CollectionRequestHandler {
 		SolrDocumentList solrDocuments = (SolrDocumentList) response.getResponse().get("response");
 		long numFound = solrDocuments.getNumFound();
 		boolean numFoundExact = solrDocuments.getNumFoundExact();
-		long start = solrDocuments.getStart();
-
-		//
 
 
 		JSONArray panlFacets = new JSONArray();
 		Map<String, JSONObject> panlFacetOrderMap = new HashMap<>();
+
+		populateDataStructures(
+				response,
+				panlLookupMap,
+				numFound,
+				numFoundExact,
+				panlTokenMap,
+				panlFacetOrderMap);
+
+		// put it into the facet array in the requested order
+
+		for (String lpseCode : collectionProperties.getLpseOrder()) {
+			if (panlFacetOrderMap.containsKey(lpseCode)) {
+				panlFacets.put(panlFacetOrderMap.get(lpseCode));
+			}
+		}
+
+		availableObjects.put("facets", panlFacets);
+
+//		panlObject.put("active", getRemovalURIPaths(lpseTokens));
+		panlObject.put("active", getRemovalURIObject(lpseTokens));
+		panlObject.put("available", panlFacets);
+		panlObject.put("pagination", getPaginationURIObject(panlTokenMap, numFound));
+		panlObject.put("sorting", getSortingURIPaths(panlTokenMap));
+
+		panlObject.put("query_operand", getQueryOperandURIPaths(panlTokenMap));
+
+		solrJsonObject.put("error", false);
+
+		JSONObject timingsObject = new JSONObject();
+		// add in some statistics
+		timingsObject.put("panl_parse_request_time", TimeUnit.NANOSECONDS.toMillis(parseRequestNanos));
+		timingsObject.put("panl_build_request_time", TimeUnit.NANOSECONDS.toMillis(buildRequestNanos));
+		timingsObject.put("panl_send_request_time", TimeUnit.NANOSECONDS.toMillis(sendAndReceiveNanos));
+
+		long buildResponse = System.nanoTime() - startNanos;
+		timingsObject.put("panl_build_response_time", TimeUnit.NANOSECONDS.toMillis(buildResponse));
+		timingsObject.put("panl_total_time", TimeUnit.NANOSECONDS.toMillis(
+				parseRequestNanos +
+						buildRequestNanos +
+						sendAndReceiveNanos +
+						buildResponse
+		));
+		panlObject.put("timings", timingsObject);
+
+		panlObject.put("canonical_uri", getCanonicalUriPath(panlTokenMap));
+
+		// last thing - we want to put the panl to solr field mappings in
+		panlObject.put("fields", collectionProperties.getSolrFieldToPanlNameLookup());
+		solrJsonObject.put("panl", panlObject);
+
+		return (solrJsonObject.toString());
+	}
+
+	private void populateDataStructures(
+			QueryResponse response,
+			Map<String, Set<String>> panlLookupMap,
+			long numFound,
+			boolean numFoundExact,
+			Map<String, List<LpseToken>> panlTokenMap,
+			Map<String, JSONObject> panlFacetOrderMap) {
 
 		for (FacetField facetField : response.getFacetFields()) {
 			if (facetField.getValueCount() != 0) {
@@ -221,8 +294,8 @@ public class CollectionRequestHandler {
 					// the number of the count of the facet - then we may not need to
 					// include it
 					if (!collectionProperties.getPanlIncludeSameNumberFacets() &&
-									numFound == value.getCount() &&
-									numFoundExact) {
+							numFound == value.getCount() &&
+							numFoundExact) {
 						shouldAdd = false;
 					}
 
@@ -232,9 +305,9 @@ public class CollectionRequestHandler {
 						facetValueObject.put("value", valueName);
 						facetValueObject.put("count", value.getCount());
 						facetValueObject.put("encoded", URLEncoder.encode(
-										collectionProperties.getConvertedToPanlValue(
-														panlCodeFromSolrFacetName,
-														valueName), StandardCharsets.UTF_8));
+								collectionProperties.getConvertedToPanlValue(
+										panlCodeFromSolrFacetName,
+										valueName), StandardCharsets.UTF_8));
 						facetValueArrays.put(facetValueObject);
 					}
 				}
@@ -256,55 +329,14 @@ public class CollectionRequestHandler {
 					facetObject.put("values", facetValueArrays);
 					if (null != panlCodeFromSolrFacetName) {
 						facetObject.put("uris",
-										getAdditionURI(
-														panlCodeFromSolrFacetName,
-														panlTokenMap));
+								getAdditionURIObject(
+										panlCodeFromSolrFacetName,
+										panlTokenMap));
 					}
 					panlFacetOrderMap.put(panlCodeFromSolrFacetName, facetObject);
 				}
 			}
 		}
-
-		// put it into the facet array in the requested order
-		for (String lpseCode : collectionProperties.getLpseOrder()) {
-			if (panlFacetOrderMap.containsKey(lpseCode)) {
-				panlFacets.put(panlFacetOrderMap.get(lpseCode));
-			}
-		}
-
-		availableObjects.put("facets", panlFacets);
-
-		panlObject.put("active", getRemovalURIPaths(lpseTokens));
-		panlObject.put("available", panlFacets);
-		panlObject.put("pagination", getPaginationURIPaths(lpseTokens, panlTokenMap, numFound));
-		panlObject.put("sorting", getSortingURIPaths(panlTokenMap));
-		panlObject.put("query_operand", getQueryOperandURIPaths(panlTokenMap));
-
-		solrJsonObject.put("error", false);
-
-		JSONObject timingsObject = new JSONObject();
-		// add in some statistics
-		timingsObject.put("panl_parse_request_time", TimeUnit.NANOSECONDS.toMillis(parseRequestNanos));
-		timingsObject.put("panl_build_request_time", TimeUnit.NANOSECONDS.toMillis(buildRequestNanos));
-		timingsObject.put("panl_send_request_time", TimeUnit.NANOSECONDS.toMillis(sendAndReceiveNanos));
-
-		long buildResponse = System.nanoTime() - startNanos;
-		timingsObject.put("panl_build_response_time", TimeUnit.NANOSECONDS.toMillis(buildResponse));
-		timingsObject.put("panl_total_time", TimeUnit.NANOSECONDS.toMillis(
-						parseRequestNanos +
-										buildRequestNanos +
-										sendAndReceiveNanos +
-										buildResponse
-		));
-		panlObject.put("timings", timingsObject);
-
-		panlObject.put("canonical_uri", getCanonicalUriPath(panlTokenMap));
-
-		// last thing - we want to put the panl to solr field mappings in
-		panlObject.put("fields", collectionProperties.getSolrFieldToPanlNameLookup());
-		solrJsonObject.put("panl", panlObject);
-
-		return (solrJsonObject.toString());
 	}
 
 	/**
@@ -313,6 +345,7 @@ public class CollectionRequestHandler {
 	 * which are defined by the panl.sort.fields property.</p>
 	 *
 	 * @param panlTokenMap
+	 *
 	 * @return The JSON object with the keys and relevant URI paths
 	 */
 	private JSONObject getSortingURIPaths(Map<String, List<LpseToken>> panlTokenMap) {
@@ -349,7 +382,6 @@ public class CollectionRequestHandler {
 		JSONObject relevanceSort = new JSONObject();
 		relevanceSort.put("name", "Relevance");
 		relevanceSort.put("replace_desc", finalBefore + "-" + lpse);
-		relevanceSort.put("replace_asc", finalBefore + "+" + lpse);
 		jsonObject.put("relevance", relevanceSort);
 
 		// These are the defined sort fields
@@ -431,88 +463,161 @@ public class CollectionRequestHandler {
 		StringBuilder canonicalUri = new StringBuilder("/");
 		StringBuilder canonicalLpse = new StringBuilder();
 
-		for(BaseField baseField: collectionProperties.getLpseFields()) {
+		for (BaseField baseField : collectionProperties.getLpseFields()) {
 			canonicalUri.append(baseField.getCanonicalUriPath(panlTokenMap, collectionProperties));
-			canonicalLpse.append(baseField.getCanonicalLpsePath(panlTokenMap, collectionProperties));
+			canonicalLpse.append(baseField.getCanonicalLpseCode(panlTokenMap, collectionProperties));
 		}
 
-		return(canonicalUri.toString() + canonicalLpse+ "/");
+		return (canonicalUri.toString() + canonicalLpse + "/");
 	}
 
-	private JSONObject getPaginationURIPaths(List<LpseToken> lpseTokens, Map<String, List<LpseToken>> panlTokenMap, long numFound) {
-		JSONObject paginationObject = new JSONObject();
-		JSONObject jsonObject = new JSONObject();
+	private JSONObject getPaginationURIObject(Map<String, List<LpseToken>> panlTokenMap, long numFound) {
 
-		// get the page number and num results per page
-		long numPerPage = 0;
-		long pageNum = 0;
-		for (LpseToken lpseToken : lpseTokens) {
-			if (lpseToken instanceof NumRowsLpseToken) {
-				numPerPage = ((NumRowsLpseToken) lpseToken).getNumRows();
-			} else if (lpseToken instanceof PageLpseToken) {
-				pageNum = ((PageLpseToken) lpseToken).getPageNum();
+		int numPerPage = collectionProperties.getNumResultsPerPage();
+		// If it is set in the URI, get the updated value
+		List<LpseToken> lpseTokens = panlTokenMap.getOrDefault(collectionProperties.getPanlParamNumRows(), new ArrayList<>());
+		if (!lpseTokens.isEmpty()) {
+			int numRows = ((NumRowsLpseToken) lpseTokens.get(0)).getNumRows();
+			if (numRows > 0) {
+				numPerPage = numRows;
 			}
 		}
 
-		// we may not have a numrows start
-		if (numPerPage == 0) {
-			numPerPage = collectionProperties.getNumResultsPerPage();
-		}
-		if (pageNum == 0) {
-			pageNum = 1;
+		int pageNumber = 1;
+		String panlParamPageLpseCode = collectionProperties.getPanlParamPage();
+		lpseTokens = panlTokenMap.getOrDefault(panlParamPageLpseCode, new ArrayList<>());
+		if (!lpseTokens.isEmpty()) {
+			int pageNum = ((PageLpseToken) lpseTokens.get(0)).getPageNum();
+			if (pageNum > 0) {
+				pageNumber = pageNum;
+			}
 		}
 
+		JSONObject paginationObject = new JSONObject();
 		paginationObject.put("num_per_page", numPerPage);
-		paginationObject.put("page_num", pageNum);
+		paginationObject.put("page_num", pageNumber);
 		long numPages = numFound / numPerPage;
 		if (numFound % numPerPage != 0) {
 			numPages++;
 		}
-
 		paginationObject.put("num_pages", numPages);
 
-		// now for the pagination URI path
-		StringBuilder lpseUri = new StringBuilder("/");
-		StringBuilder lpse = new StringBuilder();
+		StringBuilder uriPath = new StringBuilder("/");
+		StringBuilder lpseCode = new StringBuilder();
 
-		String panlLpseCode = collectionProperties.getPanlParamPage();
+		JSONObject pageUris = new JSONObject();
 
-		for (String lpseOrder : collectionProperties.getLpseOrder()) {
-			// if the current panl token's lpse matches that of the panlLpseOrder,
-			// then we need to add to lpseCode and the uri
-			if (panlLpseCode.equals(lpseOrder)) {
-				jsonObject.put("before", lpseUri + collectionProperties.getPrefixForLpseCode(panlLpseCode));
-				// clear the sting builder
-				lpseUri.setLength(0);
-				lpse.append(panlLpseCode);
+		for (BaseField baseField : collectionProperties.getLpseFields()) {
+			//
+			if (!baseField.getPanlLpseCode().equals(panlParamPageLpseCode)) {
+				uriPath.append(baseField.getURIPath(panlTokenMap, collectionProperties));
+				lpseCode.append(baseField.getLpseCode(panlTokenMap, collectionProperties));
 			} else {
-				if (panlTokenMap.containsKey(lpseOrder)) {
-					// this is not additive - it is replacement
-					for (LpseToken token : panlTokenMap.get(lpseOrder)) {
-						lpseUri.append(token.getUriPathComponent());
-						lpse.append(token.getLpseComponent());
-					}
-				}
+				pageUris.put("before", uriPath + baseField.getPanlPrefix());
+				// clear the sting builder
+				lpseCode.append(baseField.getPanlLpseCode());
+				uriPath.setLength(0);
 			}
 		}
 
-		jsonObject.put("after", collectionProperties.getSuffixForLpseCode(panlLpseCode) + "/" + lpseUri + lpse + "/");
+		BaseField panlPageNumField = collectionProperties.getLpseField(panlParamPageLpseCode);
 
-		if (pageNum < numPages) {
-			jsonObject.put("next", jsonObject.getString("before") + (pageNum + 1) + jsonObject.getString("after"));
+		String afterValue = panlPageNumField.getPanlSuffix() + "/" + uriPath + lpseCode + "/";
+		pageUris.put("after", afterValue);
+
+		if (pageNumber < numPages) {
+			pageUris.put("next", pageUris.getString("before") + (pageNumber + 1) + pageUris.getString("after"));
 		}
 
-		if (pageNum > 1) {
-			jsonObject.put("previous", jsonObject.getString("before") + (pageNum - 1) + jsonObject.getString("after"));
+		if (pageNumber > 1) {
+			pageUris.put("previous", pageUris.getString("before") + (pageNumber - 1) + pageUris.getString("after"));
 		}
 
-		paginationObject.put("page_uris", jsonObject);
+		paginationObject.put("page_uris", pageUris);
+
 		paginationObject.put("num_per_page_uris",
-						getReplacementURI(
-										collectionProperties.getPanlParamNumRows(),
-										panlTokenMap));
+				getReplacementResetURIObject(
+						collectionProperties.getPanlParamNumRows(),
+						panlTokenMap));
 
 		return (paginationObject);
+	}
+
+	/**
+	 * <p>Get the URI JSONObject with a replacement of a code, resetting all
+	 * LPSE codes that are needed.</p>
+	 *
+	 * <p>This returns a JSON object with two keys:</p>
+	 *
+	 * <ul>
+	 *   <li><code>before</code> The URI path that goes before the value.</li>
+	 *   <li><code>after</code> The URI path that goes after the value.</li>
+	 * </ul>
+	 *
+	 * @param replaceLpseCode The LPSE code to be replaced
+	 * @param panlTokenMap The tokens parsed from the inbound request
+	 *
+	 * @return The JSON object
+	 */
+	private JSONObject getReplacementResetURIObject(String replaceLpseCode, Map<String, List<LpseToken>> panlTokenMap) {
+		StringBuilder uriPath = new StringBuilder("/");
+		StringBuilder lpseCode = new StringBuilder();
+
+		JSONObject pageUris = new JSONObject();
+
+		for (BaseField baseField : collectionProperties.getLpseFields()) {
+			if (!baseField.getPanlLpseCode().equals(replaceLpseCode)) {
+				uriPath.append(baseField.getResetUriPath(panlTokenMap, collectionProperties));
+				lpseCode.append(baseField.getResetLpseCode(panlTokenMap, collectionProperties));
+			} else {
+				pageUris.put("before", uriPath + baseField.getPanlPrefix());
+				// clear the sting builder
+				lpseCode.append(baseField.getPanlLpseCode());
+				uriPath.setLength(0);
+			}
+		}
+
+		BaseField baseField = collectionProperties.getLpseField(replaceLpseCode);
+
+		pageUris.put("after", baseField.getPanlSuffix() + "/" + uriPath + lpseCode + "/");
+
+		return (pageUris);
+	}
+
+	private JSONObject getRemovalURIObject(List<LpseToken> lpseTokens) {
+		JSONObject jsonObject = new JSONObject();
+
+		// go through each of the tokens and generate the removal URL
+
+		List<String> uriComponents = new ArrayList<>();
+		List<String> lpseComponents = new ArrayList<>();
+
+		for (LpseToken lpseToken : lpseTokens) {
+			BaseField lpseField = collectionProperties.getLpseField(lpseToken.getLpseCode());
+			if(null != lpseField) {
+				lpseComponents.add(lpseField.getLpseCode(lpseToken, collectionProperties));
+				uriComponents.add(lpseField.getURIPath(lpseToken, collectionProperties));
+			}
+		}
+
+		int i = 0;
+		for (LpseToken lpseToken : lpseTokens) {
+			String tokenType = lpseToken.getType();
+			JSONArray jsonArray = jsonObject.optJSONArray(tokenType, new JSONArray());
+
+			JSONObject removeObject = new JSONObject();
+			removeObject.put("value", lpseToken.getValue());
+			removeObject.put("uri", getRemoveURIFromPath(i, uriComponents, lpseComponents));
+
+			String panlLpseCode = lpseToken.getLpseCode();
+			removeObject.put("panl_code", panlLpseCode);
+			removeObject.put("facet_name", collectionProperties.getSolrFieldNameFromPanlLpseCode(panlLpseCode));
+			removeObject.put("name", collectionProperties.getPanlNameFromPanlCode(panlLpseCode));
+			jsonArray.put(removeObject);
+			i++;
+			jsonObject.put(tokenType, jsonArray);
+		}
+		return (jsonObject);
 	}
 
 	private JSONObject getRemovalURIPaths(List<LpseToken> lpseTokens) {
@@ -527,6 +632,7 @@ public class CollectionRequestHandler {
 			uriComponents.add(lpseToken.getUriPathComponent());
 			lpseComponents.add(lpseToken.getLpseComponent());
 		}
+
 		int i = 0;
 		for (LpseToken lpseToken : lpseTokens) {
 			String tokenType = lpseToken.getType();
@@ -567,68 +673,34 @@ public class CollectionRequestHandler {
 	}
 
 	/**
-	 * <p>Get the addition URI for facets.  The addition URI will always reset
-	 * the page number LPSE code</p>
+	 * <p>Get the addition URI Object for facets.  The addition URI will always
+	 * reset the page number LPSE code</p>
 	 *
-	 * @param panlLpseCode The LPSE code to add to the URI
+	 * @param additionLpseCode The LPSE code to add to the URI
 	 * @param panlTokenMap The Map of existing tokens that are already in the URI
+	 *
 	 * @return The addition URI
 	 */
-	private JSONObject getAdditionURI(String panlLpseCode, Map<String, List<LpseToken>> panlTokenMap) {
-		JSONObject jsonObject = new JSONObject();
+
+	private JSONObject getAdditionURIObject(String additionLpseCode, Map<String, List<LpseToken>> panlTokenMap) {
+		JSONObject additionObject = new JSONObject();
 		StringBuilder lpseUri = new StringBuilder("/");
-		StringBuilder lpse = new StringBuilder();
+		StringBuilder lpseCode = new StringBuilder();
 
-		for (String lpseOrder : collectionProperties.getLpseOrder()) {
-			// do we currently have some codes for this?
-
-			if (panlTokenMap.containsKey(lpseOrder)) {
-				// TODO - need to order these alphabetically...
-				for (LpseToken token : panlTokenMap.get(lpseOrder)) {
-					lpseUri.append(token.getResetUriPathComponent());
-					lpse.append(token.getLpseComponent());
-				}
+		for (BaseField baseField : collectionProperties.getLpseFields()) {
+			if (panlTokenMap.containsKey(baseField.getPanlLpseCode())) {
+				lpseUri.append(baseField.getResetUriPath(panlTokenMap, collectionProperties));
+				lpseCode.append(baseField.getResetLpseCode(panlTokenMap, collectionProperties));
 			}
-
-			// if the current panl token's lpse matches that of the panlLpseOrder,
-			// then we need to add to lpseCode and the uri
-			if (panlLpseCode.equals(lpseOrder)) {
-				jsonObject.put("before", lpseUri.toString());
-				// clear the sting builder
+			if (baseField.getPanlLpseCode().equals(additionLpseCode)) {
+				additionObject.put("before", lpseUri.toString());
 				lpseUri.setLength(0);
-				lpse.append(panlLpseCode);
+				lpseCode.append(baseField.getLpseCode(panlTokenMap, collectionProperties));
 			}
 		}
 
-		jsonObject.put("after", "/" + lpseUri + lpse + "/");
-		return (jsonObject);
-	}
-
-	private JSONObject getReplacementURI(String panlLpseCode, Map<String, List<LpseToken>> panlTokenMap) {
-		JSONObject jsonObject = new JSONObject();
-		StringBuilder lpseUri = new StringBuilder("/");
-		StringBuilder lpse = new StringBuilder();
-
-		for (String lpseOrder : collectionProperties.getLpseOrder()) {
-			if (!panlLpseCode.equals(lpseOrder)) {
-				if (panlTokenMap.containsKey(lpseOrder)) {
-					for (LpseToken token : panlTokenMap.get(lpseOrder)) {
-						lpseUri.append(token.getResetUriPathComponent());
-						lpse.append(token.getLpseComponent());
-					}
-				}
-			} else {
-				// if the current panl token's lpse matches that of the panlLpseOrder,
-				// then we need to add to lpseCode and the uri
-				jsonObject.put("before", lpseUri + collectionProperties.getPrefixForLpseCode(panlLpseCode));
-				// clear the sting builder
-				lpseUri.setLength(0);
-				lpse.append(panlLpseCode);
-			}
-		}
-
-		jsonObject.put("after", collectionProperties.getSuffixForLpseCode(panlLpseCode) + "/" + lpseUri + lpse + "/");
-		return (jsonObject);
+		additionObject.append("after", "/" + lpseUri + lpseCode + "/");
+		return (additionObject);
 	}
 
 	/**
@@ -656,8 +728,9 @@ public class CollectionRequestHandler {
 	 *
 	 * @param uri The URI to parse
 	 * @param query the query to parse - if the query string exists, then this
-	 * 				query will replace any existing query in the lpse encoded
-	 * 				URI
+	 * 		query will replace any existing query in the lpse encoded
+	 * 		URI
+	 *
 	 * @return The parse URI as a List of <code>PanlToken</code>
 	 */
 	public List<LpseToken> parseLpse(String uri, String query) {
@@ -684,43 +757,43 @@ public class CollectionRequestHandler {
 				if (token.equals(collectionProperties.getPanlParamQuery())) {
 					hasQuery = true;
 					lpseTokens.add(
-									new QueryLpseToken(
-													query,
-													token,
-													valueTokeniser));
+							new QueryLpseToken(
+									query,
+									token,
+									valueTokeniser));
 
 				} else if (token.equals(collectionProperties.getPanlParamSort())) {
 					lpseTokens.add(
-									new SortLpseToken(
-													collectionProperties,
-													token,
-													lpseTokeniser));
+							new SortLpseToken(
+									collectionProperties,
+									token,
+									lpseTokeniser));
 
 				} else if (token.equals(collectionProperties.getPanlParamQueryOperand())) {
 					lpseTokens.add(
-									new QueryOperandLpseToken(
-													collectionProperties,
-													token,
-													lpseTokeniser));
+							new QueryOperandLpseToken(
+									collectionProperties,
+									token,
+									lpseTokeniser));
 
 				} else if (token.equals(collectionProperties.getPanlParamNumRows())) {
 					lpseTokens.add(
-									new NumRowsLpseToken(
-													collectionProperties,
-													token,
-													valueTokeniser));
+							new NumRowsLpseToken(
+									collectionProperties,
+									token,
+									valueTokeniser));
 				} else if (token.equals(collectionProperties.getPanlParamPage())) {
 					lpseTokens.add(
-									new PageLpseToken(
-													collectionProperties,
-													token,
-													valueTokeniser));
+							new PageLpseToken(
+									collectionProperties,
+									token,
+									valueTokeniser));
 				} else if (token.equals(collectionProperties.getPanlParamPassThrough())) {
 					lpseTokens.add(
-									new PassThroughLpseToken(
-													collectionProperties,
-													token,
-													valueTokeniser));
+							new PassThroughLpseToken(
+									collectionProperties,
+									token,
+									valueTokeniser));
 				} else {
 					StringBuilder facet = new StringBuilder(token);
 					// it is a facet field
@@ -730,11 +803,11 @@ public class CollectionRequestHandler {
 
 					// now we have the facetField
 					lpseTokens.add(
-									new FacetLpseToken(
-													collectionProperties,
-													facet.toString(),
-													lpseTokeniser,
-													valueTokeniser));
+							new FacetLpseToken(
+									collectionProperties,
+									facet.toString(),
+									lpseTokeniser,
+									valueTokeniser));
 				}
 			}
 

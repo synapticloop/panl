@@ -28,7 +28,7 @@ public class PanlField extends BaseField {
 	}
 
 	@Override
-	public String getCanonicalLpsePath(Map<String, List<LpseToken>> panlTokenMap, CollectionProperties collectionProperties) {
+	public String getCanonicalLpseCode(Map<String, List<LpseToken>> panlTokenMap, CollectionProperties collectionProperties) {
 		return ("");
 	}
 

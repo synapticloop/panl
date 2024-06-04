@@ -41,7 +41,7 @@ public class PanlNumRowsField extends BaseField {
 		return (sb.toString());
 	}
 
-	@Override public String getCanonicalLpsePath(Map<String, List<LpseToken>> panlTokenMap, CollectionProperties collectionProperties) {
+	@Override public String getCanonicalLpseCode(Map<String, List<LpseToken>> panlTokenMap, CollectionProperties collectionProperties) {
 		return(panlLpseCode);
 	}
 }

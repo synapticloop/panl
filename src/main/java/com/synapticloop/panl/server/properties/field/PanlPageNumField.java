@@ -36,8 +36,25 @@ public class PanlPageNumField extends BaseField {
 		return(sb.toString());
 	}
 
-	@Override public String getCanonicalLpsePath(Map<String, List<LpseToken>> panlTokenMap, CollectionProperties collectionProperties) {
+	@Override public String getCanonicalLpseCode(Map<String, List<LpseToken>> panlTokenMap, CollectionProperties collectionProperties) {
 		return(panlLpseCode);
+	}
+
+	public String getResetUriPath(Map<String, List<LpseToken>> panlTokenMap, CollectionProperties collectionProperties) {
+		StringBuilder sb = new StringBuilder();
+		if(panlTokenMap.containsKey(panlLpseCode)) {
+			sb.append(URLEncoder.encode(getConvertedToPanlValue("1"), StandardCharsets.UTF_8));
+		}
+
+		sb.append("/");
+		return(sb.toString());
+	}
+
+	public String getResetLpseCode(Map<String, List<LpseToken>> panlTokenMap, CollectionProperties collectionProperties) {
+		if(panlTokenMap.containsKey(panlLpseCode)) {
+			return(panlLpseCode);
+		}
+		return("");
 	}
 
 	@Override public Logger getLogger() {
