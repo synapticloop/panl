@@ -29,6 +29,8 @@ public abstract class BaseField {
 	private String panlSuffix;
 
 	private boolean isBooleanSolrFieldType;
+	private boolean hasBooleanTrueReplacement;
+	private boolean hasBooleanFalseReplacement;
 	private String booleanTrueReplacement;
 	private String booleanFalseReplacement;
 
@@ -76,8 +78,20 @@ public abstract class BaseField {
 		populateSolrFieldType(properties, lpseCode);
 
 		if (null != solrFieldType && solrFieldType.equals("solr.BoolField")) {
-			this.booleanTrueReplacement = properties.getProperty("panl.bool." + panlLpseCode + ".true", BOOLEAN_TRUE_VALUE);
-			this.booleanFalseReplacement = properties.getProperty("panl.bool." + panlLpseCode + ".false", BOOLEAN_FALSE_VALUE);
+			this.booleanTrueReplacement = properties.getProperty("panl.bool." + panlLpseCode + ".true", null);
+			if(null != this.booleanTrueReplacement) {
+				hasBooleanTrueReplacement = true;
+			} else {
+				this.booleanTrueReplacement = BOOLEAN_TRUE_VALUE;
+			}
+
+			this.booleanFalseReplacement = properties.getProperty("panl.bool." + panlLpseCode + ".false", null);
+			if(null != this.booleanFalseReplacement) {
+				hasBooleanFalseReplacement = true;
+			} else {
+				this.booleanFalseReplacement = BOOLEAN_FALSE_VALUE;
+			}
+
 			this.isBooleanSolrFieldType = true;
 		} else {
 			this.booleanTrueReplacement = null;
@@ -88,7 +102,7 @@ public abstract class BaseField {
 
 	protected void populateSolrFieldType(Properties properties, String lpseCode) {
 		if(null == this.solrFieldType) {
-			this.solrFieldType = properties.getProperty(PROPERTY_KEY_PANL_TYPE + panlLpseCode);
+			this.solrFieldType = properties.getProperty(PROPERTY_KEY_PANL_TYPE + lpseCode);
 		}
 	}
 
@@ -177,7 +191,7 @@ public abstract class BaseField {
 	 * @return the de-suffixed, de-prefixed, and de-replaced value.
 	 */
 	public String getDecodedValue(String value) {
-		String temp = value;
+		String temp = URLDecoder.decode(value, StandardCharsets.UTF_8);
 
 		if (hasPrefix) {
 			if (temp.startsWith(panlPrefix)) {
@@ -196,11 +210,11 @@ public abstract class BaseField {
 		}
 
 		if (isBooleanSolrFieldType) {
-			if (hasBooleanTrueReplacement() && booleanTrueReplacement.equals(value)) {
+			if (hasBooleanTrueReplacement && booleanTrueReplacement.equals(value)) {
 				return BOOLEAN_TRUE_VALUE;
 			}
 
-			if (hasBooleanFalseReplacement() && booleanFalseReplacement.equals(value)) {
+			if (hasBooleanFalseReplacement && booleanFalseReplacement.equals(value)) {
 				return BOOLEAN_FALSE_VALUE;
 			}
 
@@ -214,7 +228,7 @@ public abstract class BaseField {
 			}
 		}
 
-		return (URLDecoder.decode(temp, StandardCharsets.UTF_8));
+		return (temp);
 	}
 
 public String getEncodedPanlValue(String value) {
@@ -229,9 +243,9 @@ public String getEncodedPanlValue(String value) {
 		}
 
 		if(isBooleanSolrFieldType) {
-			if(hasBooleanTrueReplacement() && value.equalsIgnoreCase(BOOLEAN_TRUE_VALUE)) {
+			if(hasBooleanTrueReplacement && value.equalsIgnoreCase(BOOLEAN_TRUE_VALUE)) {
 				sb.append(booleanTrueReplacement);
-			} else if(hasBooleanFalseReplacement() && value.equalsIgnoreCase(BOOLEAN_FALSE_VALUE)) {
+			} else if(hasBooleanFalseReplacement && value.equalsIgnoreCase(BOOLEAN_FALSE_VALUE)) {
 				sb.append(booleanFalseReplacement);
 			} else {
 				if (BOOLEAN_TRUE_VALUE.equalsIgnoreCase(value)) {
@@ -251,23 +265,12 @@ public String getEncodedPanlValue(String value) {
 		return (URLEncoder.encode(sb.toString(), StandardCharsets.UTF_8));
 	}
 
-	private boolean hasBooleanTrueReplacement() {
-		return (null != this.booleanTrueReplacement);
-	}
-
-	private boolean hasBooleanFalseReplacement() {
-		return (null != this.booleanFalseReplacement);
-	}
-
 	public String getSolrFieldType() {
 		return solrFieldType;
 	}
 
 	public String getURIPath(LpseToken token, CollectionProperties collectionProperties) {
-		StringBuilder sb = new StringBuilder();
-		sb.append(getEncodedPanlValue(token.getValue()));
-		sb.append("/");
-		return(sb.toString());
+		return(getEncodedPanlValue(token.getValue()) + "/");
 	}
 
 	public String getLpseCode(LpseToken token, CollectionProperties collectionProperties) {
