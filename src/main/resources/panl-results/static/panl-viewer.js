@@ -101,13 +101,6 @@ function addSortingOptions(sortingObject) {
 		"Relevance: <a href=\"" +
     panlResultsViewerUrl +
     $("#collection").text() +
-    sortingObject.relevance.replace_asc +
-    "\"/>ASC</a>&nbsp;");
-
-	$("#sorting_options").append(
-		"<a href=\"" +
-    panlResultsViewerUrl +
-    $("#collection").text() +
     sortingObject.relevance.replace_desc +
     "\"/>DESC</a>&nbsp;");
 
@@ -131,6 +124,7 @@ function addSortingOptions(sortingObject) {
 }
 
 function addPagination(paginationObject) {
+	console.log(paginationObject);
 	$("#page_num").append(paginationObject.page_num);
 	$("#num_pages").append(paginationObject.num_pages);
 	$("#num_per_page").append(paginationObject.num_per_page);

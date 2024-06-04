@@ -25,9 +25,9 @@ public class SortLpseToken extends LpseToken {
 	}
 
 	public SortLpseToken(
-					CollectionProperties collectionProperties,
-					String panlLpseCode,
-					PanlTokeniser lpseTokeniser) {
+			CollectionProperties collectionProperties,
+			String panlLpseCode,
+			PanlTokeniser lpseTokeniser) {
 
 		super(panlLpseCode);
 
@@ -61,8 +61,13 @@ public class SortLpseToken extends LpseToken {
 		// is a relevance search, or will be the facet field.
 
 		this.panlFacetCode = sb.toString();
-		if (!collectionProperties.hasSortField(this.panlFacetCode)) {
-			this.isValid = false;
+
+		if (sb.length() == 0) {
+			// this is a relevance search
+		} else {
+			if (!collectionProperties.hasSortField(this.panlFacetCode)) {
+				this.isValid = false;
+			}
 		}
 
 		this.solrFacetField = collectionProperties.getSolrFieldNameFromPanlLpseCode(this.panlFacetCode);
@@ -88,9 +93,9 @@ public class SortLpseToken extends LpseToken {
 	public String getLpseComponent() {
 		if (isValid) {
 			return (this.lpseCode +
-							this.panlFacetCode +
-							(this.sortOrder.equals(SolrQuery.ORDER.asc) ? "+" : "-"));
-
+					this.panlFacetCode +
+					(null != this.solrFacetField ? this.solrFacetField : "") +
+					(this.sortOrder.equals(SolrQuery.ORDER.asc) ? "+" : "-"));
 		} else {
 			return ("");
 		}
@@ -114,13 +119,15 @@ public class SortLpseToken extends LpseToken {
 	@Override
 	public String explain() {
 		return ("PANL " +
-						(this.isValid ? "[  VALID  ]" : "[ INVALID ]") +
-						" <sort>          LPSE code '" +
-						this.panlFacetCode +
-						"' (solr field '" +
-						this.solrFacetField +
-						"'), sorted " +
-						(this.sortOrder == SolrQuery.ORDER.asc ? "ASCending" : "DESCending"));
+				(this.isValid ? "[  VALID  ]" : "[ INVALID ]") +
+				" <sort>          LPSE code '" +
+				this.lpseCode +
+				"' sort code '" +
+				this.panlFacetCode +
+				"' (solr field '" +
+				(this.solrFacetField == null ? "<relevance>" : this.solrFacetField) +
+				"'), sorted " +
+				(this.sortOrder == SolrQuery.ORDER.asc ? "ASCending" : "DESCending"));
 	}
 
 	/**
@@ -135,7 +142,7 @@ public class SortLpseToken extends LpseToken {
 	 */
 	@Override
 	public void applyToQuery(SolrQuery solrQuery) {
-		if (isValid) {
+		if (null != this.solrFacetField && isValid) {
 			solrQuery.addSort(this.solrFacetField, sortOrder);
 		}
 	}
@@ -146,10 +153,10 @@ public class SortLpseToken extends LpseToken {
 	}
 
 	public String getPanlFacetCode() {
-		return(panlFacetCode);
+		return (panlFacetCode);
 	}
 
 	public String getSortCode() {
-		return(sortCode);
+		return (sortCode);
 	}
 }

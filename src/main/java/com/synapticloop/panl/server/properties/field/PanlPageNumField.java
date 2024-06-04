@@ -3,13 +3,10 @@ package com.synapticloop.panl.server.properties.field;
 import com.synapticloop.panl.exception.PanlServerException;
 import com.synapticloop.panl.server.properties.CollectionProperties;
 import com.synapticloop.panl.server.tokeniser.token.LpseToken;
-import com.synapticloop.panl.server.tokeniser.token.NumRowsLpseToken;
 import com.synapticloop.panl.server.tokeniser.token.PageLpseToken;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.net.URLEncoder;
-import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
@@ -27,17 +24,34 @@ public class PanlPageNumField extends BaseField {
 		StringBuilder sb = new StringBuilder();
 		if(panlTokenMap.containsKey(panlLpseCode)) {
 			PageLpseToken pageLpseToken = (PageLpseToken) panlTokenMap.get(panlLpseCode).get(0);
-			sb.append(URLEncoder.encode(getConvertedToPanlValue(pageLpseToken.getPageNum() + ""), StandardCharsets.UTF_8));
+			sb.append(getEncodedPanlValue(Integer.toString(pageLpseToken.getPageNum())));
 		} else {
-			sb.append(URLEncoder.encode(getConvertedToPanlValue("1"), StandardCharsets.UTF_8));
+			sb.append(getEncodedPanlValue("1"));
 		}
 
 		sb.append("/");
 		return(sb.toString());
 	}
 
-	@Override public String getCanonicalLpsePath(Map<String, List<LpseToken>> panlTokenMap, CollectionProperties collectionProperties) {
+	@Override public String getCanonicalLpseCode(Map<String, List<LpseToken>> panlTokenMap, CollectionProperties collectionProperties) {
 		return(panlLpseCode);
+	}
+
+	public String getResetUriPath(Map<String, List<LpseToken>> panlTokenMap, CollectionProperties collectionProperties) {
+		StringBuilder sb = new StringBuilder();
+		if(panlTokenMap.containsKey(panlLpseCode)) {
+			sb.append(getEncodedPanlValue("1"));
+			sb.append("/");
+		}
+
+		return(sb.toString());
+	}
+
+	public String getResetLpseCode(Map<String, List<LpseToken>> panlTokenMap, CollectionProperties collectionProperties) {
+		if(panlTokenMap.containsKey(panlLpseCode)) {
+			return(panlLpseCode);
+		}
+		return("");
 	}
 
 	@Override public Logger getLogger() {

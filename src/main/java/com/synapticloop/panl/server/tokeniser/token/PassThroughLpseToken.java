@@ -34,13 +34,11 @@ public class PassThroughLpseToken extends LpseToken {
 	}
 
 	@Override public String getUriPathComponent() {
-		return (
-				URLEncoder.encode(
-						collectionProperties.getConvertedToPanlValue(
-								lpseCode,
-								this.value),
-						StandardCharsets.UTF_8) +
-						"/");
+		if(isValid) {
+			return (collectionProperties.getLpseField(lpseCode).getEncodedPanlValue(this.value) + "/");
+		} else {
+			return("");
+		}
 	}
 
 	@Override public String getLpseComponent() {

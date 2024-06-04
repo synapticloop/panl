@@ -1,10 +1,10 @@
 package com.synapticloop.panl.server.tokeniser.token;
 
 import com.synapticloop.panl.server.properties.CollectionProperties;
+import com.synapticloop.panl.server.properties.field.BaseField;
 import org.apache.solr.client.solrj.SolrQuery;
 
 import java.net.URLDecoder;
-import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.util.StringTokenizer;
 
@@ -24,12 +24,13 @@ public class NumRowsLpseToken extends LpseToken {
 		int numRowsTemp;
 
 		if (valueTokenizer.hasMoreTokens()) {
-			String numRowsTempString = collectionProperties
-				.getConvertedFromPanlValue(
-						panlLpseCode,
-						URLDecoder.decode(
-								valueTokenizer.nextToken(),
-								StandardCharsets.UTF_8));
+			String numRowsTempString = "";
+			BaseField lpseField = collectionProperties.getLpseField(panlLpseCode);
+			if(null != lpseField) {
+				numRowsTempString = lpseField.getDecodedValue(valueTokenizer.nextToken());
+			} else {
+				this.isValid = false;
+			}
 
 			try {
 				numRowsTemp = Integer.parseInt(numRowsTempString);
@@ -41,17 +42,16 @@ public class NumRowsLpseToken extends LpseToken {
 			isValid = false;
 			numRowsTemp = collectionProperties.getNumResultsPerPage();
 		}
+		this.value = Integer.toString(numRowsTemp);
 		this.numRows = numRowsTemp;
 	}
 
 	@Override public String getUriPathComponent() {
-		return (
-				URLEncoder.encode(
-						collectionProperties.getConvertedToPanlValue(
-								lpseCode,
-								Integer.toString(numRows)),
-						StandardCharsets.UTF_8) +
-						"/");
+		if(isValid) {
+			return (collectionProperties.getLpseField(lpseCode).getEncodedPanlValue(Integer.toString(numRows)) + "/");
+		} else {
+			return("");
+		}
 	}
 
 	@Override public String getLpseComponent() {

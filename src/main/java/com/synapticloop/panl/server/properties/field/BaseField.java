@@ -3,9 +3,9 @@ package com.synapticloop.panl.server.properties.field;
 import com.synapticloop.panl.exception.PanlServerException;
 import com.synapticloop.panl.server.properties.CollectionProperties;
 import com.synapticloop.panl.server.tokeniser.token.LpseToken;
-import org.apache.solr.client.solrj.SolrQuery;
 import org.slf4j.Logger;
 
+import java.net.URLDecoder;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
@@ -29,6 +29,8 @@ public abstract class BaseField {
 	private String panlSuffix;
 
 	private boolean isBooleanSolrFieldType;
+	private boolean hasBooleanTrueReplacement;
+	private boolean hasBooleanFalseReplacement;
 	private String booleanTrueReplacement;
 	private String booleanFalseReplacement;
 
@@ -76,8 +78,20 @@ public abstract class BaseField {
 		populateSolrFieldType(properties, lpseCode);
 
 		if (null != solrFieldType && solrFieldType.equals("solr.BoolField")) {
-			this.booleanTrueReplacement = properties.getProperty("panl.bool." + panlLpseCode + ".true", BOOLEAN_TRUE_VALUE);
-			this.booleanFalseReplacement = properties.getProperty("panl.bool." + panlLpseCode + ".false", BOOLEAN_FALSE_VALUE);
+			this.booleanTrueReplacement = properties.getProperty("panl.bool." + panlLpseCode + ".true", null);
+			if(null != this.booleanTrueReplacement) {
+				hasBooleanTrueReplacement = true;
+			} else {
+				this.booleanTrueReplacement = BOOLEAN_TRUE_VALUE;
+			}
+
+			this.booleanFalseReplacement = properties.getProperty("panl.bool." + panlLpseCode + ".false", null);
+			if(null != this.booleanFalseReplacement) {
+				hasBooleanFalseReplacement = true;
+			} else {
+				this.booleanFalseReplacement = BOOLEAN_FALSE_VALUE;
+			}
+
 			this.isBooleanSolrFieldType = true;
 		} else {
 			this.booleanTrueReplacement = null;
@@ -87,8 +101,8 @@ public abstract class BaseField {
 	}
 
 	protected void populateSolrFieldType(Properties properties, String lpseCode) {
-		if(null != this.solrFieldType) {
-			this.solrFieldType = properties.getProperty(PROPERTY_KEY_PANL_TYPE + panlLpseCode);
+		if(null == this.solrFieldType) {
+			this.solrFieldType = properties.getProperty(PROPERTY_KEY_PANL_TYPE + lpseCode);
 		}
 	}
 
@@ -133,6 +147,22 @@ public abstract class BaseField {
 		}
 	}
 
+	public String getPanlPrefix() {
+		if(hasPrefix) {
+			return(panlPrefix);
+		} else {
+			return("");
+		}
+	}
+
+	public String getPanlSuffix() {
+		if(hasSuffix) {
+			return(panlSuffix);
+		} else {
+			return("");
+		}
+	}
+
 	public abstract Logger getLogger();
 
 	public String getPanlLpseCode() {
@@ -147,42 +177,65 @@ public abstract class BaseField {
 		return solrFieldName;
 	}
 
-	public String getConvertedFromPanlValue(String value) {
-		String temp = value;
+	/**
+	 * <p>The panl value (from the URI) can have a prefix or suffix, or both
+	 * applied to it.</p>
+	 *
+	 * <p>Remove any suffixes, or prefixes from a URI parameter, should they be
+	 * defined for the LPSE code.</p>
+	 *
+	 * <p>Additionally, if this is a boolean field, it may be that there also is
+	 * a replacement for true/false for it.</p>
+	 *
+	 * @param value the value to convert if any conversions are required
+	 * @return the de-suffixed, de-prefixed, and de-replaced value.
+	 */
+	public String getDecodedValue(String value) {
+		String temp = URLDecoder.decode(value, StandardCharsets.UTF_8);
 
 		if (hasPrefix) {
 			if (temp.startsWith(panlPrefix)) {
 				temp = temp.substring(panlPrefix.length());
+			} else {
+				return(null);
 			}
 		}
 
 		if (hasSuffix) {
 			if (temp.endsWith(panlSuffix)) {
 				temp = temp.substring(0, temp.length() - panlSuffix.length());
+			} else {
+				return(null);
 			}
 		}
 
 		if (isBooleanSolrFieldType) {
-			if (hasBooleanTrueReplacement() && booleanTrueReplacement.equals(value)) {
+			if (hasBooleanTrueReplacement && booleanTrueReplacement.equals(value)) {
 				return BOOLEAN_TRUE_VALUE;
 			}
 
-			if (hasBooleanFalseReplacement() && booleanFalseReplacement.equals(value)) {
+			if (hasBooleanFalseReplacement && booleanFalseReplacement.equals(value)) {
 				return BOOLEAN_FALSE_VALUE;
 			}
 
 			// if we get to this point, and we cannot determine whether it is true or false
 			if (BOOLEAN_TRUE_VALUE.equalsIgnoreCase(value)) {
-				return BOOLEAN_TRUE_VALUE;
+				return(BOOLEAN_TRUE_VALUE);
+			} else if (BOOLEAN_FALSE_VALUE.equalsIgnoreCase(value)) {
+				return(BOOLEAN_FALSE_VALUE);
 			} else {
-				return BOOLEAN_FALSE_VALUE;
+				return(null);
 			}
 		}
 
 		return (temp);
 	}
 
-	public String getConvertedToPanlValue(String value) {
+public String getEncodedPanlValue(String value) {
+		if(null == value) {
+			return("");
+		}
+
 		StringBuilder sb = new StringBuilder();
 
 		if(hasPrefix) {
@@ -190,9 +243,9 @@ public abstract class BaseField {
 		}
 
 		if(isBooleanSolrFieldType) {
-			if(hasBooleanTrueReplacement() && value.equalsIgnoreCase(BOOLEAN_TRUE_VALUE)) {
+			if(hasBooleanTrueReplacement && value.equalsIgnoreCase(BOOLEAN_TRUE_VALUE)) {
 				sb.append(booleanTrueReplacement);
-			} else if(hasBooleanFalseReplacement() && value.equalsIgnoreCase(BOOLEAN_FALSE_VALUE)) {
+			} else if(hasBooleanFalseReplacement && value.equalsIgnoreCase(BOOLEAN_FALSE_VALUE)) {
 				sb.append(booleanFalseReplacement);
 			} else {
 				if (BOOLEAN_TRUE_VALUE.equalsIgnoreCase(value)) {
@@ -209,45 +262,60 @@ public abstract class BaseField {
 			sb.append(panlSuffix);
 		}
 
-		return (sb.toString());
-	}
-
-	private boolean hasBooleanTrueReplacement() {
-		return (null != this.booleanTrueReplacement);
-	}
-
-	private boolean hasBooleanFalseReplacement() {
-		return (null != this.booleanFalseReplacement);
+		return (URLEncoder.encode(sb.toString(), StandardCharsets.UTF_8));
 	}
 
 	public String getSolrFieldType() {
 		return solrFieldType;
 	}
 
-	public String getURIPathComponent(String value) {
-		return(getConvertedToPanlValue(value));
+	public String getURIPath(LpseToken token, CollectionProperties collectionProperties) {
+		return(getEncodedPanlValue(token.getValue()) + "/");
 	}
 
-	public String getLpsePathComponent(String value) {
-		return(panlLpseCode);
+	public String getLpseCode(LpseToken token, CollectionProperties collectionProperties) {
+		return(token.getLpseCode());
 	}
 
-	public String getCanonicalUriPath(Map<String, List<LpseToken>> panlTokenMap, CollectionProperties collectionProperties) {
+	public String getURIPath(Map<String, List<LpseToken>> panlTokenMap, CollectionProperties collectionProperties) {
 		StringBuilder sb = new StringBuilder();
 		if(panlTokenMap.containsKey(panlLpseCode)) {
 			for(LpseToken lpseToken : panlTokenMap.get(panlLpseCode)) {
-				sb.append(URLEncoder.encode(getConvertedToPanlValue(lpseToken.getValue()), StandardCharsets.UTF_8));
-				sb.append("/");
+				if(lpseToken.getIsValid()) {
+					sb.append(getEncodedPanlValue(lpseToken.getValue()));
+					sb.append("/");
+				}
 			}
 		}
 		return(sb.toString());
 	}
 
-	public String getCanonicalLpsePath(Map<String, List<LpseToken>> panlTokenMap, CollectionProperties collectionProperties) {
+	public String getLpseCode(Map<String, List<LpseToken>> panlTokenMap, CollectionProperties collectionProperties) {
+		StringBuilder sb = new StringBuilder();
 		if(panlTokenMap.containsKey(panlLpseCode)) {
-			return (panlLpseCode);
-		} else {
-			return("");
+			for(LpseToken lpseToken : panlTokenMap.get(panlLpseCode)) {
+				if(lpseToken.getIsValid()) {
+					sb.append(lpseToken.getLpseCode());
+				}
+			}
 		}
+		return(sb.toString());
 	}
+
+	public String getCanonicalUriPath(Map<String, List<LpseToken>> panlTokenMap, CollectionProperties collectionProperties) {
+		return(getURIPath(panlTokenMap, collectionProperties));
+	}
+
+	public String getCanonicalLpseCode(Map<String, List<LpseToken>> panlTokenMap, CollectionProperties collectionProperties) {
+		return(getLpseCode(panlTokenMap, collectionProperties));
+	}
+
+	public String getResetUriPath(Map<String, List<LpseToken>> panlTokenMap, CollectionProperties collectionProperties) {
+		return(getURIPath(panlTokenMap, collectionProperties));
+	}
+
+	public String getResetLpseCode(Map<String, List<LpseToken>> panlTokenMap, CollectionProperties collectionProperties) {
+		return(getLpseCode(panlTokenMap, collectionProperties));
+	}
+
 }

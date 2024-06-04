@@ -3,11 +3,12 @@ package com.synapticloop.panl.server.properties.field;
 import com.synapticloop.panl.exception.PanlServerException;
 import com.synapticloop.panl.server.properties.CollectionProperties;
 import com.synapticloop.panl.server.tokeniser.token.LpseToken;
-import com.synapticloop.panl.server.tokeniser.token.QueryOperandLpseToken;
 import com.synapticloop.panl.server.tokeniser.token.SortLpseToken;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
@@ -23,7 +24,7 @@ public class PanlSortField extends BaseField {
 		return("");
 	}
 
-	@Override public String getCanonicalLpsePath(Map<String, List<LpseToken>> panlTokenMap, CollectionProperties collectionProperties) {
+	@Override public String getCanonicalLpseCode(Map<String, List<LpseToken>> panlTokenMap, CollectionProperties collectionProperties) {
 		StringBuilder sb = new StringBuilder(panlLpseCode);
 		if(panlTokenMap.containsKey(panlLpseCode)) {
 			SortLpseToken lpseToken = (SortLpseToken) panlTokenMap.get(panlLpseCode).get(0);
@@ -37,6 +38,35 @@ public class PanlSortField extends BaseField {
 			sb.append("-");
 		}
 		return(sb.toString());
+	}
+
+	@Override public String getURIPath(LpseToken token, CollectionProperties collectionProperties) {
+		return("");
+	}
+
+	@Override public String getLpseCode(LpseToken token, CollectionProperties collectionProperties) {
+		StringBuilder sb = new StringBuilder(token.getLpseCode());
+		SortLpseToken lpseToken = (SortLpseToken) token;
+		if(lpseToken.getIsValid()) {
+			sb.append(lpseToken.getPanlFacetCode());
+			sb.append(lpseToken.getSortCode());
+		} else {
+			sb.append("-");
+		}
+		return(sb.toString());
+	}
+
+	@Override
+	public String getURIPath(Map<String, List<LpseToken>> panlTokenMap, CollectionProperties collectionProperties) {
+		return("");
+	}
+
+	@Override
+	public String getLpseCode(Map<String, List<LpseToken>> panlTokenMap, CollectionProperties collectionProperties) {
+		if(panlTokenMap.containsKey(collectionProperties.getPanlParamSort())) {
+			return(getCanonicalLpseCode(panlTokenMap, collectionProperties));
+		}
+		return("");
 	}
 
 	@Override public Logger getLogger() {

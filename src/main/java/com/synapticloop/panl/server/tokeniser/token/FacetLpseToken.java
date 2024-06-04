@@ -1,26 +1,17 @@
 package com.synapticloop.panl.server.tokeniser.token;
 
-import com.synapticloop.panl.server.tokeniser.PanlTokeniser;
 import com.synapticloop.panl.server.properties.CollectionProperties;
+import com.synapticloop.panl.server.properties.field.BaseField;
+import com.synapticloop.panl.server.tokeniser.PanlTokeniser;
 import org.apache.solr.client.solrj.SolrQuery;
 
 import java.net.URLDecoder;
-import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.util.StringTokenizer;
 
 public class FacetLpseToken extends LpseToken {
 	private String solrField = null;
 	private CollectionProperties collectionProperties;
-
-	/**
-	 * <p>Create a new Panl Facet Token for use with generating URLs.</p>
-	 *
-	 * @param panlLpseCode The code to create for the lpse part of the URL
-	 */
-	public FacetLpseToken(String panlLpseCode) {
-		super(panlLpseCode);
-	}
 
 	public FacetLpseToken(
 			CollectionProperties collectionProperties,
@@ -41,15 +32,19 @@ public class FacetLpseToken extends LpseToken {
 
 		this.lpseCode = sb.toString();
 
-		this.value = collectionProperties
-				.getConvertedFromPanlValue(
-						panlLpseCode,
-						URLDecoder.decode(
-								valueTokeniser.nextToken(),
-								StandardCharsets.UTF_8));
+		BaseField lpseField = collectionProperties.getLpseField(this.lpseCode);
+		if (null != lpseField) {
+			this.originalValue = valueTokeniser.nextToken();
+			this.value = lpseField.getDecodedValue(this.originalValue);
 
+			if (null == this.value) {
+				isValid = false;
+			}
+		} else {
+			this.isValid = false;
+		}
 
-		if(collectionProperties.hasFacetCode(panlLpseCode)) {
+		if (collectionProperties.hasFacetCode(panlLpseCode)) {
 			this.solrField = collectionProperties.getSolrFieldNameFromPanlLpseCode(panlLpseCode);
 		} else {
 			this.isValid = false;
@@ -57,46 +52,43 @@ public class FacetLpseToken extends LpseToken {
 	}
 
 	@Override public String getUriPathComponent() {
-		if(isValid) {
-			return (
-					URLEncoder.encode(
-							collectionProperties.getConvertedToPanlValue(
-									this.lpseCode,
-									this.value),
-							StandardCharsets.UTF_8) +
-							"/");
+		if (isValid) {
+			BaseField lpseField = collectionProperties.getLpseField(this.lpseCode);
+			return(lpseField.getEncodedPanlValue(this.value) + "/");
 		} else {
-			return("");
+			return ("");
 		}
 	}
 
 	@Override public String getLpseComponent() {
-		if(isValid) {
-			return(this.lpseCode);
+		if (isValid) {
+			return (this.lpseCode);
 		} else {
-			return("");
+			return ("");
 		}
 	}
 
 	@Override public String explain() {
-			return ("PANL " +
-					(this.isValid ? "[  VALID  ]" : "[ INVALID ]") +
-					" <facet>         LPSE code '" +
-					this.lpseCode +
-					"' (solr field '" +
-					this.solrField +
-					"') with value '" +
-					value +
-					"'.");
+		return ("PANL " +
+				(this.isValid ? "[  VALID  ]" : "[ INVALID ]") +
+				" <facet>         LPSE code '" +
+				this.lpseCode +
+				"' (solr field '" +
+				this.solrField +
+				"') with parsed value '" +
+				value +
+				"', incoming value '" +
+				this.originalValue +
+				"'.");
 	}
 
 	@Override public void applyToQuery(SolrQuery solrQuery) {
-		if(isValid) {
+		if (isValid) {
 			solrQuery.addFilterQuery(this.solrField + ":\"" + value + "\"");
 		}
 	}
 
 	@Override public String getType() {
-		return("facet");
+		return ("facet");
 	}
 }

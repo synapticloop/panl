@@ -1,10 +1,10 @@
 package com.synapticloop.panl.server.tokeniser.token;
 
 import com.synapticloop.panl.server.properties.CollectionProperties;
+import com.synapticloop.panl.server.properties.field.BaseField;
 import org.apache.solr.client.solrj.SolrQuery;
 
 import java.net.URLDecoder;
-import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.util.StringTokenizer;
 
@@ -23,13 +23,13 @@ public class PageLpseToken extends LpseToken {
 		int pageNumTemp;
 
 		if (valueTokenizer.hasMoreTokens()) {
-			// might have a prefix - or suffix
-			String pageNumTempString = collectionProperties
-					.getConvertedFromPanlValue(
-							panlLpseCode,
-							URLDecoder.decode(
-									valueTokenizer.nextToken(),
-									StandardCharsets.UTF_8));
+			String pageNumTempString = "";
+			BaseField lpseField = collectionProperties.getLpseField(panlLpseCode);
+			if(null != lpseField) {
+				pageNumTempString = lpseField.getDecodedValue(valueTokenizer.nextToken());
+			} else {
+				this.isValid = false;
+			}
 
 			try {
 				pageNumTemp = Integer.parseInt(pageNumTempString);
@@ -46,6 +46,7 @@ public class PageLpseToken extends LpseToken {
 			pageNumTemp = 1;
 		}
 
+		this.value = Integer.toString(pageNumTemp);
 		this.pageNum = pageNumTemp;
 	}
 
@@ -54,14 +55,13 @@ public class PageLpseToken extends LpseToken {
 	}
 
 	private String getURIComponentForPageNumber(int pageNum) {
-		return (
-				URLEncoder.encode(
-						collectionProperties.getConvertedToPanlValue(
-								lpseCode,
-								Integer.toString(pageNum)),
-						StandardCharsets.UTF_8) +
-						"/");
+		if(isValid) {
+			return (collectionProperties.getLpseField(lpseCode).getEncodedPanlValue(Integer.toString(pageNum)) + "/");
+		} else {
+			return("");
+		}
 	}
+
 	public String getResetUriPathComponent() {
 		return (getURIComponentForPageNumber(1));
 	}

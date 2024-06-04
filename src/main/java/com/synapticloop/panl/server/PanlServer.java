@@ -2,6 +2,8 @@ package com.synapticloop.panl.server;
 
 import com.synapticloop.panl.exception.PanlServerException;
 import com.synapticloop.panl.server.handler.*;
+import com.synapticloop.panl.server.handler.results.explainer.PanlResultsExplainerExplainHandler;
+import com.synapticloop.panl.server.handler.results.explainer.PanlResultsExplainerHandler;
 import com.synapticloop.panl.server.handler.results.viewer.PanlResultsViewerScriptHandler;
 import com.synapticloop.panl.server.handler.results.PanlResultsStaticHandler;
 import com.synapticloop.panl.server.handler.results.viewer.PanlResultsViewerHandler;
@@ -36,6 +38,7 @@ public class PanlServer {
 	private final String propertiesFileLocation;
 	private final int portNumber;
 	private PanlProperties panlProperties;
+	private CollectionProperties collectionProperties;
 
 	private final List<CollectionRequestHandler> collectionRequestHandlers = new ArrayList<>();
 
@@ -43,8 +46,9 @@ public class PanlServer {
 	 * <p>Instantiate a new PanlServer instance.  This will parse the properties file</p>
 	 *
 	 * @param propertiesFileLocation The location of the panl.properties to load
-	 * @param portNumber             The port number from the command line option (or
-	 *                               default of 8181)
+	 * @param portNumber The port number from the command line option (or
+	 * 		default of 8181)
+	 *
 	 * @throws PanlServerException If there was an error parsing the properties
 	 */
 	public PanlServer(String propertiesFileLocation, int portNumber) throws PanlServerException {
@@ -60,7 +64,7 @@ public class PanlServer {
 	 * also instantiates new CollectionRequestHandlers</p>
 	 *
 	 * @throws PanlServerException If there was an error parsing the properties
-	 *                             file.
+	 * 		file.
 	 * @see CollectionRequestHandler#CollectionRequestHandler(String, PanlProperties, CollectionProperties)
 	 */
 	private void parsePropertiesFile() throws PanlServerException {
@@ -82,21 +86,25 @@ public class PanlServer {
 			if (key.startsWith(PROPERTY_KEY_PANL_COLLECTION)) {
 				// we have found a new collection
 				String collectionName = key.substring(PROPERTY_KEY_PANL_COLLECTION.length());
-				Properties collectionProperties = new Properties();
+				Properties fileCollectionProperties = new Properties();
 				String fileName = propertiesFileDirectory + File.separator + properties.getProperty(key);
 				LOGGER.info("Found collection named '{}' with file location '{}'.", collectionName, fileName);
 
 				try {
-					collectionProperties.load(new FileReader(fileName));
-					collectionRequestHandlers.add(new CollectionRequestHandler(
+					fileCollectionProperties.load(new FileReader(fileName));
+					collectionProperties = new CollectionProperties(
 							collectionName,
-							panlProperties,
-							new CollectionProperties(
-									collectionName,
-									collectionProperties)));
+							fileCollectionProperties);
 				} catch (IOException e) {
 					throw new PanlServerException(e.getMessage());
 				}
+
+				collectionRequestHandlers.add(new CollectionRequestHandler(
+						collectionName,
+						panlProperties,
+						collectionProperties));
+
+				// AT this point we want
 			}
 		}
 	}
@@ -147,10 +155,9 @@ public class PanlServer {
 	 * @throws PanlServerException If there was an error starting the server
 	 * @see PanlDefaultHandler PanlDefaultHandler - the default handler
 	 * @see PanlResultsViewerHandler PanlResultsViewerHandler - the results
-	 * viewer handler
+	 * 		viewer handler
 	 * @see PanlRequestHandler PanlRequestHandler - the Panl request handler for each of the
-	 * collections
-	 *
+	 * 		collections
 	 */
 	public void start() throws PanlServerException {
 
@@ -169,9 +176,8 @@ public class PanlServer {
 			// the simple search and querying webappp
 			bootstrap.registerHandler("/panl-results-viewer/*", new PanlResultsViewerHandler(collectionRequestHandlers));
 			bootstrap.registerHandler("/panl-results-viewer/script/", new PanlResultsViewerScriptHandler(collectionRequestHandlers));
-
-			// the simple results explainer
-			bootstrap.registerHandler("/panl-results-explainer/*", new PanlResultsViewerHandler(collectionRequestHandlers));
+			bootstrap.registerHandler("/panl-results-explainer/*", new PanlResultsExplainerHandler(collectionProperties, collectionRequestHandlers));
+			bootstrap.registerHandler("/panl-results-explainer/explain/*", new PanlResultsExplainerExplainHandler(collectionProperties, collectionRequestHandlers));
 		}
 
 		// finally register the collection handlers
