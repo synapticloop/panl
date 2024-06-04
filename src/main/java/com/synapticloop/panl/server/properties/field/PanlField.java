@@ -41,4 +41,8 @@ public class PanlField extends BaseField {
 		return("A Solr field that can be configured to be sorted by, or returned in the field set.");
 	}
 
+	public void applyToQueryInternal(SolrQuery solrQuery, Map<String, List<LpseToken>> panlTokenMap) {
+		// do nothing
+	}
+
 }

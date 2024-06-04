@@ -88,7 +88,7 @@ public class QueryOperandLpseToken extends LpseToken {
 		}
 	}
 
-	private String getQOpValue() {
+	public String getQOpValue() {
 		if(this.queryOperand.equals("+")) {
 			return("AND");
 		} else {

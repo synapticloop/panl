@@ -51,6 +51,9 @@ public class AvailableProcessor extends Processor {
 		Map<String, JSONObject> panlFacetOrderMap = new LinkedHashMap<>();
 
 		for (FacetField facetField : response.getFacetFields()) {
+			// if we have an or Facet and this is an or facet, then we keep all
+			// values, otherwise we strip out the xero values
+
 			if (facetField.getValueCount() != 0) {
 				JSONObject facetObject = new JSONObject();
 				facetObject.put("facet_name", facetField.getName());
@@ -71,6 +74,17 @@ public class AvailableProcessor extends Processor {
 							shouldAdd = false;
 						}
 					}
+					// if we have an or Facet and this is an or facet, then we keep all
+					// values, otherwise we strip out the xero values
+					if(collectionProperties.getHasOrFacetFields()) {
+						BaseField lpseField = collectionProperties.getLpseField(panlCodeFromSolrFacetName);
+						if(!lpseField.getIsOrFacet()) {
+							if(value.getCount() == 0) {
+								shouldAdd = false;
+							}
+						}
+					}
+
 
 					// also, if the count of the number of found results is the same as
 					// the number of the count of the facet - then we may not need to

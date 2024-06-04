@@ -4,11 +4,10 @@ import com.synapticloop.panl.exception.PanlServerException;
 import com.synapticloop.panl.server.properties.CollectionProperties;
 import com.synapticloop.panl.server.tokeniser.token.LpseToken;
 import com.synapticloop.panl.server.tokeniser.token.SortLpseToken;
+import org.apache.solr.client.solrj.SolrQuery;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.net.URLEncoder;
-import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -89,4 +88,10 @@ public class PanlSortField extends BaseField {
 		return("The sort order (default is relevance descending), but can be any PanlField, or PanlFacet.");
 	}
 
+	public void applyToQueryInternal(SolrQuery solrQuery, Map<String, List<LpseToken>> panlTokenMap) {
+		if(panlTokenMap.containsKey(panlLpseCode)) {
+			SortLpseToken lpseToken = (SortLpseToken)panlTokenMap.get(panlLpseCode).get(0);
+			solrQuery.addSort(lpseToken.getSolrFacetField(), lpseToken.getSortOrder());
+		}
+	}
 }

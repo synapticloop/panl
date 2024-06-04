@@ -20,10 +20,6 @@ public class SortLpseToken extends LpseToken {
 	private SolrQuery.ORDER sortOrder = SolrQuery.ORDER.desc;
 	private String sortCode = "-";
 
-	public SortLpseToken(String panlLpseCode) {
-		super(panlLpseCode);
-	}
-
 	public SortLpseToken(
 			CollectionProperties collectionProperties,
 			String panlLpseCode,
@@ -158,5 +154,13 @@ public class SortLpseToken extends LpseToken {
 
 	public String getSortCode() {
 		return (sortCode);
+	}
+
+	public String getSolrFacetField() {
+		return solrFacetField;
+	}
+
+	public SolrQuery.ORDER getSortOrder() {
+		return sortOrder;
 	}
 }

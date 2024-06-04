@@ -5,8 +5,6 @@ import com.synapticloop.panl.server.properties.field.BaseField;
 import com.synapticloop.panl.server.tokeniser.PanlTokeniser;
 import org.apache.solr.client.solrj.SolrQuery;
 
-import java.net.URLDecoder;
-import java.nio.charset.StandardCharsets;
 import java.util.StringTokenizer;
 
 public class FacetLpseToken extends LpseToken {
@@ -90,5 +88,9 @@ public class FacetLpseToken extends LpseToken {
 
 	@Override public String getType() {
 		return ("facet");
+	}
+
+	public String getSolrField() {
+		return solrField;
 	}
 }

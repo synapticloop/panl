@@ -3,6 +3,7 @@ package com.synapticloop.panl.server.properties.field;
 import com.synapticloop.panl.exception.PanlServerException;
 import com.synapticloop.panl.server.properties.CollectionProperties;
 import com.synapticloop.panl.server.tokeniser.token.LpseToken;
+import org.apache.solr.client.solrj.SolrQuery;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -47,6 +48,10 @@ public class PanlPassThroughField extends BaseField {
 
 	@Override public String getExplainDescription() {
 		return ("This field is ignored by the Panl server and is not passed through to Solr.");
+	}
+
+	public void applyToQueryInternal(SolrQuery solrQuery, Map<String, List<LpseToken>> panlTokenMap) {
+		// do nothing
 	}
 
 }

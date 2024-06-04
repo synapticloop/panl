@@ -4,6 +4,7 @@ import com.synapticloop.panl.exception.PanlServerException;
 import com.synapticloop.panl.server.properties.CollectionProperties;
 import com.synapticloop.panl.server.tokeniser.token.LpseToken;
 import com.synapticloop.panl.server.tokeniser.token.PageLpseToken;
+import org.apache.solr.client.solrj.SolrQuery;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -60,6 +61,10 @@ public class PanlPageNumField extends BaseField {
 
 	@Override public String getExplainDescription() {
 		return("The page number of the results (works in conjunction with the number of results).");
+	}
+
+	public void applyToQueryInternal(SolrQuery solrQuery, Map<String, List<LpseToken>> panlTokenMap) {
+
 	}
 
 }

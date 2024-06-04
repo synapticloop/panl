@@ -7,6 +7,7 @@ import com.synapticloop.panl.server.handler.helper.CollectionHelper;
 import com.synapticloop.panl.server.handler.processor.*;
 import com.synapticloop.panl.server.properties.CollectionProperties;
 import com.synapticloop.panl.server.properties.PanlProperties;
+import com.synapticloop.panl.server.properties.field.BaseField;
 import com.synapticloop.panl.server.tokeniser.PanlTokeniser;
 import com.synapticloop.panl.server.tokeniser.token.*;
 import org.apache.solr.client.solrj.SolrClient;
@@ -111,16 +112,30 @@ public class CollectionRequestHandler {
 			int numRows = 0;
 			int pageNum = 0;
 
+			// set up the data structure
+			Map<String, List<LpseToken>> panlTokenMap = new HashMap<>();
+
 			for (LpseToken lpseToken : lpseTokens) {
+				String panlLpseCode = lpseToken.getLpseCode();
+
+				List<LpseToken> lpseTokenList = panlTokenMap.get(panlLpseCode);
+				if (null == lpseTokenList) {
+					lpseTokenList = new ArrayList<>();
+				}
+				lpseTokenList.add(lpseToken);
+				panlTokenMap.put(panlLpseCode, lpseTokenList);
+
 				if (lpseToken instanceof NumRowsLpseToken) {
 					numRows = ((NumRowsLpseToken) lpseToken).getNumRows();
 				} else if (lpseToken instanceof PageLpseToken) {
 					pageNum = ((PageLpseToken) lpseToken).getPageNum();
 				}
-
-
-				lpseToken.applyToQuery(solrQuery);
 			}
+
+			for (BaseField lpseField : collectionProperties.getLpseFields()) {
+				lpseField.applyToQuery(solrQuery, panlTokenMap);
+			}
+
 
 			// we may not have a numrows start
 			if (numRows == 0) {
