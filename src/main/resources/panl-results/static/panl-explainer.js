@@ -12,32 +12,34 @@ $(document).ready(function() {
 		var fieldset = uris[3];
 		if(isValidUrl(collection, fieldset)) {
 			$("#collection").append("/" + collection + "/" + fieldset);
-//			panlSearch();
 		}
 	}
 
-	$("button#explain").on("click", function (e) {
-		var text = $("#uris").val();
-		if(text.length == 0) {
-			return;
-		}
-		if(!text.startsWith("/")) {
-			text = "/" + text;
-		}
-
-		var explainUrl = "/panl-results-explainer/explain" + $("#collection").text() + text;
-		console.log(explainUrl);
-
-		// send of the query
-		$.ajax({
-			url:explainUrl,
-			success: function (panlJsonData) {
-				populateExplainResults(panlJsonData);
-			}
-		});
-		e.preventDefault();
+	$("button#explain").on("click", function (event) {
+		event.preventDefault();
+		panlExplain();
 	});
 });
+
+function panlExplain() {
+	var text = $("#uris").val();
+	if(text.length == 0) {
+		return;
+	}
+	if(!text.startsWith("/")) {
+		text = "/" + text;
+	}
+
+	var explainUrl = "/panl-results-explainer/explain" + $("#collection").text() + text;
+
+
+	$.ajax({
+		url:explainUrl,
+		success: function (panlJsonData) {
+			populateExplainResults(panlJsonData);
+	  }
+	});
+}
 
 function isValidUrl(collection, fieldset) {
 	var fullUrl = "/" + collection + "/" + fieldset;
@@ -51,11 +53,23 @@ function isValidUrl(collection, fieldset) {
 }
 
 function populateExplainResults(panlJsonData) {
-	console.log(panlJsonData);
-//	for(const explanation of panlJsonData.explanation) {
-//		console.log(panlJsonData);
-//		$("#documents").append("<p>" + explanation + "</p>")
-//	}
+	$("#documents").append("<h1>Request Explainer</h1>");
+	for(const expl of panlJsonData.explanation) {
+		$("#documents").append("<pre class=\"explain\">" + escapeHTML(expl) + "</pre>")
+	}
+
+	$("#documents").append("<h1>Configuration Explainer</h1>");
+	for(const conf of panlJsonData.configuration) {
+		var innerPre = "";
+		for(const inner of conf) {
+			innerPre = innerPre + escapeHTML(inner) + "\n";
+		}
+		$("#documents").append("<pre class=\"explain\">" + innerPre + "</pre>")
+	}
+}
+
+function escapeHTML(text) {
+   return text.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
 }
 
 

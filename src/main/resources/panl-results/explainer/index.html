@@ -6,6 +6,7 @@
 	<link rel="preconnect" href="https://fonts.googleapis.com">
 	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 	<link href="https://fonts.googleapis.com/css2?family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+	<link href="https://fonts.googleapis.com/css2?family=Inconsolata:wght@200..900&display=swap" rel="stylesheet">
 	<script src="/panl-results/static/jquery-3.7.1.min.js"></script>
 	<script src="/panl-results/static/panl-explainer.js"></script>
 	<style>
@@ -27,13 +28,17 @@
 		div#header p { text-align: center; }
 		div#header h1 { padding-top: 14px; margin: 0; }
 
-		#documents dl:nth-child(odd) { background-color: #efefef; }
+		#documents pre:nth-child(odd) { background-color: #efefef; padding: 12px;}
+		#documents pre:nth-child(even) { padding: 0px 12px;}
 		#documents { margin-bottom: 12px; }
 
-		dl { border-top: 1px solid black; padding: 14px 10px; margin: 0; }
-		dt { font-weight: bold; }
-		dd { padding-bottom: 3px; }
-		#documents p { text-justify: none }
+		#documents pre.explain {
+			text-justify: none;
+			font-family: "Inconsolata", monospace;
+		  font-optical-sizing: auto;
+		  font-weight: 700;
+		  font-variation-settings: "wdth" 100;
+		}
 
 
 		div#container { width: 1024px; margin: 0 auto; }

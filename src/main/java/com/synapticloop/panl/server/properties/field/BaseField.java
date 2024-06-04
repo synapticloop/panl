@@ -8,6 +8,7 @@ import org.slf4j.Logger;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
@@ -318,4 +319,30 @@ public String getEncodedPanlValue(String value) {
 		return(getLpseCode(panlTokenMap, collectionProperties));
 	}
 
+	public List<String> explain() {
+		List<String> temp = new ArrayList<>();
+		temp.add("FIELD CONFIG [ " +
+				this.getClass().getSimpleName() +
+				" ] LPSE code '" +
+				panlLpseCode +
+				"' Solr field name '" +
+				solrFieldName +
+				"' of type '" +
+				solrFieldType +
+				"'.");
+		if(hasPrefix) {
+			temp.add("             Prefix: '" + panlPrefix + "'.");
+		}
+		if(hasSuffix) {
+			temp.add("             Suffix: '" + panlSuffix + "'.");
+		}
+		if(hasBooleanTrueReplacement) {
+			temp.add("             '" + booleanTrueReplacement + "' maps to 'true'.");
+		}
+		if(hasBooleanFalseReplacement) {
+			temp.add("             '" + booleanFalseReplacement + "' maps to 'false'.");
+		}
+
+		return(temp);
+	}
 }

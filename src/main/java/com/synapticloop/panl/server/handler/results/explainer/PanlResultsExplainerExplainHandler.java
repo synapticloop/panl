@@ -4,6 +4,7 @@ import com.synapticloop.panl.generator.bean.Collection;
 import com.synapticloop.panl.server.handler.CollectionRequestHandler;
 import com.synapticloop.panl.server.handler.results.util.ResourceHelper;
 import com.synapticloop.panl.server.properties.CollectionProperties;
+import com.synapticloop.panl.server.properties.field.BaseField;
 import com.synapticloop.panl.server.tokeniser.PanlTokeniser;
 import com.synapticloop.panl.server.tokeniser.token.*;
 import org.apache.http.HttpRequest;
@@ -55,13 +56,27 @@ public class PanlResultsExplainerExplainHandler implements HttpRequestHandler {
 		JSONObject jsonObject = new JSONObject();
 		jsonObject.put("explanation", jsonArray);
 
+		jsonObject.put("configuration", getConfiguration());
+
 		response.setStatusCode(HttpStatus.SC_OK);
 		response.setEntity(
 				new StringEntity(jsonObject.toString(),
-						ResourceHelper.CONTENT_TYPE_JS));
+						ResourceHelper.CONTENT_TYPE_JSON));
 
 	}
-	public List<LpseToken> parseLpse(String uri, String query) {
+
+	private JSONArray getConfiguration() {
+		JSONArray jsonArray = new JSONArray();
+
+		for (BaseField lpseField : collectionProperties.getLpseFields()) {
+			jsonArray.put(lpseField.explain());
+		}
+
+
+		return(jsonArray);
+	}
+
+	private List<LpseToken> parseLpse(String uri, String query) {
 		List<LpseToken> lpseTokens = new ArrayList<>();
 
 		String[] searchQuery = uri.split("/");
@@ -84,7 +99,7 @@ public class PanlResultsExplainerExplainHandler implements HttpRequestHandler {
 				LpseToken lpseToken = null;
 				if (token.equals(collectionProperties.getPanlParamQuery())) {
 					hasQuery = true;
-					LpseToken queryLpseToken = new QueryLpseToken(
+					lpseToken = new QueryLpseToken(
 							query,
 							token,
 							valueTokeniser);
