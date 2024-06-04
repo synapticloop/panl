@@ -2,6 +2,7 @@ package com.synapticloop.panl.server.handler.results.explainer;
 
 import com.synapticloop.panl.server.handler.CollectionRequestHandler;
 import com.synapticloop.panl.server.handler.results.util.ResourceHelper;
+import com.synapticloop.panl.server.properties.CollectionProperties;
 import org.apache.http.HttpRequest;
 import org.apache.http.HttpResponse;
 import org.apache.http.entity.ContentType;
@@ -15,7 +16,10 @@ import java.util.List;
 
 public class PanlResultsExplainerHandler implements HttpRequestHandler {
 	public static final ContentType CONTENT_TYPE_JSON = ContentType.create("application/json", "UTF-8");
-	public PanlResultsExplainerHandler(List<CollectionRequestHandler> collectionRequestHandlers) {
+	private final CollectionProperties collectionProperties;
+
+	public PanlResultsExplainerHandler(CollectionProperties collectionProperties, List<CollectionRequestHandler> collectionRequestHandlers) {
+		this.collectionProperties = collectionProperties;
 		JSONObject jsonObject = new JSONObject();
 		jsonObject.put("error", 404);
 		jsonObject.put("message", "Could not find a PANL request url, see 'valid_urls' array.");

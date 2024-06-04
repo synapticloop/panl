@@ -1,0 +1,91 @@
+<!doctype html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Panl - results explainer</title>
+	<link rel="preconnect" href="https://fonts.googleapis.com">
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+	<link href="https://fonts.googleapis.com/css2?family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+	<script src="/panl-results/static/jquery-3.7.1.min.js"></script>
+	<script src="/panl-results/static/panl-explainer.js"></script>
+	<style>
+		body { min-height: 100%; }
+		html, body { margin: 0; padding: 0; font-family: "Libre Baskerville", serif; font-weight: 400; font-style: normal; }
+		h1, h2, form, p { padding: 0 10px;}
+		h2 { font-size: 14px; font-style: italic; font-weight: 400; }
+
+		a:link, a:visited, a:hover, a:active { color: blue; }
+
+		p { line-height: 1.8; text-align:justify; text-justify:auto; }
+		p.info { line-height: 1.4; font-size: 12px; font-style: italic; }
+		p.tight { margin-bottom: 2px; padding-bottom: 2px; }
+
+		ul { padding-left: 10px; }
+		ul li { line-height: 1.6; }
+
+		div#header { position: relative; text-align: center; border-bottom: 1px solid #afafaf; }
+		div#header p { text-align: center; }
+		div#header h1 { padding-top: 14px; margin: 0; }
+
+		#documents dl:nth-child(odd) { background-color: #efefef; }
+		#documents { margin-bottom: 12px; }
+
+		dl { border-top: 1px solid black; padding: 14px 10px; margin: 0; }
+		dt { font-weight: bold; }
+		dd { padding-bottom: 3px; }
+		#documents p { text-justify: none }
+
+
+		div#container { width: 1024px; margin: 0 auto; }
+
+		div#content { float: right; width: 1000px; }
+
+		div.padding { padding-bottom: 14px;}
+
+		div#footer { border-top: 1px solid #afafaf; margin: 84px auto 0 auto; padding: 6px 0; background-color: #efefef; clear: both; position: relative; height: 80px; margin-top: -80px; width: 1024px; }
+		div#footer p { text-align: center; text-justify: none }
+
+		input { width: 90%; }
+		.left { float: left; }
+		.right { float: right; }
+		.clear { clear: left; }
+		#timings { padding-top: 12px; border-top: 1px solid #efefef; }
+	</style>
+</head>
+<body>
+<div id="container">
+	<div id="header">
+		<h1>Panl</h1>
+		<h2><em>a very simple results explainer</em></h2>
+
+		<hr />
+
+		<p>Available collections/fieldsets (CaFS) URI: <span id="available_collections"></span></p>
+
+		<p><strong>You are viewing collection/fieldset (CaFS) URI: <span id="collection"></span></strong></p>
+
+		<p>Enter the Canonical URI path below:</p>
+		<form method="GET">
+			<label><input type="text" id="uris" /></label>
+			<button type="submit" id="explain">Explain</button>
+		</form>
+
+		<p></p>
+
+	</div>
+	<div id="wrapper">
+		<div id="content">
+			<div id="documents"></div>
+		</div>
+	</div>
+
+	<div id="footer">
+		<p class="info">This page is designed to showcase the Panl LPSE encoding mechanism,
+			with a minimal implementation. It is <strong>NOT</strong> a showcase of
+			web technologies :)</p>
+		<p class="info">Happy searching</p>
+	</div>
+</div>
+</body>
+<script type="text/javascript" src="/panl-results-viewer/script/"></script>
+</html>
