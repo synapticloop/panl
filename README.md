@@ -1,5 +1,9 @@
 # Synapticloop PANL
 
+**_WORK IN PROGRESS_**
+
+Usable, but not released... yet...
+
 # Quick Start - The 5 Steps
 
 ---
