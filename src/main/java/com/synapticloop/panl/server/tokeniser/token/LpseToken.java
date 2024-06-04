@@ -1,6 +1,10 @@
 package com.synapticloop.panl.server.tokeniser.token;
 
+import com.synapticloop.panl.server.properties.CollectionProperties;
+import com.synapticloop.panl.server.tokeniser.PanlTokeniser;
 import org.apache.solr.client.solrj.SolrQuery;
+
+import java.util.StringTokenizer;
 
 /**
  * <p>The LPSE token encapsulates the URI part and the encoding part and
@@ -30,7 +34,7 @@ import org.apache.solr.client.solrj.SolrQuery;
  * </ul>
  *
  * <p>Additionally</p>
-
+ *
  * <ul>
  *   <li>There is not always a mapping LPSE code to URI part to LPSE code</li>
  *   <li>The LPSE code may have modifiers applied to it</li>
@@ -55,13 +59,69 @@ public abstract class LpseToken {
 		this.lpseCode = lpseCode;
 	}
 
+	public static LpseToken getLpseToken(
+			CollectionProperties collectionProperties,
+			String token,
+			String query,
+			StringTokenizer valueTokeniser,
+			PanlTokeniser lpseTokeniser) {
+
+		if (token.equals(collectionProperties.getPanlParamQuery())) {
+			// having a query on the URL always trumps whether we have a query
+			// parameter in the URI path
+			return (new QueryLpseToken(
+					query,
+					token,
+					valueTokeniser));
+		} else if (token.equals(collectionProperties.getPanlParamSort())) {
+			return (new SortLpseToken(
+					collectionProperties,
+					token,
+					lpseTokeniser));
+		} else if (token.equals(collectionProperties.getPanlParamQueryOperand())) {
+			return (new QueryOperandLpseToken(
+					collectionProperties,
+					token,
+					lpseTokeniser));
+		} else if (token.equals(collectionProperties.getPanlParamNumRows())) {
+			return (new NumRowsLpseToken(
+					collectionProperties,
+					token,
+					valueTokeniser));
+		} else if (token.equals(collectionProperties.getPanlParamPage())) {
+			return (new PageLpseToken(
+					collectionProperties,
+					token,
+					valueTokeniser));
+
+		} else if (token.equals(collectionProperties.getPanlParamPassThrough())) {
+			return (new PassThroughLpseToken(
+					collectionProperties,
+					token,
+					valueTokeniser));
+		} else {
+			StringBuilder facet = new StringBuilder(token);
+			// it is a facet field
+			while (token.length() < collectionProperties.getPanlLpseNum()) {
+				facet.append(lpseTokeniser.nextToken());
+			}
+
+			// now we have the facetField
+			return (new FacetLpseToken(
+					collectionProperties,
+					facet.toString(),
+					lpseTokeniser,
+					valueTokeniser));
+		}
+	}
+
 	/**
 	 * <p>Return the LPSE code for this token.</p>
 	 *
 	 * @return The LPSE code for this token
 	 */
 	public String getLpseCode() {
-		return(lpseCode);
+		return (lpseCode);
 	}
 
 	/**
@@ -70,7 +130,7 @@ public abstract class LpseToken {
 	 * @return The LPSE value
 	 */
 	public String getValue() {
-		return(value);
+		return (value);
 	}
 
 	/**
@@ -90,7 +150,7 @@ public abstract class LpseToken {
 	 */
 	@Deprecated
 	public String getResetUriPathComponent() {
-		return(getUriPathComponent());
+		return (getUriPathComponent());
 	}
 
 	/**
@@ -107,7 +167,7 @@ public abstract class LpseToken {
 	 * be.</p>
 	 *
 	 * <p>
-	 *   An example of multiple tokens and their explanations:
+	 * An example of multiple tokens and their explanations:
 	 * </p>
 	 *
 	 * <pre>
@@ -117,7 +177,6 @@ public abstract class LpseToken {
 	 *  PANL [  VALID  ] &lt;rows&gt;  LPSE code 'n' using parsed value of '2'.
 	 *  PANL [  VALID  ] &lt;sort&gt;  LPSE code 'm' (solr field 'manu'), sorted ASCending
 	 * </pre>
-	 *
 	 *
 	 * @return A human-readable explanation of what this token has parsed
 	 */
@@ -140,6 +199,6 @@ public abstract class LpseToken {
 	public abstract String getType();
 
 	public boolean getIsValid() {
-		return(isValid);
+		return (isValid);
 	}
 }

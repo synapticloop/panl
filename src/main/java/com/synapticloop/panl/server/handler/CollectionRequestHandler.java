@@ -28,6 +28,7 @@ import java.util.*;
  */
 public class CollectionRequestHandler {
 	private static final Logger LOGGER = LoggerFactory.getLogger(CollectionRequestHandler.class);
+
 	public static final String SOLR_PARAM_Q_OP = "q.op";
 
 	private final String collectionName;
@@ -90,7 +91,6 @@ public class CollectionRequestHandler {
 		try (SolrClient solrClient = panlClient.getClient()) {
 
 			// we set the default query - to be overridden later if one exists
-			// TODO - get rid of this
 			SolrQuery solrQuery = panlClient.getQuery(query);
 			// set the operand - to be over-ridden later if it is in the URI path
 			solrQuery.setParam(SOLR_PARAM_Q_OP, collectionProperties.getSolrDefaultQueryOperand());
@@ -192,23 +192,6 @@ public class CollectionRequestHandler {
 
 		long startNanos = System.nanoTime();
 
-		// set up the data structures
-		Map<String, Set<String>> panlLookupMap = new HashMap<>();
-		for (LpseToken lpseToken : lpseTokens) {
-			String panlLpseValue = lpseToken.getValue();
-			if (null != panlLpseValue) {
-				String panlLpseCode = lpseToken.getLpseCode();
-				Set<String> valueSet = panlLookupMap.get(panlLpseCode);
-
-				if (null == valueSet) {
-					valueSet = new HashSet<>();
-				}
-				valueSet.add(panlLpseValue);
-				panlLookupMap.put(panlLpseCode, valueSet);
-			}
-		}
-
-
 		// set up the data structure
 		Map<String, List<LpseToken>> panlTokenMap = new HashMap<>();
 		for (LpseToken lpseToken : lpseTokens) {
@@ -233,7 +216,6 @@ public class CollectionRequestHandler {
 		long numFound = solrDocuments.getNumFound();
 
 		panlObject.put("available", availableProcessor.processToArray(panlTokenMap, response));
-
 		panlObject.put("active", activeProcessor.processToObject(panlTokenMap));
 		panlObject.put("pagination", paginationProcessor.processToObject(panlTokenMap, numFound ));
 		panlObject.put("timings", timingsProcessor.processToObject(panlTokenMap, parseRequestNanos, buildRequestNanos, sendAndReceiveNanos, System.nanoTime() - startNanos));
@@ -243,7 +225,6 @@ public class CollectionRequestHandler {
 		panlObject.put("canonical_uri", canonicalURIProcessor.processToString(panlTokenMap));
 
 		solrJsonObject.put("error", false);
-
 
 		// last thing - we want to put the panl to solr field mappings in
 		solrJsonObject.put("panl", panlObject);
@@ -300,60 +281,15 @@ public class CollectionRequestHandler {
 
 			while (lpseTokeniser.hasMoreTokens()) {
 				String token = lpseTokeniser.nextToken();
-				LpseToken lpseToken = null;
-				if (token.equals(collectionProperties.getPanlParamQuery())) {
-					hasQuery = true;
-					LpseToken queryLpseToken = new QueryLpseToken(
-							query,
-							token,
-							valueTokeniser);
-				} else if (token.equals(collectionProperties.getPanlParamSort())) {
-					lpseToken = new SortLpseToken(
-							collectionProperties,
-							token,
-							lpseTokeniser);
-				} else if (token.equals(collectionProperties.getPanlParamQueryOperand())) {
-					lpseToken = new QueryOperandLpseToken(
-							collectionProperties,
-							token,
-							lpseTokeniser);
-				} else if (token.equals(collectionProperties.getPanlParamNumRows())) {
-					lpseToken = new NumRowsLpseToken(
-							collectionProperties,
-							token,
-							valueTokeniser);
-				} else if (token.equals(collectionProperties.getPanlParamPage())) {
-					lpseToken = new PageLpseToken(
-							collectionProperties,
-							token,
-							valueTokeniser);
+				LpseToken lpseToken = LpseToken.getLpseToken(collectionProperties, token, query, valueTokeniser, lpseTokeniser);
 
-				} else if (token.equals(collectionProperties.getPanlParamPassThrough())) {
-					lpseToken = new PassThroughLpseToken(
-									collectionProperties,
-									token,
-									valueTokeniser);
-				} else {
-					StringBuilder facet = new StringBuilder(token);
-					// it is a facet field
-					while (token.length() < collectionProperties.getPanlLpseNum()) {
-						facet.append(lpseTokeniser.nextToken());
-					}
-
-					// now we have the facetField
-					lpseToken = new FacetLpseToken(
-									collectionProperties,
-									facet.toString(),
-									lpseTokeniser,
-									valueTokeniser);
+				// TODO - some sort of logic here...
+				if (!hasQuery && !query.isBlank()) {
+					lpseTokens.add(new QueryLpseToken(query, collectionProperties.getPanlParamQuery()));
 				}
 
 				lpseTokens.add(lpseToken);
 			}
-		}
-
-		if (!hasQuery && !query.isBlank()) {
-			lpseTokens.add(new QueryLpseToken(query, collectionProperties.getPanlParamQuery()));
 		}
 
 		for (LpseToken lpseToken : lpseTokens) {
