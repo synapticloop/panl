@@ -162,6 +162,19 @@ public abstract class BaseField {
 		return solrFieldName;
 	}
 
+	/**
+	 * <p>The panl value (from the URI) can have a prefix or suffix, or both
+	 * applied to it.</p>
+	 *
+	 * <p>Remove any suffixes, or prefixes from a URI parameter, should they be
+	 * defined for the LPSE code.</p>
+	 *
+	 * <p>Additionally, if this is a boolean field, it may be that there also is
+	 * a replacement for true/false for it.</p>
+	 *
+	 * @param value the value to convert if any conversions are required
+	 * @return the de-suffixed, de-prefixed, and de-replaced value.
+	 */
 	public String getConvertedFromPanlValue(String value) {
 		String temp = value;
 
@@ -197,7 +210,7 @@ public abstract class BaseField {
 		return (temp);
 	}
 
-	public String getConvertedToPanlValue(String value) {
+public String getConvertedToPanlValue(String value) {
 		StringBuilder sb = new StringBuilder();
 
 		if(hasPrefix) {

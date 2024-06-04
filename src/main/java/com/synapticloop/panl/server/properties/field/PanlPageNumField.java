@@ -44,9 +44,9 @@ public class PanlPageNumField extends BaseField {
 		StringBuilder sb = new StringBuilder();
 		if(panlTokenMap.containsKey(panlLpseCode)) {
 			sb.append(URLEncoder.encode(getConvertedToPanlValue("1"), StandardCharsets.UTF_8));
+			sb.append("/");
 		}
 
-		sb.append("/");
 		return(sb.toString());
 	}
 

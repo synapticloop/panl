@@ -203,7 +203,7 @@ public class CollectionProperties {
 	 * </ul>
 	 *
 	 * @throws PanlServerException If a mandatory property was not found, or
-	 * 				could not be adequately parsed
+	 * 		could not be adequately parsed
 	 */
 	private void parseDefaultProperties() throws PanlServerException {
 		this.panlIncludeSingleFacets = properties.getProperty("panl.include.single.facets", "false").equals("true");
@@ -264,9 +264,11 @@ public class CollectionProperties {
 	 *
 	 * @param propertyName The property name to look up
 	 * @param isMandatory Whether this is a mandatory property - if it is, and
-	 * 				it doesn't exist, then this will throw a PanlServerException
+	 * 		it doesn't exist, then this will throw a PanlServerException
 	 * @param hasPrefixSuffix Whether this property can also
+	 *
 	 * @return the initialised property, or null if it doesn't exist
+	 *
 	 * @throws PanlServerException If a mandatory property was not found
 	 */
 	private String initialiseStringProperty(String propertyName, boolean isMandatory, boolean hasPrefixSuffix) throws PanlServerException {
@@ -274,11 +276,11 @@ public class CollectionProperties {
 		if (null == panlPropertyValue) {
 			if (isMandatory) {
 				throw new PanlServerException(
-								"MANDATORY PROPERTY MISSING: Could not find the '" +
-												propertyName +
-												"' property in the '" +
-												this.collectionName +
-												"' Panl properties file.'");
+						"MANDATORY PROPERTY MISSING: Could not find the '" +
+								propertyName +
+								"' property in the '" +
+								this.collectionName +
+								"' Panl properties file.'");
 			} else {
 				return (null);
 			}
@@ -313,7 +315,7 @@ public class CollectionProperties {
 	 * static String for the panl prefix property</p>
 	 *
 	 * @throws PanlServerException If there was an error looking up the properties,
-	 * 				or with the found property and its associated values
+	 * 		or with the found property and its associated values
 	 */
 	private void parseFacetFields() throws PanlServerException {
 		for (String panlFieldKey : PropertyHelper.getPropertiesByPrefix(properties, PROPERTY_KEY_PANL_FACET)) {
@@ -372,7 +374,7 @@ public class CollectionProperties {
 		}
 
 		List<String> temp = new ArrayList<>();
-		for(PanlFacetField facetField: FACET_FIELDS) {
+		for (PanlFacetField facetField : FACET_FIELDS) {
 			temp.add(facetField.getSolrFieldName());
 		}
 
@@ -398,7 +400,7 @@ public class CollectionProperties {
 		}
 
 		List<String> temp = new ArrayList<>();
-		for(PanlField field: NON_FACET_FIELDS) {
+		for (PanlField field : NON_FACET_FIELDS) {
 			temp.add(field.getSolrFieldName());
 		}
 
@@ -418,11 +420,11 @@ public class CollectionProperties {
 
 		for (String lpseCode : panlLpseOrder.split(",")) {
 			lpseCode = lpseCode.trim();
-			if(lpseFieldLookup.containsKey(lpseCode)) {
+			if (lpseFieldLookup.containsKey(lpseCode)) {
 				lpseFields.add(lpseFieldLookup.get(lpseCode));
 			}
 
-			if(LPSE_FACET_FIELDS.contains(lpseCode) ||
+			if (LPSE_FACET_FIELDS.contains(lpseCode) ||
 					LPSE_FIELDS.contains(lpseCode) ||
 					LPSE_METADATA.contains(lpseCode)) {
 				lpseOrder.add(lpseCode);
@@ -491,7 +493,7 @@ public class CollectionProperties {
 	}
 
 	public String getDefaultQueryOperand() {
-		return(solrDefaultQueryOperand);
+		return (solrDefaultQueryOperand);
 	}
 
 	@Deprecated
@@ -527,14 +529,9 @@ public class CollectionProperties {
 		return (solrFacetFields);
 	}
 
-	public String[] getSolrFields() {
-		return(solrFields);
-	}
-
-
 	public boolean hasSortField(String lpseCode) {
-		return(PANL_CODE_TO_FACET_FIELD_MAP.containsKey(lpseCode) ||
-						PANL_CODE_TO_FIELD_MAP.containsKey(lpseCode));
+		return (PANL_CODE_TO_FACET_FIELD_MAP.containsKey(lpseCode) ||
+				PANL_CODE_TO_FIELD_MAP.containsKey(lpseCode));
 	}
 
 	public String getSolrFieldNameFromPanlLpseCode(String lpseCode) {
@@ -547,15 +544,15 @@ public class CollectionProperties {
 	}
 
 	public boolean hasFacetCode(String lpseCode) {
-		return(PANL_CODE_TO_FACET_FIELD_MAP.containsKey(lpseCode));
+		return (PANL_CODE_TO_FACET_FIELD_MAP.containsKey(lpseCode));
 	}
 
 	public String getPanlCodeFromSolrFacetFieldName(String name) {
-		if(SOLR_NAME_TO_FACET_FIELD_MAP.containsKey(name)) {
-			return(SOLR_NAME_TO_FACET_FIELD_MAP.get(name).getPanlLpseCode());
+		if (SOLR_NAME_TO_FACET_FIELD_MAP.containsKey(name)) {
+			return (SOLR_NAME_TO_FACET_FIELD_MAP.get(name).getPanlLpseCode());
 		}
 
-		return(null);
+		return (null);
 	}
 
 	public String getPanlNameFromSolrFieldName(String solrFieldName) {
@@ -585,52 +582,6 @@ public class CollectionProperties {
 		return (panlIncludeSameNumberFacets);
 	}
 
-	/**
-	 * <p>The panl value (from the URI) can have a prefix or suffix, or both
-	 * applied to it.</p>
-	 *
-	 * <p>Remove any suffixes, or prefixes from a URI parameter, should they
-	 * be defined for the LPSE code.</p>
-	 *
-	 * <p>Additionally, if this is a boolean field, it may be that there also is
-	 * a replacement for true/false for it.</p>
-	 *
-	 * @param panlFacetCode The panl LPSE code to lookup
-	 * @param value the value to convert if any conversions are required
-	 * @return the de-suffixed, de-prefixed, and de-replaced value.
-	 */
-	public String getConvertedFromPanlValue(String panlFacetCode, String value) {
-		String temp = value;
-
-		if (panlFacetPrefixMap.containsKey(panlFacetCode)) {
-			String prefix = panlFacetPrefixMap.get(panlFacetCode);
-			if (temp.startsWith(prefix)) {
-				temp = temp.substring(prefix.length());
-			}
-		}
-
-		if (panlFacetSuffixMap.containsKey(panlFacetCode)) {
-			String suffix = panlFacetSuffixMap.get(panlFacetCode);
-			if (temp.endsWith(suffix)) {
-				temp = temp.substring(0, temp.length() - panlFacetSuffixMap.get(panlFacetCode).length());
-			}
-		}
-
-		if (panlBooleanFacets.contains(panlFacetCode)) {
-			// we might have a boolean replacement
-			if (panlBooleanFacetFalseValues.containsKey(panlFacetCode) &&
-							panlBooleanFacetFalseValues.getOrDefault(panlFacetCode, "").equals(value)) {
-				return ("false");
-			}
-			// we might have a boolean replacement
-			if (panlBooleanFacetTrueValues.containsKey(panlFacetCode) &&
-							panlBooleanFacetTrueValues.getOrDefault(panlFacetCode, "").equals(value)) {
-				return ("true");
-			}
-		}
-
-		return (temp);
-	}
 
 	public String getConvertedToPanlValue(String panlFacetCode, String value) {
 		StringBuilder sb = new StringBuilder();
@@ -660,14 +611,6 @@ public class CollectionProperties {
 		return (sb.toString());
 	}
 
-	public String getSuffixForLpseCode(String code) {
-		return (panlFacetSuffixMap.getOrDefault(code, ""));
-	}
-
-	public String getPrefixForLpseCode(String code) {
-		return (panlFacetPrefixMap.getOrDefault(code, ""));
-	}
-
 	public List<String> getSortFieldLpseCodes() {
 		return (panlLpseCodeSortFields);
 	}
@@ -677,18 +620,14 @@ public class CollectionProperties {
 	}
 
 	public JSONObject getSolrFieldToPanlNameLookup() {
-		return(solrFieldToPanlNameLookup);
-	}
-
-	public boolean isMetaData(String lpseOrder) {
-		return(LPSE_METADATA.contains(lpseOrder));
+		return (solrFieldToPanlNameLookup);
 	}
 
 	public List<BaseField> getLpseFields() {
-		return(lpseFields);
+		return (lpseFields);
 	}
 
 	public BaseField getLpseField(String lpseCode) {
-		return(lpseFieldLookup.get(lpseCode));
+		return (lpseFieldLookup.get(lpseCode));
 	}
 }

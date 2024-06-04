@@ -38,6 +38,10 @@ public class PanlQueryOperandField extends BaseField {
 		return(sb.toString());
 	}
 
+	public String getResetUriPath(Map<String, List<LpseToken>> panlTokenMap, CollectionProperties collectionProperties) {
+		return("");
+	}
+
 	@Override
 	public Logger getLogger() {
 		return(LOGGER);

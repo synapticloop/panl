@@ -121,6 +121,8 @@ public class SortLpseToken extends LpseToken {
 		return ("PANL " +
 				(this.isValid ? "[  VALID  ]" : "[ INVALID ]") +
 				" <sort>          LPSE code '" +
+				this.lpseCode +
+				"' sort code '" +
 				this.panlFacetCode +
 				"' (solr field '" +
 				(this.solrFacetField == null ? "<relevance>" : this.solrFacetField) +
