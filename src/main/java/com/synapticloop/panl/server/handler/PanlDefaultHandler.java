@@ -78,7 +78,7 @@ public class PanlDefaultHandler implements HttpRequestHandler {
 		jsonObject.put(JSON_KEY_STATUS, 404);
 
 		// do we want verbose messaging for 404 http status codes
-		if(panlProperties.getPanlStatus404Verbose()) {
+		if(panlProperties.getUseVerbose404Messages()) {
 			jsonObject.put(JSON_KEY_404_MESSAGE, "Could not find a PANL request url, see 'valid_urls' array.");
 			JSONArray validUrls = new JSONArray();
 			for (CollectionRequestHandler collectionRequestHandler : collectionRequestHandlers) {

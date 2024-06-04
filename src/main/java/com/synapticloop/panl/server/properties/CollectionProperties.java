@@ -232,7 +232,7 @@ public class CollectionProperties {
 
 		this.panlLpseLength = PropertyHelper.getIntProperty(properties, "panl.lpse.length", null);
 		if (null == panlLpseLength) {
-			throw new PanlServerException("MANDATORY PROPERTY MISSING: Could not find the 'panl.lpse.length' property in the '" + this.collectionName + "' Panl properties file.'");
+			throw new PanlServerException("MANDATORY PROPERTY MISSING: Could not find the 'panl.lpse.length' property in the '" + this.collectionName + "'.panl.properties file.'");
 		}
 		LOGGER.info("[{}] LPSE length set to '{}'", collectionName, panlLpseLength);
 

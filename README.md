@@ -1,95 +1,153 @@
 # Synapticloop PANL
 
-## Getting started
+# Quick Start - The 5 Steps
 
-**NOTE**: This is based on Apache solr 9.6.0, however other versions should 
-hopefully match
+---
 
-For explicit instructions, see the [Solr tutorial for the techproducts](https://solr.apache.org/guide/solr/latest/getting-started/tutorial-techproducts.html), 
-**NOTE** that the instructions here use a different `collectionRequestHandler` name than `techproducts` - 
+At the end of this chapter, you will have a web page up and running with the mechanical-pencils collection indexed and ready to sort and facet on the URL:
+http://localhost:8181/panl-results-viewer/
 
 
-# Apache Solr
+<img src="src/docs/panl-results-viewer.png">
+Image: The In-Build Panl Results Viewer Web Application
 
-## 1. Download and install Apache Solr
+## 0. Download Solr and Panl
 
-[Download Apache Solr for your platform](https://solr.apache.org/downloads.html)
+Download the latest release of Synapticloop Panl - this example is using the 
+`panl9-1.0.0` version.
 
-## 2. Initialise the ~~'techproducts'~~ 'example' collectionRequestHandler
+[https://github.com/synapticloop/panl/releases](https://github.com/synapticloop/panl/releases)
 
-_Windows_
+Download the latest version of Apache Solr - this book is using the `9.6.0-slim` 
+version
 
-```
-bin\solr start -e cloud
-```
+[https://solr.apache.org/downloads.html](https://solr.apache.org/downloads.html)
 
-_*NIX_
+**A Note On Running The Commands**
 
-```
-bin/solr start -e cloud
-```
+*These are the commands for either Microsoft Windows or *NIX operating systems
+(Linux/Apple Macintosh).  Should there be any errors - see the ‘Getting Started’ section for a more in-depth explanation and approach.***
 
-For each of the prompts:
-
-1. press `enter` for the prompt `To begin, how many Solr nodes would you like to run in your local cluster? (specify 1-4 nodes) [2]:` 
-2. press `enter` for the prompt `Please enter the port for node1 [8983]:`
-3. press `enter` for the prompt `Please enter the port for node2 [7574]:`
-4. type `example` and press `enter` for the prompt `Please provide a name for your new collectionRequestHandler: [gettingstarted]`
-5. press `enter` for the prompt `How many shards would you like to split example into? [2]`
-6. press `enter` for the prompt `How many replicas per shard would you like to create? [2]`
-7. type `sample_techproducts_configs` and press `enter` for the prompt `Please choose a configuration for the example collectionRequestHandler, available options are: _default or sample_techproducts_configs [_default]`
-
-## 3. Index the ~~'techproducts'~~ 'example' collectionRequestHandler
-
-_Windows_
-
-**NOTE:** The instructions in the Apache Solr tutorial are **INCORRECT** use the following line instead:
 
 ```
-bin\solr post -c techproducts example\exampledocs\*
-```
-**NOT:** ~~`java -jar -Dc=techproducts -Dauto example\exampledocs\post.jar example\exampledocs\*`~~
-
-_*NIX_
-
-```
-bin/solr post -c techproducts example/exampledocs/*
+**IMPORTANT**: You will need to replace the
+SOLR_INSTALL_DIRECTORY
+and
+PANL_INSTALL_DIRECTORY
+references in the commands for your particular setup.
 ```
 
-# Synapticloop Panl
-
-## 1. Download the latest release
-
-[Synapticloop Panl releases](https://github.com/synapticloop/panl/releases)
-
-## 2. Extract the files
-
-unzip or untgz the files
-
-## 3. Run the example
+# Windows Commands
 
 ```
-java -jar synapticloop-panl.jar server
+**IMPORTANT**: Each of the commands - either Windows or *NIX must be run on a
+ single line - watch out for continuations.
 ```
 
-## 4. View the results
+## 1. Create an example cloud instance
 
-[http://localhost:8181/panl-results-viewer/](http://localhost:8181/panl-results-viewer/)
+This requires no interaction, will use the default setup, two replicas, and two shards under the 'example' cloud node.
+Command(s)
 
-# Next Steps
+```shell
+SOLR_INSTALL_DIRECTORY\bin\solr start -e cloud -noprompt
+```
 
-Learn more about Synapticloop Panl
+
+## 2. Create the mechanical pencils collection
+
+This will set up the mechanical pencil collection and schema so that the data can be indexed.
+Command(s)
+```shell
+SOLR_INSTALL_DIRECTORY\bin\solr create -c mechanical-pencils -d PANL_INSTALL_DIRECTORY\mechanical-pencils\ -s 2 -rf 2
+```
+
+## 3. Index the mechanical pencils data
+
+This will index all mechanical pencil data into the Solr instance.
+Command(s)
+
+```shell
+SOLR_INSTALL_DIRECTORY\bin\solr	post -c mechanical-pencils PANL_INSTALL_DIRECTORY\mechanical-pencils\data\pencils.json
+```
+
+## 4. Start the Panl Server
+
+This will start the server and be ready to accept requests.
+Command(s)
+```shell
+PANL_INSTALL_DIRECTORY\bin\panl.bat -properties PANL_INSTALL_DIRECTORY\examples\mechanical-properties\panl.properties
+```
+
+## 5. Start searching and faceting
+
+Open [http://localhost:8181/panl-results-viewer/](http://localhost:8181/panl-results-viewer/) in your favourite browser.
+
+Choose a collection/fieldset and search, facet, sort, paginate and view the results
+
+# *NIX Commands
+
+```**IMPORTANT**: Each of the commands - either Windows or *NIX must be run on
+ a single line - watch out for continuations.
+ ```
+
+## 1. Create an example cloud instance
+
+No prompting, default setup, two replicas, and two shards under the 'example' cloud node.
+Command(s)
+
+```shell
+SOLR_INSTALL_DIRECTORY/bin/solr start -e cloud -noprompt
+```
+
+## 2. Create the mechanical pencils collection
+
+Set up the schema so that the data can be indexed.
+Command(s)
+```shell
+SOLR_INSTALL_DIRECTORY/bin/solr	create -c mechanical-pencils -d PANL_INSTALL_DIRECTORY/mechanical-pencils/ -s 2 -rf 2
+```
+
+## 3. Index the mechanical pencils data
+
+Index all of the data into the Solr instance
+Command(s)
+```shell
+SOLR_INSTALL_DIRECTORY/bin/solr	post -c mechanical-pencils PANL_INSTALL_DIRECTORY/mechanical-pencils/data/pencils.json
+```
+
+## 4. Start the Panl Server
+
+Ready to go.
+Command(s)
+
+```shell
+PANL_INSTALL_DIRECTORY/bin/panl -properties PANL_INSTALL_DIRECTORY/examples/mechanical-properties/panl.properties
+```
+
+View the in-built Panl Results Viewer web application
+## 5. Start searching and faceting 
+
+Open [http://localhost:8181/panl-results-viewer/](http://localhost:8181/panl-results-viewer/) in your favourite browser.
+
+Choose a collection/fieldset and search, facet, sort, paginate and view the results
+
+# Quick Info
 
 ## Starting up the example cloud
 
-_Windows_
-```
-bin\solr start -cloud -p 8983 -s "example\cloud\node1\solr"
-bin\solr start -cloud -p 7574 -s "example\cloud\node2\solr" -z localhost:9983
+If you have stopped the example Solr server, starting it up:
+
+### _Windows_
+
+```shell
+SOLR_INSTALL_DIRECTORY\bin\solr start -cloud -p 8983 -s "example\cloud\node1\solr"
+SOLR_INSTALL_DIRECTORY\bin\solr start -cloud -p 7574 -s "example\cloud\node2\solr" -z localhost:9983
 ```
 
-_*NIX_
-```
-bin/solr start -cloud -p 8983 -s "example/cloud/node1/solr"
-bin/solr start -cloud -p 7574 -s "example/cloud/node2/solr" -z localhost:9983
+### _*NIX_
+
+```shell
+SOLR_INSTALL_DIRECTORY/bin/solr start -cloud -p 8983 -s "example/cloud/node1/solr"
+SOLR_INSTALL_DIRECTORY/bin/solr start -cloud -p 7574 -s "example/cloud/node2/solr" -z localhost:9983
 ```

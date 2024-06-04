@@ -202,7 +202,7 @@ public class PanlServer {
 
 		// register the panl results viewer - if it enabled
 
-		if (panlProperties.getPanlResultsTestingUrls()) {
+		if (panlProperties.getHasPanlResultsTestingUrls()) {
 			bootstrap.registerHandler("/panl-results/static/*", new PanlResultsStaticHandler());
 
 			// the simple search and querying webappp

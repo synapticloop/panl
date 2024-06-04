@@ -46,10 +46,10 @@ public abstract class BaseField {
 	protected static final String PROPERTY_KEY_PANL_TYPE = "panl.type.";
 	protected static final String PROPERTY_KEY_PANL_PREFIX = "panl.prefix.";
 	protected static final String PROPERTY_KEY_PANL_SUFFIX = "panl.suffix.";
+	public static final String PROPERTY_KEY_SOLR_FACET_MIN_COUNT = "solr.facet.min.count";
 
 	protected static final String BOOLEAN_TRUE_VALUE = "true";
 	protected static final String BOOLEAN_FALSE_VALUE = "false";
-	public static final String PROPERTY_KEY_SOLR_FACET_MIN_COUNT = "solr.facet.min.count";
 
 	private boolean hasPrefix = false;
 	private boolean hasSuffix = false;

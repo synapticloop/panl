@@ -104,7 +104,7 @@ public class PanlRequestHandler implements HttpRequestHandler {
 			JSONObject jsonObject = new JSONObject();
 			jsonObject.put("error", true);
 			jsonObject.put("status", 500);
-			if(panlProperties.getPanlStatus500Verbose()) {
+			if(panlProperties.getUseVerbose500Messages()) {
 				jsonObject.put("message", e.getMessage());
 				response.setEntity(new StringEntity(jsonObject.toString(), CONTENT_TYPE_JSON));
 			} else {

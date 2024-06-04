@@ -27,11 +27,12 @@ package com.synapticloop.panl.server.tokeniser;
 
 import java.util.NoSuchElementException;
 
-
 /**
  * <p><strong>NOTE:</strong> This is based almost entirely on the ORACLE
  * implementation of the StringTokenizer, only it allows the current
  * position to be reset back a token if necessary.</p>
+ *
+ * <p><strong>THE FOLLOWING COMMENT IS FROM THE ORIGINATING SOURCE</strong></p>
  *
  * <p>The string tokenizer class allows an application to break a
  * string into tokens. The tokenization method is much simpler than
@@ -449,6 +450,9 @@ public class PanlTokeniser {
 		return count;
 	}
 
+	/**
+	 * <p>Decrement the token.</p>
+	 */
 	public void decrementCurrentPosition() {
 		this.currentPosition--;
 		if (this.currentPosition < 0) {
