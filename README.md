@@ -133,7 +133,7 @@ This will index all mechanical pencil data into the Solr instance.
 Command(s)
 
 ```shell
-SOLR_INSTALL_DIRECTORY\bin\solr	post -c mechanical-pencils PANL_INSTALL_DIRECTORY\examples\mechanical-pencils\data\pencils.json
+SOLR_INSTALL_DIRECTORY\bin\solr	post -c mechanical-pencils PANL_INSTALL_DIRECTORY\examples\data\mechanical-mechanical-pencils.json
 ```
 
 ## 4. Start the Panl Server
@@ -178,7 +178,7 @@ SOLR_INSTALL_DIRECTORY/bin/solr	create -c mechanical-pencils -d PANL_INSTALL_DIR
 Index all of the data into the Solr instance
 Command(s)
 ```shell
-SOLR_INSTALL_DIRECTORY/bin/solr	post -c mechanical-pencils PANL_INSTALL_DIRECTORY/examples/mechanical-pencils/data/pencils.json
+SOLR_INSTALL_DIRECTORY/bin/solr	post -c mechanical-pencils PANL_INSTALL_DIRECTORY/examples/data/mechanical-mechanical-pencils.json
 ```
 
 ## 4. Start the Panl Server

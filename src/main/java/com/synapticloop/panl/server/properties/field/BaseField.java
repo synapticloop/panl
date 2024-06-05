@@ -58,6 +58,12 @@ public abstract class BaseField {
 
 	protected boolean isOrFacet = false;
 	protected boolean isRangeFacet = false;
+	private boolean hasMinRange = false;
+	private String rangeMinRange;
+	private boolean hasMaxRange = false;
+	private String rangeMaxRange;
+	private boolean hasRangeMidfix = false;
+	private String rangeMidfix;
 
 	private boolean isBooleanSolrFieldType;
 	private boolean hasBooleanTrueReplacement;
@@ -184,6 +190,33 @@ public abstract class BaseField {
 
 	protected void populateRanges() {
 		this.isRangeFacet =  properties.getProperty("panl.range." + lpseCode, "false").equals("true");
+		if(this.isRangeFacet) {
+			// get the other properties, if they exist...
+			this.rangeMinRange = properties.getProperty("panl.range.min." + lpseCode, null);
+			if(null != this.rangeMinRange) {
+				hasMinRange = true;
+			}
+
+			this.rangeMaxRange = properties.getProperty("panl.range.max." + lpseCode, null);
+			if(null != this.rangeMaxRange) {
+				hasMaxRange = true;
+			}
+
+//			this.rangeMaxRange = properties.getProperty("panl.range.prefix." + lpseCode, null);
+//			if(null != this.rangeMaxRange) {
+//				hasMaxRange = true;
+//			}
+//
+//			this.rangeMaxRange = properties.getProperty("panl.range.suffix." + lpseCode, null);
+//			if(null != this.rangeMaxRange) {
+//				hasMaxRange = true;
+//			}
+
+			this.rangeMidfix = properties.getProperty("panl.range.midfix." + lpseCode, null);
+			if(null != this.rangeMidfix) {
+				hasRangeMidfix = true;
+			}
+		}
 	}
 
 	/**
@@ -509,11 +542,40 @@ public abstract class BaseField {
 		return isOrFacet;
 	}
 
+	public boolean getIsRangeFacet() {
+		return isRangeFacet;
+	}
+
 	public void applyToQuery(SolrQuery solrQuery, Map<String, List<LpseToken>> panlTokenMap) {
 		// no facets, no query, all is good :)
 		if (panlTokenMap.containsKey(getLpseCode())) {
 			applyToQueryInternal(solrQuery, panlTokenMap);
 		}
+	}
+
+	public String getMinRange() {
+		if(hasMinRange) {
+			return(rangeMinRange);
+		} else {
+			// TODO - needs to be based on the field type
+			return(Integer.toString(Integer.MIN_VALUE));
+		}
+	}
+
+	public String getMaxRange() {
+		if(hasMaxRange) {
+			return(rangeMaxRange);
+		} else {
+			// TODO - needs to be based on the field type
+			return(Integer.toString(Integer.MAX_VALUE));
+		}
+	}
+
+	public boolean getHasRangeMidfix() {
+		return(hasRangeMidfix);
+	}
+	public String getRangeMidfix() {
+		return(rangeMidfix);
 	}
 
 	protected abstract void applyToQueryInternal(SolrQuery solrQuery, Map<String, List<LpseToken>> panlTokenMap);

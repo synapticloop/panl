@@ -49,16 +49,19 @@ public class AvailableProcessor extends Processor {
 	public static final String JSON_KEY_BEFORE = "before";
 	public static final String JSON_KEY_AFTER = "after";
 	public static final String JSON_KEY_IS_OR_FACET = "is_or_facet";
+	public static final String JSON_KEY_IS_RANGE_FACET = "is_range_facet";
+	public static final String JSON_KEY_RANGE_FACETS = "range_facets";
+	public static final String JSON_KEY_FACETS = "facets";
+	public static final String JSON_KEY_MIN = "min";
+	public static final String JSON_KEY_MAX = "max";
+	public static final String JSON_KEY_DURING = "during";
 
 	public AvailableProcessor(CollectionProperties collectionProperties) {
 		super(collectionProperties);
 	}
 
 	@Override public JSONObject processToObject(Map<String, List<LpseToken>> panlTokenMap, Object... params) {
-		return(new JSONObject());
-	}
-
-	@Override public JSONArray processToArray(Map<String, List<LpseToken>> panlTokenMap, Object... params) {
+		JSONObject jsonObject = new JSONObject();
 		QueryResponse response = (QueryResponse) params[0];
 
 		List<LpseToken> lpseTokens = new ArrayList<>();
@@ -98,29 +101,33 @@ public class AvailableProcessor extends Processor {
 				facetObject.put(JSON_KEY_NAME, collectionProperties.getPanlNameFromSolrFieldName(facetField.getName()));
 
 				JSONArray facetValueArrays = new JSONArray();
-				String panlCodeFromSolrFacetName = collectionProperties.getPanlCodeFromSolrFacetFieldName(facetField.getName());
-				facetObject.put(JSON_KEY_IS_OR_FACET, collectionProperties.getIsOrFacetField(panlCodeFromSolrFacetName));
+				String lpseCode = collectionProperties.getPanlCodeFromSolrFacetFieldName(facetField.getName());
+				facetObject.put(JSON_KEY_IS_OR_FACET, collectionProperties.getIsOrFacetField(lpseCode));
+				boolean isRangeFacetField = collectionProperties.getIsRangeFacetField(lpseCode);
+				facetObject.put(JSON_KEY_IS_RANGE_FACET, isRangeFacetField);
 
-				facetObject.put(JSON_KEY_PANL_CODE, panlCodeFromSolrFacetName);
-				for (FacetField.Count value : facetField.getValues()) {
+
+				facetObject.put(JSON_KEY_PANL_CODE, lpseCode);
+				List<FacetField.Count> values = facetField.getValues();
+				for (FacetField.Count value : values) {
 					// at this point - we need to see whether we already have the 'value'
 					// as a facet - as there is no need to have it again
 					boolean shouldAdd = true;
 
 					String valueName = value.getName();
 
-					if (panlLookupMap.containsKey(panlCodeFromSolrFacetName)) {
-						if (panlLookupMap.get(panlCodeFromSolrFacetName).contains(valueName)) {
+					if (panlLookupMap.containsKey(lpseCode)) {
+						if (panlLookupMap.get(lpseCode).contains(valueName)) {
 							shouldAdd = false;
 						}
 					}
 
 					// if we have an or Facet and this is an or facet, then we keep all
 					// values, otherwise we strip out the xero values
-					if(collectionProperties.getHasOrFacetFields()) {
-						BaseField lpseField = collectionProperties.getLpseField(panlCodeFromSolrFacetName);
-						if(!lpseField.getIsOrFacet()) {
-							if(value.getCount() == 0) {
+					if (collectionProperties.getHasOrFacetFields()) {
+						BaseField lpseField = collectionProperties.getLpseField(lpseCode);
+						if (!lpseField.getIsOrFacet()) {
+							if (value.getCount() == 0) {
 								shouldAdd = false;
 							}
 						}
@@ -135,7 +142,7 @@ public class AvailableProcessor extends Processor {
 						shouldAdd = false;
 					}
 
-					BaseField lpseField = collectionProperties.getLpseField(panlCodeFromSolrFacetName);
+					BaseField lpseField = collectionProperties.getLpseField(lpseCode);
 
 					if (shouldAdd) {
 						JSONObject facetValueObject = new JSONObject();
@@ -161,13 +168,14 @@ public class AvailableProcessor extends Processor {
 
 				if (shouldIncludeFacet) {
 					facetObject.put(JSON_KEY_VALUES, facetValueArrays);
-					if (null != panlCodeFromSolrFacetName) {
+					if (null != lpseCode) {
 						facetObject.put(JSON_KEY_URIS,
 								getAdditionURIObject(
-										panlCodeFromSolrFacetName,
-										panlTokenMap));
+										collectionProperties.getLpseField(lpseCode),
+										panlTokenMap,
+										false));
 					}
-					panlFacetOrderMap.put(panlCodeFromSolrFacetName, facetObject);
+					panlFacetOrderMap.put(lpseCode, facetObject);
 				}
 			}
 		}
@@ -178,20 +186,48 @@ public class AvailableProcessor extends Processor {
 			}
 		}
 
-		return(panlFacets);
+		jsonObject.put(JSON_KEY_FACETS, panlFacets);
+
+		JSONArray rangeFacetAray = new JSONArray();
+		for (BaseField lpseField : collectionProperties.getLpseFields()) {
+			if (lpseField.getIsRangeFacet()) {
+				// put this in the array please
+				JSONObject facetObject = new JSONObject();
+				String lpseCode = lpseField.getLpseCode();
+				facetObject.put(JSON_KEY_FACET_NAME, collectionProperties.getSolrFieldNameFromPanlLpseCode(lpseCode));
+				facetObject.put(JSON_KEY_NAME, collectionProperties.getPanlNameFromPanlCode(lpseCode));
+				facetObject.put(JSON_KEY_PANL_CODE, lpseCode);
+				facetObject.put(JSON_KEY_MIN, lpseField.getMinRange());
+				facetObject.put(JSON_KEY_MAX, lpseField.getMaxRange());
+
+				// addition URIs are a little bit different...
+				JSONObject additionURIObject = getAdditionURIObject(lpseField, panlTokenMap, true);
+				if (lpseField.getHasRangeMidfix()) {
+					additionURIObject.put(JSON_KEY_DURING, lpseField.getRangeMidfix());
+				} else {
+					additionURIObject.put(JSON_KEY_DURING, "/");
+				}
+				facetObject.put(JSON_KEY_URIS, additionURIObject);
+				rangeFacetAray.put(facetObject);
+			}
+		}
+
+		jsonObject.put(JSON_KEY_RANGE_FACETS, rangeFacetAray);
+		return (jsonObject);
 	}
 
 	/**
 	 * <p>Get the addition URI Object for facets.  The addition URI will always
 	 * reset the page number LPSE code</p>
 	 *
-	 * @param additionLpseCode The LPSE code to add to the URI
+	 * @param lpseField The LPSE field to add to the URI
 	 * @param panlTokenMap The Map of existing tokens that are already in the URI
 	 *
 	 * @return The addition URI
 	 */
 
-	private JSONObject getAdditionURIObject(String additionLpseCode, Map<String, List<LpseToken>> panlTokenMap) {
+	private JSONObject getAdditionURIObject(BaseField lpseField, Map<String, List<LpseToken>> panlTokenMap, boolean shouldRange) {
+		String additionLpseCode = lpseField.getLpseCode();
 		JSONObject additionObject = new JSONObject();
 		StringBuilder lpseUri = new StringBuilder("/");
 		StringBuilder lpseCode = new StringBuilder();
@@ -206,10 +242,18 @@ public class AvailableProcessor extends Processor {
 				additionObject.put(JSON_KEY_BEFORE, lpseUri.toString());
 				lpseUri.setLength(0);
 				lpseCode.append(baseField.getLpseCode());
+
+				// if this is a range, then there is a different format
+				if(shouldRange && lpseField.getHasRangeMidfix()) {
+					lpseCode.append((lpseField.getHasRangeMidfix() ? "-" : "+"));
+					lpseCode.append(lpseField.getLpseCode());
+				}
 			}
 		}
 
-		additionObject.append(JSON_KEY_AFTER, "/" + lpseUri + lpseCode + "/");
+			additionObject.put(JSON_KEY_AFTER, "/" + lpseUri + lpseCode + "/");
 		return (additionObject);
 	}
+
+
 }

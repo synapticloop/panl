@@ -281,7 +281,7 @@ public class CollectionRequestHandler {
 		SolrDocumentList solrDocuments = (SolrDocumentList) response.getResponse().get("response");
 		long numFound = solrDocuments.getNumFound();
 
-		panlObject.put(JSON_KEY_AVAILABLE, availableProcessor.processToArray(panlTokenMap, response));
+		panlObject.put(JSON_KEY_AVAILABLE, availableProcessor.processToObject(panlTokenMap, response));
 		panlObject.put(JSON_KEY_ACTIVE, activeProcessor.processToObject(panlTokenMap));
 		panlObject.put(JSON_KEY_PAGINATION, paginationProcessor.processToObject(panlTokenMap, numFound ));
 		panlObject.put(JSON_KEY_TIMINGS, timingsProcessor.processToObject(panlTokenMap, parseRequestNanos, buildRequestNanos, sendAndReceiveNanos, System.nanoTime() - startNanos));

@@ -96,6 +96,7 @@ public class CollectionProperties {
 	private final Map<String, PanlField> SOLR_NAME_TO_FIELD_MAP = new HashMap<>();
 
 	private final Set<String> PANL_CODE_OR_FIELDS = new HashSet<>();
+	private final Set<String> PANL_CODE_RANGE_FIELDS = new HashSet<>();
 
 
 	private boolean panlIncludeSingleFacets;
@@ -317,6 +318,10 @@ public class CollectionProperties {
 				PANL_CODE_OR_FIELDS.add(lpseCode);
 			}
 
+			if (facetField.getIsRangeFacet()) {
+				PANL_CODE_RANGE_FIELDS.add(lpseCode);
+			}
+
 			PANL_CODE_TO_FACET_FIELD_MAP.put(facetField.getLpseCode(), facetField);
 			SOLR_NAME_TO_FACET_FIELD_MAP.put(facetField.getSolrFieldName(), facetField);
 		}
@@ -501,6 +506,10 @@ public class CollectionProperties {
 
 	public boolean getIsOrFacetField(String lpseCode) {
 		return (PANL_CODE_OR_FIELDS.contains(lpseCode));
+	}
+
+	public boolean getIsRangeFacetField(String lpseCode) {
+		return (PANL_CODE_RANGE_FIELDS.contains(lpseCode));
 	}
 
 	public String getPanlNameFromPanlCode(String lpseCode) {

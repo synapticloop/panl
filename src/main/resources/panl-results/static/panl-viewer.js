@@ -207,10 +207,13 @@ function addActiveFacets(facets) {
 	active.append("<li><hr /></li>");
 }
 
-function addAvailableFilters(availableArray) {
+function addAvailableFilters(availableObject) {
+	console.log("available object");
+	console.log(availableObject);
+
 	// first up the facets
 	const available = $("#available");
-	for(const facet of availableArray) {
+	for(const facet of availableObject.facets) {
 		var innerUl = "<ul>";
 		for(const value of facet.values) {
 			innerUl += "<li>" +
@@ -229,6 +232,37 @@ function addAvailableFilters(availableArray) {
 		}
 		innerUl += "</ul>"
 		available.append("<li><strong>" + facet.name + " <em>(" + facet.panl_code + ")</em></strong>" + innerUl + "</li>");
+	}
+
+	const ranges = $("#ranges");
+	// now check for the ranges - we are adding another list item so that
+	// people can choose which implementation to use.
+	for(const facet of availableObject.range_facets) {
+		ranges.append("<p>Range facets</>")
+		ranges.append("<p><strong>" + facet.name + " <em>(" + facet.panl_code + ") Range</em></strong></p>");
+		var selector = "data-" + facet.facet_name;
+		ranges.append("<input class=\"custom-range\" type=\"range\" name=\"Range\" " + selector + " min=\"" + facet.min + "\" max=\"" + facet.max + "\"/>");
+		ranges.append("<div>" +
+				"<span class=\"left " + selector + "-min\">" + facet.min + "</span>" +
+				"<span class=\"right " + selector + "-max\">" + facet.max + "</span>" +
+				"</div>");
+		ranges.append("<div class=\"clear range-link\">" +
+			"<a href=\"\" class=\"" + selector + "-anchor\">[Apply]</a>&nbsp;<span class=\"" + selector + "-link\">" + facet.min + " to " + facet.max + "</span>" +
+			"</div>");
+
+   new DualRange("[" + selector + "]", (e) => {
+      document.querySelector("." + selector + "-min").textContent = e.min;
+      document.querySelector("." + selector + "-max").textContent = e.max;
+      document.querySelector("." + selector + "-link").textContent = e.min + " to " + e.max;
+      document.querySelector("." + selector + "-anchor").setAttribute("href",
+              panlResultsViewerUrl +
+              $("#collection").text() +
+              facet.uris.before +
+              e.min +
+              facet.uris.during +
+              e.max +
+              facet.uris.after);
+    });
 	}
 
 }
