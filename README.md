@@ -18,6 +18,7 @@ Panl was designed to convert rather long and unfriendly (both in human readable 
 Working with a Solr schema, the Panl configuration files translate unwieldy URI parameters into concise and precise URI paths.
 
 <img src="src/docs/panl-features.png">
+Image: The features and functionality of the Panl server
 
 1. **A list of available Collections and FieldSets (CaFS) URIs** that Panl is configured to serve.  CaFS URI paths enable different Solr fields to be returned with the same search parameters.
 1. **A textual representation of the CaFS URI** path that the Panl Results Viewer web application is using.
