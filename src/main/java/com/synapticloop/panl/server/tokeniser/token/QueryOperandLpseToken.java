@@ -40,9 +40,9 @@ public class QueryOperandLpseToken extends LpseToken {
 	private String queryOperand;
 
 	public QueryOperandLpseToken(
-					CollectionProperties collectionProperties,
-					String panlLpseCode,
-					PanlTokeniser lpseTokeniser) {
+			CollectionProperties collectionProperties,
+			String panlLpseCode,
+			PanlTokeniser lpseTokeniser) {
 		super(panlLpseCode);
 		if (lpseTokeniser.hasMoreTokens()) {
 			queryOperand = lpseTokeniser.nextToken();
@@ -52,41 +52,14 @@ public class QueryOperandLpseToken extends LpseToken {
 		}
 	}
 
-	/**
-	 * <p>The Query Operand Token does not have a URI Part</p>
-	 *
-	 * @return ALWAYS returns an empty string
-	 */
-	@Override
-	public String getUriPathComponent() {
-		return ("");
-	}
-
-	/**
-	 * <p>Get the LPSE component.  This will only return a value if there is a
-	 * valid sort field available.</p>
-	 *
-	 * @return The LPSE component, or an empty string if not valid
-	 */
-	@Override
-	public String getLpseComponent() {
-		if (isValid) {
-			return (this.lpseCode +
-							this.queryOperand);
-		} else {
-			return ("");
-		}
-	}
-
-	@Override
-	public String explain() {
+	@Override public String explain() {
 		return ("PANL " +
-						(this.isValid ? "[  VALID  ]" : "[ INVALID ]") +
-						" <query_operand> LPSE code '" +
-						this.lpseCode +
-						"' operand '" +
-						this.queryOperand +
-						"' (q.op=" + getQOpValue() + ")");
+				(this.isValid ? "[  VALID  ]" : "[ INVALID ]") +
+				" <query_operand> LPSE code '" +
+				this.lpseCode +
+				"' operand '" +
+				this.queryOperand +
+				"' (q.op=" + getQOpValue() + ")");
 	}
 
 	/**
@@ -107,19 +80,20 @@ public class QueryOperandLpseToken extends LpseToken {
 	}
 
 	public String getQOpValue() {
-		if(this.queryOperand.equals("+")) {
-			return("AND");
+		if (this.queryOperand.equals("+")) {
+			return ("AND");
 		} else {
-			return("OR");
+			return ("OR");
 		}
 	}
+
 	@Override
 	public String getType() {
 		return ("sort");
 	}
 
 	public String getQueryOperand() {
-		return(this.queryOperand);
+		return (this.queryOperand);
 	}
 
 }

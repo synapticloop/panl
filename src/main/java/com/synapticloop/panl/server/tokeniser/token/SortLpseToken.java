@@ -94,34 +94,6 @@ public class SortLpseToken extends LpseToken {
 	}
 
 	/**
-	 * <p>The Sort Order Panl Token does not have a URI path</p>
-	 *
-	 * @return ALWAYS returns an empty string
-	 */
-	@Override
-	public String getUriPathComponent() {
-		return ("");
-	}
-
-	/**
-	 * <p>Get the LPSE component.  This will only return a value if there is a
-	 * valid sort field available.</p>
-	 *
-	 * @return The LPSE component, or an empty string if not valid
-	 */
-	@Override
-	public String getLpseComponent() {
-		if (isValid) {
-			return (this.lpseCode +
-					this.panlFacetCode +
-					(null != this.solrFacetField ? this.solrFacetField : "") +
-					(this.sortOrder.equals(SolrQuery.ORDER.asc) ? "+" : "-"));
-		} else {
-			return ("");
-		}
-	}
-
-	/**
 	 * <p>This will return a human readable string of the format:</p>
 	 *
 	 * <pre>

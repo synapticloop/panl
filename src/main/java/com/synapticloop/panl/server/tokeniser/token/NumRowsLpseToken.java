@@ -64,18 +64,6 @@ public class NumRowsLpseToken extends LpseToken {
 		this.numRows = numRowsTemp;
 	}
 
-	@Override public String getUriPathComponent() {
-		if(isValid) {
-			return (collectionProperties.getLpseField(lpseCode).getEncodedPanlValue(Integer.toString(numRows)) + "/");
-		} else {
-			return("");
-		}
-	}
-
-	@Override public String getLpseComponent() {
-		return(lpseCode);
-	}
-
 	@Override public String explain() {
 		// TODO - suffix and prefix
 		return ("PANL " +

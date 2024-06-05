@@ -60,22 +60,6 @@ public class QueryLpseToken extends LpseToken {
 		}
 	}
 
-	@Override public String getUriPathComponent() {
-		if(null != value) {
-			return (value + "/");
-		} else {
-			return("");
-		}
-	}
-
-	@Override public String getLpseComponent() {
-		if(null != value) {
-			return (lpseCode);
-		} else {
-			return("");
-		}
-	}
-
 	@Override public String explain() {
 		return ("PANL [  VALID  ] <query>         LPSE code '" +
 				this.lpseCode +
