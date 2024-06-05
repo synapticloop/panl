@@ -90,13 +90,13 @@ public class PaginationProcessor extends Processor {
 
 		for (BaseField baseField : collectionProperties.getLpseFields()) {
 			//
-			if (!baseField.getPanlLpseCode().equals(panlParamPageLpseCode)) {
+			if (!baseField.getLpseCode().equals(panlParamPageLpseCode)) {
 				uriPath.append(baseField.getURIPath(panlTokenMap, collectionProperties));
 				lpseCode.append(baseField.getLpseCode(panlTokenMap, collectionProperties));
 			} else {
 				pageUris.put(JSON_KEY_BEFORE, uriPath + baseField.getPanlPrefix());
 				// clear the sting builder
-				lpseCode.append(baseField.getPanlLpseCode());
+				lpseCode.append(baseField.getLpseCode());
 				uriPath.setLength(0);
 			}
 		}
@@ -148,13 +148,13 @@ public class PaginationProcessor extends Processor {
 		JSONObject pageUris = new JSONObject();
 
 		for (BaseField baseField : collectionProperties.getLpseFields()) {
-			if (!baseField.getPanlLpseCode().equals(replaceLpseCode)) {
+			if (!baseField.getLpseCode().equals(replaceLpseCode)) {
 				uriPath.append(baseField.getResetUriPath(panlTokenMap, collectionProperties));
 				lpseCode.append(baseField.getResetLpseCode(panlTokenMap, collectionProperties));
 			} else {
 				pageUris.put(JSON_KEY_BEFORE, uriPath + baseField.getPanlPrefix());
 				// clear the sting builder
-				lpseCode.append(baseField.getPanlLpseCode());
+				lpseCode.append(baseField.getLpseCode());
 				uriPath.setLength(0);
 			}
 		}

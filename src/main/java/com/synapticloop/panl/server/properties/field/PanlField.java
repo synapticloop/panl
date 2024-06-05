@@ -39,10 +39,10 @@ public class PanlField extends BaseField {
 	private static final Logger LOGGER = LoggerFactory.getLogger(PanlField.class);
 
 	public PanlField(String lpseCode, String propertyKey, Properties properties, String collectionName, int panlLpseNum) throws PanlServerException {
-		super(lpseCode, propertyKey, collectionName, panlLpseNum);
+		super(lpseCode, properties, propertyKey, collectionName, panlLpseNum);
 
 		// fields don't have prefixes/suffixes or URIparts
-		populatePanlAndSolrFieldNames(properties, lpseCode);
+		populatePanlAndSolrFieldNames();
 
 		logDetails();
 	}

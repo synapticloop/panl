@@ -40,17 +40,17 @@ public class PanlPageNumField extends BaseField {
 	private static final Logger LOGGER = LoggerFactory.getLogger(PanlPageNumField.class);
 
 	public PanlPageNumField(String lpseCode, String propertyKey, Properties properties, String collectionName) throws PanlServerException {
-		super(lpseCode, propertyKey, collectionName);
+		super(lpseCode, properties, propertyKey, collectionName);
 
-		populateParamSuffixAndPrefix(properties, propertyKey);
+		populateParamSuffixAndPrefix();
 
 		logDetails();
 	}
 
 	@Override public String getCanonicalUriPath(Map<String, List<LpseToken>> panlTokenMap, CollectionProperties collectionProperties) {
 		StringBuilder sb = new StringBuilder();
-		if(panlTokenMap.containsKey(panlLpseCode)) {
-			PageLpseToken pageLpseToken = (PageLpseToken) panlTokenMap.get(panlLpseCode).get(0);
+		if(panlTokenMap.containsKey(lpseCode)) {
+			PageLpseToken pageLpseToken = (PageLpseToken) panlTokenMap.get(lpseCode).get(0);
 			sb.append(getEncodedPanlValue(Integer.toString(pageLpseToken.getPageNum())));
 		} else {
 			sb.append(getEncodedPanlValue("1"));
@@ -61,12 +61,12 @@ public class PanlPageNumField extends BaseField {
 	}
 
 	@Override public String getCanonicalLpseCode(Map<String, List<LpseToken>> panlTokenMap, CollectionProperties collectionProperties) {
-		return(panlLpseCode);
+		return(lpseCode);
 	}
 
 	public String getResetUriPath(Map<String, List<LpseToken>> panlTokenMap, CollectionProperties collectionProperties) {
 		StringBuilder sb = new StringBuilder();
-		if(panlTokenMap.containsKey(panlLpseCode)) {
+		if(panlTokenMap.containsKey(lpseCode)) {
 			sb.append(getEncodedPanlValue("1"));
 			sb.append("/");
 		}
@@ -75,8 +75,8 @@ public class PanlPageNumField extends BaseField {
 	}
 
 	public String getResetLpseCode(Map<String, List<LpseToken>> panlTokenMap, CollectionProperties collectionProperties) {
-		if(panlTokenMap.containsKey(panlLpseCode)) {
-			return(panlLpseCode);
+		if(panlTokenMap.containsKey(lpseCode)) {
+			return(lpseCode);
 		}
 		return("");
 	}

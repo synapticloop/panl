@@ -40,9 +40,9 @@ public class PanlNumRowsField extends BaseField {
 	private static final Logger LOGGER = LoggerFactory.getLogger(PanlNumRowsField.class);
 
 	public PanlNumRowsField(String lpseCode, String propertyKey, Properties properties, String collectionName) throws PanlServerException {
-		super(lpseCode, propertyKey, collectionName);
+		super(lpseCode, properties, propertyKey, collectionName);
 
-		populateParamSuffixAndPrefix(properties, propertyKey);
+		populateParamSuffixAndPrefix();
 
 		logDetails();
 	}
@@ -55,8 +55,8 @@ public class PanlNumRowsField extends BaseField {
 	@Override
 	public String getCanonicalUriPath(Map<String, List<LpseToken>> panlTokenMap, CollectionProperties collectionProperties) {
 		StringBuilder sb = new StringBuilder();
-		if (panlTokenMap.containsKey(panlLpseCode)) {
-			NumRowsLpseToken numRowsLpseToken = (NumRowsLpseToken) panlTokenMap.get(panlLpseCode).get(0);
+		if (panlTokenMap.containsKey(lpseCode)) {
+			NumRowsLpseToken numRowsLpseToken = (NumRowsLpseToken) panlTokenMap.get(lpseCode).get(0);
 			sb.append(getEncodedPanlValue(Integer.toString(numRowsLpseToken.getNumRows())));
 		} else {
 			sb.append(getEncodedPanlValue(Integer.toString(collectionProperties.getNumResultsPerPage())));
@@ -67,7 +67,7 @@ public class PanlNumRowsField extends BaseField {
 	}
 
 	@Override public String getCanonicalLpseCode(Map<String, List<LpseToken>> panlTokenMap, CollectionProperties collectionProperties) {
-		return(panlLpseCode);
+		return(lpseCode);
 	}
 	@Override public String getExplainDescription() {
 		return("The number of results to return per query.");

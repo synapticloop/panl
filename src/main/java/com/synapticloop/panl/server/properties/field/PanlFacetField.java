@@ -39,15 +39,17 @@ public class PanlFacetField extends BaseField {
 	private static final Logger LOGGER = LoggerFactory.getLogger(PanlFacetField.class);
 
 	public PanlFacetField(String lpseCode, String propertyKey, Properties properties, String collectionName, int panlLpseNum) throws PanlServerException {
-		super(lpseCode, propertyKey, collectionName, panlLpseNum);
+		super(lpseCode, properties, propertyKey, collectionName, panlLpseNum);
 
-		populateSuffixAndPrefix(properties, lpseCode);
-		populateBooleanReplacements(properties, lpseCode);
-		populateSolrFieldType(properties, lpseCode);
-		populatePanlAndSolrFieldNames(properties, lpseCode);
+		populateSuffixAndPrefix();
+		populateBooleanReplacements();
+		populateSolrFieldType();
+		populatePanlAndSolrFieldNames();
 
+		populateRanges();
 		// lastly, we are going to check to see whether this is an 'OR' field
-		populateFacetOr(properties, lpseCode);
+		populateFacetOr();
+
 
 		logDetails();
 	}
@@ -64,7 +66,7 @@ public class PanlFacetField extends BaseField {
 	protected void applyToQueryInternal(SolrQuery solrQuery, Map<String, List<LpseToken>> panlTokenMap) {
 		if (!isOrFacet) {
 			// just go through and set the filter queries - these will be ANDed together
-			for (LpseToken lpseToken : panlTokenMap.get(getPanlLpseCode())) {
+			for (LpseToken lpseToken : panlTokenMap.get(getLpseCode())) {
 				FacetLpseToken facetLpseToken = (FacetLpseToken) lpseToken;
 				solrQuery.addFilterQuery(facetLpseToken.getSolrField() + ":\"" + facetLpseToken.getValue() + "\"");
 			}
@@ -74,7 +76,7 @@ public class PanlFacetField extends BaseField {
 		StringBuilder stringBuilder = new StringBuilder();
 		boolean isFirst = true;
 		// at this point, we are going through the or filters
-		for (LpseToken lpseToken : panlTokenMap.get(getPanlLpseCode())) {
+		for (LpseToken lpseToken : panlTokenMap.get(getLpseCode())) {
 			FacetLpseToken facetLpseToken = (FacetLpseToken) lpseToken;
 			if (isFirst) {
 				stringBuilder

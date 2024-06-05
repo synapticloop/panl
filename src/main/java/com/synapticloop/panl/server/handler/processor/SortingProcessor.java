@@ -64,7 +64,7 @@ public class SortingProcessor extends Processor {
 		StringBuilder lpse = new StringBuilder();
 
 		for (BaseField lpseField : collectionProperties.getLpseFields()) {
-			String thisLpseCode = lpseField.getPanlLpseCode();
+			String thisLpseCode = lpseField.getLpseCode();
 			if(!panlLpseCode.equals(thisLpseCode)) {
 				if(panlTokenMap.containsKey(thisLpseCode)) {
 					lpseUri.append(lpseField.getResetUriPath(panlTokenMap, collectionProperties));

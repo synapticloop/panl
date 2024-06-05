@@ -49,7 +49,7 @@ public class QueryOperandProcessor extends Processor {
 		StringBuilder lpseCode = new StringBuilder();
 
 		for (BaseField lpseField : collectionProperties.getLpseFields()) {
-			if(!panlLpseCodeQueryOperand.equals(lpseField.getPanlLpseCode())) {
+			if(!panlLpseCodeQueryOperand.equals(lpseField.getLpseCode())) {
 				lpseUri.append(lpseField.getResetUriPath(panlTokenMap, collectionProperties));
 				lpseCode.append(lpseField.getResetLpseCode(panlTokenMap, collectionProperties));
 			} else {

@@ -38,7 +38,7 @@ public class PanlQueryField extends BaseField {
 	private static final Logger LOGGER = LoggerFactory.getLogger(PanlQueryField.class);
 
 	public PanlQueryField(String lpseCode, String propertyKey, Properties properties, String collectionName) throws PanlServerException {
-		super(lpseCode, propertyKey, collectionName);
+		super(lpseCode, properties, propertyKey, collectionName);
 
 		logDetails();
 	}
@@ -53,8 +53,8 @@ public class PanlQueryField extends BaseField {
 	}
 
 	public void applyToQueryInternal(SolrQuery solrQuery, Map<String, List<LpseToken>> panlTokenMap) {
-		if(panlTokenMap.containsKey(panlLpseCode)) {
-			LpseToken lpseToken = panlTokenMap.get(panlLpseCode).get(0);
+		if(panlTokenMap.containsKey(lpseCode)) {
+			LpseToken lpseToken = panlTokenMap.get(lpseCode).get(0);
 			solrQuery.setQuery(lpseToken.getValue());
 		}
 	}

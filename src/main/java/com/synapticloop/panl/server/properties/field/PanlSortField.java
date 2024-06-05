@@ -41,7 +41,7 @@ public class PanlSortField extends BaseField {
 	private static final Logger LOGGER = LoggerFactory.getLogger(PanlSortField.class);
 
 	public PanlSortField(String lpseCode, String propertyKey, Properties properties, String collectionName) throws PanlServerException {
-		super(lpseCode, propertyKey, collectionName);
+		super(lpseCode, properties, propertyKey, collectionName);
 
 		logDetails();
 	}
@@ -51,9 +51,9 @@ public class PanlSortField extends BaseField {
 	}
 
 	@Override public String getCanonicalLpseCode(Map<String, List<LpseToken>> panlTokenMap, CollectionProperties collectionProperties) {
-		StringBuilder sb = new StringBuilder(panlLpseCode);
-		if(panlTokenMap.containsKey(panlLpseCode)) {
-			SortLpseToken lpseToken = (SortLpseToken) panlTokenMap.get(panlLpseCode).get(0);
+		StringBuilder sb = new StringBuilder(lpseCode);
+		if(panlTokenMap.containsKey(lpseCode)) {
+			SortLpseToken lpseToken = (SortLpseToken) panlTokenMap.get(lpseCode).get(0);
 			if(lpseToken.getIsValid()) {
 				sb.append(lpseToken.getPanlFacetCode());
 				sb.append(lpseToken.getSortCode());
@@ -104,7 +104,7 @@ public class PanlSortField extends BaseField {
 		temp.add("FIELD CONFIG [ " +
 				this.getClass().getSimpleName() +
 				" ] LPSE code '" +
-				panlLpseCode +
+				lpseCode +
 				"'.");
 
 		return(temp);
@@ -115,8 +115,8 @@ public class PanlSortField extends BaseField {
 	}
 
 	public void applyToQueryInternal(SolrQuery solrQuery, Map<String, List<LpseToken>> panlTokenMap) {
-		if(panlTokenMap.containsKey(panlLpseCode)) {
-			SortLpseToken lpseToken = (SortLpseToken)panlTokenMap.get(panlLpseCode).get(0);
+		if(panlTokenMap.containsKey(lpseCode)) {
+			SortLpseToken lpseToken = (SortLpseToken)panlTokenMap.get(lpseCode).get(0);
 			if(!lpseToken.getPanlFacetCode().isBlank()) {
 				// this will be using the default relevance sort field
 				solrQuery.addSort(lpseToken.getSolrFacetField(), lpseToken.getSortOrder());

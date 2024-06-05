@@ -40,7 +40,7 @@ public class PanlQueryOperandField extends BaseField {
 	private static final Logger LOGGER = LoggerFactory.getLogger(PanlQueryOperandField.class);
 
 	public PanlQueryOperandField(String lpseCode, String propertyKey, Properties properties, String collectionName) throws PanlServerException {
-		super(lpseCode, propertyKey, collectionName);
+		super(lpseCode, properties, propertyKey, collectionName);
 
 		logDetails();
 	}
@@ -50,9 +50,9 @@ public class PanlQueryOperandField extends BaseField {
 	}
 
 	@Override public String getCanonicalLpseCode(Map<String, List<LpseToken>> panlTokenMap, CollectionProperties collectionProperties) {
-		StringBuilder sb = new StringBuilder(panlLpseCode);
-		if(panlTokenMap.containsKey(panlLpseCode)) {
-			QueryOperandLpseToken lpseToken = (QueryOperandLpseToken) panlTokenMap.get(panlLpseCode).get(0);
+		StringBuilder sb = new StringBuilder(lpseCode);
+		if(panlTokenMap.containsKey(lpseCode)) {
+			QueryOperandLpseToken lpseToken = (QueryOperandLpseToken) panlTokenMap.get(lpseCode).get(0);
 			if(lpseToken.getIsValid()) {
 				sb.append(lpseToken.getQueryOperand());
 			} else {
@@ -77,8 +77,8 @@ public class PanlQueryOperandField extends BaseField {
 	}
 
 	public void applyToQueryInternal(SolrQuery solrQuery, Map<String, List<LpseToken>> panlTokenMap) {
-		if(panlTokenMap.containsKey(panlLpseCode)) {
-			QueryOperandLpseToken lpseToken = (QueryOperandLpseToken)panlTokenMap.get(panlLpseCode).get(0);
+		if(panlTokenMap.containsKey(lpseCode)) {
+			QueryOperandLpseToken lpseToken = (QueryOperandLpseToken)panlTokenMap.get(lpseCode).get(0);
 			solrQuery.setParam("q.op", lpseToken.getQOpValue());
 		}
 	}

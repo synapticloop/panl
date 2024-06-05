@@ -63,7 +63,7 @@ public class AvailableProcessor extends Processor {
 
 		List<LpseToken> lpseTokens = new ArrayList<>();
 		for (BaseField lpseField : collectionProperties.getLpseFields()) {
-			lpseTokens.addAll(panlTokenMap.getOrDefault(lpseField.getPanlLpseCode(), new ArrayList<>()));
+			lpseTokens.addAll(panlTokenMap.getOrDefault(lpseField.getLpseCode(), new ArrayList<>()));
 		}
 
 		SolrDocumentList solrDocuments = (SolrDocumentList) response.getResponse().get(SOLR_JSON_KEY_RESPONSE);
@@ -173,8 +173,8 @@ public class AvailableProcessor extends Processor {
 		}
 
 		for (BaseField lpseField : collectionProperties.getLpseFields()) {
-			if (panlFacetOrderMap.containsKey(lpseField.getPanlLpseCode())) {
-				panlFacets.put(panlFacetOrderMap.get(lpseField.getPanlLpseCode()));
+			if (panlFacetOrderMap.containsKey(lpseField.getLpseCode())) {
+				panlFacets.put(panlFacetOrderMap.get(lpseField.getLpseCode()));
 			}
 		}
 
@@ -197,15 +197,15 @@ public class AvailableProcessor extends Processor {
 		StringBuilder lpseCode = new StringBuilder();
 
 		for (BaseField baseField : collectionProperties.getLpseFields()) {
-			if (panlTokenMap.containsKey(baseField.getPanlLpseCode())) {
+			if (panlTokenMap.containsKey(baseField.getLpseCode())) {
 				lpseUri.append(baseField.getResetUriPath(panlTokenMap, collectionProperties));
 				lpseCode.append(baseField.getResetLpseCode(panlTokenMap, collectionProperties));
 			}
 
-			if (baseField.getPanlLpseCode().equals(additionLpseCode)) {
+			if (baseField.getLpseCode().equals(additionLpseCode)) {
 				additionObject.put(JSON_KEY_BEFORE, lpseUri.toString());
 				lpseUri.setLength(0);
-				lpseCode.append(baseField.getPanlLpseCode());
+				lpseCode.append(baseField.getLpseCode());
 			}
 		}
 

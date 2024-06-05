@@ -57,6 +57,7 @@ public abstract class BaseField {
 	private String panlSuffix;
 
 	protected boolean isOrFacet = false;
+	protected boolean isRangeFacet = false;
 
 	private boolean isBooleanSolrFieldType;
 	private boolean hasBooleanTrueReplacement;
@@ -64,13 +65,14 @@ public abstract class BaseField {
 	private String booleanTrueReplacement;
 	private String booleanFalseReplacement;
 
-	protected String panlLpseCode;
+	protected String lpseCode;
 	private String panlFieldName;
 	private String solrFieldName;
 	private String solrFieldType;
 
-	private final String propertyKey;
+	private final Properties properties;
 	private final String collectionName;
+	private final String propertyKey;
 
 	private static final int VALIDATION_TYPE_NONE = 0;
 	private static final int VALIDATION_TYPE_NUMBER = 1;
@@ -81,37 +83,42 @@ public abstract class BaseField {
 
 	public BaseField(
 			String lpseCode,
+			Properties properties,
 			String propertyKey,
 			String collectionName) throws PanlServerException {
-		this(lpseCode, propertyKey, collectionName, 1);
+		this(lpseCode, properties, propertyKey, collectionName, 1);
 	}
 
 	public BaseField(
 			String lpseCode,
+			Properties properties,
 			String propertyKey,
 			String collectionName,
 			int panlLpseLength) throws PanlServerException {
 
-		this.panlLpseCode = lpseCode;
+		this.lpseCode = lpseCode;
+		this.properties = properties;
 		this.propertyKey = propertyKey;
 		this.collectionName = collectionName;
 		this.panlLpseLength = panlLpseLength;
 
-		if (this.panlLpseCode.length() != panlLpseLength) {
+		if (this.lpseCode.length() != panlLpseLength) {
 			throw new PanlServerException(propertyKey + " has invalid lpse length of " + lpseCode.length() + " is of invalid length - should be " + panlLpseLength);
 		}
 	}
 
 	public void logDetails() {
-		getLogger().info("[{}] [{}] Mapping Solr field name '{}' to panl key '{}', LPSE length {}",
+		getLogger().info("[{}] [{}] Mapping Solr field name '{}' to panl key '{}', LPSE length {}, isOrFacet: {}, isRangeFacet: {}",
 				collectionName,
 				this.getClass().getSimpleName(),
 				solrFieldName,
-				panlLpseCode,
-				panlLpseLength);
+				lpseCode,
+				panlLpseLength,
+				isOrFacet,
+				isRangeFacet);
 	}
 
-	protected void populateFacetOr(Properties properties, String lpseCode) {
+	protected void populateFacetOr() {
 		this.isOrFacet = properties.getProperty(PROPERTY_KEY_PANL_OR_FACET + lpseCode, "false").equalsIgnoreCase("true");
 		if (this.isOrFacet) {
 			String propertyFacetMinCount = properties.getProperty(PROPERTY_KEY_SOLR_FACET_MIN_COUNT, null);
@@ -128,21 +135,21 @@ public abstract class BaseField {
 		}
 	}
 
-	protected void populateBooleanReplacements(Properties properties, String lpseCode) {
+	protected void populateBooleanReplacements() {
 		// finally - we are going to look at the replacement - but only if there
 		// is a type of solr.BoolField and values are actually assigned
 
-		populateSolrFieldType(properties, lpseCode);
+		populateSolrFieldType();
 
 		if (null != solrFieldType && solrFieldType.equals("solr.BoolField")) {
-			this.booleanTrueReplacement = properties.getProperty("panl.bool." + panlLpseCode + ".true", null);
+			this.booleanTrueReplacement = properties.getProperty("panl.bool." + this.lpseCode + ".true", null);
 			if (null != this.booleanTrueReplacement) {
 				hasBooleanTrueReplacement = true;
 			} else {
 				this.booleanTrueReplacement = BOOLEAN_TRUE_VALUE;
 			}
 
-			this.booleanFalseReplacement = properties.getProperty("panl.bool." + panlLpseCode + ".false", null);
+			this.booleanFalseReplacement = properties.getProperty("panl.bool." + this.lpseCode + ".false", null);
 			if (null != this.booleanFalseReplacement) {
 				hasBooleanFalseReplacement = true;
 			} else {
@@ -157,7 +164,7 @@ public abstract class BaseField {
 		}
 	}
 
-	protected void populateSolrFieldType(Properties properties, String lpseCode) {
+	protected void populateSolrFieldType() {
 		if (null == this.solrFieldType) {
 			this.solrFieldType = properties.getProperty(PROPERTY_KEY_PANL_TYPE + lpseCode);
 			switch (this.solrFieldType) {
@@ -175,14 +182,27 @@ public abstract class BaseField {
 		}
 	}
 
-	protected void populatePanlAndSolrFieldNames(Properties properties, String lpseCode) {
+	protected void populateRanges() {
+		this.isRangeFacet =  properties.getProperty("panl.range." + lpseCode, "false").equals("true");
+	}
+
+	/**
+	 * <p>Populate the names for both Solr and Panl. THe Solr name is the field
+	 * name.  THe Panl name is either set, or will default to the Solr field
+	 * name.</p>
+	 *
+	 * <p>The Panl name can be set to any string and can be little nicer than the
+	 * Solr field name.</p>
+	 *
+	 */
+	protected void populatePanlAndSolrFieldNames() {
 		this.solrFieldName = properties.getProperty(PROPERTY_KEY_PANL_FACET + lpseCode);
 
 		if (null == this.solrFieldName) {
 			this.solrFieldName = properties.getProperty(PROPERTY_KEY_PANL_FIELD + lpseCode);
 		}
 
-		String panlFieldNameTemp = properties.getProperty(PROPERTY_KEY_PANL_NAME + panlLpseCode, null);
+		String panlFieldNameTemp = properties.getProperty(PROPERTY_KEY_PANL_NAME + this.lpseCode, null);
 		if (null == panlFieldNameTemp) {
 			this.panlFieldName = solrFieldName;
 		} else {
@@ -190,7 +210,7 @@ public abstract class BaseField {
 		}
 	}
 
-	protected void populateParamSuffixAndPrefix(Properties properties, String propertyKey) {
+	protected void populateParamSuffixAndPrefix() {
 		this.panlPrefix = properties.getProperty(propertyKey + ".prefix");
 
 		this.panlSuffix = properties.getProperty(propertyKey + ".suffix");
@@ -198,10 +218,10 @@ public abstract class BaseField {
 		checkPrefixSuffix();
 	}
 
-	protected void populateSuffixAndPrefix(Properties properties, String panlLpseCode) {
-		this.panlPrefix = properties.getProperty(PROPERTY_KEY_PANL_PREFIX + panlLpseCode);
+	protected void populateSuffixAndPrefix() {
+		this.panlPrefix = properties.getProperty(PROPERTY_KEY_PANL_PREFIX + lpseCode);
 
-		this.panlSuffix = properties.getProperty(PROPERTY_KEY_PANL_SUFFIX + panlLpseCode);
+		this.panlSuffix = properties.getProperty(PROPERTY_KEY_PANL_SUFFIX + lpseCode);
 
 		checkPrefixSuffix();
 	}
@@ -234,8 +254,8 @@ public abstract class BaseField {
 
 	public abstract Logger getLogger();
 
-	public String getPanlLpseCode() {
-		return panlLpseCode;
+	public String getLpseCode() {
+		return lpseCode;
 	}
 
 	public String getPanlFieldName() {
@@ -408,8 +428,8 @@ public abstract class BaseField {
 
 	public String getURIPath(Map<String, List<LpseToken>> panlTokenMap, CollectionProperties collectionProperties) {
 		StringBuilder sb = new StringBuilder();
-		if (panlTokenMap.containsKey(panlLpseCode)) {
-			for (LpseToken lpseToken : panlTokenMap.get(panlLpseCode)) {
+		if (panlTokenMap.containsKey(lpseCode)) {
+			for (LpseToken lpseToken : panlTokenMap.get(lpseCode)) {
 				if (lpseToken.getIsValid()) {
 					sb.append(getEncodedPanlValue(lpseToken.getValue()));
 					sb.append("/");
@@ -421,8 +441,8 @@ public abstract class BaseField {
 
 	public String getLpseCode(Map<String, List<LpseToken>> panlTokenMap, CollectionProperties collectionProperties) {
 		StringBuilder sb = new StringBuilder();
-		if (panlTokenMap.containsKey(panlLpseCode)) {
-			for (LpseToken lpseToken : panlTokenMap.get(panlLpseCode)) {
+		if (panlTokenMap.containsKey(lpseCode)) {
+			for (LpseToken lpseToken : panlTokenMap.get(lpseCode)) {
 				if (lpseToken.getIsValid()) {
 					sb.append(lpseToken.getLpseCode());
 				}
@@ -454,7 +474,7 @@ public abstract class BaseField {
 		temp.add("FIELD CONFIG [ " +
 				this.getClass().getSimpleName() +
 				" ] LPSE code '" +
-				panlLpseCode +
+				lpseCode +
 				"' Solr field name '" +
 				solrFieldName +
 				"' of type '" +
@@ -491,7 +511,7 @@ public abstract class BaseField {
 
 	public void applyToQuery(SolrQuery solrQuery, Map<String, List<LpseToken>> panlTokenMap) {
 		// no facets, no query, all is good :)
-		if (panlTokenMap.containsKey(getPanlLpseCode())) {
+		if (panlTokenMap.containsKey(getLpseCode())) {
 			applyToQueryInternal(solrQuery, panlTokenMap);
 		}
 	}

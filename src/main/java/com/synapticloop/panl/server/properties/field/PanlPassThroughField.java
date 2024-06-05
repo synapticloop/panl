@@ -40,9 +40,9 @@ public class PanlPassThroughField extends BaseField {
 	private static final Logger LOGGER = LoggerFactory.getLogger(PanlPassThroughField.class);
 
 	public PanlPassThroughField(String lpseCode, String propertyKey, Properties properties, String collectionName) throws PanlServerException {
-		super(lpseCode, propertyKey, collectionName);
+		super(lpseCode, properties, propertyKey, collectionName);
 
-		populateParamSuffixAndPrefix(properties, propertyKey);
+		populateParamSuffixAndPrefix();
 
 		logDetails();
 	}
@@ -62,7 +62,7 @@ public class PanlPassThroughField extends BaseField {
 		temp.add("FIELD CONFIG [ " +
 				this.getClass().getSimpleName() +
 				" ] LPSE code '" +
-				panlLpseCode +
+				lpseCode +
 				"'.");
 
 		return (temp);
