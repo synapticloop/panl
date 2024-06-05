@@ -220,8 +220,12 @@ function addAvailableFilters(availableArray) {
       value.encoded +
       facet.uris.after +
       "\">[add]</a>&nbsp;" +
-			decodeURI(value.encoded).replaceAll("+", " ").replaceAll("%2B", "+") +
-			"&nbsp;(" + value.count + ")</li>";
+			decodeURI(value.encoded).replaceAll("+", " ").replaceAll("%2B", "+");
+
+			if(!facet.is_or_facet) {
+				innerUl += "&nbsp;(" + value.count + ")";
+			}
+			innerUl += "</li>";
 		}
 		innerUl += "</ul>"
 		available.append("<li><strong>" + facet.name + " <em>(" + facet.panl_code + ")</em></strong>" + innerUl + "</li>");
