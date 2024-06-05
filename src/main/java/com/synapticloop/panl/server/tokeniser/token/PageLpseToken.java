@@ -68,22 +68,6 @@ public class PageLpseToken extends LpseToken {
 		this.pageNum = pageNumTemp;
 	}
 
-	@Override public String getUriPathComponent() {
-		return (getURIComponentForPageNumber(this.pageNum));
-	}
-
-	@Override public String getLpseComponent() {
-		return "";
-	}
-
-	private String getURIComponentForPageNumber(int pageNum) {
-		if(isValid) {
-			return (collectionProperties.getLpseField(lpseCode).getEncodedPanlValue(Integer.toString(pageNum)) + "/");
-		} else {
-			return("");
-		}
-	}
-
 	@Override public String explain() {
 		return ("PANL " +
 				(this.isValid ? "[  VALID  ]" : "[ INVALID ]") +
