@@ -267,15 +267,13 @@ public class CollectionRequestHandler {
 		// canonical URI
 		for (String key : panlTokenMap.keySet()) {
 			List<LpseToken> lpseTokenTemp = panlTokenMap.get(key);
-			lpseTokenTemp.sort(new Comparator<LpseToken>() {
-				@Override public int compare(LpseToken o1, LpseToken o2) {
-					if(!o1.getIsValid() || !o2.getIsValid()) {
-						// either one is invalid and won't be sent through or generate a
-						// canonical URI
-						return(0);
-					} else {
-						return(o1.getValue().compareTo(o2.getValue()));
-					}
+			lpseTokenTemp.sort((o1, o2) -> {
+				if(!o1.getIsValid() || !o2.getIsValid()) {
+					// either one is invalid and won't be sent through or generate a
+					// canonical URI
+					return(0);
+				} else {
+					return(o1.getValue().compareTo(o2.getValue()));
 				}
 			});
 		}
