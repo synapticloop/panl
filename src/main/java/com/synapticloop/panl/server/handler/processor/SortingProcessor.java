@@ -6,7 +6,7 @@ package com.synapticloop.panl.server.handler.processor;
  * https://github.com/synapticloop/panl
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
- * of this software and associated documentation files (the “Software”), to
+ * of this software and associated documentation files (the "Software"), to
  * deal in the Software without restriction, including without limitation the
  * rights to use, copy, modify, merge, publish, distribute, sublicense, and/or
  * sell copies of the Software, and to permit persons to whom the Software is
@@ -15,7 +15,7 @@ package com.synapticloop.panl.server.handler.processor;
  * The above copyright notice and this permission notice shall be included in
  * all copies or substantial portions of the Software.
  *
- * THE SOFTWARE IS PROVIDED “AS IS”, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
  * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
  * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
@@ -25,6 +25,7 @@ package com.synapticloop.panl.server.handler.processor;
  */
 
 import com.synapticloop.panl.server.properties.CollectionProperties;
+import com.synapticloop.panl.server.properties.field.BaseField;
 import com.synapticloop.panl.server.tokeniser.token.LpseToken;
 import org.json.JSONObject;
 
@@ -42,7 +43,7 @@ public class SortingProcessor extends Processor {
 	 * unlike other LPSE codes - these are a finite, set number of sort fields
 	 * which are defined by the panl.sort.fields property.</p>
 	 *
-	 * @param panlTokenMap
+	 * @param panlTokenMap the map of LPSE codes to list of panl tokens
 	 *
 	 * @return The JSON object with the keys and relevant URI paths
 	 */
@@ -55,23 +56,17 @@ public class SortingProcessor extends Processor {
 		StringBuilder lpseUri = new StringBuilder("/");
 		StringBuilder lpse = new StringBuilder();
 
-		for (String lpseOrder : collectionProperties.getLpseOrder()) {
-			// because the sort order does not have any URI path component, we can
-			// just add the URI components to it safely
-			if (!panlLpseCode.equals(lpseOrder)) {
-				// keep on adding things
-				if (panlTokenMap.containsKey(lpseOrder)) {
-					for (LpseToken token : panlTokenMap.get(lpseOrder)) {
-						lpseUri.append(token.getResetUriPathComponent());
-						// however we do not want to add the lpse component
-						lpse.append(token.getLpseComponent());
-					}
-				}
+		for (BaseField lpseField : collectionProperties.getLpseFields()) {
+			String thisLpseCode = lpseField.getPanlLpseCode();
+			if(!panlLpseCode.equals(thisLpseCode)) {
+				lpseUri.append(lpseField.getResetLpseCode(panlTokenMap, collectionProperties));
+				lpse.append(lpseField.getPanlLpseCode());
 			} else {
 				before = lpse.toString();
 				lpse.setLength(0);
 			}
 		}
+
 		lpse.append("/");
 
 		// This is the default sorting order (by relevance)
