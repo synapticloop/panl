@@ -114,6 +114,7 @@ public class AvailableProcessor extends Processor {
 							shouldAdd = false;
 						}
 					}
+
 					// if we have an or Facet and this is an or facet, then we keep all
 					// values, otherwise we strip out the xero values
 					if(collectionProperties.getHasOrFacetFields()) {
@@ -124,7 +125,6 @@ public class AvailableProcessor extends Processor {
 							}
 						}
 					}
-
 
 					// also, if the count of the number of found results is the same as
 					// the number of the count of the facet - then we may not need to

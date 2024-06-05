@@ -33,6 +33,9 @@ import java.util.List;
 
 public class QueryOperandProcessor extends Processor {
 
+	public static final String JSON_KEY_OR = "OR";
+	public static final String JSON_KEY_AND = "AND";
+
 	public QueryOperandProcessor(CollectionProperties collectionProperties) {
 		super(collectionProperties);
 	}
@@ -60,8 +63,8 @@ public class QueryOperandProcessor extends Processor {
 		// This is the default sorting order (by relevance)
 		String finalBefore = lpseUri + before + collectionProperties.getPanlParamQueryOperand();
 
-		jsonObject.put("OR", finalBefore + "-" + lpseCode);
-		jsonObject.put("AND", finalBefore + "+" + lpseCode);
+		jsonObject.put(JSON_KEY_OR, finalBefore + "-" + lpseCode);
+		jsonObject.put(JSON_KEY_AND, finalBefore + "+" + lpseCode);
 
 		return (jsonObject);
 	}

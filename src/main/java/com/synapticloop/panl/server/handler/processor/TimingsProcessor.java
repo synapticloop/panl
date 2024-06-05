@@ -32,6 +32,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
+/**
+ * <p>Process the timings object.</p>
+ *
+ * @author synapticloop
+ */
 public class TimingsProcessor extends Processor {
 	public static final String PANL_PARSE_REQUEST_TIME = "panl_parse_request_time";
 	public static final String PANL_BUILD_REQUEST_TIME = "panl_build_request_time";
@@ -45,25 +50,25 @@ public class TimingsProcessor extends Processor {
 
 	public JSONObject processToObject(Map<String, List<LpseToken>> panlTokenMap, Object... params) {
 
-	long parseRequestNanos = (Long)params[0];
-	long buildRequestNanos = (Long)params[1];
-	long sendAndReceiveNanos = (Long)params[2];
-	long buildResponse = (Long)params[3];
+		long parseRequestNanos = (Long) params[0];
+		long buildRequestNanos = (Long) params[1];
+		long sendAndReceiveNanos = (Long) params[2];
+		long buildResponse = (Long) params[3];
 
-	JSONObject timingsObject = new JSONObject();
+		JSONObject timingsObject = new JSONObject();
 
-	// add in some statistics
-		timingsObject.put(PANL_PARSE_REQUEST_TIME,TimeUnit.NANOSECONDS.toMillis(parseRequestNanos));
-		timingsObject.put(PANL_BUILD_REQUEST_TIME,TimeUnit.NANOSECONDS.toMillis(buildRequestNanos));
-		timingsObject.put(PANL_SEND_REQUEST_TIME,TimeUnit.NANOSECONDS.toMillis(sendAndReceiveNanos));
+		// add in some statistics
+		timingsObject.put(PANL_PARSE_REQUEST_TIME, TimeUnit.NANOSECONDS.toMillis(parseRequestNanos));
+		timingsObject.put(PANL_BUILD_REQUEST_TIME, TimeUnit.NANOSECONDS.toMillis(buildRequestNanos));
+		timingsObject.put(PANL_SEND_REQUEST_TIME, TimeUnit.NANOSECONDS.toMillis(sendAndReceiveNanos));
 
-		timingsObject.put(PANL_BUILD_RESPONSE_TIME,TimeUnit.NANOSECONDS.toMillis(buildResponse));
-		timingsObject.put(PANL_TOTAL_TIME,TimeUnit.NANOSECONDS.toMillis(
-	parseRequestNanos +
-	buildRequestNanos +
-	sendAndReceiveNanos +
-	buildResponse
+		timingsObject.put(PANL_BUILD_RESPONSE_TIME, TimeUnit.NANOSECONDS.toMillis(buildResponse));
+		timingsObject.put(PANL_TOTAL_TIME, TimeUnit.NANOSECONDS.toMillis(
+				parseRequestNanos +
+						buildRequestNanos +
+						sendAndReceiveNanos +
+						buildResponse
 		));
-		return(timingsObject);
-}
+		return (timingsObject);
+	}
 }

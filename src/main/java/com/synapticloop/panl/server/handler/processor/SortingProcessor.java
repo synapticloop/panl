@@ -34,6 +34,13 @@ import java.util.Map;
 
 public class SortingProcessor extends Processor {
 
+	public static final String JSON_KEY_NAME = "name";
+	public static final String JSON_KEY_REPLACE_DESC = "replace_desc";
+	public static final String JSON_KEY_RELEVANCE = "relevance";
+	public static final String JSON_VALUE_RELEVANCE = "Relevance";
+	public static final String JSON_KEY_REPLACE_ASC = "replace_asc";
+	public static final String JSON_KEY_FIELDS = "fields";
+
 	public SortingProcessor(CollectionProperties collectionProperties) {
 		super(collectionProperties);
 	}
@@ -75,9 +82,9 @@ public class SortingProcessor extends Processor {
 		String finalBefore = lpseUri + before + collectionProperties.getPanlParamSort();
 
 		JSONObject relevanceSort = new JSONObject();
-		relevanceSort.put("name", "Relevance");
-		relevanceSort.put("replace_desc", finalBefore + "-" + lpse);
-		jsonObject.put("relevance", relevanceSort);
+		relevanceSort.put(JSON_KEY_NAME, JSON_VALUE_RELEVANCE);
+		relevanceSort.put(JSON_KEY_REPLACE_DESC, finalBefore + "-" + lpse);
+		jsonObject.put(JSON_KEY_RELEVANCE, relevanceSort);
 
 		// These are the defined sort fields
 		JSONObject sortFieldsObject = new JSONObject();
@@ -86,14 +93,14 @@ public class SortingProcessor extends Processor {
 			String sortFieldName = collectionProperties.getSolrFieldNameFromPanlLpseCode(sortFieldLpseCode);
 			if (null != sortFieldName) {
 				JSONObject sortObject = new JSONObject();
-				sortObject.put("name", collectionProperties.getPanlNameFromPanlCode(sortFieldLpseCode));
-				sortObject.put("replace_desc", finalBefore + sortFieldLpseCode + "-" + lpse);
-				sortObject.put("replace_asc", finalBefore + sortFieldLpseCode + "+" + lpse);
+				sortObject.put(JSON_KEY_NAME, collectionProperties.getPanlNameFromPanlCode(sortFieldLpseCode));
+				sortObject.put(JSON_KEY_REPLACE_DESC, finalBefore + sortFieldLpseCode + "-" + lpse);
+				sortObject.put(JSON_KEY_REPLACE_ASC, finalBefore + sortFieldLpseCode + "+" + lpse);
 				sortFieldsObject.put(sortFieldName, sortObject);
 			}
 		}
 
-		jsonObject.put("fields", sortFieldsObject);
+		jsonObject.put(JSON_KEY_FIELDS, sortFieldsObject);
 
 		return (jsonObject);
 	}

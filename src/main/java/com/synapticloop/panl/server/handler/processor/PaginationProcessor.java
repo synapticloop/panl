@@ -37,6 +37,16 @@ import java.util.Map;
 
 public class PaginationProcessor extends Processor {
 
+	public static final String JSON_KEY_NUM_PER_PAGE = "num_per_page";
+	public static final String JSON_KEY_PAGE_NUM = "page_num";
+	public static final String JSON_KEY_NUM_PAGES = "num_pages";
+	public static final String JSON_KEY_BEFORE = "before";
+	public static final String JSON_KEY_AFTER = "after";
+	public static final String JSON_KEY_NEXT = "next";
+	public static final String JSON_KEY_PREVIOUS = "previous";
+	public static final String JSON_KEY_PAGE_URIS = "page_uris";
+	public static final String JSON_KEY_NUM_PER_PAGE_URIS = "num_per_page_uris";
+
 	public PaginationProcessor(CollectionProperties collectionProperties) {
 		super(collectionProperties);
 	}
@@ -65,13 +75,13 @@ public class PaginationProcessor extends Processor {
 
 		long numFound = (Long)params[0];
 		JSONObject paginationObject = new JSONObject();
-		paginationObject.put("num_per_page", numPerPage);
-		paginationObject.put("page_num", pageNumber);
+		paginationObject.put(JSON_KEY_NUM_PER_PAGE, numPerPage);
+		paginationObject.put(JSON_KEY_PAGE_NUM, pageNumber);
 		long numPages = numFound / numPerPage;
 		if (numFound % numPerPage != 0) {
 			numPages++;
 		}
-		paginationObject.put("num_pages", numPages);
+		paginationObject.put(JSON_KEY_NUM_PAGES, numPages);
 
 		StringBuilder uriPath = new StringBuilder("/");
 		StringBuilder lpseCode = new StringBuilder();
@@ -84,7 +94,7 @@ public class PaginationProcessor extends Processor {
 				uriPath.append(baseField.getURIPath(panlTokenMap, collectionProperties));
 				lpseCode.append(baseField.getLpseCode(panlTokenMap, collectionProperties));
 			} else {
-				pageUris.put("before", uriPath + baseField.getPanlPrefix());
+				pageUris.put(JSON_KEY_BEFORE, uriPath + baseField.getPanlPrefix());
 				// clear the sting builder
 				lpseCode.append(baseField.getPanlLpseCode());
 				uriPath.setLength(0);
@@ -94,19 +104,19 @@ public class PaginationProcessor extends Processor {
 		BaseField panlPageNumField = collectionProperties.getLpseField(panlParamPageLpseCode);
 
 		String afterValue = panlPageNumField.getPanlSuffix() + "/" + uriPath + lpseCode + "/";
-		pageUris.put("after", afterValue);
+		pageUris.put(JSON_KEY_AFTER, afterValue);
 
 		if (pageNumber < numPages) {
-			pageUris.put("next", pageUris.getString("before") + (pageNumber + 1) + pageUris.getString("after"));
+			pageUris.put(JSON_KEY_NEXT, pageUris.getString(JSON_KEY_BEFORE) + (pageNumber + 1) + pageUris.getString(JSON_KEY_AFTER));
 		}
 
 		if (pageNumber > 1) {
-			pageUris.put("previous", pageUris.getString("before") + (pageNumber - 1) + pageUris.getString("after"));
+			pageUris.put(JSON_KEY_PREVIOUS, pageUris.getString(JSON_KEY_BEFORE) + (pageNumber - 1) + pageUris.getString(JSON_KEY_AFTER));
 		}
 
-		paginationObject.put("page_uris", pageUris);
+		paginationObject.put(JSON_KEY_PAGE_URIS, pageUris);
 
-		paginationObject.put("num_per_page_uris",
+		paginationObject.put(JSON_KEY_NUM_PER_PAGE_URIS,
 				getReplacementResetURIObject(
 						collectionProperties.getPanlParamNumRows(),
 						panlTokenMap,
@@ -142,7 +152,7 @@ public class PaginationProcessor extends Processor {
 				uriPath.append(baseField.getResetUriPath(panlTokenMap, collectionProperties));
 				lpseCode.append(baseField.getResetLpseCode(panlTokenMap, collectionProperties));
 			} else {
-				pageUris.put("before", uriPath + baseField.getPanlPrefix());
+				pageUris.put(JSON_KEY_BEFORE, uriPath + baseField.getPanlPrefix());
 				// clear the sting builder
 				lpseCode.append(baseField.getPanlLpseCode());
 				uriPath.setLength(0);
@@ -151,7 +161,7 @@ public class PaginationProcessor extends Processor {
 
 		BaseField baseField = collectionProperties.getLpseField(replaceLpseCode);
 
-		pageUris.put("after", baseField.getPanlSuffix() + "/" + uriPath + lpseCode + "/");
+		pageUris.put(JSON_KEY_AFTER, baseField.getPanlSuffix() + "/" + uriPath + lpseCode + "/");
 
 		return (pageUris);
 	}

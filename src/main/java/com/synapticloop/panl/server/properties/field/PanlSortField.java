@@ -115,7 +115,10 @@ public class PanlSortField extends BaseField {
 	public void applyToQueryInternal(SolrQuery solrQuery, Map<String, List<LpseToken>> panlTokenMap) {
 		if(panlTokenMap.containsKey(panlLpseCode)) {
 			SortLpseToken lpseToken = (SortLpseToken)panlTokenMap.get(panlLpseCode).get(0);
-			solrQuery.addSort(lpseToken.getSolrFacetField(), lpseToken.getSortOrder());
+			if(!lpseToken.getPanlFacetCode().isBlank()) {
+				// this will be using the default relevance sort field
+				solrQuery.addSort(lpseToken.getSolrFacetField(), lpseToken.getSortOrder());
+			}
 		}
 	}
 }
