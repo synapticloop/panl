@@ -45,8 +45,15 @@ import java.util.Map;
  * @author synapticloop
  */
 public class ResourceHelper {
-	public static final String URL_PANL_RESULTS_VIEWER = "/panl-results-viewer/";
 	public static final String URL_PANL_RESULTS_VIEWER_SUBSET = "/panl-results-viewer";
+
+	public static final String JSON_KEY_ERROR = "error";
+	public static final String JSON_KEY_STATUS = "status";
+	public static final String JSON_KEY_MESSAGE = "message";
+	public static final String JSON_KEY_VALID_URLS = "valid_urls";
+
+	public static final String JSON_VALUE_MESSAGE_404 = "Not found";
+	public static final String JSON_VALUE_MESSAGE_500 = "internal server error";
 
 	public static final ContentType CONTENT_TYPE_JSON = ContentType.create("application/json", "UTF-8");
 	public static final ContentType CONTENT_TYPE_TEXT = ContentType.create("text/plain", "UTF-8");
@@ -80,15 +87,15 @@ public class ResourceHelper {
 				reader.close();
 			} else {
 				JSONObject jsonObject = new JSONObject();
-				jsonObject.put("error", true);
-				jsonObject.put("message", "Could not find the resourcePath '" + resourcePath + "'");
+				jsonObject.put(JSON_KEY_ERROR, true);
+				jsonObject.put(JSON_KEY_MESSAGE, "Could not find the resourcePath '" + resourcePath + "'");
 				response.setStatusCode(HttpStatus.SC_NOT_FOUND);
 				response.setEntity(new StringEntity(jsonObject.toString(), CONTENT_TYPE_JSON));
 			}
 		} catch (IOException ignored) {
 			JSONObject jsonObject = new JSONObject();
-			jsonObject.put("error", true);
-			jsonObject.put("message", "Could not serve the resourcePath '" + resourcePath + "'");
+			jsonObject.put(JSON_KEY_ERROR, true);
+			jsonObject.put(JSON_KEY_MESSAGE, "Could not serve the resourcePath '" + resourcePath + "'");
 			response.setStatusCode(HttpStatus.SC_INTERNAL_SERVER_ERROR);
 			response.setEntity(new StringEntity(jsonObject.toString(), CONTENT_TYPE_JSON));
 		} finally {

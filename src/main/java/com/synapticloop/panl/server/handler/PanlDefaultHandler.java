@@ -28,7 +28,6 @@ import com.synapticloop.panl.server.properties.PanlProperties;
 import org.apache.http.HttpRequest;
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
-import org.apache.http.entity.ContentType;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.protocol.HttpContext;
 import org.apache.http.protocol.HttpRequestHandler;
@@ -36,6 +35,8 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.util.List;
+
+import static com.synapticloop.panl.server.handler.results.util.ResourceHelper.*;
 
 /**
  * <p>This is the default handler for any URLs that are not bound to a
@@ -54,12 +55,8 @@ import java.util.List;
  * </pre>
  */
 public class PanlDefaultHandler implements HttpRequestHandler {
-	public static final ContentType CONTENT_TYPE_JSON = ContentType.create("application/json", "UTF-8");
-	public static final String JSON_KEY_ERROR = "error";
-	public static final String JSON_KEY_STATUS = "status";
-	public static final String JSON_KEY_404_MESSAGE = "message";
-	public static final String JSON_KEY_VALID_URLS = "valid_urls";
-	public static final String JSON_VALUE_NOT_FOUND = "Not Found";
+	public static final String JSON_VALUE_MESSAGE = "Could not find a PANL request url, see 'valid_urls' array.";
+
 	private static String json404ErrorString;
 
 	/**
@@ -70,23 +67,23 @@ public class PanlDefaultHandler implements HttpRequestHandler {
 	 *
 	 * @param panlProperties The panl properties
 	 * @param collectionRequestHandlers The collection request handlers to iterate
-	 *        through to build the static response.
+	 * 		through to build the static response.
 	 */
 	public PanlDefaultHandler(PanlProperties panlProperties, List<CollectionRequestHandler> collectionRequestHandlers) {
 		JSONObject jsonObject = new JSONObject();
 		jsonObject.put(JSON_KEY_ERROR, true);
-		jsonObject.put(JSON_KEY_STATUS, 404);
+		jsonObject.put(JSON_KEY_STATUS, HttpStatus.SC_NOT_FOUND);
 
 		// do we want verbose messaging for 404 http status codes
-		if(panlProperties.getUseVerbose404Messages()) {
-			jsonObject.put(JSON_KEY_404_MESSAGE, "Could not find a PANL request url, see 'valid_urls' array.");
+		if (panlProperties.getUseVerbose404Messages()) {
+			jsonObject.put(JSON_KEY_MESSAGE, JSON_VALUE_MESSAGE);
 			JSONArray validUrls = new JSONArray();
 			for (CollectionRequestHandler collectionRequestHandler : collectionRequestHandlers) {
 				validUrls.put("/" + collectionRequestHandler.getCollectionName() + "/*");
 			}
 			jsonObject.put(JSON_KEY_VALID_URLS, validUrls);
 		} else {
-			jsonObject.put(JSON_KEY_404_MESSAGE, JSON_VALUE_NOT_FOUND);
+			jsonObject.put(JSON_KEY_MESSAGE, JSON_VALUE_MESSAGE_404);
 		}
 
 		json404ErrorString = jsonObject.toString();
@@ -103,7 +100,8 @@ public class PanlDefaultHandler implements HttpRequestHandler {
 	@Override public void handle(HttpRequest request, HttpResponse response, HttpContext context) {
 		response.setStatusCode(HttpStatus.SC_NOT_FOUND);
 		response.setEntity(
-				new StringEntity(json404ErrorString,
+				new StringEntity(
+						json404ErrorString,
 						CONTENT_TYPE_JSON));
 	}
 }

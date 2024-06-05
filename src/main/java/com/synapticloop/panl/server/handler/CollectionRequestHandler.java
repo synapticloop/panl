@@ -29,11 +29,15 @@ import com.synapticloop.panl.generator.bean.Collection;
 import com.synapticloop.panl.server.client.PanlClient;
 import com.synapticloop.panl.server.handler.helper.CollectionHelper;
 import com.synapticloop.panl.server.handler.processor.*;
+import com.synapticloop.panl.server.handler.results.util.ResourceHelper;
 import com.synapticloop.panl.server.properties.CollectionProperties;
 import com.synapticloop.panl.server.properties.PanlProperties;
 import com.synapticloop.panl.server.properties.field.BaseField;
 import com.synapticloop.panl.server.tokeniser.PanlTokeniser;
-import com.synapticloop.panl.server.tokeniser.token.*;
+import com.synapticloop.panl.server.tokeniser.token.LpseToken;
+import com.synapticloop.panl.server.tokeniser.token.NumRowsLpseToken;
+import com.synapticloop.panl.server.tokeniser.token.PageLpseToken;
+import com.synapticloop.panl.server.tokeniser.token.QueryLpseToken;
 import org.apache.solr.client.solrj.SolrClient;
 import org.apache.solr.client.solrj.SolrQuery;
 import org.apache.solr.client.solrj.response.QueryResponse;
@@ -54,6 +58,16 @@ public class CollectionRequestHandler {
 	private static final Logger LOGGER = LoggerFactory.getLogger(CollectionRequestHandler.class);
 
 	public static final String SOLR_PARAM_Q_OP = "q.op";
+
+	public static final String JSON_KEY_AVAILABLE = "available";
+	public static final String JSON_KEY_ACTIVE = "active";
+	public static final String JSON_KEY_PAGINATION = "pagination";
+	public static final String JSON_KEY_TIMINGS = "timings";
+	public static final String JSON_KEY_SORTING = "sorting";
+	public static final String JSON_KEY_QUERY_OPERAND = "query_operand";
+	public static final String JSON_KEY_FIELDS = "fields";
+	public static final String JSON_KEY_CANONICAL_URI = "canonical_uri";
+	public static final String JSON_KEY_PANL = "panl";
 
 	private final String collectionName;
 	private final CollectionProperties collectionProperties;
@@ -255,19 +269,19 @@ public class CollectionRequestHandler {
 		SolrDocumentList solrDocuments = (SolrDocumentList) response.getResponse().get("response");
 		long numFound = solrDocuments.getNumFound();
 
-		panlObject.put("available", availableProcessor.processToArray(panlTokenMap, response));
-		panlObject.put("active", activeProcessor.processToObject(panlTokenMap));
-		panlObject.put("pagination", paginationProcessor.processToObject(panlTokenMap, numFound ));
-		panlObject.put("timings", timingsProcessor.processToObject(panlTokenMap, parseRequestNanos, buildRequestNanos, sendAndReceiveNanos, System.nanoTime() - startNanos));
-		panlObject.put("sorting", sortingProcessor.processToObject(panlTokenMap));
-		panlObject.put("query_operand", queryOperandProcessor.processToObject(panlTokenMap));
-		panlObject.put("fields", fieldsProcessor.processToObject(panlTokenMap));
-		panlObject.put("canonical_uri", canonicalURIProcessor.processToString(panlTokenMap));
+		panlObject.put(JSON_KEY_AVAILABLE, availableProcessor.processToArray(panlTokenMap, response));
+		panlObject.put(JSON_KEY_ACTIVE, activeProcessor.processToObject(panlTokenMap));
+		panlObject.put(JSON_KEY_PAGINATION, paginationProcessor.processToObject(panlTokenMap, numFound ));
+		panlObject.put(JSON_KEY_TIMINGS, timingsProcessor.processToObject(panlTokenMap, parseRequestNanos, buildRequestNanos, sendAndReceiveNanos, System.nanoTime() - startNanos));
+		panlObject.put(JSON_KEY_SORTING, sortingProcessor.processToObject(panlTokenMap));
+		panlObject.put(JSON_KEY_QUERY_OPERAND, queryOperandProcessor.processToObject(panlTokenMap));
+		panlObject.put(JSON_KEY_FIELDS, fieldsProcessor.processToObject(panlTokenMap));
+		panlObject.put(JSON_KEY_CANONICAL_URI, canonicalURIProcessor.processToString(panlTokenMap));
 
-		solrJsonObject.put("error", false);
+		solrJsonObject.put(ResourceHelper.JSON_KEY_ERROR, false);
 
 		// last thing - we want to put the panl to solr field mappings in
-		solrJsonObject.put("panl", panlObject);
+		solrJsonObject.put(JSON_KEY_PANL, panlObject);
 
 		return (solrJsonObject.toString());
 	}

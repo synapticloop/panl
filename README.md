@@ -6,7 +6,10 @@ Usable, but not released... yet...
 
 **BECAUSE**
 
-`/Caran+d'Ache/true/Black/bDW/` looks nicer than
+`/Caran+d'Ache/true/Black/bDW/` 
+
+looks A LOT nicer than
+
 `q=*:*&facet.mincount=1&rows=10&facet.field=lead_size_indicator&facet.field=grip_material&facet.field=colours&facet.field=nib_shape&facet.field=diameter&facet.field=cap_shape&facet.field=brand&facet.field=mechanism_type&facet.field=length&facet.field=hardness_indicator&facet.field=grip_type&facet.field=cap_material&facet.field=lead_grade_indicator&facet.field=tubing_material&facet.field=in_built_sharpener&facet.field=disassemble&facet.field=category&facet.field=body_shape&facet.field=clip_material&facet.field=mechanism_material&facet.field=lead_length&facet.field=body_material&facet.field=in_built_eraser&facet.field=grip_shape&facet.field=relative_weight&facet.field=name&facet.field=nib_material&facet.field=weight&facet.field=variants&facet=true&fq=brand:"Caran+d'Ache"&fq=disassemble:"true"&fq=colours:"Black"&q.op=AND`
 
 # Why Synapticloop Panl?
@@ -14,7 +17,25 @@ Panl was designed to convert rather long and unfriendly (both in human readable 
 
 Working with a Solr schema, the Panl configuration files translate unwieldy URI parameters into concise and precise URI paths.
 
+<img src="src/docs/panl-features.png">
+
+1. **A list of available Collections and FieldSets (CaFS) URIs** that Panl is configured to serve.  CaFS URI paths enable different Solr fields to be returned with the same search parameters.
+1. **A textual representation of the CaFS URI** path that the Panl Results Viewer web application is using.
+1. **The canonical URI path** (which is returned with the Panl results JSON object) - this is important as multiple Panl LPSE URI paths will return exactly the same results - this is the unique URI path for this result set.
+1. **The search query box**, by default, Panl responds to the same parameter name as The Solr server - i.e. 'q'.  This can be configured to be a different value should you choose.
+1. **Active filters** - either queries or selected facets that are currently limiting the results - the [Remove] link is the URI path that will remove this facet from the results.
+1. **Available filters** - additional facets that can further refine and limit the results.
+1. **Number of results found**, and whether this is an exact match.
+1. **Query operand** - whether the query is OR, or AND, this affects the search query, not the faceting - i.e. the Solr server q.op parameter.
+1. **Page information**, the number of pages, how many results are shown per page, and how many results are shown on this page.
+1. **Sorting options** - Whether to sort by relevance (the default) or by other configured sorting options with ascending and descending options available.  Any Solr field can be configured to be used as a sorting option.
+1. **Pagination options** - the Panl server returns all information needed to build a pagination system, number of results, number of results shown per page and the current page number.
+1. **Number of results per page**. Note: The values 3,5,10 are just examples - this can be set to any positive integer number.
+1. **Timing information** about how long the Panl server took to build and return the results (including how much time the Solr server took to find and return the results).
+1. **The results** - the fields that are shown are configured by the CaFS.
+
 ## Additional Panl Niceties
+
 1. **PREFIXES and SUFFIXES** - Panl can also add prefixes and suffixes to the URI path to increase readability, for example, with configuration.  For the example LPSE URI path of `/Caran+d'Ache/true/Black/bDW/` could also have the brand Solr field prefixed with ‘Manufactured By ’ and suffixed by ‘ Company’ to produce the URI path
 `/Manufactured+By+The+Caran+d'Ache+Company/true/Black/bDW/`
 
@@ -89,7 +110,7 @@ SOLR_INSTALL_DIRECTORY\bin\solr start -e cloud -noprompt
 This will set up the mechanical pencil collection and schema so that the data can be indexed.
 Command(s)
 ```shell
-SOLR_INSTALL_DIRECTORY\bin\solr create -c mechanical-pencils -d PANL_INSTALL_DIRECTORY\mechanical-pencils\ -s 2 -rf 2
+SOLR_INSTALL_DIRECTORY\bin\solr create -c mechanical-pencils -d PANL_INSTALL_DIRECTORY\examples\mechanical-pencils\ -s 2 -rf 2
 ```
 
 ## 3. Index the mechanical pencils data
@@ -98,7 +119,7 @@ This will index all mechanical pencil data into the Solr instance.
 Command(s)
 
 ```shell
-SOLR_INSTALL_DIRECTORY\bin\solr	post -c mechanical-pencils PANL_INSTALL_DIRECTORY\mechanical-pencils\data\pencils.json
+SOLR_INSTALL_DIRECTORY\bin\solr	post -c mechanical-pencils PANL_INSTALL_DIRECTORY\examples\mechanical-pencils\data\pencils.json
 ```
 
 ## 4. Start the Panl Server
@@ -135,7 +156,7 @@ SOLR_INSTALL_DIRECTORY/bin/solr start -e cloud -noprompt
 Set up the schema so that the data can be indexed.
 Command(s)
 ```shell
-SOLR_INSTALL_DIRECTORY/bin/solr	create -c mechanical-pencils -d PANL_INSTALL_DIRECTORY/mechanical-pencils/ -s 2 -rf 2
+SOLR_INSTALL_DIRECTORY/bin/solr	create -c mechanical-pencils -d PANL_INSTALL_DIRECTORY/examples/mechanical-pencils/conf/ -s 2 -rf 2
 ```
 
 ## 3. Index the mechanical pencils data
@@ -143,7 +164,7 @@ SOLR_INSTALL_DIRECTORY/bin/solr	create -c mechanical-pencils -d PANL_INSTALL_DIR
 Index all of the data into the Solr instance
 Command(s)
 ```shell
-SOLR_INSTALL_DIRECTORY/bin/solr	post -c mechanical-pencils PANL_INSTALL_DIRECTORY/mechanical-pencils/data/pencils.json
+SOLR_INSTALL_DIRECTORY/bin/solr	post -c mechanical-pencils PANL_INSTALL_DIRECTORY/examples/mechanical-pencils/data/pencils.json
 ```
 
 ## 4. Start the Panl Server

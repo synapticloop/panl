@@ -24,15 +24,17 @@ package com.synapticloop.panl.server.handler;
  *  IN THE SOFTWARE.
  */
 
+import com.synapticloop.panl.server.handler.results.util.ResourceHelper;
 import com.synapticloop.panl.server.properties.PanlProperties;
 import org.apache.http.HttpRequest;
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
-import org.apache.http.entity.ContentType;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.protocol.HttpContext;
 import org.apache.http.protocol.HttpRequestHandler;
 import org.json.JSONObject;
+
+import static com.synapticloop.panl.server.handler.results.util.ResourceHelper.*;
 
 /**
  * <p>This is the default handler for all requests and simply passes the
@@ -41,7 +43,6 @@ import org.json.JSONObject;
  * @author synapticloop
  */
 public class PanlRequestHandler implements HttpRequestHandler {
-	public static final ContentType CONTENT_TYPE_JSON = ContentType.create("application/json", "UTF-8");
 	private final PanlProperties panlProperties;
 	private final CollectionRequestHandler collectionRequestHandler;
 
@@ -63,9 +64,9 @@ public class PanlRequestHandler implements HttpRequestHandler {
 	 * <p>This request handler also returns the 500 internal error status if
 	 * there was an error processing the request.</p>
 	 *
-	 * @param request  the HTTP request.
+	 * @param request the HTTP request.
 	 * @param response the HTTP response.
-	 * @param context  the HTTP execution context. (which is ignored by this processor)
+	 * @param context the HTTP execution context. (which is ignored by this processor)
 	 */
 	@Override public void handle(HttpRequest request, HttpResponse response, HttpContext context) {
 
@@ -88,7 +89,7 @@ public class PanlRequestHandler implements HttpRequestHandler {
 			response.setEntity(
 					new StringEntity(
 							collectionRequestHandler.getValidUrlString(),
-							CONTENT_TYPE_JSON));
+							ResourceHelper.CONTENT_TYPE_JSON));
 			return;
 		}
 
@@ -96,19 +97,19 @@ public class PanlRequestHandler implements HttpRequestHandler {
 			response.setStatusCode(HttpStatus.SC_OK);
 			response.setEntity(
 					new StringEntity(
-					collectionRequestHandler.handleRequest(uri, query),
-					CONTENT_TYPE_JSON)
+							collectionRequestHandler.handleRequest(uri, query),
+							ResourceHelper.CONTENT_TYPE_JSON)
 			);
 		} catch (Exception e) {
 			response.setStatusCode(HttpStatus.SC_INTERNAL_SERVER_ERROR);
 			JSONObject jsonObject = new JSONObject();
-			jsonObject.put("error", true);
-			jsonObject.put("status", 500);
-			if(panlProperties.getUseVerbose500Messages()) {
-				jsonObject.put("message", e.getMessage());
-				response.setEntity(new StringEntity(jsonObject.toString(), CONTENT_TYPE_JSON));
+			jsonObject.put(JSON_KEY_ERROR, true);
+			jsonObject.put(JSON_KEY_STATUS, HttpStatus.SC_INTERNAL_SERVER_ERROR);
+			if (panlProperties.getUseVerbose500Messages()) {
+				jsonObject.put(JSON_KEY_MESSAGE, e.getMessage());
+				response.setEntity(new StringEntity(jsonObject.toString(), ResourceHelper.CONTENT_TYPE_JSON));
 			} else {
-				jsonObject.put("message", "Internal Server Error");
+				jsonObject.put(JSON_KEY_MESSAGE, JSON_VALUE_MESSAGE_500);
 			}
 		}
 	}
