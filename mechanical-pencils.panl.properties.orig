@@ -189,7 +189,7 @@ solr.facet.limit=100
 #
 #                                ~ ~ ~ * ~ ~ ~
 
-solr.facet.min.count=0
+solr.facet.min.count=1
 
 #               The Default Number of Rows (Documents) To Return
 #               --- ------- ------ -- ---- ----------- -- ------

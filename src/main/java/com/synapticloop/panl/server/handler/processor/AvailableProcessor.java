@@ -36,6 +36,20 @@ import org.json.JSONObject;
 import java.util.*;
 
 public class AvailableProcessor extends Processor {
+
+	public static final String SOLR_JSON_KEY_RESPONSE = "response";
+	public static final String JSON_KEY_FACET_NAME = "facet_name";
+	public static final String JSON_KEY_NAME = "name";
+	public static final String JSON_KEY_PANL_CODE = "panl_code";
+	public static final String JSON_KEY_VALUE = "value";
+	public static final String JSON_KEY_COUNT = "count";
+	public static final String JSON_KEY_ENCODED = "encoded";
+	public static final String JSON_KEY_VALUES = "values";
+	public static final String JSON_KEY_URIS = "uris";
+	public static final String JSON_KEY_BEFORE = "before";
+	public static final String JSON_KEY_AFTER = "after";
+	public static final String JSON_KEY_IS_OR_FACET = "is_or_facet";
+
 	public AvailableProcessor(CollectionProperties collectionProperties) {
 		super(collectionProperties);
 	}
@@ -52,7 +66,7 @@ public class AvailableProcessor extends Processor {
 			lpseTokens.addAll(panlTokenMap.getOrDefault(lpseField.getPanlLpseCode(), new ArrayList<>()));
 		}
 
-		SolrDocumentList solrDocuments = (SolrDocumentList) response.getResponse().get("response");
+		SolrDocumentList solrDocuments = (SolrDocumentList) response.getResponse().get(SOLR_JSON_KEY_RESPONSE);
 		long numFound = solrDocuments.getNumFound();
 		boolean numFoundExact = solrDocuments.getNumFoundExact();
 
@@ -80,12 +94,14 @@ public class AvailableProcessor extends Processor {
 
 			if (facetField.getValueCount() != 0) {
 				JSONObject facetObject = new JSONObject();
-				facetObject.put("facet_name", facetField.getName());
-				facetObject.put("name", collectionProperties.getPanlNameFromSolrFieldName(facetField.getName()));
+				facetObject.put(JSON_KEY_FACET_NAME, facetField.getName());
+				facetObject.put(JSON_KEY_NAME, collectionProperties.getPanlNameFromSolrFieldName(facetField.getName()));
 
 				JSONArray facetValueArrays = new JSONArray();
 				String panlCodeFromSolrFacetName = collectionProperties.getPanlCodeFromSolrFacetFieldName(facetField.getName());
-				facetObject.put("panl_code", panlCodeFromSolrFacetName);
+				facetObject.put(JSON_KEY_IS_OR_FACET, collectionProperties.getIsOrFacetField(panlCodeFromSolrFacetName));
+
+				facetObject.put(JSON_KEY_PANL_CODE, panlCodeFromSolrFacetName);
 				for (FacetField.Count value : facetField.getValues()) {
 					// at this point - we need to see whether we already have the 'value'
 					// as a facet - as there is no need to have it again
@@ -123,9 +139,9 @@ public class AvailableProcessor extends Processor {
 
 					if (shouldAdd) {
 						JSONObject facetValueObject = new JSONObject();
-						facetValueObject.put("value", valueName);
-						facetValueObject.put("count", value.getCount());
-						facetValueObject.put("encoded", lpseField.getEncodedPanlValue(valueName));
+						facetValueObject.put(JSON_KEY_VALUE, valueName);
+						facetValueObject.put(JSON_KEY_COUNT, value.getCount());
+						facetValueObject.put(JSON_KEY_ENCODED, lpseField.getEncodedPanlValue(valueName));
 						facetValueArrays.put(facetValueObject);
 					}
 				}
@@ -144,9 +160,9 @@ public class AvailableProcessor extends Processor {
 				// if we don't have any values for this facet, don't put it in
 
 				if (shouldIncludeFacet) {
-					facetObject.put("values", facetValueArrays);
+					facetObject.put(JSON_KEY_VALUES, facetValueArrays);
 					if (null != panlCodeFromSolrFacetName) {
-						facetObject.put("uris",
+						facetObject.put(JSON_KEY_URIS,
 								getAdditionURIObject(
 										panlCodeFromSolrFacetName,
 										panlTokenMap));
@@ -187,13 +203,13 @@ public class AvailableProcessor extends Processor {
 			}
 
 			if (baseField.getPanlLpseCode().equals(additionLpseCode)) {
-				additionObject.put("before", lpseUri.toString());
+				additionObject.put(JSON_KEY_BEFORE, lpseUri.toString());
 				lpseUri.setLength(0);
 				lpseCode.append(baseField.getPanlLpseCode());
 			}
 		}
 
-		additionObject.append("after", "/" + lpseUri + lpseCode + "/");
+		additionObject.append(JSON_KEY_AFTER, "/" + lpseUri + lpseCode + "/");
 		return (additionObject);
 	}
 }
