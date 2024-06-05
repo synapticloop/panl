@@ -28,7 +28,6 @@ import com.synapticloop.panl.server.properties.CollectionProperties;
 import org.apache.solr.client.solrj.SolrQuery;
 
 import java.net.URLDecoder;
-import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.util.StringTokenizer;
 
@@ -46,18 +45,6 @@ public class PassThroughLpseToken extends LpseToken {
 		this.value = URLDecoder.decode(
 				valueTokeniser.nextToken(),
 				StandardCharsets.UTF_8);
-	}
-
-	@Override public String getUriPathComponent() {
-		if(isValid) {
-			return (collectionProperties.getLpseField(lpseCode).getEncodedPanlValue(this.value) + "/");
-		} else {
-			return("");
-		}
-	}
-
-	@Override public String getLpseComponent() {
-		return (lpseCode);
 	}
 
 	@Override public String explain() {

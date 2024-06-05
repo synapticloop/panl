@@ -173,35 +173,6 @@ public abstract class LpseToken {
 	}
 
 	/**
-	 * <p>Get the URI component for the LPSE encoding - this may return an empty
-	 * string if there is no component to render.</p>
-	 *
-	 * @return The URI component
-	 */
-	@Deprecated
-	public abstract String getUriPathComponent();
-
-	/**
-	 * <p>Return the URI Path component if this is to be reset, for example the
-	 * page number if any other num per page or sort order changes.</p>
-	 *
-	 * @return The URI path component for a reset
-	 */
-	@Deprecated
-	public String getResetUriPathComponent() {
-		return (getUriPathComponent());
-	}
-
-	/**
-	 * <p>Get the LPSE component, which may have additional operands associated
-	 * with it.</p>
-	 *
-	 * @return The LPSE component
-	 */
-
-	public abstract String getLpseComponent();
-
-	/**
 	 * <p>Return a human readable explanation of what the URI has been parsed to
 	 * be.</p>
 	 *

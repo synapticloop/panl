@@ -59,8 +59,10 @@ public class SortingProcessor extends Processor {
 		for (BaseField lpseField : collectionProperties.getLpseFields()) {
 			String thisLpseCode = lpseField.getPanlLpseCode();
 			if(!panlLpseCode.equals(thisLpseCode)) {
-				lpseUri.append(lpseField.getResetLpseCode(panlTokenMap, collectionProperties));
-				lpse.append(lpseField.getPanlLpseCode());
+				if(panlTokenMap.containsKey(thisLpseCode)) {
+					lpseUri.append(lpseField.getResetUriPath(panlTokenMap, collectionProperties));
+					lpse.append(lpseField.getResetLpseCode(panlTokenMap, collectionProperties));
+				}
 			} else {
 				before = lpse.toString();
 				lpse.setLength(0);

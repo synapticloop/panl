@@ -73,23 +73,6 @@ public class FacetLpseToken extends LpseToken {
 		}
 	}
 
-	@Override public String getUriPathComponent() {
-		if (isValid) {
-			BaseField lpseField = collectionProperties.getLpseField(this.lpseCode);
-			return(lpseField.getEncodedPanlValue(this.value) + "/");
-		} else {
-			return ("");
-		}
-	}
-
-	@Override public String getLpseComponent() {
-		if (isValid) {
-			return (this.lpseCode);
-		} else {
-			return ("");
-		}
-	}
-
 	@Override public String explain() {
 		return ("PANL " +
 				(this.isValid ? "[  VALID  ]" : "[ INVALID ]") +
