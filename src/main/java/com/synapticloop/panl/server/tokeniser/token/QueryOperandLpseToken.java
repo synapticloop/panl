@@ -25,8 +25,7 @@ package com.synapticloop.panl.server.tokeniser.token;
  */
 
 import com.synapticloop.panl.server.properties.CollectionProperties;
-import com.synapticloop.panl.server.tokeniser.PanlTokeniser;
-import org.apache.solr.client.solrj.SolrQuery;
+import com.synapticloop.panl.server.tokeniser.LpseTokeniser;
 
 /**
  * <p>The query operand </p>
@@ -41,9 +40,9 @@ public class QueryOperandLpseToken extends LpseToken {
 
 	public QueryOperandLpseToken(
 			CollectionProperties collectionProperties,
-			String panlLpseCode,
-			PanlTokeniser lpseTokeniser) {
-		super(panlLpseCode);
+			String lpseCode,
+			LpseTokeniser lpseTokeniser) {
+		super(lpseCode);
 		if (lpseTokeniser.hasMoreTokens()) {
 			queryOperand = lpseTokeniser.nextToken();
 			if (!(queryOperand.equals("+") || queryOperand.equals("-"))) {

@@ -24,7 +24,7 @@ package com.synapticloop.panl.server.tokeniser.token;
  *  IN THE SOFTWARE.
  */
 
-import com.synapticloop.panl.server.tokeniser.PanlTokeniser;
+import com.synapticloop.panl.server.tokeniser.LpseTokeniser;
 import com.synapticloop.panl.server.properties.CollectionProperties;
 import org.apache.solr.client.solrj.SolrQuery;
 
@@ -46,10 +46,10 @@ public class SortLpseToken extends LpseToken {
 
 	public SortLpseToken(
 			CollectionProperties collectionProperties,
-			String panlLpseCode,
-			PanlTokeniser lpseTokeniser) {
+			String lpseCode,
+			LpseTokeniser lpseTokeniser) {
 
-		super(panlLpseCode);
+		super(lpseCode);
 
 		// Sort URI path will either be sorted on relevance and will look
 		// like /s-/ or /s+/
@@ -90,7 +90,7 @@ public class SortLpseToken extends LpseToken {
 			}
 		}
 
-		this.solrFacetField = collectionProperties.getSolrFieldNameFromPanlLpseCode(this.panlFacetCode);
+		this.solrFacetField = collectionProperties.getSolrFieldNameFromLpseCode(this.panlFacetCode);
 	}
 
 	/**

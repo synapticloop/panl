@@ -42,14 +42,14 @@ public class QueryOperandProcessor extends Processor {
 
 	public JSONObject processToObject(Map<String, List<LpseToken>> panlTokenMap, Object... params) {
 		String before = "";
-		String panlLpseCodeQueryOperand = collectionProperties.getPanlParamQueryOperand();
+		String panlParamQueryOperand = collectionProperties.getPanlParamQueryOperand();
 
 		JSONObject jsonObject = new JSONObject();
 		StringBuilder lpseUri = new StringBuilder("/");
 		StringBuilder lpseCode = new StringBuilder();
 
 		for (BaseField lpseField : collectionProperties.getLpseFields()) {
-			if(!panlLpseCodeQueryOperand.equals(lpseField.getLpseCode())) {
+			if(!panlParamQueryOperand.equals(lpseField.getLpseCode())) {
 				lpseUri.append(lpseField.getResetUriPath(panlTokenMap, collectionProperties));
 				lpseCode.append(lpseField.getResetLpseCode(panlTokenMap, collectionProperties));
 			} else {

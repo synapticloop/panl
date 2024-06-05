@@ -112,7 +112,7 @@ import java.util.NoSuchElementException;
  * @see java.io.StreamTokenizer
  * @since 1.0
  */
-public class PanlTokeniser {
+public class LpseTokeniser {
 	private int currentPosition;
 	private int newPosition;
 	private final int maxPosition;
@@ -204,7 +204,7 @@ public class PanlTokeniser {
 	 *
 	 * @throws NullPointerException if str is {@code null}
 	 */
-	public PanlTokeniser(String str, String delim, boolean returnDelims) {
+	public LpseTokeniser(String str, String delim, boolean returnDelims) {
 		currentPosition = 0;
 		newPosition = -1;
 		delimsChanged = false;
@@ -231,7 +231,7 @@ public class PanlTokeniser {
 	 *
 	 * @throws NullPointerException if str is {@code null}
 	 */
-	public PanlTokeniser(String str, String delim) {
+	public LpseTokeniser(String str, String delim) {
 		this(str, delim, false);
 	}
 
@@ -247,7 +247,7 @@ public class PanlTokeniser {
 	 *
 	 * @throws NullPointerException if str is {@code null}
 	 */
-	public PanlTokeniser(String str) {
+	public LpseTokeniser(String str) {
 		this(str, " \t\n\r\f", false);
 	}
 

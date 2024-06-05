@@ -47,9 +47,25 @@ public class PanlPageNumField extends BaseField {
 		logDetails();
 	}
 
-	@Override public String getCanonicalUriPath(Map<String, List<LpseToken>> panlTokenMap, CollectionProperties collectionProperties) {
+	/**
+	 * <p>Get the canonical URI path for the page number.  This __ALWAYS__
+	 * returns a URI path. The path will be encoded with a prefix and/or
+	 * suffix if they have been set.</p>
+	 *
+	 * @param panlTokenMap The token map with all fields and a list of their
+	 * 		values
+	 * @param collectionProperties The collection properties
+	 *
+	 * @return The URI path, never an empty string
+	 */
+	@Override
+	public String getCanonicalUriPath(Map<String, List<LpseToken>> panlTokenMap, CollectionProperties collectionProperties) {
 		StringBuilder sb = new StringBuilder();
-		if(panlTokenMap.containsKey(lpseCode)) {
+		if (panlTokenMap.containsKey(lpseCode) && !panlTokenMap.get(lpseCode).isEmpty()) {
+
+			// get the first token out of the list - there can be only one, so we
+			// choose the first one.
+
 			PageLpseToken pageLpseToken = (PageLpseToken) panlTokenMap.get(lpseCode).get(0);
 			sb.append(getEncodedPanlValue(Integer.toString(pageLpseToken.getPageNum())));
 		} else {
@@ -57,36 +73,37 @@ public class PanlPageNumField extends BaseField {
 		}
 
 		sb.append("/");
-		return(sb.toString());
+		return (sb.toString());
 	}
 
-	@Override public String getCanonicalLpseCode(Map<String, List<LpseToken>> panlTokenMap, CollectionProperties collectionProperties) {
-		return(lpseCode);
+	@Override
+	public String getCanonicalLpseCode(Map<String, List<LpseToken>> panlTokenMap, CollectionProperties collectionProperties) {
+		return (lpseCode);
 	}
 
 	public String getResetUriPath(Map<String, List<LpseToken>> panlTokenMap, CollectionProperties collectionProperties) {
 		StringBuilder sb = new StringBuilder();
-		if(panlTokenMap.containsKey(lpseCode)) {
+		if (panlTokenMap.containsKey(lpseCode)) {
 			sb.append(getEncodedPanlValue("1"));
 			sb.append("/");
 		}
 
-		return(sb.toString());
+		return (sb.toString());
 	}
 
 	public String getResetLpseCode(Map<String, List<LpseToken>> panlTokenMap, CollectionProperties collectionProperties) {
-		if(panlTokenMap.containsKey(lpseCode)) {
-			return(lpseCode);
+		if (panlTokenMap.containsKey(lpseCode)) {
+			return (lpseCode);
 		}
-		return("");
+		return ("");
 	}
 
 	@Override public Logger getLogger() {
-		return(LOGGER);
+		return (LOGGER);
 	}
 
 	@Override public String getExplainDescription() {
-		return("The page number of the results (works in conjunction with the number of results).");
+		return ("The page number of the results (works in conjunction with the number of results).");
 	}
 
 	public void applyToQueryInternal(SolrQuery solrQuery, Map<String, List<LpseToken>> panlTokenMap) {

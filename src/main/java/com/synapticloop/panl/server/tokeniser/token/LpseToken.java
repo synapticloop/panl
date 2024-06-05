@@ -25,8 +25,7 @@ package com.synapticloop.panl.server.tokeniser.token;
  */
 
 import com.synapticloop.panl.server.properties.CollectionProperties;
-import com.synapticloop.panl.server.tokeniser.PanlTokeniser;
-import org.apache.solr.client.solrj.SolrQuery;
+import com.synapticloop.panl.server.tokeniser.LpseTokeniser;
 
 import java.util.StringTokenizer;
 
@@ -92,7 +91,7 @@ public abstract class LpseToken {
 			String token,
 			String query,
 			StringTokenizer valueTokeniser,
-			PanlTokeniser lpseTokeniser) {
+			LpseTokeniser lpseTokeniser) {
 
 		if (token.equals(collectionProperties.getPanlParamQuery())) {
 			// having a query on the URL always trumps whether we have a query
@@ -130,7 +129,7 @@ public abstract class LpseToken {
 		} else {
 			StringBuilder facet = new StringBuilder(token);
 			// it is a facet field
-			while (token.length() < collectionProperties.getPanlLpseLength()) {
+			while (token.length() < collectionProperties.getLpseLength()) {
 				facet.append(lpseTokeniser.nextToken());
 			}
 

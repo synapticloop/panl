@@ -81,10 +81,10 @@ public class ActiveProcessor extends Processor {
 			removeObject.put(JSON_KEY_VALUE, lpseToken.getValue());
 			removeObject.put(JSON_KEY_URI, getRemoveURIFromPath(i, uriComponents, lpseComponents));
 
-			String panlLpseCode = lpseToken.getLpseCode();
-			removeObject.put(JSON_KEY_PANL_CODE, panlLpseCode);
-			removeObject.put(JSON_KEY_FACET_NAME, collectionProperties.getSolrFieldNameFromPanlLpseCode(panlLpseCode));
-			removeObject.put(JSON_KEY_NAME, collectionProperties.getPanlNameFromPanlCode(panlLpseCode));
+			String lpseCode = lpseToken.getLpseCode();
+			removeObject.put(JSON_KEY_PANL_CODE, lpseCode);
+			removeObject.put(JSON_KEY_FACET_NAME, collectionProperties.getSolrFieldNameFromLpseCode(lpseCode));
+			removeObject.put(JSON_KEY_NAME, collectionProperties.getPanlNameFromPanlCode(lpseCode));
 			jsonArray.put(removeObject);
 			i++;
 			jsonObject.put(tokenType, jsonArray);

@@ -77,14 +77,14 @@ public class AvailableProcessor extends Processor {
 		for (LpseToken lpseToken : lpseTokens) {
 			String panlLpseValue = lpseToken.getValue();
 			if (null != panlLpseValue) {
-				String panlLpseCode = lpseToken.getLpseCode();
-				Set<String> valueSet = panlLookupMap.get(panlLpseCode);
+				String lpseCode = lpseToken.getLpseCode();
+				Set<String> valueSet = panlLookupMap.get(lpseCode);
 
 				if (null == valueSet) {
 					valueSet = new HashSet<>();
 				}
 				valueSet.add(panlLpseValue);
-				panlLookupMap.put(panlLpseCode, valueSet);
+				panlLookupMap.put(lpseCode, valueSet);
 			}
 		}
 
@@ -194,7 +194,7 @@ public class AvailableProcessor extends Processor {
 				// put this in the array please
 				JSONObject facetObject = new JSONObject();
 				String lpseCode = lpseField.getLpseCode();
-				facetObject.put(JSON_KEY_FACET_NAME, collectionProperties.getSolrFieldNameFromPanlLpseCode(lpseCode));
+				facetObject.put(JSON_KEY_FACET_NAME, collectionProperties.getSolrFieldNameFromLpseCode(lpseCode));
 				facetObject.put(JSON_KEY_NAME, collectionProperties.getPanlNameFromPanlCode(lpseCode));
 				facetObject.put(JSON_KEY_PANL_CODE, lpseCode);
 				facetObject.put(JSON_KEY_MIN, lpseField.getMinRange());

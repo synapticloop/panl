@@ -26,8 +26,7 @@ package com.synapticloop.panl.server.tokeniser.token;
 
 import com.synapticloop.panl.server.properties.CollectionProperties;
 import com.synapticloop.panl.server.properties.field.BaseField;
-import com.synapticloop.panl.server.tokeniser.PanlTokeniser;
-import org.apache.solr.client.solrj.SolrQuery;
+import com.synapticloop.panl.server.tokeniser.LpseTokeniser;
 
 import java.util.StringTokenizer;
 
@@ -37,15 +36,15 @@ public class FacetLpseToken extends LpseToken {
 
 	public FacetLpseToken(
 			CollectionProperties collectionProperties,
-			String panlLpseCode,
-			PanlTokeniser lpseTokeniser,
+			String lpseCode,
+			LpseTokeniser lpseTokeniser,
 			StringTokenizer valueTokeniser) {
-		super(panlLpseCode);
+		super(lpseCode);
 		this.collectionProperties = collectionProperties;
 
-		StringBuilder sb = new StringBuilder(panlLpseCode);
+		StringBuilder sb = new StringBuilder(lpseCode);
 		int i = 1;
-		while (i < collectionProperties.getPanlLpseLength()) {
+		while (i < collectionProperties.getLpseLength()) {
 			if (lpseTokeniser.hasMoreTokens()) {
 				sb.append(lpseTokeniser.nextToken());
 			}
@@ -66,8 +65,8 @@ public class FacetLpseToken extends LpseToken {
 			this.isValid = false;
 		}
 
-		if (collectionProperties.hasFacetCode(panlLpseCode)) {
-			this.solrField = collectionProperties.getSolrFieldNameFromPanlLpseCode(panlLpseCode);
+		if (collectionProperties.hasFacetCode(lpseCode)) {
+			this.solrField = collectionProperties.getSolrFieldNameFromLpseCode(lpseCode);
 		} else {
 			this.isValid = false;
 		}

@@ -50,7 +50,7 @@ public class Collection {
 	private final List<Field> fields = new ArrayList<>();
 	private final List<String> unassignedFieldNames = new ArrayList<>();
 	private final Map<String, String> fieldXmlMap = new HashMap<>();
-	private int lpseNumber = 1;
+	private int lpseLength = 1;
 
 	public static String CODES = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz01234567890";
 	public static String CODES_AND_METADATA = CODES + "[].+-";
@@ -63,15 +63,15 @@ public class Collection {
 		parseSchemaFile(schema);
 
 		// each character can be one of the letters and numbers
-		this.lpseNumber = facetFieldNames.size() / 62;
+		this.lpseLength = facetFieldNames.size() / 62;
 
 		// don't forget that we have pre-defined 'params'
 		if ((facetFieldNames.size() % 62 - panlReplacementPropertyMap.size()) > 0) {
-			this.lpseNumber++;
+			this.lpseLength++;
 		}
 
 		LOGGER.info("Collection: {}", this.collectionName);
-		LOGGER.info("Have {} fields, lpseNum is set to {}", facetFieldNames.size(), this.lpseNumber);
+		LOGGER.info("Have {} fields, lpseNum is set to {}", facetFieldNames.size(), this.lpseLength);
 
 		// now we are going to remove all codes that are in use by the panl replacement map
 		for (String code : panlReplacementPropertyMap.values()) {
@@ -80,8 +80,8 @@ public class Collection {
 
 		generateAvailableCodesForFields();
 
-		PanlProperty panlLpseNum = new PanlProperty("panl.lpse.length", "" + lpseNumber);
-		PANL_PROPERTIES.put("$panl.lpse.length", panlLpseNum);
+		PanlProperty lpseLength = new PanlProperty("panl.lpse.length", "" + this.lpseLength);
+		PANL_PROPERTIES.put("$panl.lpse.length", lpseLength);
 
 		for (String property : panlReplacementPropertyMap.keySet()) {
 			PanlProperty temp = new PanlProperty(property.substring(1), panlReplacementPropertyMap.get(property));
@@ -91,7 +91,7 @@ public class Collection {
 		// now go through to fields and assign a code which is close to what they want...
 		for (String fieldName : facetFieldNames) {
 			String cleanedName = fieldName.replaceAll("[^A-Za-z0-9]", "");
-			String possibleCode = cleanedName.substring(0, lpseNumber);
+			String possibleCode = cleanedName.substring(0, this.lpseLength);
 			if (CODES_AVAILABLE.contains(possibleCode)) {
 				fields.add(new Field(
 						possibleCode,
@@ -194,7 +194,7 @@ public class Collection {
 
 	private void generateAvailableCodesForFields() {
 		// generate the codes
-		for (int i = 0; i < lpseNumber; i++) {
+		for (int i = 0; i < lpseLength; i++) {
 			for (char c : CODES.toCharArray()) {
 				generateCode(String.valueOf(c), i + 1);
 			}
@@ -202,12 +202,12 @@ public class Collection {
 	}
 
 	private void generateCode(String s, int i) {
-		if (i < lpseNumber) {
+		if (i < lpseLength) {
 			for (char c : CODES.toCharArray()) {
 				generateCode(s + c, i + 1);
 			}
 		} else {
-			if (s.length() == lpseNumber) {
+			if (s.length() == lpseLength) {
 				CODES_AVAILABLE.add(s);
 			}
 		}
@@ -304,7 +304,7 @@ public class Collection {
 		return (fields);
 	}
 
-	public int getLpseNumber() {
-		return (lpseNumber);
+	public int getLpseLength() {
+		return (lpseLength);
 	}
 }

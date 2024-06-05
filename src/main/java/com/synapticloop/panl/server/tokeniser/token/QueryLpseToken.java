@@ -26,7 +26,6 @@ package com.synapticloop.panl.server.tokeniser.token;
 
 import org.apache.http.NameValuePair;
 import org.apache.http.client.utils.URLEncodedUtils;
-import org.apache.solr.client.solrj.SolrQuery;
 
 import java.nio.charset.StandardCharsets;
 import java.util.StringTokenizer;
@@ -36,15 +35,15 @@ public class QueryLpseToken extends LpseToken {
 
 	public QueryLpseToken(
 			String queryFromUri,
-			String panlLpseCode) {
-		this(queryFromUri, panlLpseCode, null);
+			String lpseCode) {
+		this(queryFromUri, lpseCode, null);
 	}
 
 	public QueryLpseToken(
 			String queryFromUri,
-			String panlLpseCode,
+			String lpseCode,
 			StringTokenizer valueTokeniser) {
-		super(panlLpseCode);
+		super(lpseCode);
 
 		if(null != valueTokeniser && valueTokeniser.hasMoreTokens()) {
 			this.value = valueTokeniser.nextToken();

@@ -56,7 +56,7 @@ public class SortingProcessor extends Processor {
 	 */
 	public JSONObject processToObject(Map<String, List<LpseToken>> panlTokenMap, Object... params) {
 		String before = "";
-		String panlLpseCode = collectionProperties.getPanlParamSort();
+		String lpseCode = collectionProperties.getPanlParamSort();
 
 		// Run through the sorting order
 		JSONObject jsonObject = new JSONObject();
@@ -65,7 +65,7 @@ public class SortingProcessor extends Processor {
 
 		for (BaseField lpseField : collectionProperties.getLpseFields()) {
 			String thisLpseCode = lpseField.getLpseCode();
-			if(!panlLpseCode.equals(thisLpseCode)) {
+			if(!lpseCode.equals(thisLpseCode)) {
 				if(panlTokenMap.containsKey(thisLpseCode)) {
 					lpseUri.append(lpseField.getResetUriPath(panlTokenMap, collectionProperties));
 					lpse.append(lpseField.getResetLpseCode(panlTokenMap, collectionProperties));
@@ -90,7 +90,7 @@ public class SortingProcessor extends Processor {
 		JSONObject sortFieldsObject = new JSONObject();
 
 		for (String sortFieldLpseCode : collectionProperties.getSortFieldLpseCodes()) {
-			String sortFieldName = collectionProperties.getSolrFieldNameFromPanlLpseCode(sortFieldLpseCode);
+			String sortFieldName = collectionProperties.getSolrFieldNameFromLpseCode(sortFieldLpseCode);
 			if (null != sortFieldName) {
 				JSONObject sortObject = new JSONObject();
 				sortObject.put(JSON_KEY_NAME, collectionProperties.getPanlNameFromPanlCode(sortFieldLpseCode));

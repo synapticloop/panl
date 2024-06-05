@@ -25,7 +25,6 @@ package com.synapticloop.panl.server.tokeniser.token;
  */
 
 import com.synapticloop.panl.server.properties.CollectionProperties;
-import org.apache.solr.client.solrj.SolrQuery;
 
 import java.net.URLDecoder;
 import java.nio.charset.StandardCharsets;
@@ -36,9 +35,9 @@ public class PassThroughLpseToken extends LpseToken {
 
 	public PassThroughLpseToken(
 			CollectionProperties collectionProperties,
-			String panlLpseCode,
+			String lpseCode,
 			StringTokenizer valueTokeniser) {
-		super(panlLpseCode);
+		super(lpseCode);
 
 		this.collectionProperties = collectionProperties;
 

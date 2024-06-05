@@ -33,7 +33,7 @@ import com.synapticloop.panl.server.handler.results.util.ResourceHelper;
 import com.synapticloop.panl.server.properties.CollectionProperties;
 import com.synapticloop.panl.server.properties.PanlProperties;
 import com.synapticloop.panl.server.properties.field.BaseField;
-import com.synapticloop.panl.server.tokeniser.PanlTokeniser;
+import com.synapticloop.panl.server.tokeniser.LpseTokeniser;
 import com.synapticloop.panl.server.tokeniser.token.LpseToken;
 import com.synapticloop.panl.server.tokeniser.token.NumRowsLpseToken;
 import com.synapticloop.panl.server.tokeniser.token.PageLpseToken;
@@ -170,9 +170,9 @@ public class CollectionRequestHandler {
 			Map<String, List<LpseToken>> panlTokenMap = new HashMap<>();
 
 			for (LpseToken lpseToken : lpseTokens) {
-				String panlLpseCode = lpseToken.getLpseCode();
+				String lpseCode = lpseToken.getLpseCode();
 
-				List<LpseToken> lpseTokenList = panlTokenMap.get(panlLpseCode);
+				List<LpseToken> lpseTokenList = panlTokenMap.get(lpseCode);
 				if (null == lpseTokenList) {
 					lpseTokenList = new ArrayList<>();
 				}
@@ -180,7 +180,7 @@ public class CollectionRequestHandler {
 				// only adding valid tokens
 				if(lpseToken.getIsValid()) {
 					lpseTokenList.add(lpseToken);
-					panlTokenMap.put(panlLpseCode, lpseTokenList);
+					panlTokenMap.put(lpseCode, lpseTokenList);
 				}
 
 				if (lpseToken instanceof NumRowsLpseToken) {
@@ -253,14 +253,14 @@ public class CollectionRequestHandler {
 		// set up the data structure
 		Map<String, List<LpseToken>> panlTokenMap = new HashMap<>();
 		for (LpseToken lpseToken : lpseTokens) {
-			String panlLpseCode = lpseToken.getLpseCode();
+			String lpseCode = lpseToken.getLpseCode();
 
-			List<LpseToken> lpseTokenList = panlTokenMap.get(panlLpseCode);
+			List<LpseToken> lpseTokenList = panlTokenMap.get(lpseCode);
 			if (null == lpseTokenList) {
 				lpseTokenList = new ArrayList<>();
 			}
 			lpseTokenList.add(lpseToken);
-			panlTokenMap.put(panlLpseCode, lpseTokenList);
+			panlTokenMap.put(lpseCode, lpseTokenList);
 		}
 
 		// we are going to sort the tokens alphabetically by value to build the
@@ -337,7 +337,7 @@ public class CollectionRequestHandler {
 		if (searchQuery.length > 3) {
 			String lpseEncoding = searchQuery[searchQuery.length - 1];
 
-			PanlTokeniser lpseTokeniser = new PanlTokeniser(lpseEncoding, Collection.CODES_AND_METADATA, true);
+			LpseTokeniser lpseTokeniser = new LpseTokeniser(lpseEncoding, Collection.CODES_AND_METADATA, true);
 
 			StringTokenizer valueTokeniser = new StringTokenizer(uri, "/", false);
 			// we need to skip the first two - as they will be the collection and the

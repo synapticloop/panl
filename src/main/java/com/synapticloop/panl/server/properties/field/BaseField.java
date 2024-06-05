@@ -85,7 +85,7 @@ public abstract class BaseField {
 	private static final int VALIDATION_TYPE_DECIMAL = 2;
 
 	private int validationType;
-	private int panlLpseLength;
+	private int lpseLength;
 
 	public BaseField(
 			String lpseCode,
@@ -100,26 +100,25 @@ public abstract class BaseField {
 			Properties properties,
 			String propertyKey,
 			String collectionName,
-			int panlLpseLength) throws PanlServerException {
+			int lpseLength) throws PanlServerException {
 
 		this.lpseCode = lpseCode;
 		this.properties = properties;
 		this.propertyKey = propertyKey;
 		this.collectionName = collectionName;
-		this.panlLpseLength = panlLpseLength;
+		this.lpseLength = lpseLength;
 
-		if (this.lpseCode.length() != panlLpseLength) {
-			throw new PanlServerException(propertyKey + " has invalid lpse length of " + lpseCode.length() + " is of invalid length - should be " + panlLpseLength);
+		if (this.lpseCode.length() != lpseLength) {
+			throw new PanlServerException(propertyKey + " has invalid lpse length of " + lpseCode.length() + " is of invalid length - should be " + lpseLength);
 		}
 	}
 
 	public void logDetails() {
-		getLogger().info("[{}] [{}] Mapping Solr field name '{}' to panl key '{}', LPSE length {}, isOrFacet: {}, isRangeFacet: {}",
+		getLogger().info("[{}] Mapping Solr field name '{}' to panl key '{}', LPSE length {}, isOrFacet: {}, isRangeFacet: {}",
 				collectionName,
-				this.getClass().getSimpleName(),
 				solrFieldName,
 				lpseCode,
-				panlLpseLength,
+				lpseLength,
 				isOrFacet,
 				isRangeFacet);
 	}
@@ -135,6 +134,7 @@ public abstract class BaseField {
 						getLogger().warn("Property '{}' __MUST__ be set to zero for '{}{}' to be enabled.", PROPERTY_KEY_SOLR_FACET_MIN_COUNT, PROPERTY_KEY_PANL_OR_FACET, lpseCode);
 					}
 				} catch (NumberFormatException e) {
+					// TODO - should we throw an exception???
 					getLogger().error("Property '{}' must be set", PROPERTY_KEY_SOLR_FACET_MIN_COUNT);
 				}
 			}
@@ -189,16 +189,16 @@ public abstract class BaseField {
 	}
 
 	protected void populateRanges() {
-		this.isRangeFacet =  properties.getProperty("panl.range." + lpseCode, "false").equals("true");
-		if(this.isRangeFacet) {
+		this.isRangeFacet = properties.getProperty("panl.range." + lpseCode, "false").equals("true");
+		if (this.isRangeFacet) {
 			// get the other properties, if they exist...
 			this.rangeMinRange = properties.getProperty("panl.range.min." + lpseCode, null);
-			if(null != this.rangeMinRange) {
+			if (null != this.rangeMinRange) {
 				hasMinRange = true;
 			}
 
 			this.rangeMaxRange = properties.getProperty("panl.range.max." + lpseCode, null);
-			if(null != this.rangeMaxRange) {
+			if (null != this.rangeMaxRange) {
 				hasMaxRange = true;
 			}
 
@@ -213,7 +213,7 @@ public abstract class BaseField {
 //			}
 
 			this.rangeMidfix = properties.getProperty("panl.range.midfix." + lpseCode, null);
-			if(null != this.rangeMidfix) {
+			if (null != this.rangeMidfix) {
 				hasRangeMidfix = true;
 			}
 		}
@@ -226,7 +226,6 @@ public abstract class BaseField {
 	 *
 	 * <p>The Panl name can be set to any string and can be little nicer than the
 	 * Solr field name.</p>
-	 *
 	 */
 	protected void populatePanlAndSolrFieldNames() {
 		this.solrFieldName = properties.getProperty(PROPERTY_KEY_PANL_FACET + lpseCode);
@@ -484,6 +483,16 @@ public abstract class BaseField {
 		return (sb.toString());
 	}
 
+	/**
+	 * <p>Get the canonical URI path for this field, if the field has any values.</p>
+	 *
+	 * @param panlTokenMap The token map with all fields and a list of their
+	 * 		values
+	 * @param collectionProperties THe collection properties
+	 *
+	 * @return The URI path for this field, or an empty string if the field has
+	 * 		no values
+	 */
 	public String getCanonicalUriPath(Map<String, List<LpseToken>> panlTokenMap, CollectionProperties collectionProperties) {
 		return (getURIPath(panlTokenMap, collectionProperties));
 	}
@@ -554,28 +563,29 @@ public abstract class BaseField {
 	}
 
 	public String getMinRange() {
-		if(hasMinRange) {
-			return(rangeMinRange);
+		if (hasMinRange) {
+			return (rangeMinRange);
 		} else {
 			// TODO - needs to be based on the field type
-			return(Integer.toString(Integer.MIN_VALUE));
+			return (Integer.toString(Integer.MIN_VALUE));
 		}
 	}
 
 	public String getMaxRange() {
-		if(hasMaxRange) {
-			return(rangeMaxRange);
+		if (hasMaxRange) {
+			return (rangeMaxRange);
 		} else {
 			// TODO - needs to be based on the field type
-			return(Integer.toString(Integer.MAX_VALUE));
+			return (Integer.toString(Integer.MAX_VALUE));
 		}
 	}
 
 	public boolean getHasRangeMidfix() {
-		return(hasRangeMidfix);
+		return (hasRangeMidfix);
 	}
+
 	public String getRangeMidfix() {
-		return(rangeMidfix);
+		return (rangeMidfix);
 	}
 
 	protected abstract void applyToQueryInternal(SolrQuery solrQuery, Map<String, List<LpseToken>> panlTokenMap);

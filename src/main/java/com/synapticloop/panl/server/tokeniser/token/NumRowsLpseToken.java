@@ -26,7 +26,6 @@ package com.synapticloop.panl.server.tokeniser.token;
 
 import com.synapticloop.panl.server.properties.CollectionProperties;
 import com.synapticloop.panl.server.properties.field.BaseField;
-import org.apache.solr.client.solrj.SolrQuery;
 
 import java.util.StringTokenizer;
 
@@ -35,15 +34,15 @@ public class NumRowsLpseToken extends LpseToken {
 
 	private int numRows;
 
-	public NumRowsLpseToken(CollectionProperties collectionProperties, String panlLpseCode, StringTokenizer valueTokenizer) {
-		super(panlLpseCode);
+	public NumRowsLpseToken(CollectionProperties collectionProperties, String lpseCode, StringTokenizer valueTokenizer) {
+		super(lpseCode);
 		this.collectionProperties = collectionProperties;
 
 		int numRowsTemp;
 
 		if (valueTokenizer.hasMoreTokens()) {
 			String numRowsTempString = "";
-			BaseField lpseField = collectionProperties.getLpseField(panlLpseCode);
+			BaseField lpseField = collectionProperties.getLpseField(lpseCode);
 			if(null != lpseField) {
 				numRowsTempString = lpseField.getDecodedValue(valueTokenizer.nextToken());
 			} else {

@@ -29,7 +29,7 @@ import com.synapticloop.panl.server.handler.CollectionRequestHandler;
 import com.synapticloop.panl.server.handler.results.util.ResourceHelper;
 import com.synapticloop.panl.server.properties.CollectionProperties;
 import com.synapticloop.panl.server.properties.field.BaseField;
-import com.synapticloop.panl.server.tokeniser.PanlTokeniser;
+import com.synapticloop.panl.server.tokeniser.LpseTokeniser;
 import com.synapticloop.panl.server.tokeniser.token.*;
 import org.apache.http.HttpRequest;
 import org.apache.http.HttpResponse;
@@ -105,7 +105,7 @@ public class PanlResultsExplainerExplainHandler implements HttpRequestHandler {
 		if (searchQuery.length > 3) {
 			String lpseEncoding = searchQuery[searchQuery.length - 1];
 
-			PanlTokeniser lpseTokeniser = new PanlTokeniser(lpseEncoding, Collection.CODES_AND_METADATA, true);
+			LpseTokeniser lpseTokeniser = new LpseTokeniser(lpseEncoding, Collection.CODES_AND_METADATA, true);
 
 			StringTokenizer valueTokeniser = new StringTokenizer(uri, "/", false);
 			// we need to skip the first two - as they will be the collection and the
@@ -151,7 +151,7 @@ public class PanlResultsExplainerExplainHandler implements HttpRequestHandler {
 				} else {
 					StringBuilder facet = new StringBuilder(token);
 					// it is a facet field
-					while (token.length() < collectionProperties.getPanlLpseLength()) {
+					while (token.length() < collectionProperties.getLpseLength()) {
 						facet.append(lpseTokeniser.nextToken());
 					}
 

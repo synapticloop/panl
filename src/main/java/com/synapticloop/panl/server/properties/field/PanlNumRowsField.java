@@ -52,10 +52,25 @@ public class PanlNumRowsField extends BaseField {
 		return (LOGGER);
 	}
 
+	/**
+	 * <p>Get the canonical URI path for the number of results.  This __ALWAYS__
+	 * returns a URI path.  The path will be encoded with a prefix and/or
+	 * suffix if they have been set.</p>
+	 *
+	 * @param panlTokenMap The token map with all fields and a list of their
+	 * 		values
+	 * @param collectionProperties The collection properties
+	 *
+	 * @return The URI path, never an empty string
+	 */
 	@Override
 	public String getCanonicalUriPath(Map<String, List<LpseToken>> panlTokenMap, CollectionProperties collectionProperties) {
 		StringBuilder sb = new StringBuilder();
-		if (panlTokenMap.containsKey(lpseCode)) {
+		if (panlTokenMap.containsKey(lpseCode) && !panlTokenMap.get(lpseCode).isEmpty()) {
+
+			// we are ony getting the first token from the list - there can only be
+			// one - so we choose the first one
+
 			NumRowsLpseToken numRowsLpseToken = (NumRowsLpseToken) panlTokenMap.get(lpseCode).get(0);
 			sb.append(getEncodedPanlValue(Integer.toString(numRowsLpseToken.getNumRows())));
 		} else {
@@ -66,11 +81,13 @@ public class PanlNumRowsField extends BaseField {
 		return (sb.toString());
 	}
 
-	@Override public String getCanonicalLpseCode(Map<String, List<LpseToken>> panlTokenMap, CollectionProperties collectionProperties) {
-		return(lpseCode);
+	@Override
+	public String getCanonicalLpseCode(Map<String, List<LpseToken>> panlTokenMap, CollectionProperties collectionProperties) {
+		return (lpseCode);
 	}
+
 	@Override public String getExplainDescription() {
-		return("The number of results to return per query.");
+		return ("The number of results to return per query.");
 	}
 
 	public void applyToQueryInternal(SolrQuery solrQuery, Map<String, List<LpseToken>> panlTokenMap) {

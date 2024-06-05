@@ -38,10 +38,10 @@ import java.util.Properties;
 public class PanlField extends BaseField {
 	private static final Logger LOGGER = LoggerFactory.getLogger(PanlField.class);
 
-	public PanlField(String lpseCode, String propertyKey, Properties properties, String collectionName, int panlLpseNum) throws PanlServerException {
-		super(lpseCode, properties, propertyKey, collectionName, panlLpseNum);
+	public PanlField(String lpseCode, String propertyKey, Properties properties, String collectionName, int lpseLength) throws PanlServerException {
+		super(lpseCode, properties, propertyKey, collectionName, lpseLength);
 
-		// fields don't have prefixes/suffixes or URIparts
+		// fields don't have prefixes/suffixes or URI parts
 		populatePanlAndSolrFieldNames();
 
 		logDetails();
