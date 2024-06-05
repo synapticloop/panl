@@ -43,6 +43,8 @@ public class PanlField extends BaseField {
 
 		// fields don't have prefixes/suffixes or URIparts
 		populatePanlAndSolrFieldNames(properties, lpseCode);
+
+		logDetails();
 	}
 
 

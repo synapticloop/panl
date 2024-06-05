@@ -48,6 +48,8 @@ public class PanlFacetField extends BaseField {
 
 		// lastly, we are going to check to see whether this is an 'OR' field
 		populateFacetOr(properties, lpseCode);
+
+		logDetails();
 	}
 
 	@Override

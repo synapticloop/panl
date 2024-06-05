@@ -43,6 +43,8 @@ public class PanlPageNumField extends BaseField {
 		super(lpseCode, propertyKey, collectionName);
 
 		populateParamSuffixAndPrefix(properties, propertyKey);
+
+		logDetails();
 	}
 
 	@Override public String getCanonicalUriPath(Map<String, List<LpseToken>> panlTokenMap, CollectionProperties collectionProperties) {

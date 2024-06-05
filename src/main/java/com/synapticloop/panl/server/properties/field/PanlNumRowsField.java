@@ -43,6 +43,8 @@ public class PanlNumRowsField extends BaseField {
 		super(lpseCode, propertyKey, collectionName);
 
 		populateParamSuffixAndPrefix(properties, propertyKey);
+
+		logDetails();
 	}
 
 	@Override

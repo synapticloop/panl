@@ -39,6 +39,8 @@ public class PanlQueryField extends BaseField {
 
 	public PanlQueryField(String lpseCode, String propertyKey, Properties properties, String collectionName) throws PanlServerException {
 		super(lpseCode, propertyKey, collectionName);
+
+		logDetails();
 	}
 
 	@Override

@@ -42,6 +42,8 @@ public class PanlSortField extends BaseField {
 
 	public PanlSortField(String lpseCode, String propertyKey, Properties properties, String collectionName) throws PanlServerException {
 		super(lpseCode, propertyKey, collectionName);
+
+		logDetails();
 	}
 
 	@Override public String getCanonicalUriPath(Map<String, List<LpseToken>> panlTokenMap, CollectionProperties collectionProperties) {

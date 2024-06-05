@@ -49,7 +49,6 @@ public class TimingsProcessor extends Processor {
 	}
 
 	public JSONObject processToObject(Map<String, List<LpseToken>> panlTokenMap, Object... params) {
-
 		long parseRequestNanos = (Long) params[0];
 		long buildRequestNanos = (Long) params[1];
 		long sendAndReceiveNanos = (Long) params[2];
@@ -69,6 +68,7 @@ public class TimingsProcessor extends Processor {
 						sendAndReceiveNanos +
 						buildResponse
 		));
+
 		return (timingsObject);
 	}
 }

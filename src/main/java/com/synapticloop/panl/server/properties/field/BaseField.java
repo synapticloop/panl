@@ -77,6 +77,7 @@ public abstract class BaseField {
 	private static final int VALIDATION_TYPE_DECIMAL = 2;
 
 	private int validationType;
+	private int panlLpseLength;
 
 	public BaseField(
 			String lpseCode,
@@ -89,22 +90,25 @@ public abstract class BaseField {
 			String lpseCode,
 			String propertyKey,
 			String collectionName,
-			int panlLpseNum) throws PanlServerException {
+			int panlLpseLength) throws PanlServerException {
 
 		this.panlLpseCode = lpseCode;
 		this.propertyKey = propertyKey;
 		this.collectionName = collectionName;
+		this.panlLpseLength = panlLpseLength;
 
-		if (this.panlLpseCode.length() != panlLpseNum) {
-			throw new PanlServerException(propertyKey + " has invalid lpse length of " + lpseCode.length() + " is of invalid length - should be " + panlLpseNum);
+		if (this.panlLpseCode.length() != panlLpseLength) {
+			throw new PanlServerException(propertyKey + " has invalid lpse length of " + lpseCode.length() + " is of invalid length - should be " + panlLpseLength);
 		}
+	}
 
+	public void logDetails() {
 		getLogger().info("[{}] [{}] Mapping Solr field name '{}' to panl key '{}', LPSE length {}",
 				collectionName,
 				this.getClass().getSimpleName(),
 				solrFieldName,
 				panlLpseCode,
-				panlLpseNum);
+				panlLpseLength);
 	}
 
 	protected void populateFacetOr(Properties properties, String lpseCode) {
