@@ -104,12 +104,6 @@ public class FacetLpseToken extends LpseToken {
 				"'.");
 	}
 
-	@Override public void applyToQuery(SolrQuery solrQuery) {
-		if (isValid) {
-			solrQuery.addFilterQuery(this.solrField + ":\"" + value + "\"");
-		}
-	}
-
 	@Override public String getType() {
 		return ("facet");
 	}

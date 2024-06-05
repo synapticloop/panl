@@ -72,6 +72,12 @@ public abstract class BaseField {
 	private final String propertyKey;
 	private final String collectionName;
 
+	private static final int VALIDATION_TYPE_NONE = 0;
+	private static final int VALIDATION_TYPE_NUMBER = 1;
+	private static final int VALIDATION_TYPE_DECIMAL = 2;
+
+	private int validationType;
+
 	public BaseField(
 			String lpseCode,
 			String propertyKey,
@@ -103,7 +109,7 @@ public abstract class BaseField {
 
 	protected void populateFacetOr(Properties properties, String lpseCode) {
 		this.isOrFacet = properties.getProperty(PROPERTY_KEY_PANL_OR_FACET + lpseCode, "false").equalsIgnoreCase("true");
-		if(this.isOrFacet) {
+		if (this.isOrFacet) {
 			String propertyFacetMinCount = properties.getProperty(PROPERTY_KEY_SOLR_FACET_MIN_COUNT, null);
 			if (null != propertyFacetMinCount) {
 				try {
@@ -150,6 +156,18 @@ public abstract class BaseField {
 	protected void populateSolrFieldType(Properties properties, String lpseCode) {
 		if (null == this.solrFieldType) {
 			this.solrFieldType = properties.getProperty(PROPERTY_KEY_PANL_TYPE + lpseCode);
+			switch (this.solrFieldType) {
+				case "solr.IntPointField":
+				case "solr.LongPointField":
+					this.validationType = VALIDATION_TYPE_NUMBER;
+					break;
+				case "solr.DoublePointField":
+				case "solr.FloatPointField":
+					this.validationType = VALIDATION_TYPE_DECIMAL;
+					break;
+				default:
+					this.validationType = VALIDATION_TYPE_NONE;
+			}
 		}
 	}
 
@@ -234,9 +252,20 @@ public abstract class BaseField {
 	 * <p>Additionally, if this is a boolean field, it may be that there also is
 	 * a replacement for true/false for it.</p>
 	 *
+	 * <p>This will also validate the value by the Solr field type, at the
+	 * moment, the only fields that have additional validation are:</p>
+	 *
+	 * <ul>
+	 *   <li>"solr.IntPointField"</li>
+	 *   <li>"solr.LongPointField"</li>
+	 *   <li>"solr.DoublePointField"</li>
+	 *   <li>"solr.FloatPointField"</li>
+	 * </ul>
+	 *
 	 * @param value the value to convert if any conversions are required
 	 *
-	 * @return the de-suffixed, de-prefixed, and de-replaced value.
+	 * @return the de-suffixed, de-prefixed, and de-replaced value.  This will
+	 * 		return <code>null</code> if it is invalid.
 	 */
 	public String getDecodedValue(String value) {
 		String temp = URLDecoder.decode(value, StandardCharsets.UTF_8);
@@ -276,6 +305,54 @@ public abstract class BaseField {
 			}
 		}
 
+		// now we are going to validate the fields, boolean and string fields have
+		// their own validation
+		String validatedValue = getValidatedValue(temp);
+		if (null != validatedValue && validatedValue.isBlank()) {
+			return (null);
+		} else {
+			return validatedValue;
+		}
+	}
+
+	/**
+	 * <p>Get the validated value.  This will ensure that an incoming token value
+	 * matches the Solr field type, and if it doesn't, then it will attempt to
+	 * clean it up.</p>
+	 *
+	 * <p>At the moment, the only fields that are validated are:</p>
+	 *
+	 * <ul>
+	 *   <li>"solr.IntPointField"</li>
+	 *   <li>"solr.LongPointField"</li>
+	 *   <li>"solr.DoublePointField"</li>
+	 *   <li>"solr.FloatPointField"</li>
+	 * </ul>
+	 *
+	 * <p>String/Text Solr fields are not validated, but are validated elsewhere.</p>
+	 *
+	 * @param temp The value to attempt to validate
+	 *
+	 * @return The validated value
+	 */
+	private String getValidatedValue(String temp) {
+		String replaced;
+		switch (this.validationType) {
+			case VALIDATION_TYPE_NUMBER:
+				replaced = temp.replaceAll("[^0-9]", "");
+				if (replaced.isBlank()) {
+					return (null);
+				} else {
+					return replaced;
+				}
+			case VALIDATION_TYPE_DECIMAL:
+				replaced = temp.replaceAll("[^0-9.]", "");
+				if (replaced.isBlank()) {
+					return (null);
+				} else {
+					return replaced;
+				}
+		}
 		return (temp);
 	}
 

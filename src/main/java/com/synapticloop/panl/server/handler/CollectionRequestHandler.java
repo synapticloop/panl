@@ -176,8 +176,12 @@ public class CollectionRequestHandler {
 				if (null == lpseTokenList) {
 					lpseTokenList = new ArrayList<>();
 				}
-				lpseTokenList.add(lpseToken);
-				panlTokenMap.put(panlLpseCode, lpseTokenList);
+
+				// only adding valid tokens
+				if(lpseToken.getIsValid()) {
+					lpseTokenList.add(lpseToken);
+					panlTokenMap.put(panlLpseCode, lpseTokenList);
+				}
 
 				if (lpseToken instanceof NumRowsLpseToken) {
 					numRows = ((NumRowsLpseToken) lpseToken).getNumRows();

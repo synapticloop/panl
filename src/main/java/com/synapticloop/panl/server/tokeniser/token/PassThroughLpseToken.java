@@ -68,10 +68,6 @@ public class PassThroughLpseToken extends LpseToken {
 				"'.");
 	}
 
-	@Override public void applyToQuery(SolrQuery solrQuery) {
-		// do nothing
-	}
-
 	@Override public String getType() {
 		return ("passthrough");
 	}

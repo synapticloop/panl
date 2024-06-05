@@ -96,15 +96,6 @@ public class PageLpseToken extends LpseToken {
 				"'.");
 	}
 
-	/**
-	 * <p>This is not applied to the solr query as it also relies on the number
-	 * of results per page.</p>
-	 *
-	 * @param solrQuery The Solr Query to apply the token to
-	 */
-	@Override public void applyToQuery(SolrQuery solrQuery) {
-	}
-
 	@Override public String getType() {
 		return ("page");
 	}

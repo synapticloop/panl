@@ -89,10 +89,6 @@ public class NumRowsLpseToken extends LpseToken {
 				"'.");
 	}
 
-	@Override public void applyToQuery(SolrQuery solrQuery) {
-		solrQuery.setRows(this.numRows);
-	}
-
 	@Override public String getType() {
 		return("numrows");
 	}

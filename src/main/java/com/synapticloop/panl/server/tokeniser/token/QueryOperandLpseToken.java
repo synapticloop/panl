@@ -89,23 +89,6 @@ public class QueryOperandLpseToken extends LpseToken {
 						"' (q.op=" + getQOpValue() + ")");
 	}
 
-	/**
-	 * <p>If the token is valid (i.e. it is a valid solr field to sort on), add
-	 * a sort order to the solrQuery.</p>
-	 *
-	 * <p><code>solrQuery.addSort(String field, ORDER order)</code></p>
-	 *
-	 * <p>If the token is invalid - nothing is performed.</p>
-	 *
-	 * @param solrQuery The Solr Query to apply the sort order to
-	 */
-	@Override
-	public void applyToQuery(SolrQuery solrQuery) {
-		if (isValid) {
-			solrQuery.setParam("q.op", getQOpValue());
-		}
-	}
-
 	public String getQOpValue() {
 		if(this.queryOperand.equals("+")) {
 			return("AND");

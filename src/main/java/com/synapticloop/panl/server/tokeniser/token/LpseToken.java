@@ -222,24 +222,11 @@ public abstract class LpseToken {
 	public abstract String explain();
 
 	/**
-	 * <p>Apply this token to the solr query.  Depending on the type of the token
-	 * this will alter the query in different ways.</p>
-	 *
-	 * @param solrQuery The Solr Query to apply the token to
-	 */
-	@Deprecated
-	public abstract void applyToQuery(SolrQuery solrQuery);
-
-	/**
 	 * <p>Return the human-readable type for this token.</p>
 	 *
 	 * @return The human-readable type for this token.
 	 */
 	public abstract String getType();
-
-	public void validate() {
-
-	}
 
 	public boolean getIsValid() {
 		return (isValid);

@@ -86,10 +86,6 @@ public class QueryLpseToken extends LpseToken {
 		);
 	}
 
-	@Override public void applyToQuery(SolrQuery solrQuery) {
-		solrQuery.setQuery(value);
-	}
-
 	@Override public String getType() {
 		return("query");
 	}

@@ -150,23 +150,6 @@ public class SortLpseToken extends LpseToken {
 				(this.sortOrder == SolrQuery.ORDER.asc ? "ASCending" : "DESCending"));
 	}
 
-	/**
-	 * <p>If the token is valid (i.e. it is a valid solr field to sort on), add
-	 * a sort order to the solrQuery.</p>
-	 *
-	 * <p><code>solrQuery.addSort(String field, ORDER order)</code></p>
-	 *
-	 * <p>If the token is invalid - nothing is performed.</p>
-	 *
-	 * @param solrQuery The Solr Query to apply the sort order to
-	 */
-	@Override
-	public void applyToQuery(SolrQuery solrQuery) {
-		if (null != this.solrFacetField && isValid) {
-			solrQuery.addSort(this.solrFacetField, sortOrder);
-		}
-	}
-
 	@Override
 	public String getType() {
 		return ("sort");
