@@ -220,7 +220,7 @@ function addAvailableFilters(availableArray) {
       value.encoded +
       facet.uris.after +
       "\">[add]</a>&nbsp;" +
-			value.value +
+			decodeURI(value.encoded).replaceAll("+", " ").replaceAll("%2B", "+") +
 			"&nbsp;(" + value.count + ")</li>";
 		}
 		innerUl += "</ul>"
