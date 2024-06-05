@@ -18,21 +18,35 @@ Panl was designed to convert rather long and unfriendly (both in human readable 
 Working with a Solr schema, the Panl configuration files translate unwieldy URI parameters into concise and precise URI paths.
 
 <img src="src/docs/panl-features.png">
-Image: The features and functionality of the Panl server
+
+_**Image**: The features and functionality of the Panl server_
 
 1. **A list of available Collections and FieldSets (CaFS) URIs** that Panl is configured to serve.  CaFS URI paths enable different Solr fields to be returned with the same search parameters.
+
 1. **A textual representation of the CaFS URI** path that the Panl Results Viewer web application is using.
+
 1. **The canonical URI path** (which is returned with the Panl results JSON object) - this is important as multiple Panl LPSE URI paths will return exactly the same results - this is the unique URI path for this result set.
+
 1. **The search query box**, by default, Panl responds to the same parameter name as The Solr server - i.e. 'q'.  This can be configured to be a different value should you choose.
+
 1. **Active filters** - either queries or selected facets that are currently limiting the results - the [Remove] link is the URI path that will remove this facet from the results.
+
 1. **Available filters** - additional facets that can further refine and limit the results.
+
 1. **Number of results found**, and whether this is an exact match.
+
 1. **Query operand** - whether the query is OR, or AND, this affects the search query, not the faceting - i.e. the Solr server q.op parameter.
+
 1. **Page information**, the number of pages, how many results are shown per page, and how many results are shown on this page.
+
 1. **Sorting options** - Whether to sort by relevance (the default) or by other configured sorting options with ascending and descending options available.  Any Solr field can be configured to be used as a sorting option.
+
 1. **Pagination options** - the Panl server returns all information needed to build a pagination system, number of results, number of results shown per page and the current page number.
+
 1. **Number of results per page**. Note: The values 3,5,10 are just examples - this can be set to any positive integer number.
+
 1. **Timing information** about how long the Panl server took to build and return the results (including how much time the Solr server took to find and return the results).
+
 1. **The results** - the fields that are shown are configured by the CaFS.
 
 ## Additional Panl Niceties
@@ -54,14 +68,13 @@ Image: The features and functionality of the Panl server
 
 # Quick Start - The 5 Steps
 
----
-
 At the end of this chapter, you will have a web page up and running with the mechanical-pencils collection indexed and ready to sort and facet on the URL:
 http://localhost:8181/panl-results-viewer/
 
 
 <img src="src/docs/panl-results-viewer.png">
-Image: The In-Build Panl Results Viewer Web Application
+
+_**Image**: The In-Build Panl Results Viewer Web Application_
 
 ## 0. Download Solr and Panl
 
