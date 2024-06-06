@@ -27,6 +27,7 @@ package com.synapticloop.panl.server.handler.fielderiser.field;
 import com.synapticloop.panl.exception.PanlServerException;
 import com.synapticloop.panl.server.handler.fielderiser.CollectionProperties;
 import com.synapticloop.panl.server.handler.tokeniser.token.LpseToken;
+import com.synapticloop.panl.server.handler.tokeniser.token.bean.FromToBean;
 import org.apache.solr.client.solrj.SolrQuery;
 import org.slf4j.Logger;
 
@@ -71,6 +72,11 @@ public abstract class BaseField {
 	private String rangeMaxRange;
 	private boolean hasRangeMidfix = false;
 	private String rangeMidfix;
+
+	private boolean hasRangePrefix;
+	private String rangePrefix;
+	private boolean hasRangeSuffix;
+	private String rangeSuffix;
 
 	// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - //
 	//                         BOOLEAN Facet properties                        //
@@ -213,15 +219,15 @@ public abstract class BaseField {
 				hasMaxRange = true;
 			}
 
-//			this.rangeMaxRange = properties.getProperty("panl.range.prefix." + lpseCode, null);
-//			if(null != this.rangeMaxRange) {
-//				hasMaxRange = true;
-//			}
-//
-//			this.rangeMaxRange = properties.getProperty("panl.range.suffix." + lpseCode, null);
-//			if(null != this.rangeMaxRange) {
-//				hasMaxRange = true;
-//			}
+			this.rangePrefix = properties.getProperty("panl.range.prefix." + lpseCode, null);
+			if (null != this.rangePrefix) {
+				hasRangePrefix = true;
+			}
+
+			this.rangeSuffix = properties.getProperty("panl.range.suffix." + lpseCode, null);
+			if (null != this.rangeSuffix) {
+				hasRangeSuffix = true;
+			}
 
 			this.rangeMidfix = properties.getProperty("panl.range.midfix." + lpseCode, null);
 			if (null != this.rangeMidfix) {
@@ -335,30 +341,30 @@ public abstract class BaseField {
 	 * 		return <code>null</code> if it is invalid.
 	 */
 	public String getDecodedValue(String value) {
-		String temp = URLDecoder.decode(value, StandardCharsets.UTF_8);
+		String decodedValue = URLDecoder.decode(value, StandardCharsets.UTF_8);
 
 		if (hasPrefix) {
-			if (temp.startsWith(panlPrefix)) {
-				temp = temp.substring(panlPrefix.length());
+			if (decodedValue.startsWith(panlPrefix)) {
+				decodedValue = decodedValue.substring(panlPrefix.length());
 			} else {
 				return (null);
 			}
 		}
 
 		if (hasSuffix) {
-			if (temp.endsWith(panlSuffix)) {
-				temp = temp.substring(0, temp.length() - panlSuffix.length());
+			if (decodedValue.endsWith(panlSuffix)) {
+				decodedValue = decodedValue.substring(0, decodedValue.length() - panlSuffix.length());
 			} else {
 				return (null);
 			}
 		}
 
 		if (isBooleanSolrFieldType) {
-			if (hasBooleanTrueReplacement && booleanTrueReplacement.equals(temp)) {
+			if (hasBooleanTrueReplacement && booleanTrueReplacement.equals(decodedValue)) {
 				return BOOLEAN_TRUE_VALUE;
 			}
 
-			if (hasBooleanFalseReplacement && booleanFalseReplacement.equals(temp)) {
+			if (hasBooleanFalseReplacement && booleanFalseReplacement.equals(decodedValue)) {
 				return BOOLEAN_FALSE_VALUE;
 			}
 
@@ -374,13 +380,100 @@ public abstract class BaseField {
 
 		// now we are going to validate the fields, boolean and string fields have
 		// their own validation
-		String validatedValue = getValidatedValue(temp);
+		String validatedValue = getValidatedValue(decodedValue);
 		if (null != validatedValue && validatedValue.isBlank()) {
 			return (null);
 		} else {
 			return validatedValue;
 		}
 	}
+
+	/**
+	 * <p>Decode a range facet values which are in one of two formats, which
+	 * depends on whether the RANGE facet has <code>hasRangeMidfix</code> set.</p>
+	 *
+	 * <p><strong><code>hasRangeMidfix == true</code></strong></p>
+	 *
+	 * <ul>
+	 *   <li>The value will be URL decoded, then</li>
+	 *   <li>The value will be split on the <code>rangeMidfix</code></li>
+	 *   <li>If the split is exactly two Strings, carry on else return null.</li>
+	 * </ul>
+	 *
+	 * <p><strong><code>hasRangeMidfix == false</code></strong></p>
+	 *
+	 * <ul>
+	 *   <li>The value will be split on the <code>/</code> character</li>
+	 *   <li>If the split is exactly two Strings, carry on else return null.</li>
+	 *   <li>The two values will be s URL decoded.</li>
+	 * </ul>
+	 *
+	 * <p>The <code>fromValue</code> will have it's prefix removed.</p>
+	 *
+	 * <p>The <code>toValue</code> will have it's suffix removed.</p>
+	 *
+	 * <p>If all validation tests are passed, then return the bean.</p>
+	 *
+	 * @param value The value to decode for a range
+	 *
+	 * @return The FromToBean with the from and to values set.
+	 */
+	public FromToBean getDecodedRangeValues(String value) {
+
+		String fromString = "";
+		String toString = "";
+
+		if(hasRangeMidfix) {
+			// It is OK to decode the value as it is all in one
+			String decodedValue = URLDecoder.decode(value, StandardCharsets.UTF_8);
+			// then we need to split by the midfix
+			String[] fromToSplit = decodedValue.split(rangeMidfix);
+			if(fromToSplit.length != 2) {
+				return(null);
+			} else {
+				fromString = fromToSplit[0];
+				toString = fromToSplit[1];
+			}
+		} else {
+			String[] fromToSplit = value.split("/");
+			if(fromToSplit.length != 2) {
+				return(null);
+			} else {
+				fromString = URLDecoder.decode(fromToSplit[0], StandardCharsets.UTF_8);
+				toString = URLDecoder.decode(fromToSplit[1], StandardCharsets.UTF_8);
+			}
+		}
+
+		// at this point we have two values, the from and to
+
+		if (hasRangePrefix) {
+			if (fromString.startsWith(rangePrefix)) {
+				fromString = fromString.substring(rangePrefix.length());
+			} else {
+				return (null);
+			}
+		}
+
+		if (hasRangeSuffix) {
+			if (toString.endsWith(rangeSuffix)) {
+				toString = toString.substring(0, toString.length() - rangeSuffix.length());
+			} else {
+				return (null);
+			}
+		}
+
+		// lastly we are going to validate the values
+
+		String validatedFromString = getValidatedValue(fromString);
+		String validatedToString = getValidatedValue(toString);
+
+		if(null == validatedFromString || null == validatedToString || validatedFromString.isBlank() || validatedToString.isBlank()) {
+			return(null);
+		}
+		// now we have all that we need
+		return (new FromToBean(validatedFromString, validatedToString));
+	}
+
 
 	/**
 	 * <p>Get the validated value.  This will ensure that an incoming token value

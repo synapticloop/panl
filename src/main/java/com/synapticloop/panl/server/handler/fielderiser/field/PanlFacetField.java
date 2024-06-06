@@ -63,22 +63,26 @@ public class PanlFacetField extends BaseField {
 		return ("A Solr field that can be used as a facet, returned in the field set, or configured to be sorted by.");
 	}
 
-	protected void applyToQueryInternal(SolrQuery solrQuery, Map<String, List<LpseToken>> panlTokenMap) {
-		List<LpseToken> lpseTokens = panlTokenMap.get(getLpseCode());
-		if (!isOrFacet) {
-			// just go through and set the filter queries - these will be ANDed together
-			for (LpseToken lpseToken : lpseTokens) {
-				FacetLpseToken facetLpseToken = (FacetLpseToken) lpseToken;
-				solrQuery.addFilterQuery(facetLpseToken.getSolrField() + ":\"" + facetLpseToken.getValue() + "\"");
-			}
-			return;
+	private void applyRangeFacetToQuery(SolrQuery solrQuery, List<LpseToken> lpseTokens) {
+		for (LpseToken lpseToken : lpseTokens) {
+			FacetLpseToken facetLpseToken = (FacetLpseToken) lpseToken;
+			solrQuery.addFilterQuery(
+					String.format("%s:[%s TO %s]",
+							facetLpseToken.getSolrField(),
+							facetLpseToken.getValue(),
+							facetLpseToken.getToValue()));
 		}
+	}
 
+	private void applyOrFacetToQuery(SolrQuery solrQuery, List<LpseToken> lpseTokens) {
 		// if there is only one...
-		if(lpseTokens.size() == 1) {
-			FacetLpseToken facetLpseToken = (FacetLpseToken)lpseTokens.get(0);
+		if (lpseTokens.size() == 1) {
+			FacetLpseToken facetLpseToken = (FacetLpseToken) lpseTokens.get(0);
 
-			solrQuery.addFilterQuery(facetLpseToken.getSolrField() + ":\"" + facetLpseToken.getValue() + "\"");
+			solrQuery.addFilterQuery(
+					String.format("%s:\"%s\"",
+							facetLpseToken.getSolrField(),
+							facetLpseToken.getValue()));
 			return;
 		}
 
@@ -93,7 +97,7 @@ public class PanlFacetField extends BaseField {
 						.append(":(");
 			}
 
-			if(!isFirst) {
+			if (!isFirst) {
 				stringBuilder.append(" OR ");
 			}
 
@@ -107,5 +111,28 @@ public class PanlFacetField extends BaseField {
 
 		stringBuilder.append(")");
 		solrQuery.addFilterQuery(stringBuilder.toString());
+	}
+
+	protected void applyToQueryInternal(SolrQuery solrQuery, Map<String, List<LpseToken>> panlTokenMap) {
+		List<LpseToken> lpseTokens = panlTokenMap.get(getLpseCode());
+
+		// check to see whether this is a RANGE facet
+
+		if (isRangeFacet) {
+			applyRangeFacetToQuery(solrQuery, lpseTokens);
+			return;
+		}
+
+		if (isOrFacet) {
+			applyOrFacetToQuery(solrQuery, lpseTokens);
+			return;
+		}
+
+		// At this point, we just have regular facets.
+		for (LpseToken lpseToken : lpseTokens) {
+			FacetLpseToken facetLpseToken = (FacetLpseToken) lpseToken;
+			solrQuery.addFilterQuery(facetLpseToken.getSolrField() + ":\"" + facetLpseToken.getValue() + "\"");
+		}
+
 	}
 }

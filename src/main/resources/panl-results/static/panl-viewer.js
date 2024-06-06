@@ -168,6 +168,9 @@ $("#num_per_page_links").append("<a href=\"" +
 }
 
 function addActiveFilters(activeObject) {
+	console.log("active objects");
+	console.log(activeObject);
+
 	const active = $("#active");
 	// first up the query
 	if(activeObject.query !== undefined) {

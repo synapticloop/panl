@@ -27,6 +27,7 @@ package com.synapticloop.panl.server.handler.tokeniser.token;
 import com.synapticloop.panl.server.handler.fielderiser.CollectionProperties;
 import com.synapticloop.panl.server.handler.fielderiser.field.BaseField;
 import com.synapticloop.panl.server.handler.tokeniser.LpseTokeniser;
+import com.synapticloop.panl.server.handler.tokeniser.token.bean.FromToBean;
 
 import java.util.StringTokenizer;
 
@@ -96,18 +97,18 @@ public class FacetLpseToken extends LpseToken {
 
 		// at this point, we need to determine whether this is a range token by
 		// looking at the next lpse token - if it is a +, or a -
-		if(lpseTokeniser.hasMoreTokens()) {
+		if (lpseTokeniser.hasMoreTokens()) {
 			String possibleRangeDesignator = lpseTokeniser.nextToken();
-			if(possibleRangeDesignator.equals("+") || possibleRangeDesignator.equals("-")) {
+			if (possibleRangeDesignator.equals("+") || possibleRangeDesignator.equals("-")) {
 				// this is a range query, the next part should be the same as the
 				// current LPSE code - find it
 				this.isRangeToken = true;
-				if(possibleRangeDesignator.equals("-")) {
+				if (possibleRangeDesignator.equals("-")) {
 					this.hasMidFix = true;
 				}
 
 				StringBuilder nextLpse = new StringBuilder();
-				int j= 0;
+				int j = 0;
 
 				while (j < collectionProperties.getLpseLength()) {
 					if (lpseTokeniser.hasMoreTokens()) {
@@ -118,24 +119,49 @@ public class FacetLpseToken extends LpseToken {
 				}
 
 				// now check to ensure that this is the same....
-				if(!this.lpseCode.contentEquals(nextLpse)) {
+				if (!this.lpseCode.contentEquals(nextLpse)) {
 					isValid = false;
 				}
 			}
 		}
 
 		BaseField lpseField = collectionProperties.getLpseField(this.lpseCode);
+
 		if (null != lpseField) {
-			this.originalValue = valueTokeniser.nextToken();
-			this.value = lpseField.getDecodedValue(this.originalValue);
+			if(!valueTokeniser.hasMoreTokens()) {
+				this.isValid = false;
+			} else {
+				// we have a token - get it
+				this.originalValue = valueTokeniser.nextToken();
 
-			if (null == this.value) {
-				isValid = false;
-			}
+				if (isRangeToken) {
+					if (!hasMidFix) {
+						if (valueTokeniser.hasMoreTokens()) {
+							String toValueTemp = valueTokeniser.nextToken();
+							this.toValue = lpseField.getDecodedValue(toValueTemp);
+							this.originalValue += "/" + toValueTemp;
+						} else {
+							this.isValid = false;
+						}
+					}
 
-			if(!hasMidFix) {
-				if(valueTokeniser.hasMoreTokens()) {
-					this.toValue = valueTokeniser.nextToken();
+					// at this point - we have created the value, either x/x or x-midfix-x
+					// if it is valid, decode it
+					if(this.isValid) {
+						FromToBean fromToBean = lpseField.getDecodedRangeValues(this.originalValue);
+						if(null == fromToBean) {
+							this.isValid = false;
+						} else {
+							this.value = fromToBean.getFromValue();
+							this.toValue = fromToBean.getToValue();
+						}
+					}
+				} else {
+					this.value = lpseField.getDecodedValue(this.originalValue);
+
+					if (null == this.value) {
+						isValid = false;
+					}
 				}
 			}
 		} else {
@@ -170,4 +196,9 @@ public class FacetLpseToken extends LpseToken {
 	public String getSolrField() {
 		return solrField;
 	}
+
+	public String getToValue() {
+		return toValue;
+	}
+
 }
