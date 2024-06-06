@@ -1,4 +1,4 @@
-package com.synapticloop.panl.server.tokeniser.token;
+package com.synapticloop.panl.server.handler.tokeniser.token;
 
 /*
  * Copyright (c) 2008-2024 synapticloop.
@@ -24,37 +24,66 @@ package com.synapticloop.panl.server.tokeniser.token;
  *  IN THE SOFTWARE.
  */
 
-import com.synapticloop.panl.server.properties.CollectionProperties;
+import com.synapticloop.panl.server.handler.fielderiser.CollectionProperties;
+import com.synapticloop.panl.server.handler.fielderiser.field.BaseField;
 
-import java.net.URLDecoder;
-import java.nio.charset.StandardCharsets;
 import java.util.StringTokenizer;
 
-public class PassThroughLpseToken extends LpseToken {
-	private CollectionProperties collectionProperties;
+public class PageLpseToken extends LpseToken {
+	private int pageNum = 0;
+	private final CollectionProperties collectionProperties;
 
-	public PassThroughLpseToken(
-			CollectionProperties collectionProperties,
-			String lpseCode,
-			StringTokenizer valueTokeniser) {
+	public PageLpseToken(CollectionProperties collectionProperties, String lpseCode, StringTokenizer valueTokenizer) {
 		super(lpseCode);
-
 		this.collectionProperties = collectionProperties;
 
-		this.value = URLDecoder.decode(
-				valueTokeniser.nextToken(),
-				StandardCharsets.UTF_8);
+		int pageNumTemp;
+
+		if (valueTokenizer.hasMoreTokens()) {
+			String pageNumTempString = "";
+			BaseField lpseField = collectionProperties.getLpseField(lpseCode);
+			if(null != lpseField) {
+				pageNumTempString = lpseField.getDecodedValue(valueTokenizer.nextToken());
+			} else {
+				this.isValid = false;
+			}
+
+			try {
+				pageNumTemp = Integer.parseInt(pageNumTempString);
+			} catch (NumberFormatException e) {
+				isValid = false;
+				pageNumTemp = 1;
+			}
+		} else {
+			isValid = false;
+			pageNumTemp = 1;
+		}
+
+		if (pageNumTemp <= 0) {
+			pageNumTemp = 1;
+		}
+
+		this.value = Integer.toString(pageNumTemp);
+		this.pageNum = pageNumTemp;
 	}
 
 	@Override public String explain() {
-		return ("PANL [  VALID  ] <passthrough>   LPSE code '" +
+		return ("PANL " +
+				(this.isValid ? "[  VALID  ]" : "[ INVALID ]") +
+				" <page>          LPSE code '" +
 				this.lpseCode +
-				"' with value '" +
-				value +
+				"' using " +
+				(this.isValid ? "parsed" : "default") +
+				" value of '" +
+				this.pageNum +
 				"'.");
 	}
 
 	@Override public String getType() {
-		return ("passthrough");
+		return ("page");
+	}
+
+	public int getPageNum() {
+		return (this.pageNum);
 	}
 }

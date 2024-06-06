@@ -1,4 +1,4 @@
-package com.synapticloop.panl.server.tokeniser.token;
+package com.synapticloop.panl.server.handler.tokeniser.token;
 
 /*
  * Copyright (c) 2008-2024 synapticloop.
@@ -24,8 +24,8 @@ package com.synapticloop.panl.server.tokeniser.token;
  *  IN THE SOFTWARE.
  */
 
-import com.synapticloop.panl.server.properties.CollectionProperties;
-import com.synapticloop.panl.server.tokeniser.LpseTokeniser;
+import com.synapticloop.panl.server.handler.fielderiser.CollectionProperties;
+import com.synapticloop.panl.server.handler.tokeniser.LpseTokeniser;
 
 import java.util.StringTokenizer;
 

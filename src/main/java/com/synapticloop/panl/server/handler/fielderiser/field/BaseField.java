@@ -1,4 +1,4 @@
-package com.synapticloop.panl.server.properties.field;
+package com.synapticloop.panl.server.handler.fielderiser.field;
 
 /*
  * Copyright (c) 2008-2024 synapticloop.
@@ -25,8 +25,8 @@ package com.synapticloop.panl.server.properties.field;
  */
 
 import com.synapticloop.panl.exception.PanlServerException;
-import com.synapticloop.panl.server.properties.CollectionProperties;
-import com.synapticloop.panl.server.tokeniser.token.LpseToken;
+import com.synapticloop.panl.server.handler.fielderiser.CollectionProperties;
+import com.synapticloop.panl.server.handler.tokeniser.token.LpseToken;
 import org.apache.solr.client.solrj.SolrQuery;
 import org.slf4j.Logger;
 
@@ -56,7 +56,14 @@ public abstract class BaseField {
 	private String panlPrefix;
 	private String panlSuffix;
 
+	// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - //
+	//                            OR Facet properties                          //
+	// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - //
 	protected boolean isOrFacet = false;
+
+	// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - //
+	//                          RANGE Facet properties                         //
+	// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - //
 	protected boolean isRangeFacet = false;
 	private boolean hasMinRange = false;
 	private String rangeMinRange;
@@ -65,6 +72,9 @@ public abstract class BaseField {
 	private boolean hasRangeMidfix = false;
 	private String rangeMidfix;
 
+	// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - //
+	//                         BOOLEAN Facet properties                        //
+	// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - //
 	private boolean isBooleanSolrFieldType;
 	private boolean hasBooleanTrueReplacement;
 	private boolean hasBooleanFalseReplacement;
@@ -80,12 +90,13 @@ public abstract class BaseField {
 	private final String collectionName;
 	private final String propertyKey;
 
+	private final int lpseLength;
+
 	private static final int VALIDATION_TYPE_NONE = 0;
 	private static final int VALIDATION_TYPE_NUMBER = 1;
 	private static final int VALIDATION_TYPE_DECIMAL = 2;
 
 	private int validationType;
-	private int lpseLength;
 
 	public BaseField(
 			String lpseCode,

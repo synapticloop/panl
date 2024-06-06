@@ -1,4 +1,4 @@
-package com.synapticloop.panl.server.properties;
+package com.synapticloop.panl.server.handler.fielderiser;
 
 /*
  * Copyright (c) 2008-2024 synapticloop.

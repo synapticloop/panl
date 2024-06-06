@@ -1,4 +1,4 @@
-package com.synapticloop.panl.server.tokeniser;
+package com.synapticloop.panl.server.handler.tokeniser;
 
 /*
  * Copyright (c) 1994, 2004, Oracle and/or its affiliates. All rights reserved.

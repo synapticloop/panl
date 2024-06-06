@@ -24,9 +24,9 @@ package com.synapticloop.panl.server.handler.processor;
  *  IN THE SOFTWARE.
  */
 
-import com.synapticloop.panl.server.properties.CollectionProperties;
-import com.synapticloop.panl.server.properties.field.BaseField;
-import com.synapticloop.panl.server.tokeniser.token.LpseToken;
+import com.synapticloop.panl.server.handler.fielderiser.CollectionProperties;
+import com.synapticloop.panl.server.handler.fielderiser.field.BaseField;
+import com.synapticloop.panl.server.handler.tokeniser.token.LpseToken;
 import org.json.JSONArray;
 import org.json.JSONObject;
 

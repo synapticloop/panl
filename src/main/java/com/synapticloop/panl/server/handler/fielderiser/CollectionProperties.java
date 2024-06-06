@@ -1,4 +1,4 @@
-package com.synapticloop.panl.server.properties;
+package com.synapticloop.panl.server.handler.fielderiser;
 
 /*
  * Copyright (c) 2008-2024 synapticloop.
@@ -28,8 +28,8 @@ import com.synapticloop.panl.exception.PanlServerException;
 //import com.synapticloop.panl.server.handler.field.BaseField;
 //import com.synapticloop.panl.server.handler.field.FacetField;
 //import com.synapticloop.panl.server.handler.field.MetaDataField;
-import com.synapticloop.panl.server.properties.field.*;
-import com.synapticloop.panl.server.properties.util.PropertyHelper;
+import com.synapticloop.panl.server.handler.fielderiser.field.*;
+import com.synapticloop.panl.server.handler.fielderiser.util.PropertyHelper;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.slf4j.Logger;

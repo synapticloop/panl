@@ -24,8 +24,8 @@ package com.synapticloop.panl.server.client;
  *  IN THE SOFTWARE.
  */
 
-import com.synapticloop.panl.server.properties.PanlProperties;
-import com.synapticloop.panl.server.properties.CollectionProperties;
+import com.synapticloop.panl.server.handler.fielderiser.PanlProperties;
+import com.synapticloop.panl.server.handler.fielderiser.CollectionProperties;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.utils.URLEncodedUtils;
 import org.apache.solr.client.solrj.SolrClient;

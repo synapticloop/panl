@@ -1,4 +1,4 @@
-package com.synapticloop.panl.server.tokeniser.token;
+package com.synapticloop.panl.server.handler.tokeniser.token;
 
 /*
  * Copyright (c) 2008-2024 synapticloop.
@@ -24,73 +24,37 @@ package com.synapticloop.panl.server.tokeniser.token;
  *  IN THE SOFTWARE.
  */
 
-import com.synapticloop.panl.server.properties.CollectionProperties;
-import com.synapticloop.panl.server.properties.field.BaseField;
-import com.synapticloop.panl.server.tokeniser.LpseTokeniser;
+import com.synapticloop.panl.server.handler.fielderiser.CollectionProperties;
 
+import java.net.URLDecoder;
+import java.nio.charset.StandardCharsets;
 import java.util.StringTokenizer;
 
-public class FacetLpseToken extends LpseToken {
-	private String solrField = null;
+public class PassThroughLpseToken extends LpseToken {
 	private CollectionProperties collectionProperties;
 
-	public FacetLpseToken(
+	public PassThroughLpseToken(
 			CollectionProperties collectionProperties,
 			String lpseCode,
-			LpseTokeniser lpseTokeniser,
 			StringTokenizer valueTokeniser) {
 		super(lpseCode);
+
 		this.collectionProperties = collectionProperties;
 
-		StringBuilder sb = new StringBuilder(lpseCode);
-		int i = 1;
-		while (i < collectionProperties.getLpseLength()) {
-			if (lpseTokeniser.hasMoreTokens()) {
-				sb.append(lpseTokeniser.nextToken());
-			}
-			i++;
-		}
-
-		this.lpseCode = sb.toString();
-
-		BaseField lpseField = collectionProperties.getLpseField(this.lpseCode);
-		if (null != lpseField) {
-			this.originalValue = valueTokeniser.nextToken();
-			this.value = lpseField.getDecodedValue(this.originalValue);
-
-			if (null == this.value) {
-				isValid = false;
-			}
-		} else {
-			this.isValid = false;
-		}
-
-		if (collectionProperties.hasFacetCode(lpseCode)) {
-			this.solrField = collectionProperties.getSolrFieldNameFromLpseCode(lpseCode);
-		} else {
-			this.isValid = false;
-		}
+		this.value = URLDecoder.decode(
+				valueTokeniser.nextToken(),
+				StandardCharsets.UTF_8);
 	}
 
 	@Override public String explain() {
-		return ("PANL " +
-				(this.isValid ? "[  VALID  ]" : "[ INVALID ]") +
-				" <facet>         LPSE code '" +
+		return ("PANL [  VALID  ] <passthrough>   LPSE code '" +
 				this.lpseCode +
-				"' (solr field '" +
-				this.solrField +
-				"') with parsed value '" +
+				"' with value '" +
 				value +
-				"', incoming value '" +
-				this.originalValue +
 				"'.");
 	}
 
 	@Override public String getType() {
-		return ("facet");
-	}
-
-	public String getSolrField() {
-		return solrField;
+		return ("passthrough");
 	}
 }

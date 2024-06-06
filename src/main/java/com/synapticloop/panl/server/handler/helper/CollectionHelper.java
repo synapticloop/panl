@@ -26,8 +26,8 @@ package com.synapticloop.panl.server.handler.helper;
 
 import com.synapticloop.panl.exception.PanlServerException;
 import com.synapticloop.panl.server.client.*;
-import com.synapticloop.panl.server.properties.CollectionProperties;
-import com.synapticloop.panl.server.properties.PanlProperties;
+import com.synapticloop.panl.server.handler.fielderiser.CollectionProperties;
+import com.synapticloop.panl.server.handler.fielderiser.PanlProperties;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

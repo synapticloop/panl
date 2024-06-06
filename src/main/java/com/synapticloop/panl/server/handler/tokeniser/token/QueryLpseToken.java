@@ -1,4 +1,4 @@
-package com.synapticloop.panl.server.tokeniser.token;
+package com.synapticloop.panl.server.handler.tokeniser.token;
 
 /*
  * Copyright (c) 2008-2024 synapticloop.

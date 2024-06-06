@@ -1,4 +1,4 @@
-package com.synapticloop.panl.server.tokeniser.token;
+package com.synapticloop.panl.server.handler.tokeniser.token;
 
 /*
  * Copyright (c) 2008-2024 synapticloop.
@@ -24,66 +24,63 @@ package com.synapticloop.panl.server.tokeniser.token;
  *  IN THE SOFTWARE.
  */
 
-import com.synapticloop.panl.server.properties.CollectionProperties;
-import com.synapticloop.panl.server.properties.field.BaseField;
+import com.synapticloop.panl.server.handler.fielderiser.CollectionProperties;
+import com.synapticloop.panl.server.handler.fielderiser.field.BaseField;
 
 import java.util.StringTokenizer;
 
-public class PageLpseToken extends LpseToken {
-	private int pageNum = 0;
-	private final CollectionProperties collectionProperties;
+public class NumRowsLpseToken extends LpseToken {
+	private CollectionProperties collectionProperties;
 
-	public PageLpseToken(CollectionProperties collectionProperties, String lpseCode, StringTokenizer valueTokenizer) {
+	private int numRows;
+
+	public NumRowsLpseToken(CollectionProperties collectionProperties, String lpseCode, StringTokenizer valueTokenizer) {
 		super(lpseCode);
 		this.collectionProperties = collectionProperties;
 
-		int pageNumTemp;
+		int numRowsTemp;
 
 		if (valueTokenizer.hasMoreTokens()) {
-			String pageNumTempString = "";
+			String numRowsTempString = "";
 			BaseField lpseField = collectionProperties.getLpseField(lpseCode);
 			if(null != lpseField) {
-				pageNumTempString = lpseField.getDecodedValue(valueTokenizer.nextToken());
+				numRowsTempString = lpseField.getDecodedValue(valueTokenizer.nextToken());
 			} else {
 				this.isValid = false;
 			}
 
 			try {
-				pageNumTemp = Integer.parseInt(pageNumTempString);
+				numRowsTemp = Integer.parseInt(numRowsTempString);
 			} catch (NumberFormatException e) {
 				isValid = false;
-				pageNumTemp = 1;
+				numRowsTemp = collectionProperties.getNumResultsPerPage();
 			}
 		} else {
 			isValid = false;
-			pageNumTemp = 1;
+			numRowsTemp = collectionProperties.getNumResultsPerPage();
 		}
-
-		if (pageNumTemp <= 0) {
-			pageNumTemp = 1;
-		}
-
-		this.value = Integer.toString(pageNumTemp);
-		this.pageNum = pageNumTemp;
+		this.value = Integer.toString(numRowsTemp);
+		this.numRows = numRowsTemp;
 	}
 
 	@Override public String explain() {
+		// TODO - suffix and prefix
 		return ("PANL " +
 				(this.isValid ? "[  VALID  ]" : "[ INVALID ]") +
-				" <page>          LPSE code '" +
+				" <rows>          LPSE code '" +
 				this.lpseCode +
 				"' using " +
 				(this.isValid ? "parsed" : "default") +
 				" value of '" +
-				this.pageNum +
+				this.numRows +
 				"'.");
 	}
 
 	@Override public String getType() {
-		return ("page");
+		return("numrows");
 	}
 
-	public int getPageNum() {
-		return (this.pageNum);
+	public int getNumRows() {
+		return(this.numRows);
 	}
 }

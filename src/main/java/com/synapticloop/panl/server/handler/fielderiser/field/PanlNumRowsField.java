@@ -1,4 +1,4 @@
-package com.synapticloop.panl.server.properties.field;
+package com.synapticloop.panl.server.handler.fielderiser.field;
 
 /*
  * Copyright (c) 2008-2024 synapticloop.
@@ -25,9 +25,9 @@ package com.synapticloop.panl.server.properties.field;
  */
 
 import com.synapticloop.panl.exception.PanlServerException;
-import com.synapticloop.panl.server.properties.CollectionProperties;
-import com.synapticloop.panl.server.tokeniser.token.LpseToken;
-import com.synapticloop.panl.server.tokeniser.token.PageLpseToken;
+import com.synapticloop.panl.server.handler.fielderiser.CollectionProperties;
+import com.synapticloop.panl.server.handler.tokeniser.token.LpseToken;
+import com.synapticloop.panl.server.handler.tokeniser.token.NumRowsLpseToken;
 import org.apache.solr.client.solrj.SolrQuery;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -36,10 +36,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 
-public class PanlPageNumField extends BaseField {
-	private static final Logger LOGGER = LoggerFactory.getLogger(PanlPageNumField.class);
+public class PanlNumRowsField extends BaseField {
+	private static final Logger LOGGER = LoggerFactory.getLogger(PanlNumRowsField.class);
 
-	public PanlPageNumField(String lpseCode, String propertyKey, Properties properties, String collectionName) throws PanlServerException {
+	public PanlNumRowsField(String lpseCode, String propertyKey, Properties properties, String collectionName) throws PanlServerException {
 		super(lpseCode, properties, propertyKey, collectionName);
 
 		populateParamSuffixAndPrefix();
@@ -47,9 +47,14 @@ public class PanlPageNumField extends BaseField {
 		logDetails();
 	}
 
+	@Override
+	public Logger getLogger() {
+		return (LOGGER);
+	}
+
 	/**
-	 * <p>Get the canonical URI path for the page number.  This __ALWAYS__
-	 * returns a URI path. The path will be encoded with a prefix and/or
+	 * <p>Get the canonical URI path for the number of results.  This __ALWAYS__
+	 * returns a URI path.  The path will be encoded with a prefix and/or
 	 * suffix if they have been set.</p>
 	 *
 	 * @param panlTokenMap The token map with all fields and a list of their
@@ -63,13 +68,13 @@ public class PanlPageNumField extends BaseField {
 		StringBuilder sb = new StringBuilder();
 		if (panlTokenMap.containsKey(lpseCode) && !panlTokenMap.get(lpseCode).isEmpty()) {
 
-			// get the first token out of the list - there can be only one, so we
-			// choose the first one.
+			// we are ony getting the first token from the list - there can only be
+			// one - so we choose the first one
 
-			PageLpseToken pageLpseToken = (PageLpseToken) panlTokenMap.get(lpseCode).get(0);
-			sb.append(getEncodedPanlValue(Integer.toString(pageLpseToken.getPageNum())));
+			NumRowsLpseToken numRowsLpseToken = (NumRowsLpseToken) panlTokenMap.get(lpseCode).get(0);
+			sb.append(getEncodedPanlValue(Integer.toString(numRowsLpseToken.getNumRows())));
 		} else {
-			sb.append(getEncodedPanlValue("1"));
+			sb.append(getEncodedPanlValue(Integer.toString(collectionProperties.getNumResultsPerPage())));
 		}
 
 		sb.append("/");
@@ -81,33 +86,12 @@ public class PanlPageNumField extends BaseField {
 		return (lpseCode);
 	}
 
-	public String getResetUriPath(Map<String, List<LpseToken>> panlTokenMap, CollectionProperties collectionProperties) {
-		StringBuilder sb = new StringBuilder();
-		if (panlTokenMap.containsKey(lpseCode)) {
-			sb.append(getEncodedPanlValue("1"));
-			sb.append("/");
-		}
-
-		return (sb.toString());
-	}
-
-	public String getResetLpseCode(Map<String, List<LpseToken>> panlTokenMap, CollectionProperties collectionProperties) {
-		if (panlTokenMap.containsKey(lpseCode)) {
-			return (lpseCode);
-		}
-		return ("");
-	}
-
-	@Override public Logger getLogger() {
-		return (LOGGER);
-	}
-
 	@Override public String getExplainDescription() {
-		return ("The page number of the results (works in conjunction with the number of results).");
+		return ("The number of results to return per query.");
 	}
 
 	public void applyToQueryInternal(SolrQuery solrQuery, Map<String, List<LpseToken>> panlTokenMap) {
-
+		// do nothing - this relies on other data and is set by the handler
 	}
 
 }

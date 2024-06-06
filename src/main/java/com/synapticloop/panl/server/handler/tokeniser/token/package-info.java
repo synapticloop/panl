@@ -6,4 +6,4 @@
  * @author synapticloop
  * @version 1.0
  */
-package com.synapticloop.panl.server.tokeniser.token;
+package com.synapticloop.panl.server.handler.tokeniser.token;

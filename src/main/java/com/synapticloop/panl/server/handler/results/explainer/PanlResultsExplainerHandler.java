@@ -26,7 +26,7 @@ package com.synapticloop.panl.server.handler.results.explainer;
 
 import com.synapticloop.panl.server.handler.CollectionRequestHandler;
 import com.synapticloop.panl.server.handler.results.util.ResourceHelper;
-import com.synapticloop.panl.server.properties.CollectionProperties;
+import com.synapticloop.panl.server.handler.fielderiser.CollectionProperties;
 import org.apache.http.HttpRequest;
 import org.apache.http.HttpResponse;
 import org.apache.http.protocol.HttpContext;

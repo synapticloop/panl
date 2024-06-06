@@ -1,4 +1,4 @@
-package com.synapticloop.panl.server.properties.field;
+package com.synapticloop.panl.server.handler.fielderiser.field;
 
 /*
  * Copyright (c) 2008-2024 synapticloop.
@@ -25,9 +25,9 @@ package com.synapticloop.panl.server.properties.field;
  */
 
 import com.synapticloop.panl.exception.PanlServerException;
-import com.synapticloop.panl.server.properties.CollectionProperties;
-import com.synapticloop.panl.server.tokeniser.token.LpseToken;
-import com.synapticloop.panl.server.tokeniser.token.SortLpseToken;
+import com.synapticloop.panl.server.handler.fielderiser.CollectionProperties;
+import com.synapticloop.panl.server.handler.tokeniser.token.LpseToken;
+import com.synapticloop.panl.server.handler.tokeniser.token.SortLpseToken;
 import org.apache.solr.client.solrj.SolrQuery;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
