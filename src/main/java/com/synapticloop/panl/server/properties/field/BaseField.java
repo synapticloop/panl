@@ -189,7 +189,7 @@ public abstract class BaseField {
 	}
 
 	protected void populateRanges() {
-		this.isRangeFacet = properties.getProperty("panl.range." + lpseCode, "false").equals("true");
+		this.isRangeFacet = properties.getProperty("panl.range.facet." + lpseCode, "false").equals("true");
 		if (this.isRangeFacet) {
 			// get the other properties, if they exist...
 			this.rangeMinRange = properties.getProperty("panl.range.min." + lpseCode, null);
@@ -343,11 +343,11 @@ public abstract class BaseField {
 		}
 
 		if (isBooleanSolrFieldType) {
-			if (hasBooleanTrueReplacement && booleanTrueReplacement.equals(value)) {
+			if (hasBooleanTrueReplacement && booleanTrueReplacement.equals(temp)) {
 				return BOOLEAN_TRUE_VALUE;
 			}
 
-			if (hasBooleanFalseReplacement && booleanFalseReplacement.equals(value)) {
+			if (hasBooleanFalseReplacement && booleanFalseReplacement.equals(temp)) {
 				return BOOLEAN_FALSE_VALUE;
 			}
 

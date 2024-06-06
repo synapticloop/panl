@@ -64,19 +64,28 @@ public class PanlFacetField extends BaseField {
 	}
 
 	protected void applyToQueryInternal(SolrQuery solrQuery, Map<String, List<LpseToken>> panlTokenMap) {
+		List<LpseToken> lpseTokens = panlTokenMap.get(getLpseCode());
 		if (!isOrFacet) {
 			// just go through and set the filter queries - these will be ANDed together
-			for (LpseToken lpseToken : panlTokenMap.get(getLpseCode())) {
+			for (LpseToken lpseToken : lpseTokens) {
 				FacetLpseToken facetLpseToken = (FacetLpseToken) lpseToken;
 				solrQuery.addFilterQuery(facetLpseToken.getSolrField() + ":\"" + facetLpseToken.getValue() + "\"");
 			}
 			return;
 		}
 
+		// if there is only one...
+		if(lpseTokens.size() == 1) {
+			FacetLpseToken facetLpseToken = (FacetLpseToken)lpseTokens.get(0);
+
+			solrQuery.addFilterQuery(facetLpseToken.getSolrField() + ":\"" + facetLpseToken.getValue() + "\"");
+			return;
+		}
+
 		StringBuilder stringBuilder = new StringBuilder();
 		boolean isFirst = true;
 		// at this point, we are going through the or filters
-		for (LpseToken lpseToken : panlTokenMap.get(getLpseCode())) {
+		for (LpseToken lpseToken : lpseTokens) {
 			FacetLpseToken facetLpseToken = (FacetLpseToken) lpseToken;
 			if (isFirst) {
 				stringBuilder

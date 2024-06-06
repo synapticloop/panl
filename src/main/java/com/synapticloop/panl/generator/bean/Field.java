@@ -68,10 +68,14 @@ public class Field {
 					String.format("#panl.bool.%s.false=is-not-%s\n", code, field);
 		}
 
+		// TODO - add in all of the properties
 		return (String.format("\n# %s\n", schemaXml) +
 				String.format("panl.facet.%s=%s\n", code, field) +
 				String.format("panl.name.%s=%s\n", code, getPrettyName(field)) +
 				String.format("panl.type.%s=%s\n", code, solrClassName) +
+				"# The following two properties are optional and the values should be changed\n" +
+				String.format("#panl.prefix.%s=prefix\n", code) +
+				String.format("#panl.suffix.%s=suffix\n", code) +
 				"# The following two properties are optional and the values should be changed\n" +
 				String.format("#panl.prefix.%s=prefix\n", code) +
 				String.format("#panl.suffix.%s=suffix\n", code) +
