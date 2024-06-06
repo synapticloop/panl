@@ -72,9 +72,9 @@ import java.util.StringTokenizer;
 public class FacetLpseToken extends LpseToken {
 	private String solrField = null;
 	private CollectionProperties collectionProperties;
-	private boolean isRangeToken = false;
-	private boolean hasMidFix = false;
 	private String toValue = null;
+	protected boolean isRangeToken = false;
+	protected boolean hasMidFix = false;
 
 	public FacetLpseToken(
 			CollectionProperties collectionProperties,
@@ -201,4 +201,11 @@ public class FacetLpseToken extends LpseToken {
 		return toValue;
 	}
 
+	public boolean getIsRangeToken() {
+		return isRangeToken;
+	}
+
+	public boolean getHasMidFix() {
+		return hasMidFix;
+	}
 }

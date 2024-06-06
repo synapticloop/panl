@@ -201,4 +201,5 @@ public abstract class LpseToken {
 	public boolean getIsValid() {
 		return (isValid);
 	}
+
 }

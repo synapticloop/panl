@@ -26,6 +26,7 @@ package com.synapticloop.panl.server.handler.fielderiser.field;
 
 import com.synapticloop.panl.exception.PanlServerException;
 import com.synapticloop.panl.server.handler.fielderiser.CollectionProperties;
+import com.synapticloop.panl.server.handler.tokeniser.token.FacetLpseToken;
 import com.synapticloop.panl.server.handler.tokeniser.token.LpseToken;
 import com.synapticloop.panl.server.handler.tokeniser.token.bean.FromToBean;
 import org.apache.solr.client.solrj.SolrQuery;
@@ -517,10 +518,63 @@ public abstract class BaseField {
 	}
 
 	public String getEncodedPanlValue(String value) {
-		if (null == value) {
-			return ("");
+		return(getEncodedRegularFacetValue(value));
+	}
+
+	public String getEncodedPanlValue(LpseToken token) {
+		if(null == token.getValue()) {
+			return("");
 		}
 
+		String encodedPanlValue;
+		if(isRangeFacet) {
+			return(getEncodedRangeFacetValue(token));
+		} else {
+			return(getEncodedRegularFacetValue(token.getValue()));
+		}
+	}
+
+	private String getEncodedRangeFacetValue(LpseToken token) {
+		FacetLpseToken facetLpseToken = (FacetLpseToken)token;
+
+		StringBuilder sb = new StringBuilder();
+
+		if(hasRangeMidfix) {
+			// just add it all together
+			if(hasRangePrefix) {
+				sb.append(rangePrefix);
+			}
+			sb.append(facetLpseToken.getValue());
+
+			sb.append(rangeMidfix);
+
+			sb.append(facetLpseToken.getToValue());
+
+			if(hasRangeSuffix) {
+				sb.append(rangeSuffix);
+			}
+			return(URLEncoder.encode(sb.toString(), StandardCharsets.UTF_8));
+		} else {
+			// we will have a two part URI path, split by a '/' and both values need
+			// to be URLEncoded before.
+			if(hasRangePrefix) {
+				sb.append(URLEncoder.encode(rangePrefix, StandardCharsets.UTF_8));
+			}
+
+			sb.append(URLEncoder.encode(facetLpseToken.getValue(), StandardCharsets.UTF_8));
+
+			sb.append("/");
+
+			sb.append(URLEncoder.encode(facetLpseToken.getToValue(), StandardCharsets.UTF_8));
+
+			if(hasRangeSuffix) {
+				sb.append(URLEncoder.encode(rangeSuffix, StandardCharsets.UTF_8));
+			}
+			return(sb.toString());
+		}
+	}
+
+	private String getEncodedRegularFacetValue(String value) {
 		StringBuilder sb = new StringBuilder();
 
 		if (hasPrefix) {
@@ -547,7 +601,7 @@ public abstract class BaseField {
 			sb.append(panlSuffix);
 		}
 
-		return (URLEncoder.encode(sb.toString(), StandardCharsets.UTF_8));
+		return(URLEncoder.encode(sb.toString(), StandardCharsets.UTF_8));
 	}
 
 	public String getSolrFieldType() {
@@ -555,7 +609,7 @@ public abstract class BaseField {
 	}
 
 	public String getURIPath(LpseToken token, CollectionProperties collectionProperties) {
-		return (getEncodedPanlValue(token.getValue()) + "/");
+		return (getEncodedPanlValue(token) + "/");
 	}
 
 	public String getLpseCode(LpseToken token, CollectionProperties collectionProperties) {
@@ -567,7 +621,7 @@ public abstract class BaseField {
 		if (panlTokenMap.containsKey(lpseCode)) {
 			for (LpseToken lpseToken : panlTokenMap.get(lpseCode)) {
 				if (lpseToken.getIsValid()) {
-					sb.append(getEncodedPanlValue(lpseToken.getValue()));
+					sb.append(getEncodedPanlValue(lpseToken));
 					sb.append("/");
 				}
 			}
@@ -580,7 +634,18 @@ public abstract class BaseField {
 		if (panlTokenMap.containsKey(lpseCode)) {
 			for (LpseToken lpseToken : panlTokenMap.get(lpseCode)) {
 				if (lpseToken.getIsValid()) {
-					sb.append(lpseToken.getLpseCode());
+					if(lpseToken instanceof FacetLpseToken) {
+						FacetLpseToken facetLpseToken = (FacetLpseToken) lpseToken;
+						if(facetLpseToken.getIsRangeToken()) {
+							sb.append(lpseToken.getLpseCode());
+							sb.append((facetLpseToken.getHasMidFix() ? "-" : "+"));
+							sb.append(lpseToken.getLpseCode());
+						} else {
+							sb.append(lpseToken.getLpseCode());
+						}
+					} else {
+						sb.append(lpseToken.getLpseCode());
+					}
 				}
 			}
 		}
