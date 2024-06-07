@@ -39,7 +39,14 @@ function panlSearch() {
 }
 
 function populatePanlResults(panlJsonData) {
+	console.log("[ RETURNED JSON OBJECT ]")
 	console.log(panlJsonData);
+
+	console.log("[ RETURNED PANL JSON OBJECT ]")
+	console.log(panlJsonData.panl);
+
+	console.log("[ RETURNED PANL CANONICAL URI JSON OBJECT ]")
+	console.log(panlJsonData.panl.timings);
 
 	$("#canonical_uri").append(panlJsonData.panl.canonical_uri);
 
@@ -49,6 +56,9 @@ function populatePanlResults(panlJsonData) {
 			panlJsonData.response.numFound +
 			" result(s) " +
 			(panlJsonData.response.numFoundExact ? "(exact)" : "estimated)"));
+
+	console.log("[ RETURNED PANL TIMINGS JSON OBJECT ]")
+	console.log(panlJsonData.panl.timings);
 
 	// now for the timings
 	const timings = panlJsonData.panl.timings;
@@ -82,6 +92,9 @@ function populatePanlResults(panlJsonData) {
 }
 
 function addQueryOperand(queryOperand) {
+	console.log("[ RETURNED PANL QUERY OPERAND JSON OBJECT ]")
+	console.log(queryOperand);
+
 	$("#query_operand").append(
 		"<a href=\"" +
     panlResultsViewerUrl +
@@ -96,7 +109,11 @@ function addQueryOperand(queryOperand) {
     "\"/>OR</a>&nbsp;");
 
 }
+
 function addSortingOptions(sortingObject) {
+	console.log("[ RETURNED PANL SORTING JSON OBJECT ]")
+	console.log(sortingObject);
+
 	$("#sorting_options").append(
 		"Relevance: <a href=\"" +
     panlResultsViewerUrl +
@@ -124,6 +141,7 @@ function addSortingOptions(sortingObject) {
 }
 
 function addPagination(paginationObject) {
+	console.log("[ RETURNED PANL PAGINATION JSON OBJECT ]")
 	console.log(paginationObject);
 	$("#page_num").append(paginationObject.page_num);
 	$("#num_pages").append(paginationObject.num_pages);
@@ -168,7 +186,7 @@ $("#num_per_page_links").append("<a href=\"" +
 }
 
 function addActiveFilters(activeObject) {
-	console.log("active objects");
+	console.log("[ RETURNED PANL ACTIVE FACETS JSON OBJECT ]")
 	console.log(activeObject);
 
 	const active = $("#active");
@@ -211,7 +229,7 @@ function addActiveFacets(facets) {
 }
 
 function addAvailableFilters(availableObject) {
-	console.log("available object");
+	console.log("[ RETURNED PANL AVAILABLE FILTERS JSON OBJECT ]")
 	console.log(availableObject);
 
 	// first up the facets
