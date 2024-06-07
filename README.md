@@ -31,6 +31,8 @@ _**Image**: The features and functionality of the Panl server_
 
 1. **Active filters** - either queries or selected facets that are currently limiting the results - the [Remove] link is the URI path that will remove this facet from the results.
 
+1. **Range filters** - for facets that are defined as ranges - the values are inclusive (i.e. include the minimum and maximum values).
+
 1. **Available filters** - additional facets that can further refine and limit the results.
 
 1. **Number of results found**, and whether this is an exact match.
