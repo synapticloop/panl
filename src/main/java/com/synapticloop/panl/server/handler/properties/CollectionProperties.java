@@ -47,8 +47,11 @@ public class CollectionProperties {
 	public static final String PROPERTY_KEY_PANL_SORT_FIELDS = "panl.sort.fields";
 	public static final String PROPERTY_KEY_PANL_LPSE_ORDER = "panl.lpse.order";
 
+	public static final String PROPERTY_KEY_FIELDSETS_DEFAULT = "default";
+
 	public static final String SOLR_DEFAULT_QUERY_OPERAND_OR = "OR";
 	public static final String SOLR_DEFAULT_QUERY_OPERAND_AND = "AND";
+
 
 	/**
 	 * <p>The name of this collection</p>
@@ -384,9 +387,9 @@ public class CollectionProperties {
 			addResultsFields(resultFieldProperty.substring(PROPERTY_KEY_PANL_RESULTS_FIELDS.length()), properties.getProperty(resultFieldProperty));
 		}
 		// there must always be a default field
-		if(!resultFieldsMap.containsKey("default")) {
+		if(!resultFieldsMap.containsKey(PROPERTY_KEY_FIELDSETS_DEFAULT)) {
 			LOGGER.warn("[{}] Missing default field set, adding one which will return all fields.", collectionName);
-			resultFieldsMap.put("default", new ArrayList<>());
+			resultFieldsMap.put(PROPERTY_KEY_FIELDSETS_DEFAULT, new ArrayList<>());
 		}
 	}
 
