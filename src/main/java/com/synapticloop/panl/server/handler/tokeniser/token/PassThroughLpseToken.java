@@ -24,7 +24,7 @@ package com.synapticloop.panl.server.handler.tokeniser.token;
  *  IN THE SOFTWARE.
  */
 
-import com.synapticloop.panl.server.handler.fielderiser.CollectionProperties;
+import com.synapticloop.panl.server.handler.properties.CollectionProperties;
 
 import java.net.URLDecoder;
 import java.nio.charset.StandardCharsets;

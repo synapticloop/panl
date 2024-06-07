@@ -25,7 +25,7 @@ package com.synapticloop.panl.server.handler.fielderiser.field;
  */
 
 import com.synapticloop.panl.exception.PanlServerException;
-import com.synapticloop.panl.server.handler.fielderiser.CollectionProperties;
+import com.synapticloop.panl.server.handler.properties.CollectionProperties;
 import com.synapticloop.panl.server.handler.tokeniser.token.FacetLpseToken;
 import com.synapticloop.panl.server.handler.tokeniser.token.LpseToken;
 import com.synapticloop.panl.server.handler.tokeniser.token.bean.FromToBean;
@@ -526,7 +526,6 @@ public abstract class BaseField {
 			return("");
 		}
 
-		String encodedPanlValue;
 		if(isRangeFacet) {
 			return(getEncodedRangeFacetValue(token));
 		} else {
@@ -537,6 +536,12 @@ public abstract class BaseField {
 	private String getEncodedRangeFacetValue(LpseToken token) {
 		FacetLpseToken facetLpseToken = (FacetLpseToken)token;
 
+		// we can still have a single facet value which is not a range facet
+		if(null == facetLpseToken.getToValue()) {
+			return(getEncodedRegularFacetValue(facetLpseToken.getValue()));
+		}
+
+		// at this point it is a range facet
 		StringBuilder sb = new StringBuilder();
 
 		if(hasRangeMidfix) {

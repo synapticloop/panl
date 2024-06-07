@@ -56,6 +56,7 @@
 		.dualrange { width: 100%; height: 32px; }
 		#ranges { padding: 0 14px; }
 		#ranges p { font-weight: bold; padding-left: 0px; }
+		.hidden { display: none }
 
 		.custom-range .dualrange__range { background-color: #000; }
 		.custom-range .dualrange__min, .custom-range .dualrange__max { border-color: #000; }
@@ -110,11 +111,15 @@
 			<label><input type="text" name="q" /></label>
 			<button type="submit">Search</button>
 		</form>
+
 		<p><strong>Active Filters</strong></p>
 		<ul id="active"></ul>
+
+		<p id="ranges-marker" class="hidden"><strong>Range Filters</strong></p>
+		<div id="ranges"></div>
+
 		<p><strong>Available Filters</strong></p>
 		<ul id="available"></ul>
-		<div id="ranges"></div>
 	</div>
 	<div id="footer">
 		<p class="info">This page is designed to showcase the Panl LPSE encoding mechanism,

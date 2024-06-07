@@ -25,8 +25,8 @@ package com.synapticloop.panl.server.client;
  */
 
 import com.synapticloop.panl.exception.PanlServerException;
-import com.synapticloop.panl.server.handler.fielderiser.PanlProperties;
-import com.synapticloop.panl.server.handler.fielderiser.CollectionProperties;
+import com.synapticloop.panl.server.handler.properties.PanlProperties;
+import com.synapticloop.panl.server.handler.properties.CollectionProperties;
 import org.apache.solr.client.solrj.SolrClient;
 import org.apache.solr.client.solrj.impl.Http2SolrClient;
 

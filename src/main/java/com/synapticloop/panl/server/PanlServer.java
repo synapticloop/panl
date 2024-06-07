@@ -31,8 +31,8 @@ import com.synapticloop.panl.server.handler.results.explainer.PanlResultsExplain
 import com.synapticloop.panl.server.handler.results.viewer.PanlResultsViewerScriptHandler;
 import com.synapticloop.panl.server.handler.results.PanlResultsStaticHandler;
 import com.synapticloop.panl.server.handler.results.viewer.PanlResultsViewerHandler;
-import com.synapticloop.panl.server.handler.fielderiser.PanlProperties;
-import com.synapticloop.panl.server.handler.fielderiser.CollectionProperties;
+import com.synapticloop.panl.server.handler.properties.PanlProperties;
+import com.synapticloop.panl.server.handler.properties.CollectionProperties;
 import org.apache.http.impl.bootstrap.HttpServer;
 import org.apache.http.impl.bootstrap.ServerBootstrap;
 import org.slf4j.Logger;

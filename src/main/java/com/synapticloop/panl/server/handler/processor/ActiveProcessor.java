@@ -24,8 +24,9 @@ package com.synapticloop.panl.server.handler.processor;
  *  IN THE SOFTWARE.
  */
 
-import com.synapticloop.panl.server.handler.fielderiser.CollectionProperties;
+import com.synapticloop.panl.server.handler.properties.CollectionProperties;
 import com.synapticloop.panl.server.handler.fielderiser.field.BaseField;
+import com.synapticloop.panl.server.handler.fielderiser.field.PanlFacetField;
 import com.synapticloop.panl.server.handler.tokeniser.token.LpseToken;
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -40,6 +41,7 @@ public class ActiveProcessor extends Processor {
 	public static final String JSON_KEY_PANL_CODE = "panl_code";
 	public static final String JSON_KEY_FACET_NAME = "facet_name";
 	public static final String JSON_KEY_NAME = "name";
+	public static final String JSON_KEY_ENCODED = "encoded";
 
 	public ActiveProcessor(CollectionProperties collectionProperties) {
 		super(collectionProperties);
@@ -85,6 +87,11 @@ public class ActiveProcessor extends Processor {
 			removeObject.put(JSON_KEY_PANL_CODE, lpseCode);
 			removeObject.put(JSON_KEY_FACET_NAME, collectionProperties.getSolrFieldNameFromLpseCode(lpseCode));
 			removeObject.put(JSON_KEY_NAME, collectionProperties.getPanlNameFromPanlCode(lpseCode));
+
+			BaseField lpseField = collectionProperties.getLpseField(lpseCode);
+
+			removeObject.put(JSON_KEY_ENCODED, lpseField.getEncodedPanlValue(lpseToken));
+
 			jsonArray.put(removeObject);
 			i++;
 			jsonObject.put(tokenType, jsonArray);

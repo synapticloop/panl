@@ -24,7 +24,7 @@ package com.synapticloop.panl.server.handler.tokeniser.token;
  *  IN THE SOFTWARE.
  */
 
-import com.synapticloop.panl.server.handler.fielderiser.CollectionProperties;
+import com.synapticloop.panl.server.handler.properties.CollectionProperties;
 import com.synapticloop.panl.server.handler.fielderiser.field.BaseField;
 import com.synapticloop.panl.server.handler.tokeniser.LpseTokeniser;
 import com.synapticloop.panl.server.handler.tokeniser.token.bean.FromToBean;
@@ -123,6 +123,8 @@ public class FacetLpseToken extends LpseToken {
 					isValid = false;
 				}
 			}
+
+			lpseTokeniser.decrementCurrentPosition();
 		}
 
 		BaseField lpseField = collectionProperties.getLpseField(this.lpseCode);

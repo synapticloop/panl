@@ -25,7 +25,7 @@ package com.synapticloop.panl.server.handler.tokeniser.token;
  */
 
 import com.synapticloop.panl.server.handler.tokeniser.LpseTokeniser;
-import com.synapticloop.panl.server.handler.fielderiser.CollectionProperties;
+import com.synapticloop.panl.server.handler.properties.CollectionProperties;
 import org.apache.solr.client.solrj.SolrQuery;
 
 /**

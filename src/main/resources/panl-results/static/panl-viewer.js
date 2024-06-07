@@ -203,7 +203,7 @@ function addActiveFacets(facets) {
                         $("#collection").text() +
                         facet.uri +
                         "\">[remove]</a>&nbsp;" +
-                  			facet.value +
+                  			decodeURI(facet.encoded).replaceAll("+", " ").replaceAll("%2B", "+") +
                   			"</li>");
 
 	}
@@ -241,7 +241,8 @@ function addAvailableFilters(availableObject) {
 	// now check for the ranges - we are adding another list item so that
 	// people can choose which implementation to use.
 	for(const facet of availableObject.range_facets) {
-		ranges.append("<p>Range facets</>")
+		$("#ranges-marker").removeClass("hidden");
+
 		ranges.append("<p><strong>" + facet.name + " <em>(" + facet.panl_code + ") Range</em></strong></p>");
 		var selector = "data-" + facet.facet_name;
 		ranges.append("<input class=\"custom-range\" type=\"range\" name=\"Range\" " + selector + " min=\"" + facet.min + "\" max=\"" + facet.max + "\"/>");

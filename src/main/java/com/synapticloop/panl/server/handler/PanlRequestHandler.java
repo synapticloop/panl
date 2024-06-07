@@ -25,7 +25,7 @@ package com.synapticloop.panl.server.handler;
  */
 
 import com.synapticloop.panl.server.handler.results.util.ResourceHelper;
-import com.synapticloop.panl.server.handler.fielderiser.PanlProperties;
+import com.synapticloop.panl.server.handler.properties.PanlProperties;
 import org.apache.http.HttpRequest;
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;

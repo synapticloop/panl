@@ -66,11 +66,21 @@ public class PanlFacetField extends BaseField {
 	private void applyRangeFacetToQuery(SolrQuery solrQuery, List<LpseToken> lpseTokens) {
 		for (LpseToken lpseToken : lpseTokens) {
 			FacetLpseToken facetLpseToken = (FacetLpseToken) lpseToken;
-			solrQuery.addFilterQuery(
-					String.format("%s:[%s TO %s]",
-							facetLpseToken.getSolrField(),
-							facetLpseToken.getValue(),
-							facetLpseToken.getToValue()));
+
+			// even though this field is set to be a range facet, we still allow
+			// single values
+
+			if(((FacetLpseToken) lpseToken).getIsRangeToken()) {
+				solrQuery.addFilterQuery(
+						String.format("%s:[%s TO %s]",
+								facetLpseToken.getSolrField(),
+								facetLpseToken.getValue(),
+								facetLpseToken.getToValue()));
+			} else {
+				solrQuery.addFilterQuery(String.format("%s:\"%s\"",
+						facetLpseToken.getSolrField(),
+						facetLpseToken.getValue()));
+			}
 		}
 	}
 
@@ -131,8 +141,9 @@ public class PanlFacetField extends BaseField {
 		// At this point, we just have regular facets.
 		for (LpseToken lpseToken : lpseTokens) {
 			FacetLpseToken facetLpseToken = (FacetLpseToken) lpseToken;
-			solrQuery.addFilterQuery(facetLpseToken.getSolrField() + ":\"" + facetLpseToken.getValue() + "\"");
+			solrQuery.addFilterQuery(String.format("%s:\"%s\"",
+					facetLpseToken.getSolrField(),
+					facetLpseToken.getValue()));
 		}
-
 	}
 }
