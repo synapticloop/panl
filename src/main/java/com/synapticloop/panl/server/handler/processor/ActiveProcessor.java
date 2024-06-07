@@ -27,6 +27,7 @@ package com.synapticloop.panl.server.handler.processor;
 import com.synapticloop.panl.server.handler.properties.CollectionProperties;
 import com.synapticloop.panl.server.handler.fielderiser.field.BaseField;
 import com.synapticloop.panl.server.handler.fielderiser.field.PanlFacetField;
+import com.synapticloop.panl.server.handler.tokeniser.token.FacetLpseToken;
 import com.synapticloop.panl.server.handler.tokeniser.token.LpseToken;
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -42,6 +43,9 @@ public class ActiveProcessor extends Processor {
 	public static final String JSON_KEY_FACET_NAME = "facet_name";
 	public static final String JSON_KEY_NAME = "name";
 	public static final String JSON_KEY_ENCODED = "encoded";
+	public static final String JSON_KEY_VALUE_TO = "value_to";
+	public static final String JSON_KEY_IS_RANGE_FACET = "is_range_facet";
+	public static final String JSON_KEY_IS_OR_FACET = "is_or_facet";
 
 	public ActiveProcessor(CollectionProperties collectionProperties) {
 		super(collectionProperties);
@@ -80,7 +84,17 @@ public class ActiveProcessor extends Processor {
 			JSONArray jsonArray = jsonObject.optJSONArray(tokenType, new JSONArray());
 
 			JSONObject removeObject = new JSONObject();
+
 			removeObject.put(JSON_KEY_VALUE, lpseToken.getValue());
+			if(lpseToken instanceof FacetLpseToken) {
+				FacetLpseToken facetLpseToken = (FacetLpseToken) lpseToken;
+				if(facetLpseToken.getIsRangeToken()) {
+					removeObject.put(JSON_KEY_VALUE_TO, facetLpseToken.getToValue());
+				}
+
+				removeObject.put(JSON_KEY_IS_RANGE_FACET, facetLpseToken.getIsRangeToken());
+			}
+
 			removeObject.put(JSON_KEY_URI, getRemoveURIFromPath(i, uriComponents, lpseComponents));
 
 			String lpseCode = lpseToken.getLpseCode();
@@ -89,6 +103,8 @@ public class ActiveProcessor extends Processor {
 			removeObject.put(JSON_KEY_NAME, collectionProperties.getPanlNameFromPanlCode(lpseCode));
 
 			BaseField lpseField = collectionProperties.getLpseField(lpseCode);
+
+			removeObject.put(JSON_KEY_IS_OR_FACET, lpseField.getIsOrFacet());
 
 			removeObject.put(JSON_KEY_ENCODED, lpseField.getEncodedPanlValue(lpseToken));
 

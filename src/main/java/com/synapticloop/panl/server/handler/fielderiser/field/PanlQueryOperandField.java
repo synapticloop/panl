@@ -65,7 +65,13 @@ public class PanlQueryOperandField extends BaseField {
 	}
 
 	public String getResetUriPath(Map<String, List<LpseToken>> panlTokenMap, CollectionProperties collectionProperties) {
-		return("");
+		String panlParamQueryOperand = collectionProperties.getPanlParamQueryOperand();
+		if(panlTokenMap.containsKey(panlParamQueryOperand)) {
+			QueryOperandLpseToken lpseToken = (QueryOperandLpseToken)panlTokenMap.get(panlParamQueryOperand).get(0);
+			return(lpseToken.getLpseCode() + lpseToken.getQueryOperand());
+		} else {
+			return (panlParamQueryOperand + collectionProperties.getDefaultQueryOperand());
+		}
 	}
 
 	@Override public Logger getLogger() {
@@ -82,5 +88,4 @@ public class PanlQueryOperandField extends BaseField {
 			solrQuery.setParam("q.op", lpseToken.getQOpValue());
 		}
 	}
-
 }

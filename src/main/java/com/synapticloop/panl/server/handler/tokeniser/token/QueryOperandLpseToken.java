@@ -74,6 +74,10 @@ public class QueryOperandLpseToken extends LpseToken {
 		return ("sort");
 	}
 
+	/**
+	 *
+	 * @return
+	 */
 	public String getQueryOperand() {
 		return (this.queryOperand);
 	}

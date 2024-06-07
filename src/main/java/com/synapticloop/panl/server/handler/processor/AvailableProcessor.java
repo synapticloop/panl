@@ -255,5 +255,34 @@ public class AvailableProcessor extends Processor {
 		return (additionObject);
 	}
 
+	private JSONObject getReplacementURIObject(BaseField lpseField, Map<String, List<LpseToken>> panlTokenMap, boolean shouldRange) {
+		String replacementLpse = lpseField.getLpseCode();
+		JSONObject additionObject = new JSONObject();
+		StringBuilder lpseUri = new StringBuilder("/");
+		StringBuilder lpseCode = new StringBuilder();
+
+		for (BaseField baseField : collectionProperties.getLpseFields()) {
+
+			if (panlTokenMap.containsKey(baseField.getLpseCode())) {
+				lpseUri.append(baseField.getResetUriPath(panlTokenMap, collectionProperties));
+				lpseCode.append(baseField.getResetLpseCode(panlTokenMap, collectionProperties));
+			}
+
+			if (baseField.getLpseCode().equals(replacementLpse)) {
+				additionObject.put(JSON_KEY_BEFORE, lpseUri.toString());
+				lpseUri.setLength(0);
+				lpseCode.append(baseField.getLpseCode());
+
+				// if this is a range, then there is a different format
+				if(shouldRange && lpseField.getHasRangeMidfix()) {
+					lpseCode.append((lpseField.getHasRangeMidfix() ? "-" : "+"));
+					lpseCode.append(lpseField.getLpseCode());
+				}
+			}
+		}
+
+		additionObject.put(JSON_KEY_AFTER, "/" + lpseUri + lpseCode + "/");
+		return (additionObject);
+	}
 
 }

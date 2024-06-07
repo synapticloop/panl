@@ -122,9 +122,9 @@ public class FacetLpseToken extends LpseToken {
 				if (!this.lpseCode.contentEquals(nextLpse)) {
 					isValid = false;
 				}
+			} else {
+				lpseTokeniser.decrementCurrentPosition();
 			}
-
-			lpseTokeniser.decrementCurrentPosition();
 		}
 
 		BaseField lpseField = collectionProperties.getLpseField(this.lpseCode);
