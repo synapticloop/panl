@@ -98,6 +98,10 @@ public class ActiveProcessor extends Processor {
 			removeObject.put(JSON_KEY_URI, getRemoveURIFromPath(i, uriComponents, lpseComponents));
 
 			String lpseCode = lpseToken.getLpseCode();
+			removeObject.put(JSON_KEY_IS_OR_FACET, collectionProperties.getIsOrFacetField(lpseCode));
+			boolean isRangeFacetField = collectionProperties.getIsRangeFacetField(lpseCode);
+			removeObject.put(JSON_KEY_IS_RANGE_FACET, isRangeFacetField);
+
 			removeObject.put(JSON_KEY_PANL_CODE, lpseCode);
 			removeObject.put(JSON_KEY_FACET_NAME, collectionProperties.getSolrFieldNameFromLpseCode(lpseCode));
 			removeObject.put(JSON_KEY_NAME, collectionProperties.getPanlNameFromPanlCode(lpseCode));

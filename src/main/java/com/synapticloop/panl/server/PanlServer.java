@@ -178,7 +178,7 @@ public class PanlServer {
 	 * <code>panl.properties</code> file.</p>
 	 *
 	 * <p><strong>The Panl Request Handler:</strong> Will bind itself to the
-	 * context <code>/&lt;collection_name&gt;/&lt;field_set&gt;/*</code> for
+	 * context <code>/&lt;collection_uri&gt;/&lt;field_set&gt;/*</code> for
 	 * each collection and fieldset that is configured for the Panl Server.</p>
 	 *
 	 * <p>Finally, it starts the server on the passed in port number (or default

@@ -33,9 +33,6 @@ import java.util.List;
 
 public class QueryOperandProcessor extends Processor {
 
-	public static final String JSON_KEY_OR = "OR";
-	public static final String JSON_KEY_AND = "AND";
-
 	public QueryOperandProcessor(CollectionProperties collectionProperties) {
 		super(collectionProperties);
 	}

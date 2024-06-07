@@ -38,11 +38,6 @@ import java.util.concurrent.TimeUnit;
  * @author synapticloop
  */
 public class TimingsProcessor extends Processor {
-	public static final String PANL_PARSE_REQUEST_TIME = "panl_parse_request_time";
-	public static final String PANL_BUILD_REQUEST_TIME = "panl_build_request_time";
-	public static final String PANL_SEND_REQUEST_TIME = "panl_send_request_time";
-	public static final String PANL_BUILD_RESPONSE_TIME = "panl_build_response_time";
-	public static final String PANL_TOTAL_TIME = "panl_total_time";
 
 	public TimingsProcessor(CollectionProperties collectionProperties) {
 		super(collectionProperties);
@@ -57,12 +52,12 @@ public class TimingsProcessor extends Processor {
 		JSONObject timingsObject = new JSONObject();
 
 		// add in some statistics
-		timingsObject.put(PANL_PARSE_REQUEST_TIME, TimeUnit.NANOSECONDS.toMillis(parseRequestNanos));
-		timingsObject.put(PANL_BUILD_REQUEST_TIME, TimeUnit.NANOSECONDS.toMillis(buildRequestNanos));
-		timingsObject.put(PANL_SEND_REQUEST_TIME, TimeUnit.NANOSECONDS.toMillis(sendAndReceiveNanos));
+		timingsObject.put(JSON_KEY_PANL_PARSE_REQUEST_TIME, TimeUnit.NANOSECONDS.toMillis(parseRequestNanos));
+		timingsObject.put(JSON_KEY_PANL_BUILD_REQUEST_TIME, TimeUnit.NANOSECONDS.toMillis(buildRequestNanos));
+		timingsObject.put(JSON_KEY_PANL_SEND_REQUEST_TIME, TimeUnit.NANOSECONDS.toMillis(sendAndReceiveNanos));
 
-		timingsObject.put(PANL_BUILD_RESPONSE_TIME, TimeUnit.NANOSECONDS.toMillis(buildResponse));
-		timingsObject.put(PANL_TOTAL_TIME, TimeUnit.NANOSECONDS.toMillis(
+		timingsObject.put(JSON_KEY_PANL_BUILD_RESPONSE_TIME, TimeUnit.NANOSECONDS.toMillis(buildResponse));
+		timingsObject.put(JSON_KEY_PANL_TOTAL_TIME, TimeUnit.NANOSECONDS.toMillis(
 				parseRequestNanos +
 						buildRequestNanos +
 						sendAndReceiveNanos +

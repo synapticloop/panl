@@ -21,9 +21,9 @@ Working with a Solr schema, the Panl configuration files translate unwieldy URI 
 
 _**Image**: The features and functionality of the Panl server_
 
-1. **A list of available Collections and FieldSets (CaFS) URIs** that Panl is configured to serve.  CaFS URI paths enable different Solr fields to be returned with the same search parameters.
+1. **A list of available Collections and FieldSet URI Paths (CaFUPs)** that Panl is configured to serve.  CaFUPs enable different Solr fields to be returned with the same search parameters.
 
-1. **A textual representation of the CaFS URI** path that the Panl Results Viewer web application is using.
+1. **A textual representation of the CaFUPs** that the Panl Results Viewer web application is using.
 
 1. **The canonical URI path** (which is returned with the Panl results JSON object) - this is important as multiple Panl LPSE URI paths will return exactly the same results - this is the unique URI path for this result set.
 
@@ -49,7 +49,7 @@ _**Image**: The features and functionality of the Panl server_
 
 1. **Timing information** about how long the Panl server took to build and return the results (including how much time the Solr server took to find and return the results).
 
-1. **The results** - the fields that are shown are configured by the CaFS.
+1. **The results** - the fields that are shown are configured by the CaFUPs.
 
 ## Additional Panl Niceties
 
@@ -172,7 +172,7 @@ SOLR_INSTALL_DIRECTORY/bin/solr start -e cloud -noprompt
 Set up the schema so that the data can be indexed.
 Command(s)
 ```shell
-SOLR_INSTALL_DIRECTORY/bin/solr	create -c mechanical-pencils -d PANL_INSTALL_DIRECTORY/examples/mechanical-pencils/conf/ -s 2 -rf 2
+SOLR_INSTALL_DIRECTORY/bin/solr create -c mechanical-pencils -d PANL_INSTALL_DIRECTORY/examples/mechanical-pencils/conf/ -s 2 -rf 2
 ```
 
 ## 3. Index the mechanical pencils data
@@ -180,7 +180,7 @@ SOLR_INSTALL_DIRECTORY/bin/solr	create -c mechanical-pencils -d PANL_INSTALL_DIR
 Index all of the data into the Solr instance
 Command(s)
 ```shell
-SOLR_INSTALL_DIRECTORY/bin/solr	post -c mechanical-pencils PANL_INSTALL_DIRECTORY/examples/data/mechanical-mechanical-pencils.json
+SOLR_INSTALL_DIRECTORY/bin/solr post -c mechanical-pencils PANL_INSTALL_DIRECTORY/examples/data/mechanical-mechanical-pencils.json
 ```
 
 ## 4. Start the Panl Server

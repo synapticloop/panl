@@ -37,16 +37,6 @@ import java.util.Map;
 
 public class PaginationProcessor extends Processor {
 
-	public static final String JSON_KEY_NUM_PER_PAGE = "num_per_page";
-	public static final String JSON_KEY_PAGE_NUM = "page_num";
-	public static final String JSON_KEY_NUM_PAGES = "num_pages";
-	public static final String JSON_KEY_BEFORE = "before";
-	public static final String JSON_KEY_AFTER = "after";
-	public static final String JSON_KEY_NEXT = "next";
-	public static final String JSON_KEY_PREVIOUS = "previous";
-	public static final String JSON_KEY_PAGE_URIS = "page_uris";
-	public static final String JSON_KEY_NUM_PER_PAGE_URIS = "num_per_page_uris";
-
 	public PaginationProcessor(CollectionProperties collectionProperties) {
 		super(collectionProperties);
 	}

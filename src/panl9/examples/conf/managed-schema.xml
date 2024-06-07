@@ -43,6 +43,7 @@
 	<field name="colours" type="string" indexed="true" stored="true" multiValued="true" />
 	<field name="variants" type="string" stored="true" multiValued="true" />
 
+	<field name="description" type="text_general" indexed="true" stored="true" multiValued="false"/>
 	<field name="text" type="text_general" indexed="true" stored="true" multiValued="true"/>
 
 	<uniqueKey>id</uniqueKey>
@@ -65,6 +66,7 @@
 	<copyField source="cap_material" dest="text" />
 	<copyField source="colours" dest="text" />
 	<copyField source="variants" dest="text" />
+	<copyField source="description" dest="text" />
 
 
 	<!-- The StrField type is not analyzed, but indexed/stored verbatim. -->

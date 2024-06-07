@@ -424,21 +424,21 @@ public abstract class BaseField {
 		String fromString = "";
 		String toString = "";
 
-		if(hasRangeMidfix) {
+		if (hasRangeMidfix) {
 			// It is OK to decode the value as it is all in one
 			String decodedValue = URLDecoder.decode(value, StandardCharsets.UTF_8);
 			// then we need to split by the midfix
 			String[] fromToSplit = decodedValue.split(rangeMidfix);
-			if(fromToSplit.length != 2) {
-				return(null);
+			if (fromToSplit.length != 2) {
+				return (null);
 			} else {
 				fromString = fromToSplit[0];
 				toString = fromToSplit[1];
 			}
 		} else {
 			String[] fromToSplit = value.split("/");
-			if(fromToSplit.length != 2) {
-				return(null);
+			if (fromToSplit.length != 2) {
+				return (null);
 			} else {
 				fromString = URLDecoder.decode(fromToSplit[0], StandardCharsets.UTF_8);
 				toString = URLDecoder.decode(fromToSplit[1], StandardCharsets.UTF_8);
@@ -468,8 +468,8 @@ public abstract class BaseField {
 		String validatedFromString = getValidatedValue(fromString);
 		String validatedToString = getValidatedValue(toString);
 
-		if(null == validatedFromString || null == validatedToString || validatedFromString.isBlank() || validatedToString.isBlank()) {
-			return(null);
+		if (null == validatedFromString || null == validatedToString || validatedFromString.isBlank() || validatedToString.isBlank()) {
+			return (null);
 		}
 		// now we have all that we need
 		return (new FromToBean(validatedFromString, validatedToString));
@@ -518,35 +518,35 @@ public abstract class BaseField {
 	}
 
 	public String getEncodedPanlValue(String value) {
-		return(getEncodedRegularFacetValue(value));
+		return (getEncodedRegularFacetValue(value));
 	}
 
 	public String getEncodedPanlValue(LpseToken token) {
-		if(null == token.getValue()) {
-			return("");
+		if (null == token.getValue()) {
+			return ("");
 		}
 
-		if(isRangeFacet) {
-			return(getEncodedRangeFacetValue(token));
+		if (isRangeFacet) {
+			return (getEncodedRangeFacetValue(token));
 		} else {
-			return(getEncodedRegularFacetValue(token.getValue()));
+			return (getEncodedRegularFacetValue(token.getValue()));
 		}
 	}
 
 	private String getEncodedRangeFacetValue(LpseToken token) {
-		FacetLpseToken facetLpseToken = (FacetLpseToken)token;
+		FacetLpseToken facetLpseToken = (FacetLpseToken) token;
 
 		// we can still have a single facet value which is not a range facet
-		if(null == facetLpseToken.getToValue()) {
-			return(getEncodedRegularFacetValue(facetLpseToken.getValue()));
+		if (null == facetLpseToken.getToValue()) {
+			return (getEncodedRegularFacetValue(facetLpseToken.getValue()));
 		}
 
 		// at this point it is a range facet
 		StringBuilder sb = new StringBuilder();
 
-		if(hasRangeMidfix) {
+		if (hasRangeMidfix) {
 			// just add it all together
-			if(hasRangePrefix) {
+			if (hasRangePrefix) {
 				sb.append(rangePrefix);
 			}
 			sb.append(facetLpseToken.getValue());
@@ -555,14 +555,14 @@ public abstract class BaseField {
 
 			sb.append(facetLpseToken.getToValue());
 
-			if(hasRangeSuffix) {
+			if (hasRangeSuffix) {
 				sb.append(rangeSuffix);
 			}
-			return(URLEncoder.encode(sb.toString(), StandardCharsets.UTF_8));
+			return (URLEncoder.encode(sb.toString(), StandardCharsets.UTF_8));
 		} else {
 			// we will have a two part URI path, split by a '/' and both values need
 			// to be URLEncoded before.
-			if(hasRangePrefix) {
+			if (hasRangePrefix) {
 				sb.append(URLEncoder.encode(rangePrefix, StandardCharsets.UTF_8));
 			}
 
@@ -572,10 +572,10 @@ public abstract class BaseField {
 
 			sb.append(URLEncoder.encode(facetLpseToken.getToValue(), StandardCharsets.UTF_8));
 
-			if(hasRangeSuffix) {
+			if (hasRangeSuffix) {
 				sb.append(URLEncoder.encode(rangeSuffix, StandardCharsets.UTF_8));
 			}
-			return(sb.toString());
+			return (sb.toString());
 		}
 	}
 
@@ -606,7 +606,7 @@ public abstract class BaseField {
 			sb.append(panlSuffix);
 		}
 
-		return(URLEncoder.encode(sb.toString(), StandardCharsets.UTF_8));
+		return (URLEncoder.encode(sb.toString(), StandardCharsets.UTF_8));
 	}
 
 	public String getSolrFieldType() {
@@ -634,14 +634,42 @@ public abstract class BaseField {
 		return (sb.toString());
 	}
 
+	/**
+	 * <p>Get the LPSE code for the LPSE URI path from the field.</p>
+	 *
+	 * <p>This will loop through all LpseTokens for this code outputting the
+	 * correct code.  The following rules apply:</p>
+	 *
+	 * <ul>
+	 *   <li>If the <code>panlTokenMap</code> does not contain a key of this
+	 *   field's LPSE code, then a blank string will be returned.</li>
+	 *   <li>If the token is not valid, then an empty string will be returned.</li>
+	 *   <li>If the token is a RANGE facet token, then the lpse code will
+	 *   include whether it has a midfix or not.
+	 *   <ul>
+	 *     <li>If it has a midfix, the returned string will be
+	 *     <code>&lt;lpse_code&gt;-&lt;lpse_code&gt;</code></li>
+	 *     <li>If it does not have a midfix, then the returned string will be of
+	 *     the format <code>&lt;lpse_code&gt;+&lt;lpse_code&gt;</code></li>
+	 *   </ul>
+	 *   </li>
+	 * </ul>
+	 *
+	 * @param panlTokenMap The map of LPSE codes to the list of tokens for that
+	 * 		LPSE code
+	 * @param collectionProperties The collection properties for this collection
+	 * 		this is unused in this implementation
+	 *
+	 * @return The LPSE URI path for this field
+	 */
 	public String getLpseCode(Map<String, List<LpseToken>> panlTokenMap, CollectionProperties collectionProperties) {
 		StringBuilder sb = new StringBuilder();
 		if (panlTokenMap.containsKey(lpseCode)) {
 			for (LpseToken lpseToken : panlTokenMap.get(lpseCode)) {
 				if (lpseToken.getIsValid()) {
-					if(lpseToken instanceof FacetLpseToken) {
+					if (lpseToken instanceof FacetLpseToken) {
 						FacetLpseToken facetLpseToken = (FacetLpseToken) lpseToken;
-						if(facetLpseToken.getIsRangeToken()) {
+						if (facetLpseToken.getIsRangeToken()) {
 							sb.append(lpseToken.getLpseCode());
 							sb.append((facetLpseToken.getHasMidFix() ? "-" : "+"));
 							sb.append(lpseToken.getLpseCode());

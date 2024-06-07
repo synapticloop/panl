@@ -34,12 +34,6 @@ import java.util.Map;
 
 public class SortingProcessor extends Processor {
 
-	public static final String JSON_KEY_NAME = "name";
-	public static final String JSON_KEY_REPLACE_DESC = "replace_desc";
-	public static final String JSON_KEY_RELEVANCE = "relevance";
-	public static final String JSON_VALUE_RELEVANCE = "Relevance";
-	public static final String JSON_KEY_REPLACE_ASC = "replace_asc";
-	public static final String JSON_KEY_FIELDS = "fields";
 
 	public SortingProcessor(CollectionProperties collectionProperties) {
 		super(collectionProperties);

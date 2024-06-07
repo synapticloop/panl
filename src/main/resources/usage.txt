@@ -42,7 +42,7 @@ available:
     the base properties file to write the generated configuration out to. If
     this property is not included, the default panl.properties filename will
     be used with each collection file that is generated named:
-      <collection_name>.panl.properties
+      <collection_uri>.panl.properties
     NOTE: If the files exist, the generation will TERMINATE, you will need to
     remove those files before the generation - unless you have the
     -overwrite true command line option present

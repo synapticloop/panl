@@ -170,12 +170,12 @@ public class Collection {
 		PANL_PROPERTIES.put("$panl.lpse.fields", new PanlProperty("panl.lpse.fields", panlLpseFields.toString(), true));
 
 		boolean isFirst = true;
-		StringBuilder panlResultsFieldsAll = new StringBuilder();
+		StringBuilder panlResultsFieldsDefault = new StringBuilder();
 		StringBuilder panlResultsFieldsFirstFive = new StringBuilder();
 		int i = 0;
 		for (String resultsFieldName: resultFieldNames) {
 			if(i != 0) {
-				panlResultsFieldsAll.append(",\\\n");
+				panlResultsFieldsDefault.append(",\\\n");
 			}
 			if(i < 5) {
 				if(i != 0) {
@@ -184,11 +184,11 @@ public class Collection {
 				panlResultsFieldsFirstFive.append(resultsFieldName);
 			}
 			i++;
-			panlResultsFieldsAll.append(resultsFieldName);
+			panlResultsFieldsDefault.append(resultsFieldName);
 		}
-		panlResultsFieldsAll.append("\n");
+		panlResultsFieldsDefault.append("\n");
 
-		PANL_PROPERTIES.put("$panl.results.fields.all", new PanlProperty("panl.results.fields.all", panlResultsFieldsAll.toString()));
+		PANL_PROPERTIES.put("$panl.results.fields.default", new PanlProperty("panl.results.fields.default", panlResultsFieldsDefault.toString()));
 		PANL_PROPERTIES.put("$panl.results.fields.firstfive", new PanlProperty("panl.results.fields.firstfive", panlResultsFieldsFirstFive.toString()));
 	}
 

@@ -89,7 +89,7 @@ public class CollectionRequestHandler {
 	 * related fieldsets to a URI path</p>
 	 *
 	 * <p>The URI path is made up of
-	 * <code>&lt;collection_name&gt;/&lt;field_set_name&gt;/</code></p>
+	 * <code>&lt;collection_uri&gt;/&lt;field_set_name&gt;/</code></p>
 	 *
 	 * @param collectionName The collection name
 	 * @param panlProperties The panl base properties, for connection to the Solr
@@ -307,7 +307,7 @@ public class CollectionRequestHandler {
 	 * <p>The URI will always be of the form</p>
 	 *
 	 * <pre>
-	 * /&lt;collection_name&gt;
+	 * /&lt;collection_uri&gt;
 	 *   /&lt;field_set&gt;
 	 *   /&lt;facet_field&gt;
 	 *   /...
@@ -352,12 +352,13 @@ public class CollectionRequestHandler {
 					hasQuery = true;
 				}
 
-				if (!hasQuery && !query.isBlank()) {
-					lpseTokens.add(new QueryLpseToken(query, collectionProperties.getPanlParamQuery()));
-				}
 
 				lpseTokens.add(lpseToken);
 			}
+		}
+
+		if (!hasQuery && !query.isBlank()) {
+			lpseTokens.add(new QueryLpseToken(query, collectionProperties.getPanlParamQuery()));
 		}
 
 		for (LpseToken lpseToken : lpseTokens) {

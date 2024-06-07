@@ -27,8 +27,9 @@
     "lead_size_indicator": "No",
     "in_built_eraser": false,
     "in_built_sharpener": false,
-    "variants": [ "Blue and gold pinstripin" ],
+    "variants": [ "Blue and gold pinstriping" ],
     "colours": [ "Blue" ],
+    "description": "The basic, everyday pencil from Faber-Castell Goldfaber.  A classic hexagonal wooden pencil with gorgeous blue and gold pinstriping.  Not a mechanical pencil, but always worth including as a reference point.",
     "id": 4
   },
   {
@@ -61,7 +62,8 @@
     "in_built_sharpener": false,
     "variants": [ "Blue" ],
     "colours": [ "Blue" ],
-    "id": 5
+    "id": 5,
+    "description": ""
   },
   {
     "brand" :"Alvin",
@@ -93,7 +95,8 @@
     "in_built_sharpener": false,
     "variants": [ "Red", "Blue", "Green", "Yellow" ],
     "colours": [ "Red", "Blue", "Green", "Yellow" ],
-    "id": 6
+    "id": 6,
+    "description": ""
   },
   {
     "brand" :"Alvin",
@@ -125,7 +128,8 @@
     "in_built_sharpener": false,
     "variants": [ "Light Blue" ],
     "colours": [ "Blue" ],
-    "id": 7
+    "id": 7,
+    "description": ""
   },
   {
     "brand" :"BIC",
@@ -157,7 +161,8 @@
     "in_built_sharpener": true,
     "variants": [ "Silver", "Black", "White" ],
     "colours": [ "Silver", "Black", "White" ],
-    "id": 8
+    "id": 8,
+    "description": ""
   },
   {
     "brand" :"Caran d'Ache",
@@ -189,7 +194,8 @@
     "in_built_sharpener": true,
     "variants": [ "Black with red cap", "Black with blue cap", "Black with black cap" ],
     "colours": [ "Black" ],
-    "id": 9
+    "id": 9,
+    "description": ""
   },
   {
     "brand" :"Caran d'Ache",
@@ -221,7 +227,8 @@
     "in_built_sharpener": true,
     "variants": [ "Black with red cap", "Black with blue cap", "Black with black cap" ],
     "colours": [ "Black" ],
-    "id": 10
+    "id": 10,
+    "description": ""
   },
   {
     "brand" :"Caran d'Ache",
@@ -253,7 +260,8 @@
     "in_built_sharpener": true,
     "variants": [ "Green", "Blue", "Red" ],
     "colours": [ "Green", "Blue", "Red" ],
-    "id": 11
+    "id": 11,
+    "description": ""
   },
   {
     "brand" :"Caran d'Ache",
@@ -285,7 +293,8 @@
     "in_built_sharpener": true,
     "variants": [ "Ochre", "Dharkan Blue" ],
     "colours": [ "Orange", "Blue" ],
-    "id": 12
+    "id": 12,
+    "description": ""
   },
   {
     "brand" :"DEDEDEPRAISE",
@@ -317,7 +326,8 @@
     "in_built_sharpener": true,
     "variants": [ "Black" ],
     "colours": [ "Black" ],
-    "id": 13
+    "id": 13,
+    "description": ""
   },
   {
     "brand" :"Faber-Castell",
@@ -349,7 +359,8 @@
     "in_built_sharpener": true,
     "variants": [ "Green" ],
     "colours": [ "Green" ],
-    "id": 14
+    "id": 14,
+    "description": ""
   },
   {
     "brand" :"Faber-Castell",
@@ -381,7 +392,8 @@
     "in_built_sharpener": false,
     "variants": [ "Green with various lead grades etched into the body." ],
     "colours": [ "Green" ],
-    "id": 15
+    "id": 15,
+    "description": ""
   },
   {
     "brand" :"Faber-Castell",
@@ -413,7 +425,8 @@
     "in_built_sharpener": false,
     "variants": [ "Green with various lead grades etched into the body." ],
     "colours": [ "Green" ],
-    "id": 16
+    "id": 16,
+    "description": ""
   },
   {
     "brand" :"Hightide Penco",
@@ -445,7 +458,8 @@
     "in_built_sharpener": false,
     "variants": [ "Red", "Green", "Light Green", "Orange", "Blue", "Light Blue" ],
     "colours": [ "Red", "Green", "Orange", "Blue" ],
-    "id": 17
+    "id": 17,
+    "description": ""
   },
   {
     "brand" :"Hightide Penco",
@@ -477,7 +491,8 @@
     "in_built_sharpener": false,
     "variants": [ "Black", "White", "Blue", "Red" ],
     "colours": [ "Black", "White", "Blue", "Red" ],
-    "id": 18
+    "id": 18,
+    "description": ""
   },
   {
     "brand" :"Ito-Ya",
@@ -509,7 +524,8 @@
     "in_built_sharpener": false,
     "variants": [ "Red", "Black", "White", "Grey" ],
     "colours": [ "Red", "Black", "White", "Grey" ],
-    "id": 19
+    "id": 19,
+    "description": ""
   },
   {
     "brand" :"Kaweco",
@@ -541,7 +557,8 @@
     "in_built_sharpener": false,
     "variants": [ "Black" ],
     "colours": [ "Black" ],
-    "id": 20
+    "id": 20,
+    "description": ""
   },
   {
     "brand" :"Kaweco",
@@ -573,7 +590,8 @@
     "in_built_sharpener": false,
     "variants": [ "Brass" ],
     "colours": [ "Brass" ],
-    "id": 21
+    "id": 21,
+    "description": ""
   },
   {
     "brand" :"Kaweco",
@@ -605,7 +623,8 @@
     "in_built_sharpener": false,
     "variants": [ "Black" ],
     "colours": [ "Black" ],
-    "id": 22
+    "id": 22,
+    "description": ""
   },
   {
     "brand" :"Kita-Boshi",
@@ -637,7 +656,8 @@
     "in_built_sharpener": false,
     "variants": [ "Blue lacquered, or with flowers, fans, checks, or chevrons", "Red lacquered, or with flowers, fans, checks, or chevrons", "Wood", "Black" ],
     "colours": [ "Blue", "Red", "Wood" ],
-    "id": 23
+    "id": 23,
+    "description": ""
   },
   {
     "brand" :"Kita-Boshi",
@@ -669,7 +689,8 @@
     "in_built_sharpener": false,
     "variants": [ "Wood" ],
     "colours": [ "Wood" ],
-    "id": 24
+    "id": 24,
+    "description": ""
   },
   {
     "brand" :"Koh-i-Noor",
@@ -701,7 +722,8 @@
     "in_built_sharpener": true,
     "variants": [ "Yellow" ],
     "colours": [ "Yellow" ],
-    "id": 25
+    "id": 25,
+    "description": ""
   },
   {
     "brand" :"Koh-i-Noor",
@@ -733,7 +755,8 @@
     "in_built_sharpener": true,
     "variants": [ "Blue", "Green", "Purple", "Red", "Yellow" ],
     "colours": [ "Blue", "Green", "Purple", "Red", "Yellow" ],
-    "id": 26
+    "id": 26,
+    "description": ""
   },
   {
     "brand" :"Koh-i-Noor",
@@ -765,7 +788,8 @@
     "in_built_sharpener": true,
     "variants": [ "Black", "Green", "Purple", "Yellow", "Red" ],
     "colours": [ "Black", "Green", "Purple", "Yellow", "Red" ],
-    "id": 27
+    "id": 27,
+    "description": ""
   },
   {
     "brand" :"Koh-i-Noor",
@@ -797,7 +821,8 @@
     "in_built_sharpener": true,
     "variants": [ "Black", "Blue", "Dark Red", "Green", "Light Blue", "Light Green", "Light Purple", "Purple", "Red", "Yellow" ],
     "colours": [ "Black", "Blue", "Green",  "Purple", "Red", "Yellow" ],
-    "id": 28
+    "id": 28,
+    "description": ""
   },
   {
     "brand" :"Koh-i-Noor",
@@ -829,7 +854,8 @@
     "in_built_sharpener": true,
     "variants": [ "Black", "Blue", "Brown", "Green", "Red", "Yellow" ],
     "colours": [ "Black", "Blue", "Brown", "Green", "Red", "Yellow" ],
-    "id": 29
+    "id": 29,
+    "description": ""
   },
   {
     "brand" :"Koh-i-Noor",
@@ -861,7 +887,8 @@
     "in_built_sharpener": true,
     "variants": [ "Blue", "Green", "Purple", "Red", "Yellow" ],
     "colours": [ "Blue", "Green", "Purple", "Red", "Yellow" ],
-    "id": 30
+    "id": 30,
+    "description": ""
   },
   {
     "brand" :"Koh-i-Noor",
@@ -893,7 +920,8 @@
     "in_built_sharpener": true,
     "variants": [ "Blue", "Green", "Purple", "Red", "Yellow" ],
     "colours": [ "Blue", "Green", "Purple", "Red", "Yellow" ],
-    "id": 31
+    "id": 31,
+    "description": ""
   },
   {
     "brand" :"Koh-i-Noor",
@@ -925,7 +953,8 @@
     "in_built_sharpener": true,
     "variants": [ "Blue", "Green", "Red" ],
     "colours": [ "Blue", "Green", "Red" ],
-    "id": 32
+    "id": 32,
+    "description": ""
   },
   {
     "brand" :"Koh-i-Noor",
@@ -957,7 +986,8 @@
     "in_built_sharpener": true,
     "variants": [ "Black", "Red", "Yellow", "Blue", "Green", "Silver" ],
     "colours": [ "Black", "Red", "Yellow", "Blue", "Green", "Silver" ],
-    "id": 33
+    "id": 33,
+    "description": ""
   },
   {
     "brand" :"Koh-i-Noor",
@@ -989,7 +1019,8 @@
     "in_built_sharpener": true,
     "variants": [ "Black" ],
     "colours": [ "Black" ],
-    "id": 34
+    "id": 34,
+    "description": ""
   },
   {
     "brand" :"Koh-i-Noor",
@@ -1021,7 +1052,8 @@
     "in_built_sharpener": true,
     "variants": [ "Black" ],
     "colours": [ "Black" ],
-    "id": 35
+    "id": 35,
+    "description": ""
   },
   {
     "brand" :"Küelox",
@@ -1053,7 +1085,8 @@
     "in_built_sharpener": true,
     "variants": [ "Silver" ],
     "colours": [ "Silver" ],
-    "id": 36
+    "id": 36,
+    "description": ""
   },
   {
     "brand" :"Küelox",
@@ -1085,7 +1118,8 @@
     "in_built_sharpener": true,
     "variants": [ "Blue" ],
     "colours": [ "Blue" ],
-    "id": 37
+    "id": 37,
+    "description": ""
   },
   {
     "brand" :"Mitsubishi",
@@ -1117,7 +1151,8 @@
     "in_built_sharpener": false,
     "variants": [ "Red", "Grey", "Black" ],
     "colours": [ "Red", "Grey", "Black" ],
-    "id": 38
+    "id": 38,
+    "description": ""
   },
   {
     "brand" :"Mitsubishi",
@@ -1149,7 +1184,8 @@
     "in_built_sharpener": false,
     "variants": [ "Brown with varying cap colours to indicate lead grade.", "Red" ],
     "colours": [ "Brown", "Red" ],
-    "id": 39
+    "id": 39,
+    "description": ""
   },
   {
     "brand" :"Mr. Pen",
@@ -1181,7 +1217,8 @@
     "in_built_sharpener": true,
     "variants": [ "Silver" ],
     "colours": [ "Silver" ],
-    "id": 40
+    "id": 40,
+    "description": ""
   },
   {
     "brand" :"OHTO",
@@ -1213,7 +1250,8 @@
     "in_built_sharpener": false,
     "variants": [ "Brown", "Dark Pink", "Orange", "Pink", "White" ],
     "colours": [ "Brown", "Orange", "Pink", "White" ],
-    "id": 41
+    "id": 41,
+    "description": ""
   },
   {
     "brand" :"OHTO",
@@ -1245,7 +1283,8 @@
     "in_built_sharpener": false,
     "variants": [ "Dark Green", "Green", "Purple", "Red", "Wood", "Black", "Yellow" ],
     "colours": [ "Green", "Purple", "Red", "Wood", "Black", "Yellow" ],
-    "id": 42
+    "id": 42,
+    "description": ""
   },
   {
     "brand" :"Pacific Arc",
@@ -1277,7 +1316,8 @@
     "in_built_sharpener": true,
     "variants": [ "Black", "Blue" ],
     "colours": [ "Black", "Blue" ],
-    "id": 43
+    "id": 43,
+    "description": ""
   },
   {
     "brand" :"Pacific Arc",
@@ -1309,7 +1349,8 @@
     "in_built_sharpener": true,
     "variants": [ "Black", "Blue", "Red" ],
     "colours": [ "Black", "Blue", "Red" ],
-    "id": 44
+    "id": 44,
+    "description": ""
   },
   {
     "brand" :"Pacific Arc",
@@ -1341,7 +1382,8 @@
     "in_built_sharpener": true,
     "variants": [ "Black", "Blue", "Brown", "Green", "Red" ],
     "colours": [ "Black", "Blue", "Brown", "Green", "Red" ],
-    "id": 45
+    "id": 45,
+    "description": ""
   },
   {
     "brand" :"Pacific Arc",
@@ -1373,7 +1415,8 @@
     "in_built_sharpener": true,
     "variants": [ "Silver", "Black" ],
     "colours": [ "Silver", "Black" ],
-    "id": 46
+    "id": 46,
+    "description": ""
   },
   {
     "brand" :"Redcircle",
@@ -1405,7 +1448,8 @@
     "in_built_sharpener": true,
     "variants": [ "Silver", "Black", "Gold" ],
     "colours": [ "Silver", "Black", "Gold" ],
-    "id": 47
+    "id": 47,
+    "description": ""
   },
   {
     "brand" :"Rotring",
@@ -1437,7 +1481,8 @@
     "in_built_sharpener": true,
     "variants": [ "Black" ],
     "colours": [ "Black" ],
-    "id": 48
+    "id": 48,
+    "description": ""
   },
   {
     "brand" :"Rotring",
@@ -1469,7 +1514,8 @@
     "in_built_sharpener": false,
     "variants": [ "Silver", "Black" ],
     "colours": [ "Silver", "Black" ],
-    "id": 49
+    "id": 49,
+    "description": ""
   },
   {
     "brand" :"Rotring",
@@ -1501,7 +1547,8 @@
     "in_built_sharpener": true,
     "variants": [ "Black" ],
     "colours": [ "Black" ],
-    "id": 50
+    "id": 50,
+    "description": ""
   },
   {
     "brand" :"Scrikks",
@@ -1533,7 +1580,8 @@
     "in_built_sharpener": true,
     "variants": [ "Ivory", "Matt Black", "Satin Grey", "Satin Chrome" ],
     "colours": [ "White", "Black", "Grey", "Silver" ],
-    "id": 51
+    "id": 51,
+    "description": ""
   },
   {
     "brand" :"Scrikks",
@@ -1565,7 +1613,8 @@
     "in_built_sharpener": true,
     "variants": [ "Pink", "Green", "Grey", "Blue", "Black", "Orange" ],
     "colours": [ "Pink", "Green", "Grey", "Blue", "Black", "Orange" ],
-    "id": 52
+    "id": 52,
+    "description": ""
   },
   {
     "brand" :"Staedtler",
@@ -1597,7 +1646,8 @@
     "in_built_sharpener": false,
     "variants": [ "Black", "Blue", "Silver" ],
     "colours": [ "Black", "Blue", "Silver" ],
-    "id": 53
+    "id": 53,
+    "description": ""
   },
   {
     "brand" :"Staedtler",
@@ -1629,7 +1679,8 @@
     "in_built_sharpener": true,
     "variants": [ "Blue", "Black" ],
     "colours": [ "Blue", "Black" ],
-    "id": 54
+    "id": 54,
+    "description": ""
   },
   {
     "brand" :"Unbranded",
@@ -1661,7 +1712,8 @@
     "in_built_sharpener": true,
     "variants": [ "Black" ],
     "colours": [ "Black" ],
-    "id": 55
+    "id": 55,
+    "description": ""
   },
   {
     "brand" :"WSD",
@@ -1693,7 +1745,8 @@
     "in_built_sharpener": false,
     "variants": [ "Black", "Blue", "Gold", "Pink", "Silver" ],
     "colours": [ "Black", "Blue", "Gold", "Pink", "Silver" ],
-    "id": 56
+    "id": 56,
+    "description": ""
   },
   {
     "brand" :"YStudio",
@@ -1725,7 +1778,8 @@
     "in_built_sharpener": true,
     "variants": [ "Black", "Brass" ],
     "colours": [ "Black", "Brass" ],
-    "id": 57
+    "id": 57,
+    "description": ""
   },
   {
     "brand" :"Muji",
@@ -1757,6 +1811,7 @@
     "in_built_sharpener": false,
     "variants": [ "Wood" ],
     "colours": [ "Wood" ],
-    "id": 58
+    "id": 58,
+    "description": ""
   }
 ]

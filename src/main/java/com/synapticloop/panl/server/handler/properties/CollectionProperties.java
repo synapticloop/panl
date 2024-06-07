@@ -383,6 +383,11 @@ public class CollectionProperties {
 		for (String resultFieldProperty : resultFieldProperties) {
 			addResultsFields(resultFieldProperty.substring(PROPERTY_KEY_PANL_RESULTS_FIELDS.length()), properties.getProperty(resultFieldProperty));
 		}
+		// there must always be a default field
+		if(!resultFieldsMap.containsKey("default")) {
+			LOGGER.warn("[{}] Missing default field set, adding one which will return all fields.", collectionName);
+			resultFieldsMap.put("default", new ArrayList<>());
+		}
 	}
 
 	private void addResultsFields(String resultFieldsName, String resultFields) throws PanlServerException {
@@ -391,7 +396,11 @@ public class CollectionProperties {
 		}
 
 		LOGGER.info("[{}] Adding result fields with key '{}', and fields '{}'.", collectionName, resultFieldsName, resultFields);
-		List<String> fields = new ArrayList<>(Arrays.asList(resultFields.split(",")));
+		List<String> fields = new ArrayList<>();
+		for (String resultField : resultFields.split(",")) {
+			fields.add(resultField.trim());
+		}
+
 		resultFieldsMap.put(resultFieldsName, fields);
 	}
 

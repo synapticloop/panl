@@ -32,6 +32,45 @@ import java.util.List;
 import java.util.Map;
 
 public abstract class Processor {
+	public static final String JSON_KEY_AFTER = "after";
+	public static final String JSON_KEY_AND = "AND";
+	public static final String JSON_KEY_BEFORE = "before";
+	public static final String JSON_KEY_COUNT = "count";
+	public static final String JSON_KEY_DURING = "during";
+	public static final String JSON_KEY_ENCODED = "encoded";
+	public static final String JSON_KEY_FACET_NAME = "facet_name";
+	public static final String JSON_KEY_FACETS = "facets";
+	public static final String JSON_KEY_FIELDS = "fields";
+	public static final String JSON_KEY_IS_OR_FACET = "is_or_facet";
+	public static final String JSON_KEY_IS_RANGE_FACET = "is_range_facet";
+	public static final String JSON_KEY_MAX = "max";
+	public static final String JSON_KEY_MIN = "min";
+	public static final String JSON_KEY_NAME = "name";
+	public static final String JSON_KEY_NEXT = "next";
+	public static final String JSON_KEY_NUM_PAGES = "num_pages";
+	public static final String JSON_KEY_NUM_PER_PAGE = "num_per_page";
+	public static final String JSON_KEY_NUM_PER_PAGE_URIS = "num_per_page_uris";
+	public static final String JSON_KEY_OR = "OR";
+	public static final String JSON_KEY_PAGE_NUM = "page_num";
+	public static final String JSON_KEY_PAGE_URIS = "page_uris";
+	public static final String JSON_KEY_PANL_BUILD_REQUEST_TIME = "panl_build_request_time";
+	public static final String JSON_KEY_PANL_BUILD_RESPONSE_TIME = "panl_build_response_time";
+	public static final String JSON_KEY_PANL_CODE = "panl_code";
+	public static final String JSON_KEY_PANL_PARSE_REQUEST_TIME = "panl_parse_request_time";
+	public static final String JSON_KEY_PANL_SEND_REQUEST_TIME = "panl_send_request_time";
+	public static final String JSON_KEY_PANL_TOTAL_TIME = "panl_total_time";
+	public static final String JSON_KEY_PREVIOUS = "previous";
+	public static final String JSON_KEY_RANGE_FACETS = "range_facets";
+	public static final String JSON_KEY_RELEVANCE = "relevance";
+	public static final String JSON_KEY_REPLACE_ASC = "replace_asc";
+	public static final String JSON_KEY_REPLACE_DESC = "replace_desc";
+	public static final String JSON_KEY_SOLR_JSON_KEY_RESPONSE = "response";
+	public static final String JSON_KEY_URIS = "uris";
+	public static final String JSON_KEY_VALUE = "value";
+	public static final String JSON_KEY_VALUES = "values";
+
+	public static final String JSON_VALUE_RELEVANCE = "Relevance";
+
 	protected final CollectionProperties collectionProperties;
 
 	public Processor(CollectionProperties collectionProperties) {
@@ -41,7 +80,7 @@ public abstract class Processor {
 	public abstract JSONObject processToObject(Map<String, List<LpseToken>> panlTokenMap, Object... params);
 
 	public String processToString(Map<String, List<LpseToken>> panlTokenMap, Object... params) {
-		return("");
+		return ("");
 	}
 
 }

@@ -33,28 +33,11 @@ import org.apache.solr.common.SolrDocumentList;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.util.*;
 
 public class AvailableProcessor extends Processor {
-
-	public static final String SOLR_JSON_KEY_RESPONSE = "response";
-	public static final String JSON_KEY_FACET_NAME = "facet_name";
-	public static final String JSON_KEY_NAME = "name";
-	public static final String JSON_KEY_PANL_CODE = "panl_code";
-	public static final String JSON_KEY_VALUE = "value";
-	public static final String JSON_KEY_COUNT = "count";
-	public static final String JSON_KEY_ENCODED = "encoded";
-	public static final String JSON_KEY_VALUES = "values";
-	public static final String JSON_KEY_URIS = "uris";
-	public static final String JSON_KEY_BEFORE = "before";
-	public static final String JSON_KEY_AFTER = "after";
-	public static final String JSON_KEY_IS_OR_FACET = "is_or_facet";
-	public static final String JSON_KEY_IS_RANGE_FACET = "is_range_facet";
-	public static final String JSON_KEY_RANGE_FACETS = "range_facets";
-	public static final String JSON_KEY_FACETS = "facets";
-	public static final String JSON_KEY_MIN = "min";
-	public static final String JSON_KEY_MAX = "max";
-	public static final String JSON_KEY_DURING = "during";
 
 	public AvailableProcessor(CollectionProperties collectionProperties) {
 		super(collectionProperties);
@@ -69,7 +52,7 @@ public class AvailableProcessor extends Processor {
 			lpseTokens.addAll(panlTokenMap.getOrDefault(lpseField.getLpseCode(), new ArrayList<>()));
 		}
 
-		SolrDocumentList solrDocuments = (SolrDocumentList) response.getResponse().get(SOLR_JSON_KEY_RESPONSE);
+		SolrDocumentList solrDocuments = (SolrDocumentList) response.getResponse().get(JSON_KEY_SOLR_JSON_KEY_RESPONSE);
 		long numFound = solrDocuments.getNumFound();
 		boolean numFoundExact = solrDocuments.getNumFoundExact();
 
@@ -203,7 +186,7 @@ public class AvailableProcessor extends Processor {
 				// addition URIs are a little bit different...
 				JSONObject additionURIObject = getAdditionURIObject(lpseField, panlTokenMap, true);
 				if (lpseField.getHasRangeMidfix()) {
-					additionURIObject.put(JSON_KEY_DURING, lpseField.getRangeMidfix());
+					additionURIObject.put(JSON_KEY_DURING, URLEncoder.encode(lpseField.getRangeMidfix(), StandardCharsets.UTF_8));
 				} else {
 					additionURIObject.put(JSON_KEY_DURING, "/");
 				}
