@@ -38,29 +38,36 @@ public class NumRowsLpseToken extends LpseToken {
 		super(lpseCode);
 		this.collectionProperties = collectionProperties;
 
-		int numRowsTemp;
+		this.numRows = collectionProperties.getNumResultsPerPage();
 
 		if (valueTokenizer.hasMoreTokens()) {
-			String numRowsTempString = "";
 			BaseField lpseField = collectionProperties.getLpseField(lpseCode);
+
+			// do we have a lpseField
 			if(null != lpseField) {
-				numRowsTempString = lpseField.getDecodedValue(valueTokenizer.nextToken());
+				this.originalValue = valueTokenizer.nextToken();
+				this.value = lpseField.getDecodedValue(originalValue);
 			} else {
 				this.isValid = false;
 			}
 
 			try {
-				numRowsTemp = Integer.parseInt(numRowsTempString);
+				numRows = Integer.parseInt(value);
 			} catch (NumberFormatException e) {
 				isValid = false;
-				numRowsTemp = collectionProperties.getNumResultsPerPage();
+			}
+
+			if(numRows <= 0) {
+				isValid = false;
 			}
 		} else {
 			isValid = false;
-			numRowsTemp = collectionProperties.getNumResultsPerPage();
 		}
-		this.value = Integer.toString(numRowsTemp);
-		this.numRows = numRowsTemp;
+
+		if(!isValid) {
+			// reset it to the default
+			this.numRows = collectionProperties.getNumResultsPerPage();
+		}
 	}
 
 	@Override public String explain() {
@@ -69,6 +76,8 @@ public class NumRowsLpseToken extends LpseToken {
 				(this.isValid ? "[  VALID  ]" : "[ INVALID ]") +
 				" <rows>          LPSE code '" +
 				this.lpseCode +
+				"' original URI path value '" +
+				this.originalValue +
 				"' using " +
 				(this.isValid ? "parsed" : "default") +
 				" value of '" +

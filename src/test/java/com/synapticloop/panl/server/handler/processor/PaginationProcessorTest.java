@@ -407,6 +407,69 @@ public class PaginationProcessorTest {
 		assertNull(pageUrisObject.optString(Processor.JSON_KEY_NEXT, null));
 		assertEquals("/1/p/", pageUrisObject.getString(Processor.JSON_KEY_PREVIOUS));
 		assertEquals("/p/", pageUrisObject.getString(Processor.JSON_KEY_AFTER));
-
 	}
+
+	@Test public void testOutOfBoundsPageNumber() throws PanlServerException, IOException {
+		JSONObject jsonObject = TestHelper.invokePaginationProcesser(
+				"/page/num-rows-neither.properties",
+				"/test/default/8/p/",
+				"",
+				12L
+		);
+
+		// On any page, and the number of results per page is not the first page
+		// this should reset the page number
+		System.out.println(jsonObject.toString(2));
+		JSONObject numPerPageUris = jsonObject.getJSONObject(Processor.JSON_KEY_NUM_PER_PAGE_URIS);
+		assertEquals(8, jsonObject.getInt(Processor.JSON_KEY_PAGE_NUM));
+		assertEquals(2, jsonObject.getInt(Processor.JSON_KEY_NUM_PAGES));
+		assertEquals(10, jsonObject.getInt(Processor.JSON_KEY_NUM_PER_PAGE));
+
+		assertEquals("/1/", numPerPageUris.getString(Processor.JSON_KEY_BEFORE));
+		assertEquals("/pn/", numPerPageUris.getString(Processor.JSON_KEY_AFTER));
+
+		JSONObject pageUrisObject = jsonObject.getJSONObject(Processor.JSON_KEY_PAGE_URIS);
+
+		assertEquals("/", pageUrisObject.getString(Processor.JSON_KEY_BEFORE));
+		assertNull(pageUrisObject.optString(Processor.JSON_KEY_NEXT, null));
+		assertEquals("/7/p/", pageUrisObject.getString(Processor.JSON_KEY_PREVIOUS));
+		assertEquals("/p/", pageUrisObject.getString(Processor.JSON_KEY_AFTER));
+	}
+
+	@Test public void testInvalidNumRows() throws PanlServerException, IOException {
+		testInvalidRowNumbers("0");
+		testInvalidRowNumbers("-1");
+		testInvalidRowNumbers("akjdsfads");
+		testInvalidRowNumbers("1.0");
+		testInvalidRowNumbers(" ");
+		testInvalidRowNumbers("/");
+	}
+
+	private static void testInvalidRowNumbers(String numRows) throws IOException, PanlServerException {
+		JSONObject jsonObject = TestHelper.invokePaginationProcesser(
+				"/page/num-rows-neither.properties",
+				"/test/default/" + numRows + "/n/",
+				"",
+				12L
+		);
+
+		// On any page, and the number of results per page is not the first page
+		// this should reset the page number
+		System.out.println(jsonObject.toString(2));
+		JSONObject numPerPageUris = jsonObject.getJSONObject(Processor.JSON_KEY_NUM_PER_PAGE_URIS);
+		assertEquals(1, jsonObject.getInt(Processor.JSON_KEY_PAGE_NUM));
+		assertEquals(2, jsonObject.getInt(Processor.JSON_KEY_NUM_PAGES));
+		assertEquals(10, jsonObject.getInt(Processor.JSON_KEY_NUM_PER_PAGE));
+
+		assertEquals("/", numPerPageUris.getString(Processor.JSON_KEY_BEFORE));
+		assertEquals("/n/", numPerPageUris.getString(Processor.JSON_KEY_AFTER));
+
+		JSONObject pageUrisObject = jsonObject.getJSONObject(Processor.JSON_KEY_PAGE_URIS);
+
+		assertEquals("/", pageUrisObject.getString(Processor.JSON_KEY_BEFORE));
+		assertNull(pageUrisObject.optString(Processor.JSON_KEY_PREVIOUS, null));
+		assertEquals("/2/p/", pageUrisObject.getString(Processor.JSON_KEY_NEXT));
+		assertEquals("/p/", pageUrisObject.getString(Processor.JSON_KEY_AFTER));
+	}
+
 }
