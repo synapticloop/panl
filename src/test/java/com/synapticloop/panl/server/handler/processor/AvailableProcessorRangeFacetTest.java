@@ -58,7 +58,8 @@ public class AvailableProcessorRangeFacetTest {
 				"/",
 				"",
 				10,
-				true);		JSONObject urisObject = jsonObject.getJSONArray(Processor.JSON_KEY_RANGE_FACETS)
+				true);
+		JSONObject urisObject = jsonObject.getJSONArray(Processor.JSON_KEY_RANGE_FACETS)
 				.getJSONObject(0)
 				.getJSONObject(Processor.JSON_KEY_URIS);
 
@@ -166,21 +167,23 @@ public class AvailableProcessorRangeFacetTest {
 		TestHelper.assertCanonicalURI("/test/default/11~18/w+w/", "/11~18/1/10/w+ws-pno+/");
 	}
 
-	@Test public void testNoMidFixPrefixSuffix() {
+	@Test public void testNoMidFixPrefixSuffix() throws PanlServerException, IOException {
 		JSONObject jsonObject = TestHelper.invokeAvailableProcesser(
 				"/range/suffix.properties",
-				uriPath,
+				"/test/default/10~20/w+w/",
 				"",
 				10,
 				true);
 
-		JSONObject urisObject = jsonObject.getJSONArray(Processor.JSON_KEY_RANGE_FACETS)
-				.getJSONObject(0)
+		JSONObject firstRangeFacetObject = jsonObject.getJSONArray(Processor.JSON_KEY_RANGE_FACETS)
+				.getJSONObject(0);
+
+		JSONObject urisObject = firstRangeFacetObject
 				.getJSONObject(Processor.JSON_KEY_URIS);
 
 		assertEquals("/", urisObject.getString(Processor.JSON_KEY_BEFORE));
-		assertEquals("~", urisObject.getString(Processor.JSON_KEY_DURING));
-		assertEquals(after, urisObject.getString(Processor.JSON_KEY_AFTER));
+		assertEquals("+grams~", urisObject.getString(Processor.JSON_KEY_DURING));
+		assertEquals("+grams/w+w/", urisObject.getString(Processor.JSON_KEY_AFTER));
 
 	}
 }
