@@ -1,10 +1,12 @@
 package com.synapticloop.panl;
 
 import com.synapticloop.panl.exception.PanlServerException;
+import com.synapticloop.panl.generator.bean.Collection;
 import com.synapticloop.panl.server.handler.CollectionRequestHandler;
 import com.synapticloop.panl.server.handler.processor.*;
 import com.synapticloop.panl.server.handler.properties.CollectionProperties;
 import com.synapticloop.panl.server.handler.properties.PanlProperties;
+import com.synapticloop.panl.server.handler.tokeniser.LpseTokeniser;
 import com.synapticloop.panl.server.handler.tokeniser.token.LpseToken;
 import org.apache.solr.client.solrj.response.FacetField;
 import org.apache.solr.client.solrj.response.QueryResponse;
@@ -22,6 +24,14 @@ import java.util.*;
 
 public class TestHelper {
 	private static PanlProperties panlProperties;
+
+	public static CollectionProperties getCollectionProperties(String propertiesFileLocation) throws IOException, PanlServerException {
+		return(new CollectionProperties("test", TestHelper.getTestProperties(propertiesFileLocation)));
+	}
+
+	public static LpseTokeniser getLpseTokeniser(String uriPath) {
+		return(new LpseTokeniser(uriPath, Collection.CODES_AND_METADATA, true));
+	}
 
 	public static Properties getTestProperties(String propertiesName) throws IOException {
 		Properties properties = new Properties();
@@ -93,9 +103,7 @@ public class TestHelper {
 			String query,
 			long numResults) throws IOException, PanlServerException {
 		PanlProperties panlProperties = TestHelper.getTestPanlProperties();
-		CollectionProperties collectionProperties = new CollectionProperties(
-				"test",
-				TestHelper.getTestProperties(propertiesFileLocation));
+		CollectionProperties collectionProperties = getCollectionProperties(propertiesFileLocation);
 		// now to parse the query
 
 		CollectionRequestHandler collectionRequestHandler = new CollectionRequestHandler(
@@ -116,10 +124,10 @@ public class TestHelper {
 			String URIPath,
 			String query,
 			long numResults) throws IOException, PanlServerException {
+
 		PanlProperties panlProperties = TestHelper.getTestPanlProperties();
-		CollectionProperties collectionProperties = new CollectionProperties(
-				"test",
-				TestHelper.getTestProperties(propertiesFileLocation));
+
+		CollectionProperties collectionProperties = getCollectionProperties(propertiesFileLocation);
 		// now to parse the query
 
 		CollectionRequestHandler collectionRequestHandler = new CollectionRequestHandler(
@@ -160,9 +168,8 @@ public class TestHelper {
 			long numResults,
 			boolean numFoundExact) throws IOException, PanlServerException {
 		PanlProperties panlProperties = TestHelper.getTestPanlProperties();
-		CollectionProperties collectionProperties = new CollectionProperties(
-				"test",
-				TestHelper.getTestProperties(propertiesFileLocation));
+
+		CollectionProperties collectionProperties = getCollectionProperties(propertiesFileLocation);
 		// now to parse the query
 
 		CollectionRequestHandler collectionRequestHandler = new CollectionRequestHandler(
@@ -183,9 +190,8 @@ public class TestHelper {
 			String URIPath,
 			String query) throws IOException, PanlServerException {
 		PanlProperties panlProperties = TestHelper.getTestPanlProperties();
-		CollectionProperties collectionProperties = new CollectionProperties(
-				"test",
-				TestHelper.getTestProperties(propertiesFileLocation));
+
+		CollectionProperties collectionProperties = getCollectionProperties(propertiesFileLocation);
 		// now to parse the query
 
 		CollectionRequestHandler collectionRequestHandler = new CollectionRequestHandler(
@@ -209,9 +215,8 @@ public class TestHelper {
 		assertTrue(URIPath.startsWith("/test/default/"));
 
 		PanlProperties panlProperties = TestHelper.getTestPanlProperties();
-		CollectionProperties collectionProperties = new CollectionProperties(
-				"test",
-				TestHelper.getTestProperties(propertiesFileLocation));
+
+		CollectionProperties collectionProperties = getCollectionProperties(propertiesFileLocation);
 		// now to parse the query
 
 		CollectionRequestHandler collectionRequestHandler = new CollectionRequestHandler(
