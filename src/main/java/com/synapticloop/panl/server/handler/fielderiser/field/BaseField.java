@@ -25,6 +25,7 @@ package com.synapticloop.panl.server.handler.fielderiser.field;
  */
 
 import com.synapticloop.panl.exception.PanlServerException;
+import com.synapticloop.panl.server.handler.processor.Processor;
 import com.synapticloop.panl.server.handler.properties.CollectionProperties;
 import com.synapticloop.panl.server.handler.tokeniser.token.FacetLpseToken;
 import com.synapticloop.panl.server.handler.tokeniser.token.LpseToken;
@@ -436,7 +437,7 @@ public abstract class BaseField {
 				toString = fromToSplit[1];
 			}
 		} else {
-			String[] fromToSplit = value.split("/");
+			String[] fromToSplit = value.split(Processor.JSON_VALUE_NO_MIDFIX_REPLACEMENT);
 			if (fromToSplit.length != 2) {
 				return (null);
 			} else {
@@ -568,7 +569,7 @@ public abstract class BaseField {
 
 			sb.append(URLEncoder.encode(facetLpseToken.getValue(), StandardCharsets.UTF_8));
 
-			sb.append("/");
+			sb.append(Processor.JSON_VALUE_NO_MIDFIX_REPLACEMENT);
 
 			sb.append(URLEncoder.encode(facetLpseToken.getToValue(), StandardCharsets.UTF_8));
 

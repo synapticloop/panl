@@ -67,6 +67,7 @@ public abstract class Processor {
 	public static final String JSON_KEY_VALUES = "values";
 
 	public static final String JSON_VALUE_RELEVANCE = "Relevance";
+	public static final String JSON_VALUE_NO_MIDFIX_REPLACEMENT = "~";
 
 	protected final CollectionProperties collectionProperties;
 

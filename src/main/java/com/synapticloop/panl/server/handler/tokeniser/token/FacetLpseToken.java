@@ -24,6 +24,7 @@ package com.synapticloop.panl.server.handler.tokeniser.token;
  *  IN THE SOFTWARE.
  */
 
+import com.synapticloop.panl.server.handler.processor.Processor;
 import com.synapticloop.panl.server.handler.properties.CollectionProperties;
 import com.synapticloop.panl.server.handler.fielderiser.field.BaseField;
 import com.synapticloop.panl.server.handler.tokeniser.LpseTokeniser;
@@ -138,12 +139,18 @@ public class FacetLpseToken extends LpseToken {
 
 				if (isRangeToken) {
 					if (!hasMidFix) {
-						if (valueTokeniser.hasMoreTokens()) {
-							String toValueTemp = valueTokeniser.nextToken();
-							this.toValue = lpseField.getDecodedValue(toValueTemp);
-							this.originalValue += "/" + toValueTemp;
-						} else {
+						String[] split = this.originalValue.split(Processor.JSON_VALUE_NO_MIDFIX_REPLACEMENT);
+						if(split.length != 2) {
 							this.isValid = false;
+						} else {
+							this.value = lpseField.getDecodedValue(split[0]);
+							if(null == this.value) {
+								isValid = false;
+							}
+							this.toValue = lpseField.getDecodedValue(split[1]);
+							if(null == this.toValue) {
+								isValid = false;
+							}
 						}
 					}
 

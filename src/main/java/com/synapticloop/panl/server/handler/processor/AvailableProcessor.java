@@ -247,7 +247,7 @@ public class AvailableProcessor extends Processor {
 						additionObject.put(
 								JSON_KEY_DURING,
 								URLEncoder.encode(baseField.getValueSuffix(), StandardCharsets.UTF_8) +
-										FORWARD_SLASH +
+										JSON_VALUE_NO_MIDFIX_REPLACEMENT +
 										URLEncoder.encode(baseField.getValuePrefix(), StandardCharsets.UTF_8));
 					}
 				}

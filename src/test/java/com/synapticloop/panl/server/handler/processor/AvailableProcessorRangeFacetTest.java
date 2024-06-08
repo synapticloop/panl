@@ -66,7 +66,7 @@ public class AvailableProcessorRangeFacetTest {
 		assertFalse(urisObject.toString().contains("PANL_WONT_APPEAR"));
 
 		assertEquals("/this+is+the+prefix", urisObject.getString(Processor.JSON_KEY_BEFORE));
-		assertEquals("/this+is+the+prefix", urisObject.getString(Processor.JSON_KEY_DURING));
+		assertEquals("~this+is+the+prefix", urisObject.getString(Processor.JSON_KEY_DURING));
 		assertEquals("/w+w/", urisObject.getString(Processor.JSON_KEY_AFTER));
 	}
 
@@ -86,7 +86,7 @@ public class AvailableProcessorRangeFacetTest {
 		assertFalse(urisObject.toString().contains("PANL_WONT_APPEAR"));
 
 		assertEquals("/", urisObject.getString(Processor.JSON_KEY_BEFORE));
-		assertEquals("+grams/", urisObject.getString(Processor.JSON_KEY_DURING));
+		assertEquals("+grams~", urisObject.getString(Processor.JSON_KEY_DURING));
 		assertEquals("+grams/w+w/", urisObject.getString(Processor.JSON_KEY_AFTER));
 	}
 
@@ -105,7 +105,7 @@ public class AvailableProcessorRangeFacetTest {
 		assertFalse(urisObject.toString().contains("PANL_WONT_APPEAR"));
 
 		assertEquals("/this+is+the+prefix", urisObject.getString(Processor.JSON_KEY_BEFORE));
-		assertEquals("this+is+the+suffix/this+is+the+prefix", urisObject.getString(Processor.JSON_KEY_DURING));
+		assertEquals("this+is+the+suffix~this+is+the+prefix", urisObject.getString(Processor.JSON_KEY_DURING));
 		assertEquals("this+is+the+suffix/w+w/", urisObject.getString(Processor.JSON_KEY_AFTER));
 	}
 
@@ -158,12 +158,29 @@ public class AvailableProcessorRangeFacetTest {
 		System.out.println(jsonObject.toString(2));
 		System.out.println(urisObject.toString(2));
 		assertEquals("/", urisObject.getString(Processor.JSON_KEY_BEFORE));
-		assertEquals("/", urisObject.getString(Processor.JSON_KEY_DURING));
+		assertEquals("~", urisObject.getString(Processor.JSON_KEY_DURING));
 		assertEquals(after, urisObject.getString(Processor.JSON_KEY_AFTER));
 	}
 
 	@Test public void testCanonicalURI() throws PanlServerException, IOException {
-		TestHelper.assertCanonicalURI("/test/default/11/18/w+w/", "/11/18/1/10/w+ws-pno+/");
+		TestHelper.assertCanonicalURI("/test/default/11~18/w+w/", "/11~18/1/10/w+ws-pno+/");
 	}
 
+	@Test public void testNoMidFixPrefixSuffix() {
+		JSONObject jsonObject = TestHelper.invokeAvailableProcesser(
+				"/range/suffix.properties",
+				uriPath,
+				"",
+				10,
+				true);
+
+		JSONObject urisObject = jsonObject.getJSONArray(Processor.JSON_KEY_RANGE_FACETS)
+				.getJSONObject(0)
+				.getJSONObject(Processor.JSON_KEY_URIS);
+
+		assertEquals("/", urisObject.getString(Processor.JSON_KEY_BEFORE));
+		assertEquals("~", urisObject.getString(Processor.JSON_KEY_DURING));
+		assertEquals(after, urisObject.getString(Processor.JSON_KEY_AFTER));
+
+	}
 }
