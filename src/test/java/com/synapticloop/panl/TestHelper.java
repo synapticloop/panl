@@ -168,4 +168,12 @@ public class TestHelper {
 		return(canonicalURIProcessor.processToString(panlTokenMap));
 	}
 
+	public static void assertCanonicalURI(String URIPath, String expect) throws PanlServerException, IOException {
+		String uriPath = TestHelper.invokeCanonicalURIProcessor(
+				"/default.properties",
+				URIPath,
+				"");
+		assertEquals(expect, uriPath);
+	}
+
 }

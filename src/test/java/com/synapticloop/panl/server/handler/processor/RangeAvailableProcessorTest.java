@@ -137,7 +137,10 @@ public class RangeAvailableProcessorTest {
 		assertEquals("/", urisObject.getString(Processor.JSON_KEY_BEFORE));
 		assertEquals("/", urisObject.getString(Processor.JSON_KEY_DURING));
 		assertEquals(after, urisObject.getString(Processor.JSON_KEY_AFTER));
+	}
 
+	@Test public void testCanonicalURI() throws PanlServerException, IOException {
+		TestHelper.assertCanonicalURI("/test/default/11/18/w+w/", "/11/18/1/10/w+ws-pno+/");
 	}
 
 }
