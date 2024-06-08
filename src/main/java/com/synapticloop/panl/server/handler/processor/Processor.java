@@ -73,10 +73,18 @@ public abstract class Processor {
 		this.collectionProperties = collectionProperties;
 	}
 
+	/**
+	 * <p>Process the panlTokenMap to a JSONObject.</p>
+	 *
+	 * @param panlTokenMap The map of LPSE codes to the list of tokens
+	 * @param queryResponse The Solr query response
+	 *
+	 * @return The JSON object with the keys set.
+	 */
 	public abstract JSONObject processToObject(Map<String, List<LpseToken>> panlTokenMap, QueryResponse queryResponse);
 
 	public JSONObject processToObject(Map<String, List<LpseToken>> panlTokenMap) {
-		return(processToObject(panlTokenMap));
+		return(processToObject(panlTokenMap, null));
 	}
 
 	public String processToString(Map<String, List<LpseToken>> panlTokenMap) {
