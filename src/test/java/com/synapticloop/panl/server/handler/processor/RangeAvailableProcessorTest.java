@@ -83,6 +83,7 @@ public class RangeAvailableProcessorTest {
 				"",
 				10,
 				true);
+
 		JSONObject urisObject = jsonObject.getJSONArray(Processor.JSON_KEY_RANGE_FACETS)
 				.getJSONObject(0)
 				.getJSONObject(Processor.JSON_KEY_URIS);
@@ -112,6 +113,31 @@ public class RangeAvailableProcessorTest {
 		assertEquals("/this+is+the+prefix", urisObject.getString(Processor.JSON_KEY_BEFORE));
 		assertEquals("this+is+the+suffix/this+is+the+prefix", urisObject.getString(Processor.JSON_KEY_DURING));
 		assertEquals("this+is+the+suffix/w+w/", urisObject.getString(Processor.JSON_KEY_AFTER));
+	}
+
+	@Test public void testAdditionOfFacetOnPageNumber() throws PanlServerException, IOException {
+		// TODO - these are both wrong - we don't need a page number on a reset
+		assertResetOfPageNumbers("/test/default/2/p/", "/w+w/");
+		assertResetOfPageNumbers("/test/default/2/3/pn/", "/3/w+wn/");
+	}
+
+	private void assertResetOfPageNumbers(String uriPath, String after) throws PanlServerException, IOException {
+		JSONObject jsonObject = TestHelper.invokeAvailableProcesser(
+				"/range/none.properties",
+				uriPath,
+				"",
+				10,
+				true);
+		JSONObject urisObject = jsonObject.getJSONArray(Processor.JSON_KEY_RANGE_FACETS)
+				.getJSONObject(0)
+				.getJSONObject(Processor.JSON_KEY_URIS);
+
+		System.out.println(jsonObject.toString(2));
+		System.out.println(urisObject.toString(2));
+		assertEquals("/", urisObject.getString(Processor.JSON_KEY_BEFORE));
+		assertEquals("/", urisObject.getString(Processor.JSON_KEY_DURING));
+		assertEquals(after, urisObject.getString(Processor.JSON_KEY_AFTER));
+
 	}
 
 }

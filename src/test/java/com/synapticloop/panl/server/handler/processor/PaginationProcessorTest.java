@@ -398,8 +398,8 @@ public class PaginationProcessorTest {
 		assertEquals(2, jsonObject.getInt(Processor.JSON_KEY_NUM_PAGES));
 		assertEquals(10, jsonObject.getInt(Processor.JSON_KEY_NUM_PER_PAGE));
 
-		assertEquals("/1/", numPerPageUris.getString(Processor.JSON_KEY_BEFORE));
-		assertEquals("/pn/", numPerPageUris.getString(Processor.JSON_KEY_AFTER));
+		assertEquals("/", numPerPageUris.getString(Processor.JSON_KEY_BEFORE));
+		assertEquals("/n/", numPerPageUris.getString(Processor.JSON_KEY_AFTER));
 
 		JSONObject pageUrisObject = jsonObject.getJSONObject(Processor.JSON_KEY_PAGE_URIS);
 
@@ -425,8 +425,8 @@ public class PaginationProcessorTest {
 		assertEquals(2, jsonObject.getInt(Processor.JSON_KEY_NUM_PAGES));
 		assertEquals(10, jsonObject.getInt(Processor.JSON_KEY_NUM_PER_PAGE));
 
-		assertEquals("/1/", numPerPageUris.getString(Processor.JSON_KEY_BEFORE));
-		assertEquals("/pn/", numPerPageUris.getString(Processor.JSON_KEY_AFTER));
+		assertEquals("/", numPerPageUris.getString(Processor.JSON_KEY_BEFORE));
+		assertEquals("/n/", numPerPageUris.getString(Processor.JSON_KEY_AFTER));
 
 		JSONObject pageUrisObject = jsonObject.getJSONObject(Processor.JSON_KEY_PAGE_URIS);
 

@@ -64,22 +64,6 @@ public class PanlQueryOperandField extends BaseField {
 		return(sb.toString());
 	}
 
-	/**
-	 * <p>The reset URI path </p>>
-	 * @param panlTokenMap
-	 * @param collectionProperties
-	 * @return
-	 */
-	public String getResetUriPath(Map<String, List<LpseToken>> panlTokenMap, CollectionProperties collectionProperties) {
-		String panlParamQueryOperand = collectionProperties.getPanlParamQueryOperand();
-		if(panlTokenMap.containsKey(panlParamQueryOperand)) {
-			QueryOperandLpseToken lpseToken = (QueryOperandLpseToken)panlTokenMap.get(panlParamQueryOperand).get(0);
-			return(lpseToken.getLpseCode() + lpseToken.getQueryOperand());
-		} else {
-			return("");
-		}
-	}
-
 	@Override public Logger getLogger() {
 		return(LOGGER);
 	}

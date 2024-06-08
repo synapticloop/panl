@@ -81,21 +81,32 @@ public class PanlPageNumField extends BaseField {
 		return (lpseCode);
 	}
 
+	/**
+	 * <p>When resetting the page number, it is always blank, whether or not it
+	 * exists in the panl token map.  This is because when we add/remove etc, we
+	 * go back to the first page always</p>
+	 *
+	 * @param panlTokenMap
+	 * @param collectionProperties
+	 * @return
+	 */
 	public String getResetUriPath(Map<String, List<LpseToken>> panlTokenMap, CollectionProperties collectionProperties) {
-		StringBuilder sb = new StringBuilder();
-		if (panlTokenMap.containsKey(lpseCode)) {
-			sb.append(getEncodedPanlValue("1"));
-			sb.append("/");
-		}
-
-		return (sb.toString());
+		return("");
+//		StringBuilder sb = new StringBuilder();
+//		if (panlTokenMap.containsKey(lpseCode)) {
+//			sb.append(getEncodedPanlValue("1"));
+//			sb.append("/");
+//		}
+//
+//		return (sb.toString());
 	}
 
 	public String getResetLpseCode(Map<String, List<LpseToken>> panlTokenMap, CollectionProperties collectionProperties) {
-		if (panlTokenMap.containsKey(lpseCode)) {
-			return (lpseCode);
-		}
-		return ("");
+		return("");
+//		if (panlTokenMap.containsKey(lpseCode)) {
+//			return (lpseCode);
+//		}
+//		return ("");
 	}
 
 	@Override public Logger getLogger() {
