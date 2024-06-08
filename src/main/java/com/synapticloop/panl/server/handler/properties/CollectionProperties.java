@@ -37,6 +37,18 @@ import org.slf4j.LoggerFactory;
 
 import java.util.*;
 
+/**
+ * <p>This object contains all information required for the Panl server bound
+ * URI path with assigned field sets.</p>
+ *
+ * <p>The held information:</p>
+ *
+ * <ul>
+ *   <li>Panl parameter queries</li>
+ * </ul>
+ *
+ * @author synapticloop
+ */
 public class CollectionProperties {
 	private static final Logger LOGGER = LoggerFactory.getLogger(CollectionProperties.class);
 
@@ -51,6 +63,15 @@ public class CollectionProperties {
 
 	public static final String SOLR_DEFAULT_QUERY_OPERAND_OR = "OR";
 	public static final String SOLR_DEFAULT_QUERY_OPERAND_AND = "AND";
+
+	public static final String PANL_LPSE_LENGTH = "panl.lpse.length";
+
+	public static final String PANL_PARAM_QUERY = "panl.param.query";
+	public static final String PANL_PARAM_SORT = "panl.param.sort";
+	public static final String PANL_PARAM_PAGE = "panl.param.page";
+	public static final String PANL_PARAM_NUMROWS = "panl.param.numrows";
+	public static final String PANL_PARAM_QUERY_OPERAND = "panl.param.query.operand";
+	public static final String PANL_PARAM_PASSTHROUGH = "panl.param.passthrough";
 
 
 	/**
@@ -136,11 +157,14 @@ public class CollectionProperties {
 
 	private boolean hasOrFacetFields = false;
 
+	private Map<String, String> MANDATORY_LPSE_ORDER_FIELDS = new HashMap<>();
+
 	public CollectionProperties(String collectionName, Properties properties) throws PanlServerException {
 		this.collectionName = collectionName;
 		this.properties = properties;
 
 		parseDefaultProperties();
+
 		parseFacetFields();
 		parseFields();
 		parseResultFields();
@@ -223,7 +247,7 @@ public class CollectionProperties {
 		this.solrFacetLimit = PropertyHelper.getIntProperty(properties, "solr.facet.limit", 100);
 
 
-		this.lpseLength = PropertyHelper.getIntProperty(properties, "panl.lpse.length", null);
+		this.lpseLength = PropertyHelper.getIntProperty(properties, PANL_LPSE_LENGTH, null);
 		if (null == lpseLength) {
 			throw new PanlServerException("MANDATORY PROPERTY MISSING: Could not find the 'panl.lpse.length' property in the '" + this.collectionName + "'.panl.properties file.'");
 		}
@@ -235,23 +259,25 @@ public class CollectionProperties {
 
 		LPSE_METADATA.add(this.solrDefaultQueryOperand);
 
-		this.panlParamQuery = initialiseStringProperty("panl.param.query", true);
-		lpseFieldLookup.put(this.panlParamQuery, new PanlQueryField(panlParamQuery, "panl.param.query", properties, collectionName));
+		this.panlParamQuery = initialiseStringProperty(PANL_PARAM_QUERY, true);
+		lpseFieldLookup.put(this.panlParamQuery, new PanlQueryField(panlParamQuery, PANL_PARAM_QUERY, properties, collectionName));
 
-		this.panlParamSort = initialiseStringProperty("panl.param.sort", true);
-		lpseFieldLookup.put(this.panlParamSort, new PanlSortField(panlParamSort, "panl.param.sort", properties, collectionName));
+		this.panlParamSort = initialiseStringProperty(PANL_PARAM_SORT, true);
+		lpseFieldLookup.put(this.panlParamSort, new PanlSortField(panlParamSort, PANL_PARAM_SORT, properties, collectionName));
 
-		this.panlParamPage = initialiseStringProperty("panl.param.page", true);
-		lpseFieldLookup.put(this.panlParamPage, new PanlPageNumField(panlParamPage, "panl.param.page", properties, collectionName));
+		this.panlParamPage = initialiseStringProperty(PANL_PARAM_PAGE, true);
+		lpseFieldLookup.put(this.panlParamPage, new PanlPageNumField(panlParamPage, PANL_PARAM_PAGE, properties, collectionName));
 
-		this.panlParamNumRows = initialiseStringProperty("panl.param.numrows", true);
-		lpseFieldLookup.put(this.panlParamNumRows, new PanlNumRowsField(panlParamNumRows, "panl.param.numrows", properties, collectionName));
+		this.panlParamNumRows = initialiseStringProperty(PANL_PARAM_NUMROWS, true);
+		lpseFieldLookup.put(this.panlParamNumRows, new PanlNumRowsField(panlParamNumRows, PANL_PARAM_NUMROWS, properties, collectionName));
 
-		this.panlParamQueryOperand = initialiseStringProperty("panl.param.query.operand", true);
-		lpseFieldLookup.put(this.panlParamQueryOperand, new PanlQueryOperandField(panlParamQueryOperand, "panl.param.query.operand", properties, collectionName));
+		this.panlParamQueryOperand = initialiseStringProperty(PANL_PARAM_QUERY_OPERAND, true);
+		lpseFieldLookup.put(this.panlParamQueryOperand, new PanlQueryOperandField(panlParamQueryOperand, PANL_PARAM_QUERY_OPERAND, properties, collectionName));
 
-		this.panlParamPassThrough = initialiseStringProperty("panl.param.passthrough", false);
-		lpseFieldLookup.put(this.panlParamPassThrough, new PanlPassThroughField(panlParamPassThrough, "panl.param.passthrough", properties, collectionName));
+		this.panlParamPassThrough = initialiseStringProperty(PANL_PARAM_PASSTHROUGH, false);
+		if(null != panlParamPassThrough) {
+			lpseFieldLookup.put(this.panlParamPassThrough, new PanlPassThroughField(panlParamPassThrough, PANL_PARAM_PASSTHROUGH, properties, collectionName));
+		}
 	}
 
 	/**
@@ -291,6 +317,8 @@ public class CollectionProperties {
 				return (null);
 			}
 		}
+
+		MANDATORY_LPSE_ORDER_FIELDS.put(panlPropertyValue, propertyName);
 
 		LPSE_METADATA.add(panlPropertyValue);
 		return (panlPropertyValue);
@@ -378,7 +406,24 @@ public class CollectionProperties {
 					!LPSE_METADATA.contains(lpseCode)) {
 				LOGGER.warn("Found a panl code of '{}' in the " + PROPERTY_KEY_PANL_LPSE_ORDER + " property, yet it is not a defined field.  This will be ignored...", lpseCode);
 			}
+
+			MANDATORY_LPSE_ORDER_FIELDS.remove(lpseCode);
 		}
+
+		boolean missingMandatoryLpseCode = false;
+		// we also need to ensure that the default parameters are in the lpse order
+		for (String key : MANDATORY_LPSE_ORDER_FIELDS.keySet()) {
+			LOGGER.error("__MUST__ have key of '{}' in property '{}', this is set by the property '{}'.",
+					key,
+					PROPERTY_KEY_PANL_LPSE_ORDER,
+					MANDATORY_LPSE_ORDER_FIELDS.get(key));
+			missingMandatoryLpseCode = true;
+		}
+
+		if(missingMandatoryLpseCode) {
+			throw new PanlServerException("Missing mandatory LPSE codes in the " + PROPERTY_KEY_PANL_LPSE_ORDER + " property.");
+		}
+
 	}
 
 	private void parseResultFields() throws PanlServerException {

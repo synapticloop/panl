@@ -39,6 +39,8 @@ import java.util.*;
 
 public class AvailableProcessor extends Processor {
 
+	public static final String FORWARD_SLASH = "/";
+
 	public AvailableProcessor(CollectionProperties collectionProperties) {
 		super(collectionProperties);
 	}
@@ -185,11 +187,6 @@ public class AvailableProcessor extends Processor {
 
 				// addition URIs are a little bit different...
 				JSONObject additionURIObject = getAdditionURIObject(lpseField, panlTokenMap, true);
-				if (lpseField.getHasRangeMidfix()) {
-					additionURIObject.put(JSON_KEY_DURING, URLEncoder.encode(lpseField.getRangeMidfix(), StandardCharsets.UTF_8));
-				} else {
-					additionURIObject.put(JSON_KEY_DURING, "/");
-				}
 				facetObject.put(JSON_KEY_URIS, additionURIObject);
 				rangeFacetAray.put(facetObject);
 			}
@@ -212,7 +209,7 @@ public class AvailableProcessor extends Processor {
 	private JSONObject getAdditionURIObject(BaseField lpseField, Map<String, List<LpseToken>> panlTokenMap, boolean shouldRange) {
 		String additionLpseCode = lpseField.getLpseCode();
 		JSONObject additionObject = new JSONObject();
-		StringBuilder lpseUri = new StringBuilder("/");
+		StringBuilder lpseUri = new StringBuilder(FORWARD_SLASH);
 		StringBuilder lpseCode = new StringBuilder();
 
 		for (BaseField baseField : collectionProperties.getLpseFields()) {
@@ -222,26 +219,56 @@ public class AvailableProcessor extends Processor {
 			}
 
 			if (baseField.getLpseCode().equals(additionLpseCode)) {
+				if (shouldRange) {
+					// depends on whether there is a midfix
+					if (lpseField.getHasRangeMidfix()) {
+						// we have a midfix - we will be using the range value prefix/suffix
+						lpseUri.append(URLEncoder.encode(baseField.getRangeValuePrefix(), StandardCharsets.UTF_8));
+					} else {
+						// we don't have a midfix - we will be using the value prefix/suffix
+						lpseUri.append(URLEncoder.encode(baseField.getValuePrefix(), StandardCharsets.UTF_8));
+					}
+
+					lpseCode.append(lpseField.getLpseCode());
+					lpseCode.append((lpseField.getHasRangeMidfix() ? "-" : "+"));
+
+					if (baseField.getHasRangeMidfix()) {
+						// we have the midfix
+						additionObject.put(JSON_KEY_DURING, URLEncoder.encode(baseField.getRangeValueMidfix(), StandardCharsets.UTF_8));
+					} else {
+						// we shall use the value suffix and prefix;
+						additionObject.put(
+								JSON_KEY_DURING,
+								URLEncoder.encode(baseField.getValueSuffix(), StandardCharsets.UTF_8) +
+										FORWARD_SLASH +
+										URLEncoder.encode(baseField.getValuePrefix(), StandardCharsets.UTF_8));
+					}
+				}
+
 				additionObject.put(JSON_KEY_BEFORE, lpseUri.toString());
 				lpseUri.setLength(0);
 				lpseCode.append(baseField.getLpseCode());
 
-				// if this is a range, then there is a different format
-				if(shouldRange && lpseField.getHasRangeMidfix()) {
-					lpseCode.append((lpseField.getHasRangeMidfix() ? "-" : "+"));
-					lpseCode.append(lpseField.getLpseCode());
+				// now we are adding to the "after" and to...
+				if(shouldRange) {
+					if(baseField.getHasRangeMidfix()) {
+						lpseUri.append(URLEncoder.encode(baseField.getRangeValueSuffix(), StandardCharsets.UTF_8));
+					} else {
+						lpseUri.append(URLEncoder.encode(baseField.getValueSuffix(), StandardCharsets.UTF_8));
+					}
 				}
+				lpseUri.append(FORWARD_SLASH);
 			}
 		}
 
-			additionObject.put(JSON_KEY_AFTER, "/" + lpseUri + lpseCode + "/");
+		additionObject.put(JSON_KEY_AFTER, lpseUri.toString() + lpseCode.toString() + FORWARD_SLASH);
 		return (additionObject);
 	}
 
 	private JSONObject getReplacementURIObject(BaseField lpseField, Map<String, List<LpseToken>> panlTokenMap, boolean shouldRange) {
 		String replacementLpse = lpseField.getLpseCode();
 		JSONObject additionObject = new JSONObject();
-		StringBuilder lpseUri = new StringBuilder("/");
+		StringBuilder lpseUri = new StringBuilder(FORWARD_SLASH);
 		StringBuilder lpseCode = new StringBuilder();
 
 		for (BaseField baseField : collectionProperties.getLpseFields()) {
@@ -257,14 +284,14 @@ public class AvailableProcessor extends Processor {
 				lpseCode.append(baseField.getLpseCode());
 
 				// if this is a range, then there is a different format
-				if(shouldRange && lpseField.getHasRangeMidfix()) {
+				if (shouldRange && lpseField.getHasRangeMidfix()) {
 					lpseCode.append((lpseField.getHasRangeMidfix() ? "-" : "+"));
 					lpseCode.append(lpseField.getLpseCode());
 				}
 			}
 		}
 
-		additionObject.put(JSON_KEY_AFTER, "/" + lpseUri + lpseCode + "/");
+		additionObject.put(JSON_KEY_AFTER, FORWARD_SLASH + lpseUri + lpseCode + FORWARD_SLASH);
 		return (additionObject);
 	}
 

@@ -43,6 +43,8 @@ public class PaginationProcessor extends Processor {
 
 	public JSONObject processToObject(Map<String, List<LpseToken>> panlTokenMap, Object... params) {
 
+		// TODO - maybe I should change the params to the SolrQuery and also
+		// check if the results would be out of bounds....
 		int numPerPage = collectionProperties.getNumResultsPerPage();
 		// If it is set in the URI, get the updated value
 		List<LpseToken> lpseTokens = panlTokenMap.getOrDefault(collectionProperties.getPanlParamNumRows(), new ArrayList<>());
@@ -79,12 +81,11 @@ public class PaginationProcessor extends Processor {
 		JSONObject pageUris = new JSONObject();
 
 		for (BaseField baseField : collectionProperties.getLpseFields()) {
-			//
 			if (!baseField.getLpseCode().equals(panlParamPageLpseCode)) {
 				uriPath.append(baseField.getURIPath(panlTokenMap, collectionProperties));
 				lpseCode.append(baseField.getLpseCode(panlTokenMap, collectionProperties));
 			} else {
-				pageUris.put(JSON_KEY_BEFORE, uriPath + baseField.getPanlPrefix());
+				pageUris.put(JSON_KEY_BEFORE, uriPath + baseField.getValuePrefix());
 				// clear the sting builder
 				lpseCode.append(baseField.getLpseCode());
 				uriPath.setLength(0);
@@ -93,7 +94,7 @@ public class PaginationProcessor extends Processor {
 
 		BaseField panlPageNumField = collectionProperties.getLpseField(panlParamPageLpseCode);
 
-		String afterValue = panlPageNumField.getPanlSuffix() + "/" + uriPath + lpseCode + "/";
+		String afterValue = panlPageNumField.getValueSuffix() + "/" + uriPath + lpseCode + "/";
 		pageUris.put(JSON_KEY_AFTER, afterValue);
 
 		if (pageNumber < numPages) {
@@ -142,7 +143,7 @@ public class PaginationProcessor extends Processor {
 				uriPath.append(baseField.getResetUriPath(panlTokenMap, collectionProperties));
 				lpseCode.append(baseField.getResetLpseCode(panlTokenMap, collectionProperties));
 			} else {
-				pageUris.put(JSON_KEY_BEFORE, uriPath + baseField.getPanlPrefix());
+				pageUris.put(JSON_KEY_BEFORE, uriPath + baseField.getValuePrefix());
 				// clear the sting builder
 				lpseCode.append(baseField.getLpseCode());
 				uriPath.setLength(0);
@@ -151,7 +152,7 @@ public class PaginationProcessor extends Processor {
 
 		BaseField baseField = collectionProperties.getLpseField(replaceLpseCode);
 
-		pageUris.put(JSON_KEY_AFTER, baseField.getPanlSuffix() + "/" + uriPath + lpseCode + "/");
+		pageUris.put(JSON_KEY_AFTER, baseField.getValueSuffix() + "/" + uriPath + lpseCode + "/");
 
 		return (pageUris);
 	}

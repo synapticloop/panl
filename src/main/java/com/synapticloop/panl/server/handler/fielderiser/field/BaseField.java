@@ -53,10 +53,10 @@ public abstract class BaseField {
 	protected static final String BOOLEAN_TRUE_VALUE = "true";
 	protected static final String BOOLEAN_FALSE_VALUE = "false";
 
-	private boolean hasPrefix = false;
-	private boolean hasSuffix = false;
-	private String panlPrefix;
-	private String panlSuffix;
+	private boolean hasValuePrefix = false;
+	private boolean hasValueSuffix = false;
+	private String valuePrefix;
+	private String getValueSuffix;
 
 	// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - //
 	//                            OR Facet properties                          //
@@ -72,12 +72,12 @@ public abstract class BaseField {
 	private boolean hasMaxRange = false;
 	private String rangeMaxRange;
 	private boolean hasRangeMidfix = false;
-	private String rangeMidfix;
+	private String rangeValueMidfix;
 
 	private boolean hasRangePrefix;
-	private String rangePrefix;
+	private String rangeValuePrefix;
 	private boolean hasRangeSuffix;
-	private String rangeSuffix;
+	private String rangeValueSuffix;
 
 	// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - //
 	//                         BOOLEAN Facet properties                        //
@@ -220,18 +220,18 @@ public abstract class BaseField {
 				hasMaxRange = true;
 			}
 
-			this.rangePrefix = properties.getProperty("panl.range.prefix." + lpseCode, null);
-			if (null != this.rangePrefix) {
+			this.rangeValuePrefix = properties.getProperty("panl.range.prefix." + lpseCode, null);
+			if (null != this.rangeValuePrefix) {
 				hasRangePrefix = true;
 			}
 
-			this.rangeSuffix = properties.getProperty("panl.range.suffix." + lpseCode, null);
-			if (null != this.rangeSuffix) {
+			this.rangeValueSuffix = properties.getProperty("panl.range.suffix." + lpseCode, null);
+			if (null != this.rangeValueSuffix) {
 				hasRangeSuffix = true;
 			}
 
-			this.rangeMidfix = properties.getProperty("panl.range.midfix." + lpseCode, null);
-			if (null != this.rangeMidfix) {
+			this.rangeValueMidfix = properties.getProperty("panl.range.midfix." + lpseCode, null);
+			if (null != this.rangeValueMidfix) {
 				hasRangeMidfix = true;
 			}
 		}
@@ -261,42 +261,42 @@ public abstract class BaseField {
 	}
 
 	protected void populateParamSuffixAndPrefix() {
-		this.panlPrefix = properties.getProperty(propertyKey + ".prefix");
+		this.valuePrefix = properties.getProperty(propertyKey + ".prefix");
 
-		this.panlSuffix = properties.getProperty(propertyKey + ".suffix");
+		this.getValueSuffix = properties.getProperty(propertyKey + ".suffix");
 
 		checkPrefixSuffix();
 	}
 
 	protected void populateSuffixAndPrefix() {
-		this.panlPrefix = properties.getProperty(PROPERTY_KEY_PANL_PREFIX + lpseCode);
+		this.valuePrefix = properties.getProperty(PROPERTY_KEY_PANL_PREFIX + lpseCode);
 
-		this.panlSuffix = properties.getProperty(PROPERTY_KEY_PANL_SUFFIX + lpseCode);
+		this.getValueSuffix = properties.getProperty(PROPERTY_KEY_PANL_SUFFIX + lpseCode);
 
 		checkPrefixSuffix();
 	}
 
 	private void checkPrefixSuffix() {
-		if (this.panlPrefix != null && !this.panlPrefix.isEmpty()) {
-			hasPrefix = true;
+		if (this.valuePrefix != null && !this.valuePrefix.isEmpty()) {
+			hasValuePrefix = true;
 		}
 
-		if (this.panlSuffix != null && !this.panlSuffix.isEmpty()) {
-			hasSuffix = true;
+		if (this.getValueSuffix != null && !this.getValueSuffix.isEmpty()) {
+			hasValueSuffix = true;
 		}
 	}
 
-	public String getPanlPrefix() {
-		if (hasPrefix) {
-			return (panlPrefix);
+	public String getValuePrefix() {
+		if (hasValuePrefix) {
+			return (valuePrefix);
 		} else {
 			return ("");
 		}
 	}
 
-	public String getPanlSuffix() {
-		if (hasSuffix) {
-			return (panlSuffix);
+	public String getValueSuffix() {
+		if (hasValueSuffix) {
+			return (getValueSuffix);
 		} else {
 			return ("");
 		}
@@ -344,17 +344,17 @@ public abstract class BaseField {
 	public String getDecodedValue(String value) {
 		String decodedValue = URLDecoder.decode(value, StandardCharsets.UTF_8);
 
-		if (hasPrefix) {
-			if (decodedValue.startsWith(panlPrefix)) {
-				decodedValue = decodedValue.substring(panlPrefix.length());
+		if (hasValuePrefix) {
+			if (decodedValue.startsWith(valuePrefix)) {
+				decodedValue = decodedValue.substring(valuePrefix.length());
 			} else {
 				return (null);
 			}
 		}
 
-		if (hasSuffix) {
-			if (decodedValue.endsWith(panlSuffix)) {
-				decodedValue = decodedValue.substring(0, decodedValue.length() - panlSuffix.length());
+		if (hasValueSuffix) {
+			if (decodedValue.endsWith(getValueSuffix)) {
+				decodedValue = decodedValue.substring(0, decodedValue.length() - getValueSuffix.length());
 			} else {
 				return (null);
 			}
@@ -428,7 +428,7 @@ public abstract class BaseField {
 			// It is OK to decode the value as it is all in one
 			String decodedValue = URLDecoder.decode(value, StandardCharsets.UTF_8);
 			// then we need to split by the midfix
-			String[] fromToSplit = decodedValue.split(rangeMidfix);
+			String[] fromToSplit = decodedValue.split(rangeValueMidfix);
 			if (fromToSplit.length != 2) {
 				return (null);
 			} else {
@@ -448,16 +448,16 @@ public abstract class BaseField {
 		// at this point we have two values, the from and to
 
 		if (hasRangePrefix) {
-			if (fromString.startsWith(rangePrefix)) {
-				fromString = fromString.substring(rangePrefix.length());
+			if (fromString.startsWith(rangeValuePrefix)) {
+				fromString = fromString.substring(rangeValuePrefix.length());
 			} else {
 				return (null);
 			}
 		}
 
 		if (hasRangeSuffix) {
-			if (toString.endsWith(rangeSuffix)) {
-				toString = toString.substring(0, toString.length() - rangeSuffix.length());
+			if (toString.endsWith(rangeValueSuffix)) {
+				toString = toString.substring(0, toString.length() - rangeValueSuffix.length());
 			} else {
 				return (null);
 			}
@@ -547,23 +547,23 @@ public abstract class BaseField {
 		if (hasRangeMidfix) {
 			// just add it all together
 			if (hasRangePrefix) {
-				sb.append(rangePrefix);
+				sb.append(rangeValuePrefix);
 			}
 			sb.append(facetLpseToken.getValue());
 
-			sb.append(rangeMidfix);
+			sb.append(rangeValueMidfix);
 
 			sb.append(facetLpseToken.getToValue());
 
 			if (hasRangeSuffix) {
-				sb.append(rangeSuffix);
+				sb.append(rangeValueSuffix);
 			}
 			return (URLEncoder.encode(sb.toString(), StandardCharsets.UTF_8));
 		} else {
 			// we will have a two part URI path, split by a '/' and both values need
 			// to be URLEncoded before.
 			if (hasRangePrefix) {
-				sb.append(URLEncoder.encode(rangePrefix, StandardCharsets.UTF_8));
+				sb.append(URLEncoder.encode(rangeValuePrefix, StandardCharsets.UTF_8));
 			}
 
 			sb.append(URLEncoder.encode(facetLpseToken.getValue(), StandardCharsets.UTF_8));
@@ -573,7 +573,7 @@ public abstract class BaseField {
 			sb.append(URLEncoder.encode(facetLpseToken.getToValue(), StandardCharsets.UTF_8));
 
 			if (hasRangeSuffix) {
-				sb.append(URLEncoder.encode(rangeSuffix, StandardCharsets.UTF_8));
+				sb.append(URLEncoder.encode(rangeValueSuffix, StandardCharsets.UTF_8));
 			}
 			return (sb.toString());
 		}
@@ -582,8 +582,8 @@ public abstract class BaseField {
 	private String getEncodedRegularFacetValue(String value) {
 		StringBuilder sb = new StringBuilder();
 
-		if (hasPrefix) {
-			sb.append(panlPrefix);
+		if (hasValuePrefix) {
+			sb.append(valuePrefix);
 		}
 
 		if (isBooleanSolrFieldType) {
@@ -602,8 +602,8 @@ public abstract class BaseField {
 			sb.append(value);
 		}
 
-		if (hasSuffix) {
-			sb.append(panlSuffix);
+		if (hasValueSuffix) {
+			sb.append(getValueSuffix);
 		}
 
 		return (URLEncoder.encode(sb.toString(), StandardCharsets.UTF_8));
@@ -725,12 +725,12 @@ public abstract class BaseField {
 				solrFieldType +
 				"'.");
 
-		if (hasPrefix) {
-			temp.add("             Prefix: '" + panlPrefix + "'.");
+		if (hasValuePrefix) {
+			temp.add("             Prefix: '" + valuePrefix + "'.");
 		}
 
-		if (hasSuffix) {
-			temp.add("             Suffix: '" + panlSuffix + "'.");
+		if (hasValueSuffix) {
+			temp.add("             Suffix: '" + getValueSuffix + "'.");
 		}
 
 		if (hasBooleanTrueReplacement) {
@@ -786,8 +786,33 @@ public abstract class BaseField {
 		return (hasRangeMidfix);
 	}
 
-	public String getRangeMidfix() {
-		return (rangeMidfix);
+	public String getRangeValueMidfix() {
+		return (rangeValueMidfix);
+	}
+
+	public String getRangeValuePrefix() {
+		if(hasRangePrefix) {
+			return (rangeValuePrefix);
+		} else {
+			return("");
+		}
+	}
+
+	public String getRangeValueSuffix() {
+		if(hasRangeSuffix) {
+			return (rangeValueSuffix);
+		} else {
+			return("");
+		}
+	}
+
+
+	public String getPrefix() {
+		if(hasRangeMidfix) {
+			return(getRangeValuePrefix());
+		} else {
+			return(getValuePrefix());
+		}
 	}
 
 	protected abstract void applyToQueryInternal(SolrQuery solrQuery, Map<String, List<LpseToken>> panlTokenMap);
