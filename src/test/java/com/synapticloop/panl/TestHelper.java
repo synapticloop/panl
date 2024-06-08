@@ -6,6 +6,7 @@ import com.synapticloop.panl.server.handler.processor.*;
 import com.synapticloop.panl.server.handler.properties.CollectionProperties;
 import com.synapticloop.panl.server.handler.properties.PanlProperties;
 import com.synapticloop.panl.server.handler.tokeniser.token.LpseToken;
+import org.apache.solr.client.solrj.response.FacetField;
 import org.apache.solr.client.solrj.response.QueryResponse;
 import org.apache.solr.common.SolrDocumentList;
 import org.apache.solr.common.util.NamedList;
@@ -15,6 +16,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.*;
 
 import static org.mockito.Mockito.*;
+
 import java.io.IOException;
 import java.util.*;
 
@@ -56,18 +58,33 @@ public class TestHelper {
 		return (panlTokenMap);
 	}
 
-	@SuppressWarnings({ "rawtypes", "unchecked" })
+	@SuppressWarnings({"rawtypes", "unchecked"})
 	public static QueryResponse getMockedQueryResponse(long numFound, boolean numFoundExact) {
+		return (getMockedQueryResponse(new ArrayList<>(), numFound, numFoundExact));
+	}
+
+	@SuppressWarnings({"rawtypes", "unchecked"})
+	public static QueryResponse getMockedQueryResponse(List<FacetCountBean> facetCountBeans, long numFound, boolean numFoundExact) {
 		QueryResponse mockedQueryResponse = mock(QueryResponse.class);
 		NamedList mockedNamedListResponse = mock(NamedList.class);
 		SolrDocumentList mockedSolrDocumentList = mock(SolrDocumentList.class);
+
+		List<FacetField> facetFields = new ArrayList<>();
+		for (FacetCountBean facetCountBean : facetCountBeans) {
+			FacetField facetField = new FacetField(facetCountBean.getName());
+			for (long count : facetCountBean.getCounts()) {
+				facetField.insert("facet-count-" + count, count);
+			}
+			facetFields.add(facetField);
+		}
+		when(mockedQueryResponse.getFacetFields()).thenReturn(facetFields);
 
 		when(mockedQueryResponse.getResponse()).thenReturn(mockedNamedListResponse);
 		when(mockedNamedListResponse.get("response")).thenReturn(mockedSolrDocumentList);
 		when(mockedSolrDocumentList.getNumFound()).thenReturn(numFound);
 		when(mockedSolrDocumentList.getNumFoundExact()).thenReturn(numFoundExact);
 
-		return(mockedQueryResponse);
+		return (mockedQueryResponse);
 	}
 
 	public static JSONObject invokePaginationProcesser(
@@ -91,10 +108,52 @@ public class TestHelper {
 		Map<String, List<LpseToken>> panlTokenMap = TestHelper.getPanlTokenMap(lpseTokens);
 		PaginationProcessor paginationProcessor = new PaginationProcessor(collectionProperties);
 
-		return(paginationProcessor.processToObject(panlTokenMap, getMockedQueryResponse(numResults, true)));
+		return (paginationProcessor.processToObject(panlTokenMap, getMockedQueryResponse(numResults, true)));
+	}
+
+	public static JSONObject invokeSortingProcessor(
+			String propertiesFileLocation,
+			String URIPath,
+			String query,
+			long numResults) throws IOException, PanlServerException {
+		PanlProperties panlProperties = TestHelper.getTestPanlProperties();
+		CollectionProperties collectionProperties = new CollectionProperties(
+				"test",
+				TestHelper.getTestProperties(propertiesFileLocation));
+		// now to parse the query
+
+		CollectionRequestHandler collectionRequestHandler = new CollectionRequestHandler(
+				"test",
+				panlProperties,
+				collectionProperties);
+
+		List<LpseToken> lpseTokens = collectionRequestHandler.parseLpse(URIPath, query);
+
+		Map<String, List<LpseToken>> panlTokenMap = TestHelper.getPanlTokenMap(lpseTokens);
+		SortingProcessor sortingProcessor = new SortingProcessor(collectionProperties);
+
+		return (sortingProcessor.processToObject(panlTokenMap, getMockedQueryResponse(numResults, true)));
 	}
 
 	public static JSONObject invokeAvailableProcesser(
+			String propertiesFileLocation,
+			String URIPath,
+			String query,
+			long numResults,
+			boolean numFoundExact) throws IOException, PanlServerException {
+
+		return (invokeAvailableProcesser(new ArrayList<>(),
+				propertiesFileLocation,
+				URIPath,
+				query,
+				numResults,
+				numFoundExact)
+
+		);
+	}
+
+	public static JSONObject invokeAvailableProcesser(
+			List<FacetCountBean> facetList,
 			String propertiesFileLocation,
 			String URIPath,
 			String query,
@@ -116,7 +175,7 @@ public class TestHelper {
 		Map<String, List<LpseToken>> panlTokenMap = TestHelper.getPanlTokenMap(lpseTokens);
 		AvailableProcessor availableProcessor = new AvailableProcessor(collectionProperties);
 
-		return(availableProcessor.processToObject(panlTokenMap, getMockedQueryResponse(numResults, numFoundExact)));
+		return (availableProcessor.processToObject(panlTokenMap, getMockedQueryResponse(facetList, numResults, numFoundExact)));
 	}
 
 	public static JSONObject invokeQueryOperandProcesser(
@@ -139,7 +198,7 @@ public class TestHelper {
 		Map<String, List<LpseToken>> panlTokenMap = TestHelper.getPanlTokenMap(lpseTokens);
 		QueryOperandProcessor queryOperandProcessor = new QueryOperandProcessor(collectionProperties);
 
-		return(queryOperandProcessor.processToObject(panlTokenMap, getMockedQueryResponse(100, true)));
+		return (queryOperandProcessor.processToObject(panlTokenMap, getMockedQueryResponse(100, true)));
 	}
 
 	public static String invokeCanonicalURIProcessor(
@@ -165,7 +224,7 @@ public class TestHelper {
 		Map<String, List<LpseToken>> panlTokenMap = TestHelper.getPanlTokenMap(lpseTokens);
 		CanonicalURIProcessor canonicalURIProcessor = new CanonicalURIProcessor(collectionProperties);
 
-		return(canonicalURIProcessor.processToString(panlTokenMap));
+		return (canonicalURIProcessor.processToString(panlTokenMap));
 	}
 
 	public static void assertCanonicalURI(String URIPath, String expect) throws PanlServerException, IOException {

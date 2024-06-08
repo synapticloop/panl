@@ -63,6 +63,7 @@ public abstract class Processor {
 	public static final String JSON_KEY_SOLR_JSON_KEY_RESPONSE = "response";
 	public static final String JSON_KEY_URIS = "uris";
 	public static final String JSON_KEY_VALUE = "value";
+	public static final String JSON_KEY_VALUE_TO = "value_to";
 	public static final String JSON_KEY_VALUES = "values";
 
 	public static final String JSON_VALUE_RELEVANCE = "Relevance";

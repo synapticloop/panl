@@ -238,7 +238,8 @@ function addAvailableFilters(availableObject) {
 		var innerUl = "<ul>";
 		for(const value of facet.values) {
 			innerUl += "<li>" +
-			"<a href=\"" + panlResultsViewerUrl +
+			"<a href=\"" +
+			panlResultsViewerUrl +
       $("#collection").text() +
       facet.uris.before +
       value.encoded +
@@ -269,8 +270,24 @@ function addAvailableFilters(availableObject) {
 				"<span class=\"right " + selector + "-max\">" + facet.max + "</span>" +
 				"</div>");
 		ranges.append("<div class=\"clear range-link\">" +
-			"<a href=\"\" class=\"" + selector + "-anchor\">[Apply]</a>&nbsp;<span class=\"" + selector + "-link\">" + facet.min + " to " + facet.max + "</span>" +
-			"</div>");
+					"<a href=\"" +
+					panlResultsViewerUrl +
+		      $("#collection").text() +
+          facet.uris.before +
+          facet.min +
+          facet.uris.during +
+          facet.max +
+		      facet.uris.after +
+					"\" class=\"" +
+					selector +
+					"-anchor\">[Apply]</a>&nbsp;<span class=\"" +
+					selector +
+					"-link\">" +
+					facet.min +
+					" to " +
+					facet.max +
+					"</span>" +
+					"</div>");
 
    new DualRange("[" + selector + "]", (e) => {
       document.querySelector("." + selector + "-min").textContent = e.min;

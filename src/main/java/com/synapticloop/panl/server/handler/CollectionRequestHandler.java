@@ -373,7 +373,6 @@ public class CollectionRequestHandler {
 					hasQuery = true;
 				}
 
-
 				lpseTokens.add(lpseToken);
 			}
 		}

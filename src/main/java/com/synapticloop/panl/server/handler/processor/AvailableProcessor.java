@@ -26,6 +26,7 @@ package com.synapticloop.panl.server.handler.processor;
 
 import com.synapticloop.panl.server.handler.properties.CollectionProperties;
 import com.synapticloop.panl.server.handler.fielderiser.field.BaseField;
+import com.synapticloop.panl.server.handler.tokeniser.token.FacetLpseToken;
 import com.synapticloop.panl.server.handler.tokeniser.token.LpseToken;
 import org.apache.solr.client.solrj.response.FacetField;
 import org.apache.solr.client.solrj.response.QueryResponse;
@@ -183,6 +184,13 @@ public class AvailableProcessor extends Processor {
 				facetObject.put(JSON_KEY_PANL_CODE, lpseCode);
 				facetObject.put(JSON_KEY_MIN, lpseField.getMinRange());
 				facetObject.put(JSON_KEY_MAX, lpseField.getMaxRange());
+
+				// if we already have this facet selected - add in the to and from values
+				if(panlTokenMap.containsKey(lpseCode)) {
+					FacetLpseToken lpseToken = (FacetLpseToken)panlTokenMap.get(lpseCode).get(0);
+					facetObject.put(JSON_KEY_VALUE, lpseToken.getValue());
+					facetObject.put(JSON_KEY_VALUE_TO, lpseToken.getToValue());
+				}
 
 				// addition URIs are a little bit different...
 				JSONObject additionURIObject = getAdditionURIObject(lpseField, panlTokenMap, true);

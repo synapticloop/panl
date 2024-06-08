@@ -213,9 +213,9 @@ public class CollectionProperties {
 			}
 
 			if (null == lpseCode) {
-				LOGGER.warn("[{}] '{}' Could not look up the Panl LPSE code for Solr field name '{}', ignoring...", collectionName, PROPERTY_KEY_PANL_SORT_FIELDS, sortField);
+				LOGGER.warn("[{}] Sort Fields - '{}' Could not look up the Panl LPSE code for Solr field name '{}', ignoring...", collectionName, PROPERTY_KEY_PANL_SORT_FIELDS, sortField);
 			} else {
-				LOGGER.info("[{}] Adding Panl LPSE code '{}' for Solr field name '{}'.", collectionName, lpseCode, sortField);
+				LOGGER.info("[{}] Sort Fields - adding Panl LPSE code '{}' for Solr field name '{}'.", collectionName, lpseCode, sortField);
 				lpseCodeSortFields.add(lpseCode);
 			}
 		}

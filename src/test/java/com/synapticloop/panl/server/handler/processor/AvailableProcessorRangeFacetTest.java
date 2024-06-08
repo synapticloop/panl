@@ -2,21 +2,15 @@ package com.synapticloop.panl.server.handler.processor;
 
 import com.synapticloop.panl.TestHelper;
 import com.synapticloop.panl.exception.PanlServerException;
-import com.synapticloop.panl.server.handler.CollectionRequestHandler;
-import com.synapticloop.panl.server.handler.properties.CollectionProperties;
-import com.synapticloop.panl.server.handler.properties.PanlProperties;
-import com.synapticloop.panl.server.handler.tokeniser.token.LpseToken;
 import org.json.JSONObject;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
-import java.util.List;
-import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 
-public class RangeAvailableProcessorTest {
+public class AvailableProcessorRangeFacetTest {
 	@Test void testRangeAdditionURIPrefixMidfixSuffix() throws PanlServerException, IOException {
 		JSONObject jsonObject = TestHelper.invokeAvailableProcesser(
 				"/range/prefix-midfix-suffix.properties",
@@ -113,6 +107,35 @@ public class RangeAvailableProcessorTest {
 		assertEquals("/this+is+the+prefix", urisObject.getString(Processor.JSON_KEY_BEFORE));
 		assertEquals("this+is+the+suffix/this+is+the+prefix", urisObject.getString(Processor.JSON_KEY_DURING));
 		assertEquals("this+is+the+suffix/w+w/", urisObject.getString(Processor.JSON_KEY_AFTER));
+	}
+
+//	@Test
+
+	void testExistingRange() throws PanlServerException, IOException {
+		JSONObject jsonObject = TestHelper.invokeAvailableProcesser(
+				"/range/prefix-midfix-suffix.properties",
+				"/test/default/weighing+from+18+to+35+grams/w-w/",
+				"",
+				10,
+				true);
+
+		JSONObject firstRangeFacetObject = jsonObject.getJSONArray(Processor.JSON_KEY_RANGE_FACETS)
+				.getJSONObject(0);
+
+		JSONObject urisObject = firstRangeFacetObject
+				.getJSONObject(Processor.JSON_KEY_URIS);
+
+		System.out.println(jsonObject.toString(2));
+
+		assertEquals("18", firstRangeFacetObject.getString(Processor.JSON_KEY_VALUE));
+		assertEquals("35", firstRangeFacetObject.getString(Processor.JSON_KEY_VALUE_TO));
+
+		System.out.println(urisObject.toString(2));
+		assertFalse(urisObject.toString().contains("PANL_WONT_APPEAR"));
+
+		assertEquals("/weighing+from+", urisObject.getString(Processor.JSON_KEY_BEFORE));
+		assertEquals("+to+", urisObject.getString(Processor.JSON_KEY_DURING));
+		assertEquals("+grams/w-w/", urisObject.getString(Processor.JSON_KEY_AFTER));
 	}
 
 	@Test public void testAdditionOfFacetOnPageNumber() throws PanlServerException, IOException {

@@ -28,6 +28,7 @@ import com.synapticloop.panl.server.handler.properties.CollectionProperties;
 import com.synapticloop.panl.server.handler.fielderiser.field.BaseField;
 import com.synapticloop.panl.server.handler.tokeniser.token.LpseToken;
 import org.apache.solr.client.solrj.response.QueryResponse;
+import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.util.List;
@@ -82,20 +83,21 @@ public class SortingProcessor extends Processor {
 		jsonObject.put(JSON_KEY_RELEVANCE, relevanceSort);
 
 		// These are the defined sort fields
-		JSONObject sortFieldsObject = new JSONObject();
+		JSONArray sortFieldsArray = new JSONArray();
 
 		for (String sortFieldLpseCode : collectionProperties.getSortFieldLpseCodes()) {
 			String sortFieldName = collectionProperties.getSolrFieldNameFromLpseCode(sortFieldLpseCode);
 			if (null != sortFieldName) {
 				JSONObject sortObject = new JSONObject();
 				sortObject.put(JSON_KEY_NAME, collectionProperties.getPanlNameFromPanlCode(sortFieldLpseCode));
+				sortObject.put(JSON_KEY_FACET_NAME, collectionProperties.getSolrFieldNameFromLpseCode(sortFieldLpseCode));
 				sortObject.put(JSON_KEY_REPLACE_DESC, finalBefore + sortFieldLpseCode + "-" + lpse);
 				sortObject.put(JSON_KEY_REPLACE_ASC, finalBefore + sortFieldLpseCode + "+" + lpse);
-				sortFieldsObject.put(sortFieldName, sortObject);
+				sortFieldsArray.put(sortObject);
 			}
 		}
 
-		jsonObject.put(JSON_KEY_FIELDS, sortFieldsObject);
+		jsonObject.put(JSON_KEY_FIELDS, sortFieldsArray);
 
 		return (jsonObject);
 	}
