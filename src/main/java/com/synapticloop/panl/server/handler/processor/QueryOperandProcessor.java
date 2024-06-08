@@ -27,6 +27,7 @@ package com.synapticloop.panl.server.handler.processor;
 import com.synapticloop.panl.server.handler.properties.CollectionProperties;
 import com.synapticloop.panl.server.handler.fielderiser.field.BaseField;
 import com.synapticloop.panl.server.handler.tokeniser.token.LpseToken;
+import org.apache.solr.client.solrj.response.QueryResponse;
 import org.json.JSONObject;
 import java.util.Map;
 import java.util.List;
@@ -37,7 +38,7 @@ public class QueryOperandProcessor extends Processor {
 		super(collectionProperties);
 	}
 
-	public JSONObject processToObject(Map<String, List<LpseToken>> panlTokenMap, Object... params) {
+	public JSONObject processToObject(Map<String, List<LpseToken>> panlTokenMap, QueryResponse queryResponse) {
 		String before = "";
 		String panlParamQueryOperand = collectionProperties.getPanlParamQueryOperand();
 

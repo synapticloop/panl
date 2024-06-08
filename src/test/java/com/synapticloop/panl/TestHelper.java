@@ -2,20 +2,18 @@ package com.synapticloop.panl;
 
 import com.synapticloop.panl.exception.PanlServerException;
 import com.synapticloop.panl.server.handler.CollectionRequestHandler;
+import com.synapticloop.panl.server.handler.processor.AvailableProcessor;
 import com.synapticloop.panl.server.handler.processor.PaginationProcessor;
 import com.synapticloop.panl.server.handler.properties.CollectionProperties;
 import com.synapticloop.panl.server.handler.properties.PanlProperties;
 import com.synapticloop.panl.server.handler.tokeniser.token.LpseToken;
 import org.apache.solr.client.solrj.response.QueryResponse;
-import org.apache.solr.common.SolrDocument;
 import org.apache.solr.common.SolrDocumentList;
 import org.apache.solr.common.util.NamedList;
 import org.json.JSONObject;
-import org.mockito.Mockito;
 
 import static org.mockito.Mockito.*;
 import java.io.IOException;
-import java.sql.Array;
 import java.util.*;
 
 public class TestHelper {
@@ -70,7 +68,7 @@ public class TestHelper {
 		return(mockedQueryResponse);
 	}
 
-	public static JSONObject paginationProcesser(
+	public static JSONObject invokePaginationProcesser(
 			String propertiesFileLocation,
 			String URIPath,
 			String query,
@@ -91,6 +89,31 @@ public class TestHelper {
 		Map<String, List<LpseToken>> panlTokenMap = TestHelper.getPanlTokenMap(lpseTokens);
 		PaginationProcessor paginationProcessor = new PaginationProcessor(collectionProperties);
 
-		return(paginationProcessor.processToObject(panlTokenMap, numResults));
+		return(paginationProcessor.processToObject(panlTokenMap, getMockedQueryResponse(numResults, true)));
+	}
+
+	public static JSONObject invokeAvailableProcesser(
+			String propertiesFileLocation,
+			String URIPath,
+			String query,
+			long numResults,
+			boolean numFoundExact) throws IOException, PanlServerException {
+		PanlProperties panlProperties = TestHelper.getTestPanlProperties();
+		CollectionProperties collectionProperties = new CollectionProperties(
+				"test",
+				TestHelper.getTestProperties(propertiesFileLocation));
+		// now to parse the query
+
+		CollectionRequestHandler collectionRequestHandler = new CollectionRequestHandler(
+				"test",
+				panlProperties,
+				collectionProperties);
+
+		List<LpseToken> lpseTokens = collectionRequestHandler.parseLpse(URIPath, query);
+
+		Map<String, List<LpseToken>> panlTokenMap = TestHelper.getPanlTokenMap(lpseTokens);
+		AvailableProcessor availableProcessor = new AvailableProcessor(collectionProperties);
+
+		return(availableProcessor.processToObject(panlTokenMap, getMockedQueryResponse(numResults, numFoundExact)));
 	}
 }

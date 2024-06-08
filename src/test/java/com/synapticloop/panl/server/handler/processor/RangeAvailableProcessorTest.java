@@ -18,23 +18,12 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 
 public class RangeAvailableProcessorTest {
 	@Test void testRangeAdditionURIPrefixMidfixSuffix() throws PanlServerException, IOException {
-		PanlProperties panlProperties = TestHelper.getTestPanlProperties();
-		CollectionProperties collectionProperties = new CollectionProperties(
-				"test",
-				TestHelper.getTestProperties("/range/prefix-midfix-suffix.properties"));
-		// now to parse the query
-
-		CollectionRequestHandler collectionRequestHandler = new CollectionRequestHandler(
-				"test",
-				panlProperties,
-				collectionProperties);
-
-		List<LpseToken> lpseTokens = collectionRequestHandler.parseLpse("/", "");
-
-		Map<String, List<LpseToken>> panlTokenMap = TestHelper.getPanlTokenMap(lpseTokens);
-		AvailableProcessor availableProcessor = new AvailableProcessor(collectionProperties);
-
-		JSONObject jsonObject = availableProcessor.processToObject(panlTokenMap, TestHelper.getMockedQueryResponse(10, true));
+		JSONObject jsonObject = TestHelper.invokeAvailableProcesser(
+				"/range/prefix-midfix-suffix.properties",
+				"/",
+				"",
+				10,
+				true);
 		JSONObject urisObject = jsonObject.getJSONArray(Processor.JSON_KEY_RANGE_FACETS)
 				.getJSONObject(0)
 				.getJSONObject(Processor.JSON_KEY_URIS);
@@ -49,23 +38,13 @@ public class RangeAvailableProcessorTest {
 	}
 
 	@Test void testRangeAdditionURIPrefixMidfix() throws PanlServerException, IOException {
-		PanlProperties panlProperties = TestHelper.getTestPanlProperties();
-		CollectionProperties collectionProperties = new CollectionProperties(
-				"test",
-				TestHelper.getTestProperties("/range/midfix-prefix.properties"));
-		// now to parse the query
+		JSONObject jsonObject = TestHelper.invokeAvailableProcesser(
+				"/range/midfix-prefix.properties",
+				"/",
+				"",
+				10,
+				true);
 
-		CollectionRequestHandler collectionRequestHandler = new CollectionRequestHandler(
-				"test",
-				panlProperties,
-				collectionProperties);
-
-		List<LpseToken> lpseTokens = collectionRequestHandler.parseLpse("/", "");
-
-		Map<String, List<LpseToken>> panlTokenMap = TestHelper.getPanlTokenMap(lpseTokens);
-		AvailableProcessor availableProcessor = new AvailableProcessor(collectionProperties);
-
-		JSONObject jsonObject = availableProcessor.processToObject(panlTokenMap, TestHelper.getMockedQueryResponse(10, true));
 		JSONObject urisObject = jsonObject.getJSONArray(Processor.JSON_KEY_RANGE_FACETS)
 				.getJSONObject(0)
 				.getJSONObject(Processor.JSON_KEY_URIS);
@@ -80,24 +59,12 @@ public class RangeAvailableProcessorTest {
 	}
 
 	@Test void testRangeAdditionURIPrefix() throws PanlServerException, IOException {
-		PanlProperties panlProperties = TestHelper.getTestPanlProperties();
-		CollectionProperties collectionProperties = new CollectionProperties(
-				"test",
-				TestHelper.getTestProperties("/range/prefix.properties"));
-		// now to parse the query
-
-		CollectionRequestHandler collectionRequestHandler = new CollectionRequestHandler(
-				"test",
-				panlProperties,
-				collectionProperties);
-
-		List<LpseToken> lpseTokens = collectionRequestHandler.parseLpse("/", "");
-
-		Map<String, List<LpseToken>> panlTokenMap = TestHelper.getPanlTokenMap(lpseTokens);
-		AvailableProcessor availableProcessor = new AvailableProcessor(collectionProperties);
-
-		JSONObject jsonObject = availableProcessor.processToObject(panlTokenMap, TestHelper.getMockedQueryResponse(10, true));
-		JSONObject urisObject = jsonObject.getJSONArray(Processor.JSON_KEY_RANGE_FACETS)
+		JSONObject jsonObject = TestHelper.invokeAvailableProcesser(
+				"/range/prefix.properties",
+				"/",
+				"",
+				10,
+				true);		JSONObject urisObject = jsonObject.getJSONArray(Processor.JSON_KEY_RANGE_FACETS)
 				.getJSONObject(0)
 				.getJSONObject(Processor.JSON_KEY_URIS);
 
@@ -110,23 +77,12 @@ public class RangeAvailableProcessorTest {
 	}
 
 	@Test void testRangeAdditionURISuffix() throws PanlServerException, IOException {
-		PanlProperties panlProperties = TestHelper.getTestPanlProperties();
-		CollectionProperties collectionProperties = new CollectionProperties(
-				"test",
-				TestHelper.getTestProperties("/range/suffix.properties"));
-		// now to parse the query
-
-		CollectionRequestHandler collectionRequestHandler = new CollectionRequestHandler(
-				"test",
-				panlProperties,
-				collectionProperties);
-
-		List<LpseToken> lpseTokens = collectionRequestHandler.parseLpse("/", "");
-
-		Map<String, List<LpseToken>> panlTokenMap = TestHelper.getPanlTokenMap(lpseTokens);
-		AvailableProcessor availableProcessor = new AvailableProcessor(collectionProperties);
-
-		JSONObject jsonObject = availableProcessor.processToObject(panlTokenMap, TestHelper.getMockedQueryResponse(10, true));
+		JSONObject jsonObject = TestHelper.invokeAvailableProcesser(
+				"/range/suffix.properties",
+				"/",
+				"",
+				10,
+				true);
 		JSONObject urisObject = jsonObject.getJSONArray(Processor.JSON_KEY_RANGE_FACETS)
 				.getJSONObject(0)
 				.getJSONObject(Processor.JSON_KEY_URIS);
@@ -140,23 +96,12 @@ public class RangeAvailableProcessorTest {
 	}
 
 	@Test void testRangeAdditionURIPrefixSuffix() throws PanlServerException, IOException {
-		PanlProperties panlProperties = TestHelper.getTestPanlProperties();
-		CollectionProperties collectionProperties = new CollectionProperties(
-				"test",
-				TestHelper.getTestProperties("/range/prefix-suffix.properties"));
-		// now to parse the query
-
-		CollectionRequestHandler collectionRequestHandler = new CollectionRequestHandler(
-				"test",
-				panlProperties,
-				collectionProperties);
-
-		List<LpseToken> lpseTokens = collectionRequestHandler.parseLpse("/", "");
-
-		Map<String, List<LpseToken>> panlTokenMap = TestHelper.getPanlTokenMap(lpseTokens);
-		AvailableProcessor availableProcessor = new AvailableProcessor(collectionProperties);
-
-		JSONObject jsonObject = availableProcessor.processToObject(panlTokenMap, TestHelper.getMockedQueryResponse(10, true));
+		JSONObject jsonObject = TestHelper.invokeAvailableProcesser(
+				"/range/prefix-suffix.properties",
+				"/",
+				"",
+				10,
+				true);
 		JSONObject urisObject = jsonObject.getJSONArray(Processor.JSON_KEY_RANGE_FACETS)
 				.getJSONObject(0)
 				.getJSONObject(Processor.JSON_KEY_URIS);

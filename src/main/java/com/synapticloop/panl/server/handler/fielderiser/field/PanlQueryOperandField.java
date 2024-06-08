@@ -70,7 +70,7 @@ public class PanlQueryOperandField extends BaseField {
 			QueryOperandLpseToken lpseToken = (QueryOperandLpseToken)panlTokenMap.get(panlParamQueryOperand).get(0);
 			return(lpseToken.getLpseCode() + lpseToken.getQueryOperand());
 		} else {
-			return (panlParamQueryOperand + collectionProperties.getDefaultQueryOperand());
+			return("");
 		}
 	}
 

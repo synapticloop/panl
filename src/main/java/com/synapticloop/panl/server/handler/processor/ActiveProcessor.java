@@ -29,6 +29,7 @@ import com.synapticloop.panl.server.handler.fielderiser.field.BaseField;
 import com.synapticloop.panl.server.handler.fielderiser.field.PanlFacetField;
 import com.synapticloop.panl.server.handler.tokeniser.token.FacetLpseToken;
 import com.synapticloop.panl.server.handler.tokeniser.token.LpseToken;
+import org.apache.solr.client.solrj.response.QueryResponse;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -51,7 +52,7 @@ public class ActiveProcessor extends Processor {
 		super(collectionProperties);
 	}
 
-	@Override public JSONObject processToObject(Map<String, List<LpseToken>> panlTokenMap, Object... params) {
+	@Override public JSONObject processToObject(Map<String, List<LpseToken>> panlTokenMap, QueryResponse queryResponse) {
 		JSONObject jsonObject = new JSONObject();
 
 		// Get all the LPSE tokens

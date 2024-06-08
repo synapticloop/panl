@@ -47,6 +47,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.*;
+import java.util.concurrent.TimeUnit;
 
 /**
  * <p>The collection request handler acts as the intermediary between the
@@ -69,6 +70,12 @@ public class CollectionRequestHandler {
 	public static final String JSON_KEY_CANONICAL_URI = "canonical_uri";
 	public static final String JSON_KEY_PANL = "panl";
 
+	public static final String JSON_KEY_PANL_PARSE_REQUEST_TIME = "panl_parse_request_time";
+	public static final String JSON_KEY_PANL_SEND_REQUEST_TIME = "panl_send_request_time";
+	public static final String JSON_KEY_PANL_TOTAL_TIME = "panl_total_time";
+	public static final String JSON_KEY_PANL_BUILD_REQUEST_TIME = "panl_build_request_time";
+	public static final String JSON_KEY_PANL_BUILD_RESPONSE_TIME = "panl_build_response_time";
+
 	private final String collectionName;
 	private final CollectionProperties collectionProperties;
 	private final PanlClient panlClient;
@@ -77,7 +84,6 @@ public class CollectionRequestHandler {
 	// the Panl response object
 	private final ActiveProcessor activeProcessor;
 	private final PaginationProcessor paginationProcessor;
-	private final TimingsProcessor timingsProcessor;
 	private final SortingProcessor sortingProcessor;
 	private final QueryOperandProcessor queryOperandProcessor;
 	private final FieldsProcessor fieldsProcessor;
@@ -108,7 +114,6 @@ public class CollectionRequestHandler {
 
 		this.activeProcessor = new ActiveProcessor(collectionProperties);
 		this.paginationProcessor = new PaginationProcessor(collectionProperties);
-		this.timingsProcessor = new TimingsProcessor(collectionProperties);
 		this.sortingProcessor = new SortingProcessor(collectionProperties);
 		this.queryOperandProcessor = new QueryOperandProcessor(collectionProperties);
 		this.fieldsProcessor = new FieldsProcessor(collectionProperties);
@@ -279,16 +284,32 @@ public class CollectionRequestHandler {
 		}
 
 		SolrDocumentList solrDocuments = (SolrDocumentList) response.getResponse().get("response");
-		long numFound = solrDocuments.getNumFound();
 
 		panlObject.put(JSON_KEY_AVAILABLE, availableProcessor.processToObject(panlTokenMap, response));
-		panlObject.put(JSON_KEY_ACTIVE, activeProcessor.processToObject(panlTokenMap));
-		panlObject.put(JSON_KEY_PAGINATION, paginationProcessor.processToObject(panlTokenMap, numFound ));
-		panlObject.put(JSON_KEY_TIMINGS, timingsProcessor.processToObject(panlTokenMap, parseRequestNanos, buildRequestNanos, sendAndReceiveNanos, System.nanoTime() - startNanos));
-		panlObject.put(JSON_KEY_SORTING, sortingProcessor.processToObject(panlTokenMap));
-		panlObject.put(JSON_KEY_QUERY_OPERAND, queryOperandProcessor.processToObject(panlTokenMap));
-		panlObject.put(JSON_KEY_FIELDS, fieldsProcessor.processToObject(panlTokenMap));
+		panlObject.put(JSON_KEY_ACTIVE, activeProcessor.processToObject(panlTokenMap, response));
+		panlObject.put(JSON_KEY_PAGINATION, paginationProcessor.processToObject(panlTokenMap, response));
+		panlObject.put(JSON_KEY_SORTING, sortingProcessor.processToObject(panlTokenMap, response));
+		panlObject.put(JSON_KEY_QUERY_OPERAND, queryOperandProcessor.processToObject(panlTokenMap, response));
+		panlObject.put(JSON_KEY_FIELDS, fieldsProcessor.processToObject(panlTokenMap, response));
 		panlObject.put(JSON_KEY_CANONICAL_URI, canonicalURIProcessor.processToString(panlTokenMap));
+
+		// now add in the timings
+		JSONObject timingsObject = new JSONObject();
+
+		long buildResponseTime = System.nanoTime() - startNanos;
+
+		// add in some statistics
+		timingsObject.put(JSON_KEY_PANL_PARSE_REQUEST_TIME, TimeUnit.NANOSECONDS.toMillis(parseRequestNanos));
+		timingsObject.put(JSON_KEY_PANL_BUILD_REQUEST_TIME, TimeUnit.NANOSECONDS.toMillis(buildRequestNanos));
+		timingsObject.put(JSON_KEY_PANL_SEND_REQUEST_TIME, TimeUnit.NANOSECONDS.toMillis(sendAndReceiveNanos));
+
+		timingsObject.put(JSON_KEY_PANL_BUILD_RESPONSE_TIME, TimeUnit.NANOSECONDS.toMillis(buildResponseTime));
+		timingsObject.put(JSON_KEY_PANL_TOTAL_TIME, TimeUnit.NANOSECONDS.toMillis(
+				parseRequestNanos +
+						buildRequestNanos +
+						sendAndReceiveNanos +
+						buildResponseTime
+		));
 
 		solrJsonObject.put(ResourceHelper.JSON_KEY_ERROR, false);
 

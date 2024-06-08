@@ -45,16 +45,15 @@ public class AvailableProcessor extends Processor {
 		super(collectionProperties);
 	}
 
-	@Override public JSONObject processToObject(Map<String, List<LpseToken>> panlTokenMap, Object... params) {
+	@Override public JSONObject processToObject(Map<String, List<LpseToken>> panlTokenMap, QueryResponse queryResponse) {
 		JSONObject jsonObject = new JSONObject();
-		QueryResponse response = (QueryResponse) params[0];
 
 		List<LpseToken> lpseTokens = new ArrayList<>();
 		for (BaseField lpseField : collectionProperties.getLpseFields()) {
 			lpseTokens.addAll(panlTokenMap.getOrDefault(lpseField.getLpseCode(), new ArrayList<>()));
 		}
 
-		SolrDocumentList solrDocuments = (SolrDocumentList) response.getResponse().get(JSON_KEY_SOLR_JSON_KEY_RESPONSE);
+		SolrDocumentList solrDocuments = (SolrDocumentList) queryResponse.getResponse().get(JSON_KEY_SOLR_JSON_KEY_RESPONSE);
 		long numFound = solrDocuments.getNumFound();
 		boolean numFoundExact = solrDocuments.getNumFoundExact();
 
@@ -76,7 +75,7 @@ public class AvailableProcessor extends Processor {
 		JSONArray panlFacets = new JSONArray();
 		Map<String, JSONObject> panlFacetOrderMap = new LinkedHashMap<>();
 
-		for (FacetField facetField : response.getFacetFields()) {
+		for (FacetField facetField : queryResponse.getFacetFields()) {
 			// if we have an or Facet and this is an or facet, then we keep all
 			// values, otherwise we strip out the xero values
 

@@ -29,6 +29,8 @@ import com.synapticloop.panl.server.handler.fielderiser.field.BaseField;
 import com.synapticloop.panl.server.handler.tokeniser.token.LpseToken;
 import com.synapticloop.panl.server.handler.tokeniser.token.NumRowsLpseToken;
 import com.synapticloop.panl.server.handler.tokeniser.token.PageLpseToken;
+import org.apache.solr.client.solrj.response.QueryResponse;
+import org.apache.solr.common.SolrDocumentList;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
@@ -41,10 +43,11 @@ public class PaginationProcessor extends Processor {
 		super(collectionProperties);
 	}
 
-	public JSONObject processToObject(Map<String, List<LpseToken>> panlTokenMap, Object... params) {
+	public JSONObject processToObject(Map<String, List<LpseToken>> panlTokenMap, QueryResponse queryResponse) {
+		SolrDocumentList solrDocuments = (SolrDocumentList) queryResponse.getResponse().get(JSON_KEY_SOLR_JSON_KEY_RESPONSE);
+		long numFound = solrDocuments.getNumFound();
 
-		// TODO - maybe I should change the params to the SolrQuery and also
-		// check if the results would be out of bounds....
+		// TODO - maybe check if the results would be out of bounds....
 		int numPerPage = collectionProperties.getNumResultsPerPage();
 		// If it is set in the URI, get the updated value
 		List<LpseToken> lpseTokens = panlTokenMap.getOrDefault(collectionProperties.getPanlParamNumRows(), new ArrayList<>());
@@ -65,7 +68,6 @@ public class PaginationProcessor extends Processor {
 			}
 		}
 
-		long numFound = (Long)params[0];
 		JSONObject paginationObject = new JSONObject();
 		paginationObject.put(JSON_KEY_NUM_PER_PAGE, numPerPage);
 		paginationObject.put(JSON_KEY_PAGE_NUM, pageNumber);

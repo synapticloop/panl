@@ -26,6 +26,7 @@ package com.synapticloop.panl.server.handler.processor;
 
 import com.synapticloop.panl.server.handler.properties.CollectionProperties;
 import com.synapticloop.panl.server.handler.tokeniser.token.LpseToken;
+import org.apache.solr.client.solrj.response.QueryResponse;
 import org.json.JSONObject;
 
 import java.util.List;
@@ -53,12 +54,7 @@ public abstract class Processor {
 	public static final String JSON_KEY_OR = "OR";
 	public static final String JSON_KEY_PAGE_NUM = "page_num";
 	public static final String JSON_KEY_PAGE_URIS = "page_uris";
-	public static final String JSON_KEY_PANL_BUILD_REQUEST_TIME = "panl_build_request_time";
-	public static final String JSON_KEY_PANL_BUILD_RESPONSE_TIME = "panl_build_response_time";
 	public static final String JSON_KEY_PANL_CODE = "panl_code";
-	public static final String JSON_KEY_PANL_PARSE_REQUEST_TIME = "panl_parse_request_time";
-	public static final String JSON_KEY_PANL_SEND_REQUEST_TIME = "panl_send_request_time";
-	public static final String JSON_KEY_PANL_TOTAL_TIME = "panl_total_time";
 	public static final String JSON_KEY_PREVIOUS = "previous";
 	public static final String JSON_KEY_RANGE_FACETS = "range_facets";
 	public static final String JSON_KEY_RELEVANCE = "relevance";
@@ -77,9 +73,9 @@ public abstract class Processor {
 		this.collectionProperties = collectionProperties;
 	}
 
-	public abstract JSONObject processToObject(Map<String, List<LpseToken>> panlTokenMap, Object... params);
+	public abstract JSONObject processToObject(Map<String, List<LpseToken>> panlTokenMap, QueryResponse queryResponse);
 
-	public String processToString(Map<String, List<LpseToken>> panlTokenMap, Object... params) {
+	public String processToString(Map<String, List<LpseToken>> panlTokenMap) {
 		return ("");
 	}
 
