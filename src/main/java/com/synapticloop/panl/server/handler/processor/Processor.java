@@ -75,6 +75,10 @@ public abstract class Processor {
 
 	public abstract JSONObject processToObject(Map<String, List<LpseToken>> panlTokenMap, QueryResponse queryResponse);
 
+	public JSONObject processToObject(Map<String, List<LpseToken>> panlTokenMap) {
+		return(processToObject(panlTokenMap));
+	}
+
 	public String processToString(Map<String, List<LpseToken>> panlTokenMap) {
 		return ("");
 	}

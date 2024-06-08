@@ -283,14 +283,12 @@ public class CollectionRequestHandler {
 			});
 		}
 
-		SolrDocumentList solrDocuments = (SolrDocumentList) response.getResponse().get("response");
-
 		panlObject.put(JSON_KEY_AVAILABLE, availableProcessor.processToObject(panlTokenMap, response));
-		panlObject.put(JSON_KEY_ACTIVE, activeProcessor.processToObject(panlTokenMap, response));
+		panlObject.put(JSON_KEY_ACTIVE, activeProcessor.processToObject(panlTokenMap));
 		panlObject.put(JSON_KEY_PAGINATION, paginationProcessor.processToObject(panlTokenMap, response));
-		panlObject.put(JSON_KEY_SORTING, sortingProcessor.processToObject(panlTokenMap, response));
-		panlObject.put(JSON_KEY_QUERY_OPERAND, queryOperandProcessor.processToObject(panlTokenMap, response));
-		panlObject.put(JSON_KEY_FIELDS, fieldsProcessor.processToObject(panlTokenMap, response));
+		panlObject.put(JSON_KEY_SORTING, sortingProcessor.processToObject(panlTokenMap));
+		panlObject.put(JSON_KEY_QUERY_OPERAND, queryOperandProcessor.processToObject(panlTokenMap));
+		panlObject.put(JSON_KEY_FIELDS, fieldsProcessor.processToObject(panlTokenMap));
 		panlObject.put(JSON_KEY_CANONICAL_URI, canonicalURIProcessor.processToString(panlTokenMap));
 
 		// now add in the timings
@@ -310,6 +308,8 @@ public class CollectionRequestHandler {
 						sendAndReceiveNanos +
 						buildResponseTime
 		));
+
+		panlObject.put(JSON_KEY_TIMINGS, timingsObject);
 
 		solrJsonObject.put(ResourceHelper.JSON_KEY_ERROR, false);
 

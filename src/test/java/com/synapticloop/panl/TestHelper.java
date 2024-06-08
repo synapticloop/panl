@@ -2,8 +2,7 @@ package com.synapticloop.panl;
 
 import com.synapticloop.panl.exception.PanlServerException;
 import com.synapticloop.panl.server.handler.CollectionRequestHandler;
-import com.synapticloop.panl.server.handler.processor.AvailableProcessor;
-import com.synapticloop.panl.server.handler.processor.PaginationProcessor;
+import com.synapticloop.panl.server.handler.processor.*;
 import com.synapticloop.panl.server.handler.properties.CollectionProperties;
 import com.synapticloop.panl.server.handler.properties.PanlProperties;
 import com.synapticloop.panl.server.handler.tokeniser.token.LpseToken;
@@ -11,6 +10,9 @@ import org.apache.solr.client.solrj.response.QueryResponse;
 import org.apache.solr.common.SolrDocumentList;
 import org.apache.solr.common.util.NamedList;
 import org.json.JSONObject;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.*;
 
 import static org.mockito.Mockito.*;
 import java.io.IOException;
@@ -116,4 +118,54 @@ public class TestHelper {
 
 		return(availableProcessor.processToObject(panlTokenMap, getMockedQueryResponse(numResults, numFoundExact)));
 	}
+
+	public static JSONObject invokeQueryOperandProcesser(
+			String propertiesFileLocation,
+			String URIPath,
+			String query) throws IOException, PanlServerException {
+		PanlProperties panlProperties = TestHelper.getTestPanlProperties();
+		CollectionProperties collectionProperties = new CollectionProperties(
+				"test",
+				TestHelper.getTestProperties(propertiesFileLocation));
+		// now to parse the query
+
+		CollectionRequestHandler collectionRequestHandler = new CollectionRequestHandler(
+				"test",
+				panlProperties,
+				collectionProperties);
+
+		List<LpseToken> lpseTokens = collectionRequestHandler.parseLpse(URIPath, query);
+
+		Map<String, List<LpseToken>> panlTokenMap = TestHelper.getPanlTokenMap(lpseTokens);
+		QueryOperandProcessor queryOperandProcessor = new QueryOperandProcessor(collectionProperties);
+
+		return(queryOperandProcessor.processToObject(panlTokenMap, getMockedQueryResponse(100, true)));
+	}
+
+	public static String invokeCanonicalURIProcessor(
+			String propertiesFileLocation,
+			String URIPath,
+			String query) throws IOException, PanlServerException {
+
+		assertTrue(URIPath.startsWith("/test/default/"));
+
+		PanlProperties panlProperties = TestHelper.getTestPanlProperties();
+		CollectionProperties collectionProperties = new CollectionProperties(
+				"test",
+				TestHelper.getTestProperties(propertiesFileLocation));
+		// now to parse the query
+
+		CollectionRequestHandler collectionRequestHandler = new CollectionRequestHandler(
+				"test",
+				panlProperties,
+				collectionProperties);
+
+		List<LpseToken> lpseTokens = collectionRequestHandler.parseLpse(URIPath, query);
+
+		Map<String, List<LpseToken>> panlTokenMap = TestHelper.getPanlTokenMap(lpseTokens);
+		CanonicalURIProcessor canonicalURIProcessor = new CanonicalURIProcessor(collectionProperties);
+
+		return(canonicalURIProcessor.processToString(panlTokenMap));
+	}
+
 }

@@ -437,18 +437,20 @@ public class PaginationProcessorTest {
 	}
 
 	@Test public void testInvalidNumRows() throws PanlServerException, IOException {
-		testInvalidRowNumbers("0");
-		testInvalidRowNumbers("-1");
-		testInvalidRowNumbers("akjdsfads");
-		testInvalidRowNumbers("1.0");
-		testInvalidRowNumbers(" ");
+		testInvalidRowNumbers("0/");
+		testInvalidRowNumbers("-1/");
+		testInvalidRowNumbers("akjdsfads/");
+		testInvalidRowNumbers("1.0/");
+		testInvalidRowNumbers(" /");
 		testInvalidRowNumbers("/");
+		testInvalidRowNumbers("");
+		testInvalidRowNumbers("////////////////");
 	}
 
 	private static void testInvalidRowNumbers(String numRows) throws IOException, PanlServerException {
 		JSONObject jsonObject = TestHelper.invokePaginationProcesser(
 				"/page/neither.properties",
-				"/test/default/" + numRows + "/n/",
+				"/test/default/" + numRows + "n/",
 				"",
 				12L
 		);
