@@ -44,6 +44,7 @@ public abstract class Processor {
 	public static final String JSON_KEY_FIELDS = "fields";
 	public static final String JSON_KEY_IS_OR_FACET = "is_or_facet";
 	public static final String JSON_KEY_IS_RANGE_FACET = "is_range_facet";
+	public static final String JSON_KEY_IS_DESCENDING = "is_descending";
 	public static final String JSON_KEY_MAX = "max";
 	public static final String JSON_KEY_MIN = "min";
 	public static final String JSON_KEY_NAME = "name";

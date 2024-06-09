@@ -57,6 +57,9 @@
 		#ranges { padding: 0 14px; }
 		#ranges p { font-weight: bold; padding-left: 0px; }
 		.hidden { display: none }
+		input, button { font-family: "Libre Baskerville", serif; padding: 4px; }
+
+		.navheading { background-color: #efefef; border-left: 6px solid black; }
 
 		.custom-range .dualrange__range { background-color: #000; }
 		.custom-range .dualrange__min, .custom-range .dualrange__max { border-color: #000; }
@@ -106,19 +109,19 @@
 		</div>
 	</div>
 	<div id="navigation">
-		<p class="tight"><strong>Search Query</strong></p>
+		<p class="navheading"><strong>Search Query</strong></p>
 		<form method="GET">
 			<label><input type="text" name="q" /></label>
 			<button type="submit">Search</button>
 		</form>
 
-		<p><strong>Active Filters</strong></p>
+		<p class="navheading"><strong>Active Filters</strong></p>
 		<ul id="active"></ul>
 
-		<p id="ranges-marker" class="hidden"><strong>Range Filters</strong></p>
+		<p id="ranges-marker" class="hidden navheading"><strong>Range Filters</strong></p>
 		<div id="ranges"></div>
 
-		<p><strong>Available Filters</strong></p>
+		<p class="navheading"><strong>Available Filters</strong></p>
 		<ul id="available"></ul>
 	</div>
 	<div id="footer">

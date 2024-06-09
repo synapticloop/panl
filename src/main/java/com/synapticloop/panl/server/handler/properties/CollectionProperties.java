@@ -118,6 +118,8 @@ public class CollectionProperties {
 	private final Map<String, PanlFacetField> SOLR_NAME_TO_FACET_FIELD_MAP = new HashMap<>();
 	private final Map<String, PanlField> LPSE_CODE_TO_FIELD_MAP = new HashMap<>();
 	private final Map<String, PanlField> SOLR_NAME_TO_FIELD_MAP = new HashMap<>();
+	private final Map<String, PanlSortField> LPSE_CODE_TO_SORT_FIELD_MAP = new HashMap<>();
+	private final Map<String, PanlSortField> SOLR_NAME_TO_SORT_FIELD_MAP = new HashMap<>();
 
 	private final Set<String> PANL_CODE_OR_FIELDS = new HashSet<>();
 	private final Set<String> PANL_CODE_RANGE_FIELDS = new HashSet<>();
@@ -201,7 +203,7 @@ public class CollectionProperties {
 		}
 	}
 
-	private void parseSortFields() {
+	private void parseSortFields() throws PanlServerException {
 		String sortFieldsTemp = properties.getProperty(PROPERTY_KEY_PANL_SORT_FIELDS, "");
 		for (String sortField : sortFieldsTemp.split(",")) {
 			// A sort field can either be a field, or a facet field
@@ -217,6 +219,14 @@ public class CollectionProperties {
 			} else {
 				LOGGER.info("[{}] Sort Fields - adding Panl LPSE code '{}' for Solr field name '{}'.", collectionName, lpseCode, sortField);
 				lpseCodeSortFields.add(lpseCode);
+				PanlSortField panlSortField = new PanlSortField(
+						lpseCode,
+						PROPERTY_KEY_PANL_SORT_FIELDS,
+						properties,
+						collectionName);
+
+				LPSE_CODE_TO_SORT_FIELD_MAP.put(lpseCode, panlSortField);
+				SOLR_NAME_TO_SORT_FIELD_MAP.put(sortField, panlSortField);
 			}
 		}
 	}
@@ -535,6 +545,8 @@ public class CollectionProperties {
 			return (LPSE_CODE_TO_FACET_FIELD_MAP.get(lpseCode).getSolrFieldName());
 		} else if (LPSE_CODE_TO_FIELD_MAP.containsKey(lpseCode)) {
 			return (LPSE_CODE_TO_FIELD_MAP.get(lpseCode).getSolrFieldName());
+		} else if(LPSE_CODE_TO_SORT_FIELD_MAP.containsKey(lpseCode)) {
+			return (LPSE_CODE_TO_SORT_FIELD_MAP.get(lpseCode).getSolrFieldName());
 		}
 		return (null);
 	}

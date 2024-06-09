@@ -39,10 +39,13 @@ import org.apache.solr.client.solrj.SolrQuery;
  * @author synapticloop
  */
 public class SortLpseToken extends LpseToken {
-	private String panlFacetCode;
-	private String solrFacetField;
+	public static final String SORT_CODE_ASCENDING = "+";
+	public static final String SORT_CODE_DESCENDING = "-";
+
+	private final String panlFacetCode;
+	private final String solrFacetField;
 	private SolrQuery.ORDER sortOrder = SolrQuery.ORDER.desc;
-	private String sortCode = "-";
+	private String sortCode = SORT_CODE_DESCENDING;
 
 	public SortLpseToken(
 			CollectionProperties collectionProperties,
@@ -62,13 +65,13 @@ public class SortLpseToken extends LpseToken {
 		while (!hasFound && lpseTokeniser.hasMoreTokens()) {
 			String sortLpseToken = lpseTokeniser.nextToken();
 			switch (sortLpseToken) {
-				case "+":
-					this.sortCode = "+";
+				case SORT_CODE_ASCENDING:
+					this.sortCode = SORT_CODE_ASCENDING;
 					this.sortOrder = SolrQuery.ORDER.asc;
 					hasFound = true;
 					break;
-				case "-":
-					this.sortCode = "-";
+				case SORT_CODE_DESCENDING:
+					this.sortCode = SORT_CODE_DESCENDING;
 					this.sortOrder = SolrQuery.ORDER.desc;
 					hasFound = true;
 					break;
