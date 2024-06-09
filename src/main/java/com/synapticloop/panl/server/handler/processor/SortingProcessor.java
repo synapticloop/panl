@@ -99,7 +99,7 @@ public class SortingProcessor extends Processor {
 		String sortBefore = "";
 		String sortAfter = "";
 		boolean hasFound = false;
-		// TODO - this should be done in the collection properties as a lookup, not here
+
 		HashMap<String, Integer> sortFieldOrdering = new HashMap<>();
 		int i = 0;
 		for (String sortFieldLpseCode : collectionProperties.getSortFieldLpseCodes()) {

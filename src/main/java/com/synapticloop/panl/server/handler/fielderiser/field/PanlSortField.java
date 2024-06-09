@@ -52,17 +52,20 @@ public class PanlSortField extends BaseField {
 	}
 
 	@Override public String getCanonicalLpseCode(Map<String, List<LpseToken>> panlTokenMap, CollectionProperties collectionProperties) {
-		StringBuilder sb = new StringBuilder(lpseCode);
+		StringBuilder sb = new StringBuilder();
+
 		if(panlTokenMap.containsKey(lpseCode)) {
-			SortLpseToken lpseToken = (SortLpseToken) panlTokenMap.get(lpseCode).get(0);
-			if(lpseToken.getIsValid()) {
-				sb.append(lpseToken.getLpseSortCode());
-				sb.append(lpseToken.getSortOrderUriKey());
-			} else {
-				sb.append("-");
+			for (LpseToken lpseToken : panlTokenMap.getOrDefault(lpseCode, new ArrayList<>())) {
+				SortLpseToken sortLpseToken = (SortLpseToken) panlTokenMap.get(lpseCode).get(0);
+				if (lpseToken.getIsValid()) {
+					sb.append(lpseCode);
+					sb.append(sortLpseToken.getLpseSortCode());
+					sb.append(sortLpseToken.getSortOrderUriKey());
+				}
 			}
 		} else {
-			sb.append("-");
+			sb.append(lpseCode)
+					.append("-");
 		}
 		return(sb.toString());
 	}

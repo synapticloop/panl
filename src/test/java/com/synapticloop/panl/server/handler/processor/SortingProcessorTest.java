@@ -329,19 +329,25 @@ public class SortingProcessorTest {
 		for (Object object : jsonObject.getJSONArray(Processor.JSON_KEY_FIELDS)) {
 			JSONObject sortFieldObject = (JSONObject) object;
 			assertNotNull(sortFieldObject.optString(Processor.JSON_KEY_REPLACE_ASC, null));
-			assertNotNull(sortFieldObject.optString(Processor.JSON_KEY_REPLACE_ASC, null));
+			assertNotNull(sortFieldObject.optString(Processor.JSON_KEY_REPLACE_DESC, null));
+
+			String addAsc = sortFieldObject.optString(Processor.JSON_KEY_ADD_ASC, null);
+			String addDesc = sortFieldObject.optString(Processor.JSON_KEY_ADD_DESC, null);
 
 			switch (sortFieldObject.getString(Processor.JSON_KEY_FACET_NAME)) {
 				case "brand":
 				case "name":
 					// we are sorting on 'brand'
-					assertNull(sortFieldObject.optString(Processor.JSON_KEY_ADD_ASC, null));
-					assertNull(sortFieldObject.optString(Processor.JSON_KEY_ADD_ASC, null));
+					assertNull(addAsc);
+					assertNull(addDesc);
 					break;
 				case "weight":
+					assertEquals("/sb-sm+sw+/", addAsc);
+					assertEquals("/sb-sm+sw-/", addDesc);
+					break;
 				case "disassemble":
-					assertNotNull(sortFieldObject.optString(Processor.JSON_KEY_ADD_ASC, null));
-					assertNotNull(sortFieldObject.optString(Processor.JSON_KEY_ADD_ASC, null));
+					assertNotNull(addAsc);
+					assertNotNull(addDesc);
 					break;
 				default:
 					// nothing to do....
