@@ -14,9 +14,11 @@ import static org.junit.jupiter.api.Assertions.*;
 
 public class CollectionRequestHandlerTest {
 	public static CollectionRequestHandler defaultCollectionRequestHandler;
+	public static CollectionRequestHandler defaultOrCollectionRequestHandler;
 
 	@BeforeAll public static void beforeAll() throws PanlServerException, IOException {
 		defaultCollectionRequestHandler = TestHelper.getCollectionRequestHandler("/default.properties");
+		defaultOrCollectionRequestHandler = TestHelper.getCollectionRequestHandler("/default.or.properties");
 	}
 
 	@Test public void testLpseParsing() throws PanlServerException, IOException {
@@ -24,6 +26,24 @@ public class CollectionRequestHandlerTest {
 				"/test/default/brand-name/11/model-name/bwm/",
 				"q=limited")) {
 			assertTrue(lpseToken.getIsValid());
+		}
+	}
+
+	/**
+	 * <p>If the</p>
+	 * @throws PanlServerException
+	 * @throws IOException
+	 */
+	@Test public void testParseLpseNoOperands() throws PanlServerException, IOException {
+		testInvalidLpseURIs("/default/test/o/");
+		testInvalidLpseURIs("/default/test/s/");
+		testInvalidLpseURIs("/default/test/w-/");
+		testInvalidLpseURIs("/default/test/w+/");
+	}
+
+	private void testInvalidLpseURIs(String uriPath) {
+		for (LpseToken lpseToken : defaultOrCollectionRequestHandler.parseLpse(uriPath, "")) {
+			assertFalse(lpseToken.getIsValid());
 		}
 	}
 

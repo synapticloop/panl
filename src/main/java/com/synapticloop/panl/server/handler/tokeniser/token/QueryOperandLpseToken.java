@@ -45,17 +45,21 @@ public class QueryOperandLpseToken extends LpseToken {
 			String lpseCode,
 			LpseTokeniser lpseTokeniser) {
 		super(lpseCode);
+
 		if (lpseTokeniser.hasMoreTokens()) {
 			queryOperand = lpseTokeniser.nextToken();
 			if (!(queryOperand.equals("+") || queryOperand.equals("-"))) {
 				isValid = false;
 			}
+		} else {
+			this.queryOperand = collectionProperties.getDefaultQueryOperand();
+			isValid = false;
 		}
 	}
 
 	@Override public String explain() {
 		return ("PANL " +
-				(this.isValid ? "[  VALID  ]" : "[ INVALID ]") +
+					(this.isValid ? "[  VALID  ]" : "[ INVALID ]") +
 				" <query_operand> LPSE code '" +
 				this.lpseCode +
 				"' operand '" +

@@ -266,6 +266,7 @@ public class CollectionProperties {
 			throw new PanlServerException("MANDATORY PROPERTY MISSING: Could not find the 'panl.lpse.length' property in the '" + this.collectionName + "'.panl.properties file.'");
 		}
 
+		// TODO - check whether this is the best possible default to get the most amount of results...
 		this.solrDefaultQueryOperand = properties.getProperty("solr.default.query.operand", "+");
 		if (!(this.solrDefaultQueryOperand.equals("+") || this.solrDefaultQueryOperand.equals("-"))) {
 			throw new PanlServerException("Property solr.default.query.operand __MUST__ be one of '+', or '-'.");

@@ -93,6 +93,9 @@ public class SortLpseToken extends LpseToken {
 				this.isValid = false;
 			}
 		}
+		if(!hasFound) {
+			this.isValid = false;
+		}
 
 		this.solrFacetField = collectionProperties.getSolrFieldNameFromLpseCode(this.lpseSortCode);
 	}

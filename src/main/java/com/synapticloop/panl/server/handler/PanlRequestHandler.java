@@ -106,7 +106,10 @@ public class PanlRequestHandler implements HttpRequestHandler {
 			jsonObject.put(JSON_KEY_ERROR, true);
 			jsonObject.put(JSON_KEY_STATUS, HttpStatus.SC_INTERNAL_SERVER_ERROR);
 			if (panlProperties.getUseVerbose500Messages()) {
-				jsonObject.put(JSON_KEY_MESSAGE, e.getMessage());
+				jsonObject.put(JSON_KEY_MESSAGE,
+						String.format("Class: %s, message: %s.",
+								e.getClass().getCanonicalName(),
+								e.getMessage()));
 				response.setEntity(new StringEntity(jsonObject.toString(), ResourceHelper.CONTENT_TYPE_JSON));
 			} else {
 				jsonObject.put(JSON_KEY_MESSAGE, JSON_VALUE_MESSAGE_500);

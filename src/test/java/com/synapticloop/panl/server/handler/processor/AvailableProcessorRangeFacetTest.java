@@ -168,7 +168,7 @@ public class AvailableProcessorRangeFacetTest {
 	}
 
 	@Test public void testCanonicalURI() throws PanlServerException, IOException {
-		TestHelper.assertCanonicalURI("/test/default/11~18/w+w/", "/11~18/1/10/w+ws-pno+/");
+		TestHelper.assertCanonicalURI("/test/default/11~18/w+w/", "/11~18/1/10/w+wpn/");
 	}
 
 	@Test public void testNoMidFixSuffix() throws PanlServerException, IOException {
