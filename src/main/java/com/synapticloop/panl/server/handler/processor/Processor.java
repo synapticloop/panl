@@ -33,6 +33,8 @@ import java.util.List;
 import java.util.Map;
 
 public abstract class Processor {
+	public static final String JSON_KEY_ADD_ASC = "add_asc";
+	public static final String JSON_KEY_ADD_DESC = "add_desc";
 	public static final String JSON_KEY_AFTER = "after";
 	public static final String JSON_KEY_AND = "AND";
 	public static final String JSON_KEY_BEFORE = "before";

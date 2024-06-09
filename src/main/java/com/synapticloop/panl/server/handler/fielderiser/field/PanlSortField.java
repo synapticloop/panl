@@ -56,8 +56,8 @@ public class PanlSortField extends BaseField {
 		if(panlTokenMap.containsKey(lpseCode)) {
 			SortLpseToken lpseToken = (SortLpseToken) panlTokenMap.get(lpseCode).get(0);
 			if(lpseToken.getIsValid()) {
-				sb.append(lpseToken.getPanlFacetCode());
-				sb.append(lpseToken.getSortCode());
+				sb.append(lpseToken.getLpseSortCode());
+				sb.append(lpseToken.getSortOrderUriKey());
 			} else {
 				sb.append("-");
 			}
@@ -75,8 +75,8 @@ public class PanlSortField extends BaseField {
 		StringBuilder sb = new StringBuilder(token.getLpseCode());
 		SortLpseToken lpseToken = (SortLpseToken) token;
 		if(lpseToken.getIsValid()) {
-			sb.append(lpseToken.getPanlFacetCode());
-			sb.append(lpseToken.getSortCode());
+			sb.append(lpseToken.getLpseSortCode());
+			sb.append(lpseToken.getSortOrderUriKey());
 		} else {
 			sb.append("-");
 		}
@@ -118,7 +118,7 @@ public class PanlSortField extends BaseField {
 	public void applyToQueryInternal(SolrQuery solrQuery, Map<String, List<LpseToken>> panlTokenMap) {
 		if(panlTokenMap.containsKey(lpseCode)) {
 			SortLpseToken lpseToken = (SortLpseToken)panlTokenMap.get(lpseCode).get(0);
-			if(!lpseToken.getPanlFacetCode().isBlank()) {
+			if(!lpseToken.getLpseSortCode().isBlank()) {
 				// this will be using the default relevance sort field
 				solrQuery.addSort(lpseToken.getSolrFacetField(), lpseToken.getSortOrder());
 			}

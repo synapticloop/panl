@@ -103,7 +103,7 @@ public class ActiveProcessor extends Processor {
 				removeObject.put(JSON_KEY_FACET_NAME, solrFacetField);
 				String panlNameFromSolrFieldName = collectionProperties.getPanlNameFromSolrFieldName(solrFacetField);
 				removeObject.put(JSON_KEY_NAME, panlNameFromSolrFieldName);
-				removeObject.put(JSON_KEY_IS_DESCENDING, sortLpseToken.getSortCode().equals(SortLpseToken.SORT_CODE_DESCENDING));
+				removeObject.put(JSON_KEY_IS_DESCENDING, sortLpseToken.getSortOrderUriKey().equals(SortLpseToken.SORT_ORDER_URI_KEY_DESCENDING));
 				removeObject.put(JSON_KEY_ENCODED, URLEncoder.encode(panlNameFromSolrFieldName, StandardCharsets.UTF_8));
 			} else {
 				removeObject.put(JSON_KEY_FACET_NAME, collectionProperties.getSolrFieldNameFromLpseCode(lpseCode));

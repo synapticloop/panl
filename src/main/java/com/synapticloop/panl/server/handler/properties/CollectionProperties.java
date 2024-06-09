@@ -285,7 +285,7 @@ public class CollectionProperties {
 		lpseFieldLookup.put(this.panlParamQueryOperand, new PanlQueryOperandField(panlParamQueryOperand, PANL_PARAM_QUERY_OPERAND, properties, collectionName));
 
 		this.panlParamPassThrough = initialiseStringProperty(PANL_PARAM_PASSTHROUGH, false);
-		if(null != panlParamPassThrough) {
+		if (null != panlParamPassThrough) {
 			lpseFieldLookup.put(this.panlParamPassThrough, new PanlPassThroughField(panlParamPassThrough, PANL_PARAM_PASSTHROUGH, properties, collectionName));
 		}
 	}
@@ -430,7 +430,7 @@ public class CollectionProperties {
 			missingMandatoryLpseCode = true;
 		}
 
-		if(missingMandatoryLpseCode) {
+		if (missingMandatoryLpseCode) {
 			throw new PanlServerException("Missing mandatory LPSE codes in the " + PROPERTY_KEY_PANL_LPSE_ORDER + " property.");
 		}
 
@@ -442,7 +442,7 @@ public class CollectionProperties {
 			addResultsFields(resultFieldProperty.substring(PROPERTY_KEY_PANL_RESULTS_FIELDS.length()), properties.getProperty(resultFieldProperty));
 		}
 		// there must always be a default field
-		if(!resultFieldsMap.containsKey(PROPERTY_KEY_FIELDSETS_DEFAULT)) {
+		if (!resultFieldsMap.containsKey(PROPERTY_KEY_FIELDSETS_DEFAULT)) {
 			LOGGER.warn("[{}] Missing default field set, adding one which will return all fields.", collectionName);
 			resultFieldsMap.put(PROPERTY_KEY_FIELDSETS_DEFAULT, new ArrayList<>());
 		}
@@ -497,9 +497,9 @@ public class CollectionProperties {
 
 	public String getSolrDefaultQueryOperand() {
 		if (solrDefaultQueryOperand.equals("-")) {
-			return(SOLR_DEFAULT_QUERY_OPERAND_OR);
+			return (SOLR_DEFAULT_QUERY_OPERAND_OR);
 		} else {
-			return(SOLR_DEFAULT_QUERY_OPERAND_AND);
+			return (SOLR_DEFAULT_QUERY_OPERAND_AND);
 		}
 	}
 
@@ -535,9 +535,15 @@ public class CollectionProperties {
 		return (solrFacetFields);
 	}
 
+	/**
+	 * <p>Return whether this is a valid sort field.</p>
+	 *
+	 * @param lpseCode The lpse code to look up
+	 *
+	 * @return whether this is a valid sort code
+	 */
 	public boolean hasSortField(String lpseCode) {
-		return (LPSE_CODE_TO_FACET_FIELD_MAP.containsKey(lpseCode) ||
-				LPSE_CODE_TO_FIELD_MAP.containsKey(lpseCode));
+		return (LPSE_CODE_TO_SORT_FIELD_MAP.containsKey(lpseCode));
 	}
 
 	public String getSolrFieldNameFromLpseCode(String lpseCode) {
@@ -545,7 +551,7 @@ public class CollectionProperties {
 			return (LPSE_CODE_TO_FACET_FIELD_MAP.get(lpseCode).getSolrFieldName());
 		} else if (LPSE_CODE_TO_FIELD_MAP.containsKey(lpseCode)) {
 			return (LPSE_CODE_TO_FIELD_MAP.get(lpseCode).getSolrFieldName());
-		} else if(LPSE_CODE_TO_SORT_FIELD_MAP.containsKey(lpseCode)) {
+		} else if (LPSE_CODE_TO_SORT_FIELD_MAP.containsKey(lpseCode)) {
 			return (LPSE_CODE_TO_SORT_FIELD_MAP.get(lpseCode).getSolrFieldName());
 		}
 		return (null);
