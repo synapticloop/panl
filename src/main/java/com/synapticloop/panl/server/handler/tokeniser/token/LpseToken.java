@@ -202,4 +202,12 @@ public abstract class LpseToken {
 		return (isValid);
 	}
 
+
+	public String getEquivalenceValue() {
+		return(lpseCode + "/" + this.value);
+	}
+
+	public void setIsValid(boolean isValid) {
+		this.isValid = isValid;
+	}
 }

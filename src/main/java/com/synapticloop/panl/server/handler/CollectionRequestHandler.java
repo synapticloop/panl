@@ -353,6 +353,7 @@ public class CollectionRequestHandler {
 	 */
 	public List<LpseToken> parseLpse(String uri, String query) {
 		List<LpseToken> lpseTokens = new ArrayList<>();
+		Set<String> existingTokens = new HashSet<>();
 
 		String[] searchQuery = uri.split("/");
 
@@ -377,6 +378,12 @@ public class CollectionRequestHandler {
 				}
 
 				lpseTokens.add(lpseToken);
+				String equivalenceValue = lpseToken.getEquivalenceValue();
+				if(existingTokens.contains(equivalenceValue)) {
+					lpseToken.setIsValid(false);
+				} else {
+					existingTokens.add(equivalenceValue);
+				}
 			}
 		}
 

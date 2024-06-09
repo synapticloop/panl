@@ -36,6 +36,8 @@ import com.synapticloop.panl.server.handler.tokeniser.LpseTokeniser;
  * @author synapticloop
  */
 public class QueryOperandLpseToken extends LpseToken {
+	public static final String SOLR_QUERY_OPERAND_AND = "AND";
+	public static final String SOLR_QUERY_OPERAND_OR = "OR";
 	private String queryOperand;
 
 	public QueryOperandLpseToken(
@@ -63,9 +65,9 @@ public class QueryOperandLpseToken extends LpseToken {
 
 	public String getQOpValue() {
 		if (this.queryOperand.equals("+")) {
-			return ("AND");
+			return(SOLR_QUERY_OPERAND_AND);
 		} else {
-			return ("OR");
+			return(SOLR_QUERY_OPERAND_OR);
 		}
 	}
 

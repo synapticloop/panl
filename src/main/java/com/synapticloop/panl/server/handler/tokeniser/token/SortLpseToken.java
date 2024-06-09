@@ -151,4 +151,9 @@ public class SortLpseToken extends LpseToken {
 	public SolrQuery.ORDER getSortOrder() {
 		return sortOrder;
 	}
+
+	public String getEquivalenceValue() {
+		return(lpseCode + "/" + this.lpseSortCode);
+	}
+
 }

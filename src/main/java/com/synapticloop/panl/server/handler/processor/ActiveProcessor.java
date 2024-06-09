@@ -76,6 +76,7 @@ public class ActiveProcessor extends Processor {
 			String tokenType = lpseToken.getType();
 			String lpseCode = lpseToken.getLpseCode();
 			BaseField lpseField = collectionProperties.getLpseField(lpseCode);
+			boolean shouldAddObject = true;
 
 			JSONArray jsonArray = jsonObject.optJSONArray(tokenType, new JSONArray());
 			JSONObject removeObject = new JSONObject();
@@ -99,12 +100,17 @@ public class ActiveProcessor extends Processor {
 
 			if(lpseToken instanceof SortLpseToken) {
 				SortLpseToken sortLpseToken = (SortLpseToken) lpseToken;
+
 				String solrFacetField = sortLpseToken.getSolrFacetField();
-				removeObject.put(JSON_KEY_FACET_NAME, solrFacetField);
 				String panlNameFromSolrFieldName = collectionProperties.getPanlNameFromSolrFieldName(solrFacetField);
-				removeObject.put(JSON_KEY_NAME, panlNameFromSolrFieldName);
-				removeObject.put(JSON_KEY_IS_DESCENDING, sortLpseToken.getSortOrderUriKey().equals(SortLpseToken.SORT_ORDER_URI_KEY_DESCENDING));
-				removeObject.put(JSON_KEY_ENCODED, URLEncoder.encode(panlNameFromSolrFieldName, StandardCharsets.UTF_8));
+				if(null != solrFacetField) {
+					removeObject.put(JSON_KEY_FACET_NAME, solrFacetField);
+					removeObject.put(JSON_KEY_NAME, panlNameFromSolrFieldName);
+					removeObject.put(JSON_KEY_IS_DESCENDING, sortLpseToken.getSortOrderUriKey().equals(SortLpseToken.SORT_ORDER_URI_KEY_DESCENDING));
+					removeObject.put(JSON_KEY_ENCODED, URLEncoder.encode(panlNameFromSolrFieldName, StandardCharsets.UTF_8));
+				} else {
+					shouldAddObject = false;
+				}
 			} else {
 				removeObject.put(JSON_KEY_FACET_NAME, collectionProperties.getSolrFieldNameFromLpseCode(lpseCode));
 				removeObject.put(JSON_KEY_NAME, collectionProperties.getPanlNameFromPanlCode(lpseCode));
@@ -113,7 +119,9 @@ public class ActiveProcessor extends Processor {
 
 
 
-			jsonArray.put(removeObject);
+			if(shouldAddObject) {
+				jsonArray.put(removeObject);
+			}
 			i++;
 			jsonObject.put(tokenType, jsonArray);
 		}

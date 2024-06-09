@@ -185,7 +185,8 @@ public class AvailableProcessor extends Processor {
 				facetObject.put(JSON_KEY_MIN, lpseField.getMinRange());
 				facetObject.put(JSON_KEY_MAX, lpseField.getMaxRange());
 
-				// if we already have this facet selected - add in the to and from values
+				// if we already have this facet selected - add in the to and from
+				// values - only allowed one facet code per range
 				if(panlTokenMap.containsKey(lpseCode)) {
 					FacetLpseToken lpseToken = (FacetLpseToken)panlTokenMap.get(lpseCode).get(0);
 					facetObject.put(JSON_KEY_VALUE, lpseToken.getValue());
