@@ -173,7 +173,7 @@ public class AvailableProcessor extends Processor {
 
 		jsonObject.put(JSON_KEY_FACETS, panlFacets);
 
-		JSONArray rangeFacetAray = new JSONArray();
+		JSONArray rangeFacetArray = new JSONArray();
 		for (BaseField lpseField : collectionProperties.getLpseFields()) {
 			if (lpseField.getIsRangeFacet()) {
 				// put this in the array please
@@ -195,11 +195,11 @@ public class AvailableProcessor extends Processor {
 				// addition URIs are a little bit different...
 				JSONObject additionURIObject = getAdditionURIObject(lpseField, panlTokenMap, true);
 				facetObject.put(JSON_KEY_URIS, additionURIObject);
-				rangeFacetAray.put(facetObject);
+				rangeFacetArray.put(facetObject);
 			}
 		}
 
-		jsonObject.put(JSON_KEY_RANGE_FACETS, rangeFacetAray);
+		jsonObject.put(JSON_KEY_RANGE_FACETS, rangeFacetArray);
 		return (jsonObject);
 	}
 
@@ -219,8 +219,19 @@ public class AvailableProcessor extends Processor {
 		StringBuilder lpseUri = new StringBuilder(FORWARD_SLASH);
 		StringBuilder lpseCode = new StringBuilder();
 
+		// TODO - clean up this logix
 		for (BaseField baseField : collectionProperties.getLpseFields()) {
-			if (panlTokenMap.containsKey(baseField.getLpseCode())) {
+			if(shouldRange) {
+				// whether we have an addition to the URI - we are going to ignore it
+				// as it is always a replacement (you cannot have two ranges available)
+
+			}
+
+			if (
+					panlTokenMap.containsKey(baseField.getLpseCode()) &&
+							!(shouldRange &&
+									baseField.getLpseCode().equals(additionLpseCode))) {
+
 				lpseUri.append(baseField.getResetUriPath(panlTokenMap, collectionProperties));
 				lpseCode.append(baseField.getResetLpseCode(panlTokenMap, collectionProperties));
 			}

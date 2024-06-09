@@ -57,7 +57,7 @@ public abstract class BaseField {
 	private boolean hasValuePrefix = false;
 	private boolean hasValueSuffix = false;
 	private String valuePrefix;
-	private String getValueSuffix;
+	private String valueSuffix;
 
 	// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - //
 	//                            OR Facet properties                          //
@@ -264,7 +264,7 @@ public abstract class BaseField {
 	protected void populateParamSuffixAndPrefix() {
 		this.valuePrefix = properties.getProperty(propertyKey + ".prefix");
 
-		this.getValueSuffix = properties.getProperty(propertyKey + ".suffix");
+		this.valueSuffix = properties.getProperty(propertyKey + ".suffix");
 
 		checkPrefixSuffix();
 	}
@@ -272,7 +272,7 @@ public abstract class BaseField {
 	protected void populateSuffixAndPrefix() {
 		this.valuePrefix = properties.getProperty(PROPERTY_KEY_PANL_PREFIX + lpseCode);
 
-		this.getValueSuffix = properties.getProperty(PROPERTY_KEY_PANL_SUFFIX + lpseCode);
+		this.valueSuffix = properties.getProperty(PROPERTY_KEY_PANL_SUFFIX + lpseCode);
 
 		checkPrefixSuffix();
 	}
@@ -282,7 +282,7 @@ public abstract class BaseField {
 			hasValuePrefix = true;
 		}
 
-		if (this.getValueSuffix != null && !this.getValueSuffix.isEmpty()) {
+		if (this.valueSuffix != null && !this.valueSuffix.isEmpty()) {
 			hasValueSuffix = true;
 		}
 	}
@@ -297,7 +297,7 @@ public abstract class BaseField {
 
 	public String getValueSuffix() {
 		if (hasValueSuffix) {
-			return (getValueSuffix);
+			return (valueSuffix);
 		} else {
 			return ("");
 		}
@@ -354,8 +354,8 @@ public abstract class BaseField {
 		}
 
 		if (hasValueSuffix) {
-			if (decodedValue.endsWith(getValueSuffix)) {
-				decodedValue = decodedValue.substring(0, decodedValue.length() - getValueSuffix.length());
+			if (decodedValue.endsWith(valueSuffix)) {
+				decodedValue = decodedValue.substring(0, decodedValue.length() - valueSuffix.length());
 			} else {
 				return (null);
 			}
@@ -448,19 +448,37 @@ public abstract class BaseField {
 
 		// at this point we have two values, the from and to
 
-		if (hasRangePrefix) {
-			if (fromString.startsWith(rangeValuePrefix)) {
-				fromString = fromString.substring(rangeValuePrefix.length());
-			} else {
-				return (null);
+		if(hasRangeMidfix) {
+			if (hasRangePrefix) {
+				if (fromString.startsWith(rangeValuePrefix)) {
+					fromString = fromString.substring(rangeValuePrefix.length());
+				} else {
+					return (null);
+				}
 			}
-		}
 
-		if (hasRangeSuffix) {
-			if (toString.endsWith(rangeValueSuffix)) {
-				toString = toString.substring(0, toString.length() - rangeValueSuffix.length());
-			} else {
-				return (null);
+			if (hasRangeSuffix) {
+				if (toString.endsWith(rangeValueSuffix)) {
+					toString = toString.substring(0, toString.length() - rangeValueSuffix.length());
+				} else {
+					return (null);
+				}
+			}
+		} else {
+			if (hasValuePrefix) {
+				if (fromString.startsWith(valuePrefix)) {
+					fromString = fromString.substring(valuePrefix.length());
+				} else {
+					return (null);
+				}
+			}
+
+			if (hasValueSuffix) {
+				if (toString.endsWith(valueSuffix)) {
+					toString = toString.substring(0, toString.length() - valueSuffix.length());
+				} else {
+					return (null);
+				}
 			}
 		}
 
@@ -604,7 +622,7 @@ public abstract class BaseField {
 		}
 
 		if (hasValueSuffix) {
-			sb.append(getValueSuffix);
+			sb.append(valueSuffix);
 		}
 
 		return (URLEncoder.encode(sb.toString(), StandardCharsets.UTF_8));
@@ -731,7 +749,7 @@ public abstract class BaseField {
 		}
 
 		if (hasValueSuffix) {
-			temp.add("             Suffix: '" + getValueSuffix + "'.");
+			temp.add("             Suffix: '" + valueSuffix + "'.");
 		}
 
 		if (hasBooleanTrueReplacement) {

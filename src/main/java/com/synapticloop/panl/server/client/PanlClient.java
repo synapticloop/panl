@@ -64,6 +64,7 @@ public abstract class PanlClient {
 		String thisQuery = "*:*";
 
 		for (NameValuePair nameValuePair : URLEncodedUtils.parse(query, StandardCharsets.UTF_8)) {
+			// TODO - make this a configured value ???
 			if(nameValuePair.getName().equals("q")) {
 				thisQuery = nameValuePair.getValue();
 				break;

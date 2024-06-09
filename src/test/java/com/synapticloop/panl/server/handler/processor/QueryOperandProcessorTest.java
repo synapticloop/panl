@@ -12,7 +12,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 public class QueryOperandProcessorTest {
 
 	@Test public void testQueryOperand() throws PanlServerException, IOException {
-		JSONObject jsonObject = TestHelper.invokeQueryOperandProcesser(
+		JSONObject jsonObject = TestHelper.invokeQueryOperandProcessor(
 				"/default.properties",
 				"/test/default/",
 				"");
@@ -22,7 +22,7 @@ public class QueryOperandProcessorTest {
 	}
 
 	@Test public void testQueryOperandWeight() throws PanlServerException, IOException {
-		JSONObject jsonObject = TestHelper.invokeQueryOperandProcesser(
+		JSONObject jsonObject = TestHelper.invokeQueryOperandProcessor(
 				"/default.properties",
 				"/test/default/11/w/",
 				"");
@@ -32,7 +32,7 @@ public class QueryOperandProcessorTest {
 	}
 
 	@Test public void testQueryOperandBrand() throws PanlServerException, IOException {
-		JSONObject jsonObject = TestHelper.invokeQueryOperandProcesser(
+		JSONObject jsonObject = TestHelper.invokeQueryOperandProcessor(
 				"/default.properties",
 				"/test/default/brand-name/b/",
 				"");
@@ -42,7 +42,7 @@ public class QueryOperandProcessorTest {
 	}
 
 	@Test public void testResetPagination() throws PanlServerException, IOException {
-		JSONObject jsonObject = TestHelper.invokeQueryOperandProcesser(
+		JSONObject jsonObject = TestHelper.invokeQueryOperandProcessor(
 				"/default.properties",
 				"/test/default/2/p/",
 				"");
@@ -52,7 +52,7 @@ public class QueryOperandProcessorTest {
 	}
 
 	@Test public void testResetPaginationWithNumPerPage() throws PanlServerException, IOException {
-		JSONObject jsonObject = TestHelper.invokeQueryOperandProcesser(
+		JSONObject jsonObject = TestHelper.invokeQueryOperandProcessor(
 				"/default.properties",
 				"/test/default/2/3/pn/",
 				"");
@@ -62,7 +62,7 @@ public class QueryOperandProcessorTest {
 	}
 
 	@Test public void testReplacementAnd() throws PanlServerException, IOException {
-		JSONObject jsonObject = TestHelper.invokeQueryOperandProcesser(
+		JSONObject jsonObject = TestHelper.invokeQueryOperandProcessor(
 				"/default.properties",
 				"/test/default/o+/",
 				"");
@@ -72,7 +72,7 @@ public class QueryOperandProcessorTest {
 	}
 
 	@Test public void testReplacementOr() throws PanlServerException, IOException {
-		JSONObject jsonObject = TestHelper.invokeQueryOperandProcesser(
+		JSONObject jsonObject = TestHelper.invokeQueryOperandProcessor(
 				"/default.properties",
 				"/test/default/o-/",
 				"");

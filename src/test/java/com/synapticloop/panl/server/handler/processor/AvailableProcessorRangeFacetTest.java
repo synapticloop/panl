@@ -11,13 +11,15 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 
 public class AvailableProcessorRangeFacetTest {
+
 	@Test void testRangeAdditionURIPrefixMidfixSuffix() throws PanlServerException, IOException {
-		JSONObject jsonObject = TestHelper.invokeAvailableProcesser(
+		JSONObject jsonObject = TestHelper.invokeAvailableProcessor(
 				"/range/prefix-midfix-suffix.properties",
 				"/",
 				"",
 				10,
 				true);
+
 		JSONObject urisObject = jsonObject.getJSONArray(Processor.JSON_KEY_RANGE_FACETS)
 				.getJSONObject(0)
 				.getJSONObject(Processor.JSON_KEY_URIS);
@@ -32,7 +34,7 @@ public class AvailableProcessorRangeFacetTest {
 	}
 
 	@Test void testRangeAdditionURIPrefixMidfix() throws PanlServerException, IOException {
-		JSONObject jsonObject = TestHelper.invokeAvailableProcesser(
+		JSONObject jsonObject = TestHelper.invokeAvailableProcessor(
 				"/range/midfix-prefix.properties",
 				"/",
 				"",
@@ -53,7 +55,7 @@ public class AvailableProcessorRangeFacetTest {
 	}
 
 	@Test void testRangeAdditionURIPrefix() throws PanlServerException, IOException {
-		JSONObject jsonObject = TestHelper.invokeAvailableProcesser(
+		JSONObject jsonObject = TestHelper.invokeAvailableProcessor(
 				"/range/prefix.properties",
 				"/",
 				"",
@@ -72,7 +74,7 @@ public class AvailableProcessorRangeFacetTest {
 	}
 
 	@Test void testRangeAdditionURISuffix() throws PanlServerException, IOException {
-		JSONObject jsonObject = TestHelper.invokeAvailableProcesser(
+		JSONObject jsonObject = TestHelper.invokeAvailableProcessor(
 				"/range/suffix.properties",
 				"/",
 				"",
@@ -92,7 +94,7 @@ public class AvailableProcessorRangeFacetTest {
 	}
 
 	@Test void testRangeAdditionURIPrefixSuffix() throws PanlServerException, IOException {
-		JSONObject jsonObject = TestHelper.invokeAvailableProcesser(
+		JSONObject jsonObject = TestHelper.invokeAvailableProcessor(
 				"/range/prefix-suffix.properties",
 				"/",
 				"",
@@ -113,7 +115,7 @@ public class AvailableProcessorRangeFacetTest {
 //	@Test
 
 	void testExistingRange() throws PanlServerException, IOException {
-		JSONObject jsonObject = TestHelper.invokeAvailableProcesser(
+		JSONObject jsonObject = TestHelper.invokeAvailableProcessor(
 				"/range/prefix-midfix-suffix.properties",
 				"/test/default/weighing+from+18+to+35+grams/w-w/",
 				"",
@@ -140,13 +142,15 @@ public class AvailableProcessorRangeFacetTest {
 	}
 
 	@Test public void testAdditionOfFacetOnPageNumber() throws PanlServerException, IOException {
-		// TODO - these are both wrong - we don't need a page number on a reset
+		// test with the page number - it shouldn't have a 'p' LPSE code
 		assertResetOfPageNumbers("/test/default/2/p/", "/w+w/");
+		// test with the page number - it shouldn't have a 'p' LPSE code but should
+		// have the 'n'
 		assertResetOfPageNumbers("/test/default/2/3/pn/", "/3/w+wn/");
 	}
 
 	private void assertResetOfPageNumbers(String uriPath, String after) throws PanlServerException, IOException {
-		JSONObject jsonObject = TestHelper.invokeAvailableProcesser(
+		JSONObject jsonObject = TestHelper.invokeAvailableProcessor(
 				"/range/none.properties",
 				uriPath,
 				"",
@@ -167,14 +171,15 @@ public class AvailableProcessorRangeFacetTest {
 		TestHelper.assertCanonicalURI("/test/default/11~18/w+w/", "/11~18/1/10/w+ws-pno+/");
 	}
 
-	@Test public void testNoMidFixPrefixSuffix() throws PanlServerException, IOException {
-		JSONObject jsonObject = TestHelper.invokeAvailableProcesser(
+	@Test public void testNoMidFixSuffix() throws PanlServerException, IOException {
+		JSONObject jsonObject = TestHelper.invokeAvailableProcessor(
 				"/range/suffix.properties",
-				"/test/default/10~20/w+w/",
+				"/test/default/10+grams~20+grams/w+w/",
 				"",
 				10,
 				true);
 
+		System.out.println(jsonObject.toString(2));
 		JSONObject firstRangeFacetObject = jsonObject.getJSONArray(Processor.JSON_KEY_RANGE_FACETS)
 				.getJSONObject(0);
 
@@ -186,4 +191,5 @@ public class AvailableProcessorRangeFacetTest {
 		assertEquals("+grams/w+w/", urisObject.getString(Processor.JSON_KEY_AFTER));
 
 	}
+
 }

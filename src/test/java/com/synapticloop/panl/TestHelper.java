@@ -23,14 +23,28 @@ import java.io.IOException;
 import java.util.*;
 
 public class TestHelper {
+	public static final String DEFAULT_PROPERTIES = "/default.properties";
+
 	private static PanlProperties panlProperties;
 
+	public static CollectionRequestHandler getCollectionRequestHandler(String propertiesFileLocation) throws IOException, PanlServerException {
+		PanlProperties panlProperties = TestHelper.getTestPanlProperties();
+		CollectionProperties collectionProperties = getCollectionProperties(propertiesFileLocation);
+		// now to parse the query
+
+		return (new CollectionRequestHandler(
+				"test",
+				panlProperties,
+				collectionProperties));
+
+	}
+
 	public static CollectionProperties getCollectionProperties(String propertiesFileLocation) throws IOException, PanlServerException {
-		return(new CollectionProperties("test", TestHelper.getTestProperties(propertiesFileLocation)));
+		return (new CollectionProperties("test", TestHelper.getTestProperties(propertiesFileLocation)));
 	}
 
 	public static LpseTokeniser getLpseTokeniser(String uriPath) {
-		return(new LpseTokeniser(uriPath, Collection.CODES_AND_METADATA, true));
+		return (new LpseTokeniser(uriPath, Collection.CODES_AND_METADATA, true));
 	}
 
 	public static Properties getTestProperties(String propertiesName) throws IOException {
@@ -97,11 +111,12 @@ public class TestHelper {
 		return (mockedQueryResponse);
 	}
 
-	public static JSONObject invokePaginationProcesser(
+	public static JSONObject invokePaginationProcessor(
 			String propertiesFileLocation,
 			String URIPath,
 			String query,
 			long numResults) throws IOException, PanlServerException {
+
 		PanlProperties panlProperties = TestHelper.getTestPanlProperties();
 		CollectionProperties collectionProperties = getCollectionProperties(propertiesFileLocation);
 		// now to parse the query
@@ -117,6 +132,28 @@ public class TestHelper {
 		PaginationProcessor paginationProcessor = new PaginationProcessor(collectionProperties);
 
 		return (paginationProcessor.processToObject(panlTokenMap, getMockedQueryResponse(numResults, true)));
+	}
+
+	public static JSONObject invokkeActiveProcessor(
+			String propertiesFileLocation,
+			String URIPath,
+			String query) throws IOException, PanlServerException {
+		PanlProperties panlProperties = TestHelper.getTestPanlProperties();
+
+		CollectionProperties collectionProperties = getCollectionProperties(propertiesFileLocation);
+		// now to parse the query
+
+		CollectionRequestHandler collectionRequestHandler = new CollectionRequestHandler(
+				"test",
+				panlProperties,
+				collectionProperties);
+
+		List<LpseToken> lpseTokens = collectionRequestHandler.parseLpse(URIPath, query);
+
+		Map<String, List<LpseToken>> panlTokenMap = TestHelper.getPanlTokenMap(lpseTokens);
+		ActiveProcessor activeProcessor = new ActiveProcessor(collectionProperties);
+
+		return (activeProcessor.processToObject(panlTokenMap));
 	}
 
 	public static JSONObject invokeSortingProcessor(
@@ -143,14 +180,14 @@ public class TestHelper {
 		return (sortingProcessor.processToObject(panlTokenMap, getMockedQueryResponse(numResults, true)));
 	}
 
-	public static JSONObject invokeAvailableProcesser(
+	public static JSONObject invokeAvailableProcessor(
 			String propertiesFileLocation,
 			String URIPath,
 			String query,
 			long numResults,
 			boolean numFoundExact) throws IOException, PanlServerException {
 
-		return (invokeAvailableProcesser(new ArrayList<>(),
+		return (invokeAvailableProcessor(new ArrayList<>(),
 				propertiesFileLocation,
 				URIPath,
 				query,
@@ -160,7 +197,7 @@ public class TestHelper {
 		);
 	}
 
-	public static JSONObject invokeAvailableProcesser(
+	public static JSONObject invokeAvailableProcessor(
 			List<FacetCountBean> facetList,
 			String propertiesFileLocation,
 			String URIPath,
@@ -185,7 +222,7 @@ public class TestHelper {
 		return (availableProcessor.processToObject(panlTokenMap, getMockedQueryResponse(facetList, numResults, numFoundExact)));
 	}
 
-	public static JSONObject invokeQueryOperandProcesser(
+	public static JSONObject invokeQueryOperandProcessor(
 			String propertiesFileLocation,
 			String URIPath,
 			String query) throws IOException, PanlServerException {

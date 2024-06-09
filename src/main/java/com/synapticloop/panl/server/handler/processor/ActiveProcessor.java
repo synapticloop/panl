@@ -38,16 +38,6 @@ import java.util.List;
 import java.util.Map;
 
 public class ActiveProcessor extends Processor {
-	public static final String JSON_KEY_VALUE = "value";
-	public static final String JSON_KEY_URI = "uri";
-	public static final String JSON_KEY_PANL_CODE = "panl_code";
-	public static final String JSON_KEY_FACET_NAME = "facet_name";
-	public static final String JSON_KEY_NAME = "name";
-	public static final String JSON_KEY_ENCODED = "encoded";
-	public static final String JSON_KEY_VALUE_TO = "value_to";
-	public static final String JSON_KEY_IS_RANGE_FACET = "is_range_facet";
-	public static final String JSON_KEY_IS_OR_FACET = "is_or_facet";
-
 	public ActiveProcessor(CollectionProperties collectionProperties) {
 		super(collectionProperties);
 	}

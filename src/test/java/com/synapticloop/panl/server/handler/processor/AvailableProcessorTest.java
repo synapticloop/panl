@@ -9,21 +9,20 @@ import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class AvailableProcessorTest {
 
-	private static List<FacetCountBean> WEIGHT_NAME_FACETS = new ArrayList<>();
+	private static final List<FacetCountBean> WEIGHT_NAME_FACETS = new ArrayList<>();
 	static {
 		WEIGHT_NAME_FACETS.add(new FacetCountBean("weight", new long[] { 1L, 45L, 128L }));
 		WEIGHT_NAME_FACETS.add(new FacetCountBean("name", new long[] { 3L, 12L, 17L }));
 	}
 
 	@Test public void testAddFacet() throws PanlServerException, IOException {
-		JSONObject jsonObject = TestHelper.invokeAvailableProcesser(WEIGHT_NAME_FACETS,
+		JSONObject jsonObject = TestHelper.invokeAvailableProcessor(WEIGHT_NAME_FACETS,
 				"/default.properties",
 				"/test/default/brand/b/",
 				"",

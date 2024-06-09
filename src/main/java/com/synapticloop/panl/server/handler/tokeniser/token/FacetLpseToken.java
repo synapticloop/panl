@@ -71,6 +71,8 @@ import java.util.StringTokenizer;
  * <p><code>/10-to-20/&lt;lpse_code&gt;-&lt;lpse_code&gt;/</code></p>
  */
 public class FacetLpseToken extends LpseToken {
+	public static final String TOKEN_TYPE = "facet";
+
 	private String solrField = null;
 	private CollectionProperties collectionProperties;
 	private String toValue = null;
@@ -137,33 +139,13 @@ public class FacetLpseToken extends LpseToken {
 				// we have a token - get it
 				this.originalValue = valueTokeniser.nextToken();
 
-				if (isRangeToken) {
-					if (!hasMidFix) {
-						String[] split = this.originalValue.split(Processor.JSON_VALUE_NO_MIDFIX_REPLACEMENT);
-						if(split.length != 2) {
-							this.isValid = false;
-						} else {
-							this.value = lpseField.getDecodedValue(split[0]);
-							if(null == this.value) {
-								isValid = false;
-							}
-							this.toValue = lpseField.getDecodedValue(split[1]);
-							if(null == this.toValue) {
-								isValid = false;
-							}
-						}
-					}
-
-					// at this point - we have created the value, either x/x or x-midfix-x
-					// if it is valid, decode it
-					if(this.isValid) {
-						FromToBean fromToBean = lpseField.getDecodedRangeValues(this.originalValue);
-						if(null == fromToBean) {
-							this.isValid = false;
-						} else {
-							this.value = fromToBean.getFromValue();
-							this.toValue = fromToBean.getToValue();
-						}
+				if (isRangeToken && this.isValid) {
+					FromToBean fromToBean = lpseField.getDecodedRangeValues(this.originalValue);
+					if(null == fromToBean) {
+						this.isValid = false;
+					} else {
+						this.value = fromToBean.getFromValue();
+						this.toValue = fromToBean.getToValue();
 					}
 				} else {
 					this.value = lpseField.getDecodedValue(this.originalValue);
@@ -199,7 +181,7 @@ public class FacetLpseToken extends LpseToken {
 	}
 
 	@Override public String getType() {
-		return ("facet");
+		return TOKEN_TYPE;
 	}
 
 	public String getSolrField() {

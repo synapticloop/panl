@@ -12,7 +12,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 public class PaginationProcessorTest {
 	@Test void testPageAdditionURINeitherWithNext() throws PanlServerException, IOException {
-		JSONObject jsonObject = TestHelper.invokePaginationProcesser(
+		JSONObject jsonObject = TestHelper.invokePaginationProcessor(
 				"/page/neither.properties",
 				"/test/default/",
 				"",
@@ -28,7 +28,7 @@ public class PaginationProcessorTest {
 	}
 
 	@Test void testPageAdditionURINeitherWithBoth() throws PanlServerException, IOException {
-		JSONObject jsonObject = TestHelper.invokePaginationProcesser(
+		JSONObject jsonObject = TestHelper.invokePaginationProcessor(
 				"/page/neither.properties",
 				"/test/default/2/p/",
 				"",
@@ -45,7 +45,7 @@ public class PaginationProcessorTest {
 	}
 
 	@Test void testPageAdditionURINeitherWithoutPrevious() throws PanlServerException, IOException {
-		JSONObject jsonObject = TestHelper.invokePaginationProcesser(
+		JSONObject jsonObject = TestHelper.invokePaginationProcessor(
 				"/page/neither.properties",
 				"/test/default/10/p/",
 				"",
@@ -62,7 +62,7 @@ public class PaginationProcessorTest {
 	}
 
 	@Test void testPageAdditionURIPrefixSuffix() throws PanlServerException, IOException {
-		JSONObject jsonObject = TestHelper.invokePaginationProcesser(
+		JSONObject jsonObject = TestHelper.invokePaginationProcessor(
 				"/page/prefix-suffix.properties",
 				"/test/default/",
 				"",
@@ -78,7 +78,7 @@ public class PaginationProcessorTest {
 	}
 
 	@Test void testPageAdditionURIPrefix() throws PanlServerException, IOException {
-		JSONObject jsonObject = TestHelper.invokePaginationProcesser(
+		JSONObject jsonObject = TestHelper.invokePaginationProcessor(
 				"/page/prefix.properties",
 				"/test/default/",
 				"",
@@ -94,7 +94,7 @@ public class PaginationProcessorTest {
 	}
 
 	@Test void testPageAdditionURISuffix() throws PanlServerException, IOException {
-		JSONObject jsonObject = TestHelper.invokePaginationProcesser(
+		JSONObject jsonObject = TestHelper.invokePaginationProcessor(
 				"/page/suffix.properties",
 				"/test/default/",
 				"",
@@ -114,7 +114,7 @@ public class PaginationProcessorTest {
 
 
 	@Test void testPageAdditionURIPrefixSuffixPagination() throws PanlServerException, IOException {
-		JSONObject jsonObject = TestHelper.invokePaginationProcesser(
+		JSONObject jsonObject = TestHelper.invokePaginationProcessor(
 				"/page/prefix-suffix.properties",
 				"/test/default/page-prefix-2-page-suffix/p/",
 				"",
@@ -134,7 +134,7 @@ public class PaginationProcessorTest {
 	}
 
 	@Test void testPageAdditionURIPrefixSuffixPaginationNoNext() throws PanlServerException, IOException {
-		JSONObject jsonObject = TestHelper.invokePaginationProcesser(
+		JSONObject jsonObject = TestHelper.invokePaginationProcessor(
 				"/page/prefix-suffix.properties",
 				"/test/default/page-prefix-10-page-suffix/p/",
 				"",
@@ -168,7 +168,7 @@ public class PaginationProcessorTest {
 	}
 
 	@Test void testInvalidPageNumber() throws PanlServerException, IOException {
-		JSONObject jsonObject = TestHelper.invokePaginationProcesser(
+		JSONObject jsonObject = TestHelper.invokePaginationProcessor(
 				"/page/prefix-suffix.properties",
 				"/test/default/page-prefix-NOT_AN_INTEGER-page-suffix/p/",
 				"",
@@ -178,7 +178,7 @@ public class PaginationProcessorTest {
 	}
 
 	@Test void testInvalidPageNumberNegative() throws PanlServerException, IOException {
-		JSONObject jsonObject = TestHelper.invokePaginationProcesser(
+		JSONObject jsonObject = TestHelper.invokePaginationProcessor(
 				"/page/prefix-suffix.properties",
 				"/test/default/page-prefix--4-page-suffix/p/",
 				"",
@@ -188,7 +188,7 @@ public class PaginationProcessorTest {
 	}
 
 	@Test void testAfterCode()  throws PanlServerException, IOException {
-		JSONObject jsonObject = TestHelper.invokePaginationProcesser(
+		JSONObject jsonObject = TestHelper.invokePaginationProcessor(
 				"/page/prefix-suffix.properties",
 				"/test/default/11/page-prefix-2-page-suffix/wp/",
 				"",
@@ -203,7 +203,7 @@ public class PaginationProcessorTest {
 	}
 
 	@Test void testBeforeCode()  throws PanlServerException, IOException {
-		JSONObject jsonObject = TestHelper.invokePaginationProcesser(
+		JSONObject jsonObject = TestHelper.invokePaginationProcessor(
 				"/page/prefix-suffix.properties",
 				"/test/default/page-prefix-2-page-suffix/brand-name/pb/",
 				"",
@@ -218,7 +218,7 @@ public class PaginationProcessorTest {
 	}
 
 	@Test void testBeforeAndAfterCode()  throws PanlServerException, IOException {
-		JSONObject jsonObject = TestHelper.invokePaginationProcesser(
+		JSONObject jsonObject = TestHelper.invokePaginationProcessor(
 				"/page/prefix-suffix.properties",
 				"/test/default/11/page-prefix-2-page-suffix/brand-name/wpb/",
 				"",
@@ -243,7 +243,7 @@ public class PaginationProcessorTest {
 //	}
 
 	@Test void testNumPerPagePrefixSuffix() throws PanlServerException, IOException {
-		JSONObject jsonObject = TestHelper.invokePaginationProcesser(
+		JSONObject jsonObject = TestHelper.invokePaginationProcessor(
 				"/page/prefix-suffix.properties",
 				"/test/default/",
 				"",
@@ -260,7 +260,7 @@ public class PaginationProcessorTest {
 	}
 
 	@Test void testNumPerPageNeither() throws PanlServerException, IOException {
-		JSONObject jsonObject = TestHelper.invokePaginationProcesser(
+		JSONObject jsonObject = TestHelper.invokePaginationProcessor(
 				"/page/neither.properties",
 				"/test/default/",
 				"",
@@ -277,7 +277,7 @@ public class PaginationProcessorTest {
 	}
 
 	@Test void testNumPerPagePrefix() throws PanlServerException, IOException {
-		JSONObject jsonObject = TestHelper.invokePaginationProcesser(
+		JSONObject jsonObject = TestHelper.invokePaginationProcessor(
 				"/page/prefix.properties",
 				"/test/default/",
 				"",
@@ -294,7 +294,7 @@ public class PaginationProcessorTest {
 	}
 
 	@Test void testNumPerPageSuffix() throws PanlServerException, IOException {
-		JSONObject jsonObject = TestHelper.invokePaginationProcesser(
+		JSONObject jsonObject = TestHelper.invokePaginationProcessor(
 				"/page/suffix.properties",
 				"/test/default/",
 				"",
@@ -311,7 +311,7 @@ public class PaginationProcessorTest {
 	}
 
 	@Test void testPageNumbers() throws PanlServerException, IOException {
-		JSONObject jsonObject = TestHelper.invokePaginationProcesser(
+		JSONObject jsonObject = TestHelper.invokePaginationProcessor(
 				"/default.properties",
 				"/test/default/",
 				"",
@@ -321,7 +321,7 @@ public class PaginationProcessorTest {
 		assertEquals(1, jsonObject.getInt(Processor.JSON_KEY_PAGE_NUM));
 		assertEquals(9, jsonObject.getInt(Processor.JSON_KEY_NUM_PAGES));
 
-		jsonObject = TestHelper.invokePaginationProcesser(
+		jsonObject = TestHelper.invokePaginationProcessor(
 				"/default.properties",
 				"/test/default/",
 				"",
@@ -330,7 +330,7 @@ public class PaginationProcessorTest {
 
 		assertEquals(1, jsonObject.getInt(Processor.JSON_KEY_PAGE_NUM));
 		assertEquals(9, jsonObject.getInt(Processor.JSON_KEY_NUM_PAGES));
-		jsonObject = TestHelper.invokePaginationProcesser(
+		jsonObject = TestHelper.invokePaginationProcessor(
 				"/default.properties",
 				"/test/default/",
 				"",
@@ -342,7 +342,7 @@ public class PaginationProcessorTest {
 	}
 
 	@Test void testNumPerPageNumbers() throws PanlServerException, IOException {
-		JSONObject jsonObject = TestHelper.invokePaginationProcesser(
+		JSONObject jsonObject = TestHelper.invokePaginationProcessor(
 				"/page/prefix-suffix.properties",
 				"/test/default/num-rows-prefix-3-num-rows-suffix/n/",
 				"",
@@ -352,7 +352,7 @@ public class PaginationProcessorTest {
 		assertEquals(1, jsonObject.getInt(Processor.JSON_KEY_PAGE_NUM));
 		assertEquals(30, jsonObject.getInt(Processor.JSON_KEY_NUM_PAGES));
 
-		jsonObject = TestHelper.invokePaginationProcesser(
+		jsonObject = TestHelper.invokePaginationProcessor(
 				"/page/prefix-suffix.properties",
 				"/test/default/num-rows-prefix-3-num-rows-suffix/n/",
 				"",
@@ -362,7 +362,7 @@ public class PaginationProcessorTest {
 		assertEquals(1, jsonObject.getInt(Processor.JSON_KEY_PAGE_NUM));
 		assertEquals(31, jsonObject.getInt(Processor.JSON_KEY_NUM_PAGES));
 
-		jsonObject = TestHelper.invokePaginationProcesser(
+		jsonObject = TestHelper.invokePaginationProcessor(
 				"/page/prefix-suffix.properties",
 				"/test/default/num-rows-prefix-5-num-rows-suffix/n/",
 				"",
@@ -371,7 +371,7 @@ public class PaginationProcessorTest {
 
 		assertEquals(1, jsonObject.getInt(Processor.JSON_KEY_PAGE_NUM));
 		assertEquals(3, jsonObject.getInt(Processor.JSON_KEY_NUM_PAGES));
-		jsonObject = TestHelper.invokePaginationProcesser(
+		jsonObject = TestHelper.invokePaginationProcessor(
 				"/page/prefix-suffix.properties",
 				"/test/default/",
 				"",
@@ -383,7 +383,7 @@ public class PaginationProcessorTest {
 	}
 
 	@Test public void testResetOfPageNumber() throws PanlServerException, IOException {
-		JSONObject jsonObject = TestHelper.invokePaginationProcesser(
+		JSONObject jsonObject = TestHelper.invokePaginationProcessor(
 				"/page/neither.properties",
 				"/test/default/2/p/",
 				"",
@@ -410,7 +410,7 @@ public class PaginationProcessorTest {
 	}
 
 	@Test public void testOutOfBoundsPageNumber() throws PanlServerException, IOException {
-		JSONObject jsonObject = TestHelper.invokePaginationProcesser(
+		JSONObject jsonObject = TestHelper.invokePaginationProcessor(
 				"/page/neither.properties",
 				"/test/default/8/p/",
 				"",
@@ -448,7 +448,7 @@ public class PaginationProcessorTest {
 	}
 
 	private static void testInvalidRowNumbers(String numRows) throws IOException, PanlServerException {
-		JSONObject jsonObject = TestHelper.invokePaginationProcesser(
+		JSONObject jsonObject = TestHelper.invokePaginationProcessor(
 				"/page/neither.properties",
 				"/test/default/" + numRows + "n/",
 				"",
