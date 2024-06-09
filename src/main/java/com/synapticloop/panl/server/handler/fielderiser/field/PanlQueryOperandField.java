@@ -45,36 +45,60 @@ public class PanlQueryOperandField extends BaseField {
 		logDetails();
 	}
 
-	@Override public String getCanonicalUriPath(Map<String, List<LpseToken>> panlTokenMap, CollectionProperties collectionProperties) {
-		return("");
+	@Override
+	public String getCanonicalUriPath(Map<String, List<LpseToken>> panlTokenMap, CollectionProperties collectionProperties) {
+		return ("");
 	}
 
-	@Override public String getCanonicalLpseCode(Map<String, List<LpseToken>> panlTokenMap, CollectionProperties collectionProperties) {
+	/**
+	 * <p>Get the canonical URI path, this will only return something if the
+	 * query operand is different from the default AND/OR operand as set in the
+	 * collection.panl.properties file.</p>
+	 *
+	 * @param panlTokenMap The panl token map to query
+	 * @param collectionProperties The collection properties for this CaFUPs
+	 *
+	 * @return The URI part for this token
+	 */
+	@Override
+	public String getCanonicalLpseCode(Map<String, List<LpseToken>> panlTokenMap, CollectionProperties collectionProperties) {
 		StringBuilder sb = new StringBuilder(lpseCode);
-		if(panlTokenMap.containsKey(lpseCode)) {
+		if (panlTokenMap.containsKey(lpseCode)) {
 			QueryOperandLpseToken lpseToken = (QueryOperandLpseToken) panlTokenMap.get(lpseCode).get(0);
-			if(lpseToken.getIsValid()) {
-				sb.append(lpseToken.getQueryOperand());
+
+			if (lpseToken.getIsValid()) {
+				if(lpseToken.getLpseQueryOperand().equals(collectionProperties.getDefaultQueryOperand())) {
+					return("");
+				}
+
+				// at this point, the user has:
+				//   1. passed through a query operand in the LPSE Code
+				//   2. It is a valid value
+				//   3. It is not the same as the default
+				sb.append(lpseToken.getLpseQueryOperand());
 			} else {
-				sb.append(collectionProperties.getDefaultQueryOperand());
+				// not a valid token - return nothing
+				return("");
 			}
 		} else {
-			sb.append(collectionProperties.getDefaultQueryOperand());
+			// they haven't changed the query operand - return nothing
+			return("");
 		}
-		return(sb.toString());
+
+		return (sb.toString());
 	}
 
 	@Override public Logger getLogger() {
-		return(LOGGER);
+		return (LOGGER);
 	}
 
 	@Override public String getExplainDescription() {
-		return("The query operand which maps to the 'q.op' parameter of Solr");
+		return ("The query operand which maps to the 'q.op' parameter of Solr");
 	}
 
 	public void applyToQueryInternal(SolrQuery solrQuery, Map<String, List<LpseToken>> panlTokenMap) {
-		if(panlTokenMap.containsKey(lpseCode)) {
-			QueryOperandLpseToken lpseToken = (QueryOperandLpseToken)panlTokenMap.get(lpseCode).get(0);
+		if (panlTokenMap.containsKey(lpseCode)) {
+			QueryOperandLpseToken lpseToken = (QueryOperandLpseToken) panlTokenMap.get(lpseCode).get(0);
 			solrQuery.setParam("q.op", lpseToken.getQOpValue());
 		}
 	}

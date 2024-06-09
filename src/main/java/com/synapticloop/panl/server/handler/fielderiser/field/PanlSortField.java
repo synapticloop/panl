@@ -58,14 +58,22 @@ public class PanlSortField extends BaseField {
 			for (LpseToken lpseToken : panlTokenMap.getOrDefault(lpseCode, new ArrayList<>())) {
 				SortLpseToken sortLpseToken = (SortLpseToken) lpseToken;
 				if (lpseToken.getIsValid()) {
+					if(sortLpseToken.getLpseSortCode().isBlank()) {
+						// default relevance - ignore
+						return("");
+					}
+
 					sb.append(lpseCode);
 					sb.append(sortLpseToken.getLpseSortCode());
 					sb.append(sortLpseToken.getSortOrderUriKey());
+				} else {
+					return("");
 				}
 			}
 		} else {
-			sb.append(lpseCode)
-					.append("-");
+			// they haven't passed through a sort LPSE code, return nothing (the
+			// default sort by relevance descending
+			return("");
 		}
 		return(sb.toString());
 	}

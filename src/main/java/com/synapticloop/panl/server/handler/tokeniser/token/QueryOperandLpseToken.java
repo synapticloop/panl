@@ -77,10 +77,12 @@ public class QueryOperandLpseToken extends LpseToken {
 	}
 
 	/**
+	 * <p>Return the LPSE query operand - this may only be one of two values,
+	 * namely: a '+' or '-' (without the quotes).</p>
 	 *
-	 * @return
+	 * @return The LPSE query operand
 	 */
-	public String getQueryOperand() {
+	public String getLpseQueryOperand() {
 		return (this.queryOperand);
 	}
 
