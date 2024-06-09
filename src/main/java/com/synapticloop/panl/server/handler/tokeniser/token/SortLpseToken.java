@@ -80,6 +80,7 @@ public class SortLpseToken extends LpseToken {
 			}
 		}
 
+
 		// at this point, the string builder will either be length 0 - i.e. this
 		// is a relevance search, or will be the facet field.
 
@@ -91,6 +92,7 @@ public class SortLpseToken extends LpseToken {
 			if (!collectionProperties.hasSortField(this.lpseSortCode)) {
 				this.isValid = false;
 			}
+			this.value = Integer.toString(collectionProperties.getSortOrderForLpseCode(lpseSortCode));
 		}
 
 		this.solrFacetField = collectionProperties.getSolrFieldNameFromLpseCode(this.lpseSortCode);

@@ -121,22 +121,51 @@ function addSortingOptions(sortingObject) {
     sortingObject.relevance.replace_desc +
     "\"/>DESC</a>&nbsp;");
 
-	for(const sortName in sortingObject.fields) {
-	$("#sorting_options").append(
-		"||&nbsp;" +
-		sortingObject.fields[sortName].name +
-		": <a href=\"" +
-    panlResultsViewerUrl +
-    $("#collection").text() +
-    sortingObject.fields[sortName].replace_asc +
-    "\"/>ASC</a>&nbsp;");
+	for(const sortIndex in sortingObject.fields) {
+		$("#sorting_options").append(
+			"||&nbsp;" +
+			sortingObject.fields[sortIndex].name +
+			": <a href=\"" +
+	    panlResultsViewerUrl +
+	    $("#collection").text() +
+	    sortingObject.fields[sortIndex].replace_asc +
+	    "\"/>ASC</a>&nbsp;");
 
-	$("#sorting_options").append(
-		"<a href=\"" +
-    panlResultsViewerUrl +
-    $("#collection").text() +
-    sortingObject.fields[sortName].replace_desc +
-    "\"/>DESC</a>&nbsp;");
+		$("#sorting_options").append(
+			"<a href=\"" +
+	    panlResultsViewerUrl +
+	    $("#collection").text() +
+	    sortingObject.fields[sortIndex].replace_desc +
+	    "\"/>DESC</a>&nbsp;");
+	}
+
+	var hasAddedThen = false;
+	// now for the additive fields
+	for(const sortIndex in sortingObject.fields) {
+		if(sortingObject.fields[sortIndex].add_asc !== undefined) {
+
+			if(!hasAddedThen) {
+				$("#sorting_options").append("<br/><strong>Then sort by </strong>");
+				hasAddedThen = true;
+			} else {
+				$("#sorting_options").append("||&nbsp;");
+			}
+
+			$("#sorting_options").append(
+				sortingObject.fields[sortIndex].name +
+				": <a href=\"" +
+		    panlResultsViewerUrl +
+		    $("#collection").text() +
+		    sortingObject.fields[sortIndex].add_asc +
+		    "\"/>ASC</a>&nbsp;");
+
+			$("#sorting_options").append(
+				"<a href=\"" +
+		    panlResultsViewerUrl +
+		    $("#collection").text() +
+		    sortingObject.fields[sortIndex].add_desc +
+		    "\"/>DESC</a>&nbsp;");
+		}
 	}
 }
 
