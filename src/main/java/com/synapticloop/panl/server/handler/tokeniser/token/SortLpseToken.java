@@ -39,10 +39,13 @@ import org.apache.solr.client.solrj.SolrQuery;
  * @author synapticloop
  */
 public class SortLpseToken extends LpseToken {
-	private String panlFacetCode;
-	private String solrFacetField;
+	public static final String SORT_ORDER_URI_KEY_ASCENDING = "+";
+	public static final String SORT_ORDER_URI_KEY_DESCENDING = "-";
+
+	private final String lpseSortCode;
+	private final String solrFacetField;
 	private SolrQuery.ORDER sortOrder = SolrQuery.ORDER.desc;
-	private String sortCode = "-";
+	private String sortOrderUriKey = SORT_ORDER_URI_KEY_DESCENDING;
 
 	public SortLpseToken(
 			CollectionProperties collectionProperties,
@@ -62,13 +65,13 @@ public class SortLpseToken extends LpseToken {
 		while (!hasFound && lpseTokeniser.hasMoreTokens()) {
 			String sortLpseToken = lpseTokeniser.nextToken();
 			switch (sortLpseToken) {
-				case "+":
-					this.sortCode = "+";
+				case SORT_ORDER_URI_KEY_ASCENDING:
+					this.sortOrderUriKey = SORT_ORDER_URI_KEY_ASCENDING;
 					this.sortOrder = SolrQuery.ORDER.asc;
 					hasFound = true;
 					break;
-				case "-":
-					this.sortCode = "-";
+				case SORT_ORDER_URI_KEY_DESCENDING:
+					this.sortOrderUriKey = SORT_ORDER_URI_KEY_DESCENDING;
 					this.sortOrder = SolrQuery.ORDER.desc;
 					hasFound = true;
 					break;
@@ -77,20 +80,21 @@ public class SortLpseToken extends LpseToken {
 			}
 		}
 
+
 		// at this point, the string builder will either be length 0 - i.e. this
 		// is a relevance search, or will be the facet field.
 
-		this.panlFacetCode = sb.toString();
+		this.lpseSortCode = sb.toString();
 
 		if (sb.length() == 0) {
 			// this is a relevance search
 		} else {
-			if (!collectionProperties.hasSortField(this.panlFacetCode)) {
+			if (!collectionProperties.hasSortField(this.lpseSortCode)) {
 				this.isValid = false;
 			}
 		}
 
-		this.solrFacetField = collectionProperties.getSolrFieldNameFromLpseCode(this.panlFacetCode);
+		this.solrFacetField = collectionProperties.getSolrFieldNameFromLpseCode(this.lpseSortCode);
 	}
 
 	/**
@@ -115,9 +119,9 @@ public class SortLpseToken extends LpseToken {
 				" <sort>          LPSE code '" +
 				this.lpseCode +
 				"' sort code '" +
-				this.panlFacetCode +
+				this.lpseSortCode +
 				"' (solr field '" +
-				(this.solrFacetField == null ? "<relevance>" : this.solrFacetField) +
+				(this.solrFacetField == null ? " defaulting to <relevance>" : this.solrFacetField) +
 				"'), sorted " +
 				(this.sortOrder == SolrQuery.ORDER.asc ? "ASCending" : "DESCending"));
 	}
@@ -127,12 +131,17 @@ public class SortLpseToken extends LpseToken {
 		return ("sort");
 	}
 
-	public String getPanlFacetCode() {
-		return (panlFacetCode);
+	/**
+	 * <p>Get the LPSE code for the sorting order</p>
+	 *
+	 * @return The LPSE code for the sorting order
+	 */
+	public String getLpseSortCode() {
+		return (lpseSortCode);
 	}
 
-	public String getSortCode() {
-		return (sortCode);
+	public String getSortOrderUriKey() {
+		return (sortOrderUriKey);
 	}
 
 	public String getSolrFacetField() {

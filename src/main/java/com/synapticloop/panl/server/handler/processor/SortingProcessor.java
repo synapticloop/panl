@@ -27,12 +27,13 @@ package com.synapticloop.panl.server.handler.processor;
 import com.synapticloop.panl.server.handler.properties.CollectionProperties;
 import com.synapticloop.panl.server.handler.fielderiser.field.BaseField;
 import com.synapticloop.panl.server.handler.tokeniser.token.LpseToken;
+import com.synapticloop.panl.server.handler.tokeniser.token.SortLpseToken;
+import org.apache.logging.log4j.core.appender.rolling.action.IfNot;
 import org.apache.solr.client.solrj.response.QueryResponse;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class SortingProcessor extends Processor {
 
@@ -52,47 +53,90 @@ public class SortingProcessor extends Processor {
 	 */
 	public JSONObject processToObject(Map<String, List<LpseToken>> panlTokenMap, QueryResponse queryResponse) {
 		String before = "";
-		String lpseCode = collectionProperties.getPanlParamSort();
+		String panlParamSortLpseKey = collectionProperties.getPanlParamSort();
 
 		// Run through the sorting order
 		JSONObject jsonObject = new JSONObject();
-		StringBuilder lpseUri = new StringBuilder("/");
-		StringBuilder lpse = new StringBuilder();
+		StringBuilder replaceLpseUri = new StringBuilder("/");
+		StringBuilder lpseCode = new StringBuilder();
 
 		for (BaseField lpseField : collectionProperties.getLpseFields()) {
 			String thisLpseCode = lpseField.getLpseCode();
-			if(!lpseCode.equals(thisLpseCode)) {
-				if(panlTokenMap.containsKey(thisLpseCode)) {
-					lpseUri.append(lpseField.getResetUriPath(panlTokenMap, collectionProperties));
-					lpse.append(lpseField.getResetLpseCode(panlTokenMap, collectionProperties));
+			if (!panlParamSortLpseKey.equals(thisLpseCode)) {
+				if (panlTokenMap.containsKey(thisLpseCode)) {
+					replaceLpseUri.append(lpseField.getResetUriPath(panlTokenMap, collectionProperties));
+					lpseCode.append(lpseField.getResetLpseCode(panlTokenMap, collectionProperties));
 				}
 			} else {
-				before = lpse.toString();
-				lpse.setLength(0);
+				before = lpseCode.toString();
+				lpseCode.setLength(0);
 			}
 		}
 
-		lpse.append("/");
+		lpseCode.append("/");
 
 		// This is the default sorting order (by relevance)
-		String finalBefore = lpseUri + before + collectionProperties.getPanlParamSort();
+		String finalBefore = replaceLpseUri + before;
 
 		JSONObject relevanceSort = new JSONObject();
 		relevanceSort.put(JSON_KEY_NAME, JSON_VALUE_RELEVANCE);
-		relevanceSort.put(JSON_KEY_REPLACE_DESC, finalBefore + "-" + lpse);
+		relevanceSort.put(JSON_KEY_REPLACE_DESC, finalBefore + panlParamSortLpseKey + "-" + lpseCode);
 		jsonObject.put(JSON_KEY_RELEVANCE, relevanceSort);
 
-		// These are the defined sort fields
+		// These are the available sort fields
 		JSONArray sortFieldsArray = new JSONArray();
+
+		// build up a data set of all the active sorting, and the sort order URI key
+
+		// now build the before and after maps for the addition uris
+		StringBuilder sortLpse = new StringBuilder();
+		String sortBefore = "";
+
+		HashMap<String, String> activeSortings = new HashMap<>();
+
+		for (LpseToken lpseToken : panlTokenMap.getOrDefault(panlParamSortLpseKey, new ArrayList<>())) {
+			SortLpseToken sortLpseToken = (SortLpseToken) lpseToken;
+			activeSortings.put(sortLpseToken.getLpseSortCode(), sortLpseToken.getSortOrderUriKey());
+			sortLpse.append(panlParamSortLpseKey)
+					.append(sortLpseToken.getLpseSortCode())
+					.append(sortLpseToken.getSortOrderUriKey());
+		}
+		sortBefore = sortLpse.toString();
+
 
 		for (String sortFieldLpseCode : collectionProperties.getSortFieldLpseCodes()) {
 			String sortFieldName = collectionProperties.getSolrFieldNameFromLpseCode(sortFieldLpseCode);
+
 			if (null != sortFieldName) {
 				JSONObject sortObject = new JSONObject();
+
 				sortObject.put(JSON_KEY_NAME, collectionProperties.getPanlNameFromPanlCode(sortFieldLpseCode));
 				sortObject.put(JSON_KEY_FACET_NAME, collectionProperties.getSolrFieldNameFromLpseCode(sortFieldLpseCode));
-				sortObject.put(JSON_KEY_REPLACE_DESC, finalBefore + sortFieldLpseCode + "-" + lpse);
-				sortObject.put(JSON_KEY_REPLACE_ASC, finalBefore + sortFieldLpseCode + "+" + lpse);
+				sortObject.put(JSON_KEY_REPLACE_DESC, finalBefore + panlParamSortLpseKey + sortFieldLpseCode + "-" + lpseCode);
+				sortObject.put(JSON_KEY_REPLACE_ASC, finalBefore + panlParamSortLpseKey + sortFieldLpseCode + "+" + lpseCode);
+
+
+				// Now for the add fields
+				if(!activeSortings.containsKey(sortFieldLpseCode)) {
+					// at this point we need to know the ordering of the lpseCode fields,
+					// whether we are before, or after the selected index
+
+					sortObject.put(JSON_KEY_ADD_DESC,
+							finalBefore +
+									sortBefore +
+									panlParamSortLpseKey +
+									sortFieldLpseCode +
+									"-" +
+									lpseCode);
+
+					sortObject.put(JSON_KEY_ADD_ASC,
+							finalBefore +
+									sortBefore +
+									panlParamSortLpseKey +
+									sortFieldLpseCode +
+									"+" +
+									lpseCode);
+				}
 				sortFieldsArray.put(sortObject);
 			}
 		}

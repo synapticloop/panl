@@ -294,6 +294,7 @@ panl.type.i=solr.StrField
 # <field "indexed"="true" "stored"="true" "name"="brand" "type"="string" "multiValued"="false" />
 panl.facet.b=brand
 panl.or.facet.b=false
+panl.range.facet.b=false
 panl.name.b=Brand
 panl.type.b=solr.StrField
 panl.prefix.b=Manufactured by
@@ -310,12 +311,12 @@ panl.name.m=Mechanism Type
 panl.type.m=solr.StrField
 
 # <field "indexed"="true" "stored"="true" "name"="body_shape" "type"="string" "multiValued"="false" />
-panl.facet.B=body_shape
+panl.field.B=body_shape
 panl.name.B=Body Shape
 panl.type.B=solr.StrField
 
 # <field "indexed"="true" "stored"="true" "name"="grip_type" "type"="string" "multiValued"="false" />
-panl.facet.g=grip_type
+panl.field.g=grip_type
 panl.name.g=Grip Type
 panl.type.g=solr.StrField
 
@@ -323,11 +324,12 @@ panl.type.g=solr.StrField
 panl.facet.G=grip_shape
 panl.name.G=Grip Shape
 panl.type.G=solr.StrField
+panl.suffix.G=\ Grip
 
 # <field "indexed"="true" "stored"="true" "name"="cap_shape" "type"="string" "multiValued"="false" />
-#panl.facet.c=cap_shape
-#panl.name.c=Cap Shape
-#panl.type.c=solr.StrField
+panl.field.c=cap_shape
+panl.name.c=Cap Shape
+panl.type.c=solr.StrField
 
 # <field "indexed"="true" "stored"="true" "name"="category" "type"="string" "multiValued"="false" />
 panl.facet.C=category
@@ -335,52 +337,63 @@ panl.name.C=Category
 panl.type.C=solr.StrField
 
 # <field "indexed"="true" "stored"="true" "name"="length" "type"="pint" "multiValued"="false" />
-#panl.facet.l=length
-#panl.name.l=Length
-#panl.type.l=solr.IntPointField
+panl.field.l=length
+panl.name.l=Length
+panl.type.l=solr.IntPointField
 
 # <field "indexed"="true" "stored"="true" "name"="relative_length" "type"="pint" "multiValued"="false" />
-panl.facet.r=relative_length
+panl.field.r=relative_length
 panl.name.r=Relative Length
 panl.type.r=solr.IntPointField
 
 # <field "indexed"="true" "stored"="true" "name"="diameter" "type"="pint" "multiValued"="false" />
-panl.facet.d=diameter
+panl.field.d=diameter
 panl.name.d=Diameter
 panl.type.d=solr.IntPointField
 
 # <field "indexed"="true" "stored"="true" "name"="weight" "type"="pint" "multiValued"="false" />
-#panl.facet.w=weight
-#panl.name.w=Weight
-#panl.type.w=solr.IntPointField
+panl.facet.w=weight
+panl.name.w=Weight
+panl.type.w=solr.IntPointField
+panl.suffix.w=\ grams
+panl.range.facet.w=true
+panl.range.min.w=10
+panl.range.max.w=50
+panl.range.prefix.w=weighing from
+panl.range.midfix.w=\ to
+panl.range.suffix.w=\ grams
+panl.range.min.value.w=light
+panl.range.max.value.w=a lot of
 
 # <field "indexed"="true" "stored"="true" "name"="relative_weight" "type"="pint" "multiValued"="false" />
-panl.facet.R=relative_weight
+panl.field.R=relative_weight
 panl.name.R=Relative Weight
 panl.type.R=solr.IntPointField
 
 # <field "indexed"="true" "stored"="true" "name"="lead_length" "type"="pint" "multiValued"="false" />
 panl.facet.L=lead_length
-panl.name.L=Lead Length
+panl.name.L=Maximum Allowed Lead Length
 panl.type.L=solr.IntPointField
+panl.suffix.L=mm
 
 # <field "indexed"="true" "stored"="true" "name"="disassemble" "type"="boolean" "multiValued"="false" />
 panl.facet.D=disassemble
 panl.name.D=Disassemble
 panl.type.D=solr.BoolField
 # Because this is a Boolean field, you can change these values to something more human-readable
-panl.bool.D.true=able to be disassembled
-panl.bool.D.false=cannot be disassembled
+panl.bool.D.true=able to be
+panl.bool.D.false=cannot be
+panl.suffix.D=\ disassembled
 
 # <field "indexed"="true" "stored"="true" "name"="mechanism_material" "type"="string" "multiValued"="false" />
-#panl.facet.M=mechanism_material
-#panl.name.M=Mechanism Material
-#panl.type.M=solr.StrField
+panl.field.M=mechanism_material
+panl.name.M=Mechanism Material
+panl.type.M=solr.StrField
 
 # <field "indexed"="true" "stored"="true" "name"="tubing_material" "type"="string" "multiValued"="false" />
-#panl.facet.t=tubing_material
-#panl.name.t=Tubing Material
-#panl.type.t=solr.StrField
+panl.field.t=tubing_material
+panl.name.t=Tubing Material
+panl.type.t=solr.StrField
 
 # <field "indexed"="true" "stored"="true" "name"="hardness_indicator" "type"="string" "multiValued"="false" />
 panl.facet.h=hardness_indicator
@@ -392,43 +405,43 @@ panl.facet.I=in_built_eraser
 panl.name.I=In Built Eraser
 panl.type.I=solr.BoolField
 # Because this is a Boolean field, you can change these values to something more human-readable
-panl.bool.I.true=is-in_built_eraser
-panl.bool.I.false=is-not-in_built_eraser
+#panl.bool.I.true=true
+#panl.bool.I.false=false
 
 # <field "indexed"="true" "stored"="true" "name"="variants" "type"="string" "multiValued"="true" />
-#panl.facet.v=variants
-#panl.name.v=Variants
-#panl.type.v=solr.StrField
+panl.field.v=variants
+panl.name.v=Variants
+panl.type.v=solr.StrField
 
 # <field "indexed"="true" "stored"="true" "name"="nib_shape" "type"="string" "multiValued"="false" />
-panl.facet.e=nib_shape
+panl.field.e=nib_shape
 panl.name.e=Nib Shape
 panl.type.e=solr.StrField
 
 # <field "indexed"="true" "stored"="true" "name"="nib_material" "type"="string" "multiValued"="false" />
-#panl.facet.x=nib_material
-#panl.name.x=Nib Material
-#panl.type.x=solr.StrField
+panl.field.x=nib_material
+panl.name.x=Nib Material
+panl.type.x=solr.StrField
 
 # <field "indexed"="true" "stored"="true" "name"="grip_material" "type"="string" "multiValued"="false" />
-#panl.facet.X=grip_material
-#panl.name.X=Grip Material
-#panl.type.X=solr.StrField
+panl.field.X=grip_material
+panl.name.X=Grip Material
+panl.type.X=solr.StrField
 
 # <field "indexed"="true" "stored"="true" "name"="body_material" "type"="string" "multiValued"="false" />
-#panl.facet.K=body_material
-#panl.name.K=Body Material
-#panl.type.K=solr.StrField
+panl.field.K=body_material
+panl.name.K=Body Material
+panl.type.K=solr.StrField
 
 # <field "indexed"="true" "stored"="true" "name"="clip_material" "type"="string" "multiValued"="false" />
-#panl.facet.A=clip_material
-#panl.name.A=Clip Material
-#panl.type.A=solr.StrField
+panl.field.A=clip_material
+panl.name.A=Clip Material
+panl.type.A=solr.StrField
 
 # <field "indexed"="true" "stored"="true" "name"="cap_material" "type"="string" "multiValued"="false" />
-#panl.facet.f=cap_material
-#panl.name.f=Cap Material
-#panl.type.f=solr.StrField
+panl.field.f=cap_material
+panl.name.f=Cap Material
+panl.type.f=solr.StrField
 
 # <field "indexed"="true" "stored"="true" "name"="lead_grade_indicator" "type"="string" "multiValued"="false" />
 panl.facet.u=lead_grade_indicator
@@ -445,8 +458,8 @@ panl.facet.9=in_built_sharpener
 panl.name.9=In Built Sharpener
 panl.type.9=solr.BoolField
 # Because this is a Boolean field, you can change these values to something more human-readable
-panl.bool.9.true=is-in_built_sharpener
-panl.bool.9.false=is-not-in_built_sharpener
+panl.bool.9.true=Has in-built sharpener
+panl.bool.9.false=No in-built sharpener
 
 # <field "indexed"="true" "stored"="true" "name"="colours" "type"="string" "multiValued"="true" />
 panl.facet.W=colours
@@ -478,20 +491,24 @@ panl.type.W=solr.StrField
 #
 #                                ~ ~ ~ * ~ ~ ~
 
-panl.lpse.order=z,b,m,W,B,g,G,C,r,R,d,L,D,h,I,e,u,Z,9,s,p,n,o,q
+panl.lpse.order=z,b,m,W,G,C,L,D,h,I,u,Z,9,w,s,p,n,o,q
 
 #                       Panl Results Field Configuration
 #                       ---- ------- ----- -------------
 # Below are the fields that are configured to be returned for the query, these
 # fields are added to the query and must match the solr fields.
 #
-# By default, the panl.results.fields.all always exists - even if it is not
-# included in these properties file - it is included here for reference for all
-# the fields that are stored by the solr engine.
+# The panl.results.fields.default always exists - even if it is not included
+# in this properties file - it is included here for reference for so that you
+# may choose the fields that you wish to have the Solr engine to return.
+#
+# If the panl.results.fields.default property is not found , or is an empty
+# string, then by default, Solr will return all fields - which you may not
+# want
 #
 # As an example, another property:
 #
-#     panl.results.fields.firstfive
+#   panl.results.fields.firstfive
 #
 # was also automatically generated with only the first five fields.  You may
 # rename, delete or add any of the results fields as you wish (remembering that
@@ -501,9 +518,44 @@ panl.lpse.order=z,b,m,W,B,g,G,C,r,R,d,L,D,h,I,e,u,Z,9,s,p,n,o,q
 #                                ~ ~ ~ * ~ ~ ~
 
 
-panl.results.fields.all=brand,name,mechanism_type,nib_shape,body_shape,grip_type,grip_shape,cap_shape,category,length,relative_length,diameter,weight,relative_weight,lead_length,disassemble,nib_material,mechanism_material,grip_material,body_material,tubing_material,clip_material,cap_material,hardness_indicator,lead_grade_indicator,lead_size_indicator,colours,variants
+panl.results.fields.default=brand,\
+  name,\
+  mechanism_type,\
+  nib_shape,\
+  body_shape,\
+  grip_type,\
+  grip_shape,\
+  cap_shape,\
+  category,\
+  length,\
+  relative_length,\
+  diameter,\
+  weight,\
+  relative_weight,\
+  lead_length,\
+  disassemble,\
+  nib_material,\
+  mechanism_material,\
+  grip_material,\
+  body_material,\
+  tubing_material,\
+  clip_material,\
+  cap_material,\
+  hardness_indicator,\
+  lead_grade_indicator,\
+  lead_size_indicator,\
+  colours,\
+  variants,\
+  description
 
-panl.results.fields.firstfive=brand,name,category,mechanism_type,nib_shape
+panl.results.fields.firstfive=brand,\
+  name,\
+  category,\
+  mechanism_type,\
+  weight
+
+panl.results.fields.brandandname=brand,\
+  name
 
 #                      Panl Sort Field Configuration
 #                      ---- ---- ----- -------------

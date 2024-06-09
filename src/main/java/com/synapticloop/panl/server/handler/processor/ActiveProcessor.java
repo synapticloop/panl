@@ -26,13 +26,15 @@ package com.synapticloop.panl.server.handler.processor;
 
 import com.synapticloop.panl.server.handler.properties.CollectionProperties;
 import com.synapticloop.panl.server.handler.fielderiser.field.BaseField;
-import com.synapticloop.panl.server.handler.fielderiser.field.PanlFacetField;
 import com.synapticloop.panl.server.handler.tokeniser.token.FacetLpseToken;
 import com.synapticloop.panl.server.handler.tokeniser.token.LpseToken;
+import com.synapticloop.panl.server.handler.tokeniser.token.SortLpseToken;
 import org.apache.solr.client.solrj.response.QueryResponse;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -72,11 +74,16 @@ public class ActiveProcessor extends Processor {
 		int i = 0;
 		for (LpseToken lpseToken : lpseTokens) {
 			String tokenType = lpseToken.getType();
-			JSONArray jsonArray = jsonObject.optJSONArray(tokenType, new JSONArray());
+			String lpseCode = lpseToken.getLpseCode();
+			BaseField lpseField = collectionProperties.getLpseField(lpseCode);
 
+			JSONArray jsonArray = jsonObject.optJSONArray(tokenType, new JSONArray());
 			JSONObject removeObject = new JSONObject();
 
 			removeObject.put(JSON_KEY_VALUE, lpseToken.getValue());
+			removeObject.put(JSON_KEY_URI, getRemoveURIFromPath(i, uriComponents, lpseComponents));
+			removeObject.put(JSON_KEY_PANL_CODE, lpseCode);
+
 			if(lpseToken instanceof FacetLpseToken) {
 				FacetLpseToken facetLpseToken = (FacetLpseToken) lpseToken;
 				if(facetLpseToken.getIsRangeToken()) {
@@ -84,24 +91,27 @@ public class ActiveProcessor extends Processor {
 				}
 
 				removeObject.put(JSON_KEY_IS_RANGE_FACET, facetLpseToken.getIsRangeToken());
+
+				removeObject.put(JSON_KEY_IS_OR_FACET, collectionProperties.getIsOrFacetField(lpseCode));
+				boolean isRangeFacetField = collectionProperties.getIsRangeFacetField(lpseCode);
+				removeObject.put(JSON_KEY_IS_RANGE_FACET, isRangeFacetField);
 			}
 
-			removeObject.put(JSON_KEY_URI, getRemoveURIFromPath(i, uriComponents, lpseComponents));
+			if(lpseToken instanceof SortLpseToken) {
+				SortLpseToken sortLpseToken = (SortLpseToken) lpseToken;
+				String solrFacetField = sortLpseToken.getSolrFacetField();
+				removeObject.put(JSON_KEY_FACET_NAME, solrFacetField);
+				String panlNameFromSolrFieldName = collectionProperties.getPanlNameFromSolrFieldName(solrFacetField);
+				removeObject.put(JSON_KEY_NAME, panlNameFromSolrFieldName);
+				removeObject.put(JSON_KEY_IS_DESCENDING, sortLpseToken.getSortOrderUriKey().equals(SortLpseToken.SORT_ORDER_URI_KEY_DESCENDING));
+				removeObject.put(JSON_KEY_ENCODED, URLEncoder.encode(panlNameFromSolrFieldName, StandardCharsets.UTF_8));
+			} else {
+				removeObject.put(JSON_KEY_FACET_NAME, collectionProperties.getSolrFieldNameFromLpseCode(lpseCode));
+				removeObject.put(JSON_KEY_NAME, collectionProperties.getPanlNameFromPanlCode(lpseCode));
+				removeObject.put(JSON_KEY_ENCODED, lpseField.getEncodedPanlValue(lpseToken));
+			}
 
-			String lpseCode = lpseToken.getLpseCode();
-			removeObject.put(JSON_KEY_IS_OR_FACET, collectionProperties.getIsOrFacetField(lpseCode));
-			boolean isRangeFacetField = collectionProperties.getIsRangeFacetField(lpseCode);
-			removeObject.put(JSON_KEY_IS_RANGE_FACET, isRangeFacetField);
 
-			removeObject.put(JSON_KEY_PANL_CODE, lpseCode);
-			removeObject.put(JSON_KEY_FACET_NAME, collectionProperties.getSolrFieldNameFromLpseCode(lpseCode));
-			removeObject.put(JSON_KEY_NAME, collectionProperties.getPanlNameFromPanlCode(lpseCode));
-
-			BaseField lpseField = collectionProperties.getLpseField(lpseCode);
-
-			removeObject.put(JSON_KEY_IS_OR_FACET, lpseField.getIsOrFacet());
-
-			removeObject.put(JSON_KEY_ENCODED, lpseField.getEncodedPanlValue(lpseToken));
 
 			jsonArray.put(removeObject);
 			i++;

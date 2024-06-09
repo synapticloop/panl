@@ -118,6 +118,8 @@ public class CollectionProperties {
 	private final Map<String, PanlFacetField> SOLR_NAME_TO_FACET_FIELD_MAP = new HashMap<>();
 	private final Map<String, PanlField> LPSE_CODE_TO_FIELD_MAP = new HashMap<>();
 	private final Map<String, PanlField> SOLR_NAME_TO_FIELD_MAP = new HashMap<>();
+	private final Map<String, PanlSortField> LPSE_CODE_TO_SORT_FIELD_MAP = new HashMap<>();
+	private final Map<String, PanlSortField> SOLR_NAME_TO_SORT_FIELD_MAP = new HashMap<>();
 
 	private final Set<String> PANL_CODE_OR_FIELDS = new HashSet<>();
 	private final Set<String> PANL_CODE_RANGE_FIELDS = new HashSet<>();
@@ -157,7 +159,8 @@ public class CollectionProperties {
 
 	private boolean hasOrFacetFields = false;
 
-	private Map<String, String> MANDATORY_LPSE_ORDER_FIELDS = new HashMap<>();
+	private final Map<String, String> MANDATORY_LPSE_ORDER_FIELDS = new HashMap<>();
+	private final Map<String, Integer> LPSE_CODES_SORT_ORDER = new HashMap<>();
 
 	public CollectionProperties(String collectionName, Properties properties) throws PanlServerException {
 		this.collectionName = collectionName;
@@ -201,8 +204,9 @@ public class CollectionProperties {
 		}
 	}
 
-	private void parseSortFields() {
+	private void parseSortFields() throws PanlServerException {
 		String sortFieldsTemp = properties.getProperty(PROPERTY_KEY_PANL_SORT_FIELDS, "");
+		int sortOrder = 0;
 		for (String sortField : sortFieldsTemp.split(",")) {
 			// A sort field can either be a field, or a facet field
 			String lpseCode = null;
@@ -217,7 +221,17 @@ public class CollectionProperties {
 			} else {
 				LOGGER.info("[{}] Sort Fields - adding Panl LPSE code '{}' for Solr field name '{}'.", collectionName, lpseCode, sortField);
 				lpseCodeSortFields.add(lpseCode);
+				PanlSortField panlSortField = new PanlSortField(
+						lpseCode,
+						PROPERTY_KEY_PANL_SORT_FIELDS,
+						properties,
+						collectionName);
+
+				LPSE_CODE_TO_SORT_FIELD_MAP.put(lpseCode, panlSortField);
+				SOLR_NAME_TO_SORT_FIELD_MAP.put(sortField, panlSortField);
+				LPSE_CODES_SORT_ORDER.put(lpseCode, sortOrder);
 			}
+			sortOrder++;
 		}
 	}
 
@@ -275,7 +289,7 @@ public class CollectionProperties {
 		lpseFieldLookup.put(this.panlParamQueryOperand, new PanlQueryOperandField(panlParamQueryOperand, PANL_PARAM_QUERY_OPERAND, properties, collectionName));
 
 		this.panlParamPassThrough = initialiseStringProperty(PANL_PARAM_PASSTHROUGH, false);
-		if(null != panlParamPassThrough) {
+		if (null != panlParamPassThrough) {
 			lpseFieldLookup.put(this.panlParamPassThrough, new PanlPassThroughField(panlParamPassThrough, PANL_PARAM_PASSTHROUGH, properties, collectionName));
 		}
 	}
@@ -420,7 +434,7 @@ public class CollectionProperties {
 			missingMandatoryLpseCode = true;
 		}
 
-		if(missingMandatoryLpseCode) {
+		if (missingMandatoryLpseCode) {
 			throw new PanlServerException("Missing mandatory LPSE codes in the " + PROPERTY_KEY_PANL_LPSE_ORDER + " property.");
 		}
 
@@ -432,7 +446,7 @@ public class CollectionProperties {
 			addResultsFields(resultFieldProperty.substring(PROPERTY_KEY_PANL_RESULTS_FIELDS.length()), properties.getProperty(resultFieldProperty));
 		}
 		// there must always be a default field
-		if(!resultFieldsMap.containsKey(PROPERTY_KEY_FIELDSETS_DEFAULT)) {
+		if (!resultFieldsMap.containsKey(PROPERTY_KEY_FIELDSETS_DEFAULT)) {
 			LOGGER.warn("[{}] Missing default field set, adding one which will return all fields.", collectionName);
 			resultFieldsMap.put(PROPERTY_KEY_FIELDSETS_DEFAULT, new ArrayList<>());
 		}
@@ -487,9 +501,9 @@ public class CollectionProperties {
 
 	public String getSolrDefaultQueryOperand() {
 		if (solrDefaultQueryOperand.equals("-")) {
-			return(SOLR_DEFAULT_QUERY_OPERAND_OR);
+			return (SOLR_DEFAULT_QUERY_OPERAND_OR);
 		} else {
-			return(SOLR_DEFAULT_QUERY_OPERAND_AND);
+			return (SOLR_DEFAULT_QUERY_OPERAND_AND);
 		}
 	}
 
@@ -525,9 +539,15 @@ public class CollectionProperties {
 		return (solrFacetFields);
 	}
 
+	/**
+	 * <p>Return whether this is a valid sort field.</p>
+	 *
+	 * @param lpseCode The lpse code to look up
+	 *
+	 * @return whether this is a valid sort code
+	 */
 	public boolean hasSortField(String lpseCode) {
-		return (LPSE_CODE_TO_FACET_FIELD_MAP.containsKey(lpseCode) ||
-				LPSE_CODE_TO_FIELD_MAP.containsKey(lpseCode));
+		return (LPSE_CODE_TO_SORT_FIELD_MAP.containsKey(lpseCode));
 	}
 
 	public String getSolrFieldNameFromLpseCode(String lpseCode) {
@@ -535,6 +555,8 @@ public class CollectionProperties {
 			return (LPSE_CODE_TO_FACET_FIELD_MAP.get(lpseCode).getSolrFieldName());
 		} else if (LPSE_CODE_TO_FIELD_MAP.containsKey(lpseCode)) {
 			return (LPSE_CODE_TO_FIELD_MAP.get(lpseCode).getSolrFieldName());
+		} else if (LPSE_CODE_TO_SORT_FIELD_MAP.containsKey(lpseCode)) {
+			return (LPSE_CODE_TO_SORT_FIELD_MAP.get(lpseCode).getSolrFieldName());
 		}
 		return (null);
 	}
@@ -608,5 +630,18 @@ public class CollectionProperties {
 
 	public boolean getHasOrFacetFields() {
 		return hasOrFacetFields;
+	}
+
+	/**
+	 * <p>Invalid, or empty LPSE codes are always first (as a relevance search is
+	 * always first) - i.e. Integer.MIN_VALUE.</p>
+	 *
+	 * @param lpseCode The LPSE code to look up in the sort order fields
+	 *
+	 * @return The sort order, or Integer.MAX_VALUE if the LPSE code could not be
+	 * 		found
+	 */
+	public int getSortOrderForLpseCode(String lpseCode) {
+		return(LPSE_CODES_SORT_ORDER.getOrDefault(lpseCode, Integer.MIN_VALUE));
 	}
 }

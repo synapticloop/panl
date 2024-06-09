@@ -121,22 +121,51 @@ function addSortingOptions(sortingObject) {
     sortingObject.relevance.replace_desc +
     "\"/>DESC</a>&nbsp;");
 
-	for(const sortName in sortingObject.fields) {
-	$("#sorting_options").append(
-		"||&nbsp;" +
-		sortingObject.fields[sortName].name +
-		": <a href=\"" +
-    panlResultsViewerUrl +
-    $("#collection").text() +
-    sortingObject.fields[sortName].replace_asc +
-    "\"/>ASC</a>&nbsp;");
+	for(const sortIndex in sortingObject.fields) {
+		$("#sorting_options").append(
+			"||&nbsp;" +
+			sortingObject.fields[sortIndex].name +
+			": <a href=\"" +
+	    panlResultsViewerUrl +
+	    $("#collection").text() +
+	    sortingObject.fields[sortIndex].replace_asc +
+	    "\"/>ASC</a>&nbsp;");
 
-	$("#sorting_options").append(
-		"<a href=\"" +
-    panlResultsViewerUrl +
-    $("#collection").text() +
-    sortingObject.fields[sortName].replace_desc +
-    "\"/>DESC</a>&nbsp;");
+		$("#sorting_options").append(
+			"<a href=\"" +
+	    panlResultsViewerUrl +
+	    $("#collection").text() +
+	    sortingObject.fields[sortIndex].replace_desc +
+	    "\"/>DESC</a>&nbsp;");
+	}
+
+	var hasAddedThen = false;
+	// now for the additive fields
+	for(const sortIndex in sortingObject.fields) {
+		if(sortingObject.fields[sortIndex].add_asc !== undefined) {
+
+			if(!hasAddedThen) {
+				$("#sorting_options").append("<br/><strong>Then sort by </strong>");
+				hasAddedThen = true;
+			} else {
+				$("#sorting_options").append("||&nbsp;");
+			}
+
+			$("#sorting_options").append(
+				sortingObject.fields[sortIndex].name +
+				": <a href=\"" +
+		    panlResultsViewerUrl +
+		    $("#collection").text() +
+		    sortingObject.fields[sortIndex].add_asc +
+		    "\"/>ASC</a>&nbsp;");
+
+			$("#sorting_options").append(
+				"<a href=\"" +
+		    panlResultsViewerUrl +
+		    $("#collection").text() +
+		    sortingObject.fields[sortIndex].add_desc +
+		    "\"/>DESC</a>&nbsp;");
+		}
 	}
 }
 
@@ -205,6 +234,11 @@ function addActiveFilters(activeObject) {
 	if(activeObject.facet !== undefined) {
 		addActiveFacets(activeObject.facet);
 	}
+
+	// finally, the sort
+	if(activeObject.sort !== undefined) {
+		addActiveSorts(activeObject.sort);
+	}
 }
 
 function addActiveFacets(facets) {
@@ -227,6 +261,28 @@ function addActiveFacets(facets) {
 	}
 	active.append("<li><hr /></li>");
 }
+
+function addActiveSorts(sorts) {
+	const active = $("#active");
+
+	for(const sort of sorts) {
+		active.append("<li>Sorted by: <strong>" +
+				sort.name +
+				" <em>(" +
+				sort.panl_code +
+				")</em> " +
+				(sort.is_descending ? "[DESC]" : "[ASC]") +
+				"</strong></li>");
+		active.append("<li><a href=\"" + panlResultsViewerUrl +
+                        $("#collection").text() +
+                        sort.uri +
+                        "\">[remove]</a>&nbsp;" +
+                  			decodeURI(sort.encoded).replaceAll("+", " ").replaceAll("%2B", "+") +
+                  			"</li>");
+
+	}
+	active.append("<li><hr /></li>");
+	}
 
 function addAvailableFilters(availableObject) {
 	console.log("[ RETURNED PANL AVAILABLE FILTERS JSON OBJECT ]")

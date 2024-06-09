@@ -18,9 +18,9 @@ public class SortLpseTokenTest {
 				getLpseTokeniser(uriPath));
 
 		assertTrue(sortLpseToken.getIsValid());
-		assertEquals(lpseCode, sortLpseToken.getPanlFacetCode());
+		assertEquals(lpseCode, sortLpseToken.getLpseSortCode());
 		assertEquals(name, sortLpseToken.getSolrFacetField());
-		assertEquals((asc ? "+" : "-"), sortLpseToken.getSortCode());
+		assertEquals((asc ? "+" : "-"), sortLpseToken.getSortOrderUriKey());
 		assertEquals((asc ?  SolrQuery.ORDER.asc : SolrQuery.ORDER.desc), sortLpseToken.getSortOrder());
 	}
 

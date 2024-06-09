@@ -41,8 +41,9 @@ public class PanlSortField extends BaseField {
 	private static final Logger LOGGER = LoggerFactory.getLogger(PanlSortField.class);
 
 	public PanlSortField(String lpseCode, String propertyKey, Properties properties, String collectionName) throws PanlServerException {
-		super(lpseCode, properties, propertyKey, collectionName);
+		super(lpseCode, properties, propertyKey, collectionName, 1);
 
+		populatePanlAndSolrFieldNames();
 		logDetails();
 	}
 
@@ -51,17 +52,20 @@ public class PanlSortField extends BaseField {
 	}
 
 	@Override public String getCanonicalLpseCode(Map<String, List<LpseToken>> panlTokenMap, CollectionProperties collectionProperties) {
-		StringBuilder sb = new StringBuilder(lpseCode);
+		StringBuilder sb = new StringBuilder();
+
 		if(panlTokenMap.containsKey(lpseCode)) {
-			SortLpseToken lpseToken = (SortLpseToken) panlTokenMap.get(lpseCode).get(0);
-			if(lpseToken.getIsValid()) {
-				sb.append(lpseToken.getPanlFacetCode());
-				sb.append(lpseToken.getSortCode());
-			} else {
-				sb.append("-");
+			for (LpseToken lpseToken : panlTokenMap.get(lpseCode)) {
+				SortLpseToken sortLpseToken = (SortLpseToken) panlTokenMap.get(lpseCode).get(0);
+				if (lpseToken.getIsValid()) {
+					sb.append(lpseCode);
+					sb.append(sortLpseToken.getLpseSortCode());
+					sb.append(sortLpseToken.getSortOrderUriKey());
+				}
 			}
 		} else {
-			sb.append("-");
+			sb.append(lpseCode)
+					.append("-");
 		}
 		return(sb.toString());
 	}
@@ -74,8 +78,8 @@ public class PanlSortField extends BaseField {
 		StringBuilder sb = new StringBuilder(token.getLpseCode());
 		SortLpseToken lpseToken = (SortLpseToken) token;
 		if(lpseToken.getIsValid()) {
-			sb.append(lpseToken.getPanlFacetCode());
-			sb.append(lpseToken.getSortCode());
+			sb.append(lpseToken.getLpseSortCode());
+			sb.append(lpseToken.getSortOrderUriKey());
 		} else {
 			sb.append("-");
 		}
@@ -115,12 +119,15 @@ public class PanlSortField extends BaseField {
 	}
 
 	public void applyToQueryInternal(SolrQuery solrQuery, Map<String, List<LpseToken>> panlTokenMap) {
-		if(panlTokenMap.containsKey(lpseCode)) {
-			SortLpseToken lpseToken = (SortLpseToken)panlTokenMap.get(lpseCode).get(0);
-			if(!lpseToken.getPanlFacetCode().isBlank()) {
+		List<SolrQuery.SortClause> sortClauses = new ArrayList<>();
+		for (LpseToken lpseToken : panlTokenMap.getOrDefault(lpseCode, new ArrayList<>())) {
+			SortLpseToken sortLpseToken = (SortLpseToken)lpseToken;
+			if(!sortLpseToken.getLpseSortCode().isBlank()) {
 				// this will be using the default relevance sort field
-				solrQuery.addSort(lpseToken.getSolrFacetField(), lpseToken.getSortOrder());
+				sortClauses.add(SolrQuery.SortClause.create(sortLpseToken.getSolrFacetField(), sortLpseToken.getSortOrder()));
 			}
 		}
+
+		solrQuery.setSorts(sortClauses);
 	}
 }

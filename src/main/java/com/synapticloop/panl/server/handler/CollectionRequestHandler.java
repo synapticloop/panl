@@ -272,15 +272,18 @@ public class CollectionRequestHandler {
 		// canonical URI
 		for (String key : panlTokenMap.keySet()) {
 			List<LpseToken> lpseTokenTemp = panlTokenMap.get(key);
-			lpseTokenTemp.sort((o1, o2) -> {
-				if(!o1.getIsValid() || !o2.getIsValid()) {
-					// either one is invalid and won't be sent through or generate a
-					// canonical URI
-					return(0);
-				} else {
-					return(o1.getValue().compareTo(o2.getValue()));
-				}
-			});
+			// but we don't sort on the sort tokens - as there is an order to them
+			if(!key.equals(collectionProperties.getPanlParamSort())) {
+				lpseTokenTemp.sort((o1, o2) -> {
+					if (!o1.getIsValid() || !o2.getIsValid()) {
+						// either one is invalid and won't be sent through or generate a
+						// canonical URI
+						return (0);
+					} else {
+						return (o1.getValue().compareTo(o2.getValue()));
+					}
+				});
+			}
 		}
 
 		panlObject.put(JSON_KEY_AVAILABLE, availableProcessor.processToObject(panlTokenMap, response));
