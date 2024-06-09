@@ -58,73 +58,52 @@ public class SortingProcessor extends Processor {
 		// Run through the sorting order
 		JSONObject jsonObject = new JSONObject();
 		StringBuilder replaceLpseUri = new StringBuilder("/");
-		StringBuilder addLpseUri = new StringBuilder("/");
-		StringBuilder lpse = new StringBuilder();
+		StringBuilder lpseCode = new StringBuilder();
 
 		for (BaseField lpseField : collectionProperties.getLpseFields()) {
 			String thisLpseCode = lpseField.getLpseCode();
 			if (!panlParamSortLpseKey.equals(thisLpseCode)) {
 				if (panlTokenMap.containsKey(thisLpseCode)) {
 					replaceLpseUri.append(lpseField.getResetUriPath(panlTokenMap, collectionProperties));
-					lpse.append(lpseField.getResetLpseCode(panlTokenMap, collectionProperties));
+					lpseCode.append(lpseField.getResetLpseCode(panlTokenMap, collectionProperties));
 				}
 			} else {
-				before = lpse.toString();
-				lpse.setLength(0);
+				before = lpseCode.toString();
+				lpseCode.setLength(0);
 			}
 		}
 
-		lpse.append("/");
+		lpseCode.append("/");
 
 		// This is the default sorting order (by relevance)
 		String finalBefore = replaceLpseUri + before;
 
 		JSONObject relevanceSort = new JSONObject();
 		relevanceSort.put(JSON_KEY_NAME, JSON_VALUE_RELEVANCE);
-		relevanceSort.put(JSON_KEY_REPLACE_DESC, finalBefore + panlParamSortLpseKey + "-" + lpse);
+		relevanceSort.put(JSON_KEY_REPLACE_DESC, finalBefore + panlParamSortLpseKey + "-" + lpseCode);
 		jsonObject.put(JSON_KEY_RELEVANCE, relevanceSort);
 
 		// These are the available sort fields
 		JSONArray sortFieldsArray = new JSONArray();
 
 		// build up a data set of all the active sorting, and the sort order URI key
-		HashMap<String, String> activeSortings = new HashMap<>();
-		for (LpseToken lpseToken : panlTokenMap.getOrDefault(panlParamSortLpseKey, new ArrayList<>())) {
-			SortLpseToken sortLpseToken = (SortLpseToken) lpseToken;
-			activeSortings.put(sortLpseToken.getLpseSortCode(), sortLpseToken.getSortOrderUriKey());
-		}
 
 		// now build the before and after maps for the addition uris
 		StringBuilder sortLpse = new StringBuilder();
 		String sortBefore = "";
-		String sortAfter = "";
-		boolean hasFound = false;
 
-		HashMap<String, Integer> sortFieldOrdering = new HashMap<>();
-		int i = 0;
-		for (String sortFieldLpseCode : collectionProperties.getSortFieldLpseCodes()) {
-			sortFieldOrdering.put(sortFieldLpseCode, i);
-			i++;
-			if (activeSortings.containsKey(sortFieldLpseCode)) {
-				// we are already sorting on this
-				sortLpse.append(panlParamSortLpseKey)
-						.append(sortFieldLpseCode)
-						.append(activeSortings.get(sortFieldLpseCode));
+		HashMap<String, String> activeSortings = new HashMap<>();
 
-				if(hasFound) {
-					sortAfter = sortLpse.toString();
-				} else {
-					sortBefore = sortLpse.toString();
-				}
-				sortLpse.setLength(0);
-			} else {
-				// just add it
-				hasFound = true;
-			}
+		for (LpseToken lpseToken : panlTokenMap.getOrDefault(panlParamSortLpseKey, new ArrayList<>())) {
+			SortLpseToken sortLpseToken = (SortLpseToken) lpseToken;
+			activeSortings.put(sortLpseToken.getLpseSortCode(), sortLpseToken.getSortOrderUriKey());
+			sortLpse.append(panlParamSortLpseKey)
+					.append(sortLpseToken.getLpseSortCode())
+					.append(sortLpseToken.getSortOrderUriKey());
 		}
+		sortBefore = sortLpse.toString();
 
 
-		int sortFieldOrder = 0;
 		for (String sortFieldLpseCode : collectionProperties.getSortFieldLpseCodes()) {
 			String sortFieldName = collectionProperties.getSolrFieldNameFromLpseCode(sortFieldLpseCode);
 
@@ -133,39 +112,30 @@ public class SortingProcessor extends Processor {
 
 				sortObject.put(JSON_KEY_NAME, collectionProperties.getPanlNameFromPanlCode(sortFieldLpseCode));
 				sortObject.put(JSON_KEY_FACET_NAME, collectionProperties.getSolrFieldNameFromLpseCode(sortFieldLpseCode));
-				sortObject.put(JSON_KEY_REPLACE_DESC, finalBefore + panlParamSortLpseKey + sortFieldLpseCode + "-" + lpse);
-				sortObject.put(JSON_KEY_REPLACE_ASC, finalBefore + panlParamSortLpseKey + sortFieldLpseCode + "+" + lpse);
+				sortObject.put(JSON_KEY_REPLACE_DESC, finalBefore + panlParamSortLpseKey + sortFieldLpseCode + "-" + lpseCode);
+				sortObject.put(JSON_KEY_REPLACE_ASC, finalBefore + panlParamSortLpseKey + sortFieldLpseCode + "+" + lpseCode);
 
 
-				boolean shouldBeLast = sortFieldOrder < sortFieldOrdering.get(sortFieldLpseCode);
 				// Now for the add fields
 				if(!activeSortings.containsKey(sortFieldLpseCode)) {
-					// at this point we need to know the ordering of the lpse fields,
+					// at this point we need to know the ordering of the lpseCode fields,
 					// whether we are before, or after the selected index
 
 					sortObject.put(JSON_KEY_ADD_DESC,
 							finalBefore +
 									sortBefore +
-									(shouldBeLast ? sortAfter : "") +
 									panlParamSortLpseKey +
 									sortFieldLpseCode +
 									"-" +
-									(shouldBeLast ? "" : sortAfter) +
-									sortLpse.toString() +
-									lpse);
+									lpseCode);
 
 					sortObject.put(JSON_KEY_ADD_ASC,
 							finalBefore +
 									sortBefore +
-									(shouldBeLast ? sortAfter : "") +
 									panlParamSortLpseKey +
 									sortFieldLpseCode +
 									"+" +
-									(shouldBeLast ? "" : sortAfter) +
-									sortLpse.toString() +
-									lpse);
-
-					sortFieldOrder++;
+									lpseCode);
 				}
 				sortFieldsArray.put(sortObject);
 			}
