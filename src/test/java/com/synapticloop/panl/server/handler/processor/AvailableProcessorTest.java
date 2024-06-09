@@ -58,4 +58,42 @@ public class AvailableProcessorTest {
 
 		}
 	}
+
+	@Test public void testAddFacetTwoSorts() throws PanlServerException, IOException {
+		JSONObject jsonObject = TestHelper.invokeAvailableProcessor(WEIGHT_NAME_FACETS,
+				"/default.properties",
+				"/test/default/sb-sm+/",
+				"",
+				100L,
+				false);
+
+		System.out.println(jsonObject.toString(2));
+		JSONArray availableFacets = jsonObject.getJSONArray(Processor.JSON_KEY_FACETS);
+		assertEquals(WEIGHT_NAME_FACETS.size(), availableFacets.length());
+		for(int i = 0; i < availableFacets.length(); i++) {
+			JSONObject facetObject = availableFacets.getJSONObject(i);
+			JSONObject urisObject = facetObject.getJSONObject(Processor.JSON_KEY_URIS);
+
+			assertEquals("/", urisObject.getString(Processor.JSON_KEY_BEFORE));
+			assertEquals("/" +
+					facetObject.getString(Processor.JSON_KEY_PANL_CODE) +
+					"sb-sm+/", urisObject.getString(Processor.JSON_KEY_AFTER));
+
+		}
+
+		JSONArray rageFacets = jsonObject.getJSONArray(Processor.JSON_KEY_RANGE_FACETS);
+		for(int i = 0; i < rageFacets.length(); i++) {
+			JSONObject facetObject = rageFacets.getJSONObject(i);
+			JSONObject urisObject = facetObject.getJSONObject(Processor.JSON_KEY_URIS);
+
+			assertEquals("/", urisObject.getString(Processor.JSON_KEY_BEFORE));
+			String lpseCode = facetObject.getString(Processor.JSON_KEY_PANL_CODE);
+			assertEquals("/" +
+					lpseCode +
+					"+" +
+					lpseCode +
+					"sb-sm+/", urisObject.getString(Processor.JSON_KEY_AFTER));
+
+		}
+	}
 }

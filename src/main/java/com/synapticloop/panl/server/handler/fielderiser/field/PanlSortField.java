@@ -55,8 +55,8 @@ public class PanlSortField extends BaseField {
 		StringBuilder sb = new StringBuilder();
 
 		if(panlTokenMap.containsKey(lpseCode)) {
-			for (LpseToken lpseToken : panlTokenMap.get(lpseCode)) {
-				SortLpseToken sortLpseToken = (SortLpseToken) panlTokenMap.get(lpseCode).get(0);
+			for (LpseToken lpseToken : panlTokenMap.getOrDefault(lpseCode, new ArrayList<>())) {
+				SortLpseToken sortLpseToken = (SortLpseToken) lpseToken;
 				if (lpseToken.getIsValid()) {
 					sb.append(lpseCode);
 					sb.append(sortLpseToken.getLpseSortCode());
