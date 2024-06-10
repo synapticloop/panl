@@ -149,6 +149,13 @@ public class SortLpseToken extends LpseToken {
 		return (sortOrderUriKey);
 	}
 
+	public String getInverseSortOrderUriKey() {
+		if (sortOrderUriKey.equals("+")) {
+			return ("-");
+		}
+		return ("+");
+	}
+
 	public String getSolrFacetField() {
 		return solrFacetField;
 	}

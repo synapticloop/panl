@@ -31,7 +31,7 @@ public class ActiveProcessorTest {
 		assertEquals("w", facetObject.getString(Processor.JSON_KEY_PANL_CODE));
 		assertEquals("18", facetObject.getString(Processor.JSON_KEY_VALUE));
 		assertEquals("40", facetObject.getString(Processor.JSON_KEY_VALUE_TO));
-		assertEquals("/", facetObject.getString(Processor.JSON_KEY_URI));
+		assertEquals("/", facetObject.getString(Processor.JSON_KEY_REMOVE_URI));
 		assertEquals("18~40", facetObject.getString(Processor.JSON_KEY_ENCODED));
 
 	}

@@ -1,15 +1,11 @@
 package com.synapticloop.panl.server.handler.processor;
 
-import com.synapticloop.panl.FacetCountBean;
 import com.synapticloop.panl.TestHelper;
 import com.synapticloop.panl.exception.PanlServerException;
-import org.json.JSONArray;
 import org.json.JSONObject;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -23,17 +19,17 @@ public class SortingProcessorTest {
 				100L);
 
 		System.out.println(jsonObject.toString(2));
-		String resetUri = jsonObject.getString(Processor.JSON_KEY_RESET_URI);
+		String resetUri = jsonObject.getString(Processor.JSON_KEY_REMOVE_URI);
 		assertEquals("/brand/b/", resetUri);
 
 		for (Object object : jsonObject.getJSONArray(Processor.JSON_KEY_FIELDS)) {
 			JSONObject sortFieldObject = (JSONObject) object;
 			switch (sortFieldObject.getString(Processor.JSON_KEY_FACET_NAME)) {
 				case "weight":
-					assertSortFieldLpseCode(sortFieldObject.getString(Processor.JSON_KEY_REPLACE_DESC), "w", false);
+					assertSortFieldLpseCode(sortFieldObject.getString(Processor.JSON_KEY_SET_URI_DESC), "w", false);
 					break;
 				case "name":
-					assertSortFieldLpseCode(sortFieldObject.getString(Processor.JSON_KEY_REPLACE_DESC), "m", false);
+					assertSortFieldLpseCode(sortFieldObject.getString(Processor.JSON_KEY_SET_URI_DESC), "m", false);
 					break;
 				default:
 					// nothing to do....
@@ -53,19 +49,19 @@ public class SortingProcessorTest {
 				100L);
 
 		System.out.println(jsonObject.toString(2));
-		String resetUri = jsonObject.getString(Processor.JSON_KEY_RESET_URI);
+		String resetUri = jsonObject.getString(Processor.JSON_KEY_REMOVE_URI);
 		assertEquals("/2/brand/nb/", resetUri);
 
 		for (Object object : jsonObject.getJSONArray(Processor.JSON_KEY_FIELDS)) {
 			JSONObject sortFieldObject = (JSONObject) object;
 			switch (sortFieldObject.getString(Processor.JSON_KEY_FACET_NAME)) {
 				case "weight":
-					assertEquals("/2/brand/sw-nb/", sortFieldObject.getString(Processor.JSON_KEY_REPLACE_DESC));
-					assertEquals("/2/brand/sw+nb/", sortFieldObject.getString(Processor.JSON_KEY_REPLACE_ASC));
+					assertEquals("/2/brand/sw-nb/", sortFieldObject.getString(Processor.JSON_KEY_SET_URI_DESC));
+					assertEquals("/2/brand/sw+nb/", sortFieldObject.getString(Processor.JSON_KEY_SET_URI_ASC));
 					break;
 				case "name":
-					assertEquals("/2/brand/sm-nb/", sortFieldObject.getString(Processor.JSON_KEY_REPLACE_DESC));
-					assertEquals("/2/brand/sm+nb/", sortFieldObject.getString(Processor.JSON_KEY_REPLACE_ASC));
+					assertEquals("/2/brand/sm-nb/", sortFieldObject.getString(Processor.JSON_KEY_SET_URI_DESC));
+					assertEquals("/2/brand/sm+nb/", sortFieldObject.getString(Processor.JSON_KEY_SET_URI_ASC));
 					break;
 				default:
 					// nothing to do....
@@ -81,17 +77,17 @@ public class SortingProcessorTest {
 				100L);
 
 		System.out.println(jsonObject.toString(2));
-		String resetUri = jsonObject.getString(Processor.JSON_KEY_RESET_URI);
+		String resetUri = jsonObject.getString(Processor.JSON_KEY_REMOVE_URI);
 		assertEquals("/3/brand/nb/", resetUri);
 
 		for (Object object : jsonObject.getJSONArray(Processor.JSON_KEY_FIELDS)) {
 			JSONObject sortFieldObject = (JSONObject) object;
 			switch (sortFieldObject.getString(Processor.JSON_KEY_NAME)) {
 				case "weight":
-					assertSortFieldLpseCode(sortFieldObject.getString(Processor.JSON_KEY_REPLACE_DESC), "w", false);
+					assertSortFieldLpseCode(sortFieldObject.getString(Processor.JSON_KEY_SET_URI_DESC), "w", false);
 					break;
 				case "name":
-					assertSortFieldLpseCode(sortFieldObject.getString(Processor.JSON_KEY_REPLACE_DESC), "m", false);
+					assertSortFieldLpseCode(sortFieldObject.getString(Processor.JSON_KEY_SET_URI_DESC), "m", false);
 					break;
 				default:
 					// nothing to do....
@@ -117,8 +113,8 @@ public class SortingProcessorTest {
 
 		for (Object object : jsonObject.getJSONArray(Processor.JSON_KEY_FIELDS)) {
 			JSONObject sortFieldObject = (JSONObject) object;
-			assertNotNull(sortFieldObject.optString(Processor.JSON_KEY_REPLACE_ASC, null));
-			assertNotNull(sortFieldObject.optString(Processor.JSON_KEY_REPLACE_ASC, null));
+			assertNotNull(sortFieldObject.optString(Processor.JSON_KEY_SET_URI_ASC, null));
+			assertNotNull(sortFieldObject.optString(Processor.JSON_KEY_SET_URI_ASC, null));
 
 			switch (sortFieldObject.getString(Processor.JSON_KEY_FACET_NAME)) {
 				case "brand":
@@ -154,8 +150,8 @@ public class SortingProcessorTest {
 
 		for (Object object : jsonObject.getJSONArray(Processor.JSON_KEY_FIELDS)) {
 			JSONObject sortFieldObject = (JSONObject) object;
-			assertNotNull(sortFieldObject.optString(Processor.JSON_KEY_REPLACE_ASC, null));
-			assertNotNull(sortFieldObject.optString(Processor.JSON_KEY_REPLACE_ASC, null));
+			assertNotNull(sortFieldObject.optString(Processor.JSON_KEY_SET_URI_ASC, null));
+			assertNotNull(sortFieldObject.optString(Processor.JSON_KEY_SET_URI_ASC, null));
 
 			switch (sortFieldObject.getString(Processor.JSON_KEY_FACET_NAME)) {
 				case "brand":
@@ -192,8 +188,8 @@ public class SortingProcessorTest {
 
 		for (Object object : jsonObject.getJSONArray(Processor.JSON_KEY_FIELDS)) {
 			JSONObject sortFieldObject = (JSONObject) object;
-			assertNotNull(sortFieldObject.optString(Processor.JSON_KEY_REPLACE_ASC, null));
-			assertNotNull(sortFieldObject.optString(Processor.JSON_KEY_REPLACE_ASC, null));
+			assertNotNull(sortFieldObject.optString(Processor.JSON_KEY_SET_URI_ASC, null));
+			assertNotNull(sortFieldObject.optString(Processor.JSON_KEY_SET_URI_ASC, null));
 
 			switch (sortFieldObject.getString(Processor.JSON_KEY_FACET_NAME)) {
 				case "brand":
@@ -230,8 +226,8 @@ public class SortingProcessorTest {
 
 		for (Object object : jsonObject.getJSONArray(Processor.JSON_KEY_FIELDS)) {
 			JSONObject sortFieldObject = (JSONObject) object;
-			assertNotNull(sortFieldObject.optString(Processor.JSON_KEY_REPLACE_ASC, null));
-			assertNotNull(sortFieldObject.optString(Processor.JSON_KEY_REPLACE_ASC, null));
+			assertNotNull(sortFieldObject.optString(Processor.JSON_KEY_SET_URI_ASC, null));
+			assertNotNull(sortFieldObject.optString(Processor.JSON_KEY_SET_URI_ASC, null));
 
 			switch (sortFieldObject.getString(Processor.JSON_KEY_FACET_NAME)) {
 				case "brand":
@@ -274,8 +270,8 @@ public class SortingProcessorTest {
 
 		for (Object object : jsonObject.getJSONArray(Processor.JSON_KEY_FIELDS)) {
 			JSONObject sortFieldObject = (JSONObject) object;
-			assertNotNull(sortFieldObject.optString(Processor.JSON_KEY_REPLACE_ASC, null));
-			assertNotNull(sortFieldObject.optString(Processor.JSON_KEY_REPLACE_ASC, null));
+			assertNotNull(sortFieldObject.optString(Processor.JSON_KEY_SET_URI_ASC, null));
+			assertNotNull(sortFieldObject.optString(Processor.JSON_KEY_SET_URI_ASC, null));
 
 			switch (sortFieldObject.getString(Processor.JSON_KEY_FACET_NAME)) {
 				case "brand":
@@ -328,8 +324,8 @@ public class SortingProcessorTest {
 
 		for (Object object : jsonObject.getJSONArray(Processor.JSON_KEY_FIELDS)) {
 			JSONObject sortFieldObject = (JSONObject) object;
-			assertNotNull(sortFieldObject.optString(Processor.JSON_KEY_REPLACE_ASC, null));
-			assertNotNull(sortFieldObject.optString(Processor.JSON_KEY_REPLACE_DESC, null));
+			assertNotNull(sortFieldObject.optString(Processor.JSON_KEY_SET_URI_ASC, null));
+			assertNotNull(sortFieldObject.optString(Processor.JSON_KEY_SET_URI_DESC, null));
 
 			String addAsc = sortFieldObject.optString(Processor.JSON_KEY_ADD_ASC, null);
 			String addDesc = sortFieldObject.optString(Processor.JSON_KEY_ADD_DESC, null);
@@ -374,8 +370,8 @@ public class SortingProcessorTest {
 
 		for (Object object : jsonObject.getJSONArray(Processor.JSON_KEY_FIELDS)) {
 			JSONObject sortFieldObject = (JSONObject) object;
-			assertNotNull(sortFieldObject.optString(Processor.JSON_KEY_REPLACE_ASC, null));
-			assertNotNull(sortFieldObject.optString(Processor.JSON_KEY_REPLACE_DESC, null));
+			assertNotNull(sortFieldObject.optString(Processor.JSON_KEY_SET_URI_ASC, null));
+			assertNotNull(sortFieldObject.optString(Processor.JSON_KEY_SET_URI_DESC, null));
 
 			String addAsc = sortFieldObject.optString(Processor.JSON_KEY_ADD_ASC, null);
 			String addDesc = sortFieldObject.optString(Processor.JSON_KEY_ADD_DESC, null);

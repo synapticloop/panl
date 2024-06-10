@@ -29,7 +29,7 @@ _**Image**: The features and functionality of the Panl server_
 
 1. **The search query box**, by default, Panl responds to the same parameter name as The Solr server - i.e. 'q'.  This can be configured to be a different value should you choose.
 
-1. **Active filters** - either queries or selected facets that are currently limiting the results - the [Remove] link is the URI path that will remove this facet from the results.
+1. **Active filters** - either queries, selected facets, or sorting options that are currently limiting the results - the [Remove] link is the URI path that will remove this query, facet, or sorting option from the results. If it is an active sorting filter, the [Change to DESC] link will invert the sorting order without affecting any further sub-ordering.
 
 1. **Range filters** - for facets that are defined as ranges - the values are inclusive (i.e. include the minimum and maximum values).
 
@@ -41,7 +41,7 @@ _**Image**: The features and functionality of the Panl server_
 
 1. **Page information**, the number of pages, how many results are shown per page, and how many results are shown on this page.
 
-1. **Sorting options** - Whether to sort by relevance (the default) or by other configured sorting options with ascending and descending options available.  Any Solr field can be configured to be used as a sorting option.
+1. **Sorting options** - Whether to sort by relevance (the default) or by other configured sorting options with ascending and descending options available.  Any Solr field can be configured to be used as a sorting option.  And multi-sort orders are available, allowing sorting on more than one field.
 
 1. **Pagination options** - the Panl server returns all information needed to build a pagination system, number of results, number of results shown per page and the current page number.
 
