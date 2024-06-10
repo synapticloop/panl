@@ -24,30 +24,31 @@ import java.util.*;
 
 public class TestHelper {
 	public static final String DEFAULT_PROPERTIES = "/default.properties";
+	public static final String COLLECTION_NAME_TEST = "test";
 
-	private static PanlProperties panlProperties;
-	private static final Map<String, CollectionRequestHandler> COLLECTION_REQUEST_HANDLER_CACE = new HashMap<>();
+	private static PanlProperties testPanlProperties;
+	private static final Map<String, CollectionRequestHandler> COLLECTION_REQUEST_HANDLER_CACHE = new HashMap<>();
 
 	public static CollectionRequestHandler getCollectionRequestHandler(String propertiesFileLocation) throws IOException, PanlServerException {
-		if(!COLLECTION_REQUEST_HANDLER_CACE.containsKey(propertiesFileLocation)) {
+		if(!COLLECTION_REQUEST_HANDLER_CACHE.containsKey(propertiesFileLocation)) {
 			PanlProperties panlProperties = TestHelper.getTestPanlProperties();
 			CollectionProperties collectionProperties = getCollectionProperties(propertiesFileLocation);
 			// now to parse the query
 
 			CollectionRequestHandler collectionRequestHandler = new CollectionRequestHandler(
-					"test",
+					COLLECTION_NAME_TEST,
 					panlProperties,
 					collectionProperties);
 
-			COLLECTION_REQUEST_HANDLER_CACE.put(propertiesFileLocation, collectionRequestHandler);
+			COLLECTION_REQUEST_HANDLER_CACHE.put(propertiesFileLocation, collectionRequestHandler);
 		}
 
-		return(COLLECTION_REQUEST_HANDLER_CACE.get(propertiesFileLocation));
+		return(COLLECTION_REQUEST_HANDLER_CACHE.get(propertiesFileLocation));
 
 	}
 
 	public static CollectionProperties getCollectionProperties(String propertiesFileLocation) throws IOException, PanlServerException {
-		return (new CollectionProperties("test", TestHelper.getTestProperties(propertiesFileLocation)));
+		return (new CollectionProperties(COLLECTION_NAME_TEST, TestHelper.getTestProperties(propertiesFileLocation)));
 	}
 
 	public static LpseTokeniser getLpseTokeniser(String uriPath) {
@@ -61,10 +62,10 @@ public class TestHelper {
 	}
 
 	public static PanlProperties getTestPanlProperties() throws IOException {
-		if (null == panlProperties) {
-			panlProperties = new PanlProperties(getTestProperties("/test.panl.properties"));
+		if (null == testPanlProperties) {
+			testPanlProperties = new PanlProperties(getTestProperties("/test.panl.properties"));
 		}
-		return (panlProperties);
+		return (testPanlProperties);
 	}
 
 
@@ -129,7 +130,7 @@ public class TestHelper {
 		// now to parse the query
 
 		CollectionRequestHandler collectionRequestHandler = new CollectionRequestHandler(
-				"test",
+				COLLECTION_NAME_TEST,
 				panlProperties,
 				collectionProperties);
 
@@ -151,7 +152,7 @@ public class TestHelper {
 		// now to parse the query
 
 		CollectionRequestHandler collectionRequestHandler = new CollectionRequestHandler(
-				"test",
+				COLLECTION_NAME_TEST,
 				panlProperties,
 				collectionProperties);
 
@@ -175,7 +176,7 @@ public class TestHelper {
 		// now to parse the query
 
 		CollectionRequestHandler collectionRequestHandler = new CollectionRequestHandler(
-				"test",
+				COLLECTION_NAME_TEST,
 				panlProperties,
 				collectionProperties);
 
@@ -217,7 +218,7 @@ public class TestHelper {
 		// now to parse the query
 
 		CollectionRequestHandler collectionRequestHandler = new CollectionRequestHandler(
-				"test",
+				COLLECTION_NAME_TEST,
 				panlProperties,
 				collectionProperties);
 
@@ -239,7 +240,7 @@ public class TestHelper {
 		// now to parse the query
 
 		CollectionRequestHandler collectionRequestHandler = new CollectionRequestHandler(
-				"test",
+				COLLECTION_NAME_TEST,
 				panlProperties,
 				collectionProperties);
 
@@ -264,7 +265,7 @@ public class TestHelper {
 		// now to parse the query
 
 		CollectionRequestHandler collectionRequestHandler = new CollectionRequestHandler(
-				"test",
+				COLLECTION_NAME_TEST,
 				panlProperties,
 				collectionProperties);
 
