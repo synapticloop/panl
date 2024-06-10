@@ -23,8 +23,8 @@ public class SortingProcessorTest {
 				100L);
 
 		System.out.println(jsonObject.toString(2));
-		JSONObject relevanceObject = jsonObject.getJSONObject(Processor.JSON_KEY_RELEVANCE);
-		assertEquals("/brand/s-b/", relevanceObject.getString(Processor.JSON_KEY_REPLACE_DESC));
+		String resetUri = jsonObject.getString(Processor.JSON_KEY_RESET_URI);
+		assertEquals("/brand/b/", resetUri);
 
 		for (Object object : jsonObject.getJSONArray(Processor.JSON_KEY_FIELDS)) {
 			JSONObject sortFieldObject = (JSONObject) object;
@@ -53,8 +53,8 @@ public class SortingProcessorTest {
 				100L);
 
 		System.out.println(jsonObject.toString(2));
-		JSONObject relevanceObject = jsonObject.getJSONObject(Processor.JSON_KEY_RELEVANCE);
-		assertEquals("/2/brand/s-nb/", relevanceObject.getString(Processor.JSON_KEY_REPLACE_DESC));
+		String resetUri = jsonObject.getString(Processor.JSON_KEY_RESET_URI);
+		assertEquals("/2/brand/nb/", resetUri);
 
 		for (Object object : jsonObject.getJSONArray(Processor.JSON_KEY_FIELDS)) {
 			JSONObject sortFieldObject = (JSONObject) object;
@@ -81,8 +81,8 @@ public class SortingProcessorTest {
 				100L);
 
 		System.out.println(jsonObject.toString(2));
-		JSONObject relevanceObject = jsonObject.getJSONObject(Processor.JSON_KEY_RELEVANCE);
-		assertEquals("/3/brand/s-nb/", relevanceObject.getString(Processor.JSON_KEY_REPLACE_DESC));
+		String resetUri = jsonObject.getString(Processor.JSON_KEY_RESET_URI);
+		assertEquals("/3/brand/nb/", resetUri);
 
 		for (Object object : jsonObject.getJSONArray(Processor.JSON_KEY_FIELDS)) {
 			JSONObject sortFieldObject = (JSONObject) object;

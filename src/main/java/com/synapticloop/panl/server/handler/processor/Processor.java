@@ -60,9 +60,9 @@ public abstract class Processor {
 	public static final String JSON_KEY_PANL_CODE = "panl_code";
 	public static final String JSON_KEY_PREVIOUS = "previous";
 	public static final String JSON_KEY_RANGE_FACETS = "range_facets";
-	public static final String JSON_KEY_RELEVANCE = "relevance";
 	public static final String JSON_KEY_REPLACE_ASC = "replace_asc";
 	public static final String JSON_KEY_REPLACE_DESC = "replace_desc";
+	public static final String JSON_KEY_RESET_URI = "reset_uri";
 	public static final String JSON_KEY_SOLR_JSON_KEY_RESPONSE = "response";
 	public static final String JSON_KEY_URI = "uri";
 	public static final String JSON_KEY_URIS = "uris";
@@ -70,7 +70,6 @@ public abstract class Processor {
 	public static final String JSON_KEY_VALUE_TO = "value_to";
 	public static final String JSON_KEY_VALUES = "values";
 
-	public static final String JSON_VALUE_RELEVANCE = "Relevance";
 	public static final String JSON_VALUE_NO_MIDFIX_REPLACEMENT = "~";
 
 	protected final CollectionProperties collectionProperties;

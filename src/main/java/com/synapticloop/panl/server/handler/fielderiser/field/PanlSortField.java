@@ -58,11 +58,6 @@ public class PanlSortField extends BaseField {
 			for (LpseToken lpseToken : panlTokenMap.getOrDefault(lpseCode, new ArrayList<>())) {
 				SortLpseToken sortLpseToken = (SortLpseToken) lpseToken;
 				if (lpseToken.getIsValid()) {
-					if(sortLpseToken.getLpseSortCode().isBlank()) {
-						// default relevance - ignore
-						return("");
-					}
-
 					sb.append(lpseCode);
 					sb.append(sortLpseToken.getLpseSortCode());
 					sb.append(sortLpseToken.getSortOrderUriKey());
@@ -70,10 +65,6 @@ public class PanlSortField extends BaseField {
 					return("");
 				}
 			}
-		} else {
-			// they haven't passed through a sort LPSE code, return nothing (the
-			// default sort by relevance descending
-			return("");
 		}
 		return(sb.toString());
 	}
@@ -130,8 +121,7 @@ public class PanlSortField extends BaseField {
 		List<SolrQuery.SortClause> sortClauses = new ArrayList<>();
 		for (LpseToken lpseToken : panlTokenMap.getOrDefault(lpseCode, new ArrayList<>())) {
 			SortLpseToken sortLpseToken = (SortLpseToken)lpseToken;
-			if(!sortLpseToken.getLpseSortCode().isBlank()) {
-				// this will be using the default relevance sort field
+			if(sortLpseToken.getIsValid()) {
 				sortClauses.add(SolrQuery.SortClause.create(sortLpseToken.getSolrFacetField(), sortLpseToken.getSortOrder()));
 			}
 		}

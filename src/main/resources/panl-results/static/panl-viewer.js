@@ -85,9 +85,9 @@ function populatePanlResults(panlJsonData) {
 	}
 
 	addQueryOperand(panlJsonData.panl.query_operand);
-	addSortingOptions(panlJsonData.panl.sorting);
+	addSortingOptions(panlJsonData.panl.sorting, panlJsonData.panl.active);
 	addPagination(panlJsonData.panl.pagination);
-	addActiveFilters(panlJsonData.panl.active);
+	addActiveFilters(panlJsonData.panl.active, panlJsonData.panl.sorting.reset_uri);
 	addAvailableFilters(panlJsonData.panl.available);
 }
 
@@ -110,37 +110,79 @@ function addQueryOperand(queryOperand) {
 
 }
 
-function addSortingOptions(sortingObject) {
+function getActiveSortingObject(sortFacetName, activeObject) {
+	if(activeObject.sort === undefined) {
+		return(undefined);
+	}
+
+	for(const activeSortingObject of activeObject.sort) {
+		if(activeSortingObject.facet_name === sortFacetName) {
+			return(activeSortingObject);
+		}
+	}
+}
+
+function addSortingOptions(sortingObject, activeObject) {
 	console.log("[ RETURNED PANL SORTING JSON OBJECT ]")
 	console.log(sortingObject);
 
-	$("#sorting_options").append(
-		"Relevance: <a href=\"" +
-    panlResultsViewerUrl +
-    $("#collection").text() +
-    sortingObject.relevance.replace_desc +
-    "\"/>DESC</a>&nbsp;");
-
+	var hasFirst = false;
 	for(const sortIndex in sortingObject.fields) {
-		$("#sorting_options").append(
-			"||&nbsp;" +
-			sortingObject.fields[sortIndex].name +
-			": <a href=\"" +
-	    panlResultsViewerUrl +
-	    $("#collection").text() +
-	    sortingObject.fields[sortIndex].replace_asc +
-	    "\"/>ASC</a>&nbsp;");
+		if(hasFirst) {
+			$("#sorting_options").append("||&nbsp;");
+		}
 
-		$("#sorting_options").append(
-			"<a href=\"" +
-	    panlResultsViewerUrl +
-	    $("#collection").text() +
-	    sortingObject.fields[sortIndex].replace_desc +
-	    "\"/>DESC</a>&nbsp;");
+		hasFirst = true;
+
+		var isAscending = false;
+		var isDescending = false;
+
+		activeSortingObject = getActiveSortingObject(sortingObject.fields[sortIndex].facet_name, activeObject);
+		if(activeSortingObject !== undefined) {
+			isAscending = !activeSortingObject.is_descending;
+			isDescending = activeSortingObject.is_descending;
+		}
+
+
+		if(!isAscending) {
+			$("#sorting_options").append(
+				sortingObject.fields[sortIndex].name +
+				": <a href=\"" +
+		    panlResultsViewerUrl +
+		    $("#collection").text() +
+		    sortingObject.fields[sortIndex].replace_asc +
+		    "\"/>ASC</a>&nbsp;");
+    } else {
+			$("#sorting_options").append(
+				sortingObject.fields[sortIndex].name +
+				": ASC&nbsp;");
+    }
+
+		if(!isDescending) {
+			$("#sorting_options").append(
+				"<a href=\"" +
+		    panlResultsViewerUrl +
+		    $("#collection").text() +
+		    sortingObject.fields[sortIndex].replace_desc +
+		    "\"/>DESC</a>&nbsp;");
+		} else {
+			$("#sorting_options").append("DESC&nbsp;");
+    }
 	}
 
 	var hasAddedThen = false;
 	// now for the additive fields
+	var numThenSorts = 0;
+	for(const sortIndex in sortingObject.fields) {
+		if(sortingObject.fields[sortIndex].add_asc !== undefined) {
+			numThenSorts++;
+		}
+	}
+
+	if(numThenSorts == sortingObject.fields.length) {
+		return;
+	}
+
 	for(const sortIndex in sortingObject.fields) {
 		if(sortingObject.fields[sortIndex].add_asc !== undefined) {
 
@@ -214,7 +256,7 @@ $("#num_per_page_links").append("<a href=\"" +
   "\">" + number +"</a>&nbsp;");
 }
 
-function addActiveFilters(activeObject) {
+function addActiveFilters(activeObject, resetUri) {
 	console.log("[ RETURNED PANL ACTIVE FACETS JSON OBJECT ]")
 	console.log(activeObject);
 
@@ -237,7 +279,7 @@ function addActiveFilters(activeObject) {
 
 	// finally, the sort
 	if(activeObject.sort !== undefined) {
-		addActiveSorts(activeObject.sort);
+		addActiveSorts(activeObject.sort, resetUri);
 	}
 }
 
@@ -262,7 +304,7 @@ function addActiveFacets(facets) {
 	active.append("<li><hr /></li>");
 }
 
-function addActiveSorts(sorts) {
+function addActiveSorts(sorts, resetUri) {
 	const active = $("#active");
 
 	for(const sort of sorts) {
@@ -273,6 +315,7 @@ function addActiveSorts(sorts) {
 				")</em> " +
 				(sort.is_descending ? "[DESC]" : "[ASC]") +
 				"</strong></li>");
+
 		active.append("<li><a href=\"" + panlResultsViewerUrl +
                         $("#collection").text() +
                         sort.uri +
@@ -281,6 +324,14 @@ function addActiveSorts(sorts) {
                   			"</li>");
 
 	}
+	if(sorts.length > 0 ) {
+		active.append("<li><br /><a href=\"" +
+			panlResultsViewerUrl +
+      $("#collection").text() +
+      resetUri +
+      "\">[Reset sort order]</a></li>");
+	}
+
 	active.append("<li><hr /></li>");
 	}
 

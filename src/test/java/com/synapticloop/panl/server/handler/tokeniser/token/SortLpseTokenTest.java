@@ -35,6 +35,8 @@ public class SortLpseTokenTest {
 
 	@Test public void testInvalidTokenising() throws PanlServerException, IOException {
 
+		assertInvalidUriPaths("");
+
 		// no +-
 		assertInvalidUriPaths("ww");
 		assertInvalidUriPaths("wm");
@@ -45,8 +47,6 @@ public class SortLpseTokenTest {
 	}
 
 	@Test public void testValidTokenising() throws PanlServerException, IOException {
-		assertValidUriPaths("-", "", null, false);
-		assertValidUriPaths("", "", null, false);
 		assertValidUriPaths("w", "w", "weight", false);
 		assertValidUriPaths("w", "w", "weight", true);
 		assertValidUriPaths("m", "m", "name", false);

@@ -54,9 +54,8 @@ public class SortLpseToken extends LpseToken {
 
 		super(lpseCode);
 
-		// Sort URI path will either be sorted on relevance and will look
-		// like /s-/ or /s+/
-		// or will be sorted on a facet code /sb+/ or /sb-/
+		// Sort URI path will either be sorted on relevance and will be blank, or
+		// it will be sorted on a facet code /sb+/ or /sb-/
 
 		// consume all tokens until we find a + or a -
 		StringBuilder sb = new StringBuilder();
@@ -81,18 +80,20 @@ public class SortLpseToken extends LpseToken {
 		}
 
 
-		// at this point, the string builder will either be length 0 - i.e. this
-		// is a relevance search, or will be the facet field.
+		// at this point, the string builder will either be length 0 - i.e. which
+		// means that they haven't passed through a facet field LPSE code to
+		// order by
 
 		this.lpseSortCode = sb.toString();
 
 		if (sb.length() == 0) {
-			// this is a relevance search
+			this.isValid = false;
 		} else {
 			if (!collectionProperties.hasSortField(this.lpseSortCode)) {
 				this.isValid = false;
 			}
 		}
+
 		if(!hasFound) {
 			this.isValid = false;
 		}
@@ -117,6 +118,7 @@ public class SortLpseToken extends LpseToken {
 	 */
 	@Override
 	public String explain() {
+		// TODO - there shouldn't be a relevance
 		return ("PANL " +
 				(this.isValid ? "[  VALID  ]" : "[ INVALID ]") +
 				" <sort>          LPSE code '" +

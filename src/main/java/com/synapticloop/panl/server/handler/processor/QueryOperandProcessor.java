@@ -58,7 +58,6 @@ public class QueryOperandProcessor extends Processor {
 
 		lpseCode.append("/");
 
-		// This is the default sorting order (by relevance)
 		String finalBefore = lpseUri + before + collectionProperties.getPanlParamQueryOperand();
 
 		jsonObject.put(JSON_KEY_OR, finalBefore + "-" + lpseCode);

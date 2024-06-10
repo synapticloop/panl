@@ -39,7 +39,8 @@ import java.util.Map;
  * components:</p>
  *
  * <ul>
- *   <li>The Sort order - sorted by relevance by default.</li>
+ *   <li>The Sort order - sorted by relevance by default and will display
+ *   nothing.</li>
  *   <li>The page number - page 1 by default</li>
  *   <li>The number of results per page - this is defined, or 10 by default</li>
  *   <li>The query operand - this is defined, or 10 by default</li>

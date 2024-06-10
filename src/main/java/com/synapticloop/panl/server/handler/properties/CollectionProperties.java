@@ -160,7 +160,6 @@ public class CollectionProperties {
 	private boolean hasOrFacetFields = false;
 
 	private final Map<String, String> MANDATORY_LPSE_ORDER_FIELDS = new HashMap<>();
-	private final Map<String, Integer> LPSE_CODES_SORT_ORDER = new HashMap<>();
 
 	public CollectionProperties(String collectionName, Properties properties) throws PanlServerException {
 		this.collectionName = collectionName;
@@ -229,7 +228,6 @@ public class CollectionProperties {
 
 				LPSE_CODE_TO_SORT_FIELD_MAP.put(lpseCode, panlSortField);
 				SOLR_NAME_TO_SORT_FIELD_MAP.put(sortField, panlSortField);
-				LPSE_CODES_SORT_ORDER.put(lpseCode, sortOrder);
 			}
 			sortOrder++;
 		}
@@ -631,18 +629,5 @@ public class CollectionProperties {
 
 	public boolean getHasOrFacetFields() {
 		return hasOrFacetFields;
-	}
-
-	/**
-	 * <p>Invalid, or empty LPSE codes are always first (as a relevance search is
-	 * always first) - i.e. Integer.MIN_VALUE.</p>
-	 *
-	 * @param lpseCode The LPSE code to look up in the sort order fields
-	 *
-	 * @return The sort order, or Integer.MAX_VALUE if the LPSE code could not be
-	 * 		found
-	 */
-	public int getSortOrderForLpseCode(String lpseCode) {
-		return(LPSE_CODES_SORT_ORDER.getOrDefault(lpseCode, Integer.MIN_VALUE));
 	}
 }

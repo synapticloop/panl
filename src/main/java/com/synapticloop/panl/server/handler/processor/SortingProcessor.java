@@ -75,13 +75,15 @@ public class SortingProcessor extends Processor {
 
 		lpseCode.append("/");
 
-		// This is the default sorting order (by relevance)
+		// This is the reset URI link (i.e. remove all sort orders and go back to
+		// sorting by relevance descending)
 		String finalBefore = replaceLpseUri + before;
-
-		JSONObject relevanceSort = new JSONObject();
-		relevanceSort.put(JSON_KEY_NAME, JSON_VALUE_RELEVANCE);
-		relevanceSort.put(JSON_KEY_REPLACE_DESC, finalBefore + panlParamSortLpseKey + "-" + lpseCode);
-		jsonObject.put(JSON_KEY_RELEVANCE, relevanceSort);
+		if(finalBefore.length() == 2) {
+			// we have nothing in the URI
+			jsonObject.put(JSON_KEY_RESET_URI, finalBefore + lpseCode);
+		} else {
+			jsonObject.put(JSON_KEY_RESET_URI, "/");
+		}
 
 		// These are the available sort fields
 		JSONArray sortFieldsArray = new JSONArray();
