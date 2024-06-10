@@ -70,17 +70,16 @@ public abstract class LpseToken {
 	protected String originalValue;
 	protected String value;
 	protected boolean isValid = true;
-	protected CollectionProperties collectionProperties;
 
 	/**
-	 * <p>Factory method for getting the correct LPSE lpseToken for a particular
+	 * <p>Factory method for getting the correct LPSE token for a particular
 	 * code.</p>
 	 *
 	 * <p>Any unknown tokens become a <code>FacetLpseToken</code>, whether it is
 	 * valid or not.</p>
 	 *
 	 * @param collectionProperties The collection properties
-	 * @param lpseToken The lpseToken
+	 * @param token The token
 	 * @param query The query string (this may be blank or null)
 	 * @param valueTokeniser The LPSE URI tokeniser
 	 * @param lpseTokeniser The LPSE code tokeniser
