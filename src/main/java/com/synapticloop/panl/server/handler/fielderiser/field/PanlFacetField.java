@@ -25,6 +25,7 @@ package com.synapticloop.panl.server.handler.fielderiser.field;
  */
 
 import com.synapticloop.panl.exception.PanlServerException;
+import com.synapticloop.panl.server.handler.properties.CollectionProperties;
 import com.synapticloop.panl.server.handler.tokeniser.token.FacetLpseToken;
 import com.synapticloop.panl.server.handler.tokeniser.token.LpseToken;
 import org.apache.solr.client.solrj.SolrQuery;
@@ -61,6 +62,17 @@ public class PanlFacetField extends BaseField {
 
 	@Override public String getExplainDescription() {
 		return ("A Solr field that can be used as a facet, returned in the field set, or configured to be sorted by.");
+	}
+
+	@Override public String getLpseCode(LpseToken token, CollectionProperties collectionProperties) {
+		if(isRangeFacet) {
+			FacetLpseToken facetLpseToken = (FacetLpseToken) token;
+			return(facetLpseToken.getLpseCode() +
+					(facetLpseToken.getHasMidFix() ? "-" : "+") +
+					facetLpseToken.getLpseCode());
+		} else {
+			return (token.getLpseCode());
+		}
 	}
 
 	private void applyRangeFacetToQuery(SolrQuery solrQuery, List<LpseToken> lpseTokens) {
