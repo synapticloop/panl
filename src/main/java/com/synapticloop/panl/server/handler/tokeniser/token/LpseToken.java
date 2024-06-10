@@ -132,6 +132,8 @@ public abstract class LpseToken {
 			while (facet.length() < collectionProperties.getLpseLength()) {
 				if(lpseTokeniser.hasMoreTokens()) {
 					facet.append(lpseTokeniser.nextToken());
+				} else {
+					break;
 				}
 			}
 

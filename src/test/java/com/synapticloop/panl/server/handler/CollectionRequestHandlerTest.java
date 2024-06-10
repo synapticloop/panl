@@ -104,6 +104,7 @@ public class CollectionRequestHandlerTest {
 		assertEquals("q", lpseToken.getLpseCode());
 		assertEquals("query_parameter", lpseToken.getValue());
 	}
+
 	@Test public void testQueryURIPath() throws PanlServerException, IOException {
 		List<LpseToken> lpseTokens = defaultHandler.parseLpse(
 				"/test/default/uri_parameter/q/",
@@ -118,5 +119,21 @@ public class CollectionRequestHandlerTest {
 		assertEquals("uri_parameter", lpseToken.getValue());
 	}
 
+	/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+	 *
+	 *                                ODD URIs
+	 *                       (picked up whilst testing...)
+	 *
+	 * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+
+	/**
+	 * <p>Bug where if only one token was left for lpse number 2 and there were
+	 * no more tokens </p>
+	 */
+	@Test public void testTripleM() {
+		List<LpseToken> lpseTokens = defaultLpseLengthTwo.parseLpse(
+				"/test/default/Black/mmm/",
+				"");
+	}
 
 }

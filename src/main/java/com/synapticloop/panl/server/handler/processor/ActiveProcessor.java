@@ -51,8 +51,8 @@ public class ActiveProcessor extends Processor {
 		List<LpseToken> lpseTokens = new ArrayList<>();
 		for (BaseField lpseField : collectionProperties.getLpseFields()) {
 			List<LpseToken> lpseTokenList = panlTokenMap.getOrDefault(lpseField.getLpseCode(), new ArrayList<>());
-			for(LpseToken lpseToken: lpseTokenList) {
-				if(lpseToken.getIsValid()) {
+			for (LpseToken lpseToken : lpseTokenList) {
+				if (lpseToken.getIsValid()) {
 					lpseTokens.add(lpseToken);
 				}
 			}
@@ -65,7 +65,7 @@ public class ActiveProcessor extends Processor {
 
 		for (LpseToken lpseToken : lpseTokens) {
 			BaseField lpseField = collectionProperties.getLpseField(lpseToken.getLpseCode());
-			if(null != lpseField && lpseToken.getIsValid()) {
+			if (null != lpseField && lpseToken.getIsValid()) {
 				lpseComponents.add(lpseField.getLpseCode(lpseToken, collectionProperties));
 				uriComponents.add(lpseField.getURIPath(lpseToken, collectionProperties));
 			}
@@ -82,12 +82,12 @@ public class ActiveProcessor extends Processor {
 			JSONObject removeObject = new JSONObject();
 
 			removeObject.put(JSON_KEY_VALUE, lpseToken.getValue());
-			removeObject.put(JSON_KEY_URI, getRemoveURIFromPath(i, uriComponents, lpseComponents));
+			removeObject.put(JSON_KEY_REMOVE_URI, getRemoveURIFromPath(i, uriComponents, lpseComponents));
 			removeObject.put(JSON_KEY_PANL_CODE, lpseCode);
 
-			if(lpseToken instanceof FacetLpseToken) {
+			if (lpseToken instanceof FacetLpseToken) {
 				FacetLpseToken facetLpseToken = (FacetLpseToken) lpseToken;
-				if(facetLpseToken.getIsRangeToken()) {
+				if (facetLpseToken.getIsRangeToken()) {
 					removeObject.put(JSON_KEY_VALUE_TO, facetLpseToken.getToValue());
 				}
 
@@ -98,16 +98,17 @@ public class ActiveProcessor extends Processor {
 				removeObject.put(JSON_KEY_IS_RANGE_FACET, isRangeFacetField);
 			}
 
-			if(lpseToken instanceof SortLpseToken) {
+			if (lpseToken instanceof SortLpseToken) {
 				SortLpseToken sortLpseToken = (SortLpseToken) lpseToken;
 
 				String solrFacetField = sortLpseToken.getSolrFacetField();
 				String panlNameFromSolrFieldName = collectionProperties.getPanlNameFromSolrFieldName(solrFacetField);
-				if(null != solrFacetField) {
+				if (null != solrFacetField) {
 					removeObject.put(JSON_KEY_FACET_NAME, solrFacetField);
 					removeObject.put(JSON_KEY_NAME, panlNameFromSolrFieldName);
 					removeObject.put(JSON_KEY_IS_DESCENDING, sortLpseToken.getSortOrderUriKey().equals(SortLpseToken.SORT_ORDER_URI_KEY_DESCENDING));
 					removeObject.put(JSON_KEY_ENCODED, URLEncoder.encode(panlNameFromSolrFieldName, StandardCharsets.UTF_8));
+					removeObject.put(JSON_KEY_INVERSE_URI, getSortReplaceURI(sortLpseToken, uriComponents, lpseComponents));
 				} else {
 					shouldAddObject = false;
 				}
@@ -118,8 +119,7 @@ public class ActiveProcessor extends Processor {
 			}
 
 
-
-			if(shouldAddObject) {
+			if (shouldAddObject) {
 				jsonArray.put(removeObject);
 			}
 			i++;
@@ -128,7 +128,7 @@ public class ActiveProcessor extends Processor {
 		return (jsonObject);
 	}
 
-	private static String getRemoveURIFromPath(int skipNumber, List<String> uriComponents, List<String> lpseComponents) {
+	private String getRemoveURIFromPath(int skipNumber, List<String> uriComponents, List<String> lpseComponents) {
 		StringBuilder uri = new StringBuilder();
 		StringBuilder lpse = new StringBuilder();
 		for (int i = 0; i < uriComponents.size(); i++) {
@@ -136,6 +136,39 @@ public class ActiveProcessor extends Processor {
 				uri.append(uriComponents.get(i));
 				lpse.append(lpseComponents.get(i));
 			}
+		}
+
+		String test = "/" + uri + lpse + "/";
+
+		if (test.equals("//")) {
+			return ("/");
+		} else {
+			return test;
+		}
+	}
+
+	private String getSortReplaceURI(SortLpseToken sortLpseToken, List<String> uriComponents, List<String> lpseComponents) {
+		String sortLpseUriCode =
+				sortLpseToken.getLpseCode() +
+						sortLpseToken.getLpseSortCode() +
+						sortLpseToken.getSortOrderUriKey();
+		String inverseSortUriCode =
+				sortLpseToken.getLpseCode() +
+						sortLpseToken.getLpseSortCode() +
+						sortLpseToken.getInverseSortOrderUriKey();
+
+		StringBuilder uri = new StringBuilder();
+		StringBuilder lpse = new StringBuilder();
+
+		boolean found = false;
+		for (int i = 0; i < uriComponents.size(); i++) {
+			if (!found && sortLpseUriCode.equals(lpseComponents.get(i))) {
+				found = true;
+				lpse.append(inverseSortUriCode);
+ 			} else {
+				lpse.append(lpseComponents.get(i));
+			}
+			uri.append(uriComponents.get(i));
 		}
 
 		String test = "/" + uri + lpse + "/";

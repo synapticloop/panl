@@ -87,7 +87,7 @@ function populatePanlResults(panlJsonData) {
 	addQueryOperand(panlJsonData.panl.query_operand);
 	addSortingOptions(panlJsonData.panl.sorting, panlJsonData.panl.active);
 	addPagination(panlJsonData.panl.pagination);
-	addActiveFilters(panlJsonData.panl.active, panlJsonData.panl.sorting.reset_uri);
+	addActiveFilters(panlJsonData.panl.active, panlJsonData.panl.sorting.remove_uri);
 	addAvailableFilters(panlJsonData.panl.available);
 }
 
@@ -150,7 +150,7 @@ function addSortingOptions(sortingObject, activeObject) {
 				": <a href=\"" +
 		    panlResultsViewerUrl +
 		    $("#collection").text() +
-		    sortingObject.fields[sortIndex].replace_asc +
+		    sortingObject.fields[sortIndex].set_uri_asc +
 		    "\"/>ASC</a>&nbsp;");
     } else {
 			$("#sorting_options").append(
@@ -163,7 +163,7 @@ function addSortingOptions(sortingObject, activeObject) {
 				"<a href=\"" +
 		    panlResultsViewerUrl +
 		    $("#collection").text() +
-		    sortingObject.fields[sortIndex].replace_desc +
+		    sortingObject.fields[sortIndex].set_uri_desc +
 		    "\"/>DESC</a>&nbsp;");
 		} else {
 			$("#sorting_options").append("DESC&nbsp;");
@@ -256,7 +256,7 @@ $("#num_per_page_links").append("<a href=\"" +
   "\">" + number +"</a>&nbsp;");
 }
 
-function addActiveFilters(activeObject, resetUri) {
+function addActiveFilters(activeObject, removeUri) {
 	console.log("[ RETURNED PANL ACTIVE FACETS JSON OBJECT ]")
 	console.log(activeObject);
 
@@ -266,7 +266,7 @@ function addActiveFilters(activeObject, resetUri) {
 		active.append("<li><strong>Query <em>(" + activeObject.query[0].panl_code + ")</em></strong></li>");
 		active.append("<li><a href=\"" + panlResultsViewerUrl +
                         $("#collection").text() +
-                        activeObject.query[0].uri +
+                        activeObject.query[0].remove_uri +
                         "\">[remove]</a>&nbsp;" +
                   			activeObject.query[0].value +
                   			"</li><li><hr /></li>");
@@ -279,7 +279,7 @@ function addActiveFilters(activeObject, resetUri) {
 
 	// finally, the sort
 	if(activeObject.sort !== undefined) {
-		addActiveSorts(activeObject.sort, resetUri);
+		addActiveSorts(activeObject.sort, removeUri);
 	}
 }
 
@@ -295,7 +295,7 @@ function addActiveFacets(facets) {
 		}
 		active.append("<li><a href=\"" + panlResultsViewerUrl +
                         $("#collection").text() +
-                        facet.uri +
+                        facet.remove_uri +
                         "\">[remove]</a>&nbsp;" +
                   			decodeURI(facet.encoded).replaceAll("+", " ").replaceAll("%2B", "+") +
                   			"</li>");
@@ -304,7 +304,7 @@ function addActiveFacets(facets) {
 	active.append("<li><hr /></li>");
 }
 
-function addActiveSorts(sorts, resetUri) {
+function addActiveSorts(sorts, removeUri) {
 	const active = $("#active");
 
 	for(const sort of sorts) {
@@ -317,19 +317,24 @@ function addActiveSorts(sorts, resetUri) {
 				"</strong></li>");
 
 		active.append("<li><a href=\"" + panlResultsViewerUrl +
-                        $("#collection").text() +
-                        sort.uri +
-                        "\">[remove]</a>&nbsp;" +
-                  			decodeURI(sort.encoded).replaceAll("+", " ").replaceAll("%2B", "+") +
-                  			"</li>");
+        $("#collection").text() +
+        sort.remove_uri +
+        "\">[Remove sort]</a>&nbsp;" +
+        "<a href=\"" + panlResultsViewerUrl +
+         $("#collection").text() +
+         sort.inverse_uri +
+         "\">[Change to " +
+         (sort.is_descending ? "ASC" : "DESC")+
+         "]</a>&nbsp;" +
+        "</li>");
 
 	}
 	if(sorts.length > 0 ) {
 		active.append("<li><br /><a href=\"" +
 			panlResultsViewerUrl +
       $("#collection").text() +
-      resetUri +
-      "\">[Reset sort order]</a></li>");
+      removeUri +
+      "\">[Clear all sorting]</a></li>");
 	}
 
 	active.append("<li><hr /></li>");

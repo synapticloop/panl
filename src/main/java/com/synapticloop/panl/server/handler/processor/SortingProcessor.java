@@ -28,7 +28,6 @@ import com.synapticloop.panl.server.handler.properties.CollectionProperties;
 import com.synapticloop.panl.server.handler.fielderiser.field.BaseField;
 import com.synapticloop.panl.server.handler.tokeniser.token.LpseToken;
 import com.synapticloop.panl.server.handler.tokeniser.token.SortLpseToken;
-import org.apache.logging.log4j.core.appender.rolling.action.IfNot;
 import org.apache.solr.client.solrj.response.QueryResponse;
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -80,9 +79,9 @@ public class SortingProcessor extends Processor {
 		String finalBefore = replaceLpseUri + before;
 		if(finalBefore.length() + lpseCode.length() == 2) {
 			// we have nothing in the URI - i.e. the URI is "//"
-			jsonObject.put(JSON_KEY_RESET_URI, "/");
+			jsonObject.put(JSON_KEY_REMOVE_URI, "/");
 		} else {
-			jsonObject.put(JSON_KEY_RESET_URI, finalBefore + lpseCode);
+			jsonObject.put(JSON_KEY_REMOVE_URI, finalBefore + lpseCode);
 		}
 
 		// These are the available sort fields
@@ -114,8 +113,8 @@ public class SortingProcessor extends Processor {
 
 				sortObject.put(JSON_KEY_NAME, collectionProperties.getPanlNameFromPanlCode(sortFieldLpseCode));
 				sortObject.put(JSON_KEY_FACET_NAME, collectionProperties.getSolrFieldNameFromLpseCode(sortFieldLpseCode));
-				sortObject.put(JSON_KEY_REPLACE_DESC, finalBefore + panlParamSortLpseKey + sortFieldLpseCode + "-" + lpseCode);
-				sortObject.put(JSON_KEY_REPLACE_ASC, finalBefore + panlParamSortLpseKey + sortFieldLpseCode + "+" + lpseCode);
+				sortObject.put(JSON_KEY_SET_URI_DESC, finalBefore + panlParamSortLpseKey + sortFieldLpseCode + "-" + lpseCode);
+				sortObject.put(JSON_KEY_SET_URI_ASC, finalBefore + panlParamSortLpseKey + sortFieldLpseCode + "+" + lpseCode);
 
 
 				// Now for the add fields
