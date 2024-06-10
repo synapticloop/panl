@@ -26,16 +26,23 @@ public class TestHelper {
 	public static final String DEFAULT_PROPERTIES = "/default.properties";
 
 	private static PanlProperties panlProperties;
+	private static final Map<String, CollectionRequestHandler> COLLECTION_REQUEST_HANDLER_CACE = new HashMap<>();
 
 	public static CollectionRequestHandler getCollectionRequestHandler(String propertiesFileLocation) throws IOException, PanlServerException {
-		PanlProperties panlProperties = TestHelper.getTestPanlProperties();
-		CollectionProperties collectionProperties = getCollectionProperties(propertiesFileLocation);
-		// now to parse the query
+		if(!COLLECTION_REQUEST_HANDLER_CACE.containsKey(propertiesFileLocation)) {
+			PanlProperties panlProperties = TestHelper.getTestPanlProperties();
+			CollectionProperties collectionProperties = getCollectionProperties(propertiesFileLocation);
+			// now to parse the query
 
-		return (new CollectionRequestHandler(
-				"test",
-				panlProperties,
-				collectionProperties));
+			CollectionRequestHandler collectionRequestHandler = new CollectionRequestHandler(
+					"test",
+					panlProperties,
+					collectionProperties);
+
+			COLLECTION_REQUEST_HANDLER_CACE.put(propertiesFileLocation, collectionRequestHandler);
+		}
+
+		return(COLLECTION_REQUEST_HANDLER_CACE.get(propertiesFileLocation));
 
 	}
 

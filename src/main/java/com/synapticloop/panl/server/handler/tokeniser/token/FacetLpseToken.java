@@ -88,7 +88,7 @@ public class FacetLpseToken extends LpseToken {
 		this.collectionProperties = collectionProperties;
 
 		StringBuilder sb = new StringBuilder(lpseCode);
-		int i = 1;
+		int i = sb.length();
 		while (i < collectionProperties.getLpseLength()) {
 			if (lpseTokeniser.hasMoreTokens()) {
 				sb.append(lpseTokeniser.nextToken());

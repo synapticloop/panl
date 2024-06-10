@@ -205,7 +205,7 @@ public class CollectionProperties {
 
 	private void parseSortFields() throws PanlServerException {
 		String sortFieldsTemp = properties.getProperty(PROPERTY_KEY_PANL_SORT_FIELDS, "");
-		int sortOrder = 0;
+//		int sortOrder = 0;
 		for (String sortField : sortFieldsTemp.split(",")) {
 			// A sort field can either be a field, or a facet field
 			String lpseCode = null;
@@ -229,7 +229,7 @@ public class CollectionProperties {
 				LPSE_CODE_TO_SORT_FIELD_MAP.put(lpseCode, panlSortField);
 				SOLR_NAME_TO_SORT_FIELD_MAP.put(sortField, panlSortField);
 			}
-			sortOrder++;
+//			sortOrder++;
 		}
 	}
 

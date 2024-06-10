@@ -41,7 +41,7 @@ public class PanlSortField extends BaseField {
 	private static final Logger LOGGER = LoggerFactory.getLogger(PanlSortField.class);
 
 	public PanlSortField(String lpseCode, String propertyKey, Properties properties, String collectionName) throws PanlServerException {
-		super(lpseCode, properties, propertyKey, collectionName, 1);
+		super(lpseCode, properties, propertyKey, collectionName);
 
 		populatePanlAndSolrFieldNames();
 		logDetails();

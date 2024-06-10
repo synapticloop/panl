@@ -13,16 +13,39 @@ import static org.junit.jupiter.api.Assertions.*;
 
 
 public class CollectionRequestHandlerTest {
-	public static CollectionRequestHandler defaultCollectionRequestHandler;
-	public static CollectionRequestHandler defaultOrCollectionRequestHandler;
+	public static CollectionRequestHandler defaultHandler;
+	public static CollectionRequestHandler defaultOrHandler;
+	public static CollectionRequestHandler defaultLpseLengthTwo;
 
 	@BeforeAll public static void beforeAll() throws PanlServerException, IOException {
-		defaultCollectionRequestHandler = TestHelper.getCollectionRequestHandler("/default.properties");
-		defaultOrCollectionRequestHandler = TestHelper.getCollectionRequestHandler("/default.or.properties");
+		defaultHandler = TestHelper.getCollectionRequestHandler("/default.properties");
+		defaultOrHandler = TestHelper.getCollectionRequestHandler("/default.or.properties");
+		defaultLpseLengthTwo = TestHelper.getCollectionRequestHandler("/default.lpse.length.2.properties");
+	}
+
+	@Test public void testLpseParsingLength2() throws PanlServerException, IOException {
+		for (LpseToken lpseToken : defaultLpseLengthTwo.parseLpse(
+				"/test/default/brand-name/11/model-name/bbwwmm/",
+				"q=limited")) {
+			assertTrue(lpseToken.getIsValid());
+		}
+
+		for (LpseToken lpseToken : defaultLpseLengthTwo.parseLpse(
+				"/test/default/brand-name/11/model-name/bbwwmmsbb+/",
+				"q=limited")) {
+			assertTrue(lpseToken.getIsValid());
+		}
+
+		for (LpseToken lpseToken : defaultLpseLengthTwo.parseLpse(
+				"/test/default/brand-name/11/model-name/bbwwmmsbb+smm-/",
+				"q=limited")) {
+			assertTrue(lpseToken.getIsValid());
+		}
+
 	}
 
 	@Test public void testLpseParsing() throws PanlServerException, IOException {
-		for (LpseToken lpseToken : defaultCollectionRequestHandler.parseLpse(
+		for (LpseToken lpseToken : defaultHandler.parseLpse(
 				"/test/default/brand-name/11/model-name/bwm/",
 				"q=limited")) {
 			assertTrue(lpseToken.getIsValid());
@@ -42,7 +65,7 @@ public class CollectionRequestHandlerTest {
 	}
 
 	private void testInvalidLpseURIs(String uriPath) {
-		for (LpseToken lpseToken : defaultOrCollectionRequestHandler.parseLpse(uriPath, "")) {
+		for (LpseToken lpseToken : defaultOrHandler.parseLpse(uriPath, "")) {
 			assertFalse(lpseToken.getIsValid());
 		}
 	}
@@ -55,7 +78,7 @@ public class CollectionRequestHandlerTest {
 	 *
 	 * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 	@Test public void testQueryParameterOverride() throws PanlServerException, IOException {
-		List<LpseToken> lpseTokens = defaultCollectionRequestHandler.parseLpse(
+		List<LpseToken> lpseTokens = defaultHandler.parseLpse(
 				"/test/default/uri_parameter/q/",
 				"q=query_parameter");
 		assertEquals(1, lpseTokens.size());
@@ -69,7 +92,7 @@ public class CollectionRequestHandlerTest {
 	}
 
 	@Test public void testQueryParameter() throws PanlServerException, IOException {
-		List<LpseToken> lpseTokens = defaultCollectionRequestHandler.parseLpse(
+		List<LpseToken> lpseTokens = defaultHandler.parseLpse(
 				"/test/default/",
 				"q=query_parameter");
 		assertEquals(1, lpseTokens.size());
@@ -82,7 +105,7 @@ public class CollectionRequestHandlerTest {
 		assertEquals("query_parameter", lpseToken.getValue());
 	}
 	@Test public void testQueryURIPath() throws PanlServerException, IOException {
-		List<LpseToken> lpseTokens = defaultCollectionRequestHandler.parseLpse(
+		List<LpseToken> lpseTokens = defaultHandler.parseLpse(
 				"/test/default/uri_parameter/q/",
 				"");
 		assertEquals(1, lpseTokens.size());

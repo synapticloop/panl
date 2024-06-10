@@ -78,11 +78,11 @@ public class SortingProcessor extends Processor {
 		// This is the reset URI link (i.e. remove all sort orders and go back to
 		// sorting by relevance descending)
 		String finalBefore = replaceLpseUri + before;
-		if(finalBefore.length() == 2) {
-			// we have nothing in the URI
-			jsonObject.put(JSON_KEY_RESET_URI, finalBefore + lpseCode);
-		} else {
+		if(finalBefore.length() + lpseCode.length() == 2) {
+			// we have nothing in the URI - i.e. the URI is "//"
 			jsonObject.put(JSON_KEY_RESET_URI, "/");
+		} else {
+			jsonObject.put(JSON_KEY_RESET_URI, finalBefore + lpseCode);
 		}
 
 		// These are the available sort fields

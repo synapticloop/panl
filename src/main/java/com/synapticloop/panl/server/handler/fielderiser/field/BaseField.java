@@ -41,6 +41,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 
+import static com.synapticloop.panl.server.handler.properties.CollectionProperties.PROPERTY_KEY_PANL_SORT_FIELDS;
+
 public abstract class BaseField {
 	protected static final String PROPERTY_KEY_PANL_FIELD = "panl.field.";
 	protected static final String PROPERTY_KEY_PANL_NAME = "panl.name.";
@@ -127,8 +129,12 @@ public abstract class BaseField {
 		this.collectionName = collectionName;
 		this.lpseLength = lpseLength;
 
-		if (this.lpseCode.length() != lpseLength) {
-			throw new PanlServerException(propertyKey + " has invalid lpse length of " + lpseCode.length() + " is of invalid length - should be " + lpseLength);
+		if(!propertyKey.equals(PROPERTY_KEY_PANL_SORT_FIELDS)) {
+			// sort keys can be longer than the panlParamSort property code
+
+			if (this.lpseCode.length() != lpseLength) {
+				throw new PanlServerException(propertyKey + " LPSE code of '" + this.lpseCode + "' has invalid lpse length of " + lpseCode.length() + " is of invalid length - should be " + lpseLength);
+			}
 		}
 	}
 

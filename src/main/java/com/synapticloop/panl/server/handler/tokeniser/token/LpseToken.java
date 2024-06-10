@@ -129,8 +129,10 @@ public abstract class LpseToken {
 		} else {
 			StringBuilder facet = new StringBuilder(token);
 			// it is a facet field
-			while (token.length() < collectionProperties.getLpseLength()) {
-				facet.append(lpseTokeniser.nextToken());
+			while (facet.length() < collectionProperties.getLpseLength()) {
+				if(lpseTokeniser.hasMoreTokens()) {
+					facet.append(lpseTokeniser.nextToken());
+				}
 			}
 
 			// now we have the facetField
