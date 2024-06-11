@@ -49,7 +49,7 @@ public class AvailableProcessorRangeFacetTest {
 
 		System.out.println(urisObject.toString(2));
 
-		assertEquals("/weighing+from+", urisObject.getString(Processor.JSON_KEY_BEFORE));
+		assertEquals("/weighing+", urisObject.getString(Processor.JSON_KEY_BEFORE));
 		assertEquals("+to+", urisObject.getString(Processor.JSON_KEY_DURING));
 		assertEquals("/w-w/", urisObject.getString(Processor.JSON_KEY_AFTER));
 	}
