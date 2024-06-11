@@ -47,8 +47,13 @@ public class TestHelper {
 
 	}
 
-	public static CollectionProperties getCollectionProperties(String propertiesFileLocation) throws IOException, PanlServerException {
-		return (new CollectionProperties(COLLECTION_NAME_TEST, TestHelper.getTestProperties(propertiesFileLocation)));
+	public static CollectionProperties getCollectionProperties(String propertiesFileLocation) {
+		try {
+			return (new CollectionProperties(COLLECTION_NAME_TEST, TestHelper.getTestProperties(propertiesFileLocation)));
+		} catch (PanlServerException | IOException e) {
+			fail(e);
+		}
+		return(null);
 	}
 
 	public static LpseTokeniser getLpseTokeniser(String uriPath) {

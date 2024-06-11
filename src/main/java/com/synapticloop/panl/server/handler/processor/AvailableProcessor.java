@@ -184,7 +184,7 @@ public class AvailableProcessor extends Processor {
 				facetObject.put(JSON_KEY_PANL_CODE, lpseCode);
 				facetObject.put(JSON_KEY_MIN, lpseField.getMinRange());
 				facetObject.put(JSON_KEY_MAX, lpseField.getMaxRange());
-				facetObject.put("prefix", URLEncoder.encode(lpseField.getValuePrefix(), StandardCharsets.UTF_8));
+				facetObject.put(JSON_KEY_PREFIX, URLEncoder.encode(lpseField.getValuePrefix(), StandardCharsets.UTF_8));
 				facetObject.put("suffix", URLEncoder.encode(lpseField.getValueSuffix(), StandardCharsets.UTF_8));
 
 				// range min and max values

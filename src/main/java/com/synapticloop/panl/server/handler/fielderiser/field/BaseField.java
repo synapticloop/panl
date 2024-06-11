@@ -44,17 +44,17 @@ import java.util.Properties;
 import static com.synapticloop.panl.server.handler.properties.CollectionProperties.PROPERTY_KEY_PANL_SORT_FIELDS;
 
 public abstract class BaseField {
-	protected static final String PROPERTY_KEY_PANL_FIELD = "panl.field.";
-	protected static final String PROPERTY_KEY_PANL_NAME = "panl.name.";
-	protected static final String PROPERTY_KEY_PANL_FACET = "panl.facet.";
-	protected static final String PROPERTY_KEY_PANL_OR_FACET = "panl.or.facet.";
-	protected static final String PROPERTY_KEY_PANL_TYPE = "panl.type.";
-	protected static final String PROPERTY_KEY_PANL_PREFIX = "panl.prefix.";
-	protected static final String PROPERTY_KEY_PANL_SUFFIX = "panl.suffix.";
+	public static final String PROPERTY_KEY_PANL_FIELD = "panl.field.";
+	public static final String PROPERTY_KEY_PANL_NAME = "panl.name.";
+	public static final String PROPERTY_KEY_PANL_FACET = "panl.facet.";
+	public static final String PROPERTY_KEY_PANL_OR_FACET = "panl.or.facet.";
+	public static final String PROPERTY_KEY_PANL_TYPE = "panl.type.";
+	public static final String PROPERTY_KEY_PANL_PREFIX = "panl.prefix.";
+	public static final String PROPERTY_KEY_PANL_SUFFIX = "panl.suffix.";
 	public static final String PROPERTY_KEY_SOLR_FACET_MIN_COUNT = "solr.facet.min.count";
 
-	protected static final String BOOLEAN_TRUE_VALUE = "true";
-	protected static final String BOOLEAN_FALSE_VALUE = "false";
+	public static final String BOOLEAN_TRUE_VALUE = "true";
+	public static final String BOOLEAN_FALSE_VALUE = "false";
 	public static final String PROPERTY_KEY_PANL_RANGE_FACET = "panl.range.facet.";
 	public static final String PROPERTY_KEY_PANL_RANGE_MIN = "panl.range.min.";
 	public static final String PROPERTY_KEY_PANL_RANGE_MAX = "panl.range.max.";
@@ -139,7 +139,7 @@ public abstract class BaseField {
 		this.collectionName = collectionName;
 		this.lpseLength = lpseLength;
 
-		if(!propertyKey.equals(PROPERTY_KEY_PANL_SORT_FIELDS)) {
+		if (!propertyKey.equals(PROPERTY_KEY_PANL_SORT_FIELDS)) {
 			// sort keys can be longer than the panlParamSort property code
 
 			if (this.lpseCode.length() != lpseLength) {
@@ -469,10 +469,18 @@ public abstract class BaseField {
 			}
 		}
 
-		// at this point we have two values, the from and to
+		// at this point we have two values, the from and to - although they may
+		// have a min or max value replacement
 
-		if(hasRangeMidfix) {
-			if (hasRangePrefix) {
+		String rangeMinValueReplace = getRangeMinValue();
+		String rangeMaxValueReplace = getRangeMaxValue();
+
+		if (hasRangeMidfix) {
+			if(null != rangeMinValueReplace) {
+				if(fromString.equals(rangeMinValueReplace)) {
+					fromString = getMinRange();
+				}
+			} else if (hasRangePrefix) {
 				if (fromString.startsWith(rangeValuePrefix)) {
 					fromString = fromString.substring(rangeValuePrefix.length());
 				} else {
@@ -481,22 +489,34 @@ public abstract class BaseField {
 			}
 
 			if (hasRangeSuffix) {
-				if (toString.endsWith(rangeValueSuffix)) {
+				if(null != rangeMaxValueReplace) {
+					if(toString.equals(rangeMaxValueReplace)) {
+						toString = getMaxRange();
+					}
+				} else if (toString.endsWith(rangeValueSuffix)) {
 					toString = toString.substring(0, toString.length() - rangeValueSuffix.length());
 				} else {
 					return (null);
 				}
 			}
 		} else {
-			if (hasValuePrefix) {
-				if (fromString.startsWith(valuePrefix)) {
+			if(null != rangeMinValueReplace) {
+				if(fromString.equals(rangeMinValueReplace)) {
+					fromString = getMinRange();
+				}
+			} else if (hasValuePrefix) {
+				if (fromString.equals(valuePrefix)) {
 					fromString = fromString.substring(valuePrefix.length());
 				} else {
 					return (null);
 				}
 			}
 
-			if (hasValueSuffix) {
+			if(null != rangeMaxValueReplace) {
+				if(toString.equals(rangeMaxValueReplace)) {
+					toString = getMaxRange();
+				}
+			} else if (hasValueSuffix) {
 				if (toString.endsWith(valueSuffix)) {
 					toString = toString.substring(0, toString.length() - valueSuffix.length());
 				} else {
@@ -833,27 +853,27 @@ public abstract class BaseField {
 	}
 
 	public String getRangeValuePrefix() {
-		if(hasRangePrefix) {
+		if (hasRangePrefix) {
 			return (rangeValuePrefix);
 		} else {
-			return("");
+			return ("");
 		}
 	}
 
 	public String getRangeValueSuffix() {
-		if(hasRangeSuffix) {
+		if (hasRangeSuffix) {
 			return (rangeValueSuffix);
 		} else {
-			return("");
+			return ("");
 		}
 	}
 
 
 	public String getPrefix() {
-		if(hasRangeMidfix) {
-			return(getRangeValuePrefix());
+		if (hasRangeMidfix) {
+			return (getRangeValuePrefix());
 		} else {
-			return(getValuePrefix());
+			return (getValuePrefix());
 		}
 	}
 

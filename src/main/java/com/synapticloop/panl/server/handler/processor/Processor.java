@@ -71,8 +71,13 @@ public abstract class Processor {
 	public static final String JSON_KEY_VALUES = "values";
 	public static final String JSON_KEY_RANGE_MIN_VALUE = "range_min_value";
 	public static final String JSON_KEY_RANGE_MAX_VALUE = "range_max_value";
-
+	public static final String JSON_KEY_PREFIX = "prefix";
+	public static final String JSON_KEY_SUFFIX = "suffix";
+	public static final String JSON_KEY_MIN_REPLACEMENT_URI = "min_replace_uri";
+	public static final String JSON_KEY_MAX_REPLACEMENT_URI = "max_replace_uri";
 	public static final String JSON_VALUE_NO_MIDFIX_REPLACEMENT = "~";
+
+	public static final String FORWARD_SLASH = "/";
 
 	protected final CollectionProperties collectionProperties;
 

@@ -72,14 +72,14 @@ public abstract class LpseToken {
 	protected boolean isValid = true;
 
 	/**
-	 * <p>Factory method for getting the correct LPSE token for a particular
+	 * <p>Factory method for getting the correct LPSE lpseToken for a particular
 	 * code.</p>
 	 *
 	 * <p>Any unknown tokens become a <code>FacetLpseToken</code>, whether it is
 	 * valid or not.</p>
 	 *
 	 * @param collectionProperties The collection properties
-	 * @param token The token
+	 * @param lpseToken The lpseToken
 	 * @param query The query string (this may be blank or null)
 	 * @param valueTokeniser The LPSE URI tokeniser
 	 * @param lpseTokeniser The LPSE code tokeniser
@@ -88,46 +88,46 @@ public abstract class LpseToken {
 	 */
 	public static LpseToken getLpseToken(
 			CollectionProperties collectionProperties,
-			String token,
+			String lpseToken,
 			String query,
 			StringTokenizer valueTokeniser,
 			LpseTokeniser lpseTokeniser) {
 
-		if (token.equals(collectionProperties.getPanlParamQuery())) {
+		if (lpseToken.equals(collectionProperties.getPanlParamQuery())) {
 			// having a query on the URL always trumps whether we have a query
 			// parameter in the URI path
 			return (new QueryLpseToken(
 					query,
-					token,
+					lpseToken,
 					valueTokeniser));
-		} else if (token.equals(collectionProperties.getPanlParamSort())) {
+		} else if (lpseToken.equals(collectionProperties.getPanlParamSort())) {
 			return (new SortLpseToken(
 					collectionProperties,
-					token,
+					lpseToken,
 					lpseTokeniser));
-		} else if (token.equals(collectionProperties.getPanlParamQueryOperand())) {
+		} else if (lpseToken.equals(collectionProperties.getPanlParamQueryOperand())) {
 			return (new QueryOperandLpseToken(
 					collectionProperties,
-					token,
+					lpseToken,
 					lpseTokeniser));
-		} else if (token.equals(collectionProperties.getPanlParamNumRows())) {
+		} else if (lpseToken.equals(collectionProperties.getPanlParamNumRows())) {
 			return (new NumRowsLpseToken(
 					collectionProperties,
-					token,
+					lpseToken,
 					valueTokeniser));
-		} else if (token.equals(collectionProperties.getPanlParamPage())) {
+		} else if (lpseToken.equals(collectionProperties.getPanlParamPage())) {
 			return (new PageLpseToken(
 					collectionProperties,
-					token,
+					lpseToken,
 					valueTokeniser));
 
-		} else if (token.equals(collectionProperties.getPanlParamPassThrough())) {
+		} else if (lpseToken.equals(collectionProperties.getPanlParamPassThrough())) {
 			return (new PassThroughLpseToken(
 					collectionProperties,
-					token,
+					lpseToken,
 					valueTokeniser));
 		} else {
-			StringBuilder facet = new StringBuilder(token);
+			StringBuilder facet = new StringBuilder(lpseToken);
 			// it is a facet field
 			while (facet.length() < collectionProperties.getLpseLength()) {
 				if(lpseTokeniser.hasMoreTokens()) {
