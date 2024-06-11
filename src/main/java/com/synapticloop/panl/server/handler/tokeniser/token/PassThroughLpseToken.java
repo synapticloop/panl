@@ -53,4 +53,15 @@ public class PassThroughLpseToken extends LpseToken {
 	@Override public String getType() {
 		return ("passthrough");
 	}
+
+	/**
+	 * <p>The equivalence value is always an empty string - these tokens are
+	 * ignored.</p>
+	 *
+	 * @return An empty string
+	 */
+	@Override public String getEquivalenceValue() {
+		return("");
+	}
+
 }

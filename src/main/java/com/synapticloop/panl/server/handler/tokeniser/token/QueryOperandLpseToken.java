@@ -75,8 +75,7 @@ public class QueryOperandLpseToken extends LpseToken {
 		}
 	}
 
-	@Override
-	public String getType() {
+	@Override public String getType() {
 		return ("sort");
 	}
 
@@ -90,4 +89,7 @@ public class QueryOperandLpseToken extends LpseToken {
 		return (this.queryOperand);
 	}
 
+	@Override public String getEquivalenceValue() {
+		return(this.getLpseCode() + "/");
+	}
 }

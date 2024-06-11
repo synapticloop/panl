@@ -200,17 +200,44 @@ public abstract class LpseToken {
 	public abstract String explain();
 
 	/**
-	 * <p>Return the human-readable type for this token.</p>
+	 * <p>Return the human-readable type for this token.  This type is also used
+	 * for the active filter json keys in the response JSON object.</p>
 	 *
 	 * @return The human-readable type for this token.
 	 */
 	public abstract String getType();
 
+	/**
+	 * <p>Return whether this token is valid - i.e. it passed all of the parsing
+	 * and validation.  Valid tokens will be applied to the Solr query, invalid
+	 * tokens will be silently ignored.</p>
+	 *
+	 *
+	 * @return Whether this is a valid incoming token
+	 */
 	public boolean getIsValid() {
 		return (isValid);
 	}
 
 
+	/**
+	 * <p>Return the equivalence value for this token - this is used to
+	 * de-duplicate incoming tokens so that the same token will not be applied to
+	 * the Solr query more than once.</p>
+	 *
+	 * <p>The equivalence token is generally of the form
+	 * <code>&lt;lpse_code&gt;/&lt;value&gt;</code>.  This differs for some
+	 * tokens:</p>
+	 *
+	 * <ul>
+	 *   <li>Sort Tokens - the order of the sort (+/-) is ignored</li>
+	 *   <li>Operand Tokens - only one operand is allowed.</li>
+	 *   <li>Page Number Tokens - the page number is ignored.</li>
+	 *   <li>Number Per Page Tokens - The number per page value is ignored.</li>
+	 * </ul>
+	 *
+	 * @return The equivalence token
+	 */
 	public String getEquivalenceValue() {
 		return (lpseCode + "/" + this.value);
 	}

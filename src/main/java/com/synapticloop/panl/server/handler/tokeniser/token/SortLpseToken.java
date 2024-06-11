@@ -131,8 +131,7 @@ public class SortLpseToken extends LpseToken {
 				(this.sortOrder == SolrQuery.ORDER.asc ? "ASCending" : "DESCending"));
 	}
 
-	@Override
-	public String getType() {
+	@Override public String getType() {
 		return ("sort");
 	}
 
