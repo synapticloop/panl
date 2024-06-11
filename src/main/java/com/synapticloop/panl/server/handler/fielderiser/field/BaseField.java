@@ -488,15 +488,15 @@ public abstract class BaseField {
 				}
 			}
 
-			if (hasRangeSuffix) {
-				if(null != rangeMaxValueReplace) {
-					if(toString.equals(rangeMaxValueReplace)) {
-						toString = getMaxRange();
+			if(null != rangeMaxValueReplace) {
+				if(toString.equals(rangeMaxValueReplace)) {
+					toString = getMaxRange();
+				} else if(hasRangeSuffix) {
+					if (toString.endsWith(rangeValueSuffix)) {
+						toString = toString.substring(0, toString.length() - rangeValueSuffix.length());
+					} else {
+						return (null);
 					}
-				} else if (toString.endsWith(rangeValueSuffix)) {
-					toString = toString.substring(0, toString.length() - rangeValueSuffix.length());
-				} else {
-					return (null);
 				}
 			}
 		} else {
