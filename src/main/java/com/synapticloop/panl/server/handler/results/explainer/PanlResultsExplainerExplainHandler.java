@@ -119,8 +119,9 @@ public class PanlResultsExplainerExplainHandler implements HttpRequestHandler {
 				if (token.equals(collectionProperties.getPanlParamQuery())) {
 					hasQuery = true;
 					lpseToken = new QueryLpseToken(
-							query,
+							collectionProperties,
 							token,
+							query,
 							valueTokeniser);
 				} else if (token.equals(collectionProperties.getPanlParamSort())) {
 					lpseToken = new SortLpseToken(

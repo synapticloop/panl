@@ -31,15 +31,11 @@ import java.nio.charset.StandardCharsets;
 import java.util.StringTokenizer;
 
 public class PassThroughLpseToken extends LpseToken {
-	private CollectionProperties collectionProperties;
-
 	public PassThroughLpseToken(
 			CollectionProperties collectionProperties,
 			String lpseCode,
 			StringTokenizer valueTokeniser) {
-		super(lpseCode);
-
-		this.collectionProperties = collectionProperties;
+		super(lpseCode, collectionProperties);
 
 		this.value = URLDecoder.decode(
 				valueTokeniser.nextToken(),

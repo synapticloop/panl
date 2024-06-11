@@ -44,7 +44,7 @@ public class QueryOperandLpseToken extends LpseToken {
 			CollectionProperties collectionProperties,
 			String lpseCode,
 			LpseTokeniser lpseTokeniser) {
-		super(lpseCode);
+		super(lpseCode, collectionProperties);
 
 		if (lpseTokeniser.hasMoreTokens()) {
 			queryOperand = lpseTokeniser.nextToken();

@@ -62,7 +62,6 @@ public class PanlServer {
 	private final String propertiesFileLocation;
 	private final int portNumber;
 	private PanlProperties panlProperties;
-	private CollectionProperties collectionProperties;
 
 	private final List<CollectionRequestHandler> collectionRequestHandlers = new ArrayList<>();
 	private final List<CollectionProperties> collectionPropertiesList = new ArrayList<>();
@@ -120,6 +119,7 @@ public class PanlServer {
 				String fileName = propertiesFileDirectory + File.separator + properties.getProperty(key);
 				LOGGER.info("Found collection named '{}' with file location '{}'.", collectionName, fileName);
 
+				CollectionProperties collectionProperties;
 				try {
 					fileCollectionProperties.load(new FileReader(fileName));
 					collectionProperties = new CollectionProperties(

@@ -74,7 +74,6 @@ public class FacetLpseToken extends LpseToken {
 	public static final String TOKEN_TYPE = "facet";
 
 	private String solrField = null;
-	private CollectionProperties collectionProperties;
 	private String toValue = null;
 	protected boolean isRangeToken = false;
 	protected boolean hasMidFix = false;
@@ -84,8 +83,7 @@ public class FacetLpseToken extends LpseToken {
 			String lpseCode,
 			LpseTokeniser lpseTokeniser,
 			StringTokenizer valueTokeniser) {
-		super(lpseCode);
-		this.collectionProperties = collectionProperties;
+		super(lpseCode, collectionProperties);
 
 		StringBuilder sb = new StringBuilder(lpseCode);
 		int i = sb.length();

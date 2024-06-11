@@ -52,7 +52,7 @@ public class SortLpseToken extends LpseToken {
 			String lpseCode,
 			LpseTokeniser lpseTokeniser) {
 
-		super(lpseCode);
+		super(lpseCode, collectionProperties);
 
 		// Sort URI path will either be sorted on relevance and will be blank, or
 		// it will be sorted on a facet code /sb+/ or /sb-/

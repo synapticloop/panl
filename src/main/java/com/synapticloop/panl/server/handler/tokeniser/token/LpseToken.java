@@ -70,6 +70,7 @@ public abstract class LpseToken {
 	protected String originalValue;
 	protected String value;
 	protected boolean isValid = true;
+	protected CollectionProperties collectionProperties;
 
 	/**
 	 * <p>Factory method for getting the correct LPSE lpseToken for a particular
@@ -97,6 +98,7 @@ public abstract class LpseToken {
 			// having a query on the URL always trumps whether we have a query
 			// parameter in the URI path
 			return (new QueryLpseToken(
+					collectionProperties,
 					query,
 					lpseToken,
 					valueTokeniser));
@@ -130,7 +132,7 @@ public abstract class LpseToken {
 			StringBuilder facet = new StringBuilder(lpseToken);
 			// it is a facet field
 			while (facet.length() < collectionProperties.getLpseLength()) {
-				if(lpseTokeniser.hasMoreTokens()) {
+				if (lpseTokeniser.hasMoreTokens()) {
 					facet.append(lpseTokeniser.nextToken());
 				} else {
 					break;
@@ -152,9 +154,11 @@ public abstract class LpseToken {
 	 * lengths of LPSE codes.</p>
 	 *
 	 * @param lpseCode The LPSE code to assign this facet or query operand to
+	 * @param collectionProperties The collection properties
 	 */
-	public LpseToken(String lpseCode) {
+	public LpseToken(String lpseCode, CollectionProperties collectionProperties) {
 		this.lpseCode = lpseCode;
+		this.collectionProperties = collectionProperties;
 	}
 
 	/**
@@ -208,7 +212,7 @@ public abstract class LpseToken {
 
 
 	public String getEquivalenceValue() {
-		return(lpseCode + "/" + this.value);
+		return (lpseCode + "/" + this.value);
 	}
 
 	public void setIsValid(boolean isValid) {

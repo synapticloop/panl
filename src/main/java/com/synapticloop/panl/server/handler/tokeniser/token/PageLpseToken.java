@@ -34,7 +34,7 @@ public class PageLpseToken extends LpseToken {
 	private final CollectionProperties collectionProperties;
 
 	public PageLpseToken(CollectionProperties collectionProperties, String lpseCode, StringTokenizer valueTokenizer) {
-		super(lpseCode);
+		super(lpseCode, collectionProperties);
 		this.collectionProperties = collectionProperties;
 
 		int pageNumTemp;

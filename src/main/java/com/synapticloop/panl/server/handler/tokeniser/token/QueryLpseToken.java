@@ -24,6 +24,7 @@ package com.synapticloop.panl.server.handler.tokeniser.token;
  *  IN THE SOFTWARE.
  */
 
+import com.synapticloop.panl.server.handler.properties.CollectionProperties;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.utils.URLEncodedUtils;
 
@@ -36,14 +37,15 @@ public class QueryLpseToken extends LpseToken {
 	public QueryLpseToken(
 			String queryFromUri,
 			String lpseCode) {
-		this(queryFromUri, lpseCode, null);
+		this(null, lpseCode, queryFromUri,null);
 	}
 
 	public QueryLpseToken(
-			String queryFromUri,
+			CollectionProperties collectionProperties,
 			String lpseCode,
+			String queryFromUri,
 			StringTokenizer valueTokeniser) {
-		super(lpseCode);
+		super(lpseCode, collectionProperties);
 
 		if(null != valueTokeniser && valueTokeniser.hasMoreTokens()) {
 			this.value = valueTokeniser.nextToken();

@@ -30,13 +30,10 @@ import com.synapticloop.panl.server.handler.fielderiser.field.BaseField;
 import java.util.StringTokenizer;
 
 public class NumRowsLpseToken extends LpseToken {
-	private CollectionProperties collectionProperties;
-
 	private int numRows;
 
 	public NumRowsLpseToken(CollectionProperties collectionProperties, String lpseCode, StringTokenizer valueTokenizer) {
-		super(lpseCode);
-		this.collectionProperties = collectionProperties;
+		super(lpseCode, collectionProperties);
 
 		this.numRows = collectionProperties.getNumResultsPerPage();
 
