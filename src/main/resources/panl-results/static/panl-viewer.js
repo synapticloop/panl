@@ -394,7 +394,7 @@ function addAvailableFilters(availableObject, activeObject) {
 		var slider = document.getElementById("slider-ui-" + facet.facet_name);
 
 		var inboundMinValue = parseInt(facet.min);
-		var inboundMaxValue = parseInt(facet.min);
+		var inboundMaxValue = parseInt(facet.max);
 
 		var activeRange = getActiveRangeObject(facet.facet_name, activeObject);
 		if(activeRange !== undefined) {

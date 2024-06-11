@@ -99,8 +99,8 @@ public abstract class LpseToken {
 			// parameter in the URI path
 			return (new QueryLpseToken(
 					collectionProperties,
-					query,
 					lpseToken,
+					query,
 					valueTokeniser));
 		} else if (lpseToken.equals(collectionProperties.getPanlParamSort())) {
 			return (new SortLpseToken(

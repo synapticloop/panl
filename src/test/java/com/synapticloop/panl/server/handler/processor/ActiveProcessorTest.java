@@ -13,7 +13,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 public class ActiveProcessorTest {
 	@Test public void testRangeFacet() throws PanlServerException, IOException {
-		JSONObject jsonObject = TestHelper.invokkeActiveProcessor(
+		JSONObject jsonObject = TestHelper.invokeActiveProcessor(
 				TestHelper.DEFAULT_PROPERTIES,
 				"/test/default/18~40/w+w/",
 				"");

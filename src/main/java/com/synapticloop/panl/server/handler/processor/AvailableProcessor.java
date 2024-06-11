@@ -236,7 +236,7 @@ public class AvailableProcessor extends Processor {
 		StringBuilder lpseUriAfterMax = new StringBuilder();
 		StringBuilder lpseCode = new StringBuilder();
 
-		// TODO - clean up this logix
+		// TODO - clean up this logic
 		for (BaseField baseField : collectionProperties.getLpseFields()) {
 			if(shouldRange) {
 				// whether we have an addition to the URI - we are going to ignore it
@@ -293,7 +293,8 @@ public class AvailableProcessor extends Processor {
 
 				additionObject.put(JSON_KEY_BEFORE, lpseUri.toString());
 				lpseUri.setLength(0);
-				lpseCode.append(baseField.getLpseCode(panlTokenMap, collectionProperties));
+				lpseCode.append(baseField.getLpseCode());
+//				lpseCode.append(baseField.getLpseCode(panlTokenMap, collectionProperties));
 
 				if(shouldRange) {
 					if(baseField.getHasRangeMidfix()) {
@@ -307,7 +308,6 @@ public class AvailableProcessor extends Processor {
 								.append(FORWARD_SLASH);
 					}
 				}
-
 				lpseUri.append(FORWARD_SLASH);
 			}
 			System.out.println(baseField.getLpseCode() + lpseUri);

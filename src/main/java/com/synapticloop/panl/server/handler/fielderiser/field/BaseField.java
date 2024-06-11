@@ -652,8 +652,6 @@ public abstract class BaseField {
 				sb.append(URLEncoder.encode(rangeValuePrefix, StandardCharsets.UTF_8));
 			}
 
-			sb.append(URLEncoder.encode(facetLpseToken.getValue(), StandardCharsets.UTF_8));
-
 			sb.append(Processor.JSON_VALUE_NO_MIDFIX_REPLACEMENT);
 
 			if (facetLpseToken.getToValue().equals(rangeMaxValue)) {

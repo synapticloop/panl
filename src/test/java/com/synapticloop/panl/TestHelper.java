@@ -147,7 +147,7 @@ public class TestHelper {
 		return (paginationProcessor.processToObject(panlTokenMap, getMockedQueryResponse(numResults, true)));
 	}
 
-	public static JSONObject invokkeActiveProcessor(
+	public static JSONObject invokeActiveProcessor(
 			String propertiesFileLocation,
 			String URIPath,
 			String query) throws IOException, PanlServerException {
