@@ -35,7 +35,7 @@ public class AvailableProcessorRangeFacetTest {
 
 	@Test void testRangeAdditionURIPrefixMidfix() throws PanlServerException, IOException {
 		JSONObject jsonObject = TestHelper.invokeAvailableProcessor(
-				"/range/midfix-prefix.properties",
+				"/range/prefix-midfix.properties",
 				"/",
 				"",
 				10,

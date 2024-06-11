@@ -49,4 +49,12 @@ public class FacetLpseRangeTokenTest {
 		testDefaults("/range/prefix.properties", "/this+is+the+prefix10~heavy+pencils/");
 		testDefaults("/range/prefix.properties", "/from+light~this+is+the+prefix50/");
 	}
+
+	@Test public void testPreMidRangeDecoding() throws IOException, PanlServerException {
+//		testDefaults("/range/prefix-midfix.properties", "/weighing+10+to+weighing+50/");
+		testDefaults("/range/prefix-midfix.properties", "/from+light+to+heavy+pencils/");
+//		testDefaults("/range/prefix-midfix.properties", "/weighing+10+to+heavy+pencils/");
+//		testDefaults("/range/prefix-midfix.properties", "/from+light+to+weighing+50/");
+	}
+
 }
