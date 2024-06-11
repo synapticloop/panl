@@ -76,7 +76,7 @@ public class QueryOperandLpseToken extends LpseToken {
 	}
 
 	@Override public String getType() {
-		return ("sort");
+		return ("query_operand");
 	}
 
 	/**

@@ -107,6 +107,21 @@ public class PanlQueryOperandField extends BaseField {
 		return(getCanonicalLpseCode(panlTokenMap, collectionProperties));
 	}
 
+	public String getLpseCode(LpseToken token, CollectionProperties collectionProperties) {
+		QueryOperandLpseToken queryOperandLpseToken = (QueryOperandLpseToken) token;
+
+		String lpseQueryOperand = queryOperandLpseToken.getLpseQueryOperand();
+		if(lpseQueryOperand.equals(collectionProperties.getDefaultQueryOperand())) {
+			return("");
+		} else {
+			return (queryOperandLpseToken.getLpseCode() + lpseQueryOperand);
+		}
+	}
+
+	public String getURIPath(LpseToken token, CollectionProperties collectionProperties) {
+		return ("");
+	}
+
 	@Override public String getURIPath(Map<String, List<LpseToken>> panlTokenMap, CollectionProperties collectionProperties) {
 		return("");
 	}
