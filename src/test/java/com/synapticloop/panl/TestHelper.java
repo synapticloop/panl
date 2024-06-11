@@ -2,17 +2,26 @@ package com.synapticloop.panl;
 
 import com.synapticloop.panl.exception.PanlServerException;
 import com.synapticloop.panl.generator.bean.Collection;
+import com.synapticloop.panl.server.client.PanlCloudSolrClient;
 import com.synapticloop.panl.server.handler.CollectionRequestHandler;
+import com.synapticloop.panl.server.handler.helper.CollectionHelper;
 import com.synapticloop.panl.server.handler.processor.*;
 import com.synapticloop.panl.server.handler.properties.CollectionProperties;
 import com.synapticloop.panl.server.handler.properties.PanlProperties;
 import com.synapticloop.panl.server.handler.tokeniser.LpseTokeniser;
 import com.synapticloop.panl.server.handler.tokeniser.token.LpseToken;
+import org.apache.commons.io.IOUtils;
+import org.apache.solr.client.solrj.SolrClient;
+import org.apache.solr.client.solrj.SolrQuery;
+import org.apache.solr.client.solrj.SolrServerException;
+import org.apache.solr.client.solrj.impl.CloudSolrClient;
 import org.apache.solr.client.solrj.response.FacetField;
 import org.apache.solr.client.solrj.response.QueryResponse;
 import org.apache.solr.common.SolrDocumentList;
 import org.apache.solr.common.util.NamedList;
 import org.json.JSONObject;
+import org.mockito.MockedStatic;
+import org.mockito.stubbing.OngoingStubbing;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.*;
@@ -20,6 +29,9 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.*;
 
 public class TestHelper {
@@ -29,8 +41,32 @@ public class TestHelper {
 	private static PanlProperties testPanlProperties;
 	private static final Map<String, CollectionRequestHandler> COLLECTION_REQUEST_HANDLER_CACHE = new HashMap<>();
 
+	public static CollectionRequestHandler DEFAULT_HANDLER;
+	public static CollectionRequestHandler DEFAULT_OR_HANDLER;
+	public static CollectionRequestHandler DEFAULT_LPSE_LENGTH_TWO_HANDLER;
+	public static CollectionRequestHandler MECHANICAL_PENCILS_HANDLER;
+
+	public static void beforeAll() throws PanlServerException, IOException {
+		if (null == DEFAULT_HANDLER) {
+			DEFAULT_HANDLER = TestHelper.getCollectionRequestHandler("/default.properties");
+		}
+
+		if (null == DEFAULT_OR_HANDLER) {
+			DEFAULT_OR_HANDLER = TestHelper.getCollectionRequestHandler("/default.or.properties");
+		}
+
+		if (null == DEFAULT_LPSE_LENGTH_TWO_HANDLER) {
+			DEFAULT_LPSE_LENGTH_TWO_HANDLER = TestHelper.getCollectionRequestHandler("/default.lpse.length.2.properties");
+		}
+
+		if (null == MECHANICAL_PENCILS_HANDLER) {
+			MECHANICAL_PENCILS_HANDLER = TestHelper.getCollectionRequestHandler("/mechanical-pencils.panl.properties");
+		}
+
+	}
+
 	public static CollectionRequestHandler getCollectionRequestHandler(String propertiesFileLocation) throws IOException, PanlServerException {
-		if(!COLLECTION_REQUEST_HANDLER_CACHE.containsKey(propertiesFileLocation)) {
+		if (!COLLECTION_REQUEST_HANDLER_CACHE.containsKey(propertiesFileLocation)) {
 			PanlProperties panlProperties = TestHelper.getTestPanlProperties();
 			CollectionProperties collectionProperties = getCollectionProperties(propertiesFileLocation);
 			// now to parse the query
@@ -43,7 +79,7 @@ public class TestHelper {
 			COLLECTION_REQUEST_HANDLER_CACHE.put(propertiesFileLocation, collectionRequestHandler);
 		}
 
-		return(COLLECTION_REQUEST_HANDLER_CACHE.get(propertiesFileLocation));
+		return (COLLECTION_REQUEST_HANDLER_CACHE.get(propertiesFileLocation));
 
 	}
 
@@ -53,7 +89,7 @@ public class TestHelper {
 		} catch (PanlServerException | IOException e) {
 			fail(e);
 		}
-		return(null);
+		return (null);
 	}
 
 	public static LpseTokeniser getLpseTokeniser(String uriPath) {
@@ -288,6 +324,35 @@ public class TestHelper {
 				URIPath,
 				"");
 		assertEquals(expect, uriPath);
+	}
+
+	public static void mockCollectionRequestHandler(
+			String propertiesFilLocation,
+			String returnJsonResponse,
+			String uri,
+			String query) throws IOException, PanlServerException, SolrServerException {
+
+		CollectionRequestHandler collectionRequestHandler = getCollectionRequestHandler(propertiesFilLocation);
+		PanlCloudSolrClient mockPanlClient = mock(PanlCloudSolrClient.class);
+		try (MockedStatic<CollectionHelper> collectionHelperMockedStatic = mockStatic(CollectionHelper.class)) {
+			collectionHelperMockedStatic.when(() ->
+					CollectionHelper.getPanlClient(
+							"CloudSolrClient",
+							collectionRequestHandler.getCollectionName(),
+							getTestPanlProperties(),
+							getCollectionProperties(propertiesFilLocation))).thenReturn(mockPanlClient);
+		}
+
+
+		SolrClient mockSolrClient = mock(CloudSolrClient.class);
+		when(mockPanlClient.getClient()).thenReturn(mockSolrClient);
+
+		QueryResponse mockQueryResponse = mock(QueryResponse.class);
+
+		SolrQuery mockSolrQuery = mock(SolrQuery.class);
+		when(mockSolrClient.query(collectionRequestHandler.getCollectionName(), mockSolrQuery)).thenReturn(mockQueryResponse);
+
+		when(mockQueryResponse.jsonStr()).thenReturn(IOUtils.toString(TestHelper.class.getResourceAsStream(returnJsonResponse), StandardCharsets.UTF_8));
 	}
 
 }

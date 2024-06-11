@@ -15,6 +15,7 @@ public class CollectionRequestHandlerBooleanFacetTest {
 	@BeforeAll public static void beforeAll() throws PanlServerException, IOException {
 		TestHelper.beforeAll();
 	}
+
 	@Test public void parseTrueFalse() {
 		for (LpseToken lpseToken : DEFAULT_HANDLER.parseLpse(
 				"/test/default/able+to+be+disassembled/D/",
