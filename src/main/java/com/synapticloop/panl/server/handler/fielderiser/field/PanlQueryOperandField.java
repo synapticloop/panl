@@ -67,8 +67,8 @@ public class PanlQueryOperandField extends BaseField {
 			QueryOperandLpseToken queryOperandLpseToken = (QueryOperandLpseToken) panlTokenMap.get(lpseCode).get(0);
 
 			if (queryOperandLpseToken.getIsValid()) {
-				if(queryOperandLpseToken.getLpseQueryOperand().equals(collectionProperties.getDefaultQueryOperand())) {
-					return("");
+				if (queryOperandLpseToken.getLpseQueryOperand().equals(collectionProperties.getDefaultQueryOperand())) {
+					return ("");
 				}
 
 				// at this point, the user has:
@@ -78,11 +78,11 @@ public class PanlQueryOperandField extends BaseField {
 				sb.append(queryOperandLpseToken.getLpseQueryOperand());
 			} else {
 				// not a valid token - return nothing
-				return("");
+				return ("");
 			}
 		} else {
 			// they haven't changed the query operand - return nothing
-			return("");
+			return ("");
 		}
 
 		return (sb.toString());
@@ -96,23 +96,22 @@ public class PanlQueryOperandField extends BaseField {
 		return ("The query operand which maps to the 'q.op' parameter of Solr");
 	}
 
-		public void applyToQueryInternal(SolrQuery solrQuery, Map<String, List<LpseToken>> panlTokenMap) {
-		if (panlTokenMap.containsKey(lpseCode)) {
-			QueryOperandLpseToken lpseToken = (QueryOperandLpseToken) panlTokenMap.get(lpseCode).get(0);
-			solrQuery.setParam("q.op", lpseToken.getQOpValue());
+	public void applyToQueryInternal(SolrQuery solrQuery, List<LpseToken> lpseTokenList) {
+		if (!lpseTokenList.isEmpty()) {
+			solrQuery.setParam("q.op", ((QueryOperandLpseToken) lpseTokenList.get(0)).getQOpValue());
 		}
 	}
 
 	@Override public String getLpseCode(Map<String, List<LpseToken>> panlTokenMap, CollectionProperties collectionProperties) {
-		return(getCanonicalLpseCode(panlTokenMap, collectionProperties));
+		return (getCanonicalLpseCode(panlTokenMap, collectionProperties));
 	}
 
 	public String getLpseCode(LpseToken token, CollectionProperties collectionProperties) {
 		QueryOperandLpseToken queryOperandLpseToken = (QueryOperandLpseToken) token;
 
 		String lpseQueryOperand = queryOperandLpseToken.getLpseQueryOperand();
-		if(lpseQueryOperand.equals(collectionProperties.getDefaultQueryOperand())) {
-			return("");
+		if (lpseQueryOperand.equals(collectionProperties.getDefaultQueryOperand())) {
+			return ("");
 		} else {
 			return (queryOperandLpseToken.getLpseCode() + lpseQueryOperand);
 		}
@@ -122,8 +121,9 @@ public class PanlQueryOperandField extends BaseField {
 		return ("");
 	}
 
-	@Override public String getURIPath(Map<String, List<LpseToken>> panlTokenMap, CollectionProperties collectionProperties) {
-		return("");
+	@Override
+	public String getURIPath(Map<String, List<LpseToken>> panlTokenMap, CollectionProperties collectionProperties) {
+		return ("");
 	}
 
 }

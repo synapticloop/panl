@@ -589,7 +589,7 @@ public abstract class BaseField {
 		}
 
 		if (isRangeFacet) {
-			return (getEncodedRangeFacetValueUriPart((FacetLpseToken)token));
+			return (getEncodedRangeFacetValueUriPart((FacetLpseToken) token));
 		} else {
 			return (getEncodedRegularFacetValueUriPart(token.getValue()));
 		}
@@ -795,12 +795,29 @@ public abstract class BaseField {
 		return (getURIPath(panlTokenMap, collectionProperties));
 	}
 
+	/**
+	 * <p>The reset LPSE code, this will reset the LPSE code where adding a new
+	 * filter to the query will want the user to go back to page 1.</p>
+	 *
+	 * @param panlTokenMap The panlToken map to see if a list of tokens is
+	 * 		available to generate the resetLpseCode for
+	 * @param collectionProperties The collection properties to look up defaults
+	 * 		if required
+	 *
+	 * @return The reset LPSE code, or an empty string if there are no tokens in
+	 * 		the query for this
+	 */
 	public String getResetLpseCode(Map<String, List<LpseToken>> panlTokenMap, CollectionProperties collectionProperties) {
 		return (getLpseCode(panlTokenMap, collectionProperties));
 	}
 
 	@Deprecated public abstract String getExplainDescription();
 
+	/**
+	 * <p>A human readable list of explanations for debugging purposes</p>
+	 *
+	 * @return A list of human-readable strings.
+	 */
 	public List<String> explain() {
 		List<String> temp = new ArrayList<>();
 		temp.add("FIELD CONFIG [ " +
@@ -837,18 +854,34 @@ public abstract class BaseField {
 		return (temp);
 	}
 
+	/**
+	 * <p>Return whether this is an OR facet</p>
+	 *
+	 * @return Whether this is an OR facet
+	 */
 	public boolean getIsOrFacet() {
 		return isOrFacet;
 	}
 
+	/**
+	 * <p>Return whether this is a RANGE facet.  A range facet allows a range of
+	 * values and sends the Solr query as a range.</p>
+	 *
+	 * @return Whether this is a RANGE facet
+	 */
 	public boolean getIsRangeFacet() {
 		return isRangeFacet;
 	}
 
+	/**
+	 * <p>Apply the token to the Solr Query </p>
+	 * @param solrQuery
+	 * @param panlTokenMap
+	 */
 	public void applyToQuery(SolrQuery solrQuery, Map<String, List<LpseToken>> panlTokenMap) {
 		// no facets, no query, all is good :)
 		if (panlTokenMap.containsKey(getLpseCode())) {
-			applyToQueryInternal(solrQuery, panlTokenMap);
+			applyToQueryInternal(solrQuery, panlTokenMap.get(getLpseCode()));
 		}
 	}
 
@@ -912,5 +945,11 @@ public abstract class BaseField {
 	}
 
 
-	protected abstract void applyToQueryInternal(SolrQuery solrQuery, Map<String, List<LpseToken>> panlTokenMap);
+	/**
+	 * <p>The internal implementation for applying the tokens to the SolrQuery</p>
+	 *
+	 * @param solrQuery The SolrQuery to apply the tokens to
+	 * @param lpseTokenList The list of tokens to apply to the Solr query
+	 */
+	protected abstract void applyToQueryInternal(SolrQuery solrQuery, List<LpseToken> lpseTokenList);
 }

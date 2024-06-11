@@ -76,7 +76,7 @@ public class PanlPassThroughField extends BaseField {
 		return ("This field is ignored by the Panl server and is not passed through to Solr.");
 	}
 
-	public void applyToQueryInternal(SolrQuery solrQuery, Map<String, List<LpseToken>> panlTokenMap) {
+	public void applyToQueryInternal(SolrQuery solrQuery, List<LpseToken> lpseTokenList) {
 		// do nothing
 	}
 

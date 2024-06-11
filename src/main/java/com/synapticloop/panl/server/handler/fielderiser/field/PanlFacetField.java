@@ -145,23 +145,21 @@ public class PanlFacetField extends BaseField {
 		solrQuery.addFilterQuery(stringBuilder.toString());
 	}
 
-	protected void applyToQueryInternal(SolrQuery solrQuery, Map<String, List<LpseToken>> panlTokenMap) {
-		List<LpseToken> lpseTokens = panlTokenMap.get(getLpseCode());
-
+	protected void applyToQueryInternal(SolrQuery solrQuery, List<LpseToken> lpseTokenList) {
 		// check to see whether this is a RANGE facet
 
 		if (isRangeFacet) {
-			applyRangeFacetToQuery(solrQuery, lpseTokens);
+			applyRangeFacetToQuery(solrQuery, lpseTokenList);
 			return;
 		}
 
 		if (isOrFacet) {
-			applyOrFacetToQuery(solrQuery, lpseTokens);
+			applyOrFacetToQuery(solrQuery, lpseTokenList);
 			return;
 		}
 
 		// At this point, we just have regular facets.
-		for (LpseToken lpseToken : lpseTokens) {
+		for (LpseToken lpseToken : lpseTokenList) {
 			FacetLpseToken facetLpseToken = (FacetLpseToken) lpseToken;
 			solrQuery.addFilterQuery(String.format("%s:\"%s\"",
 					facetLpseToken.getSolrField(),

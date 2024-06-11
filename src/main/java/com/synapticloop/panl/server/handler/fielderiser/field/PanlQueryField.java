@@ -52,10 +52,15 @@ public class PanlQueryField extends BaseField {
 		return("The text query which maps to the 'q' parameter of Solr.");
 	}
 
-	public void applyToQueryInternal(SolrQuery solrQuery, Map<String, List<LpseToken>> panlTokenMap) {
-		if(panlTokenMap.containsKey(lpseCode)) {
-			LpseToken lpseToken = panlTokenMap.get(lpseCode).get(0);
-			solrQuery.setQuery(lpseToken.getValue());
+	/**
+	 * <p>We only apply the first query</p>
+	 *
+	 * @param solrQuery The Solr Query to apply to
+	 * @param lpseTokenList The list of tokens
+	 */
+	public void applyToQueryInternal(SolrQuery solrQuery, List<LpseToken> lpseTokenList) {
+		if(!lpseTokenList.isEmpty()) {
+			solrQuery.setQuery(lpseTokenList.get(0).getValue());
 		}
 	}
 

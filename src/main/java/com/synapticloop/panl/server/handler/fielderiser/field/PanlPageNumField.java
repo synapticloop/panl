@@ -117,8 +117,8 @@ public class PanlPageNumField extends BaseField {
 		return ("The page number of the results (works in conjunction with the number of results).");
 	}
 
-	public void applyToQueryInternal(SolrQuery solrQuery, Map<String, List<LpseToken>> panlTokenMap) {
-
+	public void applyToQueryInternal(SolrQuery solrQuery, List<LpseToken> lpseTokenList) {
+		// do nothing - this relies on other data and is set by the handler
 	}
 
 }
