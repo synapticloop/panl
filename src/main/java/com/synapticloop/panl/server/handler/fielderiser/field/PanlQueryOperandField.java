@@ -64,10 +64,10 @@ public class PanlQueryOperandField extends BaseField {
 	public String getCanonicalLpseCode(Map<String, List<LpseToken>> panlTokenMap, CollectionProperties collectionProperties) {
 		StringBuilder sb = new StringBuilder(lpseCode);
 		if (panlTokenMap.containsKey(lpseCode)) {
-			QueryOperandLpseToken lpseToken = (QueryOperandLpseToken) panlTokenMap.get(lpseCode).get(0);
+			QueryOperandLpseToken queryOperandLpseToken = (QueryOperandLpseToken) panlTokenMap.get(lpseCode).get(0);
 
-			if (lpseToken.getIsValid()) {
-				if(lpseToken.getLpseQueryOperand().equals(collectionProperties.getDefaultQueryOperand())) {
+			if (queryOperandLpseToken.getIsValid()) {
+				if(queryOperandLpseToken.getLpseQueryOperand().equals(collectionProperties.getDefaultQueryOperand())) {
 					return("");
 				}
 
@@ -75,7 +75,7 @@ public class PanlQueryOperandField extends BaseField {
 				//   1. passed through a query operand in the LPSE Code
 				//   2. It is a valid value
 				//   3. It is not the same as the default
-				sb.append(lpseToken.getLpseQueryOperand());
+				sb.append(queryOperandLpseToken.getLpseQueryOperand());
 			} else {
 				// not a valid token - return nothing
 				return("");
@@ -96,10 +96,19 @@ public class PanlQueryOperandField extends BaseField {
 		return ("The query operand which maps to the 'q.op' parameter of Solr");
 	}
 
-	public void applyToQueryInternal(SolrQuery solrQuery, Map<String, List<LpseToken>> panlTokenMap) {
+		public void applyToQueryInternal(SolrQuery solrQuery, Map<String, List<LpseToken>> panlTokenMap) {
 		if (panlTokenMap.containsKey(lpseCode)) {
 			QueryOperandLpseToken lpseToken = (QueryOperandLpseToken) panlTokenMap.get(lpseCode).get(0);
 			solrQuery.setParam("q.op", lpseToken.getQOpValue());
 		}
 	}
+
+	@Override public String getLpseCode(Map<String, List<LpseToken>> panlTokenMap, CollectionProperties collectionProperties) {
+		return(getCanonicalLpseCode(panlTokenMap, collectionProperties));
+	}
+
+	@Override public String getURIPath(Map<String, List<LpseToken>> panlTokenMap, CollectionProperties collectionProperties) {
+		return("");
+	}
+
 }

@@ -79,13 +79,13 @@ public abstract class BaseField {
 	// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - //
 	protected boolean isRangeFacet = false;
 	private boolean hasMinRange = false;
-	private String rangeMinRange;
+	private String rangeMinValue;
 	private boolean hasMaxRange = false;
-	private String rangeMaxRange;
+	private String rangeMaxValue;
 	private boolean hasRangeMidfix = false;
 	private String rangeValueMidfix;
-	private String rangeMinValue;
-	private String rangeMaxValue;
+	private String rangeMinValueReplacement;
+	private String rangeMaxValueReplacement;
 
 	private boolean hasRangePrefix;
 	private String rangeValuePrefix;
@@ -231,13 +231,13 @@ public abstract class BaseField {
 
 		if (this.isRangeFacet) {
 			// get the other properties, if they exist...
-			this.rangeMinRange = properties.getProperty(PROPERTY_KEY_PANL_RANGE_MIN + lpseCode, null);
-			if (null != this.rangeMinRange) {
+			this.rangeMinValue = properties.getProperty(PROPERTY_KEY_PANL_RANGE_MIN + lpseCode, null);
+			if (null != this.rangeMinValue) {
 				hasMinRange = true;
 			}
 
-			this.rangeMaxRange = properties.getProperty(PROPERTY_KEY_PANL_RANGE_MAX + lpseCode, null);
-			if (null != this.rangeMaxRange) {
+			this.rangeMaxValue = properties.getProperty(PROPERTY_KEY_PANL_RANGE_MAX + lpseCode, null);
+			if (null != this.rangeMaxValue) {
 				hasMaxRange = true;
 			}
 
@@ -256,8 +256,8 @@ public abstract class BaseField {
 				hasRangeMidfix = true;
 			}
 
-			this.rangeMinValue = properties.getProperty(PROPERTY_KEY_PANL_RANGE_MIN_VALUE + lpseCode, null);
-			this.rangeMaxValue = properties.getProperty(PROPERTY_KEY_PANL_RANGE_MAX_VALUE + lpseCode, null);
+			this.rangeMinValueReplacement = properties.getProperty(PROPERTY_KEY_PANL_RANGE_MIN_VALUE + lpseCode, null);
+			this.rangeMaxValueReplacement = properties.getProperty(PROPERTY_KEY_PANL_RANGE_MAX_VALUE + lpseCode, null);
 		}
 	}
 
@@ -472,12 +472,12 @@ public abstract class BaseField {
 		// at this point we have two values, the from and to - although they may
 		// have a min or max value replacement
 
-		String rangeMinValueReplace = getRangeMinValue();
-		String rangeMaxValueReplace = getRangeMaxValue();
+		String rangeMinValueReplace = getRangeMinValueReplacement();
+		String rangeMaxValueReplace = getRangeMaxValueReplacement();
 
 		if (hasRangeMidfix) {
-			if(null != rangeMinValueReplace) {
-				if(fromString.equals(rangeMinValueReplace)) {
+			if (null != rangeMinValueReplace) {
+				if (fromString.equals(rangeMinValueReplace)) {
 					fromString = getMinRange();
 				}
 			} else if (hasRangePrefix) {
@@ -488,10 +488,10 @@ public abstract class BaseField {
 				}
 			}
 
-			if(null != rangeMaxValueReplace) {
-				if(toString.equals(rangeMaxValueReplace)) {
+			if (null != rangeMaxValueReplace) {
+				if (toString.equals(rangeMaxValueReplace)) {
 					toString = getMaxRange();
-				} else if(hasRangeSuffix) {
+				} else if (hasRangeSuffix) {
 					if (toString.endsWith(rangeValueSuffix)) {
 						toString = toString.substring(0, toString.length() - rangeValueSuffix.length());
 					} else {
@@ -500,8 +500,8 @@ public abstract class BaseField {
 				}
 			}
 		} else {
-			if(null != rangeMinValueReplace) {
-				if(fromString.equals(rangeMinValueReplace)) {
+			if (null != rangeMinValueReplace) {
+				if (fromString.equals(rangeMinValueReplace)) {
 					fromString = getMinRange();
 				}
 			} else if (hasValuePrefix) {
@@ -512,8 +512,8 @@ public abstract class BaseField {
 				}
 			}
 
-			if(null != rangeMaxValueReplace) {
-				if(toString.equals(rangeMaxValueReplace)) {
+			if (null != rangeMaxValueReplace) {
+				if (toString.equals(rangeMaxValueReplace)) {
 					toString = getMaxRange();
 				}
 			} else if (hasValueSuffix) {
@@ -580,7 +580,7 @@ public abstract class BaseField {
 	}
 
 	public String getEncodedPanlValue(String value) {
-		return (getEncodedRegularFacetValue(value));
+		return (getEncodedRegularFacetValueUriPart(value));
 	}
 
 	public String getEncodedPanlValue(LpseToken token) {
@@ -589,41 +589,65 @@ public abstract class BaseField {
 		}
 
 		if (isRangeFacet) {
-			return (getEncodedRangeFacetValue(token));
+			return (getEncodedRangeFacetValueUriPart((FacetLpseToken)token));
 		} else {
-			return (getEncodedRegularFacetValue(token.getValue()));
+			return (getEncodedRegularFacetValueUriPart(token.getValue()));
 		}
 	}
 
-	private String getEncodedRangeFacetValue(LpseToken token) {
-		FacetLpseToken facetLpseToken = (FacetLpseToken) token;
+	/**
+	 * <p>For a specific Token which is a range value, get the encoded URI path
+	 * value.  This will take care of prefixes, suffixes, min and max range
+	 * values, and range prefix/suffixes, and midfix if available</p>
+	 *
+	 * @param facetLpseToken The FacetLpseToken to interrogate
+	 *
+	 * @return The encoded URI path part for a range token
+	 */
+	private String getEncodedRangeFacetValueUriPart(FacetLpseToken facetLpseToken) {
 
 		// we can still have a single facet value which is not a range facet
 		if (null == facetLpseToken.getToValue()) {
-			return (getEncodedRegularFacetValue(facetLpseToken.getValue()));
+			return (getEncodedRegularFacetValueUriPart(facetLpseToken.getValue()));
 		}
 
 		// at this point it is a range facet
 		StringBuilder sb = new StringBuilder();
 
 		if (hasRangeMidfix) {
-			// just add it all together
-			if (hasRangePrefix) {
-				sb.append(rangeValuePrefix);
+			if (facetLpseToken.getValue().equals(rangeMinValue)) {
+				sb.append(rangeMinValueReplacement);
+			} else {
+				if (hasRangePrefix) {
+					sb.append(rangeValuePrefix);
+				}
+				sb.append(facetLpseToken.getValue());
 			}
-			sb.append(facetLpseToken.getValue());
 
 			sb.append(rangeValueMidfix);
 
-			sb.append(facetLpseToken.getToValue());
-
-			if (hasRangeSuffix) {
-				sb.append(rangeValueSuffix);
+			if (facetLpseToken.getToValue().equals(rangeMaxValue)) {
+				sb.append(rangeMaxValueReplacement);
+			} else {
+				sb.append(facetLpseToken.getToValue());
+				if (hasRangeSuffix) {
+					sb.append(rangeValueSuffix);
+				}
 			}
+
 			return (URLEncoder.encode(sb.toString(), StandardCharsets.UTF_8));
 		} else {
-			// we will have a two part URI path, split by a '/' and both values need
+			// we will have a two part URI path, split by a '~' and both values need
 			// to be URLEncoded before.
+			if (facetLpseToken.getValue().equals(rangeMinValue)) {
+				sb.append(URLEncoder.encode(rangeMinValueReplacement, StandardCharsets.UTF_8));
+			} else {
+				if (hasRangePrefix) {
+					sb.append(URLEncoder.encode(rangeValuePrefix, StandardCharsets.UTF_8));
+				}
+				sb.append(URLEncoder.encode(facetLpseToken.getValue(), StandardCharsets.UTF_8));
+			}
+
 			if (hasRangePrefix) {
 				sb.append(URLEncoder.encode(rangeValuePrefix, StandardCharsets.UTF_8));
 			}
@@ -632,16 +656,20 @@ public abstract class BaseField {
 
 			sb.append(Processor.JSON_VALUE_NO_MIDFIX_REPLACEMENT);
 
-			sb.append(URLEncoder.encode(facetLpseToken.getToValue(), StandardCharsets.UTF_8));
-
-			if (hasRangeSuffix) {
-				sb.append(URLEncoder.encode(rangeValueSuffix, StandardCharsets.UTF_8));
+			if (facetLpseToken.getToValue().equals(rangeMaxValue)) {
+				sb.append(URLEncoder.encode(rangeMaxValueReplacement, StandardCharsets.UTF_8));
+			} else {
+				sb.append(URLEncoder.encode(facetLpseToken.getToValue(), StandardCharsets.UTF_8));
+				if (hasRangeSuffix) {
+					sb.append(URLEncoder.encode(rangeValueSuffix, StandardCharsets.UTF_8));
+				}
 			}
+
 			return (sb.toString());
 		}
 	}
 
-	private String getEncodedRegularFacetValue(String value) {
+	private String getEncodedRegularFacetValueUriPart(String value) {
 		StringBuilder sb = new StringBuilder();
 
 		if (hasValuePrefix) {
@@ -828,7 +856,7 @@ public abstract class BaseField {
 
 	public String getMinRange() {
 		if (hasMinRange) {
-			return (rangeMinRange);
+			return (rangeMinValue);
 		} else {
 			// TODO - needs to be based on the field type
 			return (Integer.toString(Integer.MIN_VALUE));
@@ -837,7 +865,7 @@ public abstract class BaseField {
 
 	public String getMaxRange() {
 		if (hasMaxRange) {
-			return (rangeMaxRange);
+			return (rangeMaxValue);
 		} else {
 			// TODO - needs to be based on the field type
 			return (Integer.toString(Integer.MAX_VALUE));
@@ -877,13 +905,14 @@ public abstract class BaseField {
 		}
 	}
 
-	public String getRangeMinValue() {
-		return (rangeMinValue);
+	public String getRangeMinValueReplacement() {
+		return (rangeMinValueReplacement);
 	}
 
-	public String getRangeMaxValue() {
-		return (rangeMaxValue);
+	public String getRangeMaxValueReplacement() {
+		return (rangeMaxValueReplacement);
 	}
+
 
 	protected abstract void applyToQueryInternal(SolrQuery solrQuery, Map<String, List<LpseToken>> panlTokenMap);
 }

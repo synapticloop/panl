@@ -41,6 +41,8 @@ import java.util.*;
 public class AvailableProcessor extends Processor {
 
 	public static final String FORWARD_SLASH = "/";
+	public static final String JSON_KEY_AFTER_MAX_VALUE = "after_max_value";
+	public static final String JSON_KEY_BEFORE_MIN_VALUE = "before_min_value";
 
 	public AvailableProcessor(CollectionProperties collectionProperties) {
 		super(collectionProperties);
@@ -185,15 +187,15 @@ public class AvailableProcessor extends Processor {
 				facetObject.put(JSON_KEY_MIN, lpseField.getMinRange());
 				facetObject.put(JSON_KEY_MAX, lpseField.getMaxRange());
 				facetObject.put(JSON_KEY_PREFIX, URLEncoder.encode(lpseField.getValuePrefix(), StandardCharsets.UTF_8));
-				facetObject.put("suffix", URLEncoder.encode(lpseField.getValueSuffix(), StandardCharsets.UTF_8));
+				facetObject.put(JSON_KEY_SUFFIX, URLEncoder.encode(lpseField.getValueSuffix(), StandardCharsets.UTF_8));
 
 				// range min and max values
-				String rangeMaxValue = lpseField.getRangeMaxValue();
+				String rangeMaxValue = lpseField.getRangeMaxValueReplacement();
 				if(null != rangeMaxValue) {
 					facetObject.put(Processor.JSON_KEY_RANGE_MAX_VALUE, URLEncoder.encode(rangeMaxValue, StandardCharsets.UTF_8));
 				}
 
-				String rangeMinValue = lpseField.getRangeMinValue();
+				String rangeMinValue = lpseField.getRangeMinValueReplacement();
 				if(null != rangeMinValue) {
 					facetObject.put(Processor.JSON_KEY_RANGE_MIN_VALUE, URLEncoder.encode(rangeMinValue, StandardCharsets.UTF_8));
 				}
@@ -231,6 +233,7 @@ public class AvailableProcessor extends Processor {
 		String additionLpseCode = lpseField.getLpseCode();
 		JSONObject additionObject = new JSONObject();
 		StringBuilder lpseUri = new StringBuilder(FORWARD_SLASH);
+		StringBuilder lpseUriAfterMax = new StringBuilder();
 		StringBuilder lpseCode = new StringBuilder();
 
 		// TODO - clean up this logix
@@ -245,13 +248,25 @@ public class AvailableProcessor extends Processor {
 							!(shouldRange &&
 									baseField.getLpseCode().equals(additionLpseCode))) {
 
-				lpseUri.append(baseField.getResetUriPath(panlTokenMap, collectionProperties));
+				String resetUriPath = baseField.getResetUriPath(panlTokenMap, collectionProperties);
+				lpseUri.append(resetUriPath);
+
+				if(lpseUriAfterMax.length() != 0) {
+					lpseUriAfterMax.append(resetUriPath);
+				}
+
 				lpseCode.append(baseField.getResetLpseCode(panlTokenMap, collectionProperties));
 			}
 
 			if (baseField.getLpseCode().equals(additionLpseCode)) {
 				if (shouldRange) {
 					// depends on whether there is a midfix
+					// at this point we want to also do the min value replacement, if it
+					// exists
+					if(null != baseField.getRangeMinValueReplacement()) {
+						additionObject.put(JSON_KEY_BEFORE_MIN_VALUE, lpseUri.toString() + URLEncoder.encode(baseField.getRangeMinValueReplacement(), StandardCharsets.UTF_8));
+					}
+
 					if (lpseField.getHasRangeMidfix()) {
 						// we have a midfix - we will be using the range value prefix/suffix
 						lpseUri.append(URLEncoder.encode(baseField.getRangeValuePrefix(), StandardCharsets.UTF_8));
@@ -278,21 +293,28 @@ public class AvailableProcessor extends Processor {
 
 				additionObject.put(JSON_KEY_BEFORE, lpseUri.toString());
 				lpseUri.setLength(0);
-				lpseCode.append(baseField.getLpseCode());
+				lpseCode.append(baseField.getLpseCode(panlTokenMap, collectionProperties));
 
-				// now we are adding to the "after" and to...
 				if(shouldRange) {
 					if(baseField.getHasRangeMidfix()) {
 						lpseUri.append(URLEncoder.encode(baseField.getRangeValueSuffix(), StandardCharsets.UTF_8));
 					} else {
 						lpseUri.append(URLEncoder.encode(baseField.getValueSuffix(), StandardCharsets.UTF_8));
 					}
+
+					if(null != baseField.getRangeMaxValueReplacement()) {
+						lpseUriAfterMax.append(URLEncoder.encode(baseField.getRangeMaxValueReplacement(), StandardCharsets.UTF_8))
+								.append(FORWARD_SLASH);
+					}
 				}
+
 				lpseUri.append(FORWARD_SLASH);
 			}
+			System.out.println(baseField.getLpseCode() + lpseUri);
 		}
 
 		additionObject.put(JSON_KEY_AFTER, lpseUri.toString() + lpseCode.toString() + FORWARD_SLASH);
+		additionObject.put(JSON_KEY_AFTER_MAX_VALUE, lpseUriAfterMax.toString() + lpseCode.toString() + FORWARD_SLASH);
 		return (additionObject);
 	}
 
