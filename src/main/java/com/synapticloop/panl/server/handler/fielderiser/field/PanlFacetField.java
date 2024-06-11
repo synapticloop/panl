@@ -36,6 +36,16 @@ import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 
+/**
+ * <p>A Panl facet field comes in four flavours</p>
+ *
+ * <ol>
+ *   <li>A regular facet,</li>
+ *   <li>A RANGE facet,</li>
+ *   <li>An OR facet, or</li>
+ *   <li>A Boolean facet</li>
+ * </ol>
+ */
 public class PanlFacetField extends BaseField {
 	private static final Logger LOGGER = LoggerFactory.getLogger(PanlFacetField.class);
 

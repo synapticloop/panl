@@ -88,7 +88,7 @@ function populatePanlResults(panlJsonData) {
 	addSortingOptions(panlJsonData.panl.sorting, panlJsonData.panl.active);
 	addPagination(panlJsonData.panl.pagination);
 	addActiveFilters(panlJsonData.panl.active, panlJsonData.panl.sorting.remove_uri);
-	addAvailableFilters(panlJsonData.panl.available);
+	addAvailableFilters(panlJsonData.panl.available, panlJsonData.panl.active);
 }
 
 function addQueryOperand(queryOperand) {
@@ -297,7 +297,7 @@ function addActiveFacets(facets) {
                         $("#collection").text() +
                         facet.remove_uri +
                         "\">[remove]</a>&nbsp;" +
-                  			decodeURI(facet.encoded).replaceAll("+", " ").replaceAll("%2B", "+") +
+                  			decodePanl(facet.encoded) +
                   			"</li>");
 
 	}
@@ -329,6 +329,7 @@ function addActiveSorts(sorts, removeUri) {
         "</li>");
 
 	}
+
 	if(sorts.length > 0 ) {
 		active.append("<li><br /><a href=\"" +
 			panlResultsViewerUrl +
@@ -340,7 +341,19 @@ function addActiveSorts(sorts, removeUri) {
 	active.append("<li><hr /></li>");
 	}
 
-function addAvailableFilters(availableObject) {
+function getActiveRangeObject(rangeFacetName, activeObject) {
+	if(activeObject.facet === undefined) {
+		return(undefined);
+	}
+
+	for(const activeRangeFacetObject of activeObject.facet) {
+		if(activeRangeFacetObject.facet_name === rangeFacetName) {
+			return(activeRangeFacetObject);
+		}
+	}
+}
+
+function addAvailableFilters(availableObject, activeObject) {
 	console.log("[ RETURNED PANL AVAILABLE FILTERS JSON OBJECT ]")
 	console.log(availableObject);
 
@@ -357,7 +370,7 @@ function addAvailableFilters(availableObject) {
       value.encoded +
       facet.uris.after +
       "\">[add]</a>&nbsp;" +
-			decodeURI(value.encoded).replaceAll("+", " ").replaceAll("%2B", "+");
+			decodePanl(value.encoded);
 
 			if(!facet.is_or_facet) {
 				innerUl += "&nbsp;(" + value.count + ")";
@@ -375,45 +388,97 @@ function addAvailableFilters(availableObject) {
 		$("#ranges-marker").removeClass("hidden");
 
 		ranges.append("<p><strong>" + facet.name + " <em>(" + facet.panl_code + ") Range</em></strong></p>");
-		var selector = "data-" + facet.facet_name;
-		ranges.append("<input class=\"custom-range\" type=\"range\" name=\"Range\" " + selector + " min=\"" + facet.min + "\" max=\"" + facet.max + "\"/>");
-		ranges.append("<div>" +
-				"<span class=\"left " + selector + "-min\">" + facet.min + "</span>" +
-				"<span class=\"right " + selector + "-max\">" + facet.max + "</span>" +
-				"</div>");
-		ranges.append("<div class=\"clear range-link\">" +
-					"<a href=\"" +
+
+		ranges.append("<div id=\"slider-ui-" + facet.facet_name + "\" class=\"slider-round\"></div>");
+
+		var slider = document.getElementById("slider-ui-" + facet.facet_name);
+
+		var inboundMinValue = parseInt(facet.min);
+		var inboundMaxValue = parseInt(facet.min);
+
+		var activeRange = getActiveRangeObject(facet.facet_name, activeObject);
+		if(activeRange !== undefined) {
+			inboundMaxValue = parseInt(activeRange.value_to);
+			inboundMinValue = parseInt(activeRange.value);
+		}
+
+		var options = {
+        start: [inboundMinValue, inboundMaxValue],
+        connect: true,
+        range: {
+            'min': parseInt(facet.min),
+            'max': parseInt(facet.max)
+        },
+        step: 1,
+        pips: {
+          mode: 'range',
+          density: 10
+        },
+        facet: facet,
+        format: {
+          from: function(value) {
+            return(parseInt(value));
+          },
+          to: function(value) {
+            return(parseInt(value));
+          }
+        }
+    };
+		noUiSlider.create(slider, options);
+
+
+		ranges.append("<br /><div id=\"range-link-" +
+					facet.facet_name +
+					"\" class=\"clear range-link\">" +
+					"<br /><span class=\"" +
+					facet.facet_name +
+					"-link\">" +
+					inboundMinValue +
+					" to " +
+					inboundMaxValue +
+					"</span></div><div class=\"center\"><a class=\"range-link\" href=\"" +
 					panlResultsViewerUrl +
 		      $("#collection").text() +
           facet.uris.before +
-          facet.min +
+          inboundMinValue +
           facet.uris.during +
-          facet.max +
+          inboundMaxValue +
 		      facet.uris.after +
-					"\" class=\"" +
-					selector +
-					"-anchor\">[Apply]</a>&nbsp;<span class=\"" +
-					selector +
-					"-link\">" +
-					facet.min +
+					"\" id=\"range-anchor-" +
+					facet.facet_name +
+					"\">[Apply]</a></div>");
+
+		slider.noUiSlider.on("update", function(values, handle, unencoded, tap, positions, noUiSlider) {
+			var values = values;
+			var facet = noUiSlider.options.facet;
+			var rangeLink = $("#range-anchor-" + facet.facet_name);
+			rangeLink.attr("href",
+					panlResultsViewerUrl +
+            $("#collection").text() +
+            facet.uris.before +
+            values[0] +
+            facet.uris.during +
+            values[1] +
+            facet.uris.after
+					);
+
+			var text =
+					(facet.range_min_value !== undefined && values[0] === parseInt(facet.min) ? decodePanl(facet.range_min_value) :
+					(facet.prefix !== undefined ? decodePanl(facet.prefix) : "") +
+					values[0] +
+					(facet.suffix !== undefined ? decodePanl(facet.suffix) : "")
+					) +
 					" to " +
-					facet.max +
-					"</span>" +
-					"</div>");
-
-   new DualRange("[" + selector + "]", (e) => {
-      document.querySelector("." + selector + "-min").textContent = e.min;
-      document.querySelector("." + selector + "-max").textContent = e.max;
-      document.querySelector("." + selector + "-link").textContent = e.min + " to " + e.max;
-      document.querySelector("." + selector + "-anchor").setAttribute("href",
-              panlResultsViewerUrl +
-              $("#collection").text() +
-              facet.uris.before +
-              e.min +
-              facet.uris.during +
-              e.max +
-              facet.uris.after);
-    });
+					(facet.range_max_value !== undefined && values[1] === parseInt(facet.max) ? decodePanl(facet.range_max_value) :
+					(facet.prefix !== undefined ? decodePanl(facet.prefix) : "") +
+					values[1] +
+					(facet.suffix !== undefined ? decodePanl(facet.suffix) : "")
+					);
+			$("." +facet.facet_name + "-link").text(text);
+		});
 	}
+}
 
+function decodePanl(text) {
+	return(decodeURI(text).replaceAll("+", " ").replaceAll("%2B", "+"))
 }

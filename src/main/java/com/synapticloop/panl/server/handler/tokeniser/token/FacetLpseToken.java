@@ -166,6 +166,7 @@ public class FacetLpseToken extends LpseToken {
 		}
 	}
 
+	// TODO - update for range facets
 	@Override public String explain() {
 		return ("PANL " +
 				(this.isValid ? "[  VALID  ]" : "[ INVALID ]") +

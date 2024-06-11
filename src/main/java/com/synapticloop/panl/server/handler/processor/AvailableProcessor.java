@@ -184,6 +184,19 @@ public class AvailableProcessor extends Processor {
 				facetObject.put(JSON_KEY_PANL_CODE, lpseCode);
 				facetObject.put(JSON_KEY_MIN, lpseField.getMinRange());
 				facetObject.put(JSON_KEY_MAX, lpseField.getMaxRange());
+				facetObject.put("prefix", URLEncoder.encode(lpseField.getValuePrefix(), StandardCharsets.UTF_8));
+				facetObject.put("suffix", URLEncoder.encode(lpseField.getValueSuffix(), StandardCharsets.UTF_8));
+
+				// range min and max values
+				String rangeMaxValue = lpseField.getRangeMaxValue();
+				if(null != rangeMaxValue) {
+					facetObject.put(Processor.JSON_KEY_RANGE_MAX_VALUE, URLEncoder.encode(rangeMaxValue, StandardCharsets.UTF_8));
+				}
+
+				String rangeMinValue = lpseField.getRangeMinValue();
+				if(null != rangeMinValue) {
+					facetObject.put(Processor.JSON_KEY_RANGE_MIN_VALUE, URLEncoder.encode(rangeMinValue, StandardCharsets.UTF_8));
+				}
 
 				// if we already have this facet selected - add in the to and from
 				// values - only allowed one facet code per range
@@ -228,8 +241,7 @@ public class AvailableProcessor extends Processor {
 
 			}
 
-			if (
-					panlTokenMap.containsKey(baseField.getLpseCode()) &&
+			if (panlTokenMap.containsKey(baseField.getLpseCode()) &&
 							!(shouldRange &&
 									baseField.getLpseCode().equals(additionLpseCode))) {
 

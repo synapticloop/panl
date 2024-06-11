@@ -55,6 +55,14 @@ public abstract class BaseField {
 
 	protected static final String BOOLEAN_TRUE_VALUE = "true";
 	protected static final String BOOLEAN_FALSE_VALUE = "false";
+	public static final String PROPERTY_KEY_PANL_RANGE_FACET = "panl.range.facet.";
+	public static final String PROPERTY_KEY_PANL_RANGE_MIN = "panl.range.min.";
+	public static final String PROPERTY_KEY_PANL_RANGE_MAX = "panl.range.max.";
+	public static final String PROPERTY_KEY_PANL_RANGE_PREFIX = "panl.range.prefix.";
+	public static final String PROPERTY_KEY_PANL_RANGE_SUFFIX = "panl.range.suffix.";
+	public static final String PROPERTY_KEY_PANL_RANGE_MIDFIX = "panl.range.midfix.";
+	public static final String PROPERTY_KEY_PANL_RANGE_MIN_VALUE = "panl.range.min.value.";
+	public static final String PROPERTY_KEY_PANL_RANGE_MAX_VALUE = "panl.range.max.value.";
 
 	private boolean hasValuePrefix = false;
 	private boolean hasValueSuffix = false;
@@ -76,6 +84,8 @@ public abstract class BaseField {
 	private String rangeMaxRange;
 	private boolean hasRangeMidfix = false;
 	private String rangeValueMidfix;
+	private String rangeMinValue;
+	private String rangeMaxValue;
 
 	private boolean hasRangePrefix;
 	private String rangeValuePrefix;
@@ -213,34 +223,41 @@ public abstract class BaseField {
 		}
 	}
 
+	/**
+	 * <p>Populate the range properties, if this is a range facet</p>
+	 */
 	protected void populateRanges() {
-		this.isRangeFacet = properties.getProperty("panl.range.facet." + lpseCode, "false").equals("true");
+		this.isRangeFacet = properties.getProperty(PROPERTY_KEY_PANL_RANGE_FACET + lpseCode, "false").equals("true");
+
 		if (this.isRangeFacet) {
 			// get the other properties, if they exist...
-			this.rangeMinRange = properties.getProperty("panl.range.min." + lpseCode, null);
+			this.rangeMinRange = properties.getProperty(PROPERTY_KEY_PANL_RANGE_MIN + lpseCode, null);
 			if (null != this.rangeMinRange) {
 				hasMinRange = true;
 			}
 
-			this.rangeMaxRange = properties.getProperty("panl.range.max." + lpseCode, null);
+			this.rangeMaxRange = properties.getProperty(PROPERTY_KEY_PANL_RANGE_MAX + lpseCode, null);
 			if (null != this.rangeMaxRange) {
 				hasMaxRange = true;
 			}
 
-			this.rangeValuePrefix = properties.getProperty("panl.range.prefix." + lpseCode, null);
+			this.rangeValuePrefix = properties.getProperty(PROPERTY_KEY_PANL_RANGE_PREFIX + lpseCode, null);
 			if (null != this.rangeValuePrefix) {
 				hasRangePrefix = true;
 			}
 
-			this.rangeValueSuffix = properties.getProperty("panl.range.suffix." + lpseCode, null);
+			this.rangeValueSuffix = properties.getProperty(PROPERTY_KEY_PANL_RANGE_SUFFIX + lpseCode, null);
 			if (null != this.rangeValueSuffix) {
 				hasRangeSuffix = true;
 			}
 
-			this.rangeValueMidfix = properties.getProperty("panl.range.midfix." + lpseCode, null);
+			this.rangeValueMidfix = properties.getProperty(PROPERTY_KEY_PANL_RANGE_MIDFIX + lpseCode, null);
 			if (null != this.rangeValueMidfix) {
 				hasRangeMidfix = true;
 			}
+
+			this.rangeMinValue = properties.getProperty(PROPERTY_KEY_PANL_RANGE_MIN_VALUE + lpseCode, null);
+			this.rangeMaxValue = properties.getProperty(PROPERTY_KEY_PANL_RANGE_MAX_VALUE + lpseCode, null);
 		}
 	}
 
@@ -838,6 +855,14 @@ public abstract class BaseField {
 		} else {
 			return(getValuePrefix());
 		}
+	}
+
+	public String getRangeMinValue() {
+		return (rangeMinValue);
+	}
+
+	public String getRangeMaxValue() {
+		return (rangeMaxValue);
 	}
 
 	protected abstract void applyToQueryInternal(SolrQuery solrQuery, Map<String, List<LpseToken>> panlTokenMap);

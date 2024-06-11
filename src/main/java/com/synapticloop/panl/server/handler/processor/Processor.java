@@ -69,6 +69,8 @@ public abstract class Processor {
 	public static final String JSON_KEY_VALUE = "value";
 	public static final String JSON_KEY_VALUE_TO = "value_to";
 	public static final String JSON_KEY_VALUES = "values";
+	public static final String JSON_KEY_RANGE_MIN_VALUE = "range_min_value";
+	public static final String JSON_KEY_RANGE_MAX_VALUE = "range_max_value";
 
 	public static final String JSON_VALUE_NO_MIDFIX_REPLACEMENT = "~";
 
