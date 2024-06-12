@@ -318,11 +318,20 @@ public class TestHelper {
 		return (canonicalURIProcessor.processToString(panlTokenMap));
 	}
 
-	public static void assertCanonicalURI(String URIPath, String expect) throws PanlServerException, IOException {
-		String uriPath = TestHelper.invokeCanonicalURIProcessor(
-				"/default.properties",
-				URIPath,
-				"");
+	public static void assertCanonicalURI(String URIPath, String expect) {
+		assertCanonicalURI("/default.properties", URIPath, expect);
+	}
+
+	public static void assertCanonicalURI(String propertiesFileLocation, String URIPath, String expect) {
+		String uriPath = null;
+		try {
+			uriPath = TestHelper.invokeCanonicalURIProcessor(
+					propertiesFileLocation,
+					URIPath,
+					"");
+		} catch (IOException | PanlServerException e) {
+			fail(e);
+		}
 		assertEquals(expect, uriPath);
 	}
 

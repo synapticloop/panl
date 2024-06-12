@@ -83,14 +83,15 @@ public abstract class BaseField {
 	private boolean hasMaxRange = false;
 	private String rangeMaxValue;
 	private boolean hasRangeMidfix = false;
+
 	private String rangeValueMidfix;
 	private String rangeMinValueReplacement;
 	private String rangeMaxValueReplacement;
 
 	private boolean hasRangePrefix;
-	private String rangeValuePrefix;
+	private String rangePrefix;
 	private boolean hasRangeSuffix;
-	private String rangeValueSuffix;
+	private String rangeSuffix;
 
 	// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - //
 	//                         BOOLEAN Facet properties                        //
@@ -241,13 +242,13 @@ public abstract class BaseField {
 				hasMaxRange = true;
 			}
 
-			this.rangeValuePrefix = properties.getProperty(PROPERTY_KEY_PANL_RANGE_PREFIX + lpseCode, null);
-			if (null != this.rangeValuePrefix) {
+			this.rangePrefix = properties.getProperty(PROPERTY_KEY_PANL_RANGE_PREFIX + lpseCode, null);
+			if (null != this.rangePrefix) {
 				hasRangePrefix = true;
 			}
 
-			this.rangeValueSuffix = properties.getProperty(PROPERTY_KEY_PANL_RANGE_SUFFIX + lpseCode, null);
-			if (null != this.rangeValueSuffix) {
+			this.rangeSuffix = properties.getProperty(PROPERTY_KEY_PANL_RANGE_SUFFIX + lpseCode, null);
+			if (null != this.rangeSuffix) {
 				hasRangeSuffix = true;
 			}
 
@@ -481,8 +482,8 @@ public abstract class BaseField {
 					fromString = getMinRange();
 				}
 			} else if (hasRangePrefix) {
-				if (fromString.startsWith(rangeValuePrefix)) {
-					fromString = fromString.substring(rangeValuePrefix.length());
+				if (fromString.startsWith(rangePrefix)) {
+					fromString = fromString.substring(rangePrefix.length());
 				} else {
 					return (null);
 				}
@@ -492,8 +493,8 @@ public abstract class BaseField {
 				if (toString.equals(rangeMaxValueReplace)) {
 					toString = getMaxRange();
 				} else if (hasRangeSuffix) {
-					if (toString.endsWith(rangeValueSuffix)) {
-						toString = toString.substring(0, toString.length() - rangeValueSuffix.length());
+					if (toString.endsWith(rangeSuffix)) {
+						toString = toString.substring(0, toString.length() - rangeSuffix.length());
 					} else {
 						return (null);
 					}
@@ -505,7 +506,7 @@ public abstract class BaseField {
 					fromString = getMinRange();
 				}
 			} else if (hasValuePrefix) {
-				if (fromString.equals(valuePrefix)) {
+				if (fromString.startsWith(valuePrefix)) {
 					fromString = fromString.substring(valuePrefix.length());
 				} else {
 					return (null);
@@ -615,23 +616,37 @@ public abstract class BaseField {
 		StringBuilder sb = new StringBuilder();
 
 		if (hasRangeMidfix) {
-			if (facetLpseToken.getValue().equals(rangeMinValue)) {
+			if (facetLpseToken.getValue().equals(rangeMinValue) && rangeMinValueReplacement != null) {
 				sb.append(rangeMinValueReplacement);
 			} else {
 				if (hasRangePrefix) {
-					sb.append(rangeValuePrefix);
+					sb.append(rangePrefix);
+				} else if (hasValuePrefix) {
+					sb.append(valuePrefix);
 				}
+
 				sb.append(facetLpseToken.getValue());
+
+				if (hasValueSuffix) {
+					sb.append(valueSuffix);
+				}
 			}
 
 			sb.append(rangeValueMidfix);
 
-			if (facetLpseToken.getToValue().equals(rangeMaxValue)) {
+			if (facetLpseToken.getToValue().equals(rangeMaxValue) && rangeMaxValueReplacement != null) {
 				sb.append(rangeMaxValueReplacement);
 			} else {
+				if (hasValuePrefix) {
+					sb.append(valuePrefix);
+				}
+
 				sb.append(facetLpseToken.getToValue());
+
 				if (hasRangeSuffix) {
-					sb.append(rangeValueSuffix);
+					sb.append(rangeSuffix);
+				} else if (hasValueSuffix) {
+					sb.append(valueSuffix);
 				}
 			}
 
@@ -639,27 +654,30 @@ public abstract class BaseField {
 		} else {
 			// we will have a two part URI path, split by a '~' and both values need
 			// to be URLEncoded before.
-			if (facetLpseToken.getValue().equals(rangeMinValue)) {
+			if (facetLpseToken.getValue().equals(rangeMinValue) && null != rangeMinValueReplacement) {
 				sb.append(URLEncoder.encode(rangeMinValueReplacement, StandardCharsets.UTF_8));
 			} else {
-				if (hasRangePrefix) {
-					sb.append(URLEncoder.encode(rangeValuePrefix, StandardCharsets.UTF_8));
+				if (hasValuePrefix) {
+					sb.append(URLEncoder.encode(valuePrefix, StandardCharsets.UTF_8));
 				}
 				sb.append(URLEncoder.encode(facetLpseToken.getValue(), StandardCharsets.UTF_8));
-			}
+				if (hasValueSuffix) {
+					sb.append(URLEncoder.encode(valueSuffix, StandardCharsets.UTF_8));
+				}
 
-			if (hasRangePrefix) {
-				sb.append(URLEncoder.encode(rangeValuePrefix, StandardCharsets.UTF_8));
 			}
 
 			sb.append(Processor.JSON_VALUE_NO_MIDFIX_REPLACEMENT);
 
-			if (facetLpseToken.getToValue().equals(rangeMaxValue)) {
+			if (facetLpseToken.getToValue().equals(rangeMaxValue) && null != rangeMaxValueReplacement) {
 				sb.append(URLEncoder.encode(rangeMaxValueReplacement, StandardCharsets.UTF_8));
 			} else {
+				if (hasValuePrefix) {
+					sb.append(URLEncoder.encode(valuePrefix, StandardCharsets.UTF_8));
+				}
 				sb.append(URLEncoder.encode(facetLpseToken.getToValue(), StandardCharsets.UTF_8));
-				if (hasRangeSuffix) {
-					sb.append(URLEncoder.encode(rangeValueSuffix, StandardCharsets.UTF_8));
+				if (hasValueSuffix) {
+					sb.append(URLEncoder.encode(valueSuffix, StandardCharsets.UTF_8));
 				}
 			}
 
@@ -875,6 +893,7 @@ public abstract class BaseField {
 
 	/**
 	 * <p>Apply the token to the Solr Query </p>
+	 *
 	 * @param solrQuery
 	 * @param panlTokenMap
 	 */
@@ -911,17 +930,17 @@ public abstract class BaseField {
 		return (rangeValueMidfix);
 	}
 
-	public String getRangeValuePrefix() {
+	public String getRangePrefix() {
 		if (hasRangePrefix) {
-			return (rangeValuePrefix);
+			return (rangePrefix);
 		} else {
 			return ("");
 		}
 	}
 
-	public String getRangeValueSuffix() {
+	public String getRangeSuffix() {
 		if (hasRangeSuffix) {
-			return (rangeValueSuffix);
+			return (rangeSuffix);
 		} else {
 			return ("");
 		}
@@ -930,7 +949,7 @@ public abstract class BaseField {
 
 	public String getPrefix() {
 		if (hasRangeMidfix) {
-			return (getRangeValuePrefix());
+			return (getRangePrefix());
 		} else {
 			return (getValuePrefix());
 		}

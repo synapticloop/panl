@@ -271,7 +271,7 @@ public class AvailableProcessor extends Processor {
 
 					if (lpseField.getHasRangeMidfix()) {
 						// we have a midfix - we will be using the range value prefix/suffix
-						lpseUri.append(URLEncoder.encode(baseField.getRangeValuePrefix(), StandardCharsets.UTF_8));
+						lpseUri.append(URLEncoder.encode(baseField.getRangePrefix(), StandardCharsets.UTF_8));
 					} else {
 						// we don't have a midfix - we will be using the value prefix/suffix
 						lpseUri.append(URLEncoder.encode(baseField.getValuePrefix(), StandardCharsets.UTF_8));
@@ -299,7 +299,7 @@ public class AvailableProcessor extends Processor {
 
 				if(shouldRange) {
 					if(baseField.getHasRangeMidfix()) {
-						lpseUri.append(URLEncoder.encode(baseField.getRangeValueSuffix(), StandardCharsets.UTF_8));
+						lpseUri.append(URLEncoder.encode(baseField.getRangeSuffix(), StandardCharsets.UTF_8));
 					} else {
 						lpseUri.append(URLEncoder.encode(baseField.getValueSuffix(), StandardCharsets.UTF_8));
 					}

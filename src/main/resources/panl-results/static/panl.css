@@ -1,4 +1,4 @@
-// basic formatting
+/* basic formatting */
 body { min-height: 100%; }
 html, body { margin: 0; padding: 0; font-family: "Libre Baskerville", serif; font-weight: 400; font-style: normal; }
 h1, h2, form, p { padding: 0 10px;}
@@ -19,7 +19,7 @@ ul li { line-height: 1.6; }
 .center { text-align: center; margin-top: 5px;}
 .hidden { display: none; }
 
-// header
+/* header */
 div#header { position: relative; text-align: center; border-bottom: 1px solid #afafaf; }
 div#header p { text-align: center; }
 div#header h1 { padding-top: 14px; margin: 0; }
@@ -28,12 +28,12 @@ div#container { width: 1024px; margin: 0 auto; }
 
 div#content { float: right; width: 700px; }
 
-// navigation
+/* navigation */
 div#navigation { margin-bottom: 104px; float: left; width: 300px; }
 div#navigation li { list-style: none; }
 .navheading { background-color: #efefef; border-left: 6px solid black; }
 
-// document (i.e. results) list
+/* document (i.e. results) list */
 #documents dl:nth-child(odd) { background-color: #efefef; }
 #documents { margin-bottom: 12px; }
 dl { border-top: 1px solid black; padding: 14px 10px; margin: 0; }
@@ -44,7 +44,7 @@ dd { padding-bottom: 3px; }
 div.padding { padding-bottom: 14px;}
 .range-link { text-align: center; position: relative; z-index: 1000; }
 
-// footer
+/* footer */
 div#footer { border-top: 1px solid #afafaf; margin: 84px auto 0 auto; padding: 6px 0; background-color: #efefef; clear: both; position: relative; height: 80px; margin-top: -80px; width: 1024px; }
 div#footer p { text-align: center; text-justify: none }
 
@@ -53,7 +53,7 @@ div#footer p { text-align: center; text-justify: none }
 input { width: 50%; }
 input, button { font-family: "Libre Baskerville", serif; padding: 4px; }
 
-// styling of the nouislider and ranges
+/* styling of the nouislider and ranges */
 #ranges { padding: 0 14px; }
 #ranges p { font-weight: bold; padding-left: 0px; }
 

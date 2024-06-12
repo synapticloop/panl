@@ -452,14 +452,38 @@ function addAvailableFilters(availableObject, activeObject) {
 			var values = values;
 			var facet = noUiSlider.options.facet;
 			var rangeLink = $("#range-anchor-" + facet.facet_name);
+
+			var hasMinReplacement = facet.uris.before_min_value !== undefined &&
+							values[0] === parseInt(facet.min);
+			var hasMaxReplacement = facet.uris.before_max_value !== undefined
+							&& values[1] === parseInt(facet.max);
+
+//								(facet.prefix !== undefined ? decodePanl(facet.prefix) : "") +
+//      					values[0] +
+//      					(facet.suffix !== undefined ? decodePanl(facet.suffix) : "");
+
+			var generatedHrefBefore = facet.uris.before +
+      					values[0] +
+								(!hasMinReplacement ? (facet.suffix !== undefined ? decodePanl(facet.suffix) : "") : "");
+			var generatedHrefAfter =
+								(!hasMaxReplacement ? (facet.prefix !== undefined ? decodePanl(facet.prefix) : "") : "") +
+                values[1] +
+						    facet.uris.after;
+
+			if(facet.uris.before_min_value !== undefined && values[0] === parseInt(facet.min)) {
+				generatedHrefBefore = facet.uris.before_min_value;
+			}
+
+			if(facet.uris.after_max_value !== undefined && values[1] === parseInt(facet.max)) {
+				generatedHrefAfter = facet.uris.after_max_value;
+			}
+
 			rangeLink.attr("href",
 					panlResultsViewerUrl +
             $("#collection").text() +
-            facet.uris.before +
-            values[0] +
+            generatedHrefBefore +
             facet.uris.during +
-            values[1] +
-            facet.uris.after
+            generatedHrefAfter
 					);
 
 			var text =
