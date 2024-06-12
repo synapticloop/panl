@@ -310,7 +310,6 @@ public class AvailableProcessor extends Processor {
 				}
 				lpseUri.append(FORWARD_SLASH);
 			}
-			System.out.println(baseField.getLpseCode() + lpseUri);
 		}
 
 		additionObject.put(JSON_KEY_AFTER, lpseUri.toString() + lpseCode.toString() + FORWARD_SLASH);
