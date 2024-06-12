@@ -113,8 +113,10 @@ public class PanlSortField extends BaseField {
 		return(temp);
 	}
 
-	@Override public String getExplainDescription() {
-		return("The sort order (default is relevance descending), but can be any PanlField, or PanlFacet.");
+	@Override public List<String> explainAdditional() {
+		List<String> explanations = new ArrayList<>();
+		explanations.add("The sort order (default is relevance descending), but can be any PanlField, or PanlFacet.");
+		return(explanations);
 	}
 
 	public void applyToQueryInternal(SolrQuery solrQuery, List<LpseToken> lpseTokenList) {

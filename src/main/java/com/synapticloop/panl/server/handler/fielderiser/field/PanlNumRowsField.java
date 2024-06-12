@@ -32,6 +32,7 @@ import org.apache.solr.client.solrj.SolrQuery;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
@@ -86,8 +87,10 @@ public class PanlNumRowsField extends BaseField {
 		return (lpseCode);
 	}
 
-	@Override public String getExplainDescription() {
-		return ("The number of results to return per query.");
+	@Override public List<String> explainAdditional() {
+		List<String> explanations = new ArrayList<>();
+		explanations.add("The number of results to return per query.");
+		return(explanations);
 	}
 
 	public void applyToQueryInternal(SolrQuery solrQuery, List<LpseToken> lpseTokenList) {

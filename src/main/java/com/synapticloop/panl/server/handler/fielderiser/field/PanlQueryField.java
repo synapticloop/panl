@@ -30,6 +30,7 @@ import org.apache.solr.client.solrj.SolrQuery;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
@@ -48,8 +49,10 @@ public class PanlQueryField extends BaseField {
 		return(LOGGER);
 	}
 
-	@Override public String getExplainDescription() {
-		return("The text query which maps to the 'q' parameter of Solr.");
+	@Override public List<String> explainAdditional() {
+		List<String> explanations = new ArrayList<>();
+		explanations.add("The text query which maps to the 'q' parameter of Solr.");
+		return(explanations);
 	}
 
 	/**

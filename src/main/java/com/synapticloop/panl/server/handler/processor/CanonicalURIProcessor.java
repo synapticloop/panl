@@ -43,11 +43,11 @@ import java.util.Map;
  *   nothing.</li>
  *   <li>The page number - page 1 by default</li>
  *   <li>The number of results per page - this is defined, or 10 by default</li>
- *   <li>The query operand - this is defined, or 10 by default</li>
+ *   <li>The query operand - this is defined, or OR by default</li>
  * </ul>
  *
  * <p><strong>NOTE:</strong> The pass-through parameter, if defined, will
- * never be included.</p>
+ * __NEVER__ be included.</p>
  */
 public class CanonicalURIProcessor extends Processor {
 

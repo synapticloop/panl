@@ -31,6 +31,7 @@ import org.apache.solr.client.solrj.SolrQuery;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
@@ -63,8 +64,10 @@ public class PanlField extends BaseField {
 		return (LOGGER);
 	}
 
-	@Override public String getExplainDescription() {
-		return("A Solr field that can be configured to be sorted by, or returned in the field set.");
+	@Override public List<String> explainAdditional() {
+		List<String> explanations = new ArrayList<>();
+		explanations.add("A Solr field that can be configured to be sorted by, or returned in the field set.");
+		return(explanations);
 	}
 
 	public void applyToQueryInternal(SolrQuery solrQuery, List<LpseToken> lpseTokenList) {

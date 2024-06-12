@@ -38,11 +38,13 @@ import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.util.*;
 
+/**
+ * <p>Process all facets (including RANGE and OR) facets that are available for
+ * selection by the user.</p>
+ *
+ * @author synapticloop
+ */
 public class AvailableProcessor extends Processor {
-
-	public static final String FORWARD_SLASH = "/";
-	public static final String JSON_KEY_AFTER_MAX_VALUE = "after_max_value";
-	public static final String JSON_KEY_BEFORE_MIN_VALUE = "before_min_value";
 
 	public AvailableProcessor(CollectionProperties collectionProperties) {
 		super(collectionProperties);
@@ -294,7 +296,6 @@ public class AvailableProcessor extends Processor {
 				additionObject.put(JSON_KEY_BEFORE, lpseUri.toString());
 				lpseUri.setLength(0);
 				lpseCode.append(baseField.getLpseCode());
-//				lpseCode.append(baseField.getLpseCode(panlTokenMap, collectionProperties));
 
 				if(shouldRange) {
 					if(baseField.getHasRangeMidfix()) {

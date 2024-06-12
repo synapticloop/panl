@@ -811,8 +811,6 @@ public abstract class BaseField {
 		return (getLpseCode(panlTokenMap, collectionProperties));
 	}
 
-	@Deprecated public abstract String getExplainDescription();
-
 	/**
 	 * <p>A human readable list of explanations for debugging purposes</p>
 	 *
@@ -850,9 +848,11 @@ public abstract class BaseField {
 			temp.add("             Is an OR facet, allowing multiple selections of this facet.");
 		}
 
-		temp.add("DESCRIPTION: " + getExplainDescription());
+		temp.addAll(explainAdditional());
 		return (temp);
 	}
+
+	protected abstract List<String> explainAdditional();
 
 	/**
 	 * <p>Return whether this is an OR facet</p>

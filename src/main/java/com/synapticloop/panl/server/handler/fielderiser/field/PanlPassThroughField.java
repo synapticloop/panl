@@ -72,8 +72,10 @@ public class PanlPassThroughField extends BaseField {
 		return (LOGGER);
 	}
 
-	@Override public String getExplainDescription() {
-		return ("This field is ignored by the Panl server and is not passed through to Solr.");
+	@Override public List<String> explainAdditional() {
+		List<String> explanations = new ArrayList<>();
+		explanations.add("This field is ignored by the Panl server and is not passed through to Solr.");
+		return(explanations);
 	}
 
 	public void applyToQueryInternal(SolrQuery solrQuery, List<LpseToken> lpseTokenList) {

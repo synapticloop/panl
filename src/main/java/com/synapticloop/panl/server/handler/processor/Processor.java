@@ -32,17 +32,27 @@ import org.json.JSONObject;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * <p>Base processor that all other processors inherit from.</p>
+ *
+ * @author synapticloop
+ */
 public abstract class Processor {
+	//
+	// static strings for json keys
+	//
 	public static final String JSON_KEY_ADD_ASC = "add_asc";
 	public static final String JSON_KEY_ADD_DESC = "add_desc";
 	public static final String JSON_KEY_AFTER = "after";
+	public static final String JSON_KEY_AFTER_MAX_VALUE = "after_max_value";
 	public static final String JSON_KEY_AND = "AND";
 	public static final String JSON_KEY_BEFORE = "before";
+	public static final String JSON_KEY_BEFORE_MIN_VALUE = "before_min_value";
 	public static final String JSON_KEY_COUNT = "count";
 	public static final String JSON_KEY_DURING = "during";
 	public static final String JSON_KEY_ENCODED = "encoded";
-	public static final String JSON_KEY_FACET_NAME = "facet_name";
 	public static final String JSON_KEY_FACETS = "facets";
+	public static final String JSON_KEY_FACET_NAME = "facet_name";
 	public static final String JSON_KEY_FIELDS = "fields";
 	public static final String JSON_KEY_INVERSE_URI = "inverse_uri";
 	public static final String JSON_KEY_IS_DESCENDING = "is_descending";
@@ -59,29 +69,42 @@ public abstract class Processor {
 	public static final String JSON_KEY_PAGE_NUM = "page_num";
 	public static final String JSON_KEY_PAGE_URIS = "page_uris";
 	public static final String JSON_KEY_PANL_CODE = "panl_code";
+	public static final String JSON_KEY_PREFIX = "prefix";
 	public static final String JSON_KEY_PREVIOUS = "previous";
 	public static final String JSON_KEY_RANGE_FACETS = "range_facets";
+	public static final String JSON_KEY_RANGE_MAX_VALUE = "range_max_value";
+	public static final String JSON_KEY_RANGE_MIN_VALUE = "range_min_value";
 	public static final String JSON_KEY_REMOVE_URI = "remove_uri";
 	public static final String JSON_KEY_SET_URI_ASC = "set_uri_asc";
 	public static final String JSON_KEY_SET_URI_DESC = "set_uri_desc";
 	public static final String JSON_KEY_SOLR_JSON_KEY_RESPONSE = "response";
+	public static final String JSON_KEY_SUFFIX = "suffix";
 	public static final String JSON_KEY_URIS = "uris";
 	public static final String JSON_KEY_VALUE = "value";
-	public static final String JSON_KEY_VALUE_TO = "value_to";
 	public static final String JSON_KEY_VALUES = "values";
-	public static final String JSON_KEY_RANGE_MIN_VALUE = "range_min_value";
-	public static final String JSON_KEY_RANGE_MAX_VALUE = "range_max_value";
-	public static final String JSON_KEY_PREFIX = "prefix";
-	public static final String JSON_KEY_SUFFIX = "suffix";
-	public static final String JSON_KEY_MIN_REPLACEMENT_URI = "min_replace_uri";
-	public static final String JSON_KEY_MAX_REPLACEMENT_URI = "max_replace_uri";
+	public static final String JSON_KEY_VALUE_TO = "value_to";
+
+	//
+	// static strings for json values
+	//
 	public static final String JSON_VALUE_NO_MIDFIX_REPLACEMENT = "~";
 
+	//
+	// static strings for the forward slash
+	//
 	public static final String FORWARD_SLASH = "/";
 
+	/**
+	 * <p>The collection properties for this request.</p>
+	 */
 	protected final CollectionProperties collectionProperties;
 
-	public Processor(CollectionProperties collectionProperties) {
+	/**
+	 * <p>Base instantiation of parent class.</p>
+	 *
+	 * @param collectionProperties The collection properties to use
+	 */
+	protected Processor(CollectionProperties collectionProperties) {
 		this.collectionProperties = collectionProperties;
 	}
 
@@ -95,10 +118,29 @@ public abstract class Processor {
 	 */
 	public abstract JSONObject processToObject(Map<String, List<LpseToken>> panlTokenMap, QueryResponse queryResponse);
 
+	/**
+	 * <p>Process the panl token map to a JSON object.  This will call the
+	 * <code>processToObject(panlTokenMap, queryResponse)</code> method with a
+	 * null queryResponse.</p>
+	 *
+	 * @param panlTokenMap The panl token map to interrogate
+	 *
+	 * @return The JSON object for return to the user
+	 *
+	 * @see #processToObject(Map, QueryResponse)
+	 */
 	public JSONObject processToObject(Map<String, List<LpseToken>> panlTokenMap) {
-		return(processToObject(panlTokenMap, null));
+		return (processToObject(panlTokenMap, null));
 	}
 
+	/**
+	 * <p>Process the panlTokenMap to a string, will return an empty string
+	 * unless overridden.</p>
+	 *
+	 * @param panlTokenMap The panl token map to interrogate
+	 *
+	 * @return Always returns an empty string
+	 */
 	public String processToString(Map<String, List<LpseToken>> panlTokenMap) {
 		return ("");
 	}
