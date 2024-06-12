@@ -141,7 +141,6 @@ public class CanonicalURIProcessorTest {
 				propertiesLocation,
 				"/test/default/" + uriPath + "/w+w/",
 				"/" + uriPath + "/1/10/w+wpn/");
-
 	}
 
 	private void assertCanonicalMidfix(String propertiesLocation, String URIpath) {
@@ -149,7 +148,6 @@ public class CanonicalURIProcessorTest {
 				propertiesLocation,
 				"/test/default/" + URIpath + "/w-w/",
 				"/" + URIpath + "/1/10/w-wpn/");
-
 	}
 
 }
