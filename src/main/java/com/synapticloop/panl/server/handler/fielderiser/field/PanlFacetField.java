@@ -95,12 +95,14 @@ public class PanlFacetField extends BaseField {
 			// even though this field is set to be a range facet, we still allow
 			// single values
 
-			if(((FacetLpseToken) lpseToken).getIsRangeToken()) {
+			if(facetLpseToken.getIsRangeToken()) {
+				String value = (hasMinRangeWildcard && facetLpseToken.getValue().equals(getMinRange())) ? "*" : facetLpseToken.getValue();
+				String toValue = (hasMaxRangeWildcard && facetLpseToken.getToValue().equals(getMaxRange())) ? "*" : facetLpseToken.getToValue();
 				solrQuery.addFilterQuery(
 						String.format("%s:[%s TO %s]",
 								facetLpseToken.getSolrField(),
-								facetLpseToken.getValue(),
-								facetLpseToken.getToValue()));
+								value,
+								toValue));
 			} else {
 				solrQuery.addFilterQuery(String.format("%s:\"%s\"",
 						facetLpseToken.getSolrField(),

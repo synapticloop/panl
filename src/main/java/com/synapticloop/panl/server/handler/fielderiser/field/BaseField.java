@@ -58,6 +58,8 @@ public abstract class BaseField {
 	public static final String PROPERTY_KEY_PANL_RANGE_FACET = "panl.range.facet.";
 	public static final String PROPERTY_KEY_PANL_RANGE_MIN = "panl.range.min.";
 	public static final String PROPERTY_KEY_PANL_RANGE_MAX = "panl.range.max.";
+	public static final String PROPERTY_KEY_PANL_RANGE_MIN_WILDCARD = "panl.range.min.wildcard.";
+	public static final String PROPERTY_KEY_PANL_RANGE_MAX_WILDCARD = "panl.range.max.wildcard.";
 	public static final String PROPERTY_KEY_PANL_RANGE_PREFIX = "panl.range.prefix.";
 	public static final String PROPERTY_KEY_PANL_RANGE_SUFFIX = "panl.range.suffix.";
 	public static final String PROPERTY_KEY_PANL_RANGE_MIDFIX = "panl.range.midfix.";
@@ -92,6 +94,9 @@ public abstract class BaseField {
 	private String rangePrefix;
 	private boolean hasRangeSuffix;
 	private String rangeSuffix;
+
+	protected boolean hasMinRangeWildcard;
+	protected boolean hasMaxRangeWildcard;
 
 	// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - //
 	//                         BOOLEAN Facet properties                        //
@@ -259,6 +264,8 @@ public abstract class BaseField {
 
 			this.rangeMinValueReplacement = properties.getProperty(PROPERTY_KEY_PANL_RANGE_MIN_VALUE + lpseCode, null);
 			this.rangeMaxValueReplacement = properties.getProperty(PROPERTY_KEY_PANL_RANGE_MAX_VALUE + lpseCode, null);
+			this.hasMinRangeWildcard = properties.getProperty(PROPERTY_KEY_PANL_RANGE_MIN_WILDCARD + lpseCode, "false").equals("true");
+			this.hasMaxRangeWildcard = properties.getProperty(PROPERTY_KEY_PANL_RANGE_MAX_WILDCARD + lpseCode, "false").equals("true");
 		}
 	}
 
@@ -894,8 +901,8 @@ public abstract class BaseField {
 	/**
 	 * <p>Apply the token to the Solr Query </p>
 	 *
-	 * @param solrQuery
-	 * @param panlTokenMap
+	 * @param solrQuery The Solr Query to apply to field to
+	 * @param panlTokenMap The token map to get the parameters from
 	 */
 	public void applyToQuery(SolrQuery solrQuery, Map<String, List<LpseToken>> panlTokenMap) {
 		// no facets, no query, all is good :)

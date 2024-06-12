@@ -10,6 +10,8 @@ import com.synapticloop.panl.server.handler.properties.CollectionProperties;
 import com.synapticloop.panl.server.handler.properties.PanlProperties;
 import com.synapticloop.panl.server.handler.tokeniser.LpseTokeniser;
 import com.synapticloop.panl.server.handler.tokeniser.token.LpseToken;
+import com.synapticloop.panl.server.handler.tokeniser.token.NumRowsLpseToken;
+import com.synapticloop.panl.server.handler.tokeniser.token.PageLpseToken;
 import org.apache.commons.io.IOUtils;
 import org.apache.solr.client.solrj.SolrClient;
 import org.apache.solr.client.solrj.SolrQuery;
@@ -83,13 +85,20 @@ public class TestHelper {
 
 	}
 
+	private static final Map<String, CollectionProperties> collectionPropertiesCache = new HashMap<>();
+
 	public static CollectionProperties getCollectionProperties(String propertiesFileLocation) {
-		try {
-			return (new CollectionProperties(COLLECTION_NAME_TEST, TestHelper.getTestProperties(propertiesFileLocation)));
-		} catch (PanlServerException | IOException e) {
-			fail(e);
+		CollectionProperties collectionProperties;
+		if(!collectionPropertiesCache.containsKey(propertiesFileLocation)) {
+			try {
+				collectionProperties = new CollectionProperties(COLLECTION_NAME_TEST, TestHelper.getTestProperties(propertiesFileLocation));
+				collectionPropertiesCache.put(propertiesFileLocation, collectionProperties);
+			} catch (PanlServerException | IOException e) {
+				fail(e);
+			}
 		}
-		return (null);
+
+		return(collectionPropertiesCache.get(propertiesFileLocation));
 	}
 
 	public static LpseTokeniser getLpseTokeniser(String uriPath) {
@@ -364,4 +373,32 @@ public class TestHelper {
 		when(mockQueryResponse.jsonStr()).thenReturn(IOUtils.toString(TestHelper.class.getResourceAsStream(returnJsonResponse), StandardCharsets.UTF_8));
 	}
 
+	public static void mockSolrQuery(
+			String propertiesFilLocation,
+			String returnJsonResponse,
+			String uri,
+			String query) throws IOException, PanlServerException, SolrServerException {
+
+		CollectionRequestHandler collectionRequestHandler = getCollectionRequestHandler(propertiesFilLocation);
+		PanlCloudSolrClient mockPanlClient = mock(PanlCloudSolrClient.class);
+		try (MockedStatic<CollectionHelper> collectionHelperMockedStatic = mockStatic(CollectionHelper.class)) {
+			collectionHelperMockedStatic.when(() ->
+					CollectionHelper.getPanlClient(
+							"CloudSolrClient",
+							collectionRequestHandler.getCollectionName(),
+							getTestPanlProperties(),
+							getCollectionProperties(propertiesFilLocation))).thenReturn(mockPanlClient);
+		}
+
+
+		SolrClient mockSolrClient = mock(CloudSolrClient.class);
+		when(mockPanlClient.getClient()).thenReturn(mockSolrClient);
+
+		QueryResponse mockQueryResponse = mock(QueryResponse.class);
+
+		SolrQuery mockSolrQuery = mock(SolrQuery.class);
+		when(mockSolrClient.query(collectionRequestHandler.getCollectionName(), mockSolrQuery)).thenReturn(mockQueryResponse);
+
+		when(mockQueryResponse.jsonStr()).thenReturn(IOUtils.toString(TestHelper.class.getResourceAsStream(returnJsonResponse), StandardCharsets.UTF_8));
+	}
 }
