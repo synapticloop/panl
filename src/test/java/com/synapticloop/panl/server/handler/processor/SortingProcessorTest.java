@@ -119,20 +119,20 @@ public class SortingProcessorTest {
 			switch (sortFieldObject.getString(Processor.JSON_KEY_FACET_NAME)) {
 				case "brand":
 					// we are sorting on 'brand'
-					assertNull(sortFieldObject.optString(Processor.JSON_KEY_ADD_ASC, null));
-					assertNull(sortFieldObject.optString(Processor.JSON_KEY_ADD_ASC, null));
+					assertNull(sortFieldObject.optString(Processor.JSON_KEY_ADD_URI_ASC, null));
+					assertNull(sortFieldObject.optString(Processor.JSON_KEY_ADD_URI_ASC, null));
 					break;
 				case "disassemble":
-					assertEquals("/sb-sD+/", sortFieldObject.getString(Processor.JSON_KEY_ADD_ASC));
-					assertEquals("/sb-sD-/", sortFieldObject.getString(Processor.JSON_KEY_ADD_DESC));
+					assertEquals("/sb-sD+/", sortFieldObject.getString(Processor.JSON_KEY_ADD_URI_ASC));
+					assertEquals("/sb-sD-/", sortFieldObject.getString(Processor.JSON_KEY_ADD_URI_DESC));
 					break;
 				case "weight":
-					assertEquals("/sb-sw+/", sortFieldObject.getString(Processor.JSON_KEY_ADD_ASC));
-					assertEquals("/sb-sw-/", sortFieldObject.getString(Processor.JSON_KEY_ADD_DESC));
+					assertEquals("/sb-sw+/", sortFieldObject.getString(Processor.JSON_KEY_ADD_URI_ASC));
+					assertEquals("/sb-sw-/", sortFieldObject.getString(Processor.JSON_KEY_ADD_URI_DESC));
 					break;
 				case "name":
-					assertEquals("/sb-sm+/", sortFieldObject.getString(Processor.JSON_KEY_ADD_ASC));
-					assertEquals("/sb-sm-/", sortFieldObject.getString(Processor.JSON_KEY_ADD_DESC));
+					assertEquals("/sb-sm+/", sortFieldObject.getString(Processor.JSON_KEY_ADD_URI_ASC));
+					assertEquals("/sb-sm-/", sortFieldObject.getString(Processor.JSON_KEY_ADD_URI_DESC));
 					break;
 				default:
 					// nothing to do....
@@ -156,20 +156,20 @@ public class SortingProcessorTest {
 			switch (sortFieldObject.getString(Processor.JSON_KEY_FACET_NAME)) {
 				case "brand":
 					// we are sorting on 'name' ('m')
-					assertEquals("/sm-sb+/", sortFieldObject.getString(Processor.JSON_KEY_ADD_ASC));
-					assertEquals("/sm-sb-/", sortFieldObject.getString(Processor.JSON_KEY_ADD_DESC));
+					assertEquals("/sm-sb+/", sortFieldObject.getString(Processor.JSON_KEY_ADD_URI_ASC));
+					assertEquals("/sm-sb-/", sortFieldObject.getString(Processor.JSON_KEY_ADD_URI_DESC));
 					break;
 				case "disassemble":
-					assertEquals("/sm-sD+/", sortFieldObject.getString(Processor.JSON_KEY_ADD_ASC));
-					assertEquals("/sm-sD-/", sortFieldObject.getString(Processor.JSON_KEY_ADD_DESC));
+					assertEquals("/sm-sD+/", sortFieldObject.getString(Processor.JSON_KEY_ADD_URI_ASC));
+					assertEquals("/sm-sD-/", sortFieldObject.getString(Processor.JSON_KEY_ADD_URI_DESC));
 					break;
 				case "weight":
-					assertEquals("/sm-sw+/", sortFieldObject.getString(Processor.JSON_KEY_ADD_ASC));
-					assertEquals("/sm-sw-/", sortFieldObject.getString(Processor.JSON_KEY_ADD_DESC));
+					assertEquals("/sm-sw+/", sortFieldObject.getString(Processor.JSON_KEY_ADD_URI_ASC));
+					assertEquals("/sm-sw-/", sortFieldObject.getString(Processor.JSON_KEY_ADD_URI_DESC));
 					break;
 				case "name":
-					assertNull(sortFieldObject.optString(Processor.JSON_KEY_ADD_ASC, null));
-					assertNull(sortFieldObject.optString(Processor.JSON_KEY_ADD_ASC, null));
+					assertNull(sortFieldObject.optString(Processor.JSON_KEY_ADD_URI_ASC, null));
+					assertNull(sortFieldObject.optString(Processor.JSON_KEY_ADD_URI_ASC, null));
 					break;
 				default:
 					// nothing to do....
@@ -194,20 +194,20 @@ public class SortingProcessorTest {
 			switch (sortFieldObject.getString(Processor.JSON_KEY_FACET_NAME)) {
 				case "brand":
 					// we are sorting on 'name' ('m')
-					assertEquals("/sw+sb+/", sortFieldObject.getString(Processor.JSON_KEY_ADD_ASC));
-					assertEquals("/sw+sb-/", sortFieldObject.getString(Processor.JSON_KEY_ADD_DESC));
+					assertEquals("/sw+sb+/", sortFieldObject.getString(Processor.JSON_KEY_ADD_URI_ASC));
+					assertEquals("/sw+sb-/", sortFieldObject.getString(Processor.JSON_KEY_ADD_URI_DESC));
 					break;
 				case "disassemble":
-					assertEquals("/sw+sD+/", sortFieldObject.getString(Processor.JSON_KEY_ADD_ASC));
-					assertEquals("/sw+sD-/", sortFieldObject.getString(Processor.JSON_KEY_ADD_DESC));
+					assertEquals("/sw+sD+/", sortFieldObject.getString(Processor.JSON_KEY_ADD_URI_ASC));
+					assertEquals("/sw+sD-/", sortFieldObject.getString(Processor.JSON_KEY_ADD_URI_DESC));
 					break;
 				case "weight":
-					assertNull(sortFieldObject.optString(Processor.JSON_KEY_ADD_ASC, null));
-					assertNull(sortFieldObject.optString(Processor.JSON_KEY_ADD_ASC, null));
+					assertNull(sortFieldObject.optString(Processor.JSON_KEY_ADD_URI_ASC, null));
+					assertNull(sortFieldObject.optString(Processor.JSON_KEY_ADD_URI_ASC, null));
 					break;
 				case "name":
-					assertEquals("/sw+sm+/", sortFieldObject.getString(Processor.JSON_KEY_ADD_ASC));
-					assertEquals("/sw+sm-/", sortFieldObject.getString(Processor.JSON_KEY_ADD_DESC));
+					assertEquals("/sw+sm+/", sortFieldObject.getString(Processor.JSON_KEY_ADD_URI_ASC));
+					assertEquals("/sw+sm-/", sortFieldObject.getString(Processor.JSON_KEY_ADD_URI_DESC));
 					break;
 				default:
 					// nothing to do....
@@ -231,20 +231,20 @@ public class SortingProcessorTest {
 
 			switch (sortFieldObject.getString(Processor.JSON_KEY_FACET_NAME)) {
 				case "brand":
-					assertEquals("/sD+sb+/", sortFieldObject.getString(Processor.JSON_KEY_ADD_ASC));
-					assertEquals("/sD+sb-/", sortFieldObject.getString(Processor.JSON_KEY_ADD_DESC));
+					assertEquals("/sD+sb+/", sortFieldObject.getString(Processor.JSON_KEY_ADD_URI_ASC));
+					assertEquals("/sD+sb-/", sortFieldObject.getString(Processor.JSON_KEY_ADD_URI_DESC));
 					break;
 				case "disassemble":
-					assertNull(sortFieldObject.optString(Processor.JSON_KEY_ADD_ASC, null));
-					assertNull(sortFieldObject.optString(Processor.JSON_KEY_ADD_ASC, null));
+					assertNull(sortFieldObject.optString(Processor.JSON_KEY_ADD_URI_ASC, null));
+					assertNull(sortFieldObject.optString(Processor.JSON_KEY_ADD_URI_ASC, null));
 					break;
 				case "weight":
-					assertEquals("/sD+sw+/", sortFieldObject.getString(Processor.JSON_KEY_ADD_ASC));
-					assertEquals("/sD+sw-/", sortFieldObject.getString(Processor.JSON_KEY_ADD_DESC));
+					assertEquals("/sD+sw+/", sortFieldObject.getString(Processor.JSON_KEY_ADD_URI_ASC));
+					assertEquals("/sD+sw-/", sortFieldObject.getString(Processor.JSON_KEY_ADD_URI_DESC));
 					break;
 				case "name":
-					assertEquals("/sD+sm+/", sortFieldObject.getString(Processor.JSON_KEY_ADD_ASC));
-					assertEquals("/sD+sm-/", sortFieldObject.getString(Processor.JSON_KEY_ADD_DESC));
+					assertEquals("/sD+sm+/", sortFieldObject.getString(Processor.JSON_KEY_ADD_URI_ASC));
+					assertEquals("/sD+sm-/", sortFieldObject.getString(Processor.JSON_KEY_ADD_URI_DESC));
 					break;
 				default:
 					// nothing to do....
@@ -276,28 +276,28 @@ public class SortingProcessorTest {
 			switch (sortFieldObject.getString(Processor.JSON_KEY_FACET_NAME)) {
 				case "brand":
 					// sorting on name, brand comes first
-					assertEquals("/sm-sb+/", sortFieldObject.getString(Processor.JSON_KEY_ADD_ASC));
-					assertEquals("/sm-sb-/", sortFieldObject.getString(Processor.JSON_KEY_ADD_DESC));
-					assertNotNull(sortFieldObject.optString(Processor.JSON_KEY_ADD_ASC, null));
-					assertNotNull(sortFieldObject.optString(Processor.JSON_KEY_ADD_ASC, null));
+					assertEquals("/sm-sb+/", sortFieldObject.getString(Processor.JSON_KEY_ADD_URI_ASC));
+					assertEquals("/sm-sb-/", sortFieldObject.getString(Processor.JSON_KEY_ADD_URI_DESC));
+					assertNotNull(sortFieldObject.optString(Processor.JSON_KEY_ADD_URI_ASC, null));
+					assertNotNull(sortFieldObject.optString(Processor.JSON_KEY_ADD_URI_ASC, null));
 					break;
 				case "weight":
 					// sorting on name, weight comes after
-					assertEquals("/sm-sw+/", sortFieldObject.getString(Processor.JSON_KEY_ADD_ASC));
-					assertEquals("/sm-sw-/", sortFieldObject.getString(Processor.JSON_KEY_ADD_DESC));
-					assertNotNull(sortFieldObject.optString(Processor.JSON_KEY_ADD_ASC, null));
-					assertNotNull(sortFieldObject.optString(Processor.JSON_KEY_ADD_ASC, null));
+					assertEquals("/sm-sw+/", sortFieldObject.getString(Processor.JSON_KEY_ADD_URI_ASC));
+					assertEquals("/sm-sw-/", sortFieldObject.getString(Processor.JSON_KEY_ADD_URI_DESC));
+					assertNotNull(sortFieldObject.optString(Processor.JSON_KEY_ADD_URI_ASC, null));
+					assertNotNull(sortFieldObject.optString(Processor.JSON_KEY_ADD_URI_ASC, null));
 					break;
 				case "disassemble":
 					// sorting on name, weight comes after
-					assertEquals("/sm-sD+/", sortFieldObject.getString(Processor.JSON_KEY_ADD_ASC));
-					assertEquals("/sm-sD-/", sortFieldObject.getString(Processor.JSON_KEY_ADD_DESC));
-					assertNotNull(sortFieldObject.optString(Processor.JSON_KEY_ADD_ASC, null));
-					assertNotNull(sortFieldObject.optString(Processor.JSON_KEY_ADD_ASC, null));
+					assertEquals("/sm-sD+/", sortFieldObject.getString(Processor.JSON_KEY_ADD_URI_ASC));
+					assertEquals("/sm-sD-/", sortFieldObject.getString(Processor.JSON_KEY_ADD_URI_DESC));
+					assertNotNull(sortFieldObject.optString(Processor.JSON_KEY_ADD_URI_ASC, null));
+					assertNotNull(sortFieldObject.optString(Processor.JSON_KEY_ADD_URI_ASC, null));
 					break;
 				case "name":
-					assertNull(sortFieldObject.optString(Processor.JSON_KEY_ADD_ASC, null));
-					assertNull(sortFieldObject.optString(Processor.JSON_KEY_ADD_ASC, null));
+					assertNull(sortFieldObject.optString(Processor.JSON_KEY_ADD_URI_ASC, null));
+					assertNull(sortFieldObject.optString(Processor.JSON_KEY_ADD_URI_ASC, null));
 					break;
 				default:
 					// nothing to do....
@@ -327,8 +327,8 @@ public class SortingProcessorTest {
 			assertNotNull(sortFieldObject.optString(Processor.JSON_KEY_SET_URI_ASC, null));
 			assertNotNull(sortFieldObject.optString(Processor.JSON_KEY_SET_URI_DESC, null));
 
-			String addAsc = sortFieldObject.optString(Processor.JSON_KEY_ADD_ASC, null);
-			String addDesc = sortFieldObject.optString(Processor.JSON_KEY_ADD_DESC, null);
+			String addAsc = sortFieldObject.optString(Processor.JSON_KEY_ADD_URI_ASC, null);
+			String addDesc = sortFieldObject.optString(Processor.JSON_KEY_ADD_URI_DESC, null);
 
 			switch (sortFieldObject.getString(Processor.JSON_KEY_FACET_NAME)) {
 				case "brand":
@@ -373,8 +373,8 @@ public class SortingProcessorTest {
 			assertNotNull(sortFieldObject.optString(Processor.JSON_KEY_SET_URI_ASC, null));
 			assertNotNull(sortFieldObject.optString(Processor.JSON_KEY_SET_URI_DESC, null));
 
-			String addAsc = sortFieldObject.optString(Processor.JSON_KEY_ADD_ASC, null);
-			String addDesc = sortFieldObject.optString(Processor.JSON_KEY_ADD_DESC, null);
+			String addAsc = sortFieldObject.optString(Processor.JSON_KEY_ADD_URI_ASC, null);
+			String addDesc = sortFieldObject.optString(Processor.JSON_KEY_ADD_URI_DESC, null);
 
 			switch (sortFieldObject.getString(Processor.JSON_KEY_FACET_NAME)) {
 				case "brand":

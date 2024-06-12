@@ -122,7 +122,7 @@ public class SortingProcessor extends Processor {
 					// at this point we need to know the ordering of the lpseCode fields,
 					// whether we are before, or after the selected index
 
-					sortObject.put(JSON_KEY_ADD_DESC,
+					sortObject.put(JSON_KEY_ADD_URI_DESC,
 							finalBefore +
 									sortBefore +
 									panlParamSortLpseKey +
@@ -130,7 +130,7 @@ public class SortingProcessor extends Processor {
 									"-" +
 									lpseCode);
 
-					sortObject.put(JSON_KEY_ADD_ASC,
+					sortObject.put(JSON_KEY_ADD_URI_ASC,
 							finalBefore +
 									sortBefore +
 									panlParamSortLpseKey +

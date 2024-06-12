@@ -174,7 +174,7 @@ function addSortingOptions(sortingObject, activeObject) {
 	// now for the additive fields
 	var numThenSorts = 0;
 	for(const sortIndex in sortingObject.fields) {
-		if(sortingObject.fields[sortIndex].add_asc !== undefined) {
+		if(sortingObject.fields[sortIndex].add_uri_asc !== undefined) {
 			numThenSorts++;
 		}
 	}
@@ -184,7 +184,7 @@ function addSortingOptions(sortingObject, activeObject) {
 	}
 
 	for(const sortIndex in sortingObject.fields) {
-		if(sortingObject.fields[sortIndex].add_asc !== undefined) {
+		if(sortingObject.fields[sortIndex].add_uri_asc !== undefined) {
 
 			if(!hasAddedThen) {
 				$("#sorting_options").append("<br/><strong>Then sort by </strong>");
@@ -198,14 +198,14 @@ function addSortingOptions(sortingObject, activeObject) {
 				": <a href=\"" +
 		    panlResultsViewerUrl +
 		    $("#collection").text() +
-		    sortingObject.fields[sortIndex].add_asc +
+		    sortingObject.fields[sortIndex].add_uri_asc +
 		    "\"/>ASC</a>&nbsp;");
 
 			$("#sorting_options").append(
 				"<a href=\"" +
 		    panlResultsViewerUrl +
 		    $("#collection").text() +
-		    sortingObject.fields[sortIndex].add_desc +
+		    sortingObject.fields[sortIndex].add_uri_desc +
 		    "\"/>DESC</a>&nbsp;");
 		}
 	}

@@ -41,8 +41,8 @@ public abstract class Processor {
 	//
 	// static strings for json keys
 	//
-	public static final String JSON_KEY_ADD_ASC = "add_asc";
-	public static final String JSON_KEY_ADD_DESC = "add_desc";
+	public static final String JSON_KEY_ADD_URI_ASC = "add_uri_asc";
+	public static final String JSON_KEY_ADD_URI_DESC = "add_uri_desc";
 	public static final String JSON_KEY_AFTER = "after";
 	public static final String JSON_KEY_AFTER_MAX_VALUE = "after_max_value";
 	public static final String JSON_KEY_AND = "AND";
