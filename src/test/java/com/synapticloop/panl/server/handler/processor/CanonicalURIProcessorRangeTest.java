@@ -5,7 +5,7 @@ import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-public class CanonicalURIProcessorTest {
+public class CanonicalURIProcessorRangeTest {
 	@Test public void testURIPaths() {
 		TestHelper.assertCanonicalURI("/test/default/", "/1/10/pn/");
 		TestHelper.assertCanonicalURI("/test/default/brand-name/b/", "/1/10/brand-name/pnb/");
