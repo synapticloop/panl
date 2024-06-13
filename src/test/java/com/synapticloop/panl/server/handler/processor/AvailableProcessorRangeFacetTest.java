@@ -12,9 +12,9 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 
 public class AvailableProcessorRangeFacetTest {
 
-	@Test void testRangeAdditionURIPrefixMidfixSuffix() throws PanlServerException, IOException {
+	@Test void testRangeAdditionURIPrefixInfixSuffix() throws PanlServerException, IOException {
 		JSONObject jsonObject = TestHelper.invokeAvailableProcessor(
-				"/range/prefix-midfix-suffix.properties",
+				"/range/prefix-infix-suffix.properties",
 				"/",
 				"",
 				10,
@@ -33,9 +33,9 @@ public class AvailableProcessorRangeFacetTest {
 		assertEquals("+grams/w-w/", urisObject.getString(Processor.JSON_KEY_AFTER));
 	}
 
-	@Test void testRangeAdditionURIPrefixMidfix() throws PanlServerException, IOException {
+	@Test void testRangeAdditionURIPrefixInfix() throws PanlServerException, IOException {
 		JSONObject jsonObject = TestHelper.invokeAvailableProcessor(
-				"/range/prefix-midfix.properties",
+				"/range/prefix-infix.properties",
 				"/",
 				"",
 				10,
@@ -116,7 +116,7 @@ public class AvailableProcessorRangeFacetTest {
 
 	void testExistingRange() throws PanlServerException, IOException {
 		JSONObject jsonObject = TestHelper.invokeAvailableProcessor(
-				"/range/prefix-midfix-suffix.properties",
+				"/range/prefix-infix-suffix.properties",
 				"/test/default/weighing+from+18+to+35+grams/w-w/",
 				"",
 				10,
@@ -171,7 +171,7 @@ public class AvailableProcessorRangeFacetTest {
 		TestHelper.assertCanonicalURI("/test/default/11~18/w+w/", "/11~18/1/10/w+wpn/");
 	}
 
-	@Test public void testNoMidFixSuffix() throws PanlServerException, IOException {
+	@Test public void testNoInfixSuffix() throws PanlServerException, IOException {
 		JSONObject jsonObject = TestHelper.invokeAvailableProcessor(
 				"/range/suffix.properties",
 				"/test/default/10+grams~20+grams/w+w/",

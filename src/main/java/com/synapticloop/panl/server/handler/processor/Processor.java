@@ -87,7 +87,7 @@ public abstract class Processor {
 	//
 	// static strings for json values
 	//
-	public static final String JSON_VALUE_NO_MIDFIX_REPLACEMENT = "~";
+	public static final String JSON_VALUE_NO_INFIX_REPLACEMENT = "~";
 
 	//
 	// static strings for the forward slash

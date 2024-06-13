@@ -34,7 +34,6 @@ import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import java.util.Properties;
 
 /**
@@ -81,7 +80,7 @@ public class PanlFacetField extends BaseField {
 		if(isRangeFacet) {
 			FacetLpseToken facetLpseToken = (FacetLpseToken) token;
 			return(facetLpseToken.getLpseCode() +
-					(facetLpseToken.getHasMidFix() ? "-" : "+") +
+					(facetLpseToken.getHasInfix() ? "-" : "+") +
 					facetLpseToken.getLpseCode());
 		} else {
 			return (token.getLpseCode());

@@ -62,7 +62,7 @@ public abstract class BaseField {
 	public static final String PROPERTY_KEY_PANL_RANGE_MAX_WILDCARD = "panl.range.max.wildcard.";
 	public static final String PROPERTY_KEY_PANL_RANGE_PREFIX = "panl.range.prefix.";
 	public static final String PROPERTY_KEY_PANL_RANGE_SUFFIX = "panl.range.suffix.";
-	public static final String PROPERTY_KEY_PANL_RANGE_MIDFIX = "panl.range.midfix.";
+	public static final String PROPERTY_KEY_PANL_RANGE_INFIX = "panl.range.infix.";
 	public static final String PROPERTY_KEY_PANL_RANGE_MIN_VALUE = "panl.range.min.value.";
 	public static final String PROPERTY_KEY_PANL_RANGE_MAX_VALUE = "panl.range.max.value.";
 
@@ -84,9 +84,9 @@ public abstract class BaseField {
 	private String rangeMinValue;
 	private boolean hasMaxRange = false;
 	private String rangeMaxValue;
-	private boolean hasRangeMidfix = false;
+	private boolean hasRangeInfix = false;
 
-	private String rangeValueMidfix;
+	private String rangeValueInfix;
 	private String rangeMinValueReplacement;
 	private String rangeMaxValueReplacement;
 
@@ -257,9 +257,9 @@ public abstract class BaseField {
 				hasRangeSuffix = true;
 			}
 
-			this.rangeValueMidfix = properties.getProperty(PROPERTY_KEY_PANL_RANGE_MIDFIX + lpseCode, null);
-			if (null != this.rangeValueMidfix) {
-				hasRangeMidfix = true;
+			this.rangeValueInfix = properties.getProperty(PROPERTY_KEY_PANL_RANGE_INFIX + lpseCode, null);
+			if (null != this.rangeValueInfix) {
+				hasRangeInfix = true;
 			}
 
 			this.rangeMinValueReplacement = properties.getProperty(PROPERTY_KEY_PANL_RANGE_MIN_VALUE + lpseCode, null);
@@ -423,17 +423,17 @@ public abstract class BaseField {
 
 	/**
 	 * <p>Decode a range facet values which are in one of two formats, which
-	 * depends on whether the RANGE facet has <code>hasRangeMidfix</code> set.</p>
+	 * depends on whether the RANGE facet has <code>hasRangeInfix</code> set.</p>
 	 *
-	 * <p><strong><code>hasRangeMidfix == true</code></strong></p>
+	 * <p><strong><code>hasRangeInfix == true</code></strong></p>
 	 *
 	 * <ul>
 	 *   <li>The value will be URL decoded, then</li>
-	 *   <li>The value will be split on the <code>rangeMidfix</code></li>
+	 *   <li>The value will be split on the <code>rangeInfix</code></li>
 	 *   <li>If the split is exactly two Strings, carry on else return null.</li>
 	 * </ul>
 	 *
-	 * <p><strong><code>hasRangeMidfix == false</code></strong></p>
+	 * <p><strong><code>hasRangeInfix == false</code></strong></p>
 	 *
 	 * <ul>
 	 *   <li>The value will be split on the <code>/</code> character</li>
@@ -456,11 +456,11 @@ public abstract class BaseField {
 		String fromString = "";
 		String toString = "";
 
-		if (hasRangeMidfix) {
+		if (hasRangeInfix) {
 			// It is OK to decode the value as it is all in one
 			String decodedValue = URLDecoder.decode(value, StandardCharsets.UTF_8);
-			// then we need to split by the midfix
-			String[] fromToSplit = decodedValue.split(rangeValueMidfix);
+			// then we need to split by the infix
+			String[] fromToSplit = decodedValue.split(rangeValueInfix);
 			if (fromToSplit.length != 2) {
 				return (null);
 			} else {
@@ -468,7 +468,7 @@ public abstract class BaseField {
 				toString = fromToSplit[1];
 			}
 		} else {
-			String[] fromToSplit = value.split(Processor.JSON_VALUE_NO_MIDFIX_REPLACEMENT);
+			String[] fromToSplit = value.split(Processor.JSON_VALUE_NO_INFIX_REPLACEMENT);
 			if (fromToSplit.length != 2) {
 				return (null);
 			} else {
@@ -483,7 +483,7 @@ public abstract class BaseField {
 		String rangeMinValueReplace = getRangeMinValueReplacement();
 		String rangeMaxValueReplace = getRangeMaxValueReplacement();
 
-		if (hasRangeMidfix) {
+		if (hasRangeInfix) {
 			if (null != rangeMinValueReplace) {
 				if (fromString.equals(rangeMinValueReplace)) {
 					fromString = getMinRange();
@@ -606,7 +606,7 @@ public abstract class BaseField {
 	/**
 	 * <p>For a specific Token which is a range value, get the encoded URI path
 	 * value.  This will take care of prefixes, suffixes, min and max range
-	 * values, and range prefix/suffixes, and midfix if available</p>
+	 * values, and range prefix/suffixes, and infix if available</p>
 	 *
 	 * @param facetLpseToken The FacetLpseToken to interrogate
 	 *
@@ -622,7 +622,7 @@ public abstract class BaseField {
 		// at this point it is a range facet
 		StringBuilder sb = new StringBuilder();
 
-		if (hasRangeMidfix) {
+		if (hasRangeInfix) {
 			if (facetLpseToken.getValue().equals(rangeMinValue) && rangeMinValueReplacement != null) {
 				sb.append(rangeMinValueReplacement);
 			} else {
@@ -639,7 +639,7 @@ public abstract class BaseField {
 				}
 			}
 
-			sb.append(rangeValueMidfix);
+			sb.append(rangeValueInfix);
 
 			if (facetLpseToken.getToValue().equals(rangeMaxValue) && rangeMaxValueReplacement != null) {
 				sb.append(rangeMaxValueReplacement);
@@ -674,7 +674,7 @@ public abstract class BaseField {
 
 			}
 
-			sb.append(Processor.JSON_VALUE_NO_MIDFIX_REPLACEMENT);
+			sb.append(Processor.JSON_VALUE_NO_INFIX_REPLACEMENT);
 
 			if (facetLpseToken.getToValue().equals(rangeMaxValue) && null != rangeMaxValueReplacement) {
 				sb.append(URLEncoder.encode(rangeMaxValueReplacement, StandardCharsets.UTF_8));
@@ -758,11 +758,11 @@ public abstract class BaseField {
 	 *   field's LPSE code, then a blank string will be returned.</li>
 	 *   <li>If the token is not valid, then an empty string will be returned.</li>
 	 *   <li>If the token is a RANGE facet token, then the lpse code will
-	 *   include whether it has a midfix or not.
+	 *   include whether it has an infix or not.
 	 *   <ul>
-	 *     <li>If it has a midfix, the returned string will be
+	 *     <li>If it has an infix, the returned string will be
 	 *     <code>&lt;lpse_code&gt;-&lt;lpse_code&gt;</code></li>
-	 *     <li>If it does not have a midfix, then the returned string will be of
+	 *     <li>If it does not have an infix, then the returned string will be of
 	 *     the format <code>&lt;lpse_code&gt;+&lt;lpse_code&gt;</code></li>
 	 *   </ul>
 	 *   </li>
@@ -784,7 +784,7 @@ public abstract class BaseField {
 						FacetLpseToken facetLpseToken = (FacetLpseToken) lpseToken;
 						if (facetLpseToken.getIsRangeToken()) {
 							sb.append(lpseToken.getLpseCode());
-							sb.append((facetLpseToken.getHasMidFix() ? "-" : "+"));
+							sb.append((facetLpseToken.getHasInfix() ? "-" : "+"));
 							sb.append(lpseToken.getLpseCode());
 						} else {
 							sb.append(lpseToken.getLpseCode());
@@ -929,12 +929,12 @@ public abstract class BaseField {
 		}
 	}
 
-	public boolean getHasRangeMidfix() {
-		return (hasRangeMidfix);
+	public boolean getHasRangeInfix() {
+		return (hasRangeInfix);
 	}
 
-	public String getRangeValueMidfix() {
-		return (rangeValueMidfix);
+	public String getRangeValueInfix() {
+		return (rangeValueInfix);
 	}
 
 	public String getRangePrefix() {
@@ -955,7 +955,7 @@ public abstract class BaseField {
 
 
 	public String getPrefix() {
-		if (hasRangeMidfix) {
+		if (hasRangeInfix) {
 			return (getRangePrefix());
 		} else {
 			return (getValuePrefix());

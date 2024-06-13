@@ -24,7 +24,6 @@ package com.synapticloop.panl.server.handler.tokeniser.token;
  *  IN THE SOFTWARE.
  */
 
-import com.synapticloop.panl.server.handler.processor.Processor;
 import com.synapticloop.panl.server.handler.properties.CollectionProperties;
 import com.synapticloop.panl.server.handler.fielderiser.field.BaseField;
 import com.synapticloop.panl.server.handler.tokeniser.LpseTokeniser;
@@ -64,8 +63,8 @@ import java.util.StringTokenizer;
  * <p><code>/10/20/&lt;lpse_code&gt;+&lt;lpse_code&gt;/</code></p>
  *
  * <p>For the <code>-</code> - i.e. <code>/&lt;lpse_code&gt;-&lt;lpse_code&gt;/</code>
- * the values for this token will be separated by the midfix replacement which
- * is defined by the <code>panl.range.&lt;lpse_code&gt;.midfix</code>
+ * the values for this token will be separated by the infix replacement which
+ * is defined by the <code>panl.range.&lt;lpse_code&gt;.infix</code>
  * property.  This would translate to:</p>
  *
  * <p><code>/10-to-20/&lt;lpse_code&gt;-&lt;lpse_code&gt;/</code></p>
@@ -76,7 +75,7 @@ public class FacetLpseToken extends LpseToken {
 	private String solrField = null;
 	private String toValue = null;
 	protected boolean isRangeToken = false;
-	protected boolean hasMidFix = false;
+	protected boolean hasInfix = false;
 
 	public FacetLpseToken(
 			CollectionProperties collectionProperties,
@@ -105,7 +104,7 @@ public class FacetLpseToken extends LpseToken {
 				// current LPSE code - find it
 				this.isRangeToken = true;
 				if (possibleRangeDesignator.equals("-")) {
-					this.hasMidFix = true;
+					this.hasInfix = true;
 				}
 
 				StringBuilder nextLpse = new StringBuilder();
@@ -195,7 +194,7 @@ public class FacetLpseToken extends LpseToken {
 		return isRangeToken;
 	}
 
-	public boolean getHasMidFix() {
-		return hasMidFix;
+	public boolean getHasInfix() {
+		return hasInfix;
 	}
 }

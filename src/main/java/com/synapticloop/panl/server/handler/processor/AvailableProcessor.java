@@ -262,33 +262,33 @@ public class AvailableProcessor extends Processor {
 
 			if (baseField.getLpseCode().equals(additionLpseCode)) {
 				if (shouldRange) {
-					// depends on whether there is a midfix
+					// depends on whether there is an infix
 					// at this point we want to also do the min value replacement, if it
 					// exists
 					if(null != baseField.getRangeMinValueReplacement()) {
 						additionObject.put(JSON_KEY_BEFORE_MIN_VALUE, lpseUri.toString() + URLEncoder.encode(baseField.getRangeMinValueReplacement(), StandardCharsets.UTF_8));
 					}
 
-					if (lpseField.getHasRangeMidfix()) {
-						// we have a midfix - we will be using the range value prefix/suffix
+					if (lpseField.getHasRangeInfix()) {
+						// we have an infix - we will be using the range value prefix/suffix
 						lpseUri.append(URLEncoder.encode(baseField.getRangePrefix(), StandardCharsets.UTF_8));
 					} else {
-						// we don't have a midfix - we will be using the value prefix/suffix
+						// we don't have an infix - we will be using the value prefix/suffix
 						lpseUri.append(URLEncoder.encode(baseField.getValuePrefix(), StandardCharsets.UTF_8));
 					}
 
 					lpseCode.append(lpseField.getLpseCode());
-					lpseCode.append((lpseField.getHasRangeMidfix() ? "-" : "+"));
+					lpseCode.append((lpseField.getHasRangeInfix() ? "-" : "+"));
 
-					if (baseField.getHasRangeMidfix()) {
-						// we have the midfix
-						additionObject.put(JSON_KEY_DURING, URLEncoder.encode(baseField.getRangeValueMidfix(), StandardCharsets.UTF_8));
+					if (baseField.getHasRangeInfix()) {
+						// we have the infix
+						additionObject.put(JSON_KEY_DURING, URLEncoder.encode(baseField.getRangeValueInfix(), StandardCharsets.UTF_8));
 					} else {
 						// we shall use the value suffix and prefix;
 						additionObject.put(
 								JSON_KEY_DURING,
 								URLEncoder.encode(baseField.getValueSuffix(), StandardCharsets.UTF_8) +
-										JSON_VALUE_NO_MIDFIX_REPLACEMENT +
+										JSON_VALUE_NO_INFIX_REPLACEMENT +
 										URLEncoder.encode(baseField.getValuePrefix(), StandardCharsets.UTF_8));
 					}
 				}
@@ -298,7 +298,7 @@ public class AvailableProcessor extends Processor {
 				lpseCode.append(baseField.getLpseCode());
 
 				if(shouldRange) {
-					if(baseField.getHasRangeMidfix()) {
+					if(baseField.getHasRangeInfix()) {
 						lpseUri.append(URLEncoder.encode(baseField.getRangeSuffix(), StandardCharsets.UTF_8));
 					} else {
 						lpseUri.append(URLEncoder.encode(baseField.getValueSuffix(), StandardCharsets.UTF_8));
@@ -337,8 +337,8 @@ public class AvailableProcessor extends Processor {
 				lpseCode.append(baseField.getLpseCode());
 
 				// if this is a range, then there is a different format
-				if (shouldRange && lpseField.getHasRangeMidfix()) {
-					lpseCode.append((lpseField.getHasRangeMidfix() ? "-" : "+"));
+				if (shouldRange && lpseField.getHasRangeInfix()) {
+					lpseCode.append((lpseField.getHasRangeInfix() ? "-" : "+"));
 					lpseCode.append(lpseField.getLpseCode());
 				}
 			}
