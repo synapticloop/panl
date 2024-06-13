@@ -347,7 +347,7 @@ function getActiveRangeObject(rangeFacetName, activeObject) {
 	}
 
 	for(const activeRangeFacetObject of activeObject.facet) {
-		if(activeRangeFacetObject.facet_name === rangeFacetName) {
+		if(activeRangeFacetObject.facet_name === rangeFacetName && activeRangeFacetObject.value_to !== undefined) {
 			return(activeRangeFacetObject);
 		}
 	}

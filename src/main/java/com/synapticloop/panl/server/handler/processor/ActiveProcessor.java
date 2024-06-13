@@ -88,7 +88,12 @@ public class ActiveProcessor extends Processor {
 			if (lpseToken instanceof FacetLpseToken) {
 				FacetLpseToken facetLpseToken = (FacetLpseToken) lpseToken;
 				if (facetLpseToken.getIsRangeToken()) {
-					removeObject.put(JSON_KEY_VALUE_TO, facetLpseToken.getToValue());
+					String toValue = facetLpseToken.getToValue();
+					if(null == toValue) {
+						removeObject.remove(JSON_KEY_VALUE_TO);
+					} else {
+						removeObject.put(JSON_KEY_VALUE_TO, toValue);
+					}
 				}
 
 				removeObject.put(JSON_KEY_IS_RANGE_FACET, facetLpseToken.getIsRangeToken());

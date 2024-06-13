@@ -205,9 +205,11 @@ public class AvailableProcessor extends Processor {
 				// if we already have this facet selected - add in the to and from
 				// values - only allowed one facet code per range
 				if(panlTokenMap.containsKey(lpseCode)) {
-					FacetLpseToken lpseToken = (FacetLpseToken)panlTokenMap.get(lpseCode).get(0);
-					facetObject.put(JSON_KEY_VALUE, lpseToken.getValue());
-					facetObject.put(JSON_KEY_VALUE_TO, lpseToken.getToValue());
+					FacetLpseToken facetLpseToken = (FacetLpseToken)panlTokenMap.get(lpseCode).get(0);
+					if(null != facetLpseToken.getToValue()) {
+						facetObject.put(JSON_KEY_VALUE, facetLpseToken.getValue());
+						facetObject.put(JSON_KEY_VALUE_TO, facetLpseToken.getToValue());
+					}
 				}
 
 				// addition URIs are a little bit different...
