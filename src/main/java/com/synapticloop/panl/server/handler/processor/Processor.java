@@ -55,6 +55,7 @@ public abstract class Processor {
 	public static final String JSON_KEY_FACETS = "facets";
 	public static final String JSON_KEY_FACET_NAME = "facet_name";
 	public static final String JSON_KEY_FIELDS = "fields";
+	public static final String JSON_KEY_HAS_INFIX = "has_infix";
 	public static final String JSON_KEY_INVERSE_URI = "inverse_uri";
 	public static final String JSON_KEY_IS_DESCENDING = "is_descending";
 	public static final String JSON_KEY_IS_OR_FACET = "is_or_facet";

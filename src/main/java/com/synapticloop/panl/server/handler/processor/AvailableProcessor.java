@@ -284,9 +284,11 @@ public class AvailableProcessor extends Processor {
 
 					if (baseField.getHasRangeInfix()) {
 						// we have the infix
+						additionObject.put(JSON_KEY_HAS_INFIX, true);
 						additionObject.put(JSON_KEY_DURING, URLEncoder.encode(baseField.getRangeValueInfix(), StandardCharsets.UTF_8));
 					} else {
 						// we shall use the value suffix and prefix;
+						additionObject.put(JSON_KEY_HAS_INFIX, false);
 						additionObject.put(
 								JSON_KEY_DURING,
 								URLEncoder.encode(baseField.getValueSuffix(), StandardCharsets.UTF_8) +

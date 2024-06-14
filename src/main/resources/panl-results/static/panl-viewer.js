@@ -453,14 +453,11 @@ function addAvailableFilters(availableObject, activeObject) {
 			var facet = noUiSlider.options.facet;
 			var rangeLink = $("#range-anchor-" + facet.facet_name);
 
+			// This is used for the min/max value replacement
 			var hasMinReplacement = facet.uris.before_min_value !== undefined &&
 							values[0] === parseInt(facet.min);
 			var hasMaxReplacement = facet.uris.before_max_value !== undefined
 							&& values[1] === parseInt(facet.max);
-
-//								(facet.prefix !== undefined ? decodePanl(facet.prefix) : "") +
-//      					values[0] +
-//      					(facet.suffix !== undefined ? decodePanl(facet.suffix) : "");
 
 			var generatedHrefBefore = facet.uris.before +
       					values[0] +
