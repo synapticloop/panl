@@ -33,7 +33,8 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * <p>Base processor that all other processors inherit from.</p>
+ * <p>Base processor that all other processors inherit from.  Holds JSON keys,
+ * and defines base methods that can be overridden.</p>
  *
  * @author synapticloop
  */
@@ -144,5 +145,4 @@ public abstract class Processor {
 	public String processToString(Map<String, List<LpseToken>> panlTokenMap) {
 		return ("");
 	}
-
 }

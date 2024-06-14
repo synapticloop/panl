@@ -48,10 +48,19 @@ import java.util.stream.Collectors;
 public class Main {
 	private static final Logger LOGGER = LoggerFactory.getLogger(Main.class);
 
+	public static final String CMD_OPTION_OVERWRITE = "-overwrite";
+	public static final String CMD_OPTION_PORT = "-port";
+	public static final String CMD_OPTION_PROPERTIES = "-properties";
+	public static final String CMD_OPTION_SCHEMA = "-schema";
+
+	public static final String CMD_VALUE_SERVER = "server";
+	public static final String CMD_VALUE_GENERATE = "generate";
+
 	private static final Set<String> ALLOWABLE_COMMANDS = new HashSet<>();
+
 	static {
-		ALLOWABLE_COMMANDS.add("server");
-		ALLOWABLE_COMMANDS.add("generate");
+		ALLOWABLE_COMMANDS.add(CMD_VALUE_SERVER);
+		ALLOWABLE_COMMANDS.add(CMD_VALUE_GENERATE);
 	}
 
 	public static final String DEFAULT_PANL_PROPERTIES = "panl.properties";
@@ -65,34 +74,57 @@ public class Main {
 
 	private final String[] args;
 
+	/**
+	 * <p>Instantiate the Main</p>
+	 *
+	 * @param args The command line arguments
+	 */
 	public Main(String[] args) {
 		this.args = args;
 	}
 
-	private void parseCommandLine() throws PanlServerException, CommandLineOptionException, PanlGenerateException {
-		if(args.length < 1) {
-			usage("Could not determine command, should be one of 'server' or 'generate'");
+	/**
+	 * <p>Parse the command line options and execute the options.  This will
+	 * execute one of:</p>
+	 *
+	 * <ol>
+	 *   <li>Panl Server - start the Panl server</li>
+	 *   <li>Panl Generator - start the Panl generator</li>
+	 * </ol>
+	 *
+	 * @throws PanlServerException If the command line options were correctly
+	 * 		parsed and the Panl server was executed, however there was an
+	  		exception with the server
+	 * @throws CommandLineOptionException If the command line options could not
+	 * 		be parsed
+	 * @throws PanlGenerateException If the command line options were correctly
+	 * 		parsed and the Panl generator was executed, however there was an
+	 * 		exception with the generations
+	 */
+	private void parseAndExecuteCommandLine() throws PanlServerException, CommandLineOptionException, PanlGenerateException {
+		if (args.length < 1) {
+			usageAndException("Could not determine command, should be one of 'server' or 'generate'");
 		}
 
 		String command = args[0];
-		if(!ALLOWABLE_COMMANDS.contains(command)) {
-			usage(String.format("Unknown command of '%s', expecting 'server' or 'generate'", command));
+		if (!ALLOWABLE_COMMANDS.contains(command)) {
+			usageAndException(String.format("Unknown command of '%s', expecting 'server' or 'generate'", command));
 		}
 
 		// now go through the rest of the command line arguments
-		for(int i = 1; i < args.length; i++) {
+		for (int i = 1; i < args.length; i++) {
 			String optionKey = args[i];
 			try {
 				String optionValue = args[i + 1];
 				OPTIONS_MAP.put(optionKey, optionValue);
 				i++;
 			} catch (ArrayIndexOutOfBoundsException e) {
-				usage(String.format("Found a command line option of '%s' without a value", optionKey));
+				usageAndException(String.format("Found a command line option of '%s' without a value", optionKey));
 			}
 		}
 
 		// now parse the rest of the commands
-		if(command.equals("server")) {
+		if (command.equals(CMD_VALUE_SERVER)) {
 			parseAndExecuteServerCommands();
 		} else {
 			parseAndExecuteGenerateCommands();
@@ -100,15 +132,15 @@ public class Main {
 	}
 
 	private void parseAndExecuteServerCommands() throws PanlServerException, CommandLineOptionException {
-		this.propertiesFileLocation = OPTIONS_MAP.getOrDefault("-properties", DEFAULT_PANL_PROPERTIES);
-		String portNumberString = OPTIONS_MAP.getOrDefault("-port", DEFAULT_PORT_NUMBER);
+		this.propertiesFileLocation = OPTIONS_MAP.getOrDefault(CMD_OPTION_PROPERTIES, DEFAULT_PANL_PROPERTIES);
+		String portNumberString = OPTIONS_MAP.getOrDefault(CMD_OPTION_PORT, DEFAULT_PORT_NUMBER);
 		try {
 			this.portNumber = Integer.parseInt(portNumberString);
-		} catch(NumberFormatException e) {
-			usage(String.format("Could not parse port number of '%s'", portNumberString));
+		} catch (NumberFormatException e) {
+			usageAndException(String.format("Could not parse port number of '%s'", portNumberString));
 		}
 
-		LOGGER.info("Starting server with properties:");
+		LOGGER.info("Starting Panl server with properties:");
 		LOGGER.info("  -properties {}", this.propertiesFileLocation);
 		LOGGER.info("        -port {}", this.portNumber);
 
@@ -121,25 +153,25 @@ public class Main {
 	 * <p>Parse the command line options, and then execute the generation.</p>
 	 *
 	 * @throws CommandLineOptionException If there was an invalid command line
-	 *         option
+	 * 		option
 	 * @throws PanlGenerateException If there was an error with the generation of
-	 *         the panl.properties file, or the &lt;collection&gt;.panl.properties
-	 *         file
+	 * 		the panl.properties file, or the &lt;collection&gt;.panl.properties
+	 * 		file
 	 */
 	private void parseAndExecuteGenerateCommands() throws CommandLineOptionException, PanlGenerateException {
-		this.propertiesFileLocation = OPTIONS_MAP.getOrDefault("-properties", DEFAULT_PANL_PROPERTIES);
-		String schemaFileLocations = OPTIONS_MAP.getOrDefault("-schema", null);
-		String shouldOverwriteString = OPTIONS_MAP.getOrDefault("-overwrite", "false").toLowerCase();
+		this.propertiesFileLocation = OPTIONS_MAP.getOrDefault(CMD_OPTION_PROPERTIES, DEFAULT_PANL_PROPERTIES);
+		String schemaFileLocations = OPTIONS_MAP.getOrDefault(CMD_OPTION_SCHEMA, null);
+		String shouldOverwriteString = OPTIONS_MAP.getOrDefault(CMD_OPTION_OVERWRITE, "false").toLowerCase();
 
-		if(shouldOverwriteString.compareTo("true") == 0) {
+		if (shouldOverwriteString.compareTo("true") == 0) {
 			this.shouldOverwrite = true;
 		}
 
-		if(null == schemaFileLocations) {
-			usage("Mandatory command line option of '-schema' missing.");
+		if (null == schemaFileLocations) {
+			usageAndException("Mandatory command line option of '-schema' missing.");
 		}
 
-		LOGGER.info("Starting generation with properties:");
+		LOGGER.info("Starting Panl generation with properties:");
 		LOGGER.info("  -properties {}", this.propertiesFileLocation);
 		LOGGER.info("      -schema {}", schemaFileLocations);
 		LOGGER.info("   -overwrite {}", this.shouldOverwrite);
@@ -152,9 +184,16 @@ public class Main {
 		panlGenerator.generate();
 	}
 
-	private void usage(String message) throws CommandLineOptionException {
+	/**
+	 * <p>Print a simple usage message.</p>
+	 *
+	 * @param message The message to prepend to the usage instructions
+	 *
+	 * @throws CommandLineOptionException Always throws this exception
+	 */
+	private void usageAndException(String message) throws CommandLineOptionException {
 		System.out.printf("[ERROR]: %s\n", message);
-		if(args.length == 0) {
+		if (args.length == 0) {
 			System.out.println("[ERROR]: No arguments provided.");
 		} else {
 			System.out.println("[ERROR]: arguments were:");
@@ -165,7 +204,7 @@ public class Main {
 
 		// now print the usage
 		try (InputStream inputStream = Main.class.getResourceAsStream("/usage.txt")) {
-			if(null == inputStream) {
+			if (null == inputStream) {
 				System.out.println("[FATAL]: Could not read the usage.txt file.");
 			} else {
 				System.out.println(
@@ -179,8 +218,19 @@ public class Main {
 		throw new CommandLineOptionException("Invalid command line options.");
 	}
 
+	/**
+	 * <p>Main starting point for the application.</p>
+	 *
+	 * @param args The arguments to parse
+	 *
+	 * @throws PanlServerException If there was an error starting the server
+	 * @throws CommandLineOptionException If the command line options could not
+	 * 		be parsed
+	 * @throws PanlGenerateException If there was an error with the generation
+	 * 		of the properties
+	 */
 	public static void main(String[] args) throws PanlServerException, CommandLineOptionException, PanlGenerateException {
 		Main main = new Main(args);
-		main.parseCommandLine();
+		main.parseAndExecuteCommandLine();
 	}
 }

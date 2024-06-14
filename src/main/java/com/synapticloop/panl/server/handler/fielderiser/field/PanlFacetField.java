@@ -56,7 +56,7 @@ public class PanlFacetField extends BaseField {
 
 		populateSuffixAndPrefix();
 		populateBooleanReplacements();
-		populateSolrFieldType();
+		populateSolrFieldTypeValidation();
 		populatePanlAndSolrFieldNames();
 
 		populateRanges();

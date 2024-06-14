@@ -40,7 +40,7 @@ import java.util.Map;
 
 /**
  * <p>A helper class for serving up assets from the classpath.  Used by the
- * panl result viewer (and helpers) in-built servlet.</p>
+ * panl result viewer (and helpers) in-built handler.</p>
  *
  * @author synapticloop
  */

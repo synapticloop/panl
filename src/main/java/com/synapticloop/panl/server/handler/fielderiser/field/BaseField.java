@@ -66,6 +66,12 @@ public abstract class BaseField {
 	public static final String PROPERTY_KEY_PANL_RANGE_MIN_VALUE = "panl.range.min.value.";
 	public static final String PROPERTY_KEY_PANL_RANGE_MAX_VALUE = "panl.range.max.value.";
 
+	public static final String TYPE_SOLR_BOOL_FIELD = "solr.BoolField";
+	public static final String TYPE_SOLR_INT_POINT_FIELD = "solr.IntPointField";
+	public static final String TYPE_SOLR_LONG_POINT_FIELD = "solr.LongPointField";
+	public static final String TYPE_SOLR_DOUBLE_POINT_FIELD = "solr.DoublePointField";
+	public static final String TYPE_SOLR_FLOAT_POINT_FIELD = "solr.FloatPointField";
+
 	private boolean hasValuePrefix = false;
 	private boolean hasValueSuffix = false;
 	private String valuePrefix;
@@ -184,12 +190,27 @@ public abstract class BaseField {
 		boolean rangeFacet = properties.getProperty(PROPERTY_KEY_PANL_RANGE_FACET + this.lpseCode, "false").equals("true");
 		if(orFacet && rangeFacet) {
 			hasErrors = true;
-			getLogger().error("You __MAY NOT__ set a facet to both OR and RANGE.  Properties: '{}{}' and '{}{}'.",
+			getLogger().error("You __MAY_NOT__ set a facet to both OR and RANGE.  Properties: '{}{}' and '{}{}'.",
 					PROPERTY_KEY_PANL_OR_FACET,
 					this.lpseCode,
 					PROPERTY_KEY_PANL_RANGE_FACET,
-					this.lpseCode
-			);
+					this.lpseCode);
+		}
+
+		if(rangeFacet) {
+			String infix = properties.getProperty(PROPERTY_KEY_PANL_RANGE_INFIX + this.lpseCode, null);
+			if(null != infix) {
+				if(infix.equals("-")) {
+					hasErrors = true;
+					getLogger().error("You __MAY_NOT__ set an infix value to the minus character '-'.  Property: '{}{}'.",
+							PROPERTY_KEY_PANL_RANGE_INFIX,
+							this.lpseCode);
+				} else if(infix.contains("-")) {
+					getLogger().warn("Setting an infix value that contains the minus character '-' __MAY__ cause parsing errors.  Property: '{}{}'.",
+							PROPERTY_KEY_PANL_RANGE_INFIX,
+							this.lpseCode);
+				}
+			}
 		}
 
 		if(hasErrors) {
@@ -197,13 +218,19 @@ public abstract class BaseField {
 		}
 	}
 
+	/**
+	 * <p>Populate any replacements for boolean field types which map to the Solr
+	 * field type of <code>solr.BoolField</code></p>
+	 *
+	 * <p>This will only have an effect if it is a boolean field type</p>
+	 */
 	protected void populateBooleanReplacements() {
 		// finally - we are going to look at the replacement - but only if there
 		// is a type of solr.BoolField and values are actually assigned
 
-		populateSolrFieldType();
+		populateSolrFieldTypeValidation();
 
-		if (null != solrFieldType && solrFieldType.equals("solr.BoolField")) {
+		if (null != solrFieldType && solrFieldType.equals(TYPE_SOLR_BOOL_FIELD)) {
 			this.booleanTrueReplacement = properties.getProperty("panl.bool." + this.lpseCode + ".true", null);
 			if (null != this.booleanTrueReplacement) {
 				hasBooleanTrueReplacement = true;
@@ -226,16 +253,16 @@ public abstract class BaseField {
 		}
 	}
 
-	protected void populateSolrFieldType() {
+	protected void populateSolrFieldTypeValidation() {
 		if (null == this.solrFieldType) {
 			this.solrFieldType = properties.getProperty(PROPERTY_KEY_PANL_TYPE + lpseCode);
 			switch (this.solrFieldType) {
-				case "solr.IntPointField":
-				case "solr.LongPointField":
+				case TYPE_SOLR_INT_POINT_FIELD:
+				case TYPE_SOLR_LONG_POINT_FIELD:
 					this.validationType = VALIDATION_TYPE_NUMBER;
 					break;
-				case "solr.DoublePointField":
-				case "solr.FloatPointField":
+				case TYPE_SOLR_DOUBLE_POINT_FIELD:
+				case TYPE_SOLR_FLOAT_POINT_FIELD:
 					this.validationType = VALIDATION_TYPE_DECIMAL;
 					break;
 				default:
