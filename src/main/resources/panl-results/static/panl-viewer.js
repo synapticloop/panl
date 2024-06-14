@@ -459,27 +459,36 @@ function addAvailableFilters(availableObject, activeObject) {
 			var hasMaxReplacement = facet.uris.before_max_value !== undefined
 							&& values[1] === parseInt(facet.max);
 
-			var generatedHrefBefore = facet.uris.before +
+			var generatedHrefBefore =
+								facet.uris.before +
       					values[0] +
-								(!hasMinReplacement ? (facet.suffix !== undefined ? decodePanl(facet.suffix) : "") : "");
+								(!facet.uris.has_infix ? "" : (facet.suffix !== undefined ? facet.suffix : ""));
 			var generatedHrefAfter =
-								(!hasMaxReplacement ? (facet.prefix !== undefined ? decodePanl(facet.prefix) : "") : "") +
+								(facet.uris.has_infix ? "" : (facet.prefix !== undefined ? facet.prefix : "")) +
                 values[1] +
 						    facet.uris.after;
 
+			var generatedHrefDuring = facet.uris.during;
+
 			if(facet.uris.before_min_value !== undefined && values[0] === parseInt(facet.min)) {
 				generatedHrefBefore = facet.uris.before_min_value;
+				if(!facet.uris.has_infix && values[0] === parseInt(facet.min)) {
+					generatedHrefDuring = "~";
+				}
 			}
 
 			if(facet.uris.after_max_value !== undefined && values[1] === parseInt(facet.max)) {
 				generatedHrefAfter = facet.uris.after_max_value;
+				if(!facet.uris.has_infix  && values[0] === parseInt(facet.max)) {
+					generatedHrefDuring = "~";
+				}
 			}
 
 			rangeLink.attr("href",
 					panlResultsViewerUrl +
             $("#collection").text() +
             generatedHrefBefore +
-            facet.uris.during +
+            generatedHrefDuring +
             generatedHrefAfter
 					);
 
