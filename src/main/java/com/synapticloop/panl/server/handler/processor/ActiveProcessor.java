@@ -40,6 +40,9 @@ import java.util.List;
 import java.util.Map;
 
 public class ActiveProcessor extends Processor {
+
+	public static final String JSON_KEY_SORT_FIELDS = "sort_fields";
+
 	public ActiveProcessor(CollectionProperties collectionProperties) {
 		super(collectionProperties);
 	}
@@ -71,6 +74,7 @@ public class ActiveProcessor extends Processor {
 			}
 		}
 
+		JSONObject activeSortObject = new JSONObject();
 		int i = 0;
 		for (LpseToken lpseToken : lpseTokens) {
 			String tokenType = lpseToken.getType();
@@ -117,6 +121,7 @@ public class ActiveProcessor extends Processor {
 					removeObject.put(JSON_KEY_IS_DESCENDING, sortLpseToken.getSortOrderUriKey().equals(SortLpseToken.SORT_ORDER_URI_KEY_DESCENDING));
 					removeObject.put(JSON_KEY_ENCODED, URLEncoder.encode(panlNameFromSolrFieldName, StandardCharsets.UTF_8));
 					removeObject.put(JSON_KEY_INVERSE_URI, getSortReplaceURI(sortLpseToken, uriComponents, lpseComponents));
+					activeSortObject.put(solrFacetField, true);
 				} else {
 					shouldAddObject = false;
 				}
@@ -131,6 +136,11 @@ public class ActiveProcessor extends Processor {
 				jsonArray.put(removeObject);
 			}
 			i++;
+
+			if(!activeSortObject.isEmpty()) {
+				jsonObject.put(JSON_KEY_SORT_FIELDS, activeSortObject);
+			}
+
 			jsonObject.put(tokenType, jsonArray);
 		}
 		return (jsonObject);

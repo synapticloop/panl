@@ -55,6 +55,10 @@ public class QueryOperandLpseToken extends LpseToken {
 			this.queryOperand = collectionProperties.getDefaultQueryOperand();
 			isValid = false;
 		}
+
+		if(isValid) {
+			this.value = this.queryOperand;
+		}
 	}
 
 	@Override public String explain() {
