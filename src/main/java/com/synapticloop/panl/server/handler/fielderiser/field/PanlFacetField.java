@@ -52,6 +52,8 @@ public class PanlFacetField extends BaseField {
 	public PanlFacetField(String lpseCode, String propertyKey, Properties properties, String collectionName, int lpseLength) throws PanlServerException {
 		super(lpseCode, properties, propertyKey, collectionName, lpseLength);
 
+		validateProperties();
+
 		populateSuffixAndPrefix();
 		populateBooleanReplacements();
 		populateSolrFieldType();
@@ -60,8 +62,6 @@ public class PanlFacetField extends BaseField {
 		populateRanges();
 		// lastly, we are going to check to see whether this is an 'OR' field
 		populateFacetOr();
-
-
 		logDetails();
 	}
 

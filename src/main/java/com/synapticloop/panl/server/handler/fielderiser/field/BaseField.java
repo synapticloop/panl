@@ -154,16 +154,6 @@ public abstract class BaseField {
 		}
 	}
 
-	public void logDetails() {
-		getLogger().info("[{}] Mapping Solr field name '{}' to panl key '{}', LPSE length {}, isOrFacet: {}, isRangeFacet: {}",
-				collectionName,
-				solrFieldName,
-				lpseCode,
-				lpseLength,
-				isOrFacet,
-				isRangeFacet);
-	}
-
 	protected void populateFacetOr() {
 		this.isOrFacet = properties.getProperty(PROPERTY_KEY_PANL_OR_FACET + lpseCode, "false").equalsIgnoreCase("true");
 		if (this.isOrFacet) {
@@ -179,6 +169,31 @@ public abstract class BaseField {
 					getLogger().error("Property '{}' must be set", PROPERTY_KEY_SOLR_FACET_MIN_COUNT);
 				}
 			}
+		}
+	}
+
+	/**
+	 * <p>Default validation of properties - this does not set any properties.</p>
+	 *
+	 * @throws PanlServerException If there was an error parsing the properties
+	 */
+	protected void validateProperties() throws PanlServerException {
+		boolean hasErrors = false;
+		// check for or facet and range facet
+		boolean orFacet = properties.getProperty(PROPERTY_KEY_PANL_OR_FACET + this.lpseCode, "false").equals("true");
+		boolean rangeFacet = properties.getProperty(PROPERTY_KEY_PANL_RANGE_FACET + this.lpseCode, "false").equals("true");
+		if(orFacet && rangeFacet) {
+			hasErrors = true;
+			getLogger().error("You __MAY NOT__ set a facet to both OR and RANGE.  Properties: '{}{}' and '{}{}'.",
+					PROPERTY_KEY_PANL_OR_FACET,
+					this.lpseCode,
+					PROPERTY_KEY_PANL_RANGE_FACET,
+					this.lpseCode
+			);
+		}
+
+		if(hasErrors) {
+			throw new PanlServerException("FATAL Property validation errors, not continuing.");
 		}
 	}
 
@@ -970,6 +985,16 @@ public abstract class BaseField {
 		return (rangeMaxValueReplacement);
 	}
 
+
+	public void logDetails() {
+		getLogger().info("[{}] Mapping Solr field name '{}' to panl key '{}', LPSE length {}, isOrFacet: {}, isRangeFacet: {}",
+				collectionName,
+				solrFieldName,
+				lpseCode,
+				lpseLength,
+				isOrFacet,
+				isRangeFacet);
+	}
 
 	/**
 	 * <p>The internal implementation for applying the tokens to the SolrQuery</p>
