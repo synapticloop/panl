@@ -160,7 +160,7 @@ public abstract class BaseField {
 		}
 	}
 
-	protected void populateFacetOr() {
+	protected void populateFacetOr() throws PanlServerException {
 		this.isOrFacet = properties.getProperty(PROPERTY_KEY_PANL_OR_FACET + lpseCode, "false").equalsIgnoreCase("true");
 		if (this.isOrFacet) {
 			String propertyFacetMinCount = properties.getProperty(PROPERTY_KEY_SOLR_FACET_MIN_COUNT, null);
@@ -171,8 +171,8 @@ public abstract class BaseField {
 						getLogger().warn("Property '{}' __MUST__ be set to zero for '{}{}' to be enabled.", PROPERTY_KEY_SOLR_FACET_MIN_COUNT, PROPERTY_KEY_PANL_OR_FACET, lpseCode);
 					}
 				} catch (NumberFormatException e) {
-					// TODO - should we throw an exception???
-					getLogger().error("Property '{}' must be set", PROPERTY_KEY_SOLR_FACET_MIN_COUNT);
+					getLogger().error("Property '{}' __MUST__ be set.", PROPERTY_KEY_SOLR_FACET_MIN_COUNT);
+					throw new PanlServerException("Property " + PROPERTY_KEY_SOLR_FACET_MIN_COUNT + " was not set.");
 				}
 			}
 		}
