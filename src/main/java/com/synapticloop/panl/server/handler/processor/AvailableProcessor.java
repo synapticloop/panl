@@ -319,35 +319,4 @@ public class AvailableProcessor extends Processor {
 		additionObject.put(JSON_KEY_AFTER_MAX_VALUE, lpseUriAfterMax.toString() + lpseCode.toString() + FORWARD_SLASH);
 		return (additionObject);
 	}
-
-	private JSONObject getReplacementURIObject(BaseField lpseField, Map<String, List<LpseToken>> panlTokenMap, boolean shouldRange) {
-		String replacementLpse = lpseField.getLpseCode();
-		JSONObject additionObject = new JSONObject();
-		StringBuilder lpseUri = new StringBuilder(FORWARD_SLASH);
-		StringBuilder lpseCode = new StringBuilder();
-
-		for (BaseField baseField : collectionProperties.getLpseFields()) {
-
-			if (panlTokenMap.containsKey(baseField.getLpseCode())) {
-				lpseUri.append(baseField.getResetUriPath(panlTokenMap, collectionProperties));
-				lpseCode.append(baseField.getResetLpseCode(panlTokenMap, collectionProperties));
-			}
-
-			if (baseField.getLpseCode().equals(replacementLpse)) {
-				additionObject.put(JSON_KEY_BEFORE, lpseUri.toString());
-				lpseUri.setLength(0);
-				lpseCode.append(baseField.getLpseCode());
-
-				// if this is a range, then there is a different format
-				if (shouldRange && lpseField.getHasRangeInfix()) {
-					lpseCode.append((lpseField.getHasRangeInfix() ? "-" : "+"));
-					lpseCode.append(lpseField.getLpseCode());
-				}
-			}
-		}
-
-		additionObject.put(JSON_KEY_AFTER, FORWARD_SLASH + lpseUri + lpseCode + FORWARD_SLASH);
-		return (additionObject);
-	}
-
 }
