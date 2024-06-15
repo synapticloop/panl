@@ -42,9 +42,9 @@ application {
 
 distributions {
     main {
-        distributionBaseName = 'panl-solr-9'
+        distributionBaseName = 'solr-panl-9'
         contents {
-            from 'src/panl-solr-9/'
+            from 'src/solr-panl-9/'
         }
     }
 }

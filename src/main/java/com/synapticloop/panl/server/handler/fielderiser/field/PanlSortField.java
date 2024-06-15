@@ -40,8 +40,8 @@ import java.util.Properties;
 public class PanlSortField extends BaseField {
 	private static final Logger LOGGER = LoggerFactory.getLogger(PanlSortField.class);
 
-	public PanlSortField(String lpseCode, String propertyKey, Properties properties, String collectionName) throws PanlServerException {
-		super(lpseCode, properties, propertyKey, collectionName);
+	public PanlSortField(String lpseCode, String propertyKey, Properties properties, String solrCollection) throws PanlServerException {
+		super(lpseCode, properties, propertyKey, solrCollection);
 
 		populatePanlAndSolrFieldNames();
 		logDetails();

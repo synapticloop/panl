@@ -40,8 +40,8 @@ import java.util.Properties;
 public class PanlQueryOperandField extends BaseField {
 	private static final Logger LOGGER = LoggerFactory.getLogger(PanlQueryOperandField.class);
 
-	public PanlQueryOperandField(String lpseCode, String propertyKey, Properties properties, String collectionName) throws PanlServerException {
-		super(lpseCode, properties, propertyKey, collectionName);
+	public PanlQueryOperandField(String lpseCode, String propertyKey, Properties properties, String solrCollection) throws PanlServerException {
+		super(lpseCode, properties, propertyKey, solrCollection);
 
 		logDetails();
 	}

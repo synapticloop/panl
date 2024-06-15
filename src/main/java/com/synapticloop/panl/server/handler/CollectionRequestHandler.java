@@ -41,7 +41,6 @@ import com.synapticloop.panl.server.handler.tokeniser.token.QueryLpseToken;
 import org.apache.solr.client.solrj.SolrClient;
 import org.apache.solr.client.solrj.SolrQuery;
 import org.apache.solr.client.solrj.response.QueryResponse;
-import org.apache.solr.common.SolrDocumentList;
 import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -76,7 +75,7 @@ public class CollectionRequestHandler {
 	public static final String JSON_KEY_PANL_BUILD_REQUEST_TIME = "panl_build_request_time";
 	public static final String JSON_KEY_PANL_BUILD_RESPONSE_TIME = "panl_build_response_time";
 
-	private final String collectionName;
+	private final String solrCollection;
 	private final CollectionProperties collectionProperties;
 	private final PanlClient panlClient;
 
@@ -89,6 +88,7 @@ public class CollectionRequestHandler {
 	private final FieldsProcessor fieldsProcessor;
 	private final AvailableProcessor availableProcessor;
 	private final CanonicalURIProcessor canonicalURIProcessor;
+	private final String panlCollectionName;
 
 	/**
 	 * <p>The collection request handler which maps a single collection and its
@@ -97,20 +97,27 @@ public class CollectionRequestHandler {
 	 * <p>The URI path is made up of
 	 * <code>&lt;collection_uri&gt;/&lt;field_set_name&gt;/</code></p>
 	 *
-	 * @param collectionName The collection name
+	 * @param solrCollection The solr collection name to retrieve the search
+	 * 		results from
+	 * @param panlCollectionName The name of the collection that the Panl server
+	 * 		is bound to.
 	 * @param panlProperties The panl base properties, for connection to the Solr
 	 * 		server
 	 * @param collectionProperties The collection properties
 	 *
 	 * @throws PanlServerException If there was an error with the request
 	 */
-	public CollectionRequestHandler(String collectionName, PanlProperties panlProperties, CollectionProperties collectionProperties) throws PanlServerException {
-		LOGGER.info("[{}] Initialising collection", collectionName);
+	public CollectionRequestHandler(String solrCollection,
+	                                String panlCollectionName,
+	                                PanlProperties panlProperties,
+	                                CollectionProperties collectionProperties) throws PanlServerException {
+		LOGGER.info("[{}] Initialising Panl collection {}", solrCollection, panlCollectionName);
 
-		this.collectionName = collectionName;
+		this.solrCollection = solrCollection;
+		this.panlCollectionName = panlCollectionName;
 		this.collectionProperties = collectionProperties;
 
-		panlClient = CollectionHelper.getPanlClient(panlProperties.getSolrjClient(), collectionName, panlProperties, collectionProperties);
+		panlClient = CollectionHelper.getPanlClient(panlProperties.getSolrjClient(), solrCollection, panlProperties, collectionProperties);
 
 		this.activeProcessor = new ActiveProcessor(collectionProperties);
 		this.paginationProcessor = new PaginationProcessor(collectionProperties);
@@ -183,7 +190,7 @@ public class CollectionRequestHandler {
 				}
 
 				// only adding valid tokens
-				if(lpseToken.getIsValid()) {
+				if (lpseToken.getIsValid()) {
 					lpseTokenList.add(lpseToken);
 					panlTokenMap.put(lpseCode, lpseTokenList);
 				}
@@ -214,7 +221,7 @@ public class CollectionRequestHandler {
 
 			long buildRequestNanos = System.nanoTime() - startNanos;
 			startNanos = System.nanoTime();
-			final QueryResponse response = solrClient.query(this.collectionName, solrQuery);
+			final QueryResponse response = solrClient.query(this.solrCollection, solrQuery);
 
 			long sendAnReceiveNanos = System.nanoTime() - startNanos;
 			return (parseResponse(
@@ -273,7 +280,7 @@ public class CollectionRequestHandler {
 		for (String key : panlTokenMap.keySet()) {
 			List<LpseToken> lpseTokenTemp = panlTokenMap.get(key);
 			// but we don't sort on the sort tokens - as there is an order to them
-			if(!key.equals(collectionProperties.getPanlParamSort())) {
+			if (!key.equals(collectionProperties.getPanlParamSort())) {
 				lpseTokenTemp.sort((o1, o2) -> {
 					if (!o1.getIsValid() || !o2.getIsValid()) {
 						// either one is invalid and won't be sent through or generate a
@@ -373,13 +380,13 @@ public class CollectionRequestHandler {
 			while (lpseTokeniser.hasMoreTokens()) {
 				String token = lpseTokeniser.nextToken();
 				LpseToken lpseToken = LpseToken.getLpseToken(collectionProperties, token, query, valueTokeniser, lpseTokeniser);
-				if(lpseToken instanceof QueryLpseToken) {
+				if (lpseToken instanceof QueryLpseToken) {
 					hasQuery = true;
 				}
 
 				lpseTokens.add(lpseToken);
 				String equivalenceValue = lpseToken.getEquivalenceValue();
-				if(existingTokens.contains(equivalenceValue)) {
+				if (existingTokens.contains(equivalenceValue)) {
 					lpseToken.setIsValid(false);
 				} else {
 					existingTokens.add(equivalenceValue);
@@ -406,12 +413,15 @@ public class CollectionRequestHandler {
 		return (collectionProperties.isValidResultFieldsName(path));
 	}
 
-	public String getCollectionName() {
-		return collectionName;
+	public String getSolrCollection() {
+		return solrCollection;
 	}
 
 	public List<String> getResultFieldsNames() {
 		return (new ArrayList<>(collectionProperties.getResultFieldsNames()));
 	}
 
+	public String getPanlCollectionName() {
+		return panlCollectionName;
+	}
 }

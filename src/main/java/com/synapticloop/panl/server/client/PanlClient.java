@@ -38,12 +38,12 @@ import java.nio.charset.StandardCharsets;
 public abstract class PanlClient {
 	public static final Logger LOGGER = LoggerFactory.getLogger(PanlClient.class);
 
-	protected final String collectionName;
+	protected final String solrCollection;
 	protected final PanlProperties panlProperties;
 	protected final CollectionProperties collectionProperties;
 
-	public PanlClient(String collectionName, PanlProperties panlProperties, CollectionProperties collectionProperties) {
-		this.collectionName = collectionName;
+	public PanlClient(String solrCollection, PanlProperties panlProperties, CollectionProperties collectionProperties) {
+		this.solrCollection = solrCollection;
 		this.panlProperties = panlProperties;
 		this.collectionProperties = collectionProperties;
 	}

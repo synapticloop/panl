@@ -34,18 +34,18 @@ import org.slf4j.LoggerFactory;
 public class CollectionHelper {
 	private static final Logger LOGGER = LoggerFactory.getLogger(CollectionHelper.class);
 
-	public static PanlClient getPanlClient(String solrJClient, String collectionName, PanlProperties panlProperties, CollectionProperties collectionProperties) throws PanlServerException {
-		LOGGER.info("[{}] Looking up solrjClient of '{}'", collectionName, solrJClient);
+	public static PanlClient getPanlClient(String solrJClient, String solrCollection, PanlProperties panlProperties, CollectionProperties collectionProperties) throws PanlServerException {
+		LOGGER.info("[{}] Looking up solrjClient of '{}'", solrCollection, solrJClient);
 
 		switch (solrJClient) {
 			case "Http2SolrClient":
-				return (new PanlHttp2SolrClient(collectionName, panlProperties, collectionProperties));
+				return (new PanlHttp2SolrClient(solrCollection, panlProperties, collectionProperties));
 			case "HttpJdkSolrClient":
-				return (new PanlHttpJdkSolrClient(collectionName, panlProperties, collectionProperties));
+				return (new PanlHttpJdkSolrClient(solrCollection, panlProperties, collectionProperties));
 			case "LBHttp2SolrClient":
-				return (new PanlLBHttp2SolrClient(collectionName, panlProperties, collectionProperties));
+				return (new PanlLBHttp2SolrClient(solrCollection, panlProperties, collectionProperties));
 			case "CloudSolrClient":
-				return (new PanlCloudSolrClient(collectionName, panlProperties, collectionProperties));
+				return (new PanlCloudSolrClient(solrCollection, panlProperties, collectionProperties));
 			default:
 				throw new PanlServerException("Unknown property value for 'solrj.client' of '" + solrJClient + "', available values are 'Http2SolrClient', 'HttpJdkSolrClient', 'LBHttp2SolrClient', or 'CloudSolrClient'.");
 		}

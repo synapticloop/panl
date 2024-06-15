@@ -31,8 +31,8 @@ import org.apache.solr.client.solrj.SolrClient;
 import org.apache.solr.client.solrj.impl.HttpJdkSolrClient;
 
 public class PanlHttpJdkSolrClient extends PanlClient {
-	public PanlHttpJdkSolrClient(String collectionName, PanlProperties panlProperties, CollectionProperties collectionProperties) throws PanlServerException {
-		super(collectionName, panlProperties, collectionProperties);
+	public PanlHttpJdkSolrClient(String solrCollection, PanlProperties panlProperties, CollectionProperties collectionProperties) throws PanlServerException {
+		super(solrCollection, panlProperties, collectionProperties);
 	}
 
 	@Override

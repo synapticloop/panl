@@ -79,7 +79,7 @@ public class PanlDefaultHandler implements HttpRequestHandler {
 			jsonObject.put(JSON_KEY_MESSAGE, JSON_VALUE_MESSAGE);
 			JSONArray validUrls = new JSONArray();
 			for (CollectionRequestHandler collectionRequestHandler : collectionRequestHandlers) {
-				validUrls.put("/" + collectionRequestHandler.getCollectionName() + "/*");
+				validUrls.put("/" + collectionRequestHandler.getSolrCollection() + "/*");
 			}
 			jsonObject.put(JSON_KEY_VALID_URLS, validUrls);
 		} else {

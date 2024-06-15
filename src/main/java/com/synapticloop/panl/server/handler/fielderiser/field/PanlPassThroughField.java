@@ -39,8 +39,8 @@ import java.util.Properties;
 public class PanlPassThroughField extends BaseField {
 	private static final Logger LOGGER = LoggerFactory.getLogger(PanlPassThroughField.class);
 
-	public PanlPassThroughField(String lpseCode, String propertyKey, Properties properties, String collectionName) throws PanlServerException {
-		super(lpseCode, properties, propertyKey, collectionName);
+	public PanlPassThroughField(String lpseCode, String propertyKey, Properties properties, String solrCollection) throws PanlServerException {
+		super(lpseCode, properties, propertyKey, solrCollection);
 
 		populateParamSuffixAndPrefix();
 

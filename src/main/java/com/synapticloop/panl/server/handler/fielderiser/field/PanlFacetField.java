@@ -49,8 +49,8 @@ import java.util.Properties;
 public class PanlFacetField extends BaseField {
 	private static final Logger LOGGER = LoggerFactory.getLogger(PanlFacetField.class);
 
-	public PanlFacetField(String lpseCode, String propertyKey, Properties properties, String collectionName, int lpseLength) throws PanlServerException {
-		super(lpseCode, properties, propertyKey, collectionName, lpseLength);
+	public PanlFacetField(String lpseCode, String propertyKey, Properties properties, String solrCollection, int lpseLength) throws PanlServerException {
+		super(lpseCode, properties, propertyKey, solrCollection, lpseLength);
 
 		validateProperties();
 

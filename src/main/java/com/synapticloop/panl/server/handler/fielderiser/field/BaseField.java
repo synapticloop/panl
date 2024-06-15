@@ -119,7 +119,7 @@ public abstract class BaseField {
 	private String solrFieldType;
 
 	private final Properties properties;
-	private final String collectionName;
+	private final String solrCollection;
 	private final String propertyKey;
 
 	private final int lpseLength;
@@ -134,21 +134,21 @@ public abstract class BaseField {
 			String lpseCode,
 			Properties properties,
 			String propertyKey,
-			String collectionName) throws PanlServerException {
-		this(lpseCode, properties, propertyKey, collectionName, 1);
+			String solrCollection) throws PanlServerException {
+		this(lpseCode, properties, propertyKey, solrCollection, 1);
 	}
 
 	public BaseField(
 			String lpseCode,
 			Properties properties,
 			String propertyKey,
-			String collectionName,
+			String solrCollection,
 			int lpseLength) throws PanlServerException {
 
 		this.lpseCode = lpseCode;
 		this.properties = properties;
 		this.propertyKey = propertyKey;
-		this.collectionName = collectionName;
+		this.solrCollection = solrCollection;
 		this.lpseLength = lpseLength;
 
 		if (!propertyKey.equals(PROPERTY_KEY_PANL_SORT_FIELDS)) {
@@ -1015,7 +1015,7 @@ public abstract class BaseField {
 
 	public void logDetails() {
 		getLogger().info("[{}] Mapping Solr field name '{}' to panl key '{}', LPSE length {}, isOrFacet: {}, isRangeFacet: {}",
-				collectionName,
+				solrCollection,
 				solrFieldName,
 				lpseCode,
 				lpseLength,

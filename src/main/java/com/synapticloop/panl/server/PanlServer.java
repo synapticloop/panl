@@ -94,7 +94,7 @@ public class PanlServer {
 	 *
 	 * @throws PanlServerException If there was an error parsing the properties
 	 * 		file.
-	 * @see CollectionRequestHandler#CollectionRequestHandler(String, PanlProperties, CollectionProperties)
+	 * @see CollectionRequestHandler#CollectionRequestHandler(String, String, PanlProperties, CollectionProperties)
 	 */
 	private void parsePropertiesFile() throws PanlServerException {
 		Properties properties = new Properties();
@@ -106,37 +106,50 @@ public class PanlServer {
 
 		panlProperties = new PanlProperties(properties);
 
-		File file = new File(propertiesFileLocation);
-		File propertiesFileDirectory = file.getAbsoluteFile().getParentFile();
+		File panlPropertiesFile = new File(propertiesFileLocation);
+		File propertiesFileDirectory = panlPropertiesFile.getAbsoluteFile().getParentFile();
 
 		Enumeration<Object> keys = properties.keys();
 		while (keys.hasMoreElements()) {
 			String key = (String) keys.nextElement();
 			if (key.startsWith(PROPERTY_KEY_PANL_COLLECTION)) {
 				// we have found a new collection
-				String collectionName = key.substring(PROPERTY_KEY_PANL_COLLECTION.length());
-				Properties fileCollectionProperties = new Properties();
-				String fileName = propertiesFileDirectory + File.separator + properties.getProperty(key);
-				LOGGER.info("Found collection named '{}' with file location '{}'.", collectionName, fileName);
+				String solrCollection = key.substring(PROPERTY_KEY_PANL_COLLECTION.length());
 
-				CollectionProperties collectionProperties;
-				try {
-					fileCollectionProperties.load(new FileReader(fileName));
-					collectionProperties = new CollectionProperties(
-							collectionName,
-							fileCollectionProperties);
+				for (String propertyFileName : properties.getProperty(key).split(",")) {
+					Properties propertiesCollectionProperties = new Properties();
 
-					collectionPropertiesList.add(collectionProperties);
-				} catch (IOException e) {
-					throw new PanlServerException(e.getMessage());
+					CollectionProperties collectionProperties;
+					String panlCollectionName;
+					try {
+						File collectionPropertiesFile = new File(propertiesFileDirectory + File.separator + propertyFileName.trim());
+
+						LOGGER.info("Found collection named '{}' with file location '{}'.", solrCollection, collectionPropertiesFile.getName());
+
+						propertiesCollectionProperties.load(new FileReader(collectionPropertiesFile));
+
+						collectionProperties = new CollectionProperties(
+								solrCollection,
+								propertiesCollectionProperties);
+
+						// TODO - need a set to lookup so that there aren't multiple panl
+						//  collection names bound
+
+						String fileName = collectionPropertiesFile.getName();
+						panlCollectionName = fileName.substring(0, fileName.indexOf("."));
+
+						collectionPropertiesList.add(collectionProperties);
+					} catch (IOException e) {
+						throw new PanlServerException(e.getMessage());
+					}
+
+
+					collectionRequestHandlers.add(new CollectionRequestHandler(
+							solrCollection,
+							panlCollectionName,
+							panlProperties,
+							collectionProperties));
 				}
-
-				collectionRequestHandlers.add(new CollectionRequestHandler(
-						collectionName,
-						panlProperties,
-						collectionProperties));
-
-				// AT this point we want
 			}
 		}
 	}
@@ -215,11 +228,12 @@ public class PanlServer {
 
 		// finally register the collection handlers
 		for (CollectionRequestHandler collectionRequestHandler : collectionRequestHandlers) {
-			String collectionName = collectionRequestHandler.getCollectionName();
-			bootstrap.registerHandler("/" + collectionName + "/*", new PanlRequestHandler(panlProperties, collectionRequestHandler));
-			LOGGER.info("Binding collection of '{}' to /{}/*", collectionName, collectionName);
+			String solrCollection = collectionRequestHandler.getSolrCollection();
+			String panlCollectionName = collectionRequestHandler.getPanlCollectionName();
+			bootstrap.registerHandler("/" + panlCollectionName + "/*", new PanlRequestHandler(panlProperties, collectionRequestHandler));
+			LOGGER.info("Binding Solr collection of '{}' to /{}/*", solrCollection, panlCollectionName);
 			for (String resultFieldsName : collectionRequestHandler.getResultFieldsNames()) {
-				LOGGER.info("Results will be available on /{}/{}/*", collectionName, resultFieldsName);
+				LOGGER.info("Results will be available on /{}/{}/*", panlCollectionName, resultFieldsName);
 			}
 		}
 

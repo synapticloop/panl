@@ -67,6 +67,7 @@ public class PanlProperties {
 			LOGGER.warn("Property '{}' could not be found, defaulting to '{}'", PROPERTY_KEY_SOLRJ_CLIENT, DEFAULT_CLOUD_SOLR_CLIENT);
 			solrjClientTemp = DEFAULT_CLOUD_SOLR_CLIENT;
 		}
+
 		this.solrjClient = solrjClientTemp;
 
 		String solrSearchServerUrlTemp;

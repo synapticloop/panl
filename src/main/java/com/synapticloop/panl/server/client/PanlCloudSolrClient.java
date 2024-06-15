@@ -33,18 +33,33 @@ import org.apache.solr.client.solrj.impl.CloudHttp2SolrClient;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 
 public class PanlCloudSolrClient extends PanlClient {
+	public static final String PREFIX_ZOOKEPER = "zookeeper:";
 	private final List<String> solrUrls = new ArrayList<>();
+	private boolean hasZookeeper = false;
 
-	public PanlCloudSolrClient(String collectionName, PanlProperties panlProperties, CollectionProperties collectionProperties) throws PanlServerException {
-		super(collectionName, panlProperties, collectionProperties);
+	public PanlCloudSolrClient(String solrCollection, PanlProperties panlProperties, CollectionProperties collectionProperties) throws PanlServerException {
+		super(solrCollection, panlProperties, collectionProperties);
 
-		Collections.addAll(solrUrls, panlProperties.getSolrSearchServerUrl().split(","));
-}
+		String[] urls = panlProperties.getSolrSearchServerUrl().split(",");
+		for (String url : urls) {
+			if (url.toLowerCase().startsWith(PREFIX_ZOOKEPER)) {
+				hasZookeeper = true;
+				solrUrls.add(url.substring(PREFIX_ZOOKEPER.length()));
+			} else {
+				solrUrls.add(url);
+			}
+		}
+	}
 
 	@Override
 	public SolrClient getClient() {
-		return(new CloudHttp2SolrClient.Builder(solrUrls).build());
+		if (hasZookeeper) {
+			return (new CloudHttp2SolrClient.Builder(solrUrls, Optional.empty()).build());
+		} else {
+			return (new CloudHttp2SolrClient.Builder(solrUrls).build());
+		}
 	}
 }
