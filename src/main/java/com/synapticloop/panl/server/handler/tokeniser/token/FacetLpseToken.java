@@ -51,7 +51,7 @@ import java.util.StringTokenizer;
  * <p>For a RANGE facet, the LPSE code is one of:</p>
  *
  * <p><code>/&lt;lpse_code&gt;+&lt;lpse_code&gt;/</code>, or
- * <code>/&lt;lpse_code&gt;=&lt;lpse_code&gt;/</code></p>
+ * <code>/&lt;lpse_code&gt;+&lt;lpse_code&gt;/</code></p>
  *
  * <p>With the <code>+</code> or <code>-</code> determining how the URI path
  * will look.</p>

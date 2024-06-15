@@ -31,7 +31,6 @@ public class PanlFacetRangeWildcardTest {
 		}
 
 		assertTrue(solrQuery.toString().contains(contains));
-
 	}
 
 	@Test public void testFromWildcard() throws PanlServerException, IOException {

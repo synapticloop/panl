@@ -4,6 +4,7 @@ import com.synapticloop.panl.exception.PanlServerException;
 import com.synapticloop.panl.generator.bean.Collection;
 import com.synapticloop.panl.server.client.PanlCloudSolrClient;
 import com.synapticloop.panl.server.handler.CollectionRequestHandler;
+import com.synapticloop.panl.server.handler.fielderiser.field.BaseField;
 import com.synapticloop.panl.server.handler.helper.CollectionHelper;
 import com.synapticloop.panl.server.handler.processor.*;
 import com.synapticloop.panl.server.handler.properties.CollectionProperties;
@@ -403,4 +404,21 @@ public class TestHelper {
 
 		when(mockQueryResponse.jsonStr()).thenReturn(IOUtils.toString(TestHelper.class.getResourceAsStream(returnJsonResponse), StandardCharsets.UTF_8));
 	}
+
+	public static SolrQuery testApplyToQuery(String propertiesFileLocation, String uriPath, String contains) throws PanlServerException, IOException {
+		SolrQuery solrQuery = new SolrQuery("");
+		CollectionProperties collectionProperties = TestHelper.getCollectionProperties(propertiesFileLocation);
+		CollectionRequestHandler collectionRequestHandler = TestHelper.getCollectionRequestHandler(propertiesFileLocation);
+		List<LpseToken> lpseTokens = collectionRequestHandler.parseLpse(uriPath, "");
+		Map<String, List<LpseToken>> panlTokenMap = TestHelper.getPanlTokenMap(lpseTokens);
+
+		for (BaseField lpseField : collectionProperties.getLpseFields()) {
+			lpseField.applyToQuery(solrQuery, panlTokenMap);
+		}
+
+		System.out.println(solrQuery.toString());
+		assertTrue(solrQuery.toString().contains(contains));
+		return(solrQuery);
+	}
+
 }

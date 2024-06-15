@@ -130,7 +130,8 @@ public abstract class LpseToken {
 					valueTokeniser));
 		} else {
 			StringBuilder facet = new StringBuilder(lpseToken);
-			// it is a facet field
+			// it is a facet field - unlike parameters and operands, the token must
+			// be the length LPSE length
 			while (facet.length() < collectionProperties.getLpseLength()) {
 				if (lpseTokeniser.hasMoreTokens()) {
 					facet.append(lpseTokeniser.nextToken());
@@ -171,7 +172,7 @@ public abstract class LpseToken {
 	}
 
 	/**
-	 * <p>Get the UIR path value for this token.</p>
+	 * <p>Get the value for this token.</p>
 	 *
 	 * @return The LPSE value
 	 */
@@ -242,7 +243,9 @@ public abstract class LpseToken {
 		return (lpseCode + "/" + this.value);
 	}
 
+
 	public void setIsValid(boolean isValid) {
 		this.isValid = isValid;
 	}
+
 }
