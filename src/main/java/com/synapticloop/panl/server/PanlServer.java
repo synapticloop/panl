@@ -120,7 +120,7 @@ public class PanlServer {
 					Properties propertiesCollectionProperties = new Properties();
 
 					CollectionProperties collectionProperties;
-					String panlCollectionName;
+					String panlCollectionUri;
 					try {
 						File collectionPropertiesFile = new File(propertiesFileDirectory + File.separator + propertyFileName.trim());
 
@@ -136,7 +136,7 @@ public class PanlServer {
 						//  collection names bound
 
 						String fileName = collectionPropertiesFile.getName();
-						panlCollectionName = fileName.substring(0, fileName.indexOf("."));
+						panlCollectionUri = fileName.substring(0, fileName.indexOf("."));
 
 						collectionPropertiesList.add(collectionProperties);
 					} catch (IOException e) {
@@ -146,7 +146,7 @@ public class PanlServer {
 
 					collectionRequestHandlers.add(new CollectionRequestHandler(
 							solrCollection,
-							panlCollectionName,
+							panlCollectionUri,
 							panlProperties,
 							collectionProperties));
 				}
@@ -229,11 +229,11 @@ public class PanlServer {
 		// finally register the collection handlers
 		for (CollectionRequestHandler collectionRequestHandler : collectionRequestHandlers) {
 			String solrCollection = collectionRequestHandler.getSolrCollection();
-			String panlCollectionName = collectionRequestHandler.getPanlCollectionName();
-			bootstrap.registerHandler("/" + panlCollectionName + "/*", new PanlRequestHandler(panlProperties, collectionRequestHandler));
-			LOGGER.info("Binding Solr collection of '{}' to /{}/*", solrCollection, panlCollectionName);
+			String panlCollectionUri = collectionRequestHandler.getPanlCollectionUri();
+			bootstrap.registerHandler("/" + panlCollectionUri + "/*", new PanlRequestHandler(panlProperties, collectionRequestHandler));
+			LOGGER.info("Binding Solr collection of '{}' to /{}/*", solrCollection, panlCollectionUri);
 			for (String resultFieldsName : collectionRequestHandler.getResultFieldsNames()) {
-				LOGGER.info("Results will be available on /{}/{}/*", panlCollectionName, resultFieldsName);
+				LOGGER.info("Results will be available on /{}/{}/*", panlCollectionUri, resultFieldsName);
 			}
 		}
 

@@ -88,7 +88,7 @@ public class CollectionRequestHandler {
 	private final FieldsProcessor fieldsProcessor;
 	private final AvailableProcessor availableProcessor;
 	private final CanonicalURIProcessor canonicalURIProcessor;
-	private final String panlCollectionName;
+	private final String panlCollectionUri;
 
 	/**
 	 * <p>The collection request handler which maps a single collection and its
@@ -99,7 +99,7 @@ public class CollectionRequestHandler {
 	 *
 	 * @param solrCollection The solr collection name to retrieve the search
 	 * 		results from
-	 * @param panlCollectionName The name of the collection that the Panl server
+	 * @param panlCollectionUri The name of the collection that the Panl server
 	 * 		is bound to.
 	 * @param panlProperties The panl base properties, for connection to the Solr
 	 * 		server
@@ -108,13 +108,13 @@ public class CollectionRequestHandler {
 	 * @throws PanlServerException If there was an error with the request
 	 */
 	public CollectionRequestHandler(String solrCollection,
-	                                String panlCollectionName,
+	                                String panlCollectionUri,
 	                                PanlProperties panlProperties,
 	                                CollectionProperties collectionProperties) throws PanlServerException {
-		LOGGER.info("[{}] Initialising Panl collection {}", solrCollection, panlCollectionName);
+		LOGGER.info("[{}] Initialising Panl collection URI {}", solrCollection, panlCollectionUri);
 
 		this.solrCollection = solrCollection;
-		this.panlCollectionName = panlCollectionName;
+		this.panlCollectionUri = panlCollectionUri;
 		this.collectionProperties = collectionProperties;
 
 		panlClient = CollectionHelper.getPanlClient(panlProperties.getSolrjClient(), solrCollection, panlProperties, collectionProperties);
@@ -421,7 +421,7 @@ public class CollectionRequestHandler {
 		return (new ArrayList<>(collectionProperties.getResultFieldsNames()));
 	}
 
-	public String getPanlCollectionName() {
-		return panlCollectionName;
+	public String getPanlCollectionUri() {
+		return panlCollectionUri;
 	}
 }

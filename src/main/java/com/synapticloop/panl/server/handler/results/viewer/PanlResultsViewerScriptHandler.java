@@ -39,13 +39,13 @@ import java.util.List;
 
 public class PanlResultsViewerScriptHandler implements HttpRequestHandler {
 
-	private final List<String> panlCollectionNames = new ArrayList<>();
+	private final List<String> panlCollectionUris = new ArrayList<>();
 
 	public PanlResultsViewerScriptHandler(List<CollectionRequestHandler> collectionRequestHandlers) {
 		for (CollectionRequestHandler collectionRequestHandler : collectionRequestHandlers) {
-			String panlCollectionName = collectionRequestHandler.getPanlCollectionName();
+			String panlCollectionUri = collectionRequestHandler.getPanlCollectionUri();
 			for (String resultFieldsName : collectionRequestHandler.getResultFieldsNames()) {
-				panlCollectionNames.add("/" + panlCollectionName + "/" + resultFieldsName);
+				panlCollectionUris.add("/" + panlCollectionUri + "/" + resultFieldsName);
 			}
 		}
 	}
@@ -57,14 +57,14 @@ public class PanlResultsViewerScriptHandler implements HttpRequestHandler {
 				.append("var collections = [");
 
 		int i = 0;
-		for (String panlCollectionName : panlCollectionNames) {
+		for (String panlCollectionUri : panlCollectionUris) {
 
 			if(i != 0) {
 				sb.append(",");
 			}
 
 			sb.append("\"")
-					.append(panlCollectionName)
+					.append(panlCollectionUri)
 					.append("\"");
 
 			i++;
