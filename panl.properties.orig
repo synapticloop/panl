@@ -3,7 +3,9 @@
 #                          .-----.---.-.-----.|  |                            #
 #                          |  _  |  _  |     ||  |                            #
 #                          |   __|___._|__|__||__|                            #
-#                          |__|                                               #
+#                          |__|     ... .-..                                  #
+#                                                                             #
+#                                ~ ~ ~ * ~ ~ ~                                #
 #                                                                             #
 #                PANL/SOLR SERVER CONNECTION CONFIGURATION                    #
 #                --------- ------ ---------- -------------                    #
@@ -39,15 +41,24 @@ solrj.client=CloudSolrClient
 #                           Which URLs To Connect To
 #                           ----- ---- -- ------- --
 # Dependant on which Solr server installation you have, and consequently the
-# SolrJ Client that you use, this will either be a single url, or a comma
+# SolrJ Client that is configured, this will either be a single url, or a comma
 # separated list of URLs
 #
 #     solr.search.server.url - the search server URL to connect to which must
 #         NOT include the core that it is connecting to - this will be taken
-#         care of by the panl request mechanism.
+#         care of by the Panl request mechanism.
 #
-#         NOTE that if you are using connector that has multiple URLs, then
-#         they MUST be comma separated.
+#     NOTE: that if you are using connector that has multiple URLs, then
+#           they MUST be comma separated.
+#
+#     NOTE: If you are using the CloudSolrClient as a connector and you wish to
+#           use the zookeeper URLs, then you __MUST__ prefix the URLs with
+#
+#             zookeeper:
+#
+#           The below property would then become:
+#
+#             solr.search.server.url=zookeeper:http://localhost:9983
 #
 #                                ~ ~ ~ * ~ ~ ~
 
@@ -55,18 +66,18 @@ solr.search.server.url=http://localhost:8983/solr,http://localhost:7574/solr
 
 #                      Whether To Enable The Testing URLs
 #                      ------- -- ------ --- ------- ----
-# The panl results viewer url, this is a simple web app which will allow you to
-# test the collections and the URLs that are generated, including field
-# inclusion, faceting, querying, and results.
+# The Panl results viewer / explainer URLs, this is a simple web app which will
+# allow you to test and explain the collections and the URLs that are
+# generated, including fields, faceting, querying, sorting, and results.
 #
 # If this property does not exist, or if it is set to false, then no results
-# viewer will be available.  You may wish to remove this property for production
-# (or perhaps just disallow access to it.)
+# viewer /explainer will be available.  You may wish to remove this property
+# for production (or perhaps just disallow access to it).
 #
 # The URI paths are __ALWAYS__
 #     /panl-results-viewer/ - for testing the queries, facets, and results
 #     /panl-results-explainer/ - for explaining LPSE encoded URIs and describing
-#                               the configuration for the Panl server.
+#                                the configuration for the Panl server.
 #
 #                                ~ ~ ~ * ~ ~ ~
 
@@ -75,7 +86,12 @@ panl.results.testing.urls=true
 #                     Whether To Enable Verbose Error Messaging
 #                     ------- -- ------ ------- ----- ---------
 # Whether verbose messaging is turned on for the error (404 / 500) http status
-# messages.
+# messages.  Verbose messaging for the 404 error will provide valid URI paths
+# to connect to.  Verbose messaging for the 500 error will provide a
+# stacktrace.
+#
+# The recommendation is to set both of these properties to false to reduce the
+# possibility of information leakage.
 #
 #                                ~ ~ ~ * ~ ~ ~
 
@@ -87,13 +103,25 @@ panl.status.500.verbose=true
 # Each property file defines a singular collection, with the associated
 # properties and configuration.  The format of the property is:
 #
-#     panl.collection.<collection_name>=<properties_file_location>
+#     panl.collection.<solr_collection_name>=properties_file_location>
 #
 # Where:
-#            <collection_name> is the collection to query on the Solr server
-#   <properties_file_location> is the relative location __FROM__ this file of
-#                              the collection.panl.properties configuration file
+#       <solr_collection_name> is the collection to query on the Solr server
+#   <properties_file_location> is the relative location __FROM__ this file
+#                              (i.e. the panl.properties file).  The format of
+#                              the filename is:
+#
+#     <panl_collection_uri>.panl.properties
+#
+# Where:
+#     <panl_collection_uri> is the base URI path that the Panl server will
+#                           respond to
+#
+#     NOTE: You may have multiple <panl_collection_uri> values for each
+#           <solr_collection_name> with different configurations
 #
 #                                ~ ~ ~ * ~ ~ ~
 
 panl.collection.mechanical-pencils=mechanical-pencils.panl.properties
+
+
