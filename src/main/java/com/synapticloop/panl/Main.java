@@ -143,6 +143,9 @@ public class Main {
 		LOGGER.info("Starting Panl server with properties:");
 		LOGGER.info("  -properties {}", this.propertiesFileLocation);
 		LOGGER.info("        -port {}", this.portNumber);
+		LOGGER.info("");
+		LOGGER.info("            ~ ~ ~ * ~ ~ ~");
+		LOGGER.info("");
 
 		// at this point we are ready to go
 		PanlServer panlServer = new PanlServer(this.propertiesFileLocation, this.portNumber);
@@ -175,6 +178,9 @@ public class Main {
 		LOGGER.info("  -properties {}", this.propertiesFileLocation);
 		LOGGER.info("      -schema {}", schemaFileLocations);
 		LOGGER.info("   -overwrite {}", this.shouldOverwrite);
+		LOGGER.info("");
+		LOGGER.info("            ~ ~ ~ * ~ ~ ~");
+		LOGGER.info("");
 
 		PanlGenerator panlGenerator = new PanlGenerator(
 				this.propertiesFileLocation,
@@ -231,6 +237,16 @@ public class Main {
 	 */
 	public static void main(String[] args) throws PanlServerException, CommandLineOptionException, PanlGenerateException {
 		Main main = new Main(args);
+
+		LOGGER.info("                           __ ");
+		LOGGER.info("       .-----.---.-.-----.|  |");
+		LOGGER.info("       |  _  |  _  |     ||  |");
+		LOGGER.info("       |   __|___._|__|__||__|");
+		LOGGER.info("       |__|     ... .-..      ");
+		LOGGER.info("");
+		LOGGER.info("            ~ ~ ~ * ~ ~ ~");
+		LOGGER.info("");
+
 		main.parseAndExecuteCommandLine();
 	}
 }

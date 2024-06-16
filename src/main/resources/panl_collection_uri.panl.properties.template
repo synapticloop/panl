@@ -3,19 +3,26 @@
 #                          .-----.---.-.-----.|  |                            #
 #                          |  _  |  _  |     ||  |                            #
 #                          |   __|___._|__|__||__|                            #
-#                          |__|                                               #
+#                          |__|     ... .-..                                  #
 #                                                                             #
+#                                ~ ~ ~ * ~ ~ ~                                #
 #                                                                             #
 #         COLLECTION LAST PAGE SEGMENT ENCODING (LPSE) CONFIGURATION          #
 #         ---------- ---- ---- ------- -------- ------ -------------          #
 #                                                                             #
-# This file configures the collection and field sets that connect to the Solr #
-# server.                                                                     #
+# This file configures the collection and field sets that Panl uses to        #
+# generate the query that is sent to the Solr search server.                  #
 #                                                                             #
+# It uses (L)ast (P)ath (S)egment (E)ncoding that:                            #
 #                                                                             #
-# It uses (L)ast (P)ath (S)eparator (E)ncoding which will use the URI path    #
-# and convert it to a Solr search query.  An LPSE encoded URI path will be of #
-# the following format:                                                       #
+#   1. reads the last segment of the URI path,                                #
+#   2. decodes it with the configuration contained herein,                    #
+#   3. converts it to a Solr search query,                                    #
+#   4. sends the query to the Solr Search engine,                             #
+#   5. parses the response adding additional information, and                 #
+#   6. sends the response back to the requester                               #
+#                                                                             #
+# A LPSE encoded URI path will be of the following format:                    #
 #                                                                             #
 #   /something/something-else/se/                                             #
 #                                                                             #
@@ -29,7 +36,7 @@
 #        0 1 2 3 4 5 6 7 8 9                                                  #
 #                                                                             #
 # The following are reserved characters and __MUST__ not be used as they are  #
-# modifiers that the Panl server users.                                       #
+# modifiers that the Panl server users, or are reserved for future use.       #
 #                                                                             #
 #        + - .                                                                #
 #                                ~ ~ ~ * ~ ~ ~                                #
@@ -55,12 +62,14 @@
 #                                                                             #
 # First up, the number of characters that are used for encoding of a          #
 # particular parameter must be set.  This number must then also match the     #
-# length of the codes assign to:                                              #
-#     panl.facet.*                                                            #
+# length of the codes assigned to the                                         #
+#                                                                             #
+#   panl.facet.*                                                              #
 #   panl.field.*                                                              #
 #                                                                             #
 # definitions, else a FATAL encoding error will occur and the server will not #
 # be started.  This defaults to a single character if not set - i.e.          #
+#                                                                             #
 #     panl.lpse.length=1                                                      #
 #                                                                             #
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
@@ -79,7 +88,7 @@ $panl.lpse.length
 #                                ---- --------
 # The following are considered metadata that changes what results are returned
 # and in what format.  These are not considered facets, however they
-# __ARE_NOT__ conform to the panl.lpse.length property above and are __ALWAYS__
+# __DO_NOT__ conform to the panl.lpse.length property above and are __ALWAYS__
 # a constant length of 1 (one).  These define the following metadata:
 #
 #    panl.param.query - The query that is sent through to the Solr server
@@ -95,6 +104,7 @@ $panl.lpse.length
 #
 # NOTE: The LPSE codes assigned to the metadata __MUST_NOT__ be the same as any
 #       of the facets, __OR__ start with the same letter as any of the facets
+#       if the panl.lpse.length is greater than 1
 #
 # NOTE: Both the page and numrows parameters may have a prefix and suffix
 #       assigned to them, for example:
