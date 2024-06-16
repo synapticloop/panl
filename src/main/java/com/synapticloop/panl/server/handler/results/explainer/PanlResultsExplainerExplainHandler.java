@@ -61,10 +61,28 @@ public class PanlResultsExplainerExplainHandler implements HttpRequestHandler {
 			uri = uri.substring(0, startParam);
 		}
 
-		uri.split("/");
+		String[] splits = uri.split("/");
+		if (splits.length < 5) {
+			// #TODO return a 404 or something
+			return;
+		}
 
-		// TODO - this most certainly is wrong
-		CollectionProperties collectionProperties = collectionPropertiesList.get(0);
+		// the first part is the panl collection URI that we need
+
+
+		CollectionProperties collectionProperties = null;
+		String panlCollectionUri = splits[3];
+		for(CollectionProperties collectionPropertiesTemp : collectionPropertiesList) {
+			if(collectionPropertiesTemp.getPanCollectionUri().equals(panlCollectionUri)) {
+				collectionProperties = collectionPropertiesTemp;
+				break;
+			}
+		}
+
+		if(null == collectionProperties) {
+			return;
+		}
+
 		List<LpseToken> lpseTokens = parseLpse(collectionProperties, uri, query);
 		JSONArray jsonArray = new JSONArray();
 		for (LpseToken lpseToken : lpseTokens) {
@@ -75,7 +93,9 @@ public class PanlResultsExplainerExplainHandler implements HttpRequestHandler {
 		JSONObject jsonObject = new JSONObject();
 		jsonObject.put("explanation", jsonArray);
 
-		jsonObject.put("configuration", getConfiguration(collectionProperties));
+		jsonObject.put("parameters", getLpseParameters(collectionProperties));
+
+		jsonObject.put("configuration", getLpseConfiguration(collectionProperties));
 
 		response.setStatusCode(HttpStatus.SC_OK);
 		response.setEntity(
@@ -83,8 +103,30 @@ public class PanlResultsExplainerExplainHandler implements HttpRequestHandler {
 						ResourceHelper.CONTENT_TYPE_JSON));
 
 	}
+	private JSONArray getLpseParameters(CollectionProperties collectionProperties) {
+		JSONArray jsonArray = new JSONArray();
+		jsonArray.put(createParameterDetails(
+				CollectionProperties.PROPERTY_KEY_PANL_PARAM_QUERY,
+				collectionProperties.getPanlParamQuery(),
+				"The LPSE code for the user search query."));
+		jsonArray.put(createParameterDetails(
+				CollectionProperties.PROPERTY_KEY_PANL_PARAM_SORT,
+				collectionProperties.getPanlParamSort(),
+				"The sort fields available: " + collectionProperties.getSortFieldLpseCodes()));
 
-	private JSONArray getConfiguration(CollectionProperties collectionProperties) {
+		return(jsonArray);
+	}
+
+	private JSONObject createParameterDetails(String propertyKey, Object value, String description) {
+		JSONObject jsonObject = new JSONObject();
+		jsonObject.put("property", propertyKey);
+		jsonObject.put("value", value);
+		jsonObject.put("description", description);
+
+		return (jsonObject);
+	}
+
+	private JSONArray getLpseConfiguration(CollectionProperties collectionProperties) {
 		JSONArray jsonArray = new JSONArray();
 
 		for (BaseField lpseField : collectionProperties.getLpseFields()) {
@@ -102,7 +144,7 @@ public class PanlResultsExplainerExplainHandler implements HttpRequestHandler {
 
 		boolean hasQuery = false;
 
-		if (searchQuery.length > 3) {
+		if (searchQuery.length > 5) {
 			String lpseEncoding = searchQuery[searchQuery.length - 1];
 
 			LpseTokeniser lpseTokeniser = new LpseTokeniser(lpseEncoding, Collection.CODES_AND_METADATA, true);
@@ -112,58 +154,12 @@ public class PanlResultsExplainerExplainHandler implements HttpRequestHandler {
 			// field set
 			valueTokeniser.nextToken();
 			valueTokeniser.nextToken();
+			valueTokeniser.nextToken();
+			valueTokeniser.nextToken();
 
 			while (lpseTokeniser.hasMoreTokens()) {
 				String token = lpseTokeniser.nextToken();
-				LpseToken lpseToken = null;
-				if (token.equals(collectionProperties.getPanlParamQuery())) {
-					hasQuery = true;
-					lpseToken = new QueryLpseToken(
-							collectionProperties,
-							token,
-							query,
-							valueTokeniser);
-				} else if (token.equals(collectionProperties.getPanlParamSort())) {
-					lpseToken = new SortLpseToken(
-							collectionProperties,
-							token,
-							lpseTokeniser);
-				} else if (token.equals(collectionProperties.getPanlParamQueryOperand())) {
-					lpseToken = new QueryOperandLpseToken(
-							collectionProperties,
-							token,
-							lpseTokeniser);
-				} else if (token.equals(collectionProperties.getPanlParamNumRows())) {
-					lpseToken = new NumRowsLpseToken(
-							collectionProperties,
-							token,
-							valueTokeniser);
-				} else if (token.equals(collectionProperties.getPanlParamPage())) {
-					lpseToken = new PageLpseToken(
-							collectionProperties,
-							token,
-							valueTokeniser);
-
-				} else if (token.equals(collectionProperties.getPanlParamPassThrough())) {
-					lpseToken = new PassThroughLpseToken(
-							collectionProperties,
-							token,
-							valueTokeniser);
-				} else {
-					StringBuilder facet = new StringBuilder(token);
-					// it is a facet field
-					while (token.length() < collectionProperties.getLpseLength()) {
-						facet.append(lpseTokeniser.nextToken());
-					}
-
-					// now we have the facetField
-					lpseToken = new FacetLpseToken(
-							collectionProperties,
-							facet.toString(),
-							lpseTokeniser,
-							valueTokeniser);
-				}
-
+				LpseToken lpseToken = LpseToken.getLpseToken(collectionProperties, token, query, valueTokeniser, lpseTokeniser);
 				lpseTokens.add(lpseToken);
 			}
 		}

@@ -362,12 +362,12 @@ public class CollectionRequestHandler {
 		List<LpseToken> lpseTokens = new ArrayList<>();
 		Set<String> existingTokens = new HashSet<>();
 
-		String[] searchQuery = uri.split("/");
+		String[] lpseUriPath = uri.split("/");
 
 		boolean hasQuery = false;
 
-		if (searchQuery.length > 3) {
-			String lpseEncoding = searchQuery[searchQuery.length - 1];
+		if (lpseUriPath.length > 3) {
+			String lpseEncoding = lpseUriPath[lpseUriPath.length - 1];
 
 			LpseTokeniser lpseTokeniser = new LpseTokeniser(lpseEncoding, Collection.CODES_AND_METADATA, true);
 

@@ -129,6 +129,7 @@ public class PanlServer {
 						propertiesCollectionProperties.load(new FileReader(collectionPropertiesFile));
 
 						collectionProperties = new CollectionProperties(
+								propertyFileName.substring(0, propertyFileName.indexOf(".")),
 								solrCollection,
 								propertiesCollectionProperties);
 

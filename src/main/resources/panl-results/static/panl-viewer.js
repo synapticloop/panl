@@ -11,6 +11,8 @@ $(document).ready(function() {
 		var collection = uris[2];
 		var fieldset = uris[3];
 		if(isValidUrl(collection, fieldset)) {
+			$("#searchfield").removeAttr("disabled");
+			$("#searchbutton").removeAttr("disabled");
 			$("#collection").append("/" + collection + "/" + fieldset);
 			panlSearch();
 		}

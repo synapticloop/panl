@@ -85,6 +85,7 @@ public class CollectionProperties {
 	 * <p>The name of this collection</p>
 	 */
 	private final String solrCollection;
+	private final String panCollectionUri;
 	/**
 	 * <p>The collection.panl.properties that drive this collection</p>
 	 */
@@ -170,8 +171,9 @@ public class CollectionProperties {
 
 	private final Map<String, String> MANDATORY_LPSE_ORDER_FIELDS = new HashMap<>();
 
-	public CollectionProperties(String solrCollection, Properties properties) throws PanlServerException {
+	public CollectionProperties(String solrCollection, String panCollectionUri, Properties properties) throws PanlServerException {
 		this.solrCollection = solrCollection;
+		this.panCollectionUri = panCollectionUri;
 		this.properties = properties;
 
 		parseDefaultProperties();
@@ -238,7 +240,6 @@ public class CollectionProperties {
 				LPSE_CODE_TO_SORT_FIELD_MAP.put(lpseCode, panlSortField);
 				SOLR_NAME_TO_SORT_FIELD_MAP.put(sortField, panlSortField);
 			}
-//			sortOrder++;
 		}
 	}
 
@@ -650,4 +651,7 @@ public class CollectionProperties {
 		return (formQueryRespondTo);
 	}
 
+	public String getPanCollectionUri() {
+		return panCollectionUri;
+	}
 }

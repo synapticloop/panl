@@ -12,13 +12,14 @@ $(document).ready(function() {
 		var fieldset = uris[3];
 		if(isValidUrl(collection, fieldset)) {
 			$("#collection").append("/" + collection + "/" + fieldset);
+			$("#explain").removeAttr("disabled");
+			$("#uris").removeAttr("disabled");
+			$("button#explain").on("click", function (event) {
+				event.preventDefault();
+				panlExplain();
+			});
 		}
 	}
-
-	$("button#explain").on("click", function (event) {
-		event.preventDefault();
-		panlExplain();
-	});
 });
 
 function panlExplain() {
