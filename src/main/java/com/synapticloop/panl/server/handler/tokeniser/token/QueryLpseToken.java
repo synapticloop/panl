@@ -38,7 +38,7 @@ public class QueryLpseToken extends LpseToken {
 			CollectionProperties collectionProperties,
 			String queryFromUri,
 			String lpseCode) {
-		this(null, lpseCode, queryFromUri,null);
+		this(collectionProperties, lpseCode, queryFromUri,null);
 	}
 
 	public QueryLpseToken(
