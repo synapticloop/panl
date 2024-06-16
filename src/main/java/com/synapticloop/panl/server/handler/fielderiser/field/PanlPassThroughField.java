@@ -38,10 +38,12 @@ import java.util.Properties;
 
 public class PanlPassThroughField extends BaseField {
 	private static final Logger LOGGER = LoggerFactory.getLogger(PanlPassThroughField.class);
+	private final boolean panlParamPassThroughCanonical;
 
 	public PanlPassThroughField(String lpseCode, String propertyKey, Properties properties, String solrCollection) throws PanlServerException {
 		super(lpseCode, properties, propertyKey, solrCollection);
 
+		this.panlParamPassThroughCanonical = properties.getProperty("panl.param.passthrough.canonical", "false").equals("true");
 		populateParamSuffixAndPrefix();
 
 		logDetails();
@@ -49,12 +51,29 @@ public class PanlPassThroughField extends BaseField {
 
 	@Override
 	public String getCanonicalUriPath(Map<String, List<LpseToken>> panlTokenMap, CollectionProperties collectionProperties) {
-		return ("");
+		if(this.panlParamPassThroughCanonical) {
+			StringBuilder sb = new StringBuilder();
+			if (panlTokenMap.containsKey(lpseCode)) {
+				for (LpseToken lpseToken : panlTokenMap.get(lpseCode)) {
+					if (lpseToken.getIsValid()) {
+						sb.append(getEncodedPanlValue(lpseToken));
+						sb.append("/");
+					}
+				}
+			}
+			return (sb.toString());
+		} else {
+			return ("");
+		}
 	}
 
 	@Override
 	public String getCanonicalLpseCode(Map<String, List<LpseToken>> panlTokenMap, CollectionProperties collectionProperties) {
-		return ("");
+		if(this.panlParamPassThroughCanonical) {
+			return(this.lpseCode);
+		} else {
+			return ("");
+		}
 	}
 
 	@Override public List<String> explain() {

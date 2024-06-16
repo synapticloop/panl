@@ -37,6 +37,12 @@ import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 
+/**
+ * <p>The sort field controls the order in which the results are sorted.  This
+ * field does not have a URI path value, only a URI LPSE code.</p>
+ *
+ * @author synapticloop
+ */
 public class PanlSortField extends BaseField {
 	private static final Logger LOGGER = LoggerFactory.getLogger(PanlSortField.class);
 

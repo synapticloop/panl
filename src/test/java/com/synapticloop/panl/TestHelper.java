@@ -405,7 +405,7 @@ public class TestHelper {
 		when(mockQueryResponse.jsonStr()).thenReturn(IOUtils.toString(TestHelper.class.getResourceAsStream(returnJsonResponse), StandardCharsets.UTF_8));
 	}
 
-	public static SolrQuery testApplyToQuery(String propertiesFileLocation, String uriPath, String contains) throws PanlServerException, IOException {
+	public static SolrQuery testApplyToQueryContains(String propertiesFileLocation, String uriPath, String contains) throws PanlServerException, IOException {
 		SolrQuery solrQuery = new SolrQuery("");
 		CollectionProperties collectionProperties = TestHelper.getCollectionProperties(propertiesFileLocation);
 		CollectionRequestHandler collectionRequestHandler = TestHelper.getCollectionRequestHandler(propertiesFileLocation);
@@ -419,6 +419,27 @@ public class TestHelper {
 		System.out.println(solrQuery.toString());
 		assertTrue(solrQuery.toString().contains(contains));
 		return(solrQuery);
+	}
+
+	public static SolrQuery testApplyToQueryEquals(String propertiesFileLocation, String uriPath, String equals) throws PanlServerException, IOException {
+		SolrQuery solrQuery = new SolrQuery("");
+		CollectionProperties collectionProperties = TestHelper.getCollectionProperties(propertiesFileLocation);
+		CollectionRequestHandler collectionRequestHandler = TestHelper.getCollectionRequestHandler(propertiesFileLocation);
+		List<LpseToken> lpseTokens = collectionRequestHandler.parseLpse(uriPath, "");
+		Map<String, List<LpseToken>> panlTokenMap = TestHelper.getPanlTokenMap(lpseTokens);
+
+		for (BaseField lpseField : collectionProperties.getLpseFields()) {
+			lpseField.applyToQuery(solrQuery, panlTokenMap);
+		}
+
+		System.out.println(solrQuery.toString());
+		assertEquals(solrQuery.toString(), equals);
+		return(solrQuery);
+	}
+
+	public static List<LpseToken> getLpseTokens(String propertiesFileLocation, String uriPath, String query) throws PanlServerException, IOException {
+		CollectionRequestHandler collectionRequestHandler = TestHelper.getCollectionRequestHandler(propertiesFileLocation);
+		return(collectionRequestHandler.parseLpse(uriPath, query));
 	}
 
 }

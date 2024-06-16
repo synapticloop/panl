@@ -68,8 +68,8 @@
 #                                Panl LPSE Length
 #                                ---- ---- ------
 # The length (or number of characters) for each of the LPSE codes for the
-# facet field codes and normal field codes.  This length does not apply to
-# the Panl parameters
+# facet and normal field.  This length does not apply to the Panl metadata
+# LPSE codes which are __ALWAYS__ of length 1 (one)
 #
 #                                ~ ~ ~ * ~ ~ ~
 
@@ -78,9 +78,23 @@ $panl.lpse.length
 #                                Panl Metadata
 #                                ---- --------
 # The following are considered metadata that changes what results are returned
-# and in what format.  These are not considered facets, however they do need to
-# be the same size as the panl.lpse.length property above.  These define what
-# the query parameter will be and __MUST NOT__ be the same as any of the facets
+# and in what format.  These are not considered facets, however they
+# __ARE_NOT__ conform to the panl.lpse.length property above and are __ALWAYS__
+# a constant length of 1 (one).  These define the following metadata:
+#
+#    panl.param.query - The query that is sent through to the Solr server
+#    panl.param.sort - The sort order
+#    panl.param.page - The page number
+#    panl.param.numrows - The number of results per page by default
+#    panl.param.query.operand - The Solr query operand (q.op)
+#    panl.param.passthrough - Pass through parameters which will not be passed
+#         through to the Solr search server (see property below)
+#    panl.param.passthrough.canonical - Whether to keep this URI path value in
+#         the generated canonical URI (and all URIs generated)  If not included
+#         this property defaults to false
+#
+# NOTE: The LPSE codes assigned to the metadata __MUST_NOT__ be the same as any
+#       of the facets, __OR__ start with the same letter as any of the facets
 #
 # NOTE: Both the page and numrows parameters may have a prefix and suffix
 #       assigned to them, for example:
@@ -100,13 +114,16 @@ $panl.param.page
 $panl.param.numrows
 $panl.param.query.operand
 $panl.param.passthrough
+panl.param.passthrough.canonical=false
 
 #                     Whether to include single facets
 #                     ------- -- ------- ------ ------
 # Facets that only include a single result to further refine the query will not
-# be included by default.  The reasoning behind this is that having only one
-# defined facet does not refine the query at all, it will simply return the
-# same set of results, just with a longer LPSE URI
+# be included by default.  The reasoning behind this is that having a list of
+# facets with only one result will not refine the query at all, it will simply
+# return the same set of results, just with a longer LPSE URI.  You may wish to
+# include these results for a more verbose URL and possibly better search
+# engine visibility
 #
 # The default value for this property is false, so you do not need to include
 # it unless you wish to enable this feature, i.e.
@@ -156,7 +173,7 @@ solr.default.query.operand=-
 #           The Default Maximum Number Of Facet Values To Return
 #           --- ------- ------- ------ -- ----- ------ -- ------
 # This is not a required property, the default set by Solr is 100, you may
-# change this to any positive integer vale.
+# change this to any positive integer value.
 #
 #                                ~ ~ ~ * ~ ~ ~
 
@@ -185,22 +202,10 @@ solr.facet.min.count=1
 # The Solr default is 10 documents to be returned, however, this may be set to
 # any positive integer value.
 #
-# This value can also be changed per request with the LPSE encoded parameter
-# see the property:
+# This value can also be changed by the end user with the LPSE encoded
+# parameter see the property for the LPSE code that this is bound to:
 #
 #    panl.param.numrows
-#
-#                                ~ ~ ~ * ~ ~ ~
-#
-# IMPORTANT: If you have a 'facet OR' enabled for one or more of the facet
-#            fields, then you __MUST__ set this to 0 (zero) to ensure that the
-#            correct facets are returned.
-#
-# SOLR configuration variables
-#     solr.facet.min.count - the minimum number of items within each facet before
-#         the facet will be returned
-#     solr.numrows.defaulr - the default number of rows (i.e. documents to return
-#         for any query)
 #
 #                                ~ ~ ~ * ~ ~ ~
 
@@ -216,7 +221,7 @@ solr.numrows.default=10
 #       <code> is the LPSE code and __MUST__ be the same length as the
 #              panl.lpse.length
 # <solr_field> is the solr field name which __MUST__ map to the Solr field
-#              name in the configuration file
+#              name in the solr schema.xml configuration file
 # <field_name> is the name of the facet in a more human friendly version, will
 #              be returned with the results, and may be used as the facet
 #              header
@@ -249,7 +254,7 @@ solr.numrows.default=10
 # The non-suffixed, non-prefixed URI encoding would be:
 #     /ACME Incorporated/m/
 #
-# Post processing, the URI would be the following:
+# Post processing (i.e. URL decoding), the URI would be the following:
 #     /Manufactured by ACME Incorporated // a fine company/m/
 #
 #                                ~ ~ ~ * ~ ~ ~
@@ -267,7 +272,7 @@ solr.numrows.default=10
 #                                ~ ~ ~ * ~ ~ ~
 #
 # You may return additional fields with a query that are either faceted or not
-# and is defined in the
+# and are defined in the
 #
 #     panl.results.fields.*
 #
