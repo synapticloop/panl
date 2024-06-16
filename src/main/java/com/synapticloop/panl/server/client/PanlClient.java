@@ -41,6 +41,7 @@ public abstract class PanlClient {
 	protected final String solrCollection;
 	protected final PanlProperties panlProperties;
 	protected final CollectionProperties collectionProperties;
+	protected String queryParameter = "q";
 
 	public PanlClient(String solrCollection, PanlProperties panlProperties, CollectionProperties collectionProperties) {
 		this.solrCollection = solrCollection;
@@ -64,8 +65,7 @@ public abstract class PanlClient {
 		String thisQuery = "*:*";
 
 		for (NameValuePair nameValuePair : URLEncodedUtils.parse(query, StandardCharsets.UTF_8)) {
-			// TODO - make this a configured value ???
-			if(nameValuePair.getName().equals("q")) {
+			if(nameValuePair.getName().equals(queryParameter)) {
 				thisQuery = nameValuePair.getValue();
 				break;
 			}

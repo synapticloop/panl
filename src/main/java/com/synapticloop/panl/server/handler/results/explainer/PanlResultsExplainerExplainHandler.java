@@ -169,7 +169,7 @@ public class PanlResultsExplainerExplainHandler implements HttpRequestHandler {
 		}
 
 		if (!hasQuery && !query.isBlank()) {
-			lpseTokens.add(new QueryLpseToken(query, collectionProperties.getPanlParamQuery()));
+			lpseTokens.add(new QueryLpseToken(collectionProperties, query, collectionProperties.getPanlParamQuery()));
 		}
 
 		return (lpseTokens);

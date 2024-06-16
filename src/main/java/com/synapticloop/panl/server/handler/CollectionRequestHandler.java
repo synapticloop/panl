@@ -395,7 +395,7 @@ public class CollectionRequestHandler {
 		}
 
 		if (!hasQuery && !query.isBlank()) {
-			lpseTokens.add(new QueryLpseToken(query, collectionProperties.getPanlParamQuery()));
+			lpseTokens.add(new QueryLpseToken(collectionProperties, query, collectionProperties.getPanlParamQuery()));
 		}
 
 		for (LpseToken lpseToken : lpseTokens) {

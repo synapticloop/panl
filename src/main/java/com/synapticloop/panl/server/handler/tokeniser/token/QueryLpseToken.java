@@ -35,6 +35,7 @@ public class QueryLpseToken extends LpseToken {
 	private boolean isOverride;
 
 	public QueryLpseToken(
+			CollectionProperties collectionProperties,
 			String queryFromUri,
 			String lpseCode) {
 		this(null, lpseCode, queryFromUri,null);
@@ -52,8 +53,7 @@ public class QueryLpseToken extends LpseToken {
 		}
 
 		for (NameValuePair nameValuePair : URLEncodedUtils.parse(queryFromUri, StandardCharsets.UTF_8)) {
-			// TODO - do we want to allow people to change this???
-			if(nameValuePair.getName().equals("q")) {
+			if(nameValuePair.getName().equals(collectionProperties.getFormQueryRespondTo())) {
 				this.value = nameValuePair.getValue();
 				isOverride = true;
 				break;

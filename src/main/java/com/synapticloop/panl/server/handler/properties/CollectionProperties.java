@@ -55,23 +55,30 @@ public class CollectionProperties {
 	// STATIC strings
 	public static final String PROPERTY_KEY_PANL_FACET = "panl.facet.";
 	public static final String PROPERTY_KEY_PANL_FIELD = "panl.field.";
+	public static final String PROPERTY_KEY_PANL_FORM_QUERY_RESPONDTO = "panl.form.query.respondto";
+	public static final String PROPERTY_KEY_PANL_INCLUDE_SAME_NUMBER_FACETS = "panl.include.same.number.facets";
+	public static final String PROPERTY_KEY_PANL_INCLUDE_SINGLE_FACETS = "panl.include.single.facets";
+	public static final String PROPERTY_KEY_PANL_LPSE_LENGTH = "panl.lpse.length";
+	public static final String PROPERTY_KEY_PANL_LPSE_ORDER = "panl.lpse.order";
+	public static final String PROPERTY_KEY_PANL_PARAM_NUMROWS = "panl.param.numrows";
+	public static final String PROPERTY_KEY_PANL_PARAM_PAGE = "panl.param.page";
+	public static final String PROPERTY_KEY_PANL_PARAM_PASSTHROUGH = "panl.param.passthrough";
+	public static final String PROPERTY_KEY_PANL_PARAM_QUERY = "panl.param.query";
+	public static final String PROPERTY_KEY_PANL_PARAM_QUERY_OPERAND = "panl.param.query.operand";
+	public static final String PROPERTY_KEY_PANL_PARAM_SORT = "panl.param.sort";
 	public static final String PROPERTY_KEY_PANL_RESULTS_FIELDS = "panl.results.fields.";
 	public static final String PROPERTY_KEY_PANL_SORT_FIELDS = "panl.sort.fields";
-	public static final String PROPERTY_KEY_PANL_LPSE_ORDER = "panl.lpse.order";
+	public static final String PROPERTY_KEY_SOLR_DEFAULT_QUERY_OPERAND = "solr.default.query.operand";
+	public static final String PROPERTY_KEY_SOLR_FACET_LIMIT = "solr.facet.limit";
+	public static final String PROPERTY_KEY_SOLR_FACET_MIN_COUNT = "solr.facet.min.count";
+	public static final String PROPERTY_KEY_SOLR_NUMROWS_DEFAULT = "solr.numrows.default";
 
-	public static final String PROPERTY_KEY_FIELDSETS_DEFAULT = "default";
+	public static final String FIELDSETS_DEFAULT = "default";
 
 	public static final String SOLR_DEFAULT_QUERY_OPERAND_OR = "OR";
 	public static final String SOLR_DEFAULT_QUERY_OPERAND_AND = "AND";
 
-	public static final String PANL_LPSE_LENGTH = "panl.lpse.length";
 
-	public static final String PANL_PARAM_QUERY = "panl.param.query";
-	public static final String PANL_PARAM_SORT = "panl.param.sort";
-	public static final String PANL_PARAM_PAGE = "panl.param.page";
-	public static final String PANL_PARAM_NUMROWS = "panl.param.numrows";
-	public static final String PANL_PARAM_QUERY_OPERAND = "panl.param.query.operand";
-	public static final String PANL_PARAM_PASSTHROUGH = "panl.param.passthrough";
 
 
 	/**
@@ -136,6 +143,8 @@ public class CollectionProperties {
 	private String panlParamNumRows;
 	private String panlParamQueryOperand;
 	private String panlParamPassThrough;
+
+	private String formQueryRespondTo;
 
 	private String solrDefaultQueryOperand;
 	private int solrFacetLimit;
@@ -251,45 +260,46 @@ public class CollectionProperties {
 	 * 		could not be adequately parsed
 	 */
 	private void parseDefaultProperties() throws PanlServerException {
-		this.panlIncludeSingleFacets = properties.getProperty("panl.include.single.facets", "false").equals("true");
-		this.panlIncludeSameNumberFacets = properties.getProperty("panl.include.same.number.facets", "false").equals("true");
+		this.panlIncludeSingleFacets = properties.getProperty(PROPERTY_KEY_PANL_INCLUDE_SINGLE_FACETS, "false").equals("true");
+		this.panlIncludeSameNumberFacets = properties.getProperty(PROPERTY_KEY_PANL_INCLUDE_SAME_NUMBER_FACETS, "false").equals("true");
+		this.formQueryRespondTo = properties.getProperty(PROPERTY_KEY_PANL_FORM_QUERY_RESPONDTO, "q");
 
-		this.facetMinCount = PropertyHelper.getIntProperty(properties, "solr.facet.min.count", 1);
-		this.numResultsPerPage = PropertyHelper.getIntProperty(properties, "solr.numrows.default", 10);
-		this.solrFacetLimit = PropertyHelper.getIntProperty(properties, "solr.facet.limit", 100);
+		this.facetMinCount = PropertyHelper.getIntProperty(properties, PROPERTY_KEY_SOLR_FACET_MIN_COUNT, 1);
+		this.numResultsPerPage = PropertyHelper.getIntProperty(properties, PROPERTY_KEY_SOLR_NUMROWS_DEFAULT, 10);
+		this.solrFacetLimit = PropertyHelper.getIntProperty(properties, PROPERTY_KEY_SOLR_FACET_LIMIT, 100);
 
 
-		this.lpseLength = PropertyHelper.getIntProperty(properties, PANL_LPSE_LENGTH, null);
+		this.lpseLength = PropertyHelper.getIntProperty(properties, PROPERTY_KEY_PANL_LPSE_LENGTH, null);
 		if (null == lpseLength) {
 			throw new PanlServerException("MANDATORY PROPERTY MISSING: Could not find the 'panl.lpse.length' property in the '" + this.solrCollection + "'.panl.properties file.'");
 		}
 
 		// TODO - check whether this is the best possible default to get the most amount of results...
-		this.solrDefaultQueryOperand = properties.getProperty("solr.default.query.operand", "+");
+		this.solrDefaultQueryOperand = properties.getProperty(PROPERTY_KEY_SOLR_DEFAULT_QUERY_OPERAND, "+");
 		if (!(this.solrDefaultQueryOperand.equals("+") || this.solrDefaultQueryOperand.equals("-"))) {
 			throw new PanlServerException("Property solr.default.query.operand __MUST__ be one of '+', or '-'.");
 		}
 
 		LPSE_METADATA.add(this.solrDefaultQueryOperand);
 
-		this.panlParamQuery = initialiseStringProperty(PANL_PARAM_QUERY, true);
-		lpseFieldLookup.put(this.panlParamQuery, new PanlQueryField(panlParamQuery, PANL_PARAM_QUERY, properties, solrCollection));
+		this.panlParamQuery = initialiseStringProperty(PROPERTY_KEY_PANL_PARAM_QUERY, true);
+		lpseFieldLookup.put(this.panlParamQuery, new PanlQueryField(panlParamQuery, PROPERTY_KEY_PANL_PARAM_QUERY, properties, solrCollection));
 
-		this.panlParamSort = initialiseStringProperty(PANL_PARAM_SORT, true);
-		lpseFieldLookup.put(this.panlParamSort, new PanlSortField(panlParamSort, PANL_PARAM_SORT, properties, solrCollection));
+		this.panlParamSort = initialiseStringProperty(PROPERTY_KEY_PANL_PARAM_SORT, true);
+		lpseFieldLookup.put(this.panlParamSort, new PanlSortField(panlParamSort, PROPERTY_KEY_PANL_PARAM_SORT, properties, solrCollection));
 
-		this.panlParamPage = initialiseStringProperty(PANL_PARAM_PAGE, true);
-		lpseFieldLookup.put(this.panlParamPage, new PanlPageNumField(panlParamPage, PANL_PARAM_PAGE, properties, solrCollection));
+		this.panlParamPage = initialiseStringProperty(PROPERTY_KEY_PANL_PARAM_PAGE, true);
+		lpseFieldLookup.put(this.panlParamPage, new PanlPageNumField(panlParamPage, PROPERTY_KEY_PANL_PARAM_PAGE, properties, solrCollection));
 
-		this.panlParamNumRows = initialiseStringProperty(PANL_PARAM_NUMROWS, true);
-		lpseFieldLookup.put(this.panlParamNumRows, new PanlNumRowsField(panlParamNumRows, PANL_PARAM_NUMROWS, properties, solrCollection));
+		this.panlParamNumRows = initialiseStringProperty(PROPERTY_KEY_PANL_PARAM_NUMROWS, true);
+		lpseFieldLookup.put(this.panlParamNumRows, new PanlNumRowsField(panlParamNumRows, PROPERTY_KEY_PANL_PARAM_NUMROWS, properties, solrCollection));
 
-		this.panlParamQueryOperand = initialiseStringProperty(PANL_PARAM_QUERY_OPERAND, true);
-		lpseFieldLookup.put(this.panlParamQueryOperand, new PanlQueryOperandField(panlParamQueryOperand, PANL_PARAM_QUERY_OPERAND, properties, solrCollection));
+		this.panlParamQueryOperand = initialiseStringProperty(PROPERTY_KEY_PANL_PARAM_QUERY_OPERAND, true);
+		lpseFieldLookup.put(this.panlParamQueryOperand, new PanlQueryOperandField(panlParamQueryOperand, PROPERTY_KEY_PANL_PARAM_QUERY_OPERAND, properties, solrCollection));
 
-		this.panlParamPassThrough = initialiseStringProperty(PANL_PARAM_PASSTHROUGH, false);
+		this.panlParamPassThrough = initialiseStringProperty(PROPERTY_KEY_PANL_PARAM_PASSTHROUGH, false);
 		if (null != panlParamPassThrough) {
-			lpseFieldLookup.put(this.panlParamPassThrough, new PanlPassThroughField(panlParamPassThrough, PANL_PARAM_PASSTHROUGH, properties, solrCollection));
+			lpseFieldLookup.put(this.panlParamPassThrough, new PanlPassThroughField(panlParamPassThrough, PROPERTY_KEY_PANL_PARAM_PASSTHROUGH, properties, solrCollection));
 		}
 	}
 
@@ -445,9 +455,9 @@ public class CollectionProperties {
 			addResultsFields(resultFieldProperty.substring(PROPERTY_KEY_PANL_RESULTS_FIELDS.length()), properties.getProperty(resultFieldProperty));
 		}
 		// there must always be a default field
-		if (!resultFieldsMap.containsKey(PROPERTY_KEY_FIELDSETS_DEFAULT)) {
+		if (!resultFieldsMap.containsKey(FIELDSETS_DEFAULT)) {
 			LOGGER.warn("[{}] Missing default field set, adding one which will return all fields.", solrCollection);
-			resultFieldsMap.put(PROPERTY_KEY_FIELDSETS_DEFAULT, new ArrayList<>());
+			resultFieldsMap.put(FIELDSETS_DEFAULT, new ArrayList<>());
 		}
 	}
 
@@ -630,4 +640,14 @@ public class CollectionProperties {
 	public boolean getHasOrFacetFields() {
 		return hasOrFacetFields;
 	}
+
+	/**
+	 * <p>The URL parameter key to respond to for a text search term.</p>
+	 *
+	 * @return The URL parameter key to respond to for a text search term
+	 */
+	public String getFormQueryRespondTo() {
+		return (formQueryRespondTo);
+	}
+
 }

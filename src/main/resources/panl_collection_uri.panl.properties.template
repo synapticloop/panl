@@ -126,6 +126,27 @@ $panl.param.query.operand
 $panl.param.passthrough
 panl.param.passthrough.canonical=false
 
+#                         The Form Query To Respond To
+#                         --- ---- ----- -- ------- --
+# In the below HTML form definition, the 'q' named parameter is passed through
+# to the Panl server, which is then parsed and send through to the Solr search
+# sever as the Solr Query 'q' parameter.
+#
+# <form method="GET">
+#   <label><input type="text" name="q" /></label>
+#   <button type="submit">Search</button>
+# </form>
+#
+# You may wish to set this to something else - e.g. search, or find.
+#
+# If this property is not included, then the default value for this is 'q'
+# (without the quotes)
+#
+#                                ~ ~ ~ * ~ ~ ~
+
+panl.form.query.respondto=q
+
+
 #                     Whether to include single facets
 #                     ------- -- ------- ------ ------
 # Facets that only include a single result to further refine the query will not
