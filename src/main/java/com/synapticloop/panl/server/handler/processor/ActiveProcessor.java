@@ -53,6 +53,11 @@ public class ActiveProcessor extends Processor {
 		// Get all the LPSE tokens
 		List<LpseToken> lpseTokens = new ArrayList<>();
 		for (BaseField lpseField : collectionProperties.getLpseFields()) {
+			// These codes are ignored, just carry on
+			if(collectionProperties.getIsIgnoredLpseCode(lpseField.getLpseCode())) {
+				continue;
+			}
+
 			List<LpseToken> lpseTokenList = panlTokenMap.getOrDefault(lpseField.getLpseCode(), new ArrayList<>());
 			for (LpseToken lpseToken : lpseTokenList) {
 				if (lpseToken.getIsValid()) {

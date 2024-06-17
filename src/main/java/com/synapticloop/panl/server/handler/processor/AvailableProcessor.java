@@ -55,6 +55,10 @@ public class AvailableProcessor extends Processor {
 
 		List<LpseToken> lpseTokens = new ArrayList<>();
 		for (BaseField lpseField : collectionProperties.getLpseFields()) {
+			// These codes are ignored, just carry on
+			if(collectionProperties.getIsIgnoredLpseCode(lpseField.getLpseCode())) {
+				continue;
+			}
 			lpseTokens.addAll(panlTokenMap.getOrDefault(lpseField.getLpseCode(), new ArrayList<>()));
 		}
 
@@ -65,6 +69,10 @@ public class AvailableProcessor extends Processor {
 		Map<String, Set<String>> panlLookupMap = new HashMap<>();
 		for (LpseToken lpseToken : lpseTokens) {
 			String panlLpseValue = lpseToken.getValue();
+			// These codes are ignored, just carry on
+			if(collectionProperties.getIsIgnoredLpseCode(lpseToken.getLpseCode())) {
+				continue;
+			}
 			if (null != panlLpseValue) {
 				String lpseCode = lpseToken.getLpseCode();
 				Set<String> valueSet = panlLookupMap.get(lpseCode);
@@ -83,6 +91,11 @@ public class AvailableProcessor extends Processor {
 		for (FacetField facetField : queryResponse.getFacetFields()) {
 			// if we have an or Facet and this is an or facet, then we keep all
 			// values, otherwise we strip out the xero values
+
+			// These codes are ignored, just carry on
+			if(collectionProperties.getIsIgnoredLpseCode(collectionProperties.getPanlCodeFromSolrFacetFieldName(facetField.getName()))) {
+				continue;
+			}
 
 			if (facetField.getValueCount() != 0) {
 				JSONObject facetObject = new JSONObject();

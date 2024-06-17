@@ -60,6 +60,7 @@ public class CollectionProperties {
 	public static final String PROPERTY_KEY_PANL_INCLUDE_SINGLE_FACETS = "panl.include.single.facets";
 	public static final String PROPERTY_KEY_PANL_LPSE_LENGTH = "panl.lpse.length";
 	public static final String PROPERTY_KEY_PANL_LPSE_ORDER = "panl.lpse.order";
+	public static final String PROPERTY_KEY_PANL_LPSE_IGNORE = "panl.lpse.ignore";
 	public static final String PROPERTY_KEY_PANL_PARAM_NUMROWS = "panl.param.numrows";
 	public static final String PROPERTY_KEY_PANL_PARAM_PAGE = "panl.param.page";
 	public static final String PROPERTY_KEY_PANL_PARAM_PASSTHROUGH = "panl.param.passthrough";
@@ -77,8 +78,6 @@ public class CollectionProperties {
 
 	public static final String SOLR_DEFAULT_QUERY_OPERAND_OR = "OR";
 	public static final String SOLR_DEFAULT_QUERY_OPERAND_AND = "AND";
-
-
 
 
 	/**
@@ -150,10 +149,13 @@ public class CollectionProperties {
 	private String solrDefaultQueryOperand;
 	private int solrFacetLimit;
 
+	private final Set<String> LPSE_URI_CODES = new HashSet<>();
+	private final Set<String> LPSE_IGNORED_URI_CODES = new HashSet<>();
 	private final List<BaseField> lpseFields = new ArrayList<>();
 	private final Set<String> LPSE_METADATA = new HashSet<>();
 
 	private final Map<String, List<String>> resultFieldsMap = new HashMap<>();
+
 	/**
 	 * <p>The list of all the named Solr facet fields - Note that this is not
 	 * used as a FieldSet - it is all of the Solr fields that will be
@@ -166,14 +168,35 @@ public class CollectionProperties {
 	private final JSONObject solrFieldToPanlNameLookup = new JSONObject();
 
 	private final Map<String, BaseField> lpseFieldLookup = new HashMap<>();
-
+	/**
+	 * <p>Are there any OR facet fields registered for this collection</p>
+	 */
 	private boolean hasOrFacetFields = false;
 
+	/**
+	 * <p>Used as a holder for panl LPSE codes which are mandatory to have in the
+	 * panl.lpse.order property.  Mandatory properties are added, then removed
+	 * when the property is set.</p>
+	 */
 	private final Map<String, String> MANDATORY_LPSE_ORDER_FIELDS = new HashMap<>();
 
-	public CollectionProperties(String solrCollection, String panCollectionUri, Properties properties) throws PanlServerException {
+	/**
+	 * <p>Instantiate the Collection properties which maps to one Panl collection
+	 * URI path and multiple fieldsets.</p>
+	 *
+	 * @param solrCollection The Solr collection to connect to - this is used for
+	 * 		debugging and logging purposes
+	 * @param panlCollectionUri The Panl collection URI that this collection is
+	 * 		registered to - this is used for debugging and logging purposes
+	 * @param properties The panl_collection_uri.properties object to generate
+	 * 		the configuration from
+	 *
+	 * @throws PanlServerException If there was an error in parsing, there are
+	 * 		missing, or there was an invalid property.
+	 */
+	public CollectionProperties(String solrCollection, String panlCollectionUri, Properties properties) throws PanlServerException {
 		this.solrCollection = solrCollection;
-		this.panCollectionUri = panCollectionUri;
+		this.panCollectionUri = panlCollectionUri;
 		this.properties = properties;
 
 		parseDefaultProperties();
@@ -183,6 +206,7 @@ public class CollectionProperties {
 		parseResultFields();
 		parseSortFields();
 		parseLpseOrder();
+		parseLpseIgnore();
 
 
 		// Generate some static information
@@ -416,13 +440,14 @@ public class CollectionProperties {
 	private void parseLpseOrder() throws PanlServerException {
 		String panlLpseOrder = properties.getProperty(PROPERTY_KEY_PANL_LPSE_ORDER, null);
 		if (null == panlLpseOrder) {
-			throw new PanlServerException("Could not find the property " + PROPERTY_KEY_PANL_LPSE_ORDER);
+			throw new PanlServerException("Could not find the MANDATORY property " + PROPERTY_KEY_PANL_LPSE_ORDER);
 		}
 
 		for (String lpseCode : panlLpseOrder.split(",")) {
 			lpseCode = lpseCode.trim();
 			if (lpseFieldLookup.containsKey(lpseCode)) {
 				lpseFields.add(lpseFieldLookup.get(lpseCode));
+				LPSE_URI_CODES.add(lpseCode);
 			}
 
 			if (!LPSE_FACET_FIELDS.contains(lpseCode) &&
@@ -448,6 +473,26 @@ public class CollectionProperties {
 			throw new PanlServerException("Missing mandatory LPSE codes in the " + PROPERTY_KEY_PANL_LPSE_ORDER + " property.");
 		}
 
+	}
+
+	/**
+	 * <p>Parse the LPSE ignore comma separated list.  LPSE ignore codes will
+	 * still be able to be searched on, however they won't be returned in the
+	 * available </p>
+	 *
+	 * <p>If the LPSE code to be ignored is not in the LPSE order, it will
+	 * generate a warning message.</p>
+	 */
+	private void parseLpseIgnore() {
+		String panlLpseIgnore = properties.getProperty(PROPERTY_KEY_PANL_LPSE_IGNORE, "");
+		for (String ignore : panlLpseIgnore.split(",")) {
+			String trimmed = ignore.trim();
+			if (LPSE_URI_CODES.contains(trimmed)) {
+				LPSE_IGNORED_URI_CODES.add(trimmed);
+			} else {
+				LOGGER.warn("Attempting to ignore a facet with code '{}' which was not defined by the lpse order property '{}", trimmed, PROPERTY_KEY_PANL_LPSE_ORDER);
+			}
+		}
 	}
 
 	private void parseResultFields() throws PanlServerException {
@@ -645,13 +690,51 @@ public class CollectionProperties {
 	/**
 	 * <p>The URL parameter key to respond to for a text search term.</p>
 	 *
+	 * <p>In the below form, the URL parameter is <code>q</code> (i.e. the form
+	 * field name.)</p>
+	 *
+	 * <pre>
+	 * &lt;form method="GET"&gt;
+	 *   &lt;label>&lt;input type="text" name="q" /&gt;&lt;/label&gt;
+	 *   &lt;button type="submit"&gt;Search&lt;/button&gt;
+	 * &lt;/form&gt;
+	 * </pre>
+	 *
+	 * <p>This parameter will change the name of the input that is picked up, e.g.
+	 * <code>panl.form.query.respondto=search</code> will require a named input
+	 * as:</p>
+	 *
+	 * <pre>
+	 * &lt;form method="GET"&gt;
+	 *   &lt;label>&lt;input type="text" name="search" /&gt;&lt;/label&gt;
+	 *   &lt;button type="submit"&gt;Search&lt;/button&gt;
+	 * &lt;/form&gt;
+	 * </pre>
+	 *
 	 * @return The URL parameter key to respond to for a text search term
 	 */
 	public String getFormQueryRespondTo() {
 		return (formQueryRespondTo);
 	}
 
+	/**
+	 * <p>Get the Panl collection URI for this collection</p>
+	 *
+	 * @return The Panl collection URI for this collection
+	 */
 	public String getPanCollectionUri() {
 		return panCollectionUri;
+	}
+
+	/**
+	 * <p>Return whether the LPSE code should be ignored in the active and
+	 * available facets.</p>
+	 *
+	 * @param lpseCode The LPSE code to lookup
+	 *
+	 * @return Whether this LPSE code should be ignored
+	 */
+	public boolean getIsIgnoredLpseCode(String lpseCode) {
+		return (LPSE_IGNORED_URI_CODES.contains(lpseCode));
 	}
 }

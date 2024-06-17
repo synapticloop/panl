@@ -345,9 +345,10 @@ $panl.lpse.order
 # active or available filters JSON object
 #
 # This is useful when you want to use a facet for a lookup, but not allow the
-# facet to be removed.  An example usage would be when generating a link to a
-# single results (say with its id field) and the returned available facets
-# would return all of the ids as facets.
+# facet to be removed or returned in the list of available or active facets. An
+# example usage would be when generating a link to a single results (say with
+# its id field) and the returned available facets would return all of the ids
+# as facets.
 #
 #                                ~ ~ ~ * ~ ~ ~
 
