@@ -55,9 +55,14 @@ public class QueryLpseToken extends LpseToken {
 		for (NameValuePair nameValuePair : URLEncodedUtils.parse(queryFromUri, StandardCharsets.UTF_8)) {
 			if(nameValuePair.getName().equals(collectionProperties.getFormQueryRespondTo())) {
 				this.value = nameValuePair.getValue();
+
 				isOverride = true;
 				break;
 			}
+		}
+
+		if(null != this.value  && (this.value.equals("-") || this.value.equals("+"))) {
+			this.isValid = false;
 		}
 	}
 
