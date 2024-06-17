@@ -63,7 +63,7 @@ public class PanlQueryField extends BaseField {
 	 */
 	public void applyToQueryInternal(SolrQuery solrQuery, List<LpseToken> lpseTokenList) {
 		if(!lpseTokenList.isEmpty()) {
-			solrQuery.setQuery(lpseTokenList.get(0).getValue());
+			solrQuery.setQuery("\"" + lpseTokenList.get(0).getValue() + "\"");
 		}
 	}
 

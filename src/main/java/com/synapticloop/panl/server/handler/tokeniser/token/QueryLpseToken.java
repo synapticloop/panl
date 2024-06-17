@@ -30,29 +30,16 @@ import org.apache.http.client.utils.URLEncodedUtils;
 
 import java.net.URLDecoder;
 import java.nio.charset.StandardCharsets;
-import java.util.HashSet;
-import java.util.Set;
-import java.util.StringTokenizer;
+import java.util.*;
 
 public class QueryLpseToken extends LpseToken {
 	private boolean isOverride;
-	private static final Set<String> DISALLOWED_QUERIES = new HashSet<>();
-	private static final Set<String> DISALLOWED_STARTS_WITH = new HashSet<>();
-	static {
-		DISALLOWED_QUERIES.add("+");
-		DISALLOWED_QUERIES.add("-");
-		DISALLOWED_QUERIES.add("OR");
-		DISALLOWED_QUERIES.add("AND");
-
-		DISALLOWED_STARTS_WITH.add("[");
-		DISALLOWED_STARTS_WITH.add("]");
-	}
 
 	public QueryLpseToken(
 			CollectionProperties collectionProperties,
 			String queryFromUri,
 			String lpseCode) {
-		this(collectionProperties, lpseCode, queryFromUri,null);
+		this(collectionProperties, lpseCode, queryFromUri, null);
 	}
 
 	public QueryLpseToken(
@@ -62,23 +49,16 @@ public class QueryLpseToken extends LpseToken {
 			StringTokenizer valueTokeniser) {
 		super(lpseCode, collectionProperties);
 
-		if(null != valueTokeniser && valueTokeniser.hasMoreTokens()) {
+		if (null != valueTokeniser && valueTokeniser.hasMoreTokens()) {
 			this.value = valueTokeniser.nextToken();
 		}
 
 		for (NameValuePair nameValuePair : URLEncodedUtils.parse(queryFromUri, StandardCharsets.UTF_8)) {
-			if(nameValuePair.getName().equals(collectionProperties.getFormQueryRespondTo())) {
+			if (nameValuePair.getName().equals(collectionProperties.getFormQueryRespondTo())) {
 				this.value = nameValuePair.getValue();
 
 				isOverride = true;
 				break;
-			}
-		}
-
-		if(null != this.value) {
-			if(DISALLOWED_QUERIES.contains(this.value) ||
-			DISALLOWED_STARTS_WITH.contains(URLDecoder.decode(this.value, StandardCharsets.UTF_8).trim().substring(0, 1))) {
-				this.isValid = false;
 			}
 		}
 	}
@@ -89,12 +69,12 @@ public class QueryLpseToken extends LpseToken {
 				"' with value '" +
 				value +
 				"'" +
-				(isOverride ? " (Overridden by query parameter).": ".")
+				(isOverride ? " (Overridden by query parameter)." : ".")
 		);
 	}
 
 	@Override public String getType() {
-		return("query");
+		return ("query");
 	}
 
 }

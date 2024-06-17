@@ -8,7 +8,7 @@ import java.util.Random;
 
 public class RandomURITester {
 	private static final String DEFAULT_URL = "http://localhost:8181/mechanical-pencils/brandandname/";
-	private static final String AVAILABLE = "abcdef/ghij/klmnopq/rstuvwx/yzABCDEFG/HIJKLM/NOPQR/S/TUVWX/YZ0123/456789/+-";
+	private static final String AVAILABLE = "ab+cdef/g-hij/kl+mn[opq/rs]tuv-wx/yz+AB[CDEFG/HI-J]KLM/N+O[PQR/S/TU]V-WX/Y+Z[0123/45]67-89/+-";
 	private static Random RANDOM = new Random(System.currentTimeMillis());
 	private static String getRandomURI() {
 		// length
