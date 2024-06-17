@@ -218,3 +218,23 @@ SOLR_INSTALL_DIRECTORY\bin\solr start -cloud -p 7574 -s "example\cloud\node2\sol
 SOLR_INSTALL_DIRECTORY/bin/solr start -cloud -p 8983 -s "example/cloud/node1/solr"
 SOLR_INSTALL_DIRECTORY/bin/solr start -cloud -p 7574 -s "example/cloud/node2/solr" -z localhost:9983
 ```
+
+# Building The distribution
+
+### _Windows_
+
+```shell
+gradlew.bat assemble
+```
+
+### _*NIX_
+
+```shell
+./gradlew assemble
+```
+
+The distributions (both a `.zip` and a `.tar` file) will be created in the build distributions directory.
+
+I.e.
+ - `./build/distributions` (*NIX), or
+ - `.\build\distributions` (Windows)
