@@ -110,6 +110,7 @@ public class PanlRequestHandler implements HttpRequestHandler {
 						String.format("Class: %s, message: %s.",
 								e.getClass().getCanonicalName(),
 								e.getMessage()));
+				e.printStackTrace();
 				response.setEntity(new StringEntity(jsonObject.toString(), ResourceHelper.CONTENT_TYPE_JSON));
 			} else {
 				jsonObject.put(JSON_KEY_MESSAGE, JSON_VALUE_MESSAGE_500);

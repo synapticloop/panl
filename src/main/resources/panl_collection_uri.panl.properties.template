@@ -38,7 +38,7 @@
 # The following are reserved characters and __MUST__ not be used as they are  #
 # modifiers that the Panl server users, or are reserved for future use.       #
 #                                                                             #
-#        + - .                                                                #
+#        + - . ~ [ ] ^ ( )                                                    #
 #                                ~ ~ ~ * ~ ~ ~                                #
 #                                                                             #
 #   NOTE: The Panl server will not enforce the above two rules.  If either    #

@@ -37,9 +37,11 @@ public class PassThroughLpseToken extends LpseToken {
 			StringTokenizer valueTokeniser) {
 		super(lpseCode, collectionProperties);
 
-		this.value = URLDecoder.decode(
-				valueTokeniser.nextToken(),
-				StandardCharsets.UTF_8);
+		if(valueTokeniser.hasMoreTokens()) {
+			this.value = URLDecoder.decode(
+					valueTokeniser.nextToken(),
+					StandardCharsets.UTF_8);
+		}
 	}
 
 	@Override public String explain() {

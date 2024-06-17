@@ -287,7 +287,12 @@ public class CollectionRequestHandler {
 			// but we don't sort on the sort tokens - as there is an order to them
 			if (!key.equals(collectionProperties.getPanlParamSort())) {
 				lpseTokenTemp.sort((o1, o2) -> {
-					if (!o1.getIsValid() || !o2.getIsValid()) {
+					if (o1 == null ||
+							o2 == null ||
+							!o1.getIsValid() ||
+							o1.getValue() == null ||
+							o2.getValue() == null ||
+							!o2.getIsValid()) {
 						// either one is invalid and won't be sent through or generate a
 						// canonical URI
 						return (0);
