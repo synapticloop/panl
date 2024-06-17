@@ -28,7 +28,14 @@ public class RandomURITester {
 		for(int i = 0; i <= 10000; i++) {
 			URL url = null;
 			try {
-				System.out.print(i + " ");
+				if(i % 1000 == 0) {
+					System.out.println();
+				}
+
+				if(i % 100 == 0) {
+					System.out.print(i + " ");
+				}
+
 				String randomURI = getRandomURI();
 				url = new URL(randomURI);
 				HttpURLConnection con = (HttpURLConnection) url.openConnection();

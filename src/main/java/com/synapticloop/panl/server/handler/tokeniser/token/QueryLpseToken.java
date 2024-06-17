@@ -28,11 +28,25 @@ import com.synapticloop.panl.server.handler.properties.CollectionProperties;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.utils.URLEncodedUtils;
 
+import java.net.URLDecoder;
 import java.nio.charset.StandardCharsets;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.StringTokenizer;
 
 public class QueryLpseToken extends LpseToken {
 	private boolean isOverride;
+	private static final Set<String> DISALLOWED_QUERIES = new HashSet<>();
+	private static final Set<String> DISALLOWED_STARTS_WITH = new HashSet<>();
+	static {
+		DISALLOWED_QUERIES.add("+");
+		DISALLOWED_QUERIES.add("-");
+		DISALLOWED_QUERIES.add("OR");
+		DISALLOWED_QUERIES.add("AND");
+
+		DISALLOWED_STARTS_WITH.add("[");
+		DISALLOWED_STARTS_WITH.add("]");
+	}
 
 	public QueryLpseToken(
 			CollectionProperties collectionProperties,
@@ -61,8 +75,11 @@ public class QueryLpseToken extends LpseToken {
 			}
 		}
 
-		if(null != this.value  && (this.value.equals("-") || this.value.equals("+"))) {
-			this.isValid = false;
+		if(null != this.value) {
+			if(DISALLOWED_QUERIES.contains(this.value) ||
+			DISALLOWED_STARTS_WITH.contains(URLDecoder.decode(this.value, StandardCharsets.UTF_8).trim().substring(0, 1))) {
+				this.isValid = false;
+			}
 		}
 	}
 
