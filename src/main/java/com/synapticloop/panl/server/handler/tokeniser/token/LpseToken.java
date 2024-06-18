@@ -248,4 +248,7 @@ public abstract class LpseToken {
 		this.isValid = isValid;
 	}
 
+	public String getOriginalValue() {
+		return(this.originalValue);
+	}
 }

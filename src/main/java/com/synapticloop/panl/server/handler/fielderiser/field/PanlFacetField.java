@@ -37,20 +37,21 @@ import java.util.List;
 import java.util.Properties;
 
 /**
- * <p>A Panl facet field comes in four flavours</p>
+ * <p>A Panl facet field comes in five flavours</p>
  *
  * <ol>
  *   <li>A regular facet,</li>
  *   <li>A RANGE facet,</li>
  *   <li>An OR facet, or</li>
- *   <li>A Boolean facet</li>
+ *   <li>A BOOLEAN facet</li>
+ *   <li>A DATE facet</li>
  * </ol>
  */
 public class PanlFacetField extends BaseField {
 	private static final Logger LOGGER = LoggerFactory.getLogger(PanlFacetField.class);
 
 	public PanlFacetField(String lpseCode, String propertyKey, Properties properties, String solrCollection, int lpseLength) throws PanlServerException {
-		super(lpseCode, properties, propertyKey, solrCollection, lpseLength);
+		super(lpseCode, propertyKey, properties, solrCollection, lpseLength);
 
 		validateProperties();
 
@@ -62,6 +63,7 @@ public class PanlFacetField extends BaseField {
 		populateRanges();
 		// lastly, we are going to check to see whether this is an 'OR' field
 		populateFacetOr();
+
 		logDetails();
 	}
 

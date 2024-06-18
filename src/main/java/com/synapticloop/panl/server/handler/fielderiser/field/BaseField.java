@@ -71,6 +71,7 @@ public abstract class BaseField {
 	public static final String TYPE_SOLR_LONG_POINT_FIELD = "solr.LongPointField";
 	public static final String TYPE_SOLR_DOUBLE_POINT_FIELD = "solr.DoublePointField";
 	public static final String TYPE_SOLR_FLOAT_POINT_FIELD = "solr.FloatPointField";
+	public static final String TYPE_SOLR_DATE_POINT_FIELD = "solr.DatePointField";
 
 	private boolean hasValuePrefix = false;
 	private boolean hasValueSuffix = false;
@@ -118,7 +119,7 @@ public abstract class BaseField {
 	private String solrFieldName;
 	private String solrFieldType;
 
-	private final Properties properties;
+	protected final Properties properties;
 	private final String solrCollection;
 	private final String propertyKey;
 
@@ -127,6 +128,7 @@ public abstract class BaseField {
 	private static final int VALIDATION_TYPE_NONE = 0;
 	private static final int VALIDATION_TYPE_NUMBER = 1;
 	private static final int VALIDATION_TYPE_DECIMAL = 2;
+	private static final int VALIDATION_TYPE_DATE = 3;
 
 	private int validationType;
 
@@ -135,13 +137,13 @@ public abstract class BaseField {
 			Properties properties,
 			String propertyKey,
 			String solrCollection) throws PanlServerException {
-		this(lpseCode, properties, propertyKey, solrCollection, 1);
+		this(lpseCode, propertyKey, properties, solrCollection, 1);
 	}
 
 	public BaseField(
 			String lpseCode,
-			Properties properties,
 			String propertyKey,
+			Properties properties,
 			String solrCollection,
 			int lpseLength) throws PanlServerException {
 
@@ -264,6 +266,9 @@ public abstract class BaseField {
 				case TYPE_SOLR_DOUBLE_POINT_FIELD:
 				case TYPE_SOLR_FLOAT_POINT_FIELD:
 					this.validationType = VALIDATION_TYPE_DECIMAL;
+					break;
+				case TYPE_SOLR_DATE_POINT_FIELD:
+					this.validationType = VALIDATION_TYPE_DATE;
 					break;
 				default:
 					this.validationType = VALIDATION_TYPE_NONE;
@@ -609,6 +614,7 @@ public abstract class BaseField {
 	 * @return The validated value
 	 */
 	private String getValidatedValue(String temp) {
+	// TODO - should change this to objects...
 		String replaced;
 		switch (this.validationType) {
 			case VALIDATION_TYPE_NUMBER:
@@ -620,6 +626,13 @@ public abstract class BaseField {
 				}
 			case VALIDATION_TYPE_DECIMAL:
 				replaced = temp.replaceAll("[^0-9.]", "");
+				if (replaced.isBlank()) {
+					return (null);
+				} else {
+					return replaced;
+				}
+			case VALIDATION_TYPE_DATE:
+				replaced = temp.replaceAll("[^0-9]", "");
 				if (replaced.isBlank()) {
 					return (null);
 				} else {

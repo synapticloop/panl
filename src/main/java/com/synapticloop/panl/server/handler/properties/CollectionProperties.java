@@ -37,6 +37,9 @@ import org.slf4j.LoggerFactory;
 
 import java.util.*;
 
+import static com.synapticloop.panl.server.handler.fielderiser.field.BaseField.PROPERTY_KEY_PANL_TYPE;
+import static com.synapticloop.panl.server.handler.fielderiser.field.BaseField.TYPE_SOLR_DATE_POINT_FIELD;
+
 /**
  * <p>This object contains all information required for the Panl server bound
  * URI path with assigned field sets.</p>
@@ -386,7 +389,15 @@ public class CollectionProperties {
 	private void parseFacetFields() throws PanlServerException {
 		for (String panlFieldKey : PropertyHelper.getPropertiesByPrefix(properties, PROPERTY_KEY_PANL_FACET)) {
 			String lpseCode = panlFieldKey.substring(panlFieldKey.lastIndexOf(".") + 1);
-			PanlFacetField facetField = new PanlFacetField(lpseCode, panlFieldKey, properties, solrCollection, lpseLength);
+			// now we need to know the type of the facetField
+			String solrFieldType = properties.getProperty(PROPERTY_KEY_PANL_TYPE + lpseCode, null);
+
+			PanlFacetField facetField;
+			if(TYPE_SOLR_DATE_POINT_FIELD.equals(solrFieldType)) {
+				facetField = new PanlDateFacetField(lpseCode, panlFieldKey, properties, solrCollection, lpseLength);
+			} else {
+				facetField = new PanlFacetField(lpseCode, panlFieldKey, properties, solrCollection, lpseLength);
+			}
 
 			FACET_FIELDS.add(facetField);
 			LPSE_FACET_FIELDS.add(facetField.getLpseCode());
