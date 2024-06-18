@@ -70,8 +70,12 @@ public class Collection {
 			this.lpseLength++;
 		}
 
+		if(this.lpseLength == 0) {
+			this.lpseLength = 1;
+		}
+
 		LOGGER.info("Collection: {}", this.collectionName);
-		LOGGER.info("Have {} fields, lpseNum is set to {}", facetFieldNames.size(), this.lpseLength);
+		LOGGER.info("Have {} fields, LPSE length is set to {}", facetFieldNames.size(), this.lpseLength);
 
 		// now we are going to remove all codes that are in use by the panl replacement map
 		for (String code : panlReplacementPropertyMap.values()) {

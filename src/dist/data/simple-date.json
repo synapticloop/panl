@@ -1,0 +1,4002 @@
+[
+  {
+    "text_date": "Wednesday 18 June 2014",
+    "solr_date": "2014-06-18T10:05:53Z",
+    "id": "20140618"
+  },
+  {
+    "text_date": "Saturday 28 June 2014",
+    "solr_date": "2014-06-28T10:05:53Z",
+    "id": "20140628"
+  },
+  {
+    "text_date": "Tuesday 8 July 2014",
+    "solr_date": "2014-07-08T10:05:53Z",
+    "id": "20140708"
+  },
+  {
+    "text_date": "Friday 18 July 2014",
+    "solr_date": "2014-07-18T10:05:53Z",
+    "id": "20140718"
+  },
+  {
+    "text_date": "Monday 28 July 2014",
+    "solr_date": "2014-07-28T10:05:53Z",
+    "id": "20140728"
+  },
+  {
+    "text_date": "Thursday 7 August 2014",
+    "solr_date": "2014-08-07T10:05:53Z",
+    "id": "20140807"
+  },
+  {
+    "text_date": "Sunday 17 August 2014",
+    "solr_date": "2014-08-17T10:05:53Z",
+    "id": "20140817"
+  },
+  {
+    "text_date": "Wednesday 27 August 2014",
+    "solr_date": "2014-08-27T10:05:53Z",
+    "id": "20140827"
+  },
+  {
+    "text_date": "Saturday 6 September 2014",
+    "solr_date": "2014-09-06T10:05:53Z",
+    "id": "20140906"
+  },
+  {
+    "text_date": "Tuesday 16 September 2014",
+    "solr_date": "2014-09-16T10:05:53Z",
+    "id": "20140916"
+  },
+  {
+    "text_date": "Friday 26 September 2014",
+    "solr_date": "2014-09-26T10:05:53Z",
+    "id": "20140926"
+  },
+  {
+    "text_date": "Monday 6 October 2014",
+    "solr_date": "2014-10-06T10:05:53Z",
+    "id": "20141006"
+  },
+  {
+    "text_date": "Thursday 16 October 2014",
+    "solr_date": "2014-10-16T10:05:53Z",
+    "id": "20141016"
+  },
+  {
+    "text_date": "Sunday 26 October 2014",
+    "solr_date": "2014-10-26T10:05:53Z",
+    "id": "20141026"
+  },
+  {
+    "text_date": "Wednesday 5 November 2014",
+    "solr_date": "2014-11-05T10:05:53Z",
+    "id": "20141105"
+  },
+  {
+    "text_date": "Saturday 15 November 2014",
+    "solr_date": "2014-11-15T10:05:53Z",
+    "id": "20141115"
+  },
+  {
+    "text_date": "Tuesday 25 November 2014",
+    "solr_date": "2014-11-25T10:05:53Z",
+    "id": "20141125"
+  },
+  {
+    "text_date": "Friday 5 December 2014",
+    "solr_date": "2014-12-05T10:05:53Z",
+    "id": "20141205"
+  },
+  {
+    "text_date": "Monday 15 December 2014",
+    "solr_date": "2014-12-15T10:05:53Z",
+    "id": "20141215"
+  },
+  {
+    "text_date": "Thursday 25 December 2014",
+    "solr_date": "2014-12-25T10:05:53Z",
+    "id": "20141225"
+  },
+  {
+    "text_date": "Sunday 4 January 2015",
+    "solr_date": "2015-01-04T10:05:53Z",
+    "id": "20150104"
+  },
+  {
+    "text_date": "Wednesday 14 January 2015",
+    "solr_date": "2015-01-14T10:05:53Z",
+    "id": "20150114"
+  },
+  {
+    "text_date": "Saturday 24 January 2015",
+    "solr_date": "2015-01-24T10:05:53Z",
+    "id": "20150124"
+  },
+  {
+    "text_date": "Tuesday 3 February 2015",
+    "solr_date": "2015-02-03T10:05:53Z",
+    "id": "20150203"
+  },
+  {
+    "text_date": "Friday 13 February 2015",
+    "solr_date": "2015-02-13T10:05:53Z",
+    "id": "20150213"
+  },
+  {
+    "text_date": "Monday 23 February 2015",
+    "solr_date": "2015-02-23T10:05:53Z",
+    "id": "20150223"
+  },
+  {
+    "text_date": "Thursday 5 March 2015",
+    "solr_date": "2015-03-05T10:05:53Z",
+    "id": "20150305"
+  },
+  {
+    "text_date": "Sunday 15 March 2015",
+    "solr_date": "2015-03-15T10:05:53Z",
+    "id": "20150315"
+  },
+  {
+    "text_date": "Wednesday 25 March 2015",
+    "solr_date": "2015-03-25T10:05:53Z",
+    "id": "20150325"
+  },
+  {
+    "text_date": "Saturday 4 April 2015",
+    "solr_date": "2015-04-04T10:05:53Z",
+    "id": "20150404"
+  },
+  {
+    "text_date": "Tuesday 14 April 2015",
+    "solr_date": "2015-04-14T10:05:53Z",
+    "id": "20150414"
+  },
+  {
+    "text_date": "Friday 24 April 2015",
+    "solr_date": "2015-04-24T10:05:53Z",
+    "id": "20150424"
+  },
+  {
+    "text_date": "Monday 4 May 2015",
+    "solr_date": "2015-05-04T10:05:53Z",
+    "id": "20150504"
+  },
+  {
+    "text_date": "Thursday 14 May 2015",
+    "solr_date": "2015-05-14T10:05:53Z",
+    "id": "20150514"
+  },
+  {
+    "text_date": "Sunday 24 May 2015",
+    "solr_date": "2015-05-24T10:05:53Z",
+    "id": "20150524"
+  },
+  {
+    "text_date": "Wednesday 3 June 2015",
+    "solr_date": "2015-06-03T10:05:53Z",
+    "id": "20150603"
+  },
+  {
+    "text_date": "Saturday 13 June 2015",
+    "solr_date": "2015-06-13T10:05:53Z",
+    "id": "20150613"
+  },
+  {
+    "text_date": "Tuesday 23 June 2015",
+    "solr_date": "2015-06-23T10:05:53Z",
+    "id": "20150623"
+  },
+  {
+    "text_date": "Friday 3 July 2015",
+    "solr_date": "2015-07-03T10:05:53Z",
+    "id": "20150703"
+  },
+  {
+    "text_date": "Monday 13 July 2015",
+    "solr_date": "2015-07-13T10:05:53Z",
+    "id": "20150713"
+  },
+  {
+    "text_date": "Thursday 23 July 2015",
+    "solr_date": "2015-07-23T10:05:53Z",
+    "id": "20150723"
+  },
+  {
+    "text_date": "Sunday 2 August 2015",
+    "solr_date": "2015-08-02T10:05:53Z",
+    "id": "20150802"
+  },
+  {
+    "text_date": "Wednesday 12 August 2015",
+    "solr_date": "2015-08-12T10:05:53Z",
+    "id": "20150812"
+  },
+  {
+    "text_date": "Saturday 22 August 2015",
+    "solr_date": "2015-08-22T10:05:53Z",
+    "id": "20150822"
+  },
+  {
+    "text_date": "Tuesday 1 September 2015",
+    "solr_date": "2015-09-01T10:05:53Z",
+    "id": "20150901"
+  },
+  {
+    "text_date": "Friday 11 September 2015",
+    "solr_date": "2015-09-11T10:05:53Z",
+    "id": "20150911"
+  },
+  {
+    "text_date": "Monday 21 September 2015",
+    "solr_date": "2015-09-21T10:05:53Z",
+    "id": "20150921"
+  },
+  {
+    "text_date": "Thursday 1 October 2015",
+    "solr_date": "2015-10-01T10:05:53Z",
+    "id": "20151001"
+  },
+  {
+    "text_date": "Sunday 11 October 2015",
+    "solr_date": "2015-10-11T10:05:53Z",
+    "id": "20151011"
+  },
+  {
+    "text_date": "Wednesday 21 October 2015",
+    "solr_date": "2015-10-21T10:05:53Z",
+    "id": "20151021"
+  },
+  {
+    "text_date": "Saturday 31 October 2015",
+    "solr_date": "2015-10-31T10:05:53Z",
+    "id": "20151031"
+  },
+  {
+    "text_date": "Tuesday 10 November 2015",
+    "solr_date": "2015-11-10T10:05:53Z",
+    "id": "20151110"
+  },
+  {
+    "text_date": "Friday 20 November 2015",
+    "solr_date": "2015-11-20T10:05:53Z",
+    "id": "20151120"
+  },
+  {
+    "text_date": "Monday 30 November 2015",
+    "solr_date": "2015-11-30T10:05:53Z",
+    "id": "20151130"
+  },
+  {
+    "text_date": "Thursday 10 December 2015",
+    "solr_date": "2015-12-10T10:05:53Z",
+    "id": "20151210"
+  },
+  {
+    "text_date": "Sunday 20 December 2015",
+    "solr_date": "2015-12-20T10:05:53Z",
+    "id": "20151220"
+  },
+  {
+    "text_date": "Wednesday 30 December 2015",
+    "solr_date": "2015-12-30T10:05:53Z",
+    "id": "20151230"
+  },
+  {
+    "text_date": "Saturday 9 January 2016",
+    "solr_date": "2016-01-09T10:05:53Z",
+    "id": "20160109"
+  },
+  {
+    "text_date": "Tuesday 19 January 2016",
+    "solr_date": "2016-01-19T10:05:53Z",
+    "id": "20160119"
+  },
+  {
+    "text_date": "Friday 29 January 2016",
+    "solr_date": "2016-01-29T10:05:53Z",
+    "id": "20160129"
+  },
+  {
+    "text_date": "Monday 8 February 2016",
+    "solr_date": "2016-02-08T10:05:53Z",
+    "id": "20160208"
+  },
+  {
+    "text_date": "Thursday 18 February 2016",
+    "solr_date": "2016-02-18T10:05:53Z",
+    "id": "20160218"
+  },
+  {
+    "text_date": "Sunday 28 February 2016",
+    "solr_date": "2016-02-28T10:05:53Z",
+    "id": "20160228"
+  },
+  {
+    "text_date": "Wednesday 9 March 2016",
+    "solr_date": "2016-03-09T10:05:53Z",
+    "id": "20160309"
+  },
+  {
+    "text_date": "Saturday 19 March 2016",
+    "solr_date": "2016-03-19T10:05:53Z",
+    "id": "20160319"
+  },
+  {
+    "text_date": "Tuesday 29 March 2016",
+    "solr_date": "2016-03-29T10:05:53Z",
+    "id": "20160329"
+  },
+  {
+    "text_date": "Friday 8 April 2016",
+    "solr_date": "2016-04-08T10:05:53Z",
+    "id": "20160408"
+  },
+  {
+    "text_date": "Monday 18 April 2016",
+    "solr_date": "2016-04-18T10:05:53Z",
+    "id": "20160418"
+  },
+  {
+    "text_date": "Thursday 28 April 2016",
+    "solr_date": "2016-04-28T10:05:53Z",
+    "id": "20160428"
+  },
+  {
+    "text_date": "Sunday 8 May 2016",
+    "solr_date": "2016-05-08T10:05:53Z",
+    "id": "20160508"
+  },
+  {
+    "text_date": "Wednesday 18 May 2016",
+    "solr_date": "2016-05-18T10:05:53Z",
+    "id": "20160518"
+  },
+  {
+    "text_date": "Saturday 28 May 2016",
+    "solr_date": "2016-05-28T10:05:53Z",
+    "id": "20160528"
+  },
+  {
+    "text_date": "Tuesday 7 June 2016",
+    "solr_date": "2016-06-07T10:05:53Z",
+    "id": "20160607"
+  },
+  {
+    "text_date": "Friday 17 June 2016",
+    "solr_date": "2016-06-17T10:05:53Z",
+    "id": "20160617"
+  },
+  {
+    "text_date": "Monday 27 June 2016",
+    "solr_date": "2016-06-27T10:05:53Z",
+    "id": "20160627"
+  },
+  {
+    "text_date": "Thursday 7 July 2016",
+    "solr_date": "2016-07-07T10:05:53Z",
+    "id": "20160707"
+  },
+  {
+    "text_date": "Sunday 17 July 2016",
+    "solr_date": "2016-07-17T10:05:53Z",
+    "id": "20160717"
+  },
+  {
+    "text_date": "Wednesday 27 July 2016",
+    "solr_date": "2016-07-27T10:05:53Z",
+    "id": "20160727"
+  },
+  {
+    "text_date": "Saturday 6 August 2016",
+    "solr_date": "2016-08-06T10:05:53Z",
+    "id": "20160806"
+  },
+  {
+    "text_date": "Tuesday 16 August 2016",
+    "solr_date": "2016-08-16T10:05:53Z",
+    "id": "20160816"
+  },
+  {
+    "text_date": "Friday 26 August 2016",
+    "solr_date": "2016-08-26T10:05:53Z",
+    "id": "20160826"
+  },
+  {
+    "text_date": "Monday 5 September 2016",
+    "solr_date": "2016-09-05T10:05:53Z",
+    "id": "20160905"
+  },
+  {
+    "text_date": "Thursday 15 September 2016",
+    "solr_date": "2016-09-15T10:05:53Z",
+    "id": "20160915"
+  },
+  {
+    "text_date": "Sunday 25 September 2016",
+    "solr_date": "2016-09-25T10:05:53Z",
+    "id": "20160925"
+  },
+  {
+    "text_date": "Wednesday 5 October 2016",
+    "solr_date": "2016-10-05T10:05:53Z",
+    "id": "20161005"
+  },
+  {
+    "text_date": "Saturday 15 October 2016",
+    "solr_date": "2016-10-15T10:05:53Z",
+    "id": "20161015"
+  },
+  {
+    "text_date": "Tuesday 25 October 2016",
+    "solr_date": "2016-10-25T10:05:53Z",
+    "id": "20161025"
+  },
+  {
+    "text_date": "Friday 4 November 2016",
+    "solr_date": "2016-11-04T10:05:53Z",
+    "id": "20161104"
+  },
+  {
+    "text_date": "Monday 14 November 2016",
+    "solr_date": "2016-11-14T10:05:53Z",
+    "id": "20161114"
+  },
+  {
+    "text_date": "Thursday 24 November 2016",
+    "solr_date": "2016-11-24T10:05:53Z",
+    "id": "20161124"
+  },
+  {
+    "text_date": "Sunday 4 December 2016",
+    "solr_date": "2016-12-04T10:05:53Z",
+    "id": "20161204"
+  },
+  {
+    "text_date": "Wednesday 14 December 2016",
+    "solr_date": "2016-12-14T10:05:53Z",
+    "id": "20161214"
+  },
+  {
+    "text_date": "Saturday 24 December 2016",
+    "solr_date": "2016-12-24T10:05:53Z",
+    "id": "20161224"
+  },
+  {
+    "text_date": "Tuesday 3 January 2017",
+    "solr_date": "2017-01-03T10:05:53Z",
+    "id": "20170103"
+  },
+  {
+    "text_date": "Friday 13 January 2017",
+    "solr_date": "2017-01-13T10:05:53Z",
+    "id": "20170113"
+  },
+  {
+    "text_date": "Monday 23 January 2017",
+    "solr_date": "2017-01-23T10:05:53Z",
+    "id": "20170123"
+  },
+  {
+    "text_date": "Thursday 2 February 2017",
+    "solr_date": "2017-02-02T10:05:53Z",
+    "id": "20170202"
+  },
+  {
+    "text_date": "Sunday 12 February 2017",
+    "solr_date": "2017-02-12T10:05:53Z",
+    "id": "20170212"
+  },
+  {
+    "text_date": "Wednesday 22 February 2017",
+    "solr_date": "2017-02-22T10:05:53Z",
+    "id": "20170222"
+  },
+  {
+    "text_date": "Saturday 4 March 2017",
+    "solr_date": "2017-03-04T10:05:53Z",
+    "id": "20170304"
+  },
+  {
+    "text_date": "Tuesday 14 March 2017",
+    "solr_date": "2017-03-14T10:05:53Z",
+    "id": "20170314"
+  },
+  {
+    "text_date": "Friday 24 March 2017",
+    "solr_date": "2017-03-24T10:05:53Z",
+    "id": "20170324"
+  },
+  {
+    "text_date": "Monday 3 April 2017",
+    "solr_date": "2017-04-03T10:05:53Z",
+    "id": "20170403"
+  },
+  {
+    "text_date": "Thursday 13 April 2017",
+    "solr_date": "2017-04-13T10:05:53Z",
+    "id": "20170413"
+  },
+  {
+    "text_date": "Sunday 23 April 2017",
+    "solr_date": "2017-04-23T10:05:53Z",
+    "id": "20170423"
+  },
+  {
+    "text_date": "Wednesday 3 May 2017",
+    "solr_date": "2017-05-03T10:05:53Z",
+    "id": "20170503"
+  },
+  {
+    "text_date": "Saturday 13 May 2017",
+    "solr_date": "2017-05-13T10:05:53Z",
+    "id": "20170513"
+  },
+  {
+    "text_date": "Tuesday 23 May 2017",
+    "solr_date": "2017-05-23T10:05:53Z",
+    "id": "20170523"
+  },
+  {
+    "text_date": "Friday 2 June 2017",
+    "solr_date": "2017-06-02T10:05:53Z",
+    "id": "20170602"
+  },
+  {
+    "text_date": "Monday 12 June 2017",
+    "solr_date": "2017-06-12T10:05:53Z",
+    "id": "20170612"
+  },
+  {
+    "text_date": "Thursday 22 June 2017",
+    "solr_date": "2017-06-22T10:05:53Z",
+    "id": "20170622"
+  },
+  {
+    "text_date": "Sunday 2 July 2017",
+    "solr_date": "2017-07-02T10:05:53Z",
+    "id": "20170702"
+  },
+  {
+    "text_date": "Wednesday 12 July 2017",
+    "solr_date": "2017-07-12T10:05:53Z",
+    "id": "20170712"
+  },
+  {
+    "text_date": "Saturday 22 July 2017",
+    "solr_date": "2017-07-22T10:05:53Z",
+    "id": "20170722"
+  },
+  {
+    "text_date": "Tuesday 1 August 2017",
+    "solr_date": "2017-08-01T10:05:53Z",
+    "id": "20170801"
+  },
+  {
+    "text_date": "Friday 11 August 2017",
+    "solr_date": "2017-08-11T10:05:53Z",
+    "id": "20170811"
+  },
+  {
+    "text_date": "Monday 21 August 2017",
+    "solr_date": "2017-08-21T10:05:53Z",
+    "id": "20170821"
+  },
+  {
+    "text_date": "Thursday 31 August 2017",
+    "solr_date": "2017-08-31T10:05:53Z",
+    "id": "20170831"
+  },
+  {
+    "text_date": "Sunday 10 September 2017",
+    "solr_date": "2017-09-10T10:05:53Z",
+    "id": "20170910"
+  },
+  {
+    "text_date": "Wednesday 20 September 2017",
+    "solr_date": "2017-09-20T10:05:53Z",
+    "id": "20170920"
+  },
+  {
+    "text_date": "Saturday 30 September 2017",
+    "solr_date": "2017-09-30T10:05:53Z",
+    "id": "20170930"
+  },
+  {
+    "text_date": "Tuesday 10 October 2017",
+    "solr_date": "2017-10-10T10:05:53Z",
+    "id": "20171010"
+  },
+  {
+    "text_date": "Friday 20 October 2017",
+    "solr_date": "2017-10-20T10:05:53Z",
+    "id": "20171020"
+  },
+  {
+    "text_date": "Monday 30 October 2017",
+    "solr_date": "2017-10-30T10:05:53Z",
+    "id": "20171030"
+  },
+  {
+    "text_date": "Thursday 9 November 2017",
+    "solr_date": "2017-11-09T10:05:53Z",
+    "id": "20171109"
+  },
+  {
+    "text_date": "Sunday 19 November 2017",
+    "solr_date": "2017-11-19T10:05:53Z",
+    "id": "20171119"
+  },
+  {
+    "text_date": "Wednesday 29 November 2017",
+    "solr_date": "2017-11-29T10:05:53Z",
+    "id": "20171129"
+  },
+  {
+    "text_date": "Saturday 9 December 2017",
+    "solr_date": "2017-12-09T10:05:53Z",
+    "id": "20171209"
+  },
+  {
+    "text_date": "Tuesday 19 December 2017",
+    "solr_date": "2017-12-19T10:05:53Z",
+    "id": "20171219"
+  },
+  {
+    "text_date": "Friday 29 December 2017",
+    "solr_date": "2017-12-29T10:05:53Z",
+    "id": "20171229"
+  },
+  {
+    "text_date": "Monday 8 January 2018",
+    "solr_date": "2018-01-08T10:05:53Z",
+    "id": "20180108"
+  },
+  {
+    "text_date": "Thursday 18 January 2018",
+    "solr_date": "2018-01-18T10:05:53Z",
+    "id": "20180118"
+  },
+  {
+    "text_date": "Sunday 28 January 2018",
+    "solr_date": "2018-01-28T10:05:53Z",
+    "id": "20180128"
+  },
+  {
+    "text_date": "Wednesday 7 February 2018",
+    "solr_date": "2018-02-07T10:05:53Z",
+    "id": "20180207"
+  },
+  {
+    "text_date": "Saturday 17 February 2018",
+    "solr_date": "2018-02-17T10:05:53Z",
+    "id": "20180217"
+  },
+  {
+    "text_date": "Tuesday 27 February 2018",
+    "solr_date": "2018-02-27T10:05:53Z",
+    "id": "20180227"
+  },
+  {
+    "text_date": "Friday 9 March 2018",
+    "solr_date": "2018-03-09T10:05:53Z",
+    "id": "20180309"
+  },
+  {
+    "text_date": "Monday 19 March 2018",
+    "solr_date": "2018-03-19T10:05:53Z",
+    "id": "20180319"
+  },
+  {
+    "text_date": "Thursday 29 March 2018",
+    "solr_date": "2018-03-29T10:05:53Z",
+    "id": "20180329"
+  },
+  {
+    "text_date": "Sunday 8 April 2018",
+    "solr_date": "2018-04-08T10:05:53Z",
+    "id": "20180408"
+  },
+  {
+    "text_date": "Wednesday 18 April 2018",
+    "solr_date": "2018-04-18T10:05:53Z",
+    "id": "20180418"
+  },
+  {
+    "text_date": "Saturday 28 April 2018",
+    "solr_date": "2018-04-28T10:05:53Z",
+    "id": "20180428"
+  },
+  {
+    "text_date": "Tuesday 8 May 2018",
+    "solr_date": "2018-05-08T10:05:53Z",
+    "id": "20180508"
+  },
+  {
+    "text_date": "Friday 18 May 2018",
+    "solr_date": "2018-05-18T10:05:53Z",
+    "id": "20180518"
+  },
+  {
+    "text_date": "Monday 28 May 2018",
+    "solr_date": "2018-05-28T10:05:53Z",
+    "id": "20180528"
+  },
+  {
+    "text_date": "Thursday 7 June 2018",
+    "solr_date": "2018-06-07T10:05:53Z",
+    "id": "20180607"
+  },
+  {
+    "text_date": "Sunday 17 June 2018",
+    "solr_date": "2018-06-17T10:05:53Z",
+    "id": "20180617"
+  },
+  {
+    "text_date": "Wednesday 27 June 2018",
+    "solr_date": "2018-06-27T10:05:53Z",
+    "id": "20180627"
+  },
+  {
+    "text_date": "Saturday 7 July 2018",
+    "solr_date": "2018-07-07T10:05:53Z",
+    "id": "20180707"
+  },
+  {
+    "text_date": "Tuesday 17 July 2018",
+    "solr_date": "2018-07-17T10:05:53Z",
+    "id": "20180717"
+  },
+  {
+    "text_date": "Friday 27 July 2018",
+    "solr_date": "2018-07-27T10:05:53Z",
+    "id": "20180727"
+  },
+  {
+    "text_date": "Monday 6 August 2018",
+    "solr_date": "2018-08-06T10:05:53Z",
+    "id": "20180806"
+  },
+  {
+    "text_date": "Thursday 16 August 2018",
+    "solr_date": "2018-08-16T10:05:53Z",
+    "id": "20180816"
+  },
+  {
+    "text_date": "Sunday 26 August 2018",
+    "solr_date": "2018-08-26T10:05:53Z",
+    "id": "20180826"
+  },
+  {
+    "text_date": "Wednesday 5 September 2018",
+    "solr_date": "2018-09-05T10:05:53Z",
+    "id": "20180905"
+  },
+  {
+    "text_date": "Saturday 15 September 2018",
+    "solr_date": "2018-09-15T10:05:53Z",
+    "id": "20180915"
+  },
+  {
+    "text_date": "Tuesday 25 September 2018",
+    "solr_date": "2018-09-25T10:05:53Z",
+    "id": "20180925"
+  },
+  {
+    "text_date": "Friday 5 October 2018",
+    "solr_date": "2018-10-05T10:05:53Z",
+    "id": "20181005"
+  },
+  {
+    "text_date": "Monday 15 October 2018",
+    "solr_date": "2018-10-15T10:05:53Z",
+    "id": "20181015"
+  },
+  {
+    "text_date": "Thursday 25 October 2018",
+    "solr_date": "2018-10-25T10:05:53Z",
+    "id": "20181025"
+  },
+  {
+    "text_date": "Sunday 4 November 2018",
+    "solr_date": "2018-11-04T10:05:53Z",
+    "id": "20181104"
+  },
+  {
+    "text_date": "Wednesday 14 November 2018",
+    "solr_date": "2018-11-14T10:05:53Z",
+    "id": "20181114"
+  },
+  {
+    "text_date": "Saturday 24 November 2018",
+    "solr_date": "2018-11-24T10:05:53Z",
+    "id": "20181124"
+  },
+  {
+    "text_date": "Tuesday 4 December 2018",
+    "solr_date": "2018-12-04T10:05:53Z",
+    "id": "20181204"
+  },
+  {
+    "text_date": "Friday 14 December 2018",
+    "solr_date": "2018-12-14T10:05:53Z",
+    "id": "20181214"
+  },
+  {
+    "text_date": "Monday 24 December 2018",
+    "solr_date": "2018-12-24T10:05:53Z",
+    "id": "20181224"
+  },
+  {
+    "text_date": "Thursday 3 January 2019",
+    "solr_date": "2019-01-03T10:05:53Z",
+    "id": "20190103"
+  },
+  {
+    "text_date": "Sunday 13 January 2019",
+    "solr_date": "2019-01-13T10:05:53Z",
+    "id": "20190113"
+  },
+  {
+    "text_date": "Wednesday 23 January 2019",
+    "solr_date": "2019-01-23T10:05:53Z",
+    "id": "20190123"
+  },
+  {
+    "text_date": "Saturday 2 February 2019",
+    "solr_date": "2019-02-02T10:05:53Z",
+    "id": "20190202"
+  },
+  {
+    "text_date": "Tuesday 12 February 2019",
+    "solr_date": "2019-02-12T10:05:53Z",
+    "id": "20190212"
+  },
+  {
+    "text_date": "Friday 22 February 2019",
+    "solr_date": "2019-02-22T10:05:53Z",
+    "id": "20190222"
+  },
+  {
+    "text_date": "Monday 4 March 2019",
+    "solr_date": "2019-03-04T10:05:53Z",
+    "id": "20190304"
+  },
+  {
+    "text_date": "Thursday 14 March 2019",
+    "solr_date": "2019-03-14T10:05:53Z",
+    "id": "20190314"
+  },
+  {
+    "text_date": "Sunday 24 March 2019",
+    "solr_date": "2019-03-24T10:05:53Z",
+    "id": "20190324"
+  },
+  {
+    "text_date": "Wednesday 3 April 2019",
+    "solr_date": "2019-04-03T10:05:53Z",
+    "id": "20190403"
+  },
+  {
+    "text_date": "Saturday 13 April 2019",
+    "solr_date": "2019-04-13T10:05:53Z",
+    "id": "20190413"
+  },
+  {
+    "text_date": "Tuesday 23 April 2019",
+    "solr_date": "2019-04-23T10:05:53Z",
+    "id": "20190423"
+  },
+  {
+    "text_date": "Friday 3 May 2019",
+    "solr_date": "2019-05-03T10:05:53Z",
+    "id": "20190503"
+  },
+  {
+    "text_date": "Monday 13 May 2019",
+    "solr_date": "2019-05-13T10:05:53Z",
+    "id": "20190513"
+  },
+  {
+    "text_date": "Thursday 23 May 2019",
+    "solr_date": "2019-05-23T10:05:53Z",
+    "id": "20190523"
+  },
+  {
+    "text_date": "Sunday 2 June 2019",
+    "solr_date": "2019-06-02T10:05:53Z",
+    "id": "20190602"
+  },
+  {
+    "text_date": "Wednesday 12 June 2019",
+    "solr_date": "2019-06-12T10:05:53Z",
+    "id": "20190612"
+  },
+  {
+    "text_date": "Saturday 22 June 2019",
+    "solr_date": "2019-06-22T10:05:53Z",
+    "id": "20190622"
+  },
+  {
+    "text_date": "Tuesday 2 July 2019",
+    "solr_date": "2019-07-02T10:05:53Z",
+    "id": "20190702"
+  },
+  {
+    "text_date": "Friday 12 July 2019",
+    "solr_date": "2019-07-12T10:05:53Z",
+    "id": "20190712"
+  },
+  {
+    "text_date": "Monday 22 July 2019",
+    "solr_date": "2019-07-22T10:05:53Z",
+    "id": "20190722"
+  },
+  {
+    "text_date": "Thursday 1 August 2019",
+    "solr_date": "2019-08-01T10:05:53Z",
+    "id": "20190801"
+  },
+  {
+    "text_date": "Sunday 11 August 2019",
+    "solr_date": "2019-08-11T10:05:53Z",
+    "id": "20190811"
+  },
+  {
+    "text_date": "Wednesday 21 August 2019",
+    "solr_date": "2019-08-21T10:05:53Z",
+    "id": "20190821"
+  },
+  {
+    "text_date": "Saturday 31 August 2019",
+    "solr_date": "2019-08-31T10:05:53Z",
+    "id": "20190831"
+  },
+  {
+    "text_date": "Tuesday 10 September 2019",
+    "solr_date": "2019-09-10T10:05:53Z",
+    "id": "20190910"
+  },
+  {
+    "text_date": "Friday 20 September 2019",
+    "solr_date": "2019-09-20T10:05:53Z",
+    "id": "20190920"
+  },
+  {
+    "text_date": "Monday 30 September 2019",
+    "solr_date": "2019-09-30T10:05:53Z",
+    "id": "20190930"
+  },
+  {
+    "text_date": "Thursday 10 October 2019",
+    "solr_date": "2019-10-10T10:05:53Z",
+    "id": "20191010"
+  },
+  {
+    "text_date": "Sunday 20 October 2019",
+    "solr_date": "2019-10-20T10:05:53Z",
+    "id": "20191020"
+  },
+  {
+    "text_date": "Wednesday 30 October 2019",
+    "solr_date": "2019-10-30T10:05:53Z",
+    "id": "20191030"
+  },
+  {
+    "text_date": "Saturday 9 November 2019",
+    "solr_date": "2019-11-09T10:05:53Z",
+    "id": "20191109"
+  },
+  {
+    "text_date": "Tuesday 19 November 2019",
+    "solr_date": "2019-11-19T10:05:53Z",
+    "id": "20191119"
+  },
+  {
+    "text_date": "Friday 29 November 2019",
+    "solr_date": "2019-11-29T10:05:53Z",
+    "id": "20191129"
+  },
+  {
+    "text_date": "Monday 9 December 2019",
+    "solr_date": "2019-12-09T10:05:53Z",
+    "id": "20191209"
+  },
+  {
+    "text_date": "Thursday 19 December 2019",
+    "solr_date": "2019-12-19T10:05:53Z",
+    "id": "20191219"
+  },
+  {
+    "text_date": "Sunday 29 December 2019",
+    "solr_date": "2019-12-29T10:05:53Z",
+    "id": "20191229"
+  },
+  {
+    "text_date": "Wednesday 8 January 2020",
+    "solr_date": "2020-01-08T10:05:53Z",
+    "id": "20200108"
+  },
+  {
+    "text_date": "Saturday 18 January 2020",
+    "solr_date": "2020-01-18T10:05:53Z",
+    "id": "20200118"
+  },
+  {
+    "text_date": "Tuesday 28 January 2020",
+    "solr_date": "2020-01-28T10:05:53Z",
+    "id": "20200128"
+  },
+  {
+    "text_date": "Friday 7 February 2020",
+    "solr_date": "2020-02-07T10:05:53Z",
+    "id": "20200207"
+  },
+  {
+    "text_date": "Monday 17 February 2020",
+    "solr_date": "2020-02-17T10:05:53Z",
+    "id": "20200217"
+  },
+  {
+    "text_date": "Thursday 27 February 2020",
+    "solr_date": "2020-02-27T10:05:53Z",
+    "id": "20200227"
+  },
+  {
+    "text_date": "Sunday 8 March 2020",
+    "solr_date": "2020-03-08T10:05:53Z",
+    "id": "20200308"
+  },
+  {
+    "text_date": "Wednesday 18 March 2020",
+    "solr_date": "2020-03-18T10:05:53Z",
+    "id": "20200318"
+  },
+  {
+    "text_date": "Saturday 28 March 2020",
+    "solr_date": "2020-03-28T10:05:53Z",
+    "id": "20200328"
+  },
+  {
+    "text_date": "Tuesday 7 April 2020",
+    "solr_date": "2020-04-07T10:05:53Z",
+    "id": "20200407"
+  },
+  {
+    "text_date": "Friday 17 April 2020",
+    "solr_date": "2020-04-17T10:05:53Z",
+    "id": "20200417"
+  },
+  {
+    "text_date": "Monday 27 April 2020",
+    "solr_date": "2020-04-27T10:05:53Z",
+    "id": "20200427"
+  },
+  {
+    "text_date": "Thursday 7 May 2020",
+    "solr_date": "2020-05-07T10:05:53Z",
+    "id": "20200507"
+  },
+  {
+    "text_date": "Sunday 17 May 2020",
+    "solr_date": "2020-05-17T10:05:53Z",
+    "id": "20200517"
+  },
+  {
+    "text_date": "Wednesday 27 May 2020",
+    "solr_date": "2020-05-27T10:05:53Z",
+    "id": "20200527"
+  },
+  {
+    "text_date": "Saturday 6 June 2020",
+    "solr_date": "2020-06-06T10:05:53Z",
+    "id": "20200606"
+  },
+  {
+    "text_date": "Tuesday 16 June 2020",
+    "solr_date": "2020-06-16T10:05:53Z",
+    "id": "20200616"
+  },
+  {
+    "text_date": "Friday 26 June 2020",
+    "solr_date": "2020-06-26T10:05:53Z",
+    "id": "20200626"
+  },
+  {
+    "text_date": "Monday 6 July 2020",
+    "solr_date": "2020-07-06T10:05:53Z",
+    "id": "20200706"
+  },
+  {
+    "text_date": "Thursday 16 July 2020",
+    "solr_date": "2020-07-16T10:05:53Z",
+    "id": "20200716"
+  },
+  {
+    "text_date": "Sunday 26 July 2020",
+    "solr_date": "2020-07-26T10:05:53Z",
+    "id": "20200726"
+  },
+  {
+    "text_date": "Wednesday 5 August 2020",
+    "solr_date": "2020-08-05T10:05:53Z",
+    "id": "20200805"
+  },
+  {
+    "text_date": "Saturday 15 August 2020",
+    "solr_date": "2020-08-15T10:05:53Z",
+    "id": "20200815"
+  },
+  {
+    "text_date": "Tuesday 25 August 2020",
+    "solr_date": "2020-08-25T10:05:53Z",
+    "id": "20200825"
+  },
+  {
+    "text_date": "Friday 4 September 2020",
+    "solr_date": "2020-09-04T10:05:53Z",
+    "id": "20200904"
+  },
+  {
+    "text_date": "Monday 14 September 2020",
+    "solr_date": "2020-09-14T10:05:53Z",
+    "id": "20200914"
+  },
+  {
+    "text_date": "Thursday 24 September 2020",
+    "solr_date": "2020-09-24T10:05:53Z",
+    "id": "20200924"
+  },
+  {
+    "text_date": "Sunday 4 October 2020",
+    "solr_date": "2020-10-04T10:05:53Z",
+    "id": "20201004"
+  },
+  {
+    "text_date": "Wednesday 14 October 2020",
+    "solr_date": "2020-10-14T10:05:53Z",
+    "id": "20201014"
+  },
+  {
+    "text_date": "Saturday 24 October 2020",
+    "solr_date": "2020-10-24T10:05:53Z",
+    "id": "20201024"
+  },
+  {
+    "text_date": "Tuesday 3 November 2020",
+    "solr_date": "2020-11-03T10:05:53Z",
+    "id": "20201103"
+  },
+  {
+    "text_date": "Friday 13 November 2020",
+    "solr_date": "2020-11-13T10:05:53Z",
+    "id": "20201113"
+  },
+  {
+    "text_date": "Monday 23 November 2020",
+    "solr_date": "2020-11-23T10:05:53Z",
+    "id": "20201123"
+  },
+  {
+    "text_date": "Thursday 3 December 2020",
+    "solr_date": "2020-12-03T10:05:53Z",
+    "id": "20201203"
+  },
+  {
+    "text_date": "Sunday 13 December 2020",
+    "solr_date": "2020-12-13T10:05:53Z",
+    "id": "20201213"
+  },
+  {
+    "text_date": "Wednesday 23 December 2020",
+    "solr_date": "2020-12-23T10:05:53Z",
+    "id": "20201223"
+  },
+  {
+    "text_date": "Saturday 2 January 2021",
+    "solr_date": "2021-01-02T10:05:53Z",
+    "id": "20210102"
+  },
+  {
+    "text_date": "Tuesday 12 January 2021",
+    "solr_date": "2021-01-12T10:05:53Z",
+    "id": "20210112"
+  },
+  {
+    "text_date": "Friday 22 January 2021",
+    "solr_date": "2021-01-22T10:05:53Z",
+    "id": "20210122"
+  },
+  {
+    "text_date": "Monday 1 February 2021",
+    "solr_date": "2021-02-01T10:05:53Z",
+    "id": "20210201"
+  },
+  {
+    "text_date": "Thursday 11 February 2021",
+    "solr_date": "2021-02-11T10:05:53Z",
+    "id": "20210211"
+  },
+  {
+    "text_date": "Sunday 21 February 2021",
+    "solr_date": "2021-02-21T10:05:53Z",
+    "id": "20210221"
+  },
+  {
+    "text_date": "Wednesday 3 March 2021",
+    "solr_date": "2021-03-03T10:05:53Z",
+    "id": "20210303"
+  },
+  {
+    "text_date": "Saturday 13 March 2021",
+    "solr_date": "2021-03-13T10:05:53Z",
+    "id": "20210313"
+  },
+  {
+    "text_date": "Tuesday 23 March 2021",
+    "solr_date": "2021-03-23T10:05:53Z",
+    "id": "20210323"
+  },
+  {
+    "text_date": "Friday 2 April 2021",
+    "solr_date": "2021-04-02T10:05:53Z",
+    "id": "20210402"
+  },
+  {
+    "text_date": "Monday 12 April 2021",
+    "solr_date": "2021-04-12T10:05:53Z",
+    "id": "20210412"
+  },
+  {
+    "text_date": "Thursday 22 April 2021",
+    "solr_date": "2021-04-22T10:05:53Z",
+    "id": "20210422"
+  },
+  {
+    "text_date": "Sunday 2 May 2021",
+    "solr_date": "2021-05-02T10:05:53Z",
+    "id": "20210502"
+  },
+  {
+    "text_date": "Wednesday 12 May 2021",
+    "solr_date": "2021-05-12T10:05:53Z",
+    "id": "20210512"
+  },
+  {
+    "text_date": "Saturday 22 May 2021",
+    "solr_date": "2021-05-22T10:05:53Z",
+    "id": "20210522"
+  },
+  {
+    "text_date": "Tuesday 1 June 2021",
+    "solr_date": "2021-06-01T10:05:53Z",
+    "id": "20210601"
+  },
+  {
+    "text_date": "Friday 11 June 2021",
+    "solr_date": "2021-06-11T10:05:53Z",
+    "id": "20210611"
+  },
+  {
+    "text_date": "Monday 21 June 2021",
+    "solr_date": "2021-06-21T10:05:53Z",
+    "id": "20210621"
+  },
+  {
+    "text_date": "Thursday 1 July 2021",
+    "solr_date": "2021-07-01T10:05:53Z",
+    "id": "20210701"
+  },
+  {
+    "text_date": "Sunday 11 July 2021",
+    "solr_date": "2021-07-11T10:05:53Z",
+    "id": "20210711"
+  },
+  {
+    "text_date": "Wednesday 21 July 2021",
+    "solr_date": "2021-07-21T10:05:53Z",
+    "id": "20210721"
+  },
+  {
+    "text_date": "Saturday 31 July 2021",
+    "solr_date": "2021-07-31T10:05:53Z",
+    "id": "20210731"
+  },
+  {
+    "text_date": "Tuesday 10 August 2021",
+    "solr_date": "2021-08-10T10:05:53Z",
+    "id": "20210810"
+  },
+  {
+    "text_date": "Friday 20 August 2021",
+    "solr_date": "2021-08-20T10:05:53Z",
+    "id": "20210820"
+  },
+  {
+    "text_date": "Monday 30 August 2021",
+    "solr_date": "2021-08-30T10:05:53Z",
+    "id": "20210830"
+  },
+  {
+    "text_date": "Thursday 9 September 2021",
+    "solr_date": "2021-09-09T10:05:53Z",
+    "id": "20210909"
+  },
+  {
+    "text_date": "Sunday 19 September 2021",
+    "solr_date": "2021-09-19T10:05:53Z",
+    "id": "20210919"
+  },
+  {
+    "text_date": "Wednesday 29 September 2021",
+    "solr_date": "2021-09-29T10:05:53Z",
+    "id": "20210929"
+  },
+  {
+    "text_date": "Saturday 9 October 2021",
+    "solr_date": "2021-10-09T10:05:53Z",
+    "id": "20211009"
+  },
+  {
+    "text_date": "Tuesday 19 October 2021",
+    "solr_date": "2021-10-19T10:05:53Z",
+    "id": "20211019"
+  },
+  {
+    "text_date": "Friday 29 October 2021",
+    "solr_date": "2021-10-29T10:05:53Z",
+    "id": "20211029"
+  },
+  {
+    "text_date": "Monday 8 November 2021",
+    "solr_date": "2021-11-08T10:05:53Z",
+    "id": "20211108"
+  },
+  {
+    "text_date": "Thursday 18 November 2021",
+    "solr_date": "2021-11-18T10:05:53Z",
+    "id": "20211118"
+  },
+  {
+    "text_date": "Sunday 28 November 2021",
+    "solr_date": "2021-11-28T10:05:53Z",
+    "id": "20211128"
+  },
+  {
+    "text_date": "Wednesday 8 December 2021",
+    "solr_date": "2021-12-08T10:05:53Z",
+    "id": "20211208"
+  },
+  {
+    "text_date": "Saturday 18 December 2021",
+    "solr_date": "2021-12-18T10:05:53Z",
+    "id": "20211218"
+  },
+  {
+    "text_date": "Tuesday 28 December 2021",
+    "solr_date": "2021-12-28T10:05:53Z",
+    "id": "20211228"
+  },
+  {
+    "text_date": "Friday 7 January 2022",
+    "solr_date": "2022-01-07T10:05:53Z",
+    "id": "20220107"
+  },
+  {
+    "text_date": "Monday 17 January 2022",
+    "solr_date": "2022-01-17T10:05:53Z",
+    "id": "20220117"
+  },
+  {
+    "text_date": "Thursday 27 January 2022",
+    "solr_date": "2022-01-27T10:05:53Z",
+    "id": "20220127"
+  },
+  {
+    "text_date": "Sunday 6 February 2022",
+    "solr_date": "2022-02-06T10:05:53Z",
+    "id": "20220206"
+  },
+  {
+    "text_date": "Wednesday 16 February 2022",
+    "solr_date": "2022-02-16T10:05:53Z",
+    "id": "20220216"
+  },
+  {
+    "text_date": "Saturday 26 February 2022",
+    "solr_date": "2022-02-26T10:05:53Z",
+    "id": "20220226"
+  },
+  {
+    "text_date": "Tuesday 8 March 2022",
+    "solr_date": "2022-03-08T10:05:53Z",
+    "id": "20220308"
+  },
+  {
+    "text_date": "Friday 18 March 2022",
+    "solr_date": "2022-03-18T10:05:53Z",
+    "id": "20220318"
+  },
+  {
+    "text_date": "Monday 28 March 2022",
+    "solr_date": "2022-03-28T10:05:53Z",
+    "id": "20220328"
+  },
+  {
+    "text_date": "Thursday 7 April 2022",
+    "solr_date": "2022-04-07T10:05:53Z",
+    "id": "20220407"
+  },
+  {
+    "text_date": "Sunday 17 April 2022",
+    "solr_date": "2022-04-17T10:05:53Z",
+    "id": "20220417"
+  },
+  {
+    "text_date": "Wednesday 27 April 2022",
+    "solr_date": "2022-04-27T10:05:53Z",
+    "id": "20220427"
+  },
+  {
+    "text_date": "Saturday 7 May 2022",
+    "solr_date": "2022-05-07T10:05:53Z",
+    "id": "20220507"
+  },
+  {
+    "text_date": "Tuesday 17 May 2022",
+    "solr_date": "2022-05-17T10:05:53Z",
+    "id": "20220517"
+  },
+  {
+    "text_date": "Friday 27 May 2022",
+    "solr_date": "2022-05-27T10:05:53Z",
+    "id": "20220527"
+  },
+  {
+    "text_date": "Monday 6 June 2022",
+    "solr_date": "2022-06-06T10:05:53Z",
+    "id": "20220606"
+  },
+  {
+    "text_date": "Thursday 16 June 2022",
+    "solr_date": "2022-06-16T10:05:53Z",
+    "id": "20220616"
+  },
+  {
+    "text_date": "Sunday 26 June 2022",
+    "solr_date": "2022-06-26T10:05:53Z",
+    "id": "20220626"
+  },
+  {
+    "text_date": "Wednesday 6 July 2022",
+    "solr_date": "2022-07-06T10:05:53Z",
+    "id": "20220706"
+  },
+  {
+    "text_date": "Saturday 16 July 2022",
+    "solr_date": "2022-07-16T10:05:53Z",
+    "id": "20220716"
+  },
+  {
+    "text_date": "Tuesday 26 July 2022",
+    "solr_date": "2022-07-26T10:05:53Z",
+    "id": "20220726"
+  },
+  {
+    "text_date": "Friday 5 August 2022",
+    "solr_date": "2022-08-05T10:05:53Z",
+    "id": "20220805"
+  },
+  {
+    "text_date": "Monday 15 August 2022",
+    "solr_date": "2022-08-15T10:05:53Z",
+    "id": "20220815"
+  },
+  {
+    "text_date": "Thursday 25 August 2022",
+    "solr_date": "2022-08-25T10:05:53Z",
+    "id": "20220825"
+  },
+  {
+    "text_date": "Sunday 4 September 2022",
+    "solr_date": "2022-09-04T10:05:53Z",
+    "id": "20220904"
+  },
+  {
+    "text_date": "Wednesday 14 September 2022",
+    "solr_date": "2022-09-14T10:05:53Z",
+    "id": "20220914"
+  },
+  {
+    "text_date": "Saturday 24 September 2022",
+    "solr_date": "2022-09-24T10:05:53Z",
+    "id": "20220924"
+  },
+  {
+    "text_date": "Tuesday 4 October 2022",
+    "solr_date": "2022-10-04T10:05:53Z",
+    "id": "20221004"
+  },
+  {
+    "text_date": "Friday 14 October 2022",
+    "solr_date": "2022-10-14T10:05:53Z",
+    "id": "20221014"
+  },
+  {
+    "text_date": "Monday 24 October 2022",
+    "solr_date": "2022-10-24T10:05:53Z",
+    "id": "20221024"
+  },
+  {
+    "text_date": "Thursday 3 November 2022",
+    "solr_date": "2022-11-03T10:05:53Z",
+    "id": "20221103"
+  },
+  {
+    "text_date": "Sunday 13 November 2022",
+    "solr_date": "2022-11-13T10:05:53Z",
+    "id": "20221113"
+  },
+  {
+    "text_date": "Wednesday 23 November 2022",
+    "solr_date": "2022-11-23T10:05:53Z",
+    "id": "20221123"
+  },
+  {
+    "text_date": "Saturday 3 December 2022",
+    "solr_date": "2022-12-03T10:05:53Z",
+    "id": "20221203"
+  },
+  {
+    "text_date": "Tuesday 13 December 2022",
+    "solr_date": "2022-12-13T10:05:53Z",
+    "id": "20221213"
+  },
+  {
+    "text_date": "Friday 23 December 2022",
+    "solr_date": "2022-12-23T10:05:53Z",
+    "id": "20221223"
+  },
+  {
+    "text_date": "Monday 2 January 2023",
+    "solr_date": "2023-01-02T10:05:53Z",
+    "id": "20230102"
+  },
+  {
+    "text_date": "Thursday 12 January 2023",
+    "solr_date": "2023-01-12T10:05:53Z",
+    "id": "20230112"
+  },
+  {
+    "text_date": "Sunday 22 January 2023",
+    "solr_date": "2023-01-22T10:05:53Z",
+    "id": "20230122"
+  },
+  {
+    "text_date": "Wednesday 1 February 2023",
+    "solr_date": "2023-02-01T10:05:53Z",
+    "id": "20230201"
+  },
+  {
+    "text_date": "Saturday 11 February 2023",
+    "solr_date": "2023-02-11T10:05:53Z",
+    "id": "20230211"
+  },
+  {
+    "text_date": "Tuesday 21 February 2023",
+    "solr_date": "2023-02-21T10:05:53Z",
+    "id": "20230221"
+  },
+  {
+    "text_date": "Friday 3 March 2023",
+    "solr_date": "2023-03-03T10:05:53Z",
+    "id": "20230303"
+  },
+  {
+    "text_date": "Monday 13 March 2023",
+    "solr_date": "2023-03-13T10:05:53Z",
+    "id": "20230313"
+  },
+  {
+    "text_date": "Thursday 23 March 2023",
+    "solr_date": "2023-03-23T10:05:53Z",
+    "id": "20230323"
+  },
+  {
+    "text_date": "Sunday 2 April 2023",
+    "solr_date": "2023-04-02T10:05:53Z",
+    "id": "20230402"
+  },
+  {
+    "text_date": "Wednesday 12 April 2023",
+    "solr_date": "2023-04-12T10:05:53Z",
+    "id": "20230412"
+  },
+  {
+    "text_date": "Saturday 22 April 2023",
+    "solr_date": "2023-04-22T10:05:53Z",
+    "id": "20230422"
+  },
+  {
+    "text_date": "Tuesday 2 May 2023",
+    "solr_date": "2023-05-02T10:05:53Z",
+    "id": "20230502"
+  },
+  {
+    "text_date": "Friday 12 May 2023",
+    "solr_date": "2023-05-12T10:05:53Z",
+    "id": "20230512"
+  },
+  {
+    "text_date": "Monday 22 May 2023",
+    "solr_date": "2023-05-22T10:05:53Z",
+    "id": "20230522"
+  },
+  {
+    "text_date": "Thursday 1 June 2023",
+    "solr_date": "2023-06-01T10:05:53Z",
+    "id": "20230601"
+  },
+  {
+    "text_date": "Sunday 11 June 2023",
+    "solr_date": "2023-06-11T10:05:53Z",
+    "id": "20230611"
+  },
+  {
+    "text_date": "Wednesday 21 June 2023",
+    "solr_date": "2023-06-21T10:05:53Z",
+    "id": "20230621"
+  },
+  {
+    "text_date": "Saturday 1 July 2023",
+    "solr_date": "2023-07-01T10:05:53Z",
+    "id": "20230701"
+  },
+  {
+    "text_date": "Tuesday 11 July 2023",
+    "solr_date": "2023-07-11T10:05:53Z",
+    "id": "20230711"
+  },
+  {
+    "text_date": "Friday 21 July 2023",
+    "solr_date": "2023-07-21T10:05:53Z",
+    "id": "20230721"
+  },
+  {
+    "text_date": "Monday 31 July 2023",
+    "solr_date": "2023-07-31T10:05:53Z",
+    "id": "20230731"
+  },
+  {
+    "text_date": "Thursday 10 August 2023",
+    "solr_date": "2023-08-10T10:05:53Z",
+    "id": "20230810"
+  },
+  {
+    "text_date": "Sunday 20 August 2023",
+    "solr_date": "2023-08-20T10:05:53Z",
+    "id": "20230820"
+  },
+  {
+    "text_date": "Wednesday 30 August 2023",
+    "solr_date": "2023-08-30T10:05:53Z",
+    "id": "20230830"
+  },
+  {
+    "text_date": "Saturday 9 September 2023",
+    "solr_date": "2023-09-09T10:05:53Z",
+    "id": "20230909"
+  },
+  {
+    "text_date": "Tuesday 19 September 2023",
+    "solr_date": "2023-09-19T10:05:53Z",
+    "id": "20230919"
+  },
+  {
+    "text_date": "Friday 29 September 2023",
+    "solr_date": "2023-09-29T10:05:53Z",
+    "id": "20230929"
+  },
+  {
+    "text_date": "Monday 9 October 2023",
+    "solr_date": "2023-10-09T10:05:53Z",
+    "id": "20231009"
+  },
+  {
+    "text_date": "Thursday 19 October 2023",
+    "solr_date": "2023-10-19T10:05:53Z",
+    "id": "20231019"
+  },
+  {
+    "text_date": "Sunday 29 October 2023",
+    "solr_date": "2023-10-29T10:05:53Z",
+    "id": "20231029"
+  },
+  {
+    "text_date": "Wednesday 8 November 2023",
+    "solr_date": "2023-11-08T10:05:53Z",
+    "id": "20231108"
+  },
+  {
+    "text_date": "Saturday 18 November 2023",
+    "solr_date": "2023-11-18T10:05:53Z",
+    "id": "20231118"
+  },
+  {
+    "text_date": "Tuesday 28 November 2023",
+    "solr_date": "2023-11-28T10:05:53Z",
+    "id": "20231128"
+  },
+  {
+    "text_date": "Friday 8 December 2023",
+    "solr_date": "2023-12-08T10:05:53Z",
+    "id": "20231208"
+  },
+  {
+    "text_date": "Monday 18 December 2023",
+    "solr_date": "2023-12-18T10:05:53Z",
+    "id": "20231218"
+  },
+  {
+    "text_date": "Thursday 28 December 2023",
+    "solr_date": "2023-12-28T10:05:53Z",
+    "id": "20231228"
+  },
+  {
+    "text_date": "Sunday 7 January 2024",
+    "solr_date": "2024-01-07T10:05:53Z",
+    "id": "20240107"
+  },
+  {
+    "text_date": "Wednesday 17 January 2024",
+    "solr_date": "2024-01-17T10:05:53Z",
+    "id": "20240117"
+  },
+  {
+    "text_date": "Saturday 27 January 2024",
+    "solr_date": "2024-01-27T10:05:53Z",
+    "id": "20240127"
+  },
+  {
+    "text_date": "Tuesday 6 February 2024",
+    "solr_date": "2024-02-06T10:05:53Z",
+    "id": "20240206"
+  },
+  {
+    "text_date": "Friday 16 February 2024",
+    "solr_date": "2024-02-16T10:05:53Z",
+    "id": "20240216"
+  },
+  {
+    "text_date": "Monday 26 February 2024",
+    "solr_date": "2024-02-26T10:05:53Z",
+    "id": "20240226"
+  },
+  {
+    "text_date": "Thursday 7 March 2024",
+    "solr_date": "2024-03-07T10:05:53Z",
+    "id": "20240307"
+  },
+  {
+    "text_date": "Sunday 17 March 2024",
+    "solr_date": "2024-03-17T10:05:53Z",
+    "id": "20240317"
+  },
+  {
+    "text_date": "Wednesday 27 March 2024",
+    "solr_date": "2024-03-27T10:05:53Z",
+    "id": "20240327"
+  },
+  {
+    "text_date": "Saturday 6 April 2024",
+    "solr_date": "2024-04-06T10:05:53Z",
+    "id": "20240406"
+  },
+  {
+    "text_date": "Tuesday 16 April 2024",
+    "solr_date": "2024-04-16T10:05:53Z",
+    "id": "20240416"
+  },
+  {
+    "text_date": "Friday 26 April 2024",
+    "solr_date": "2024-04-26T10:05:53Z",
+    "id": "20240426"
+  },
+  {
+    "text_date": "Monday 6 May 2024",
+    "solr_date": "2024-05-06T10:05:53Z",
+    "id": "20240506"
+  },
+  {
+    "text_date": "Thursday 16 May 2024",
+    "solr_date": "2024-05-16T10:05:53Z",
+    "id": "20240516"
+  },
+  {
+    "text_date": "Sunday 26 May 2024",
+    "solr_date": "2024-05-26T10:05:53Z",
+    "id": "20240526"
+  },
+  {
+    "text_date": "Wednesday 5 June 2024",
+    "solr_date": "2024-06-05T10:05:53Z",
+    "id": "20240605"
+  },
+  {
+    "text_date": "Saturday 15 June 2024",
+    "solr_date": "2024-06-15T10:05:53Z",
+    "id": "20240615"
+  },
+  {
+    "text_date": "Tuesday 25 June 2024",
+    "solr_date": "2024-06-25T10:05:53Z",
+    "id": "20240625"
+  },
+  {
+    "text_date": "Friday 5 July 2024",
+    "solr_date": "2024-07-05T10:05:53Z",
+    "id": "20240705"
+  },
+  {
+    "text_date": "Monday 15 July 2024",
+    "solr_date": "2024-07-15T10:05:53Z",
+    "id": "20240715"
+  },
+  {
+    "text_date": "Thursday 25 July 2024",
+    "solr_date": "2024-07-25T10:05:53Z",
+    "id": "20240725"
+  },
+  {
+    "text_date": "Sunday 4 August 2024",
+    "solr_date": "2024-08-04T10:05:53Z",
+    "id": "20240804"
+  },
+  {
+    "text_date": "Wednesday 14 August 2024",
+    "solr_date": "2024-08-14T10:05:53Z",
+    "id": "20240814"
+  },
+  {
+    "text_date": "Saturday 24 August 2024",
+    "solr_date": "2024-08-24T10:05:53Z",
+    "id": "20240824"
+  },
+  {
+    "text_date": "Tuesday 3 September 2024",
+    "solr_date": "2024-09-03T10:05:53Z",
+    "id": "20240903"
+  },
+  {
+    "text_date": "Friday 13 September 2024",
+    "solr_date": "2024-09-13T10:05:53Z",
+    "id": "20240913"
+  },
+  {
+    "text_date": "Monday 23 September 2024",
+    "solr_date": "2024-09-23T10:05:53Z",
+    "id": "20240923"
+  },
+  {
+    "text_date": "Thursday 3 October 2024",
+    "solr_date": "2024-10-03T10:05:53Z",
+    "id": "20241003"
+  },
+  {
+    "text_date": "Sunday 13 October 2024",
+    "solr_date": "2024-10-13T10:05:53Z",
+    "id": "20241013"
+  },
+  {
+    "text_date": "Wednesday 23 October 2024",
+    "solr_date": "2024-10-23T10:05:53Z",
+    "id": "20241023"
+  },
+  {
+    "text_date": "Saturday 2 November 2024",
+    "solr_date": "2024-11-02T10:05:53Z",
+    "id": "20241102"
+  },
+  {
+    "text_date": "Tuesday 12 November 2024",
+    "solr_date": "2024-11-12T10:05:53Z",
+    "id": "20241112"
+  },
+  {
+    "text_date": "Friday 22 November 2024",
+    "solr_date": "2024-11-22T10:05:53Z",
+    "id": "20241122"
+  },
+  {
+    "text_date": "Monday 2 December 2024",
+    "solr_date": "2024-12-02T10:05:53Z",
+    "id": "20241202"
+  },
+  {
+    "text_date": "Thursday 12 December 2024",
+    "solr_date": "2024-12-12T10:05:53Z",
+    "id": "20241212"
+  },
+  {
+    "text_date": "Sunday 22 December 2024",
+    "solr_date": "2024-12-22T10:05:53Z",
+    "id": "20241222"
+  },
+  {
+    "text_date": "Wednesday 1 January 2025",
+    "solr_date": "2025-01-01T10:05:53Z",
+    "id": "20250101"
+  },
+  {
+    "text_date": "Saturday 11 January 2025",
+    "solr_date": "2025-01-11T10:05:53Z",
+    "id": "20250111"
+  },
+  {
+    "text_date": "Tuesday 21 January 2025",
+    "solr_date": "2025-01-21T10:05:53Z",
+    "id": "20250121"
+  },
+  {
+    "text_date": "Friday 31 January 2025",
+    "solr_date": "2025-01-31T10:05:53Z",
+    "id": "20250131"
+  },
+  {
+    "text_date": "Monday 10 February 2025",
+    "solr_date": "2025-02-10T10:05:53Z",
+    "id": "20250210"
+  },
+  {
+    "text_date": "Thursday 20 February 2025",
+    "solr_date": "2025-02-20T10:05:53Z",
+    "id": "20250220"
+  },
+  {
+    "text_date": "Sunday 2 March 2025",
+    "solr_date": "2025-03-02T10:05:53Z",
+    "id": "20250302"
+  },
+  {
+    "text_date": "Wednesday 12 March 2025",
+    "solr_date": "2025-03-12T10:05:53Z",
+    "id": "20250312"
+  },
+  {
+    "text_date": "Saturday 22 March 2025",
+    "solr_date": "2025-03-22T10:05:53Z",
+    "id": "20250322"
+  },
+  {
+    "text_date": "Tuesday 1 April 2025",
+    "solr_date": "2025-04-01T10:05:53Z",
+    "id": "20250401"
+  },
+  {
+    "text_date": "Friday 11 April 2025",
+    "solr_date": "2025-04-11T10:05:53Z",
+    "id": "20250411"
+  },
+  {
+    "text_date": "Monday 21 April 2025",
+    "solr_date": "2025-04-21T10:05:53Z",
+    "id": "20250421"
+  },
+  {
+    "text_date": "Thursday 1 May 2025",
+    "solr_date": "2025-05-01T10:05:53Z",
+    "id": "20250501"
+  },
+  {
+    "text_date": "Sunday 11 May 2025",
+    "solr_date": "2025-05-11T10:05:53Z",
+    "id": "20250511"
+  },
+  {
+    "text_date": "Wednesday 21 May 2025",
+    "solr_date": "2025-05-21T10:05:53Z",
+    "id": "20250521"
+  },
+  {
+    "text_date": "Saturday 31 May 2025",
+    "solr_date": "2025-05-31T10:05:53Z",
+    "id": "20250531"
+  },
+  {
+    "text_date": "Tuesday 10 June 2025",
+    "solr_date": "2025-06-10T10:05:53Z",
+    "id": "20250610"
+  },
+  {
+    "text_date": "Friday 20 June 2025",
+    "solr_date": "2025-06-20T10:05:53Z",
+    "id": "20250620"
+  },
+  {
+    "text_date": "Monday 30 June 2025",
+    "solr_date": "2025-06-30T10:05:53Z",
+    "id": "20250630"
+  },
+  {
+    "text_date": "Thursday 10 July 2025",
+    "solr_date": "2025-07-10T10:05:53Z",
+    "id": "20250710"
+  },
+  {
+    "text_date": "Sunday 20 July 2025",
+    "solr_date": "2025-07-20T10:05:53Z",
+    "id": "20250720"
+  },
+  {
+    "text_date": "Wednesday 30 July 2025",
+    "solr_date": "2025-07-30T10:05:53Z",
+    "id": "20250730"
+  },
+  {
+    "text_date": "Saturday 9 August 2025",
+    "solr_date": "2025-08-09T10:05:53Z",
+    "id": "20250809"
+  },
+  {
+    "text_date": "Tuesday 19 August 2025",
+    "solr_date": "2025-08-19T10:05:53Z",
+    "id": "20250819"
+  },
+  {
+    "text_date": "Friday 29 August 2025",
+    "solr_date": "2025-08-29T10:05:53Z",
+    "id": "20250829"
+  },
+  {
+    "text_date": "Monday 8 September 2025",
+    "solr_date": "2025-09-08T10:05:53Z",
+    "id": "20250908"
+  },
+  {
+    "text_date": "Thursday 18 September 2025",
+    "solr_date": "2025-09-18T10:05:53Z",
+    "id": "20250918"
+  },
+  {
+    "text_date": "Sunday 28 September 2025",
+    "solr_date": "2025-09-28T10:05:53Z",
+    "id": "20250928"
+  },
+  {
+    "text_date": "Wednesday 8 October 2025",
+    "solr_date": "2025-10-08T10:05:53Z",
+    "id": "20251008"
+  },
+  {
+    "text_date": "Saturday 18 October 2025",
+    "solr_date": "2025-10-18T10:05:53Z",
+    "id": "20251018"
+  },
+  {
+    "text_date": "Tuesday 28 October 2025",
+    "solr_date": "2025-10-28T10:05:53Z",
+    "id": "20251028"
+  },
+  {
+    "text_date": "Friday 7 November 2025",
+    "solr_date": "2025-11-07T10:05:53Z",
+    "id": "20251107"
+  },
+  {
+    "text_date": "Monday 17 November 2025",
+    "solr_date": "2025-11-17T10:05:53Z",
+    "id": "20251117"
+  },
+  {
+    "text_date": "Thursday 27 November 2025",
+    "solr_date": "2025-11-27T10:05:53Z",
+    "id": "20251127"
+  },
+  {
+    "text_date": "Sunday 7 December 2025",
+    "solr_date": "2025-12-07T10:05:53Z",
+    "id": "20251207"
+  },
+  {
+    "text_date": "Wednesday 17 December 2025",
+    "solr_date": "2025-12-17T10:05:53Z",
+    "id": "20251217"
+  },
+  {
+    "text_date": "Saturday 27 December 2025",
+    "solr_date": "2025-12-27T10:05:53Z",
+    "id": "20251227"
+  },
+  {
+    "text_date": "Tuesday 6 January 2026",
+    "solr_date": "2026-01-06T10:05:53Z",
+    "id": "20260106"
+  },
+  {
+    "text_date": "Friday 16 January 2026",
+    "solr_date": "2026-01-16T10:05:53Z",
+    "id": "20260116"
+  },
+  {
+    "text_date": "Monday 26 January 2026",
+    "solr_date": "2026-01-26T10:05:53Z",
+    "id": "20260126"
+  },
+  {
+    "text_date": "Thursday 5 February 2026",
+    "solr_date": "2026-02-05T10:05:53Z",
+    "id": "20260205"
+  },
+  {
+    "text_date": "Sunday 15 February 2026",
+    "solr_date": "2026-02-15T10:05:53Z",
+    "id": "20260215"
+  },
+  {
+    "text_date": "Wednesday 25 February 2026",
+    "solr_date": "2026-02-25T10:05:53Z",
+    "id": "20260225"
+  },
+  {
+    "text_date": "Saturday 7 March 2026",
+    "solr_date": "2026-03-07T10:05:53Z",
+    "id": "20260307"
+  },
+  {
+    "text_date": "Tuesday 17 March 2026",
+    "solr_date": "2026-03-17T10:05:53Z",
+    "id": "20260317"
+  },
+  {
+    "text_date": "Friday 27 March 2026",
+    "solr_date": "2026-03-27T10:05:53Z",
+    "id": "20260327"
+  },
+  {
+    "text_date": "Monday 6 April 2026",
+    "solr_date": "2026-04-06T10:05:53Z",
+    "id": "20260406"
+  },
+  {
+    "text_date": "Thursday 16 April 2026",
+    "solr_date": "2026-04-16T10:05:53Z",
+    "id": "20260416"
+  },
+  {
+    "text_date": "Sunday 26 April 2026",
+    "solr_date": "2026-04-26T10:05:53Z",
+    "id": "20260426"
+  },
+  {
+    "text_date": "Wednesday 6 May 2026",
+    "solr_date": "2026-05-06T10:05:53Z",
+    "id": "20260506"
+  },
+  {
+    "text_date": "Saturday 16 May 2026",
+    "solr_date": "2026-05-16T10:05:53Z",
+    "id": "20260516"
+  },
+  {
+    "text_date": "Tuesday 26 May 2026",
+    "solr_date": "2026-05-26T10:05:53Z",
+    "id": "20260526"
+  },
+  {
+    "text_date": "Friday 5 June 2026",
+    "solr_date": "2026-06-05T10:05:53Z",
+    "id": "20260605"
+  },
+  {
+    "text_date": "Monday 15 June 2026",
+    "solr_date": "2026-06-15T10:05:53Z",
+    "id": "20260615"
+  },
+  {
+    "text_date": "Thursday 25 June 2026",
+    "solr_date": "2026-06-25T10:05:53Z",
+    "id": "20260625"
+  },
+  {
+    "text_date": "Sunday 5 July 2026",
+    "solr_date": "2026-07-05T10:05:53Z",
+    "id": "20260705"
+  },
+  {
+    "text_date": "Wednesday 15 July 2026",
+    "solr_date": "2026-07-15T10:05:53Z",
+    "id": "20260715"
+  },
+  {
+    "text_date": "Saturday 25 July 2026",
+    "solr_date": "2026-07-25T10:05:53Z",
+    "id": "20260725"
+  },
+  {
+    "text_date": "Tuesday 4 August 2026",
+    "solr_date": "2026-08-04T10:05:53Z",
+    "id": "20260804"
+  },
+  {
+    "text_date": "Friday 14 August 2026",
+    "solr_date": "2026-08-14T10:05:53Z",
+    "id": "20260814"
+  },
+  {
+    "text_date": "Monday 24 August 2026",
+    "solr_date": "2026-08-24T10:05:53Z",
+    "id": "20260824"
+  },
+  {
+    "text_date": "Thursday 3 September 2026",
+    "solr_date": "2026-09-03T10:05:53Z",
+    "id": "20260903"
+  },
+  {
+    "text_date": "Sunday 13 September 2026",
+    "solr_date": "2026-09-13T10:05:53Z",
+    "id": "20260913"
+  },
+  {
+    "text_date": "Wednesday 23 September 2026",
+    "solr_date": "2026-09-23T10:05:53Z",
+    "id": "20260923"
+  },
+  {
+    "text_date": "Saturday 3 October 2026",
+    "solr_date": "2026-10-03T10:05:53Z",
+    "id": "20261003"
+  },
+  {
+    "text_date": "Tuesday 13 October 2026",
+    "solr_date": "2026-10-13T10:05:53Z",
+    "id": "20261013"
+  },
+  {
+    "text_date": "Friday 23 October 2026",
+    "solr_date": "2026-10-23T10:05:53Z",
+    "id": "20261023"
+  },
+  {
+    "text_date": "Monday 2 November 2026",
+    "solr_date": "2026-11-02T10:05:53Z",
+    "id": "20261102"
+  },
+  {
+    "text_date": "Thursday 12 November 2026",
+    "solr_date": "2026-11-12T10:05:53Z",
+    "id": "20261112"
+  },
+  {
+    "text_date": "Sunday 22 November 2026",
+    "solr_date": "2026-11-22T10:05:53Z",
+    "id": "20261122"
+  },
+  {
+    "text_date": "Wednesday 2 December 2026",
+    "solr_date": "2026-12-02T10:05:53Z",
+    "id": "20261202"
+  },
+  {
+    "text_date": "Saturday 12 December 2026",
+    "solr_date": "2026-12-12T10:05:53Z",
+    "id": "20261212"
+  },
+  {
+    "text_date": "Tuesday 22 December 2026",
+    "solr_date": "2026-12-22T10:05:53Z",
+    "id": "20261222"
+  },
+  {
+    "text_date": "Friday 1 January 2027",
+    "solr_date": "2027-01-01T10:05:53Z",
+    "id": "20270101"
+  },
+  {
+    "text_date": "Monday 11 January 2027",
+    "solr_date": "2027-01-11T10:05:53Z",
+    "id": "20270111"
+  },
+  {
+    "text_date": "Thursday 21 January 2027",
+    "solr_date": "2027-01-21T10:05:53Z",
+    "id": "20270121"
+  },
+  {
+    "text_date": "Sunday 31 January 2027",
+    "solr_date": "2027-01-31T10:05:53Z",
+    "id": "20270131"
+  },
+  {
+    "text_date": "Wednesday 10 February 2027",
+    "solr_date": "2027-02-10T10:05:53Z",
+    "id": "20270210"
+  },
+  {
+    "text_date": "Saturday 20 February 2027",
+    "solr_date": "2027-02-20T10:05:53Z",
+    "id": "20270220"
+  },
+  {
+    "text_date": "Tuesday 2 March 2027",
+    "solr_date": "2027-03-02T10:05:53Z",
+    "id": "20270302"
+  },
+  {
+    "text_date": "Friday 12 March 2027",
+    "solr_date": "2027-03-12T10:05:53Z",
+    "id": "20270312"
+  },
+  {
+    "text_date": "Monday 22 March 2027",
+    "solr_date": "2027-03-22T10:05:53Z",
+    "id": "20270322"
+  },
+  {
+    "text_date": "Thursday 1 April 2027",
+    "solr_date": "2027-04-01T10:05:53Z",
+    "id": "20270401"
+  },
+  {
+    "text_date": "Sunday 11 April 2027",
+    "solr_date": "2027-04-11T10:05:53Z",
+    "id": "20270411"
+  },
+  {
+    "text_date": "Wednesday 21 April 2027",
+    "solr_date": "2027-04-21T10:05:53Z",
+    "id": "20270421"
+  },
+  {
+    "text_date": "Saturday 1 May 2027",
+    "solr_date": "2027-05-01T10:05:53Z",
+    "id": "20270501"
+  },
+  {
+    "text_date": "Tuesday 11 May 2027",
+    "solr_date": "2027-05-11T10:05:53Z",
+    "id": "20270511"
+  },
+  {
+    "text_date": "Friday 21 May 2027",
+    "solr_date": "2027-05-21T10:05:53Z",
+    "id": "20270521"
+  },
+  {
+    "text_date": "Monday 31 May 2027",
+    "solr_date": "2027-05-31T10:05:53Z",
+    "id": "20270531"
+  },
+  {
+    "text_date": "Thursday 10 June 2027",
+    "solr_date": "2027-06-10T10:05:53Z",
+    "id": "20270610"
+  },
+  {
+    "text_date": "Sunday 20 June 2027",
+    "solr_date": "2027-06-20T10:05:53Z",
+    "id": "20270620"
+  },
+  {
+    "text_date": "Wednesday 30 June 2027",
+    "solr_date": "2027-06-30T10:05:53Z",
+    "id": "20270630"
+  },
+  {
+    "text_date": "Saturday 10 July 2027",
+    "solr_date": "2027-07-10T10:05:53Z",
+    "id": "20270710"
+  },
+  {
+    "text_date": "Tuesday 20 July 2027",
+    "solr_date": "2027-07-20T10:05:53Z",
+    "id": "20270720"
+  },
+  {
+    "text_date": "Friday 30 July 2027",
+    "solr_date": "2027-07-30T10:05:53Z",
+    "id": "20270730"
+  },
+  {
+    "text_date": "Monday 9 August 2027",
+    "solr_date": "2027-08-09T10:05:53Z",
+    "id": "20270809"
+  },
+  {
+    "text_date": "Thursday 19 August 2027",
+    "solr_date": "2027-08-19T10:05:53Z",
+    "id": "20270819"
+  },
+  {
+    "text_date": "Sunday 29 August 2027",
+    "solr_date": "2027-08-29T10:05:53Z",
+    "id": "20270829"
+  },
+  {
+    "text_date": "Wednesday 8 September 2027",
+    "solr_date": "2027-09-08T10:05:53Z",
+    "id": "20270908"
+  },
+  {
+    "text_date": "Saturday 18 September 2027",
+    "solr_date": "2027-09-18T10:05:53Z",
+    "id": "20270918"
+  },
+  {
+    "text_date": "Tuesday 28 September 2027",
+    "solr_date": "2027-09-28T10:05:53Z",
+    "id": "20270928"
+  },
+  {
+    "text_date": "Friday 8 October 2027",
+    "solr_date": "2027-10-08T10:05:53Z",
+    "id": "20271008"
+  },
+  {
+    "text_date": "Monday 18 October 2027",
+    "solr_date": "2027-10-18T10:05:53Z",
+    "id": "20271018"
+  },
+  {
+    "text_date": "Thursday 28 October 2027",
+    "solr_date": "2027-10-28T10:05:53Z",
+    "id": "20271028"
+  },
+  {
+    "text_date": "Sunday 7 November 2027",
+    "solr_date": "2027-11-07T10:05:53Z",
+    "id": "20271107"
+  },
+  {
+    "text_date": "Wednesday 17 November 2027",
+    "solr_date": "2027-11-17T10:05:53Z",
+    "id": "20271117"
+  },
+  {
+    "text_date": "Saturday 27 November 2027",
+    "solr_date": "2027-11-27T10:05:53Z",
+    "id": "20271127"
+  },
+  {
+    "text_date": "Tuesday 7 December 2027",
+    "solr_date": "2027-12-07T10:05:53Z",
+    "id": "20271207"
+  },
+  {
+    "text_date": "Friday 17 December 2027",
+    "solr_date": "2027-12-17T10:05:53Z",
+    "id": "20271217"
+  },
+  {
+    "text_date": "Monday 27 December 2027",
+    "solr_date": "2027-12-27T10:05:53Z",
+    "id": "20271227"
+  },
+  {
+    "text_date": "Thursday 6 January 2028",
+    "solr_date": "2028-01-06T10:05:53Z",
+    "id": "20280106"
+  },
+  {
+    "text_date": "Sunday 16 January 2028",
+    "solr_date": "2028-01-16T10:05:53Z",
+    "id": "20280116"
+  },
+  {
+    "text_date": "Wednesday 26 January 2028",
+    "solr_date": "2028-01-26T10:05:53Z",
+    "id": "20280126"
+  },
+  {
+    "text_date": "Saturday 5 February 2028",
+    "solr_date": "2028-02-05T10:05:53Z",
+    "id": "20280205"
+  },
+  {
+    "text_date": "Tuesday 15 February 2028",
+    "solr_date": "2028-02-15T10:05:53Z",
+    "id": "20280215"
+  },
+  {
+    "text_date": "Friday 25 February 2028",
+    "solr_date": "2028-02-25T10:05:53Z",
+    "id": "20280225"
+  },
+  {
+    "text_date": "Monday 6 March 2028",
+    "solr_date": "2028-03-06T10:05:53Z",
+    "id": "20280306"
+  },
+  {
+    "text_date": "Thursday 16 March 2028",
+    "solr_date": "2028-03-16T10:05:53Z",
+    "id": "20280316"
+  },
+  {
+    "text_date": "Sunday 26 March 2028",
+    "solr_date": "2028-03-26T10:05:53Z",
+    "id": "20280326"
+  },
+  {
+    "text_date": "Wednesday 5 April 2028",
+    "solr_date": "2028-04-05T10:05:53Z",
+    "id": "20280405"
+  },
+  {
+    "text_date": "Saturday 15 April 2028",
+    "solr_date": "2028-04-15T10:05:53Z",
+    "id": "20280415"
+  },
+  {
+    "text_date": "Tuesday 25 April 2028",
+    "solr_date": "2028-04-25T10:05:53Z",
+    "id": "20280425"
+  },
+  {
+    "text_date": "Friday 5 May 2028",
+    "solr_date": "2028-05-05T10:05:53Z",
+    "id": "20280505"
+  },
+  {
+    "text_date": "Monday 15 May 2028",
+    "solr_date": "2028-05-15T10:05:53Z",
+    "id": "20280515"
+  },
+  {
+    "text_date": "Thursday 25 May 2028",
+    "solr_date": "2028-05-25T10:05:53Z",
+    "id": "20280525"
+  },
+  {
+    "text_date": "Sunday 4 June 2028",
+    "solr_date": "2028-06-04T10:05:53Z",
+    "id": "20280604"
+  },
+  {
+    "text_date": "Wednesday 14 June 2028",
+    "solr_date": "2028-06-14T10:05:53Z",
+    "id": "20280614"
+  },
+  {
+    "text_date": "Saturday 24 June 2028",
+    "solr_date": "2028-06-24T10:05:53Z",
+    "id": "20280624"
+  },
+  {
+    "text_date": "Tuesday 4 July 2028",
+    "solr_date": "2028-07-04T10:05:53Z",
+    "id": "20280704"
+  },
+  {
+    "text_date": "Friday 14 July 2028",
+    "solr_date": "2028-07-14T10:05:53Z",
+    "id": "20280714"
+  },
+  {
+    "text_date": "Monday 24 July 2028",
+    "solr_date": "2028-07-24T10:05:53Z",
+    "id": "20280724"
+  },
+  {
+    "text_date": "Thursday 3 August 2028",
+    "solr_date": "2028-08-03T10:05:53Z",
+    "id": "20280803"
+  },
+  {
+    "text_date": "Sunday 13 August 2028",
+    "solr_date": "2028-08-13T10:05:53Z",
+    "id": "20280813"
+  },
+  {
+    "text_date": "Wednesday 23 August 2028",
+    "solr_date": "2028-08-23T10:05:53Z",
+    "id": "20280823"
+  },
+  {
+    "text_date": "Saturday 2 September 2028",
+    "solr_date": "2028-09-02T10:05:53Z",
+    "id": "20280902"
+  },
+  {
+    "text_date": "Tuesday 12 September 2028",
+    "solr_date": "2028-09-12T10:05:53Z",
+    "id": "20280912"
+  },
+  {
+    "text_date": "Friday 22 September 2028",
+    "solr_date": "2028-09-22T10:05:53Z",
+    "id": "20280922"
+  },
+  {
+    "text_date": "Monday 2 October 2028",
+    "solr_date": "2028-10-02T10:05:53Z",
+    "id": "20281002"
+  },
+  {
+    "text_date": "Thursday 12 October 2028",
+    "solr_date": "2028-10-12T10:05:53Z",
+    "id": "20281012"
+  },
+  {
+    "text_date": "Sunday 22 October 2028",
+    "solr_date": "2028-10-22T10:05:53Z",
+    "id": "20281022"
+  },
+  {
+    "text_date": "Wednesday 1 November 2028",
+    "solr_date": "2028-11-01T10:05:53Z",
+    "id": "20281101"
+  },
+  {
+    "text_date": "Saturday 11 November 2028",
+    "solr_date": "2028-11-11T10:05:53Z",
+    "id": "20281111"
+  },
+  {
+    "text_date": "Tuesday 21 November 2028",
+    "solr_date": "2028-11-21T10:05:53Z",
+    "id": "20281121"
+  },
+  {
+    "text_date": "Friday 1 December 2028",
+    "solr_date": "2028-12-01T10:05:53Z",
+    "id": "20281201"
+  },
+  {
+    "text_date": "Monday 11 December 2028",
+    "solr_date": "2028-12-11T10:05:53Z",
+    "id": "20281211"
+  },
+  {
+    "text_date": "Thursday 21 December 2028",
+    "solr_date": "2028-12-21T10:05:53Z",
+    "id": "20281221"
+  },
+  {
+    "text_date": "Sunday 31 December 2028",
+    "solr_date": "2028-12-31T10:05:53Z",
+    "id": "20281231"
+  },
+  {
+    "text_date": "Wednesday 10 January 2029",
+    "solr_date": "2029-01-10T10:05:53Z",
+    "id": "20290110"
+  },
+  {
+    "text_date": "Saturday 20 January 2029",
+    "solr_date": "2029-01-20T10:05:53Z",
+    "id": "20290120"
+  },
+  {
+    "text_date": "Tuesday 30 January 2029",
+    "solr_date": "2029-01-30T10:05:53Z",
+    "id": "20290130"
+  },
+  {
+    "text_date": "Friday 9 February 2029",
+    "solr_date": "2029-02-09T10:05:53Z",
+    "id": "20290209"
+  },
+  {
+    "text_date": "Monday 19 February 2029",
+    "solr_date": "2029-02-19T10:05:53Z",
+    "id": "20290219"
+  },
+  {
+    "text_date": "Thursday 1 March 2029",
+    "solr_date": "2029-03-01T10:05:53Z",
+    "id": "20290301"
+  },
+  {
+    "text_date": "Sunday 11 March 2029",
+    "solr_date": "2029-03-11T10:05:53Z",
+    "id": "20290311"
+  },
+  {
+    "text_date": "Wednesday 21 March 2029",
+    "solr_date": "2029-03-21T10:05:53Z",
+    "id": "20290321"
+  },
+  {
+    "text_date": "Saturday 31 March 2029",
+    "solr_date": "2029-03-31T10:05:53Z",
+    "id": "20290331"
+  },
+  {
+    "text_date": "Tuesday 10 April 2029",
+    "solr_date": "2029-04-10T10:05:53Z",
+    "id": "20290410"
+  },
+  {
+    "text_date": "Friday 20 April 2029",
+    "solr_date": "2029-04-20T10:05:53Z",
+    "id": "20290420"
+  },
+  {
+    "text_date": "Monday 30 April 2029",
+    "solr_date": "2029-04-30T10:05:53Z",
+    "id": "20290430"
+  },
+  {
+    "text_date": "Thursday 10 May 2029",
+    "solr_date": "2029-05-10T10:05:53Z",
+    "id": "20290510"
+  },
+  {
+    "text_date": "Sunday 20 May 2029",
+    "solr_date": "2029-05-20T10:05:53Z",
+    "id": "20290520"
+  },
+  {
+    "text_date": "Wednesday 30 May 2029",
+    "solr_date": "2029-05-30T10:05:53Z",
+    "id": "20290530"
+  },
+  {
+    "text_date": "Saturday 9 June 2029",
+    "solr_date": "2029-06-09T10:05:53Z",
+    "id": "20290609"
+  },
+  {
+    "text_date": "Tuesday 19 June 2029",
+    "solr_date": "2029-06-19T10:05:53Z",
+    "id": "20290619"
+  },
+  {
+    "text_date": "Friday 29 June 2029",
+    "solr_date": "2029-06-29T10:05:53Z",
+    "id": "20290629"
+  },
+  {
+    "text_date": "Monday 9 July 2029",
+    "solr_date": "2029-07-09T10:05:53Z",
+    "id": "20290709"
+  },
+  {
+    "text_date": "Thursday 19 July 2029",
+    "solr_date": "2029-07-19T10:05:53Z",
+    "id": "20290719"
+  },
+  {
+    "text_date": "Sunday 29 July 2029",
+    "solr_date": "2029-07-29T10:05:53Z",
+    "id": "20290729"
+  },
+  {
+    "text_date": "Wednesday 8 August 2029",
+    "solr_date": "2029-08-08T10:05:53Z",
+    "id": "20290808"
+  },
+  {
+    "text_date": "Saturday 18 August 2029",
+    "solr_date": "2029-08-18T10:05:53Z",
+    "id": "20290818"
+  },
+  {
+    "text_date": "Tuesday 28 August 2029",
+    "solr_date": "2029-08-28T10:05:53Z",
+    "id": "20290828"
+  },
+  {
+    "text_date": "Friday 7 September 2029",
+    "solr_date": "2029-09-07T10:05:53Z",
+    "id": "20290907"
+  },
+  {
+    "text_date": "Monday 17 September 2029",
+    "solr_date": "2029-09-17T10:05:53Z",
+    "id": "20290917"
+  },
+  {
+    "text_date": "Thursday 27 September 2029",
+    "solr_date": "2029-09-27T10:05:53Z",
+    "id": "20290927"
+  },
+  {
+    "text_date": "Sunday 7 October 2029",
+    "solr_date": "2029-10-07T10:05:53Z",
+    "id": "20291007"
+  },
+  {
+    "text_date": "Wednesday 17 October 2029",
+    "solr_date": "2029-10-17T10:05:53Z",
+    "id": "20291017"
+  },
+  {
+    "text_date": "Saturday 27 October 2029",
+    "solr_date": "2029-10-27T10:05:53Z",
+    "id": "20291027"
+  },
+  {
+    "text_date": "Tuesday 6 November 2029",
+    "solr_date": "2029-11-06T10:05:53Z",
+    "id": "20291106"
+  },
+  {
+    "text_date": "Friday 16 November 2029",
+    "solr_date": "2029-11-16T10:05:53Z",
+    "id": "20291116"
+  },
+  {
+    "text_date": "Monday 26 November 2029",
+    "solr_date": "2029-11-26T10:05:53Z",
+    "id": "20291126"
+  },
+  {
+    "text_date": "Thursday 6 December 2029",
+    "solr_date": "2029-12-06T10:05:53Z",
+    "id": "20291206"
+  },
+  {
+    "text_date": "Sunday 16 December 2029",
+    "solr_date": "2029-12-16T10:05:53Z",
+    "id": "20291216"
+  },
+  {
+    "text_date": "Wednesday 26 December 2029",
+    "solr_date": "2029-12-26T10:05:53Z",
+    "id": "20291226"
+  },
+  {
+    "text_date": "Saturday 5 January 2030",
+    "solr_date": "2030-01-05T10:05:53Z",
+    "id": "20300105"
+  },
+  {
+    "text_date": "Tuesday 15 January 2030",
+    "solr_date": "2030-01-15T10:05:53Z",
+    "id": "20300115"
+  },
+  {
+    "text_date": "Friday 25 January 2030",
+    "solr_date": "2030-01-25T10:05:53Z",
+    "id": "20300125"
+  },
+  {
+    "text_date": "Monday 4 February 2030",
+    "solr_date": "2030-02-04T10:05:53Z",
+    "id": "20300204"
+  },
+  {
+    "text_date": "Thursday 14 February 2030",
+    "solr_date": "2030-02-14T10:05:53Z",
+    "id": "20300214"
+  },
+  {
+    "text_date": "Sunday 24 February 2030",
+    "solr_date": "2030-02-24T10:05:53Z",
+    "id": "20300224"
+  },
+  {
+    "text_date": "Wednesday 6 March 2030",
+    "solr_date": "2030-03-06T10:05:53Z",
+    "id": "20300306"
+  },
+  {
+    "text_date": "Saturday 16 March 2030",
+    "solr_date": "2030-03-16T10:05:53Z",
+    "id": "20300316"
+  },
+  {
+    "text_date": "Tuesday 26 March 2030",
+    "solr_date": "2030-03-26T10:05:53Z",
+    "id": "20300326"
+  },
+  {
+    "text_date": "Friday 5 April 2030",
+    "solr_date": "2030-04-05T10:05:53Z",
+    "id": "20300405"
+  },
+  {
+    "text_date": "Monday 15 April 2030",
+    "solr_date": "2030-04-15T10:05:53Z",
+    "id": "20300415"
+  },
+  {
+    "text_date": "Thursday 25 April 2030",
+    "solr_date": "2030-04-25T10:05:53Z",
+    "id": "20300425"
+  },
+  {
+    "text_date": "Sunday 5 May 2030",
+    "solr_date": "2030-05-05T10:05:53Z",
+    "id": "20300505"
+  },
+  {
+    "text_date": "Wednesday 15 May 2030",
+    "solr_date": "2030-05-15T10:05:53Z",
+    "id": "20300515"
+  },
+  {
+    "text_date": "Saturday 25 May 2030",
+    "solr_date": "2030-05-25T10:05:53Z",
+    "id": "20300525"
+  },
+  {
+    "text_date": "Tuesday 4 June 2030",
+    "solr_date": "2030-06-04T10:05:53Z",
+    "id": "20300604"
+  },
+  {
+    "text_date": "Friday 14 June 2030",
+    "solr_date": "2030-06-14T10:05:53Z",
+    "id": "20300614"
+  },
+  {
+    "text_date": "Monday 24 June 2030",
+    "solr_date": "2030-06-24T10:05:53Z",
+    "id": "20300624"
+  },
+  {
+    "text_date": "Thursday 4 July 2030",
+    "solr_date": "2030-07-04T10:05:53Z",
+    "id": "20300704"
+  },
+  {
+    "text_date": "Sunday 14 July 2030",
+    "solr_date": "2030-07-14T10:05:53Z",
+    "id": "20300714"
+  },
+  {
+    "text_date": "Wednesday 24 July 2030",
+    "solr_date": "2030-07-24T10:05:53Z",
+    "id": "20300724"
+  },
+  {
+    "text_date": "Saturday 3 August 2030",
+    "solr_date": "2030-08-03T10:05:53Z",
+    "id": "20300803"
+  },
+  {
+    "text_date": "Tuesday 13 August 2030",
+    "solr_date": "2030-08-13T10:05:53Z",
+    "id": "20300813"
+  },
+  {
+    "text_date": "Friday 23 August 2030",
+    "solr_date": "2030-08-23T10:05:53Z",
+    "id": "20300823"
+  },
+  {
+    "text_date": "Monday 2 September 2030",
+    "solr_date": "2030-09-02T10:05:53Z",
+    "id": "20300902"
+  },
+  {
+    "text_date": "Thursday 12 September 2030",
+    "solr_date": "2030-09-12T10:05:53Z",
+    "id": "20300912"
+  },
+  {
+    "text_date": "Sunday 22 September 2030",
+    "solr_date": "2030-09-22T10:05:53Z",
+    "id": "20300922"
+  },
+  {
+    "text_date": "Wednesday 2 October 2030",
+    "solr_date": "2030-10-02T10:05:53Z",
+    "id": "20301002"
+  },
+  {
+    "text_date": "Saturday 12 October 2030",
+    "solr_date": "2030-10-12T10:05:53Z",
+    "id": "20301012"
+  },
+  {
+    "text_date": "Tuesday 22 October 2030",
+    "solr_date": "2030-10-22T10:05:53Z",
+    "id": "20301022"
+  },
+  {
+    "text_date": "Friday 1 November 2030",
+    "solr_date": "2030-11-01T10:05:53Z",
+    "id": "20301101"
+  },
+  {
+    "text_date": "Monday 11 November 2030",
+    "solr_date": "2030-11-11T10:05:53Z",
+    "id": "20301111"
+  },
+  {
+    "text_date": "Thursday 21 November 2030",
+    "solr_date": "2030-11-21T10:05:53Z",
+    "id": "20301121"
+  },
+  {
+    "text_date": "Sunday 1 December 2030",
+    "solr_date": "2030-12-01T10:05:53Z",
+    "id": "20301201"
+  },
+  {
+    "text_date": "Wednesday 11 December 2030",
+    "solr_date": "2030-12-11T10:05:53Z",
+    "id": "20301211"
+  },
+  {
+    "text_date": "Saturday 21 December 2030",
+    "solr_date": "2030-12-21T10:05:53Z",
+    "id": "20301221"
+  },
+  {
+    "text_date": "Tuesday 31 December 2030",
+    "solr_date": "2030-12-31T10:05:53Z",
+    "id": "20301231"
+  },
+  {
+    "text_date": "Friday 10 January 2031",
+    "solr_date": "2031-01-10T10:05:53Z",
+    "id": "20310110"
+  },
+  {
+    "text_date": "Monday 20 January 2031",
+    "solr_date": "2031-01-20T10:05:53Z",
+    "id": "20310120"
+  },
+  {
+    "text_date": "Thursday 30 January 2031",
+    "solr_date": "2031-01-30T10:05:53Z",
+    "id": "20310130"
+  },
+  {
+    "text_date": "Sunday 9 February 2031",
+    "solr_date": "2031-02-09T10:05:53Z",
+    "id": "20310209"
+  },
+  {
+    "text_date": "Wednesday 19 February 2031",
+    "solr_date": "2031-02-19T10:05:53Z",
+    "id": "20310219"
+  },
+  {
+    "text_date": "Saturday 1 March 2031",
+    "solr_date": "2031-03-01T10:05:53Z",
+    "id": "20310301"
+  },
+  {
+    "text_date": "Tuesday 11 March 2031",
+    "solr_date": "2031-03-11T10:05:53Z",
+    "id": "20310311"
+  },
+  {
+    "text_date": "Friday 21 March 2031",
+    "solr_date": "2031-03-21T10:05:53Z",
+    "id": "20310321"
+  },
+  {
+    "text_date": "Monday 31 March 2031",
+    "solr_date": "2031-03-31T10:05:53Z",
+    "id": "20310331"
+  },
+  {
+    "text_date": "Thursday 10 April 2031",
+    "solr_date": "2031-04-10T10:05:53Z",
+    "id": "20310410"
+  },
+  {
+    "text_date": "Sunday 20 April 2031",
+    "solr_date": "2031-04-20T10:05:53Z",
+    "id": "20310420"
+  },
+  {
+    "text_date": "Wednesday 30 April 2031",
+    "solr_date": "2031-04-30T10:05:53Z",
+    "id": "20310430"
+  },
+  {
+    "text_date": "Saturday 10 May 2031",
+    "solr_date": "2031-05-10T10:05:53Z",
+    "id": "20310510"
+  },
+  {
+    "text_date": "Tuesday 20 May 2031",
+    "solr_date": "2031-05-20T10:05:53Z",
+    "id": "20310520"
+  },
+  {
+    "text_date": "Friday 30 May 2031",
+    "solr_date": "2031-05-30T10:05:53Z",
+    "id": "20310530"
+  },
+  {
+    "text_date": "Monday 9 June 2031",
+    "solr_date": "2031-06-09T10:05:53Z",
+    "id": "20310609"
+  },
+  {
+    "text_date": "Thursday 19 June 2031",
+    "solr_date": "2031-06-19T10:05:53Z",
+    "id": "20310619"
+  },
+  {
+    "text_date": "Sunday 29 June 2031",
+    "solr_date": "2031-06-29T10:05:53Z",
+    "id": "20310629"
+  },
+  {
+    "text_date": "Wednesday 9 July 2031",
+    "solr_date": "2031-07-09T10:05:53Z",
+    "id": "20310709"
+  },
+  {
+    "text_date": "Saturday 19 July 2031",
+    "solr_date": "2031-07-19T10:05:53Z",
+    "id": "20310719"
+  },
+  {
+    "text_date": "Tuesday 29 July 2031",
+    "solr_date": "2031-07-29T10:05:53Z",
+    "id": "20310729"
+  },
+  {
+    "text_date": "Friday 8 August 2031",
+    "solr_date": "2031-08-08T10:05:53Z",
+    "id": "20310808"
+  },
+  {
+    "text_date": "Monday 18 August 2031",
+    "solr_date": "2031-08-18T10:05:53Z",
+    "id": "20310818"
+  },
+  {
+    "text_date": "Thursday 28 August 2031",
+    "solr_date": "2031-08-28T10:05:53Z",
+    "id": "20310828"
+  },
+  {
+    "text_date": "Sunday 7 September 2031",
+    "solr_date": "2031-09-07T10:05:53Z",
+    "id": "20310907"
+  },
+  {
+    "text_date": "Wednesday 17 September 2031",
+    "solr_date": "2031-09-17T10:05:53Z",
+    "id": "20310917"
+  },
+  {
+    "text_date": "Saturday 27 September 2031",
+    "solr_date": "2031-09-27T10:05:53Z",
+    "id": "20310927"
+  },
+  {
+    "text_date": "Tuesday 7 October 2031",
+    "solr_date": "2031-10-07T10:05:53Z",
+    "id": "20311007"
+  },
+  {
+    "text_date": "Friday 17 October 2031",
+    "solr_date": "2031-10-17T10:05:53Z",
+    "id": "20311017"
+  },
+  {
+    "text_date": "Monday 27 October 2031",
+    "solr_date": "2031-10-27T10:05:53Z",
+    "id": "20311027"
+  },
+  {
+    "text_date": "Thursday 6 November 2031",
+    "solr_date": "2031-11-06T10:05:53Z",
+    "id": "20311106"
+  },
+  {
+    "text_date": "Sunday 16 November 2031",
+    "solr_date": "2031-11-16T10:05:53Z",
+    "id": "20311116"
+  },
+  {
+    "text_date": "Wednesday 26 November 2031",
+    "solr_date": "2031-11-26T10:05:53Z",
+    "id": "20311126"
+  },
+  {
+    "text_date": "Saturday 6 December 2031",
+    "solr_date": "2031-12-06T10:05:53Z",
+    "id": "20311206"
+  },
+  {
+    "text_date": "Tuesday 16 December 2031",
+    "solr_date": "2031-12-16T10:05:53Z",
+    "id": "20311216"
+  },
+  {
+    "text_date": "Friday 26 December 2031",
+    "solr_date": "2031-12-26T10:05:53Z",
+    "id": "20311226"
+  },
+  {
+    "text_date": "Monday 5 January 2032",
+    "solr_date": "2032-01-05T10:05:53Z",
+    "id": "20320105"
+  },
+  {
+    "text_date": "Thursday 15 January 2032",
+    "solr_date": "2032-01-15T10:05:53Z",
+    "id": "20320115"
+  },
+  {
+    "text_date": "Sunday 25 January 2032",
+    "solr_date": "2032-01-25T10:05:53Z",
+    "id": "20320125"
+  },
+  {
+    "text_date": "Wednesday 4 February 2032",
+    "solr_date": "2032-02-04T10:05:53Z",
+    "id": "20320204"
+  },
+  {
+    "text_date": "Saturday 14 February 2032",
+    "solr_date": "2032-02-14T10:05:53Z",
+    "id": "20320214"
+  },
+  {
+    "text_date": "Tuesday 24 February 2032",
+    "solr_date": "2032-02-24T10:05:53Z",
+    "id": "20320224"
+  },
+  {
+    "text_date": "Friday 5 March 2032",
+    "solr_date": "2032-03-05T10:05:53Z",
+    "id": "20320305"
+  },
+  {
+    "text_date": "Monday 15 March 2032",
+    "solr_date": "2032-03-15T10:05:53Z",
+    "id": "20320315"
+  },
+  {
+    "text_date": "Thursday 25 March 2032",
+    "solr_date": "2032-03-25T10:05:53Z",
+    "id": "20320325"
+  },
+  {
+    "text_date": "Sunday 4 April 2032",
+    "solr_date": "2032-04-04T10:05:53Z",
+    "id": "20320404"
+  },
+  {
+    "text_date": "Wednesday 14 April 2032",
+    "solr_date": "2032-04-14T10:05:53Z",
+    "id": "20320414"
+  },
+  {
+    "text_date": "Saturday 24 April 2032",
+    "solr_date": "2032-04-24T10:05:53Z",
+    "id": "20320424"
+  },
+  {
+    "text_date": "Tuesday 4 May 2032",
+    "solr_date": "2032-05-04T10:05:53Z",
+    "id": "20320504"
+  },
+  {
+    "text_date": "Friday 14 May 2032",
+    "solr_date": "2032-05-14T10:05:53Z",
+    "id": "20320514"
+  },
+  {
+    "text_date": "Monday 24 May 2032",
+    "solr_date": "2032-05-24T10:05:53Z",
+    "id": "20320524"
+  },
+  {
+    "text_date": "Thursday 3 June 2032",
+    "solr_date": "2032-06-03T10:05:53Z",
+    "id": "20320603"
+  },
+  {
+    "text_date": "Sunday 13 June 2032",
+    "solr_date": "2032-06-13T10:05:53Z",
+    "id": "20320613"
+  },
+  {
+    "text_date": "Wednesday 23 June 2032",
+    "solr_date": "2032-06-23T10:05:53Z",
+    "id": "20320623"
+  },
+  {
+    "text_date": "Saturday 3 July 2032",
+    "solr_date": "2032-07-03T10:05:53Z",
+    "id": "20320703"
+  },
+  {
+    "text_date": "Tuesday 13 July 2032",
+    "solr_date": "2032-07-13T10:05:53Z",
+    "id": "20320713"
+  },
+  {
+    "text_date": "Friday 23 July 2032",
+    "solr_date": "2032-07-23T10:05:53Z",
+    "id": "20320723"
+  },
+  {
+    "text_date": "Monday 2 August 2032",
+    "solr_date": "2032-08-02T10:05:53Z",
+    "id": "20320802"
+  },
+  {
+    "text_date": "Thursday 12 August 2032",
+    "solr_date": "2032-08-12T10:05:53Z",
+    "id": "20320812"
+  },
+  {
+    "text_date": "Sunday 22 August 2032",
+    "solr_date": "2032-08-22T10:05:53Z",
+    "id": "20320822"
+  },
+  {
+    "text_date": "Wednesday 1 September 2032",
+    "solr_date": "2032-09-01T10:05:53Z",
+    "id": "20320901"
+  },
+  {
+    "text_date": "Saturday 11 September 2032",
+    "solr_date": "2032-09-11T10:05:53Z",
+    "id": "20320911"
+  },
+  {
+    "text_date": "Tuesday 21 September 2032",
+    "solr_date": "2032-09-21T10:05:53Z",
+    "id": "20320921"
+  },
+  {
+    "text_date": "Friday 1 October 2032",
+    "solr_date": "2032-10-01T10:05:53Z",
+    "id": "20321001"
+  },
+  {
+    "text_date": "Monday 11 October 2032",
+    "solr_date": "2032-10-11T10:05:53Z",
+    "id": "20321011"
+  },
+  {
+    "text_date": "Thursday 21 October 2032",
+    "solr_date": "2032-10-21T10:05:53Z",
+    "id": "20321021"
+  },
+  {
+    "text_date": "Sunday 31 October 2032",
+    "solr_date": "2032-10-31T10:05:53Z",
+    "id": "20321031"
+  },
+  {
+    "text_date": "Wednesday 10 November 2032",
+    "solr_date": "2032-11-10T10:05:53Z",
+    "id": "20321110"
+  },
+  {
+    "text_date": "Saturday 20 November 2032",
+    "solr_date": "2032-11-20T10:05:53Z",
+    "id": "20321120"
+  },
+  {
+    "text_date": "Tuesday 30 November 2032",
+    "solr_date": "2032-11-30T10:05:53Z",
+    "id": "20321130"
+  },
+  {
+    "text_date": "Friday 10 December 2032",
+    "solr_date": "2032-12-10T10:05:53Z",
+    "id": "20321210"
+  },
+  {
+    "text_date": "Monday 20 December 2032",
+    "solr_date": "2032-12-20T10:05:53Z",
+    "id": "20321220"
+  },
+  {
+    "text_date": "Thursday 30 December 2032",
+    "solr_date": "2032-12-30T10:05:53Z",
+    "id": "20321230"
+  },
+  {
+    "text_date": "Sunday 9 January 2033",
+    "solr_date": "2033-01-09T10:05:53Z",
+    "id": "20330109"
+  },
+  {
+    "text_date": "Wednesday 19 January 2033",
+    "solr_date": "2033-01-19T10:05:53Z",
+    "id": "20330119"
+  },
+  {
+    "text_date": "Saturday 29 January 2033",
+    "solr_date": "2033-01-29T10:05:53Z",
+    "id": "20330129"
+  },
+  {
+    "text_date": "Tuesday 8 February 2033",
+    "solr_date": "2033-02-08T10:05:53Z",
+    "id": "20330208"
+  },
+  {
+    "text_date": "Friday 18 February 2033",
+    "solr_date": "2033-02-18T10:05:53Z",
+    "id": "20330218"
+  },
+  {
+    "text_date": "Monday 28 February 2033",
+    "solr_date": "2033-02-28T10:05:53Z",
+    "id": "20330228"
+  },
+  {
+    "text_date": "Thursday 10 March 2033",
+    "solr_date": "2033-03-10T10:05:53Z",
+    "id": "20330310"
+  },
+  {
+    "text_date": "Sunday 20 March 2033",
+    "solr_date": "2033-03-20T10:05:53Z",
+    "id": "20330320"
+  },
+  {
+    "text_date": "Wednesday 30 March 2033",
+    "solr_date": "2033-03-30T10:05:53Z",
+    "id": "20330330"
+  },
+  {
+    "text_date": "Saturday 9 April 2033",
+    "solr_date": "2033-04-09T10:05:53Z",
+    "id": "20330409"
+  },
+  {
+    "text_date": "Tuesday 19 April 2033",
+    "solr_date": "2033-04-19T10:05:53Z",
+    "id": "20330419"
+  },
+  {
+    "text_date": "Friday 29 April 2033",
+    "solr_date": "2033-04-29T10:05:53Z",
+    "id": "20330429"
+  },
+  {
+    "text_date": "Monday 9 May 2033",
+    "solr_date": "2033-05-09T10:05:53Z",
+    "id": "20330509"
+  },
+  {
+    "text_date": "Thursday 19 May 2033",
+    "solr_date": "2033-05-19T10:05:53Z",
+    "id": "20330519"
+  },
+  {
+    "text_date": "Sunday 29 May 2033",
+    "solr_date": "2033-05-29T10:05:53Z",
+    "id": "20330529"
+  },
+  {
+    "text_date": "Wednesday 8 June 2033",
+    "solr_date": "2033-06-08T10:05:53Z",
+    "id": "20330608"
+  },
+  {
+    "text_date": "Saturday 18 June 2033",
+    "solr_date": "2033-06-18T10:05:53Z",
+    "id": "20330618"
+  },
+  {
+    "text_date": "Tuesday 28 June 2033",
+    "solr_date": "2033-06-28T10:05:53Z",
+    "id": "20330628"
+  },
+  {
+    "text_date": "Friday 8 July 2033",
+    "solr_date": "2033-07-08T10:05:53Z",
+    "id": "20330708"
+  },
+  {
+    "text_date": "Monday 18 July 2033",
+    "solr_date": "2033-07-18T10:05:53Z",
+    "id": "20330718"
+  },
+  {
+    "text_date": "Thursday 28 July 2033",
+    "solr_date": "2033-07-28T10:05:53Z",
+    "id": "20330728"
+  },
+  {
+    "text_date": "Sunday 7 August 2033",
+    "solr_date": "2033-08-07T10:05:53Z",
+    "id": "20330807"
+  },
+  {
+    "text_date": "Wednesday 17 August 2033",
+    "solr_date": "2033-08-17T10:05:53Z",
+    "id": "20330817"
+  },
+  {
+    "text_date": "Saturday 27 August 2033",
+    "solr_date": "2033-08-27T10:05:53Z",
+    "id": "20330827"
+  },
+  {
+    "text_date": "Tuesday 6 September 2033",
+    "solr_date": "2033-09-06T10:05:53Z",
+    "id": "20330906"
+  },
+  {
+    "text_date": "Friday 16 September 2033",
+    "solr_date": "2033-09-16T10:05:53Z",
+    "id": "20330916"
+  },
+  {
+    "text_date": "Monday 26 September 2033",
+    "solr_date": "2033-09-26T10:05:53Z",
+    "id": "20330926"
+  },
+  {
+    "text_date": "Thursday 6 October 2033",
+    "solr_date": "2033-10-06T10:05:53Z",
+    "id": "20331006"
+  },
+  {
+    "text_date": "Sunday 16 October 2033",
+    "solr_date": "2033-10-16T10:05:53Z",
+    "id": "20331016"
+  },
+  {
+    "text_date": "Wednesday 26 October 2033",
+    "solr_date": "2033-10-26T10:05:53Z",
+    "id": "20331026"
+  },
+  {
+    "text_date": "Saturday 5 November 2033",
+    "solr_date": "2033-11-05T10:05:53Z",
+    "id": "20331105"
+  },
+  {
+    "text_date": "Tuesday 15 November 2033",
+    "solr_date": "2033-11-15T10:05:53Z",
+    "id": "20331115"
+  },
+  {
+    "text_date": "Friday 25 November 2033",
+    "solr_date": "2033-11-25T10:05:53Z",
+    "id": "20331125"
+  },
+  {
+    "text_date": "Monday 5 December 2033",
+    "solr_date": "2033-12-05T10:05:53Z",
+    "id": "20331205"
+  },
+  {
+    "text_date": "Thursday 15 December 2033",
+    "solr_date": "2033-12-15T10:05:53Z",
+    "id": "20331215"
+  },
+  {
+    "text_date": "Sunday 25 December 2033",
+    "solr_date": "2033-12-25T10:05:53Z",
+    "id": "20331225"
+  },
+  {
+    "text_date": "Wednesday 4 January 2034",
+    "solr_date": "2034-01-04T10:05:53Z",
+    "id": "20340104"
+  },
+  {
+    "text_date": "Saturday 14 January 2034",
+    "solr_date": "2034-01-14T10:05:53Z",
+    "id": "20340114"
+  },
+  {
+    "text_date": "Tuesday 24 January 2034",
+    "solr_date": "2034-01-24T10:05:53Z",
+    "id": "20340124"
+  },
+  {
+    "text_date": "Friday 3 February 2034",
+    "solr_date": "2034-02-03T10:05:53Z",
+    "id": "20340203"
+  },
+  {
+    "text_date": "Monday 13 February 2034",
+    "solr_date": "2034-02-13T10:05:53Z",
+    "id": "20340213"
+  },
+  {
+    "text_date": "Thursday 23 February 2034",
+    "solr_date": "2034-02-23T10:05:53Z",
+    "id": "20340223"
+  },
+  {
+    "text_date": "Sunday 5 March 2034",
+    "solr_date": "2034-03-05T10:05:53Z",
+    "id": "20340305"
+  },
+  {
+    "text_date": "Wednesday 15 March 2034",
+    "solr_date": "2034-03-15T10:05:53Z",
+    "id": "20340315"
+  },
+  {
+    "text_date": "Saturday 25 March 2034",
+    "solr_date": "2034-03-25T10:05:53Z",
+    "id": "20340325"
+  },
+  {
+    "text_date": "Tuesday 4 April 2034",
+    "solr_date": "2034-04-04T10:05:53Z",
+    "id": "20340404"
+  },
+  {
+    "text_date": "Friday 14 April 2034",
+    "solr_date": "2034-04-14T10:05:53Z",
+    "id": "20340414"
+  },
+  {
+    "text_date": "Monday 24 April 2034",
+    "solr_date": "2034-04-24T10:05:53Z",
+    "id": "20340424"
+  },
+  {
+    "text_date": "Thursday 4 May 2034",
+    "solr_date": "2034-05-04T10:05:53Z",
+    "id": "20340504"
+  },
+  {
+    "text_date": "Sunday 14 May 2034",
+    "solr_date": "2034-05-14T10:05:53Z",
+    "id": "20340514"
+  },
+  {
+    "text_date": "Wednesday 24 May 2034",
+    "solr_date": "2034-05-24T10:05:53Z",
+    "id": "20340524"
+  },
+  {
+    "text_date": "Saturday 3 June 2034",
+    "solr_date": "2034-06-03T10:05:53Z",
+    "id": "20340603"
+  },
+  {
+    "text_date": "Tuesday 13 June 2034",
+    "solr_date": "2034-06-13T10:05:53Z",
+    "id": "20340613"
+  },
+  {
+    "text_date": "Friday 23 June 2034",
+    "solr_date": "2034-06-23T10:05:53Z",
+    "id": "20340623"
+  },
+  {
+    "text_date": "Monday 3 July 2034",
+    "solr_date": "2034-07-03T10:05:53Z",
+    "id": "20340703"
+  },
+  {
+    "text_date": "Thursday 13 July 2034",
+    "solr_date": "2034-07-13T10:05:53Z",
+    "id": "20340713"
+  },
+  {
+    "text_date": "Sunday 23 July 2034",
+    "solr_date": "2034-07-23T10:05:53Z",
+    "id": "20340723"
+  },
+  {
+    "text_date": "Wednesday 2 August 2034",
+    "solr_date": "2034-08-02T10:05:53Z",
+    "id": "20340802"
+  },
+  {
+    "text_date": "Saturday 12 August 2034",
+    "solr_date": "2034-08-12T10:05:53Z",
+    "id": "20340812"
+  },
+  {
+    "text_date": "Tuesday 22 August 2034",
+    "solr_date": "2034-08-22T10:05:53Z",
+    "id": "20340822"
+  },
+  {
+    "text_date": "Friday 1 September 2034",
+    "solr_date": "2034-09-01T10:05:53Z",
+    "id": "20340901"
+  },
+  {
+    "text_date": "Monday 11 September 2034",
+    "solr_date": "2034-09-11T10:05:53Z",
+    "id": "20340911"
+  },
+  {
+    "text_date": "Thursday 21 September 2034",
+    "solr_date": "2034-09-21T10:05:53Z",
+    "id": "20340921"
+  },
+  {
+    "text_date": "Sunday 1 October 2034",
+    "solr_date": "2034-10-01T10:05:53Z",
+    "id": "20341001"
+  },
+  {
+    "text_date": "Wednesday 11 October 2034",
+    "solr_date": "2034-10-11T10:05:53Z",
+    "id": "20341011"
+  },
+  {
+    "text_date": "Saturday 21 October 2034",
+    "solr_date": "2034-10-21T10:05:53Z",
+    "id": "20341021"
+  },
+  {
+    "text_date": "Tuesday 31 October 2034",
+    "solr_date": "2034-10-31T10:05:53Z",
+    "id": "20341031"
+  },
+  {
+    "text_date": "Friday 10 November 2034",
+    "solr_date": "2034-11-10T10:05:53Z",
+    "id": "20341110"
+  },
+  {
+    "text_date": "Monday 20 November 2034",
+    "solr_date": "2034-11-20T10:05:53Z",
+    "id": "20341120"
+  },
+  {
+    "text_date": "Thursday 30 November 2034",
+    "solr_date": "2034-11-30T10:05:53Z",
+    "id": "20341130"
+  },
+  {
+    "text_date": "Sunday 10 December 2034",
+    "solr_date": "2034-12-10T10:05:53Z",
+    "id": "20341210"
+  },
+  {
+    "text_date": "Wednesday 20 December 2034",
+    "solr_date": "2034-12-20T10:05:53Z",
+    "id": "20341220"
+  },
+  {
+    "text_date": "Saturday 30 December 2034",
+    "solr_date": "2034-12-30T10:05:53Z",
+    "id": "20341230"
+  },
+  {
+    "text_date": "Tuesday 9 January 2035",
+    "solr_date": "2035-01-09T10:05:53Z",
+    "id": "20350109"
+  },
+  {
+    "text_date": "Friday 19 January 2035",
+    "solr_date": "2035-01-19T10:05:53Z",
+    "id": "20350119"
+  },
+  {
+    "text_date": "Monday 29 January 2035",
+    "solr_date": "2035-01-29T10:05:53Z",
+    "id": "20350129"
+  },
+  {
+    "text_date": "Thursday 8 February 2035",
+    "solr_date": "2035-02-08T10:05:53Z",
+    "id": "20350208"
+  },
+  {
+    "text_date": "Sunday 18 February 2035",
+    "solr_date": "2035-02-18T10:05:53Z",
+    "id": "20350218"
+  },
+  {
+    "text_date": "Wednesday 28 February 2035",
+    "solr_date": "2035-02-28T10:05:53Z",
+    "id": "20350228"
+  },
+  {
+    "text_date": "Saturday 10 March 2035",
+    "solr_date": "2035-03-10T10:05:53Z",
+    "id": "20350310"
+  },
+  {
+    "text_date": "Tuesday 20 March 2035",
+    "solr_date": "2035-03-20T10:05:53Z",
+    "id": "20350320"
+  },
+  {
+    "text_date": "Friday 30 March 2035",
+    "solr_date": "2035-03-30T10:05:53Z",
+    "id": "20350330"
+  },
+  {
+    "text_date": "Monday 9 April 2035",
+    "solr_date": "2035-04-09T10:05:53Z",
+    "id": "20350409"
+  },
+  {
+    "text_date": "Thursday 19 April 2035",
+    "solr_date": "2035-04-19T10:05:53Z",
+    "id": "20350419"
+  },
+  {
+    "text_date": "Sunday 29 April 2035",
+    "solr_date": "2035-04-29T10:05:53Z",
+    "id": "20350429"
+  },
+  {
+    "text_date": "Wednesday 9 May 2035",
+    "solr_date": "2035-05-09T10:05:53Z",
+    "id": "20350509"
+  },
+  {
+    "text_date": "Saturday 19 May 2035",
+    "solr_date": "2035-05-19T10:05:53Z",
+    "id": "20350519"
+  },
+  {
+    "text_date": "Tuesday 29 May 2035",
+    "solr_date": "2035-05-29T10:05:53Z",
+    "id": "20350529"
+  },
+  {
+    "text_date": "Friday 8 June 2035",
+    "solr_date": "2035-06-08T10:05:53Z",
+    "id": "20350608"
+  },
+  {
+    "text_date": "Monday 18 June 2035",
+    "solr_date": "2035-06-18T10:05:53Z",
+    "id": "20350618"
+  },
+  {
+    "text_date": "Thursday 28 June 2035",
+    "solr_date": "2035-06-28T10:05:53Z",
+    "id": "20350628"
+  },
+  {
+    "text_date": "Sunday 8 July 2035",
+    "solr_date": "2035-07-08T10:05:53Z",
+    "id": "20350708"
+  },
+  {
+    "text_date": "Wednesday 18 July 2035",
+    "solr_date": "2035-07-18T10:05:53Z",
+    "id": "20350718"
+  },
+  {
+    "text_date": "Saturday 28 July 2035",
+    "solr_date": "2035-07-28T10:05:53Z",
+    "id": "20350728"
+  },
+  {
+    "text_date": "Tuesday 7 August 2035",
+    "solr_date": "2035-08-07T10:05:53Z",
+    "id": "20350807"
+  },
+  {
+    "text_date": "Friday 17 August 2035",
+    "solr_date": "2035-08-17T10:05:53Z",
+    "id": "20350817"
+  },
+  {
+    "text_date": "Monday 27 August 2035",
+    "solr_date": "2035-08-27T10:05:53Z",
+    "id": "20350827"
+  },
+  {
+    "text_date": "Thursday 6 September 2035",
+    "solr_date": "2035-09-06T10:05:53Z",
+    "id": "20350906"
+  },
+  {
+    "text_date": "Sunday 16 September 2035",
+    "solr_date": "2035-09-16T10:05:53Z",
+    "id": "20350916"
+  },
+  {
+    "text_date": "Wednesday 26 September 2035",
+    "solr_date": "2035-09-26T10:05:53Z",
+    "id": "20350926"
+  },
+  {
+    "text_date": "Saturday 6 October 2035",
+    "solr_date": "2035-10-06T10:05:53Z",
+    "id": "20351006"
+  },
+  {
+    "text_date": "Tuesday 16 October 2035",
+    "solr_date": "2035-10-16T10:05:53Z",
+    "id": "20351016"
+  },
+  {
+    "text_date": "Friday 26 October 2035",
+    "solr_date": "2035-10-26T10:05:53Z",
+    "id": "20351026"
+  },
+  {
+    "text_date": "Monday 5 November 2035",
+    "solr_date": "2035-11-05T10:05:53Z",
+    "id": "20351105"
+  },
+  {
+    "text_date": "Thursday 15 November 2035",
+    "solr_date": "2035-11-15T10:05:53Z",
+    "id": "20351115"
+  },
+  {
+    "text_date": "Sunday 25 November 2035",
+    "solr_date": "2035-11-25T10:05:53Z",
+    "id": "20351125"
+  },
+  {
+    "text_date": "Wednesday 5 December 2035",
+    "solr_date": "2035-12-05T10:05:53Z",
+    "id": "20351205"
+  },
+  {
+    "text_date": "Saturday 15 December 2035",
+    "solr_date": "2035-12-15T10:05:53Z",
+    "id": "20351215"
+  },
+  {
+    "text_date": "Tuesday 25 December 2035",
+    "solr_date": "2035-12-25T10:05:53Z",
+    "id": "20351225"
+  },
+  {
+    "text_date": "Friday 4 January 2036",
+    "solr_date": "2036-01-04T10:05:53Z",
+    "id": "20360104"
+  },
+  {
+    "text_date": "Monday 14 January 2036",
+    "solr_date": "2036-01-14T10:05:53Z",
+    "id": "20360114"
+  },
+  {
+    "text_date": "Thursday 24 January 2036",
+    "solr_date": "2036-01-24T10:05:53Z",
+    "id": "20360124"
+  },
+  {
+    "text_date": "Sunday 3 February 2036",
+    "solr_date": "2036-02-03T10:05:53Z",
+    "id": "20360203"
+  },
+  {
+    "text_date": "Wednesday 13 February 2036",
+    "solr_date": "2036-02-13T10:05:53Z",
+    "id": "20360213"
+  },
+  {
+    "text_date": "Saturday 23 February 2036",
+    "solr_date": "2036-02-23T10:05:53Z",
+    "id": "20360223"
+  },
+  {
+    "text_date": "Tuesday 4 March 2036",
+    "solr_date": "2036-03-04T10:05:53Z",
+    "id": "20360304"
+  },
+  {
+    "text_date": "Friday 14 March 2036",
+    "solr_date": "2036-03-14T10:05:53Z",
+    "id": "20360314"
+  },
+  {
+    "text_date": "Monday 24 March 2036",
+    "solr_date": "2036-03-24T10:05:53Z",
+    "id": "20360324"
+  },
+  {
+    "text_date": "Thursday 3 April 2036",
+    "solr_date": "2036-04-03T10:05:53Z",
+    "id": "20360403"
+  },
+  {
+    "text_date": "Sunday 13 April 2036",
+    "solr_date": "2036-04-13T10:05:53Z",
+    "id": "20360413"
+  },
+  {
+    "text_date": "Wednesday 23 April 2036",
+    "solr_date": "2036-04-23T10:05:53Z",
+    "id": "20360423"
+  },
+  {
+    "text_date": "Saturday 3 May 2036",
+    "solr_date": "2036-05-03T10:05:53Z",
+    "id": "20360503"
+  }
+]

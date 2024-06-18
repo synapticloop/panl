@@ -1,65 +1,60 @@
 plugins {
-    id 'java'
-    id 'application'
-    id 'jacoco'
+	id 'java'
+	id 'application'
+	id 'jacoco'
 }
 
 group = 'com.synapticloop'
 version = '1.0.0'
 
 repositories {
-    mavenCentral()
+	mavenCentral()
 }
 
 dependencies {
-    // solrj
-    implementation 'org.apache.solr:solr-solrj:9.6.0'
-    implementation 'org.apache.solr:solr-solrj-zookeeper:9.6.0'
+	// solrj
+	implementation 'org.apache.solr:solr-solrj:9.6.0'
+	implementation 'org.apache.solr:solr-solrj-zookeeper:9.6.0'
 
-    // note - the following map to the solrj dependencies
-    implementation 'org.eclipse.jetty.http2:http2-server:10.0.20'
-    implementation 'org.eclipse.jetty:jetty-servlet:10.0.20'
+	// note - the following map to the solrj dependencies
+	implementation 'org.eclipse.jetty.http2:http2-server:10.0.20'
+	implementation 'org.eclipse.jetty:jetty-servlet:10.0.20'
 
-    // logging
-    implementation 'org.slf4j:slf4j-api:2.0.13'
-    implementation 'org.apache.logging.log4j:log4j-core:2.23.1'
-    implementation 'org.apache.logging.log4j:log4j-api:2.23.1'
-    implementation 'org.apache.logging.log4j:log4j-slf4j2-impl:2.23.1'
+	// logging
+	implementation 'org.slf4j:slf4j-api:2.0.13'
+	implementation 'org.apache.logging.log4j:log4j-core:2.23.1'
+	implementation 'org.apache.logging.log4j:log4j-api:2.23.1'
+	implementation 'org.apache.logging.log4j:log4j-slf4j2-impl:2.23.1'
 
 
-    // additional utilities
-    implementation 'commons-io:commons-io:2.16.1'
-    implementation 'org.json:json:20240303'
+	// additional utilities
+	implementation 'commons-io:commons-io:2.16.1'
+	implementation 'org.json:json:20240303'
 
-    // testing
-    testImplementation platform('org.junit:junit-bom:5.9.1')
-    testImplementation 'org.junit.jupiter:junit-jupiter'
-    testImplementation 'org.mockito:mockito-core:5.12.0'
-    testImplementation 'com.fasterxml.jackson.core:jackson-databind:2.17.1'
+	// testing
+	testImplementation platform('org.junit:junit-bom:5.9.1')
+	testImplementation 'org.junit.jupiter:junit-jupiter'
+	testImplementation 'org.mockito:mockito-core:5.12.0'
+	testImplementation 'com.fasterxml.jackson.core:jackson-databind:2.17.1'
 }
 
 application {
-    mainClass = 'com.synapticloop.panl.Main'
+	mainClass = 'com.synapticloop.panl.Main'
 }
 
-
-
 distributions {
-    main {
-        distributionBaseName = 'solr-panl-9'
-        contents {
-            from 'src/solr-panl-9/'
-        }
-    }
+	main {
+		distributionBaseName = 'solr-panl-9'
+	}
 }
 
 
 test {
-    useJUnitPlatform()
-    finalizedBy jacocoTestReport
+	useJUnitPlatform()
+	finalizedBy jacocoTestReport
 }
 
 jacocoTestReport {
-    dependsOn test
+	dependsOn test
 }
 

@@ -1,12 +1,11 @@
-package live;
+package external;
 
 import java.io.IOException;
 import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Random;
 
-public class RandomURITester {
+public class LiveRandomURITester {
 	private static final String DEFAULT_URL = "http://localhost:8181/mechanical-pencils/brandandname/";
 	private static final String AVAILABLE = "ab+cdef/g-hij/kl+mn[opq/rs]tuv-wx/yz+AB[CDEFG/HI-J]KLM/N+O[PQR/S/TU]V-WX/Y+Z[0123/45]67-89/+-";
 	private static final Random RANDOM = new Random(System.currentTimeMillis());
