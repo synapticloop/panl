@@ -1,4 +1,4 @@
-package com.synapticloop.panl.server.handler.fielderiser.field;
+package com.synapticloop.panl.server.handler.fielderiser.field.param;
 
 /*
  * Copyright (c) 2008-2024 synapticloop.
@@ -25,6 +25,7 @@ package com.synapticloop.panl.server.handler.fielderiser.field;
  */
 
 import com.synapticloop.panl.exception.PanlServerException;
+import com.synapticloop.panl.server.handler.fielderiser.field.BaseField;
 import com.synapticloop.panl.server.handler.properties.CollectionProperties;
 import com.synapticloop.panl.server.handler.tokeniser.token.LpseToken;
 import org.apache.solr.client.solrj.SolrQuery;

@@ -3,7 +3,7 @@ package com.synapticloop.panl.server.handler;
 import com.synapticloop.panl.TestHelper;
 import com.synapticloop.panl.exception.PanlServerException;
 import com.synapticloop.panl.server.handler.tokeniser.token.LpseToken;
-import com.synapticloop.panl.server.handler.tokeniser.token.QueryLpseToken;
+import com.synapticloop.panl.server.handler.tokeniser.token.param.QueryLpseToken;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 

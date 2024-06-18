@@ -2,7 +2,7 @@ package com.synapticloop.panl.server.handler.tokeniser.token;
 
 import com.synapticloop.panl.TestHelper;
 import com.synapticloop.panl.exception.PanlServerException;
-import com.synapticloop.panl.server.handler.tokeniser.LpseTokeniser;
+import com.synapticloop.panl.server.handler.tokeniser.token.param.PassThroughLpseToken;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;

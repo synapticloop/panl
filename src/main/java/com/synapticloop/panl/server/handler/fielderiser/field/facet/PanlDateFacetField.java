@@ -25,16 +25,16 @@ package com.synapticloop.panl.server.handler.fielderiser.field.facet;
  */
 
 import com.synapticloop.panl.exception.PanlServerException;
-import com.synapticloop.panl.server.handler.fielderiser.field.PanlFacetField;
 import com.synapticloop.panl.server.handler.properties.CollectionProperties;
-import com.synapticloop.panl.server.handler.tokeniser.token.FacetLpseToken;
 import com.synapticloop.panl.server.handler.tokeniser.token.LpseToken;
 import com.synapticloop.panl.server.handler.tokeniser.token.facet.DateFacetLpseToken;
 import org.apache.solr.client.solrj.SolrQuery;
+import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.net.URLDecoder;
+import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.util.*;
 
@@ -51,21 +51,35 @@ import java.util.*;
  */
 public class PanlDateFacetField extends PanlFacetField {
 	private static final Logger LOGGER = LoggerFactory.getLogger(PanlDateFacetField.class);
+
+	public static final String JSON_KEY_DAYS = "days";
+	public static final String JSON_KEY_DESIGNATOR = "designator";
+	public static final String JSON_KEY_HOURS = "hours";
+	public static final String JSON_KEY_IS_DATE_FACET = "is_date_facet";
+	public static final String JSON_KEY_MONTHS = "months";
+	public static final String JSON_KEY_NEXT = "next";
+	public static final String JSON_KEY_PREVIOUS = "previous";
+	public static final String JSON_KEY_YEARS = "years";
+
 	public static final String PROPERTY_KEY_PREFIX_PANL_DATE = "panl.date.";
-	public static final String SOLR_DESIGNATOR_YEARS = "YEARS";
-	public static final String SOLR_DESIGNATOR_MONTHS = "MONTHS";
+	public static final String PROPERTY_KEY_SUFFIX_DAYS = ".days";
+	public static final String PROPERTY_KEY_SUFFIX_HOURS = ".hours";
+	public static final String PROPERTY_KEY_SUFFIX_MONTHS = ".months";
+	public static final String PROPERTY_KEY_SUFFIX_NEXT = ".next";
+	public static final String PROPERTY_KEY_SUFFIX_PREVIOUS = ".previous";
+	public static final String PROPERTY_KEY_SUFFIX_YEARS = ".years";
+
 	public static final String SOLR_DESIGNATOR_DAYS = "DAYS";
 	public static final String SOLR_DESIGNATOR_HOURS = "HOURS";
+	public static final String SOLR_DESIGNATOR_MONTHS = "MONTHS";
+	public static final String SOLR_DESIGNATOR_YEARS = "YEARS";
 
-	private Map<String, String> solrRangeDesignatorLookupMap = new HashMap<>();
-	private Map<String, Integer> solrRangeDesignatorLengthLookupMap = new HashMap<>();
+	private final Map<String, String> solrRangeDesignatorLookupMap = new HashMap<>();
+	private final Map<String, String> solrRangeDesignatorEncodedLookupMap = new HashMap<>();
+	private final Map<String, Integer> solrRangeDesignatorLengthLookupMap = new HashMap<>();
 
 	private String nextIndicator;
 	private String previousIndicator;
-	private String yearsSuffix;
-	private String monthsSuffix;
-	private String daysSuffix;
-	private String hoursSuffix;
 
 	private boolean hasNext = false;
 	private boolean hasPrevious = false;
@@ -75,11 +89,14 @@ public class PanlDateFacetField extends PanlFacetField {
 
 		validateProperties();
 
-		populateSuffixAndPrefix();
 		populateDateReplacements();
 		populateSolrFieldTypeValidation();
 		populatePanlAndSolrFieldNames();
 
+		logWarnProperties(this.lpseCode, PROPERTY_KEY_PANL_OR_FACET + this.lpseCode);
+		logWarnProperties(this.lpseCode, PROPERTY_KEY_PANL_RANGE_FACET + this.lpseCode);
+		logWarnProperties(this.lpseCode, PROPERTY_KEY_PANL_PREFIX + this.lpseCode);
+		logWarnProperties(this.lpseCode, PROPERTY_KEY_PANL_SUFFIX + this.lpseCode);
 		logDetails();
 	}
 
@@ -102,20 +119,20 @@ public class PanlDateFacetField extends PanlFacetField {
 		populateSolrFieldTypeValidation();
 
 		// look for the previous and next keys
-		nextIndicator = properties.getProperty(PROPERTY_KEY_PREFIX_PANL_DATE + this.lpseCode + ".next", null);
+		nextIndicator = properties.getProperty(PROPERTY_KEY_PREFIX_PANL_DATE + this.lpseCode + PROPERTY_KEY_SUFFIX_NEXT, null);
 		hasNext = nullCheck(nextIndicator);
 
-		previousIndicator = properties.getProperty(PROPERTY_KEY_PREFIX_PANL_DATE + this.lpseCode + ".previous", null);
+		previousIndicator = properties.getProperty(PROPERTY_KEY_PREFIX_PANL_DATE + this.lpseCode + PROPERTY_KEY_SUFFIX_PREVIOUS, null);
 		hasPrevious = nullCheck(previousIndicator);
 
 		if (null != nextIndicator || null != previousIndicator) {
-			yearsSuffix = properties.getProperty(PROPERTY_KEY_PREFIX_PANL_DATE + this.lpseCode + ".years", null);
+			String yearsSuffix = properties.getProperty(PROPERTY_KEY_PREFIX_PANL_DATE + this.lpseCode + PROPERTY_KEY_SUFFIX_YEARS, null);
 			addToSolrLookupMap(yearsSuffix, SOLR_DESIGNATOR_YEARS);
-			monthsSuffix = properties.getProperty(PROPERTY_KEY_PREFIX_PANL_DATE + this.lpseCode + ".months", null);
+			String monthsSuffix = properties.getProperty(PROPERTY_KEY_PREFIX_PANL_DATE + this.lpseCode + PROPERTY_KEY_SUFFIX_MONTHS, null);
 			addToSolrLookupMap(monthsSuffix, SOLR_DESIGNATOR_MONTHS);
-			daysSuffix = properties.getProperty(PROPERTY_KEY_PREFIX_PANL_DATE + this.lpseCode + ".days", null);
+			String daysSuffix = properties.getProperty(PROPERTY_KEY_PREFIX_PANL_DATE + this.lpseCode + PROPERTY_KEY_SUFFIX_DAYS, null);
 			addToSolrLookupMap(daysSuffix, SOLR_DESIGNATOR_DAYS);
-			hoursSuffix = properties.getProperty(PROPERTY_KEY_PREFIX_PANL_DATE + this.lpseCode + ".hours", null);
+			String hoursSuffix = properties.getProperty(PROPERTY_KEY_PREFIX_PANL_DATE + this.lpseCode + PROPERTY_KEY_SUFFIX_HOURS, null);
 			addToSolrLookupMap(hoursSuffix, SOLR_DESIGNATOR_HOURS);
 		}
 	}
@@ -123,6 +140,7 @@ public class PanlDateFacetField extends PanlFacetField {
 	private void addToSolrLookupMap(String key, String value) {
 		if (null != key) {
 			solrRangeDesignatorLookupMap.put(key, value);
+			solrRangeDesignatorEncodedLookupMap.put(value, URLEncoder.encode(key, StandardCharsets.UTF_8));
 			solrRangeDesignatorLengthLookupMap.put(value, value.length());
 		}
 	}
@@ -151,7 +169,6 @@ public class PanlDateFacetField extends PanlFacetField {
 			lpseToken = (DateFacetLpseToken) lpseTokenList.get(0);
 			String originalValue = URLDecoder.decode(lpseToken.getOriginalValue(), StandardCharsets.UTF_8);
 			if (hasNext && originalValue.startsWith(nextIndicator)) {
-				boolean shouldQuery = true;
 				// then we are going to do a range from NOW to x years/months/days
 				originalValue = originalValue.substring(nextIndicator.length());
 				String solrRangeDesignator = getSolrRangeDesignator(originalValue);
@@ -168,7 +185,6 @@ public class PanlDateFacetField extends PanlFacetField {
 					}
 				}
 			} else if (hasPrevious && originalValue.startsWith(previousIndicator)) {
-				boolean shouldQuery = true;
 				// then we are going to do a range from x years/months/days to NOW
 				originalValue = originalValue.substring(previousIndicator.length());
 				String solrRangeDesignator = getSolrRangeDesignator(originalValue);
@@ -184,19 +200,13 @@ public class PanlDateFacetField extends PanlFacetField {
 					} catch (NumberFormatException ignored) {
 					}
 				}
-			} else {
-				// TODO - need to determine OR FACET
-				// just a facet selection
-				solrQuery.addFilterQuery(String.format("%s:%s",
-						lpseToken.getSolrField(),
-						lpseToken.getValue()));
 			}
 		}
 	}
 
 	/**
-	 * <p>This may either have a prefix, or a suffix, or may be a Solr range
-	 * designator.</p>
+	 * <p>This may either have a next or previous designator, with a designator
+	 * suffix.</p>
 	 *
 	 * @param panlTokenMap The panl token map to look up
 	 * @param collectionProperties The collection properties
@@ -205,12 +215,9 @@ public class PanlDateFacetField extends PanlFacetField {
 	 */
 	@Override
 	public String getURIPath(Map<String, List<LpseToken>> panlTokenMap, CollectionProperties collectionProperties) {
-		if(!panlTokenMap.containsKey(lpseCode) || panlTokenMap.get(lpseCode).isEmpty()) {
-			return("");
+		if (!panlTokenMap.containsKey(lpseCode) || panlTokenMap.get(lpseCode).isEmpty()) {
+			return ("");
 		}
-
-		// at this point we have a value - lets go through them
-		StringBuilder sb = new StringBuilder();
 
 		for (LpseToken lpseToken : panlTokenMap.get(lpseCode)) {
 			if (!lpseToken.getIsValid()) {
@@ -219,37 +226,13 @@ public class PanlDateFacetField extends PanlFacetField {
 			}
 
 			// we are going to return the first one
-			if(hasNext || hasPrevious) {
+			if (hasNext || hasPrevious) {
 				boolean isValidNextPrevious = getIsValidNextPrevious(lpseToken);
 				if (isValidNextPrevious) {
 					return (lpseToken.getOriginalValue() + "/");
 				}
 			}
-
-			// they may have a next/previous, but that does not mean that we don't
-			// have a prefix/suffix
-
-			if(hasValuePrefix || hasValueSuffix) {
-				boolean isValidNextPrevious = getIsValidPrefixSuffix(panlTokenMap.get(lpseCode).get(0));
-				if (isValidNextPrevious) {
-					return (lpseToken.getOriginalValue() + "/");
-				}
-			}
-
 		}
-
-
-		// they may have a next/previous, but that does not mean that we don't
-		// have a prefix/suffix
-
-		if(hasValuePrefix || hasValueSuffix) {
-			boolean isValidNextPrevious = getIsValidPrefixSuffix(panlTokenMap.get(lpseCode).get(0));
-			if (isValidNextPrevious) {
-				return (panlTokenMap.get(lpseCode).get(0).getOriginalValue() + "/");
-			}
-		}
-		// check for prefix or suffix first
-		// TODO - here please
 
 
 		if (panlTokenMap.containsKey(lpseCode)) {
@@ -257,9 +240,9 @@ public class PanlDateFacetField extends PanlFacetField {
 
 			List<LpseToken> lpseTokens = panlTokenMap.get(lpseCode);
 
-			FacetLpseToken lpseToken;
+			DateFacetLpseToken lpseToken;
 			if (!lpseTokens.isEmpty()) {
-				lpseToken = (FacetLpseToken) lpseTokens.get(0);
+				lpseToken = (DateFacetLpseToken) lpseTokens.get(0);
 				if (!lpseToken.getIsValid()) {
 					return ("");
 				}
@@ -278,49 +261,30 @@ public class PanlDateFacetField extends PanlFacetField {
 					return (lpseToken.getOriginalValue() + "/");
 				}
 			}
-
 		}
-		return (sb.toString());
-	}
-
-	private boolean getIsValidPrefixSuffix(LpseToken lpseToken) {
-		if(!hasValuePrefix || !hasValueSuffix) {
-			return(false);
-		}
-
-		String originalValue = lpseToken.getOriginalValue();
-		boolean isValidPrefixSuffix = true;
-		if(hasValuePrefix && !originalValue.startsWith(valuePrefix)) {
-			isValidPrefixSuffix = false;
-		}
-
-		if(hasValueSuffix && !originalValue.startsWith(valueSuffix)) {
-			isValidPrefixSuffix = false;
-		}
-
-		return(isValidPrefixSuffix);
+		return ("");
 	}
 
 	private boolean getIsValidNextPrevious(LpseToken lpseToken) {
-		if(!hasNext && !hasPrevious) {
-			return(false);
+		if (!hasNext && !hasPrevious) {
+			return (false);
 		}
 
 		String originalValue = lpseToken.getOriginalValue();
 		boolean isValidNextPrevious = true;
-		if(hasNext && !originalValue.startsWith(nextIndicator)) {
+		if (hasNext && !originalValue.startsWith(nextIndicator)) {
 			isValidNextPrevious = false;
 		}
 
-		if(hasPrevious && !originalValue.startsWith(previousIndicator)) {
+		if (hasPrevious && !originalValue.startsWith(previousIndicator)) {
 			isValidNextPrevious = false;
 		}
 
-		return(isValidNextPrevious);
+		return (isValidNextPrevious);
 	}
 
 	/**
-	 * <p>Decode the value.</p>
+	 * <p>Decode the value, or return null if it cannot be decoded.</p>
 	 *
 	 * @param value the value to convert if any conversions are required
 	 *
@@ -330,7 +294,7 @@ public class PanlDateFacetField extends PanlFacetField {
 		String decodedValue = URLDecoder.decode(value, StandardCharsets.UTF_8);
 
 		boolean decodedNextPrevious = false;
-		if(hasNext || hasPrevious) {
+		if (hasNext || hasPrevious) {
 			if (hasNext) {
 				if (decodedValue.startsWith(nextIndicator)) {
 					decodedValue = decodedValue.substring(nextIndicator.length());
@@ -346,7 +310,7 @@ public class PanlDateFacetField extends PanlFacetField {
 			}
 		}
 
-		if(decodedNextPrevious) {
+		if (decodedNextPrevious) {
 			// now we need to determine which of the fields it is (months, years,
 			// hours, days, etc)
 			// parse the value
@@ -358,28 +322,25 @@ public class PanlDateFacetField extends PanlFacetField {
 				try {
 					return (Integer.toString(Integer.parseInt(decodedValue)));
 				} catch (NumberFormatException e) {
-					return(null);
+					return (null);
 				}
 			}
 		}
 
-		// now for the prefix/suffix
-		if (hasValuePrefix) {
-			if (decodedValue.endsWith(valuePrefix)) {
-				decodedValue = decodedValue.substring(0, decodedValue.length() - valuePrefix.length());
-			} else {
-				return (null);
-			}
-		}
+		return (decodedValue);
+	}
 
-		if (hasValueSuffix) {
-			if (decodedValue.endsWith(valueSuffix)) {
-				decodedValue = decodedValue.substring(0, decodedValue.length() - valueSuffix.length());
-			} else {
-				return (null);
-			}
-		}
+	@Override public void addToAdditionObject(JSONObject additionObject, Map<String, List<LpseToken>> panlTokenMap) {
+		additionObject.put(JSON_KEY_IS_DATE_FACET, true);
+		additionObject.put(JSON_KEY_NEXT, URLEncoder.encode(nextIndicator, StandardCharsets.UTF_8));
+		additionObject.put(JSON_KEY_PREVIOUS, URLEncoder.encode(previousIndicator, StandardCharsets.UTF_8));
 
-		return(decodedValue);
+		JSONObject designatorObject = new JSONObject();
+		designatorObject.put(JSON_KEY_HOURS, solrRangeDesignatorEncodedLookupMap.get(SOLR_DESIGNATOR_HOURS));
+		designatorObject.put(JSON_KEY_DAYS, solrRangeDesignatorEncodedLookupMap.get(SOLR_DESIGNATOR_DAYS));
+		designatorObject.put(JSON_KEY_MONTHS, solrRangeDesignatorEncodedLookupMap.get(SOLR_DESIGNATOR_MONTHS));
+		designatorObject.put(JSON_KEY_YEARS, solrRangeDesignatorEncodedLookupMap.get(SOLR_DESIGNATOR_YEARS));
+
+		additionObject.put(JSON_KEY_DESIGNATOR, designatorObject);
 	}
 }

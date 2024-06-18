@@ -27,10 +27,11 @@ package com.synapticloop.panl.server.handler.fielderiser.field;
 import com.synapticloop.panl.exception.PanlServerException;
 import com.synapticloop.panl.server.handler.processor.Processor;
 import com.synapticloop.panl.server.handler.properties.CollectionProperties;
-import com.synapticloop.panl.server.handler.tokeniser.token.FacetLpseToken;
+import com.synapticloop.panl.server.handler.tokeniser.token.facet.FacetLpseToken;
 import com.synapticloop.panl.server.handler.tokeniser.token.LpseToken;
-import com.synapticloop.panl.server.handler.tokeniser.token.bean.FromToBean;
+import com.synapticloop.panl.server.handler.tokeniser.token.facet.bean.FromToBean;
 import org.apache.solr.client.solrj.SolrQuery;
+import org.json.JSONObject;
 import org.slf4j.Logger;
 
 import java.net.URLDecoder;
@@ -104,15 +105,6 @@ public abstract class BaseField {
 
 	protected boolean hasMinRangeWildcard;
 	protected boolean hasMaxRangeWildcard;
-
-	// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - //
-	//                         BOOLEAN Facet properties                        //
-	// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - //
-	private boolean isBooleanSolrFieldType;
-	private boolean hasBooleanTrueReplacement;
-	private boolean hasBooleanFalseReplacement;
-	private String booleanTrueReplacement;
-	private String booleanFalseReplacement;
 
 	protected String lpseCode;
 	private String panlFieldName;
@@ -217,41 +209,6 @@ public abstract class BaseField {
 
 		if(hasErrors) {
 			throw new PanlServerException("FATAL Property validation errors, not continuing.");
-		}
-	}
-
-	/**
-	 * <p>Populate any replacements for boolean field types which map to the Solr
-	 * field type of <code>solr.BoolField</code></p>
-	 *
-	 * <p>This will only have an effect if it is a boolean field type</p>
-	 */
-	protected void populateBooleanReplacements() {
-		// finally - we are going to look at the replacement - but only if there
-		// is a type of solr.BoolField and values are actually assigned
-
-		populateSolrFieldTypeValidation();
-
-		if (null != solrFieldType && solrFieldType.equals(TYPE_SOLR_BOOL_FIELD)) {
-			this.booleanTrueReplacement = properties.getProperty("panl.bool." + this.lpseCode + ".true", null);
-			if (null != this.booleanTrueReplacement) {
-				hasBooleanTrueReplacement = true;
-			} else {
-				this.booleanTrueReplacement = BOOLEAN_TRUE_VALUE;
-			}
-
-			this.booleanFalseReplacement = properties.getProperty("panl.bool." + this.lpseCode + ".false", null);
-			if (null != this.booleanFalseReplacement) {
-				hasBooleanFalseReplacement = true;
-			} else {
-				this.booleanFalseReplacement = BOOLEAN_FALSE_VALUE;
-			}
-
-			this.isBooleanSolrFieldType = true;
-		} else {
-			this.booleanTrueReplacement = null;
-			this.booleanFalseReplacement = null;
-			this.isBooleanSolrFieldType = false;
 		}
 	}
 
@@ -434,25 +391,6 @@ public abstract class BaseField {
 		if (hasValueSuffix) {
 			if (decodedValue.endsWith(valueSuffix)) {
 				decodedValue = decodedValue.substring(0, decodedValue.length() - valueSuffix.length());
-			} else {
-				return (null);
-			}
-		}
-
-		if (isBooleanSolrFieldType) {
-			if (hasBooleanTrueReplacement && booleanTrueReplacement.equals(decodedValue)) {
-				return BOOLEAN_TRUE_VALUE;
-			}
-
-			if (hasBooleanFalseReplacement && booleanFalseReplacement.equals(decodedValue)) {
-				return BOOLEAN_FALSE_VALUE;
-			}
-
-			// if we get to this point, and we cannot determine whether it is true or false
-			if (BOOLEAN_TRUE_VALUE.equalsIgnoreCase(value)) {
-				return (BOOLEAN_TRUE_VALUE);
-			} else if (BOOLEAN_FALSE_VALUE.equalsIgnoreCase(value)) {
-				return (BOOLEAN_FALSE_VALUE);
 			} else {
 				return (null);
 			}
@@ -754,21 +692,7 @@ public abstract class BaseField {
 			sb.append(valuePrefix);
 		}
 
-		if (isBooleanSolrFieldType) {
-			if (hasBooleanTrueReplacement && value.equalsIgnoreCase(BOOLEAN_TRUE_VALUE)) {
-				sb.append(booleanTrueReplacement);
-			} else if (hasBooleanFalseReplacement && value.equalsIgnoreCase(BOOLEAN_FALSE_VALUE)) {
-				sb.append(booleanFalseReplacement);
-			} else {
-				if (BOOLEAN_TRUE_VALUE.equalsIgnoreCase(value)) {
-					sb.append(BOOLEAN_TRUE_VALUE);
-				} else {
-					sb.append(BOOLEAN_FALSE_VALUE);
-				}
-			}
-		} else {
-			sb.append(value);
-		}
+		sb.append(value);
 
 		if (hasValueSuffix) {
 			sb.append(valueSuffix);
@@ -916,14 +840,6 @@ public abstract class BaseField {
 			temp.add("             Suffix: '" + valueSuffix + "'.");
 		}
 
-		if (hasBooleanTrueReplacement) {
-			temp.add("             '" + booleanTrueReplacement + "' maps to 'true'.");
-		}
-
-		if (hasBooleanFalseReplacement) {
-			temp.add("             '" + booleanFalseReplacement + "' maps to 'false'.");
-		}
-
 		if (isOrFacet) {
 			temp.add("             Is an OR facet, allowing multiple selections of this facet.");
 		}
@@ -1036,6 +952,10 @@ public abstract class BaseField {
 				isRangeFacet);
 	}
 
+	public void addToAdditionObject(JSONObject additionObject, Map<String, List<LpseToken>> panlTokenMap) {
+		// do nothing
+	}
+
 	/**
 	 * <p>The internal implementation for applying the tokens to the SolrQuery</p>
 	 *
@@ -1043,4 +963,10 @@ public abstract class BaseField {
 	 * @param lpseTokenList The list of tokens to apply to the Solr query
 	 */
 	protected abstract void applyToQueryInternal(SolrQuery solrQuery, List<LpseToken> lpseTokenList);
+
+	protected void logWarnProperties(String lpseCode, String propertyKey) {
+		if(properties.containsKey(propertyKey)) {
+			getLogger().warn("LPSE code '{}' has a property of '{}' which is invalid and should be removed.  (It has been ignored...)", lpseCode, propertyKey);
+		}
+	}
 }

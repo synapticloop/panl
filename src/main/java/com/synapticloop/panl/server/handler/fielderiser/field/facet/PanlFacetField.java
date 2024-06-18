@@ -1,4 +1,4 @@
-package com.synapticloop.panl.server.handler.fielderiser.field;
+package com.synapticloop.panl.server.handler.fielderiser.field.facet;
 
 /*
  * Copyright (c) 2008-2024 synapticloop.
@@ -25,8 +25,9 @@ package com.synapticloop.panl.server.handler.fielderiser.field;
  */
 
 import com.synapticloop.panl.exception.PanlServerException;
+import com.synapticloop.panl.server.handler.fielderiser.field.BaseField;
 import com.synapticloop.panl.server.handler.properties.CollectionProperties;
-import com.synapticloop.panl.server.handler.tokeniser.token.FacetLpseToken;
+import com.synapticloop.panl.server.handler.tokeniser.token.facet.FacetLpseToken;
 import com.synapticloop.panl.server.handler.tokeniser.token.LpseToken;
 import org.apache.solr.client.solrj.SolrQuery;
 import org.slf4j.Logger;
@@ -50,13 +51,15 @@ import java.util.Properties;
 public class PanlFacetField extends BaseField {
 	private static final Logger LOGGER = LoggerFactory.getLogger(PanlFacetField.class);
 
+	protected String solrFieldType;
+
 	public PanlFacetField(String lpseCode, String propertyKey, Properties properties, String solrCollection, int lpseLength) throws PanlServerException {
 		super(lpseCode, propertyKey, properties, solrCollection, lpseLength);
 
+		populateSolrFieldType();
 		validateProperties();
 
 		populateSuffixAndPrefix();
-		populateBooleanReplacements();
 		populateSolrFieldTypeValidation();
 		populatePanlAndSolrFieldNames();
 
@@ -65,6 +68,10 @@ public class PanlFacetField extends BaseField {
 		populateFacetOr();
 
 		logDetails();
+	}
+
+	private void populateSolrFieldType() {
+		this.solrFieldType = properties.getProperty(PROPERTY_KEY_PANL_TYPE + lpseCode);
 	}
 
 	@Override

@@ -26,9 +26,9 @@ package com.synapticloop.panl.server.handler.processor;
 
 import com.synapticloop.panl.server.handler.properties.CollectionProperties;
 import com.synapticloop.panl.server.handler.fielderiser.field.BaseField;
-import com.synapticloop.panl.server.handler.tokeniser.token.FacetLpseToken;
+import com.synapticloop.panl.server.handler.tokeniser.token.facet.FacetLpseToken;
 import com.synapticloop.panl.server.handler.tokeniser.token.LpseToken;
-import com.synapticloop.panl.server.handler.tokeniser.token.SortLpseToken;
+import com.synapticloop.panl.server.handler.tokeniser.token.param.SortLpseToken;
 import org.apache.solr.client.solrj.response.QueryResponse;
 import org.json.JSONArray;
 import org.json.JSONObject;

@@ -26,7 +26,7 @@ package com.synapticloop.panl.server.handler.processor;
 
 import com.synapticloop.panl.server.handler.properties.CollectionProperties;
 import com.synapticloop.panl.server.handler.fielderiser.field.BaseField;
-import com.synapticloop.panl.server.handler.tokeniser.token.FacetLpseToken;
+import com.synapticloop.panl.server.handler.tokeniser.token.facet.FacetLpseToken;
 import com.synapticloop.panl.server.handler.tokeniser.token.LpseToken;
 import org.apache.solr.client.solrj.response.FacetField;
 import org.apache.solr.client.solrj.response.QueryResponse;
@@ -108,6 +108,8 @@ public class AvailableProcessor extends Processor {
 				boolean isRangeFacetField = collectionProperties.getIsRangeFacetField(lpseCode);
 				facetObject.put(JSON_KEY_IS_RANGE_FACET, isRangeFacetField);
 
+				BaseField lpseField = collectionProperties.getLpseField(lpseCode);
+				lpseField.addToAdditionObject(facetObject, panlTokenMap);
 
 				facetObject.put(JSON_KEY_PANL_CODE, lpseCode);
 				List<FacetField.Count> values = facetField.getValues();
@@ -127,7 +129,6 @@ public class AvailableProcessor extends Processor {
 					// if we have an or Facet and this is an or facet, then we keep all
 					// values, otherwise we strip out the xero values
 					if (collectionProperties.getHasOrFacetFields()) {
-						BaseField lpseField = collectionProperties.getLpseField(lpseCode);
 						if (!lpseField.getIsOrFacet()) {
 							if (value.getCount() == 0) {
 								shouldAdd = false;
@@ -143,8 +144,6 @@ public class AvailableProcessor extends Processor {
 							numFoundExact) {
 						shouldAdd = false;
 					}
-
-					BaseField lpseField = collectionProperties.getLpseField(lpseCode);
 
 					if (shouldAdd) {
 						JSONObject facetValueObject = new JSONObject();
@@ -177,6 +176,7 @@ public class AvailableProcessor extends Processor {
 										panlTokenMap,
 										false));
 					}
+
 					panlFacetOrderMap.put(lpseCode, facetObject);
 				}
 			}

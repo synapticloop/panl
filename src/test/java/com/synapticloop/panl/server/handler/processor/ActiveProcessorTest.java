@@ -2,7 +2,7 @@ package com.synapticloop.panl.server.handler.processor;
 
 import com.synapticloop.panl.TestHelper;
 import com.synapticloop.panl.exception.PanlServerException;
-import com.synapticloop.panl.server.handler.tokeniser.token.FacetLpseToken;
+import com.synapticloop.panl.server.handler.tokeniser.token.facet.FacetLpseToken;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.junit.jupiter.api.Test;

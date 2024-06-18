@@ -512,5 +512,8 @@ function addAvailableFilters(availableObject, activeObject) {
 }
 
 function decodePanl(text) {
-	return(decodeURI(text).replaceAll("+", " ").replaceAll("%2B", "+"));
+	return(decodeURI(text)
+		.replaceAll("+", " ")
+		.replaceAll("%2B", "+")
+		.replaceAll("%3A", ":"));
 }

@@ -1,4 +1,4 @@
-package com.synapticloop.panl.server.handler.tokeniser.token.bean;
+package com.synapticloop.panl.server.handler.tokeniser.token.facet.bean;
 
 public class FromToBean {
 	private final String from;

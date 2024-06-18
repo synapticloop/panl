@@ -1,4 +1,4 @@
-package com.synapticloop.panl.server.handler.tokeniser.token;
+package com.synapticloop.panl.server.handler.tokeniser.token.facet;
 
 /*
  * Copyright (c) 2008-2024 synapticloop.
@@ -27,7 +27,8 @@ package com.synapticloop.panl.server.handler.tokeniser.token;
 import com.synapticloop.panl.server.handler.properties.CollectionProperties;
 import com.synapticloop.panl.server.handler.fielderiser.field.BaseField;
 import com.synapticloop.panl.server.handler.tokeniser.LpseTokeniser;
-import com.synapticloop.panl.server.handler.tokeniser.token.bean.FromToBean;
+import com.synapticloop.panl.server.handler.tokeniser.token.LpseToken;
+import com.synapticloop.panl.server.handler.tokeniser.token.facet.bean.FromToBean;
 
 import java.util.StringTokenizer;
 

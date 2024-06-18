@@ -1,4 +1,4 @@
-package com.synapticloop.panl.server.handler.tokeniser.token;
+package com.synapticloop.panl.server.handler.tokeniser.token.param;
 
 /*
  * Copyright (c) 2008-2024 synapticloop.
@@ -26,6 +26,7 @@ package com.synapticloop.panl.server.handler.tokeniser.token;
 
 import com.synapticloop.panl.server.handler.tokeniser.LpseTokeniser;
 import com.synapticloop.panl.server.handler.properties.CollectionProperties;
+import com.synapticloop.panl.server.handler.tokeniser.token.LpseToken;
 import org.apache.solr.client.solrj.SolrQuery;
 
 /**

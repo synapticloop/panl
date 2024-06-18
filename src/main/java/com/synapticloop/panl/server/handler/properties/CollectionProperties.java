@@ -29,7 +29,10 @@ import com.synapticloop.panl.exception.PanlServerException;
 //import com.synapticloop.panl.server.handler.field.FacetField;
 //import com.synapticloop.panl.server.handler.field.MetaDataField;
 import com.synapticloop.panl.server.handler.fielderiser.field.*;
+import com.synapticloop.panl.server.handler.fielderiser.field.facet.PanlBooleanFacetField;
 import com.synapticloop.panl.server.handler.fielderiser.field.facet.PanlDateFacetField;
+import com.synapticloop.panl.server.handler.fielderiser.field.facet.PanlFacetField;
+import com.synapticloop.panl.server.handler.fielderiser.field.param.*;
 import com.synapticloop.panl.server.handler.helper.PropertyHelper;
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -38,8 +41,7 @@ import org.slf4j.LoggerFactory;
 
 import java.util.*;
 
-import static com.synapticloop.panl.server.handler.fielderiser.field.BaseField.PROPERTY_KEY_PANL_TYPE;
-import static com.synapticloop.panl.server.handler.fielderiser.field.BaseField.TYPE_SOLR_DATE_POINT_FIELD;
+import static com.synapticloop.panl.server.handler.fielderiser.field.BaseField.*;
 
 /**
  * <p>This object contains all information required for the Panl server bound
@@ -132,6 +134,7 @@ public class CollectionProperties {
 	private final Map<String, PanlSortField> LPSE_CODE_TO_SORT_FIELD_MAP = new HashMap<>();
 	private final Map<String, PanlSortField> SOLR_NAME_TO_SORT_FIELD_MAP = new HashMap<>();
 	private final Map<String, PanlDateFacetField> LPSE_CODE_DATE_FACET_MAP = new HashMap<>();
+	private final Map<String, PanlBooleanFacetField> LPSE_CODE_BOOLEAN_FACET_MAP = new HashMap<>();
 
 	private final Set<String> PANL_CODE_OR_FIELDS = new HashSet<>();
 	private final Set<String> PANL_CODE_RANGE_FIELDS = new HashSet<>();
@@ -398,6 +401,9 @@ public class CollectionProperties {
 			if(TYPE_SOLR_DATE_POINT_FIELD.equals(solrFieldType)) {
 				facetField = new PanlDateFacetField(lpseCode, panlFieldKey, properties, solrCollection, lpseLength);
 				LPSE_CODE_DATE_FACET_MAP.put(lpseCode, (PanlDateFacetField) facetField);
+			} else if(TYPE_SOLR_BOOL_FIELD.equals(solrFieldType)) {
+				facetField = new PanlBooleanFacetField(lpseCode, panlFieldKey, properties, solrCollection, lpseLength);
+				LPSE_CODE_BOOLEAN_FACET_MAP.put(lpseCode, (PanlBooleanFacetField) facetField);
 			} else {
 				facetField = new PanlFacetField(lpseCode, panlFieldKey, properties, solrCollection, lpseLength);
 			}
@@ -755,4 +761,9 @@ public class CollectionProperties {
 	public boolean getIsDateFacetField(String lpseCode) {
 		return(LPSE_CODE_DATE_FACET_MAP.containsKey(lpseCode));
 	}
+
+	public boolean getIsBooleanFacetField(String lpseCode) {
+		return(LPSE_CODE_BOOLEAN_FACET_MAP.containsKey(lpseCode));
+	}
+
 }

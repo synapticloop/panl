@@ -1,6 +1,7 @@
 package com.synapticloop.panl.server.handler.tokeniser.token;
 
 import com.synapticloop.panl.exception.PanlServerException;
+import com.synapticloop.panl.server.handler.tokeniser.token.param.SortLpseToken;
 import org.apache.solr.client.solrj.SolrQuery;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;

@@ -1,4 +1,4 @@
-package com.synapticloop.panl.server.handler.tokeniser.token;
+package com.synapticloop.panl.server.handler.tokeniser.token.param;
 
 /*
  * Copyright (c) 2008-2024 synapticloop.
@@ -25,10 +25,10 @@ package com.synapticloop.panl.server.handler.tokeniser.token;
  */
 
 import com.synapticloop.panl.server.handler.properties.CollectionProperties;
+import com.synapticloop.panl.server.handler.tokeniser.token.LpseToken;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.utils.URLEncodedUtils;
 
-import java.net.URLDecoder;
 import java.nio.charset.StandardCharsets;
 import java.util.*;
 

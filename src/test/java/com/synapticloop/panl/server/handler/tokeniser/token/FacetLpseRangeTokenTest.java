@@ -4,6 +4,7 @@ import com.synapticloop.panl.TestHelper;
 import com.synapticloop.panl.generator.bean.Collection;
 import com.synapticloop.panl.server.handler.properties.CollectionProperties;
 import com.synapticloop.panl.server.handler.tokeniser.LpseTokeniser;
+import com.synapticloop.panl.server.handler.tokeniser.token.facet.FacetLpseToken;
 import org.junit.jupiter.api.Test;
 
 import java.util.StringTokenizer;
