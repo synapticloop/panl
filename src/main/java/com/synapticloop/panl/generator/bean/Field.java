@@ -28,13 +28,13 @@ public class Field {
 	private final String code;
 	private final String field;
 	private final String schemaXml;
-	private final String solrClassName;
+	private final String solrFieldType;
 
-	public Field(String code, String field, String schemaXml, String solrClassName) {
+	public Field(String code, String field, String schemaXml, String solrFieldType) {
 		this.code = code;
 		this.field = field;
 		this.schemaXml = schemaXml;
-		this.solrClassName = solrClassName;
+		this.solrFieldType = solrFieldType;
 	}
 
 	private String getPrettyName(String name) {
@@ -61,25 +61,37 @@ public class Field {
 
 	public String toProperties() {
 		String booleanFieldText = "";
-		if(solrClassName.equals("solr.BoolField")) {
-			booleanFieldText = "# Because this is a Boolean field, you can change these values to something more human-readable\n" +
-					"# Either, or both of these properties may be set\n" +
+		String dateFieldText = "";
+		if (solrFieldType.equals("solr.BoolField")) {
+			booleanFieldText = "# Because this is a Boolean field, you can use a boolean value replacement for\n" +
+					"# either the true value, the false value, or neither.  This makes a more human-\n" +
+					"# readable URL\n" +
 					String.format("#panl.bool.%s.true=is-%s\n", code, field) +
 					String.format("#panl.bool.%s.false=is-not-%s\n", code, field);
+		}
+
+		if (solrFieldType.equals("solr.DatePointField")) {
+			dateFieldText = "# Because this is a Date field, there are special queries that can be applied\n" +
+					"# for a date range. You can query for results up to NOW, or from NOW onwards.\n" +
+					"# Either, or both of these properties may be set\n" +
+					String.format("#panl.date.%s.previous=previous \n", code) +
+					String.format("#panl.date.%s.next=next \n", code) +
+					String.format("#panl.date.%s.years=\\ years\n", code) +
+					String.format("#panl.date.%s.months=\\ months\n", code) +
+					String.format("#panl.date.%s.days=\\ days\n", code) +
+					String.format("#panl.date.%s.hours=\\ hours\n", code);
 		}
 
 		// TODO - add in all of the properties
 		return (String.format("\n# %s\n", schemaXml) +
 				String.format("panl.facet.%s=%s\n", code, field) +
 				String.format("panl.name.%s=%s\n", code, getPrettyName(field)) +
-				String.format("panl.type.%s=%s\n", code, solrClassName) +
+				String.format("panl.type.%s=%s\n", code, solrFieldType) +
 				"# The following two properties are optional and the values should be changed\n" +
 				String.format("#panl.prefix.%s=prefix\n", code) +
 				String.format("#panl.suffix.%s=suffix\n", code) +
-				"# The following two properties are optional and the values should be changed\n" +
-				String.format("#panl.prefix.%s=prefix\n", code) +
-				String.format("#panl.suffix.%s=suffix\n", code) +
-				booleanFieldText
+				booleanFieldText +
+				dateFieldText
 		);
 	}
 
