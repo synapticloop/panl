@@ -73,10 +73,10 @@ public abstract class BaseField {
 	public static final String TYPE_SOLR_FLOAT_POINT_FIELD = "solr.FloatPointField";
 	public static final String TYPE_SOLR_DATE_POINT_FIELD = "solr.DatePointField";
 
-	private boolean hasValuePrefix = false;
-	private boolean hasValueSuffix = false;
-	private String valuePrefix;
-	private String valueSuffix;
+	protected boolean hasValuePrefix = false;
+	protected boolean hasValueSuffix = false;
+	protected String valuePrefix;
+	protected String valueSuffix;
 
 	// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - //
 	//                            OR Facet properties                          //

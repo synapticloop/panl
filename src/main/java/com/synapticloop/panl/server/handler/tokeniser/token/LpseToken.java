@@ -26,6 +26,7 @@ package com.synapticloop.panl.server.handler.tokeniser.token;
 
 import com.synapticloop.panl.server.handler.properties.CollectionProperties;
 import com.synapticloop.panl.server.handler.tokeniser.LpseTokeniser;
+import com.synapticloop.panl.server.handler.tokeniser.token.facet.DateFacetLpseToken;
 
 import java.util.StringTokenizer;
 
@@ -129,21 +130,31 @@ public abstract class LpseToken {
 					lpseToken,
 					valueTokeniser));
 		} else {
-			StringBuilder facet = new StringBuilder(lpseToken);
-			// it is a facet field - unlike parameters and operands, the token must
-			// be the length LPSE length
-			while (facet.length() < collectionProperties.getLpseLength()) {
+			StringBuilder lpseCodeBuilder = new StringBuilder(lpseToken);
+			// it is a lpseCodeBuilder field - unlike parameters and operands, the token
+			// must be the length LPSE length
+			while (lpseCodeBuilder.length() < collectionProperties.getLpseLength()) {
 				if (lpseTokeniser.hasMoreTokens()) {
-					facet.append(lpseTokeniser.nextToken());
+					lpseCodeBuilder.append(lpseTokeniser.nextToken());
 				} else {
 					break;
 				}
 			}
 
+			// this may be a date facet field
+			String lpseCode = lpseCodeBuilder.toString();
+			if(collectionProperties.getIsDateFacetField(lpseCode)) {
+				return(new DateFacetLpseToken(
+						collectionProperties,
+						lpseCode,
+						lpseTokeniser,
+						valueTokeniser));
+			}
+
 			// now we have the facetField
 			return (new FacetLpseToken(
 					collectionProperties,
-					facet.toString(),
+					lpseCode,
 					lpseTokeniser,
 					valueTokeniser));
 		}

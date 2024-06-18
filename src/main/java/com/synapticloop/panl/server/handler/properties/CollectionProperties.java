@@ -29,6 +29,7 @@ import com.synapticloop.panl.exception.PanlServerException;
 //import com.synapticloop.panl.server.handler.field.FacetField;
 //import com.synapticloop.panl.server.handler.field.MetaDataField;
 import com.synapticloop.panl.server.handler.fielderiser.field.*;
+import com.synapticloop.panl.server.handler.fielderiser.field.facet.PanlDateFacetField;
 import com.synapticloop.panl.server.handler.helper.PropertyHelper;
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -130,6 +131,7 @@ public class CollectionProperties {
 	private final Map<String, PanlField> SOLR_NAME_TO_FIELD_MAP = new HashMap<>();
 	private final Map<String, PanlSortField> LPSE_CODE_TO_SORT_FIELD_MAP = new HashMap<>();
 	private final Map<String, PanlSortField> SOLR_NAME_TO_SORT_FIELD_MAP = new HashMap<>();
+	private final Map<String, PanlDateFacetField> LPSE_CODE_DATE_FACET_MAP = new HashMap<>();
 
 	private final Set<String> PANL_CODE_OR_FIELDS = new HashSet<>();
 	private final Set<String> PANL_CODE_RANGE_FIELDS = new HashSet<>();
@@ -395,6 +397,7 @@ public class CollectionProperties {
 			PanlFacetField facetField;
 			if(TYPE_SOLR_DATE_POINT_FIELD.equals(solrFieldType)) {
 				facetField = new PanlDateFacetField(lpseCode, panlFieldKey, properties, solrCollection, lpseLength);
+				LPSE_CODE_DATE_FACET_MAP.put(lpseCode, (PanlDateFacetField) facetField);
 			} else {
 				facetField = new PanlFacetField(lpseCode, panlFieldKey, properties, solrCollection, lpseLength);
 			}
@@ -747,5 +750,9 @@ public class CollectionProperties {
 	 */
 	public boolean getIsIgnoredLpseCode(String lpseCode) {
 		return (LPSE_IGNORED_URI_CODES.contains(lpseCode));
+	}
+
+	public boolean getIsDateFacetField(String lpseCode) {
+		return(LPSE_CODE_DATE_FACET_MAP.containsKey(lpseCode));
 	}
 }
