@@ -24,17 +24,33 @@ package com.synapticloop.panl.generator.bean;
  * IN THE SOFTWARE.
  */
 
-public class Field {
-	private final String code;
-	private final String field;
-	private final String schemaXml;
+/**
+ * <p>A field is a one to one mapping of the SOlr fields defined in the Solr
+ * schema file and encapsulates all information required to generate the
+ * example properties.</p>
+ *
+ * @author synapticloop
+ */
+public class PanlField {
+	private final String lpseCode;
+	private final String solrFieldName;
+	private final String schemaXmlLine;
 	private final String solrFieldType;
 
-	public Field(String code, String field, String schemaXml, String solrFieldType) {
-		this.code = code;
-		this.field = field;
-		this.schemaXml = schemaXml;
+	/**
+	 * <p>Instantiate a field</p>
+	 *
+	 * @param lpseCode The LPSE code that is assigned to the Solr field
+	 * @param solrFieldName The name of the field from the schema
+	 * @param schemaXmlLine The generated field definition line from the
+	 * 		managed-schema.xml line
+	 * @param solrFieldType The field storage type for the Solr field
+	 */
+	public PanlField(String lpseCode, String solrFieldName, String solrFieldType, String schemaXmlLine) {
+		this.lpseCode = lpseCode;
+		this.solrFieldName = solrFieldName;
 		this.solrFieldType = solrFieldType;
+		this.schemaXmlLine = schemaXmlLine;
 	}
 
 	private String getPrettyName(String name) {
@@ -66,36 +82,36 @@ public class Field {
 			booleanFieldText = "# Because this is a Boolean field, you can use a boolean value replacement for\n" +
 					"# either the true value, the false value, or neither.  This makes a more human-\n" +
 					"# readable URL\n" +
-					String.format("#panl.bool.%s.true=is-%s\n", code, field) +
-					String.format("#panl.bool.%s.false=is-not-%s\n", code, field);
+					String.format("#panl.bool.%s.true=is-%s\n", lpseCode, solrFieldName) +
+					String.format("#panl.bool.%s.false=is-not-%s\n", lpseCode, solrFieldName);
 		}
 
 		if (solrFieldType.equals("solr.DatePointField")) {
 			dateFieldText = "# Because this is a Date field, there are special queries that can be applied\n" +
 					"# for a date range. You can query for results up to NOW, or from NOW onwards.\n" +
 					"# Either, or both of these properties may be set\n" +
-					String.format("#panl.date.%s.previous=previous \n", code) +
-					String.format("#panl.date.%s.next=next \n", code) +
-					String.format("#panl.date.%s.years=\\ years\n", code) +
-					String.format("#panl.date.%s.months=\\ months\n", code) +
-					String.format("#panl.date.%s.days=\\ days\n", code) +
-					String.format("#panl.date.%s.hours=\\ hours\n", code);
+					String.format("#panl.date.%s.previous=previous \n", lpseCode) +
+					String.format("#panl.date.%s.next=next \n", lpseCode) +
+					String.format("#panl.date.%s.years=\\ years\n", lpseCode) +
+					String.format("#panl.date.%s.months=\\ months\n", lpseCode) +
+					String.format("#panl.date.%s.days=\\ days\n", lpseCode) +
+					String.format("#panl.date.%s.hours=\\ hours\n", lpseCode);
 		}
 
 		// TODO - add in all of the properties
-		return (String.format("\n# %s\n", schemaXml) +
-				String.format("panl.facet.%s=%s\n", code, field) +
-				String.format("panl.name.%s=%s\n", code, getPrettyName(field)) +
-				String.format("panl.type.%s=%s\n", code, solrFieldType) +
+		return (String.format("\n# %s\n", schemaXmlLine) +
+				String.format("panl.facet.%s=%s\n", lpseCode, solrFieldName) +
+				String.format("panl.name.%s=%s\n", lpseCode, getPrettyName(solrFieldName)) +
+				String.format("panl.type.%s=%s\n", lpseCode, solrFieldType) +
 				"# The following two properties are optional and the values should be changed\n" +
-				String.format("#panl.prefix.%s=prefix\n", code) +
-				String.format("#panl.suffix.%s=suffix\n", code) +
+				String.format("#panl.prefix.%s=prefix\n", lpseCode) +
+				String.format("#panl.suffix.%s=suffix\n", lpseCode) +
 				booleanFieldText +
 				dateFieldText
 		);
 	}
 
-	public String getCode() {
-		return (code);
+	public String getLpseCode() {
+		return (lpseCode);
 	}
 }

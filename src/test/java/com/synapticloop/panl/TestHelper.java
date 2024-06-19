@@ -1,7 +1,7 @@
 package com.synapticloop.panl;
 
 import com.synapticloop.panl.exception.PanlServerException;
-import com.synapticloop.panl.generator.bean.Collection;
+import com.synapticloop.panl.generator.bean.PanlCollection;
 import com.synapticloop.panl.server.client.PanlCloudSolrClient;
 import com.synapticloop.panl.server.handler.CollectionRequestHandler;
 import com.synapticloop.panl.server.handler.fielderiser.field.BaseField;
@@ -99,7 +99,7 @@ public class TestHelper {
 	}
 
 	public static LpseTokeniser getLpseTokeniser(String uriPath) {
-		return (new LpseTokeniser(uriPath, Collection.CODES_AND_METADATA, true));
+		return (new LpseTokeniser(uriPath, PanlCollection.CODES_AND_METADATA, true));
 	}
 
 	public static Properties getTestProperties(String propertiesName) throws IOException {

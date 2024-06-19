@@ -1,7 +1,7 @@
 package com.synapticloop.panl.server.handler.tokeniser.token;
 
 import com.synapticloop.panl.TestHelper;
-import com.synapticloop.panl.generator.bean.Collection;
+import com.synapticloop.panl.generator.bean.PanlCollection;
 import com.synapticloop.panl.server.handler.properties.CollectionProperties;
 import com.synapticloop.panl.server.handler.tokeniser.LpseTokeniser;
 import com.synapticloop.panl.server.handler.tokeniser.token.facet.FacetLpseToken;
@@ -62,7 +62,7 @@ public class FacetLpseRangeTokenTest {
 	private void getLpseToken(String propertiesLocation, String uriPath, String lpsePath, int from, int to) {
 		CollectionProperties collectionProperties = TestHelper.getCollectionProperties(propertiesLocation);
 		StringTokenizer stringTokenizer = new StringTokenizer(uriPath, "/", false);
-		LpseTokeniser lpseTokeniser = new LpseTokeniser(lpsePath, Collection.CODES_AND_METADATA, true);
+		LpseTokeniser lpseTokeniser = new LpseTokeniser(lpsePath, PanlCollection.CODES_AND_METADATA, true);
 		String lpseToken = lpseTokeniser.nextToken();
 		FacetLpseToken facetLpseToken = (FacetLpseToken) LpseToken.getLpseToken(
 				collectionProperties,

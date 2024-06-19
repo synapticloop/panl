@@ -25,7 +25,7 @@ package com.synapticloop.panl.server.handler;
  */
 
 import com.synapticloop.panl.exception.PanlServerException;
-import com.synapticloop.panl.generator.bean.Collection;
+import com.synapticloop.panl.generator.bean.PanlCollection;
 import com.synapticloop.panl.server.client.PanlClient;
 import com.synapticloop.panl.server.handler.helper.CollectionHelper;
 import com.synapticloop.panl.server.handler.processor.*;
@@ -379,7 +379,7 @@ public class CollectionRequestHandler {
 		if (lpseUriPath.length > 3) {
 			String lpseEncoding = lpseUriPath[lpseUriPath.length - 1];
 
-			LpseTokeniser lpseTokeniser = new LpseTokeniser(lpseEncoding, Collection.CODES_AND_METADATA, true);
+			LpseTokeniser lpseTokeniser = new LpseTokeniser(lpseEncoding, PanlCollection.CODES_AND_METADATA, true);
 
 			StringTokenizer valueTokeniser = new StringTokenizer(uri, "/", false);
 			// we need to skip the first two - as they will be the collection and the

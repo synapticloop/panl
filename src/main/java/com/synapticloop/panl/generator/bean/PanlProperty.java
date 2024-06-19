@@ -64,8 +64,4 @@ public class PanlProperty {
 			return (panlPropertyName + "=" + panlPropertyValue);
 		}
 	}
-
-	public void setSolrClassName(String solrClassName) {
-		this.solrClassName = solrClassName;
-	}
 }
