@@ -25,7 +25,6 @@ package com.synapticloop.panl.server.handler.tokeniser.token.facet;
  */
 
 import com.synapticloop.panl.server.handler.fielderiser.field.facet.PanlBooleanFacetField;
-import com.synapticloop.panl.server.handler.fielderiser.field.facet.PanlDateFacetField;
 import com.synapticloop.panl.server.handler.properties.CollectionProperties;
 import com.synapticloop.panl.server.handler.tokeniser.LpseTokeniser;
 import com.synapticloop.panl.server.handler.tokeniser.token.LpseToken;

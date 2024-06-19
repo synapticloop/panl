@@ -137,7 +137,6 @@ public class TestHelper {
 		return (panlTokenMap);
 	}
 
-	@SuppressWarnings({"rawtypes", "unchecked"})
 	public static QueryResponse getMockedQueryResponse(long numFound, boolean numFoundExact) {
 		return (getMockedQueryResponse(new ArrayList<>(), numFound, numFoundExact));
 	}
