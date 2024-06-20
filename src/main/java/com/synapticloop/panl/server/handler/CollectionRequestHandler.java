@@ -36,7 +36,7 @@ import com.synapticloop.panl.server.handler.fielderiser.field.BaseField;
 import com.synapticloop.panl.server.handler.tokeniser.LpseTokeniser;
 import com.synapticloop.panl.server.handler.tokeniser.token.LpseToken;
 import com.synapticloop.panl.server.handler.tokeniser.token.param.NumRowsLpseToken;
-import com.synapticloop.panl.server.handler.tokeniser.token.param.PageLpseToken;
+import com.synapticloop.panl.server.handler.tokeniser.token.param.PageNumLpseToken;
 import com.synapticloop.panl.server.handler.tokeniser.token.param.QueryLpseToken;
 import org.apache.solr.client.solrj.SolrClient;
 import org.apache.solr.client.solrj.SolrQuery;
@@ -197,8 +197,8 @@ public class CollectionRequestHandler {
 
 				if (lpseToken instanceof NumRowsLpseToken) {
 					numRows = ((NumRowsLpseToken) lpseToken).getNumRows();
-				} else if (lpseToken instanceof PageLpseToken) {
-					pageNum = ((PageLpseToken) lpseToken).getPageNum();
+				} else if (lpseToken instanceof PageNumLpseToken) {
+					pageNum = ((PageNumLpseToken) lpseToken).getPageNum();
 				}
 			}
 

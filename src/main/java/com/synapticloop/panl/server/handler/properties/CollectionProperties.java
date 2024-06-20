@@ -32,6 +32,7 @@ import com.synapticloop.panl.server.handler.fielderiser.field.*;
 import com.synapticloop.panl.server.handler.fielderiser.field.facet.PanlBooleanFacetField;
 import com.synapticloop.panl.server.handler.fielderiser.field.facet.PanlDateFacetField;
 import com.synapticloop.panl.server.handler.fielderiser.field.facet.PanlFacetField;
+import com.synapticloop.panl.server.handler.fielderiser.field.facet.PanlOrFacetField;
 import com.synapticloop.panl.server.handler.fielderiser.field.param.*;
 import com.synapticloop.panl.server.handler.helper.PropertyHelper;
 import org.json.JSONArray;
@@ -239,7 +240,7 @@ public class CollectionProperties {
 		// finally - do we have any or fields
 		for (String key : lpseFieldLookup.keySet()) {
 			BaseField baseField = lpseFieldLookup.get(key);
-			if (baseField.getIsOrFacet()) {
+			if (baseField instanceof PanlOrFacetField) {
 				this.hasOrFacetFields = true;
 				break;
 			}
@@ -396,6 +397,8 @@ public class CollectionProperties {
 			String lpseCode = panlFieldKey.substring(panlFieldKey.lastIndexOf(".") + 1);
 			// now we need to know the type of the facetField
 			String solrFieldType = properties.getProperty(PROPERTY_KEY_PANL_TYPE + lpseCode, null);
+			boolean isOrFacet = properties.getProperty(PROPERTY_KEY_PANL_OR_FACET + lpseCode, "false").equals("true");
+			boolean isRangeFacet = properties.getProperty(PROPERTY_KEY_PANL_RANGE_FACET + lpseCode, "false").equals("true");
 
 			PanlFacetField facetField;
 			if(TYPE_SOLR_DATE_POINT_FIELD.equals(solrFieldType)) {
@@ -404,18 +407,20 @@ public class CollectionProperties {
 			} else if(TYPE_SOLR_BOOL_FIELD.equals(solrFieldType)) {
 				facetField = new PanlBooleanFacetField(lpseCode, panlFieldKey, properties, solrCollection, lpseLength);
 				LPSE_CODE_BOOLEAN_FACET_MAP.put(lpseCode, (PanlBooleanFacetField) facetField);
+			} else if(isOrFacet) {
+				facetField = new PanlOrFacetField(lpseCode, panlFieldKey, properties, solrCollection, lpseLength);
+				PANL_CODE_OR_FIELDS.add(lpseCode);
 			} else {
 				facetField = new PanlFacetField(lpseCode, panlFieldKey, properties, solrCollection, lpseLength);
 			}
+
+			// we need to determine whether it is an OR facet
+
 
 			FACET_FIELDS.add(facetField);
 			LPSE_FACET_FIELDS.add(facetField.getLpseCode());
 
 			lpseFieldLookup.put(lpseCode, facetField);
-
-			if (facetField.getIsOrFacet()) {
-				PANL_CODE_OR_FIELDS.add(lpseCode);
-			}
 
 			if (facetField.getIsRangeFacet()) {
 				PANL_CODE_RANGE_FIELDS.add(lpseCode);
@@ -675,13 +680,13 @@ public class CollectionProperties {
 		return (null);
 	}
 
-	public boolean getPanlIncludeSingleFacets() {
-		return (panlIncludeSingleFacets);
-	}
-
-	public boolean getPanlIncludeSameNumberFacets() {
-		return (panlIncludeSameNumberFacets);
-	}
+//	public boolean getPanlIncludeSingleFacets() {
+//		return (panlIncludeSingleFacets);
+//	}
+//
+//	public boolean getPanlIncludeSameNumberFacets() {
+//		return (panlIncludeSameNumberFacets);
+//	}
 
 	public List<String> getSortFieldLpseCodes() {
 		return (lpseCodeSortFields);

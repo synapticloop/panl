@@ -54,6 +54,7 @@ public class AvailableProcessor extends Processor {
 		JSONObject jsonObject = new JSONObject();
 
 		List<LpseToken> lpseTokens = new ArrayList<>();
+
 		for (BaseField lpseField : collectionProperties.getLpseFields()) {
 			// These codes are ignored, just carry on
 			if(collectionProperties.getIsIgnoredLpseCode(lpseField.getLpseCode())) {
@@ -73,6 +74,7 @@ public class AvailableProcessor extends Processor {
 			if(collectionProperties.getIsIgnoredLpseCode(lpseToken.getLpseCode())) {
 				continue;
 			}
+
 			if (null != panlLpseValue) {
 				String lpseCode = lpseToken.getLpseCode();
 				Set<String> valueSet = panlLookupMap.get(lpseCode);
@@ -89,29 +91,32 @@ public class AvailableProcessor extends Processor {
 		Map<String, JSONObject> panlFacetOrderMap = new LinkedHashMap<>();
 
 		for (FacetField facetField : queryResponse.getFacetFields()) {
-			// if we have an or Facet and this is an or facet, then we keep all
-			// values, otherwise we strip out the xero values
-
 			// These codes are ignored, just carry on
 			if(collectionProperties.getIsIgnoredLpseCode(collectionProperties.getPanlCodeFromSolrFacetFieldName(facetField.getName()))) {
 				continue;
 			}
 
+			String lpseCode = collectionProperties.getPanlCodeFromSolrFacetFieldName(facetField.getName());
+			BaseField baseField = collectionProperties.getLpseField(lpseCode);
+
 			if (facetField.getValueCount() != 0) {
 				JSONObject facetObject = new JSONObject();
-				facetObject.put(JSON_KEY_FACET_NAME, facetField.getName());
-				facetObject.put(JSON_KEY_NAME, collectionProperties.getPanlNameFromSolrFieldName(facetField.getName()));
+				baseField.appendAvailableFacetObject(facetObject);
+				if(baseField.appendAvailableValues(facetObject, collectionProperties, panlTokenMap, facetField.getValues(), numFound, numFoundExact)) {
+					panlFacetOrderMap.put(lpseCode, facetObject);
+				}
+
+				baseField.addToAdditionObject(facetObject, panlTokenMap);
+
+				// RANGE FACETS NEED TO BE REMOVED
+				boolean isRangeFacetField = collectionProperties.getIsRangeFacetField(lpseCode);
+				if(isRangeFacetField) {
+					facetObject.put(JSON_KEY_IS_RANGE_FACET, isRangeFacetField);
+				}
 
 				JSONArray facetValueArrays = new JSONArray();
-				String lpseCode = collectionProperties.getPanlCodeFromSolrFacetFieldName(facetField.getName());
-				facetObject.put(JSON_KEY_IS_OR_FACET, collectionProperties.getIsOrFacetField(lpseCode));
-				boolean isRangeFacetField = collectionProperties.getIsRangeFacetField(lpseCode);
-				facetObject.put(JSON_KEY_IS_RANGE_FACET, isRangeFacetField);
 
-				BaseField lpseField = collectionProperties.getLpseField(lpseCode);
-				lpseField.addToAdditionObject(facetObject, panlTokenMap);
-
-				facetObject.put(JSON_KEY_PANL_CODE, lpseCode);
+				// TODO - this need to be a RANGE facet
 				List<FacetField.Count> values = facetField.getValues();
 				for (FacetField.Count value : values) {
 					// at this point - we need to see whether we already have the 'value'
@@ -129,7 +134,7 @@ public class AvailableProcessor extends Processor {
 					// if we have an or Facet and this is an or facet, then we keep all
 					// values, otherwise we strip out the xero values
 					if (collectionProperties.getHasOrFacetFields()) {
-						if (!lpseField.getIsOrFacet()) {
+						if (!baseField.getIsOrFacet()) {
 							if (value.getCount() == 0) {
 								shouldAdd = false;
 							}
@@ -139,7 +144,7 @@ public class AvailableProcessor extends Processor {
 					// also, if the count of the number of found results is the same as
 					// the number of the count of the facet - then we may not need to
 					// include it
-					if (!collectionProperties.getPanlIncludeSameNumberFacets() &&
+					if (!baseField.getPanlIncludeSameNumberFacets() &&
 							numFound == value.getCount() &&
 							numFoundExact) {
 						shouldAdd = false;
@@ -149,7 +154,7 @@ public class AvailableProcessor extends Processor {
 						JSONObject facetValueObject = new JSONObject();
 						facetValueObject.put(JSON_KEY_VALUE, valueName);
 						facetValueObject.put(JSON_KEY_COUNT, value.getCount());
-						facetValueObject.put(JSON_KEY_ENCODED, lpseField.getEncodedPanlValue(valueName));
+						facetValueObject.put(JSON_KEY_ENCODED, baseField.getEncodedPanlValue(valueName));
 						facetValueArrays.put(facetValueObject);
 					}
 				}
@@ -161,20 +166,22 @@ public class AvailableProcessor extends Processor {
 						shouldIncludeFacet = false;
 						break;
 					case 1:
-						shouldIncludeFacet = collectionProperties.getPanlIncludeSingleFacets();
+						shouldIncludeFacet = baseField.getPanlIncludeSingleFacets();
 						break;
 				}
 
 				// if we don't have any values for this facet, don't put it in
 
 				if (shouldIncludeFacet) {
-					facetObject.put(JSON_KEY_VALUES, facetValueArrays);
-					if (null != lpseCode) {
-						facetObject.put(JSON_KEY_URIS,
-								getAdditionURIObject(
-										collectionProperties.getLpseField(lpseCode),
-										panlTokenMap,
-										false));
+					if(null != facetObject.getJSONArray(JSON_KEY_VALUES)) {
+						facetObject.put(JSON_KEY_VALUES, facetValueArrays);
+						if (null != lpseCode) {
+							facetObject.put(JSON_KEY_URIS,
+									getAdditionURIObject(
+											collectionProperties.getLpseField(lpseCode),
+											panlTokenMap,
+											false));
+						}
 					}
 
 					panlFacetOrderMap.put(lpseCode, facetObject);

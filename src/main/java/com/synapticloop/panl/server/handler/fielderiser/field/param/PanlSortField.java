@@ -30,6 +30,7 @@ import com.synapticloop.panl.server.handler.properties.CollectionProperties;
 import com.synapticloop.panl.server.handler.tokeniser.token.LpseToken;
 import com.synapticloop.panl.server.handler.tokeniser.token.param.SortLpseToken;
 import org.apache.solr.client.solrj.SolrQuery;
+import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -82,10 +83,10 @@ public class PanlSortField extends BaseField {
 
 	@Override public String getLpseCode(LpseToken token, CollectionProperties collectionProperties) {
 		StringBuilder sb = new StringBuilder(token.getLpseCode());
-		SortLpseToken lpseToken = (SortLpseToken) token;
-		if(lpseToken.getIsValid()) {
-			sb.append(lpseToken.getLpseSortCode());
-			sb.append(lpseToken.getSortOrderUriKey());
+		SortLpseToken sortLpseToken = (SortLpseToken) token;
+		if(sortLpseToken.getIsValid()) {
+			sb.append(sortLpseToken.getLpseSortCode());
+			sb.append(sortLpseToken.getSortOrderUriKey());
 		} else {
 			sb.append("-");
 		}
@@ -137,4 +138,9 @@ public class PanlSortField extends BaseField {
 
 		solrQuery.setSorts(sortClauses);
 	}
+
+	@Override public void appendAvailableObjectInternal(JSONObject jsonObject) {
+
+	}
+
 }

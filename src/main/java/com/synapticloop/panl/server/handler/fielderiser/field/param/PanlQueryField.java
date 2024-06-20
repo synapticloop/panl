@@ -28,6 +28,7 @@ import com.synapticloop.panl.exception.PanlServerException;
 import com.synapticloop.panl.server.handler.fielderiser.field.BaseField;
 import com.synapticloop.panl.server.handler.tokeniser.token.LpseToken;
 import org.apache.solr.client.solrj.SolrQuery;
+import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -44,16 +45,7 @@ public class PanlQueryField extends BaseField {
 		logDetails();
 	}
 
-	@Override
-	public Logger getLogger() {
-		return(LOGGER);
-	}
 
-	@Override public List<String> explainAdditional() {
-		List<String> explanations = new ArrayList<>();
-		explanations.add("The text query which maps to the 'q' parameter of Solr.");
-		return(explanations);
-	}
 
 	/**
 	 * <p>We only apply the first query</p>
@@ -67,4 +59,17 @@ public class PanlQueryField extends BaseField {
 		}
 	}
 
+	@Override public Logger getLogger() {
+		return(LOGGER);
+	}
+
+	@Override public List<String> explainAdditional() {
+		List<String> explanations = new ArrayList<>();
+		explanations.add("The text query which maps to the 'q' parameter of Solr.");
+		return(explanations);
+	}
+
+	@Override public void appendAvailableObjectInternal(JSONObject jsonObject) {
+
+	}
 }

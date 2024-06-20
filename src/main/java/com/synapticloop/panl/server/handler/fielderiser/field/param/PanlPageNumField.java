@@ -25,10 +25,10 @@ package com.synapticloop.panl.server.handler.fielderiser.field.param;
  */
 
 import com.synapticloop.panl.exception.PanlServerException;
-import com.synapticloop.panl.server.handler.fielderiser.field.BaseField;
+import com.synapticloop.panl.server.handler.fielderiser.field.BasePrefixSuffixField;
 import com.synapticloop.panl.server.handler.properties.CollectionProperties;
 import com.synapticloop.panl.server.handler.tokeniser.token.LpseToken;
-import com.synapticloop.panl.server.handler.tokeniser.token.param.PageLpseToken;
+import com.synapticloop.panl.server.handler.tokeniser.token.param.PageNumLpseToken;
 import org.apache.solr.client.solrj.SolrQuery;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -38,14 +38,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 
-public class PanlPageNumField extends BaseField {
+public class PanlPageNumField extends BasePrefixSuffixField {
 	private static final Logger LOGGER = LoggerFactory.getLogger(PanlPageNumField.class);
 
 	public PanlPageNumField(String lpseCode, String propertyKey, Properties properties, String solrCollection) throws PanlServerException {
-		super(lpseCode, properties, propertyKey, solrCollection);
-
-		populateParamSuffixAndPrefix();
-
+		super(lpseCode, propertyKey, properties, solrCollection);
 		logDetails();
 	}
 
@@ -68,8 +65,8 @@ public class PanlPageNumField extends BaseField {
 			// get the first token out of the list - there can be only one, so we
 			// choose the first one.
 
-			PageLpseToken pageLpseToken = (PageLpseToken) panlTokenMap.get(lpseCode).get(0);
-			sb.append(getEncodedPanlValue(Integer.toString(pageLpseToken.getPageNum())));
+			PageNumLpseToken pageNumLpseToken = (PageNumLpseToken) panlTokenMap.get(lpseCode).get(0);
+			sb.append(getEncodedPanlValue(Integer.toString(pageNumLpseToken.getPageNum())));
 		} else {
 			sb.append(getEncodedPanlValue("1"));
 		}
@@ -77,6 +74,7 @@ public class PanlPageNumField extends BaseField {
 		sb.append("/");
 		return (sb.toString());
 	}
+
 
 	@Override
 	public String getCanonicalLpseCode(Map<String, List<LpseToken>> panlTokenMap, CollectionProperties collectionProperties) {
@@ -93,22 +91,20 @@ public class PanlPageNumField extends BaseField {
 	 * @return
 	 */
 	public String getResetUriPath(Map<String, List<LpseToken>> panlTokenMap, CollectionProperties collectionProperties) {
-		return("");
-//		StringBuilder sb = new StringBuilder();
-//		if (panlTokenMap.containsKey(lpseCode)) {
-//			sb.append(getEncodedPanlValue("1"));
-//			sb.append("/");
-//		}
-//
-//		return (sb.toString());
+		StringBuilder sb = new StringBuilder();
+		if (panlTokenMap.containsKey(lpseCode)) {
+			sb.append(getEncodedPanlValue("1"));
+			sb.append("/");
+		}
+
+		return (sb.toString());
 	}
 
 	public String getResetLpseCode(Map<String, List<LpseToken>> panlTokenMap, CollectionProperties collectionProperties) {
-		return("");
-//		if (panlTokenMap.containsKey(lpseCode)) {
-//			return (lpseCode);
-//		}
-//		return ("");
+		if (panlTokenMap.containsKey(lpseCode)) {
+			return (lpseCode);
+		}
+		return ("");
 	}
 
 	@Override public Logger getLogger() {

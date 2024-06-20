@@ -30,6 +30,7 @@ import com.synapticloop.panl.server.handler.properties.CollectionProperties;
 import com.synapticloop.panl.server.handler.tokeniser.token.LpseToken;
 import com.synapticloop.panl.server.handler.tokeniser.token.param.QueryOperandLpseToken;
 import org.apache.solr.client.solrj.SolrQuery;
+import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -40,6 +41,7 @@ import java.util.Properties;
 
 public class PanlQueryOperandField extends BaseField {
 	private static final Logger LOGGER = LoggerFactory.getLogger(PanlQueryOperandField.class);
+	public static final String SOLR_PARAM_Q_OP = "q.op";
 
 	public PanlQueryOperandField(String lpseCode, String propertyKey, Properties properties, String solrCollection) throws PanlServerException {
 		super(lpseCode, properties, propertyKey, solrCollection);
@@ -102,7 +104,7 @@ public class PanlQueryOperandField extends BaseField {
 
 	public void applyToQueryInternal(SolrQuery solrQuery, List<LpseToken> lpseTokenList) {
 		if (!lpseTokenList.isEmpty()) {
-			solrQuery.setParam("q.op", ((QueryOperandLpseToken) lpseTokenList.get(0)).getQOpValue());
+			solrQuery.setParam(SOLR_PARAM_Q_OP, ((QueryOperandLpseToken) lpseTokenList.get(0)).getQOpValue());
 		}
 	}
 
@@ -128,6 +130,10 @@ public class PanlQueryOperandField extends BaseField {
 	@Override
 	public String getURIPath(Map<String, List<LpseToken>> panlTokenMap, CollectionProperties collectionProperties) {
 		return ("");
+	}
+
+	@Override public void appendAvailableObjectInternal(JSONObject jsonObject) {
+
 	}
 
 }

@@ -26,10 +26,12 @@ package com.synapticloop.panl.server.handler.fielderiser.field.param;
 
 import com.synapticloop.panl.exception.PanlServerException;
 import com.synapticloop.panl.server.handler.fielderiser.field.BaseField;
+import com.synapticloop.panl.server.handler.fielderiser.field.BasePrefixSuffixField;
 import com.synapticloop.panl.server.handler.properties.CollectionProperties;
 import com.synapticloop.panl.server.handler.tokeniser.token.LpseToken;
 import com.synapticloop.panl.server.handler.tokeniser.token.param.NumRowsLpseToken;
 import org.apache.solr.client.solrj.SolrQuery;
+import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -38,13 +40,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 
-public class PanlNumRowsField extends BaseField {
+public class PanlNumRowsField extends BasePrefixSuffixField {
 	private static final Logger LOGGER = LoggerFactory.getLogger(PanlNumRowsField.class);
 
 	public PanlNumRowsField(String lpseCode, String propertyKey, Properties properties, String solrCollection) throws PanlServerException {
-		super(lpseCode, properties, propertyKey, solrCollection);
-
-		populateParamSuffixAndPrefix();
+		super(lpseCode, propertyKey, properties, solrCollection);
 
 		logDetails();
 	}

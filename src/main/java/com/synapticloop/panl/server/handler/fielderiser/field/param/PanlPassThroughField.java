@@ -29,6 +29,7 @@ import com.synapticloop.panl.server.handler.fielderiser.field.BaseField;
 import com.synapticloop.panl.server.handler.properties.CollectionProperties;
 import com.synapticloop.panl.server.handler.tokeniser.token.LpseToken;
 import org.apache.solr.client.solrj.SolrQuery;
+import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -39,14 +40,13 @@ import java.util.Properties;
 
 public class PanlPassThroughField extends BaseField {
 	private static final Logger LOGGER = LoggerFactory.getLogger(PanlPassThroughField.class);
+	public static final String PROPERTY_KEY_PANL_PARAM_PASSTHROUGH_CANONICAL = "panl.param.passthrough.canonical";
 	private final boolean panlParamPassThroughCanonical;
 
 	public PanlPassThroughField(String lpseCode, String propertyKey, Properties properties, String solrCollection) throws PanlServerException {
 		super(lpseCode, properties, propertyKey, solrCollection);
 
-		this.panlParamPassThroughCanonical = properties.getProperty("panl.param.passthrough.canonical", "false").equals("true");
-		populateParamSuffixAndPrefix();
-
+		this.panlParamPassThroughCanonical = properties.getProperty(PROPERTY_KEY_PANL_PARAM_PASSTHROUGH_CANONICAL, "false").equals("true");
 		logDetails();
 	}
 
@@ -100,6 +100,10 @@ public class PanlPassThroughField extends BaseField {
 
 	public void applyToQueryInternal(SolrQuery solrQuery, List<LpseToken> lpseTokenList) {
 		// do nothing
+	}
+
+	@Override public void appendAvailableObjectInternal(JSONObject jsonObject) {
+
 	}
 
 }

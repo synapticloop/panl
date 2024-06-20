@@ -24,11 +24,13 @@ package com.synapticloop.panl.server.handler.tokeniser.token;
  *  IN THE SOFTWARE.
  */
 
+import com.synapticloop.panl.server.handler.fielderiser.field.facet.PanlOrFacetField;
 import com.synapticloop.panl.server.handler.properties.CollectionProperties;
 import com.synapticloop.panl.server.handler.tokeniser.LpseTokeniser;
 import com.synapticloop.panl.server.handler.tokeniser.token.facet.BooleanFacetLpseToken;
 import com.synapticloop.panl.server.handler.tokeniser.token.facet.DateFacetLpseToken;
 import com.synapticloop.panl.server.handler.tokeniser.token.facet.FacetLpseToken;
+import com.synapticloop.panl.server.handler.tokeniser.token.facet.OrFacetLpseToken;
 import com.synapticloop.panl.server.handler.tokeniser.token.param.*;
 
 import java.util.StringTokenizer;
@@ -122,7 +124,7 @@ public abstract class LpseToken {
 					lpseToken,
 					valueTokeniser));
 		} else if (lpseToken.equals(collectionProperties.getPanlParamPage())) {
-			return (new PageLpseToken(
+			return (new PageNumLpseToken(
 					collectionProperties,
 					lpseToken,
 					valueTokeniser));
@@ -154,6 +156,12 @@ public abstract class LpseToken {
 						valueTokeniser));
 			} else if(collectionProperties.getIsBooleanFacetField(lpseCode)) {
 				return(new BooleanFacetLpseToken(
+						collectionProperties,
+						lpseCode,
+						lpseTokeniser,
+						valueTokeniser));
+			} else if(collectionProperties.getIsOrFacetField(lpseCode)) {
+				return(new OrFacetLpseToken(
 						collectionProperties,
 						lpseCode,
 						lpseTokeniser,

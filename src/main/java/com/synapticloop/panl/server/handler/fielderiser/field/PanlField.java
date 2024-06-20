@@ -28,6 +28,7 @@ import com.synapticloop.panl.exception.PanlServerException;
 import com.synapticloop.panl.server.handler.properties.CollectionProperties;
 import com.synapticloop.panl.server.handler.tokeniser.token.LpseToken;
 import org.apache.solr.client.solrj.SolrQuery;
+import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -72,6 +73,10 @@ public class PanlField extends BaseField {
 
 	public void applyToQueryInternal(SolrQuery solrQuery, List<LpseToken> lpseTokenList) {
 		// do nothing
+	}
+
+	@Override public void appendAvailableObjectInternal(JSONObject jsonObject) {
+
 	}
 
 }

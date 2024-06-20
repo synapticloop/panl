@@ -26,10 +26,12 @@ package com.synapticloop.panl.server.handler.fielderiser.field.facet;
 
 import com.synapticloop.panl.exception.PanlServerException;
 import com.synapticloop.panl.server.handler.fielderiser.field.BaseField;
+import com.synapticloop.panl.server.handler.fielderiser.field.BasePrefixSuffixField;
 import com.synapticloop.panl.server.handler.properties.CollectionProperties;
 import com.synapticloop.panl.server.handler.tokeniser.token.facet.FacetLpseToken;
 import com.synapticloop.panl.server.handler.tokeniser.token.LpseToken;
 import org.apache.solr.client.solrj.SolrQuery;
+import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -48,7 +50,7 @@ import java.util.Properties;
  *   <li>A DATE facet</li>
  * </ol>
  */
-public class PanlFacetField extends BaseField {
+public class PanlFacetField extends BasePrefixSuffixField {
 	private static final Logger LOGGER = LoggerFactory.getLogger(PanlFacetField.class);
 
 	protected String solrFieldType;
@@ -59,13 +61,12 @@ public class PanlFacetField extends BaseField {
 		populateSolrFieldType();
 		validateProperties();
 
-		populateSuffixAndPrefix();
 		populateSolrFieldTypeValidation();
 		populatePanlAndSolrFieldNames();
 
 		populateRanges();
 		// lastly, we are going to check to see whether this is an 'OR' field
-		populateFacetOr();
+//		populateFacetOr();
 
 		logDetails();
 	}
@@ -178,5 +179,9 @@ public class PanlFacetField extends BaseField {
 					facetLpseToken.getSolrField(),
 					facetLpseToken.getValue()));
 		}
+	}
+
+	@Override public void appendAvailableObjectInternal(JSONObject jsonObject) {
+
 	}
 }

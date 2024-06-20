@@ -31,6 +31,8 @@ import com.synapticloop.panl.server.handler.tokeniser.token.facet.FacetLpseToken
 import com.synapticloop.panl.server.handler.tokeniser.token.LpseToken;
 import com.synapticloop.panl.server.handler.tokeniser.token.facet.bean.FromToBean;
 import org.apache.solr.client.solrj.SolrQuery;
+import org.apache.solr.client.solrj.response.FacetField;
+import org.json.JSONArray;
 import org.json.JSONObject;
 import org.slf4j.Logger;
 
@@ -42,9 +44,13 @@ import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 
+import static com.synapticloop.panl.server.handler.processor.Processor.*;
 import static com.synapticloop.panl.server.handler.properties.CollectionProperties.PROPERTY_KEY_PANL_SORT_FIELDS;
 
 public abstract class BaseField {
+	public static final String PROPERTY_KEY_PANL_INCLUDE_SAME_NUMBER_FACETS = "panl.include.same.number.facets";
+	public static final String PROPERTY_KEY_PANL_INCLUDE_SINGLE_FACETS = "panl.include.single.facets";
+
 	public static final String PROPERTY_KEY_PANL_FIELD = "panl.field.";
 	public static final String PROPERTY_KEY_PANL_NAME = "panl.name.";
 	public static final String PROPERTY_KEY_PANL_FACET = "panl.facet.";
@@ -122,6 +128,9 @@ public abstract class BaseField {
 	private static final int VALIDATION_TYPE_DECIMAL = 2;
 	private static final int VALIDATION_TYPE_DATE = 3;
 
+	protected final boolean panlIncludeSingleFacets;
+	protected final boolean panlIncludeSameNumberFacets;
+
 	private int validationType;
 
 	public BaseField(
@@ -139,6 +148,9 @@ public abstract class BaseField {
 			String solrCollection,
 			int lpseLength) throws PanlServerException {
 
+		this.panlIncludeSingleFacets = properties.getProperty(PROPERTY_KEY_PANL_INCLUDE_SINGLE_FACETS, "false").equals("true");
+		this.panlIncludeSameNumberFacets = properties.getProperty(PROPERTY_KEY_PANL_INCLUDE_SAME_NUMBER_FACETS, "false").equals("true");
+
 		this.lpseCode = lpseCode;
 		this.properties = properties;
 		this.propertyKey = propertyKey;
@@ -150,24 +162,6 @@ public abstract class BaseField {
 
 			if (this.lpseCode.length() != lpseLength) {
 				throw new PanlServerException(propertyKey + " LPSE code of '" + this.lpseCode + "' has invalid lpse length of " + lpseCode.length() + " is of invalid length - should be " + lpseLength);
-			}
-		}
-	}
-
-	protected void populateFacetOr() throws PanlServerException {
-		this.isOrFacet = properties.getProperty(PROPERTY_KEY_PANL_OR_FACET + lpseCode, "false").equalsIgnoreCase("true");
-		if (this.isOrFacet) {
-			String propertyFacetMinCount = properties.getProperty(PROPERTY_KEY_SOLR_FACET_MIN_COUNT, null);
-			if (null != propertyFacetMinCount) {
-				try {
-					int minCount = Integer.parseInt(propertyFacetMinCount);
-					if (minCount != 0) {
-						getLogger().warn("Property '{}' __MUST__ be set to zero for '{}{}' to be enabled.", PROPERTY_KEY_SOLR_FACET_MIN_COUNT, PROPERTY_KEY_PANL_OR_FACET, lpseCode);
-					}
-				} catch (NumberFormatException e) {
-					getLogger().error("Property '{}' __MUST__ be set.", PROPERTY_KEY_SOLR_FACET_MIN_COUNT);
-					throw new PanlServerException("Property " + PROPERTY_KEY_SOLR_FACET_MIN_COUNT + " was not set.");
-				}
 			}
 		}
 	}
@@ -275,7 +269,7 @@ public abstract class BaseField {
 
 	/**
 	 * <p>Populate the names for both Solr and Panl. THe Solr name is the field
-	 * name.  THe Panl name is either set, or will default to the Solr field
+	 * name.  The Panl name is either set, or will default to the Solr field
 	 * name.</p>
 	 *
 	 * <p>The Panl name can be set to any string and can be little nicer than the
@@ -377,7 +371,7 @@ public abstract class BaseField {
 	 * @return the de-suffixed, de-prefixed, and de-replaced value.  This will
 	 * 		return <code>null</code> if it is invalid.
 	 */
-	public String getDecodedValue(String value) {
+	@Deprecated public String getDecodedValue(String value) {
 		String decodedValue = URLDecoder.decode(value, StandardCharsets.UTF_8);
 
 		if (hasValuePrefix) {
@@ -551,7 +545,7 @@ public abstract class BaseField {
 	 *
 	 * @return The validated value
 	 */
-	private String getValidatedValue(String temp) {
+	protected String getValidatedValue(String temp) {
 	// TODO - should change this to objects...
 		String replaced;
 		switch (this.validationType) {
@@ -969,4 +963,139 @@ public abstract class BaseField {
 			getLogger().warn("LPSE code '{}' has a property of '{}' which is invalid and should be removed.  (It has been ignored...)", lpseCode, propertyKey);
 		}
 	}
+
+	public boolean getPanlIncludeSingleFacets() {
+		return (panlIncludeSingleFacets);
+	}
+
+	public boolean getPanlIncludeSameNumberFacets() {
+		return (panlIncludeSameNumberFacets);
+	}
+
+
+	public static final String JSON_KEY_FACET_NAME = "facet_name";
+	public static final String JSON_KEY_NAME = "name";
+	public static final String JSON_KEY_PANL_CODE = "panl_code";
+	public static final String JSON_KEY_VALUE = "value";
+	public static final String JSON_KEY_COUNT = "count";
+	public static final String JSON_KEY_ENCODED = "encoded";
+	public static final String JSON_KEY_VALUES = "values";
+	public static final String JSON_KEY_URIS = "uris";
+
+
+
+	public void appendAvailableFacetObject(JSONObject jsonObject) {
+		jsonObject.put(JSON_KEY_FACET_NAME, this.solrFieldName);
+		jsonObject.put(JSON_KEY_NAME, this.panlFieldName);
+		jsonObject.put(JSON_KEY_PANL_CODE, this.lpseCode);
+
+		appendAvailableObjectInternal(jsonObject);
+	}
+
+	public boolean appendAvailableValues(
+			JSONObject facetObject,
+			CollectionProperties collectionProperties,
+			Map<String, List<LpseToken>> panlTokenMap,
+			List<FacetField.Count> values,
+			long numFound,
+			boolean numFoundExact) {
+
+		JSONArray facetValueArrays = new JSONArray();
+
+		for (FacetField.Count value : values) {
+			// at this point - we need to see whether we already have the 'value'
+			// as a facet - as there is no need to have it again
+			boolean shouldAdd = true;
+
+			String valueName = value.getName();
+
+			// if we have an or Facet and this is an or facet, then we keep all
+			// values, otherwise we strip out the xero values
+			if (value.getCount() == 0) {
+				continue;
+			}
+
+			// also, if the count of the number of found results is the same as
+			// the number of the count of the facet - then we may not need to
+			// include it
+			if (!panlIncludeSameNumberFacets &&
+					numFound == value.getCount() &&
+					numFoundExact) {
+				shouldAdd = false;
+			}
+
+			if (shouldAdd) {
+				JSONObject facetValueObject = new JSONObject();
+				facetValueObject.put(JSON_KEY_VALUE, valueName);
+				facetValueObject.put(JSON_KEY_COUNT, value.getCount());
+				facetValueObject.put(JSON_KEY_ENCODED, getEncodedPanlValue(valueName));
+				facetValueArrays.put(facetValueObject);
+			}
+		}
+
+		int length = facetValueArrays.length();
+		boolean shouldIncludeFacet = true;
+		switch (length) {
+			case 0:
+				shouldIncludeFacet = false;
+				break;
+			case 1:
+				shouldIncludeFacet = panlIncludeSingleFacets;
+				break;
+		}
+
+		// if we don't have any values for this facet, don't put it in
+
+		if (shouldIncludeFacet) {
+			facetObject.put(JSON_KEY_VALUES, facetValueArrays);
+			if (null != lpseCode) {
+				facetObject.put(JSON_KEY_URIS,
+						getAdditionURIObject(
+								collectionProperties,
+								this,
+								panlTokenMap));
+				return(true);
+			}
+		}
+		return(false);
+	}
+
+	protected JSONObject getAdditionURIObject(CollectionProperties collectionProperties, BaseField lpseField, Map<String, List<LpseToken>> panlTokenMap) {
+		String additionLpseCode = lpseField.getLpseCode();
+		JSONObject additionObject = new JSONObject();
+		StringBuilder lpseUri = new StringBuilder(FORWARD_SLASH);
+		StringBuilder lpseUriAfterMax = new StringBuilder();
+		StringBuilder lpseCode = new StringBuilder();
+
+		// TODO - clean up this logic
+		for (BaseField baseField : collectionProperties.getLpseFields()) {
+
+			if (panlTokenMap.containsKey(baseField.getLpseCode()) &&
+					!(baseField.getLpseCode().equals(additionLpseCode))) {
+
+				String resetUriPath = baseField.getResetUriPath(panlTokenMap, collectionProperties);
+				lpseUri.append(resetUriPath);
+
+				if(lpseUriAfterMax.length() != 0) {
+					lpseUriAfterMax.append(resetUriPath);
+				}
+
+				lpseCode.append(baseField.getResetLpseCode(panlTokenMap, collectionProperties));
+			}
+
+			if (baseField.getLpseCode().equals(additionLpseCode)) {
+
+				additionObject.put(JSON_KEY_BEFORE, lpseUri.toString());
+				lpseUri.setLength(0);
+				lpseCode.append(baseField.getLpseCode());
+
+				lpseUri.append(FORWARD_SLASH);
+			}
+		}
+
+		additionObject.put(JSON_KEY_AFTER, lpseUri.toString() + lpseCode.toString() + FORWARD_SLASH);
+		additionObject.put(JSON_KEY_AFTER_MAX_VALUE, lpseUriAfterMax.toString() + lpseCode.toString() + FORWARD_SLASH);
+		return (additionObject);
+	}
+	public abstract void appendAvailableObjectInternal(JSONObject jsonObject);
 }

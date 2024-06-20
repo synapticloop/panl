@@ -45,7 +45,7 @@ import java.util.*;
  *   <li>A regular facet,</li>
  *   <li>A RANGE facet,</li>
  *   <li>An OR facet, or</li>
- *   <li>A BOOLEAN facet</li>
+ *   <li>A BOOLEAN facet, or</li>
  *   <li>A DATE facet</li>
  * </ol>
  */

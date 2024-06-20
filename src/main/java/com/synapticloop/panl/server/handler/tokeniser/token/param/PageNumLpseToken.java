@@ -30,27 +30,25 @@ import com.synapticloop.panl.server.handler.tokeniser.token.LpseToken;
 
 import java.util.StringTokenizer;
 
-public class PageLpseToken extends LpseToken {
+public class PageNumLpseToken extends LpseToken {
 	private int pageNum = 0;
-	private final CollectionProperties collectionProperties;
-
-	public PageLpseToken(CollectionProperties collectionProperties, String lpseCode, StringTokenizer valueTokenizer) {
+	public PageNumLpseToken(CollectionProperties collectionProperties, String lpseCode, StringTokenizer valueTokenizer) {
 		super(lpseCode, collectionProperties);
-		this.collectionProperties = collectionProperties;
 
 		int pageNumTemp;
 
 		if (valueTokenizer.hasMoreTokens()) {
-			String pageNumTempString = "";
 			BaseField lpseField = collectionProperties.getLpseField(lpseCode);
 			if(null != lpseField) {
-				pageNumTempString = lpseField.getDecodedValue(valueTokenizer.nextToken());
+				this.originalValue = valueTokenizer.nextToken();
+				// TODO - only deprecated in the Basefield
+				this.value = lpseField.getDecodedValue(this.originalValue);
 			} else {
 				this.isValid = false;
 			}
 
 			try {
-				pageNumTemp = Integer.parseInt(pageNumTempString);
+				pageNumTemp = Integer.parseInt(this.value);
 			} catch (NumberFormatException e) {
 				isValid = false;
 				pageNumTemp = 1;
@@ -87,4 +85,5 @@ public class PageLpseToken extends LpseToken {
 	public int getPageNum() {
 		return (this.pageNum);
 	}
+
 }

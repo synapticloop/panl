@@ -28,7 +28,7 @@ import com.synapticloop.panl.server.handler.properties.CollectionProperties;
 import com.synapticloop.panl.server.handler.fielderiser.field.BaseField;
 import com.synapticloop.panl.server.handler.tokeniser.token.LpseToken;
 import com.synapticloop.panl.server.handler.tokeniser.token.param.NumRowsLpseToken;
-import com.synapticloop.panl.server.handler.tokeniser.token.param.PageLpseToken;
+import com.synapticloop.panl.server.handler.tokeniser.token.param.PageNumLpseToken;
 import org.apache.solr.client.solrj.response.QueryResponse;
 import org.apache.solr.common.SolrDocumentList;
 import org.json.JSONObject;
@@ -62,7 +62,7 @@ public class PaginationProcessor extends Processor {
 		String panlParamPageLpseCode = collectionProperties.getPanlParamPage();
 		lpseTokens = panlTokenMap.getOrDefault(panlParamPageLpseCode, new ArrayList<>());
 		if (!lpseTokens.isEmpty()) {
-			int pageNum = ((PageLpseToken) lpseTokens.get(0)).getPageNum();
+			int pageNum = ((PageNumLpseToken) lpseTokens.get(0)).getPageNum();
 			if (pageNum > 0) {
 				pageNumber = pageNum;
 			}
