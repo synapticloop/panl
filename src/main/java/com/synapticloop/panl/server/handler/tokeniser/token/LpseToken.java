@@ -27,10 +27,7 @@ package com.synapticloop.panl.server.handler.tokeniser.token;
 import com.synapticloop.panl.server.handler.fielderiser.field.facet.PanlOrFacetField;
 import com.synapticloop.panl.server.handler.properties.CollectionProperties;
 import com.synapticloop.panl.server.handler.tokeniser.LpseTokeniser;
-import com.synapticloop.panl.server.handler.tokeniser.token.facet.BooleanFacetLpseToken;
-import com.synapticloop.panl.server.handler.tokeniser.token.facet.DateFacetLpseToken;
-import com.synapticloop.panl.server.handler.tokeniser.token.facet.FacetLpseToken;
-import com.synapticloop.panl.server.handler.tokeniser.token.facet.OrFacetLpseToken;
+import com.synapticloop.panl.server.handler.tokeniser.token.facet.*;
 import com.synapticloop.panl.server.handler.tokeniser.token.param.*;
 
 import java.util.StringTokenizer;
@@ -166,9 +163,15 @@ public abstract class LpseToken {
 						lpseCode,
 						lpseTokeniser,
 						valueTokeniser));
+			} else if(collectionProperties.getIsRangeFacetField(lpseCode)) {
+				return(new RangeFacetLpseToken(
+						collectionProperties,
+						lpseCode,
+						lpseTokeniser,
+						valueTokeniser));
 			}
 
-			// now we have the facetField
+			// now we have the regular facetField
 			return (new FacetLpseToken(
 					collectionProperties,
 					lpseCode,

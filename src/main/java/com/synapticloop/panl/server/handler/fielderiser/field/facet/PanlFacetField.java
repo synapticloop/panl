@@ -86,16 +86,6 @@ public class PanlFacetField extends BasePrefixSuffixField {
 		return(explanations);
 	}
 
-	@Override public String getLpseCode(LpseToken token, CollectionProperties collectionProperties) {
-		if(isRangeFacet) {
-			FacetLpseToken facetLpseToken = (FacetLpseToken) token;
-			return(facetLpseToken.getLpseCode() +
-					(facetLpseToken.getHasInfix() ? "-" : "+") +
-					facetLpseToken.getLpseCode());
-		} else {
-			return (token.getLpseCode());
-		}
-	}
 
 	private void applyRangeFacetToQuery(SolrQuery solrQuery, List<LpseToken> lpseTokens) {
 		for (LpseToken lpseToken : lpseTokens) {

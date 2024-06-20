@@ -29,10 +29,7 @@ import com.synapticloop.panl.exception.PanlServerException;
 //import com.synapticloop.panl.server.handler.field.FacetField;
 //import com.synapticloop.panl.server.handler.field.MetaDataField;
 import com.synapticloop.panl.server.handler.fielderiser.field.*;
-import com.synapticloop.panl.server.handler.fielderiser.field.facet.PanlBooleanFacetField;
-import com.synapticloop.panl.server.handler.fielderiser.field.facet.PanlDateFacetField;
-import com.synapticloop.panl.server.handler.fielderiser.field.facet.PanlFacetField;
-import com.synapticloop.panl.server.handler.fielderiser.field.facet.PanlOrFacetField;
+import com.synapticloop.panl.server.handler.fielderiser.field.facet.*;
 import com.synapticloop.panl.server.handler.fielderiser.field.param.*;
 import com.synapticloop.panl.server.handler.helper.PropertyHelper;
 import org.json.JSONArray;
@@ -161,6 +158,7 @@ public class CollectionProperties {
 	private final Set<String> LPSE_URI_CODES = new HashSet<>();
 	private final Set<String> LPSE_IGNORED_URI_CODES = new HashSet<>();
 	private final List<BaseField> lpseFields = new ArrayList<>();
+	private final List<PanlRangeFacetField> rangeFields = new ArrayList<>();
 	private final Set<String> LPSE_METADATA = new HashSet<>();
 
 	private final Map<String, List<String>> resultFieldsMap = new HashMap<>();
@@ -410,6 +408,9 @@ public class CollectionProperties {
 			} else if(isOrFacet) {
 				facetField = new PanlOrFacetField(lpseCode, panlFieldKey, properties, solrCollection, lpseLength);
 				PANL_CODE_OR_FIELDS.add(lpseCode);
+			} else if(isRangeFacet) {
+				facetField = new PanlRangeFacetField(lpseCode, panlFieldKey, properties, solrCollection, lpseLength);
+				PANL_CODE_RANGE_FIELDS.add(lpseCode);
 			} else {
 				facetField = new PanlFacetField(lpseCode, panlFieldKey, properties, solrCollection, lpseLength);
 			}

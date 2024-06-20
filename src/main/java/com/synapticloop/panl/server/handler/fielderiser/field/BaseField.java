@@ -176,7 +176,7 @@ public abstract class BaseField {
 		// check for or facet and range facet
 		boolean orFacet = properties.getProperty(PROPERTY_KEY_PANL_OR_FACET + this.lpseCode, "false").equals("true");
 		boolean rangeFacet = properties.getProperty(PROPERTY_KEY_PANL_RANGE_FACET + this.lpseCode, "false").equals("true");
-		if(orFacet && rangeFacet) {
+		if (orFacet && rangeFacet) {
 			hasErrors = true;
 			getLogger().error("You __MAY_NOT__ set a facet to both OR and RANGE.  Properties: '{}{}' and '{}{}'.",
 					PROPERTY_KEY_PANL_OR_FACET,
@@ -185,15 +185,15 @@ public abstract class BaseField {
 					this.lpseCode);
 		}
 
-		if(rangeFacet) {
+		if (rangeFacet) {
 			String infix = properties.getProperty(PROPERTY_KEY_PANL_RANGE_INFIX + this.lpseCode, null);
-			if(null != infix) {
-				if(infix.equals("-")) {
+			if (null != infix) {
+				if (infix.equals("-")) {
 					hasErrors = true;
 					getLogger().error("You __MAY_NOT__ set an infix value to the minus character '-'.  Property: '{}{}'.",
 							PROPERTY_KEY_PANL_RANGE_INFIX,
 							this.lpseCode);
-				} else if(infix.contains("-")) {
+				} else if (infix.contains("-")) {
 					getLogger().warn("Setting an infix value that contains the minus character '-' __MAY__ cause parsing errors.  Property: '{}{}'.",
 							PROPERTY_KEY_PANL_RANGE_INFIX,
 							this.lpseCode);
@@ -201,7 +201,7 @@ public abstract class BaseField {
 			}
 		}
 
-		if(hasErrors) {
+		if (hasErrors) {
 			throw new PanlServerException("FATAL Property validation errors, not continuing.");
 		}
 	}
@@ -546,7 +546,7 @@ public abstract class BaseField {
 	 * @return The validated value
 	 */
 	protected String getValidatedValue(String temp) {
-	// TODO - should change this to objects...
+		// TODO - should change this to objects...
 		String replaced;
 		switch (this.validationType) {
 			case VALIDATION_TYPE_NUMBER:
@@ -757,7 +757,7 @@ public abstract class BaseField {
 						FacetLpseToken facetLpseToken = (FacetLpseToken) lpseToken;
 						if (facetLpseToken.getIsRangeToken()) {
 							sb.append(lpseToken.getLpseCode());
-							sb.append((facetLpseToken.getHasInfix() ? "-" : "+"));
+							sb.append((facetLpseToken.getHasMidfix() ? "-" : "+"));
 							sb.append(lpseToken.getLpseCode());
 						} else {
 							sb.append(lpseToken.getLpseCode());
@@ -959,7 +959,7 @@ public abstract class BaseField {
 	protected abstract void applyToQueryInternal(SolrQuery solrQuery, List<LpseToken> lpseTokenList);
 
 	protected void logWarnProperties(String lpseCode, String propertyKey) {
-		if(properties.containsKey(propertyKey)) {
+		if (properties.containsKey(propertyKey)) {
 			getLogger().warn("LPSE code '{}' has a property of '{}' which is invalid and should be removed.  (It has been ignored...)", lpseCode, propertyKey);
 		}
 	}
@@ -983,13 +983,19 @@ public abstract class BaseField {
 	public static final String JSON_KEY_URIS = "uris";
 
 
-
 	public void appendAvailableFacetObject(JSONObject jsonObject) {
 		jsonObject.put(JSON_KEY_FACET_NAME, this.solrFieldName);
 		jsonObject.put(JSON_KEY_NAME, this.panlFieldName);
 		jsonObject.put(JSON_KEY_PANL_CODE, this.lpseCode);
 
 		appendAvailableObjectInternal(jsonObject);
+	}
+
+	public boolean appendAvailableRangeValues(
+			JSONObject facetObject,
+			CollectionProperties collectionProperties,
+			Map<String, List<LpseToken>> panlTokenMap) {
+		return (false);
 	}
 
 	public boolean appendAvailableValues(
@@ -1054,10 +1060,10 @@ public abstract class BaseField {
 								collectionProperties,
 								this,
 								panlTokenMap));
-				return(true);
+				return (true);
 			}
 		}
-		return(false);
+		return (false);
 	}
 
 	protected JSONObject getAdditionURIObject(CollectionProperties collectionProperties, BaseField lpseField, Map<String, List<LpseToken>> panlTokenMap) {
@@ -1076,7 +1082,7 @@ public abstract class BaseField {
 				String resetUriPath = baseField.getResetUriPath(panlTokenMap, collectionProperties);
 				lpseUri.append(resetUriPath);
 
-				if(lpseUriAfterMax.length() != 0) {
+				if (lpseUriAfterMax.length() != 0) {
 					lpseUriAfterMax.append(resetUriPath);
 				}
 
@@ -1097,5 +1103,6 @@ public abstract class BaseField {
 		additionObject.put(JSON_KEY_AFTER_MAX_VALUE, lpseUriAfterMax.toString() + lpseCode.toString() + FORWARD_SLASH);
 		return (additionObject);
 	}
+
 	public abstract void appendAvailableObjectInternal(JSONObject jsonObject);
 }

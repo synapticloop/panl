@@ -62,46 +62,6 @@ public class PanlOrFacetField extends PanlFacetField {
 		return (LOGGER);
 	}
 
-	private void applyOrFacetToQuery(SolrQuery solrQuery, List<LpseToken> lpseTokens) {
-		// if there is only one...
-		if (lpseTokens.size() == 1) {
-			FacetLpseToken facetLpseToken = (FacetLpseToken) lpseTokens.get(0);
-
-			solrQuery.addFilterQuery(
-					String.format("%s:\"%s\"",
-							facetLpseToken.getSolrField(),
-							facetLpseToken.getValue()));
-			return;
-		}
-
-		StringBuilder stringBuilder = new StringBuilder();
-		boolean isFirst = true;
-		// at this point, we are going through the or filters
-		for (LpseToken lpseToken : lpseTokens) {
-			FacetLpseToken facetLpseToken = (FacetLpseToken) lpseToken;
-			if (isFirst) {
-				stringBuilder
-						.append(facetLpseToken.getSolrField())
-						.append(":(");
-			}
-
-			if (!isFirst) {
-				stringBuilder.append(" OR ");
-			}
-
-			stringBuilder
-					.append("\"")
-					.append(facetLpseToken.getValue())
-					.append("\"");
-
-			isFirst = false;
-		}
-
-		stringBuilder.append(")");
-		solrQuery.addFilterQuery(stringBuilder.toString());
-	}
-
-
 	@Override protected void applyToQueryInternal(SolrQuery solrQuery, List<LpseToken> lpseTokenList) {
 		// if there is only one...
 		if (lpseTokenList.size() == 1) {

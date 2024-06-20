@@ -24,8 +24,8 @@ package com.synapticloop.panl.server.handler.tokeniser.token.facet;
  *  IN THE SOFTWARE.
  */
 
-import com.synapticloop.panl.server.handler.properties.CollectionProperties;
 import com.synapticloop.panl.server.handler.fielderiser.field.BaseField;
+import com.synapticloop.panl.server.handler.properties.CollectionProperties;
 import com.synapticloop.panl.server.handler.tokeniser.LpseTokeniser;
 import com.synapticloop.panl.server.handler.tokeniser.token.LpseToken;
 import com.synapticloop.panl.server.handler.tokeniser.token.facet.bean.FromToBean;
@@ -70,15 +70,14 @@ import java.util.StringTokenizer;
  *
  * <p><code>/10-to-20/&lt;lpse_code&gt;-&lt;lpse_code&gt;/</code></p>
  */
-public class FacetLpseToken extends LpseToken {
+public class RangeFacetLpseToken extends LpseToken {
 	public static final String TOKEN_TYPE = "facet";
 
 	private String solrField = null;
 	private String toValue = null;
-	protected boolean isRangeToken = false;
-	protected boolean hasMidfix = false;
+	protected boolean hasInfix = false;
 
-	public FacetLpseToken(
+	public RangeFacetLpseToken(
 			CollectionProperties collectionProperties,
 			String lpseCode,
 			LpseTokeniser lpseTokeniser,
@@ -103,9 +102,8 @@ public class FacetLpseToken extends LpseToken {
 			if (possibleRangeDesignator.equals("+") || possibleRangeDesignator.equals("-")) {
 				// this is a range query, the next part should be the same as the
 				// current LPSE code - find it
-				this.isRangeToken = true;
 				if (possibleRangeDesignator.equals("-")) {
-					this.hasMidfix = true;
+					this.hasInfix = true;
 				}
 
 				StringBuilder nextLpse = new StringBuilder();
@@ -124,7 +122,7 @@ public class FacetLpseToken extends LpseToken {
 					isValid = false;
 				}
 			} else {
-				lpseTokeniser.decrementCurrentPosition();
+				this.isValid = false;
 			}
 		}
 
@@ -137,7 +135,7 @@ public class FacetLpseToken extends LpseToken {
 				// we have a token - get it
 				this.originalValue = valueTokeniser.nextToken();
 
-				if (isRangeToken && this.isValid) {
+				if (this.isValid) {
 					FromToBean fromToBean = lpseField.getDecodedRangeValues(this.originalValue);
 					if(null == fromToBean) {
 						this.isValid = false;
@@ -168,7 +166,7 @@ public class FacetLpseToken extends LpseToken {
 	@Override public String explain() {
 		return ("PANL " +
 				(this.isValid ? "[  VALID  ]" : "[ INVALID ]") +
-				" <facet>         LPSE code '" +
+				" <facet (RANGE)> LPSE code '" +
 				this.lpseCode +
 				"' (solr field '" +
 				this.solrField +
@@ -191,11 +189,7 @@ public class FacetLpseToken extends LpseToken {
 		return toValue;
 	}
 
-	public boolean getIsRangeToken() {
-		return isRangeToken;
-	}
-
-	public boolean getHasMidfix() {
-		return hasMidfix;
+	public boolean getHasInfix() {
+		return hasInfix;
 	}
 }
