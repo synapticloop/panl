@@ -75,6 +75,69 @@ public class PanlPageNumField extends BasePrefixSuffixField {
 		return (sb.toString());
 	}
 
+	@Override public String getURIPath(LpseToken token, CollectionProperties collectionProperties) {
+		PageNumLpseToken pageNumLpseToken = (PageNumLpseToken) token;
+		if(pageNumLpseToken.getPageNum() == 1) {
+			return("");
+		} else {
+			return(getDecodedValue(token.getValue()) + "/");
+		}
+	}
+
+	@Override
+	public String getURIPath(Map<String, List<LpseToken>> panlTokenMap, CollectionProperties collectionProperties) {
+		for (LpseToken lpseToken : panlTokenMap.getOrDefault(this.lpseCode, new ArrayList<>())) {
+			return(getURIPath(lpseToken, collectionProperties));
+		}
+
+		return("");
+	}
+
+	@Override public String getLpseCode(LpseToken token, CollectionProperties collectionProperties) {
+		PageNumLpseToken pageNumLpseToken = (PageNumLpseToken) token;
+		if(pageNumLpseToken.getPageNum() == 1) {
+			return("");
+		} else {
+			return(this.lpseCode);
+		}
+	}
+
+	/**
+	 * <p>Get the LPSE code for the LPSE URI path from the field.</p>
+	 *
+	 * <p>This will loop through all LpseTokens for this code outputting the
+	 * correct code.  The following rules apply:</p>
+	 *
+	 * <ul>
+	 *   <li>If the <code>panlTokenMap</code> does not contain a key of this
+	 *   field's LPSE code, then a blank string will be returned.</li>
+	 *   <li>If the token is not valid, then an empty string will be returned.</li>
+	 *   <li>If the token is a RANGE facet token, then the lpse code will
+	 *   include whether it has an infix or not.
+	 *   <ul>
+	 *     <li>If it has an infix, the returned string will be
+	 *     <code>&lt;lpse_code&gt;-&lt;lpse_code&gt;</code></li>
+	 *     <li>If it does not have an infix, then the returned string will be of
+	 *     the format <code>&lt;lpse_code&gt;+&lt;lpse_code&gt;</code></li>
+	 *   </ul>
+	 *   </li>
+	 * </ul>
+	 *
+	 * @param panlTokenMap The map of LPSE codes to the list of tokens for that
+	 * 		LPSE code
+	 * @param collectionProperties The collection properties for this collection
+	 * 		this is unused in this implementation
+	 *
+	 * @return The LPSE URI path for this field
+	 */
+	@Override
+	public String getLpseCode(Map<String, List<LpseToken>> panlTokenMap, CollectionProperties collectionProperties) {
+		for (LpseToken lpseToken : panlTokenMap.getOrDefault(this.lpseCode, new ArrayList<>())) {
+			return(getLpseCode(lpseToken, collectionProperties));
+		}
+
+		return("");
+	}
 
 	@Override
 	public String getCanonicalLpseCode(Map<String, List<LpseToken>> panlTokenMap, CollectionProperties collectionProperties) {
@@ -91,19 +154,10 @@ public class PanlPageNumField extends BasePrefixSuffixField {
 	 * @return
 	 */
 	public String getResetUriPath(Map<String, List<LpseToken>> panlTokenMap, CollectionProperties collectionProperties) {
-		StringBuilder sb = new StringBuilder();
-		if (panlTokenMap.containsKey(lpseCode)) {
-			sb.append(getEncodedPanlValue("1"));
-			sb.append("/");
-		}
-
-		return (sb.toString());
+		return("");
 	}
 
 	public String getResetLpseCode(Map<String, List<LpseToken>> panlTokenMap, CollectionProperties collectionProperties) {
-		if (panlTokenMap.containsKey(lpseCode)) {
-			return (lpseCode);
-		}
 		return ("");
 	}
 
