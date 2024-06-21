@@ -90,8 +90,8 @@ public class PanlDateRangeFacetField extends PanlFacetField {
 	private boolean hasNext = false;
 	private boolean hasPrevious = false;
 
-	public PanlDateRangeFacetField(String lpseCode, String propertyKey, Properties properties, String solrCollection, int lpseLength) throws PanlServerException {
-		super(lpseCode, propertyKey, properties, solrCollection, lpseLength);
+	public PanlDateRangeFacetField(String lpseCode, String propertyKey, Properties properties, String solrCollection, String panlCollectionUri, int lpseLength) throws PanlServerException {
+		super(lpseCode, propertyKey, properties, solrCollection, panlCollectionUri, lpseLength);
 
 		validateProperties();
 

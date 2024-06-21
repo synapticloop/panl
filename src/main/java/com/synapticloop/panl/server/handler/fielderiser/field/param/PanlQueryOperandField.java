@@ -41,8 +41,8 @@ public class PanlQueryOperandField extends BaseField {
 	private static final Logger LOGGER = LoggerFactory.getLogger(PanlQueryOperandField.class);
 	public static final String SOLR_PARAM_Q_OP = "q.op";
 
-	public PanlQueryOperandField(String lpseCode, String propertyKey, Properties properties, String solrCollection) throws PanlServerException {
-		super(lpseCode, properties, propertyKey, solrCollection);
+	public PanlQueryOperandField(String lpseCode, String propertyKey, Properties properties, String solrCollection, String panlCollectionUri) throws PanlServerException {
+		super(lpseCode, properties, propertyKey, solrCollection, panlCollectionUri);
 	}
 
 	@Override
@@ -136,8 +136,9 @@ public class PanlQueryOperandField extends BaseField {
 	}
 
 	@Override protected void logDetails() {
-		getLogger().info("[ Solr collection: '{}' ] Query operand parameter mapped to '{}'.",
+		getLogger().info("[ Solr/Panl '{}/{}' ] Query operand parameter mapped to '{}'.",
 				solrCollection,
+				panlCollectionUri,
 				lpseCode);
 	}
 

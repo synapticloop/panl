@@ -26,13 +26,9 @@ public class PanlOrFacetField extends PanlFacetField {
 	// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - //
 	protected boolean isOrFacet = false;
 
-	public PanlOrFacetField(String lpseCode, String propertyKey, Properties properties, String solrCollection, int lpseLength) throws PanlServerException {
-		super(lpseCode, propertyKey, properties, solrCollection, lpseLength);
+	public PanlOrFacetField(String lpseCode, String propertyKey, Properties properties, String solrCollection, String panlCollectionUri, int lpseLength) throws PanlServerException {
+		super(lpseCode, propertyKey, properties, solrCollection, panlCollectionUri, lpseLength);
 
-		populateFacetOr();
-	}
-
-	private void populateFacetOr() throws PanlServerException {
 		this.isOrFacet = properties.getProperty(PROPERTY_KEY_PANL_OR_FACET + lpseCode, "false").equalsIgnoreCase("true");
 		if (this.isOrFacet) {
 			String propertyFacetMinCount = properties.getProperty(PROPERTY_KEY_SOLR_FACET_MIN_COUNT, null);
@@ -233,7 +229,8 @@ public class PanlOrFacetField extends PanlFacetField {
 		return (additionObject);
 	}
 
-	@Override public LpseToken instantiateToken(CollectionProperties collectionProperties, String lpseCode, String query, StringTokenizer valueTokeniser, LpseTokeniser lpseTokeniser) {
+	@Override
+	public LpseToken instantiateToken(CollectionProperties collectionProperties, String lpseCode, String query, StringTokenizer valueTokeniser, LpseTokeniser lpseTokeniser) {
 		return (new OrFacetLpseToken(collectionProperties, this.lpseCode, lpseTokeniser, valueTokeniser));
 	}
 

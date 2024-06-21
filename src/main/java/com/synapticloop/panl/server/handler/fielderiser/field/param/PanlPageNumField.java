@@ -39,8 +39,8 @@ import java.util.*;
 public class PanlPageNumField extends BasePrefixSuffixField {
 	private static final Logger LOGGER = LoggerFactory.getLogger(PanlPageNumField.class);
 
-	public PanlPageNumField(String lpseCode, String propertyKey, Properties properties, String solrCollection) throws PanlServerException {
-		super(lpseCode, propertyKey, properties, solrCollection);
+	public PanlPageNumField(String lpseCode, String propertyKey, Properties properties, String solrCollection, String panlCollectionUri) throws PanlServerException {
+		super(lpseCode, propertyKey, properties, solrCollection, panlCollectionUri);
 	}
 
 	/**
@@ -177,8 +177,9 @@ public class PanlPageNumField extends BasePrefixSuffixField {
 	}
 
 	@Override protected void logDetails() {
-		getLogger().info("[ Solr collection: '{}' ] Page number parameter mapped to '{}'.",
+		getLogger().info("[ Solr/Panl '{}/{}' ] Page number parameter mapped to '{}'.",
 				solrCollection,
+				panlCollectionUri,
 				lpseCode);
 	}
 

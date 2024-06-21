@@ -46,8 +46,8 @@ import java.util.*;
 public class PanlSortField extends BaseField {
 	private static final Logger LOGGER = LoggerFactory.getLogger(PanlSortField.class);
 
-	public PanlSortField(String lpseCode, String propertyKey, Properties properties, String solrCollection) throws PanlServerException {
-		super(lpseCode, properties, propertyKey, solrCollection);
+	public PanlSortField(String lpseCode, String propertyKey, Properties properties, String solrCollection, String panlCollectionUri) throws PanlServerException {
+		super(lpseCode, properties, propertyKey, solrCollection, panlCollectionUri);
 	}
 
 	@Override public String getCanonicalUriPath(Map<String, List<LpseToken>> panlTokenMap, CollectionProperties collectionProperties) {
@@ -143,8 +143,9 @@ public class PanlSortField extends BaseField {
 	}
 
 	@Override protected void logDetails() {
-		getLogger().info("[ Solr collection: '{}' ] Sort parameter mapped to '{}'.",
+		getLogger().info("[ Solr/Panl: '{}/{}' ] Sort parameter mapped to '{}'.",
 				solrCollection,
+				panlCollectionUri,
 				lpseCode);
 	}
 

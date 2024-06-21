@@ -26,14 +26,14 @@ public abstract class BasePrefixSuffixField extends BaseField {
 	 * @param lpseLength
 	 * @throws PanlServerException
 	 */
-	public BasePrefixSuffixField(String lpseCode, String propertyKey, Properties properties, String solrCollection, int lpseLength) throws PanlServerException {
-		super(lpseCode, propertyKey, properties, solrCollection, lpseLength);
+	public BasePrefixSuffixField(String lpseCode, String propertyKey, Properties properties, String solrCollection, String panlCollectionUri, int lpseLength) throws PanlServerException {
+		super(lpseCode, propertyKey, properties, solrCollection, panlCollectionUri, lpseLength);
 
 		populateSuffixAndPrefix();
 	}
 
-	public BasePrefixSuffixField(String lpseCode, String propertyKey, Properties properties, String solrCollection) throws PanlServerException {
-		super(lpseCode, propertyKey, properties, solrCollection, 1);
+	public BasePrefixSuffixField(String lpseCode, String propertyKey, Properties properties, String solrCollection, String panlCollectionUri) throws PanlServerException {
+		super(lpseCode, propertyKey, properties, solrCollection, panlCollectionUri, 1);
 
 		populateParamSuffixAndPrefix(propertyKey);
 	}

@@ -86,6 +86,7 @@ public abstract class BaseField {
 	protected final String solrCollection;
 	private final String propertyKey;
 
+	protected final String panlCollectionUri;
 	protected final int lpseLength;
 
 	private static final int VALIDATION_TYPE_NONE = 0;
@@ -102,8 +103,9 @@ public abstract class BaseField {
 			String lpseCode,
 			Properties properties,
 			String propertyKey,
-			String solrCollection) throws PanlServerException {
-		this(lpseCode, propertyKey, properties, solrCollection, 1);
+			String solrCollection,
+			String panlCollectionUri) throws PanlServerException {
+		this(lpseCode, propertyKey, properties, solrCollection, panlCollectionUri, 1);
 	}
 
 	public BaseField(
@@ -111,6 +113,7 @@ public abstract class BaseField {
 			String propertyKey,
 			Properties properties,
 			String solrCollection,
+			String panlCollectionUri,
 			int lpseLength) throws PanlServerException {
 
 		this.panlIncludeSingleFacets = properties.getProperty(PROPERTY_KEY_PANL_INCLUDE_SINGLE_FACETS, "false").equals("true");
@@ -120,6 +123,7 @@ public abstract class BaseField {
 		this.properties = properties;
 		this.propertyKey = propertyKey;
 		this.solrCollection = solrCollection;
+		this.panlCollectionUri = panlCollectionUri;
 		this.lpseLength = lpseLength;
 
 		if (!propertyKey.equals(PROPERTY_KEY_PANL_SORT_FIELDS)) {
@@ -467,8 +471,9 @@ public abstract class BaseField {
 	}
 
 	protected void logDetails() {
-		getLogger().info("[ Solr collection '{}' ] Mapping Solr field name '{}' of type '{}' to panl key '{}', LPSE length {}",
+		getLogger().info("[ Solr/Panl '{}/{}' ] Mapping Solr facet field name '{}' of type '{}' to panl key '{}', LPSE length {}",
 				solrCollection,
+				panlCollectionUri,
 				solrFieldName,
 				solrFieldType,
 				lpseCode,

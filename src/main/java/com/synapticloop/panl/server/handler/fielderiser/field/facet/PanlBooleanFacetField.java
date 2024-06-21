@@ -29,8 +29,8 @@ public class PanlBooleanFacetField extends PanlFacetField {
 	private String booleanTrueReplacement;
 	private String booleanFalseReplacement;
 
-	public PanlBooleanFacetField(String lpseCode, String propertyKey, Properties properties, String solrCollection, int lpseLength) throws PanlServerException {
-		super(lpseCode, propertyKey, properties, solrCollection, lpseLength);
+	public PanlBooleanFacetField(String lpseCode, String propertyKey, Properties properties, String solrCollection, String panlCollectionUri, int lpseLength) throws PanlServerException {
+		super(lpseCode, propertyKey, properties, solrCollection, panlCollectionUri, lpseLength);
 		validateProperties();
 
 		populateBooleanReplacements();

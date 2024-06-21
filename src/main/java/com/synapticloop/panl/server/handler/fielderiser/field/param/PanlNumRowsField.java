@@ -42,8 +42,8 @@ import java.util.*;
 public class PanlNumRowsField extends BasePrefixSuffixField {
 	private static final Logger LOGGER = LoggerFactory.getLogger(PanlNumRowsField.class);
 
-	public PanlNumRowsField(String lpseCode, String propertyKey, Properties properties, String solrCollection) throws PanlServerException {
-		super(lpseCode, propertyKey, properties, solrCollection);
+	public PanlNumRowsField(String lpseCode, String propertyKey, Properties properties, String solrCollection, String panlCollectionUri) throws PanlServerException {
+		super(lpseCode, propertyKey, properties, solrCollection, panlCollectionUri);
 	}
 
 	@Override
@@ -100,8 +100,9 @@ public class PanlNumRowsField extends BasePrefixSuffixField {
 	}
 
 	@Override protected void logDetails() {
-		getLogger().info("[ Solr collection: '{}' ] Number of results per page parameter mapped to '{}'.",
+		getLogger().info("[ Solr/Panl '{}/{}' ] Number of results per page parameter mapped to '{}'.",
 				solrCollection,
+				panlCollectionUri,
 				lpseCode);
 	}
 

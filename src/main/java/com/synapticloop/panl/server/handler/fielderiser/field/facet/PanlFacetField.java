@@ -55,8 +55,8 @@ public class PanlFacetField extends BasePrefixSuffixField {
 
 	protected String solrFieldType;
 
-	public PanlFacetField(String lpseCode, String propertyKey, Properties properties, String solrCollection, int lpseLength) throws PanlServerException {
-		super(lpseCode, propertyKey, properties, solrCollection, lpseLength);
+	public PanlFacetField(String lpseCode, String propertyKey, Properties properties, String solrCollection, String panlCollectionUri, int lpseLength) throws PanlServerException {
+		super(lpseCode, propertyKey, properties, solrCollection, panlCollectionUri, lpseLength);
 
 		populateSolrFieldType();
 		validateProperties();

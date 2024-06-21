@@ -43,8 +43,8 @@ import java.util.StringTokenizer;
 public class PanlQueryField extends BaseField {
 	private static final Logger LOGGER = LoggerFactory.getLogger(PanlQueryField.class);
 
-	public PanlQueryField(String lpseCode, String propertyKey, Properties properties, String solrCollection) throws PanlServerException {
-		super(lpseCode, properties, propertyKey, solrCollection);
+	public PanlQueryField(String lpseCode, String propertyKey, Properties properties, String solrCollection, String panlCollectionUri) throws PanlServerException {
+		super(lpseCode, properties, propertyKey, solrCollection, panlCollectionUri);
 	}
 
 
@@ -80,8 +80,9 @@ public class PanlQueryField extends BaseField {
 	}
 
 	@Override protected void logDetails() {
-		getLogger().info("[ Solr collection: '{}' ] Query parameter mapped to '{}'.",
+		getLogger().info("[ Solr/Panl: '{}/{}' ] Query parameter mapped to '{}'.",
 				solrCollection,
+				panlCollectionUri,
 				lpseCode);
 	}
 

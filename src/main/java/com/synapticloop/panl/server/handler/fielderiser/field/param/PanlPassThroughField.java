@@ -42,8 +42,8 @@ public class PanlPassThroughField extends BaseField {
 	public static final String PROPERTY_KEY_PANL_PARAM_PASSTHROUGH_CANONICAL = "panl.param.passthrough.canonical";
 	private final boolean panlParamPassThroughCanonical;
 
-	public PanlPassThroughField(String lpseCode, String propertyKey, Properties properties, String solrCollection) throws PanlServerException {
-		super(lpseCode, properties, propertyKey, solrCollection);
+	public PanlPassThroughField(String lpseCode, String propertyKey, Properties properties, String solrCollection, String panlCollectionUri) throws PanlServerException {
+		super(lpseCode, properties, propertyKey, solrCollection, panlCollectionUri);
 
 		this.panlParamPassThroughCanonical = properties.getProperty(PROPERTY_KEY_PANL_PARAM_PASSTHROUGH_CANONICAL, "false").equals("true");
 	}
@@ -109,8 +109,9 @@ public class PanlPassThroughField extends BaseField {
 	}
 
 	@Override protected void logDetails() {
-		getLogger().info("[ Solr collection: '{}' ] Pass through parameter mapped to '{}'.",
+		getLogger().info("[ Solr/Panl '{}/{}' ] Pass through parameter mapped to '{}'.",
 				solrCollection,
+				panlCollectionUri,
 				lpseCode);
 	}
 

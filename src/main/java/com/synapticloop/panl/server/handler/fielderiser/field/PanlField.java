@@ -39,8 +39,8 @@ import java.util.*;
 public class PanlField extends BaseField {
 	private static final Logger LOGGER = LoggerFactory.getLogger(PanlField.class);
 
-	public PanlField(String lpseCode, String propertyKey, Properties properties, String solrCollection, int lpseLength) throws PanlServerException {
-		super(lpseCode, propertyKey, properties, solrCollection, lpseLength);
+	public PanlField(String lpseCode, String propertyKey, Properties properties, String solrCollection, String panlCollectionUri, int lpseLength) throws PanlServerException {
+		super(lpseCode, propertyKey, properties, solrCollection, panlCollectionUri, lpseLength);
 
 		// fields don't have prefixes/suffixes or URI parts
 		populatePanlAndSolrFieldNames();
@@ -77,9 +77,10 @@ public class PanlField extends BaseField {
 		return (new FacetLpseToken(collectionProperties, this.lpseCode, lpseTokeniser, valueTokeniser));
 	}
 
-	protected void logDetails() {
-		getLogger().info("[ Solr collection: '{}' ] Mapping Solr field name '{}' to panl key '{}', LPSE length {}",
+	@Override protected void logDetails() {
+		getLogger().info("[ Solr/Panl '{}/{}' ] Mapping Solr field name '{}' to panl key '{}', LPSE length {}",
 				solrCollection,
+				panlCollectionUri,
 				solrFieldName,
 				lpseCode,
 				lpseLength);
