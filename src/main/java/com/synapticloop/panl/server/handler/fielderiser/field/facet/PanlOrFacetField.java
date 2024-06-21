@@ -124,6 +124,7 @@ public class PanlOrFacetField extends PanlFacetField {
 			JSONObject facetObject,
 			CollectionProperties collectionProperties,
 			Map<String, List<LpseToken>> panlTokenMap,
+			Set<String> existingLpseValues,
 			List<FacetField.Count> values,
 			long numFound,
 			boolean numFoundExact) {

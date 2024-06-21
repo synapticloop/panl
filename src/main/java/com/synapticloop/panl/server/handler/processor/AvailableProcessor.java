@@ -53,6 +53,36 @@ public class AvailableProcessor extends Processor {
 	@Override public JSONObject processToObject(Map<String, List<LpseToken>> panlTokenMap, QueryResponse queryResponse) {
 		JSONObject jsonObject = new JSONObject();
 
+		List<LpseToken> lpseTokens = new ArrayList<>();
+
+		for (BaseField lpseField : collectionProperties.getLpseFields()) {
+			// These codes are ignored, just carry on
+			if(collectionProperties.getIsIgnoredLpseCode(lpseField.getLpseCode())) {
+				continue;
+			}
+			lpseTokens.addAll(panlTokenMap.getOrDefault(lpseField.getLpseCode(), new ArrayList<>()));
+		}
+
+		Map<String, Set<String>> panlLookupMap = new HashMap<>();
+		for (LpseToken lpseToken : lpseTokens) {
+			String panlLpseValue = lpseToken.getValue();
+			// These codes are ignored, just carry on
+			if(collectionProperties.getIsIgnoredLpseCode(lpseToken.getLpseCode())) {
+				continue;
+			}
+
+			if (null != panlLpseValue) {
+				String lpseCode = lpseToken.getLpseCode();
+				Set<String> valueSet = panlLookupMap.get(lpseCode);
+
+				if (null == valueSet) {
+					valueSet = new HashSet<>();
+				}
+				valueSet.add(panlLpseValue);
+				panlLookupMap.put(lpseCode, valueSet);
+			}
+		}
+
 		SolrDocumentList solrDocuments = (SolrDocumentList) queryResponse.getResponse().get(JSON_KEY_SOLR_JSON_KEY_RESPONSE);
 		long numFound = solrDocuments.getNumFound();
 		boolean numFoundExact = solrDocuments.getNumFoundExact();
@@ -79,7 +109,14 @@ public class AvailableProcessor extends Processor {
 				JSONObject facetObject = new JSONObject();
 				JSONObject rangeFacetObject = new JSONObject();
 				baseField.appendAvailableFacetObject(facetObject);
-				if(baseField.appendAvailableValues(facetObject, collectionProperties, panlTokenMap, facetField.getValues(), numFound, numFoundExact)) {
+				if(baseField.appendAvailableValues(
+						facetObject,
+						collectionProperties,
+						panlTokenMap,
+						panlLookupMap.getOrDefault(lpseCode, new HashSet<>()),
+						facetField.getValues(),
+						numFound,
+						numFoundExact)) {
 					panlFacetOrderMap.put(lpseCode, facetObject);
 				}
 
