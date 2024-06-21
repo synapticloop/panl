@@ -7,6 +7,8 @@ import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
 
+import static com.synapticloop.panl.server.handler.processor.AvailableProcessorTest.WEIGHT_FACETS;
+import static com.synapticloop.panl.server.handler.processor.AvailableProcessorTest.WEIGHT_NAME_FACETS;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 
@@ -14,6 +16,7 @@ public class AvailableProcessorRangeFacetTest {
 
 	@Test void testRangeAdditionURIPrefixInfixSuffix() throws PanlServerException, IOException {
 		JSONObject jsonObject = TestHelper.invokeAvailableProcessor(
+				WEIGHT_FACETS,
 				"/range/prefix-infix-suffix.properties",
 				"/",
 				"",
@@ -35,6 +38,7 @@ public class AvailableProcessorRangeFacetTest {
 
 	@Test void testRangeAdditionURIPrefixInfix() throws PanlServerException, IOException {
 		JSONObject jsonObject = TestHelper.invokeAvailableProcessor(
+				WEIGHT_FACETS,
 				"/range/prefix-infix.properties",
 				"/",
 				"",
@@ -56,6 +60,7 @@ public class AvailableProcessorRangeFacetTest {
 
 	@Test void testRangeAdditionURIPrefix() throws PanlServerException, IOException {
 		JSONObject jsonObject = TestHelper.invokeAvailableProcessor(
+				WEIGHT_FACETS,
 				"/range/prefix.properties",
 				"/",
 				"",
@@ -75,6 +80,7 @@ public class AvailableProcessorRangeFacetTest {
 
 	@Test void testRangeAdditionURISuffix() throws PanlServerException, IOException {
 		JSONObject jsonObject = TestHelper.invokeAvailableProcessor(
+				WEIGHT_FACETS,
 				"/range/suffix.properties",
 				"/",
 				"",
@@ -95,11 +101,14 @@ public class AvailableProcessorRangeFacetTest {
 
 	@Test void testRangeAdditionURIPrefixSuffix() throws PanlServerException, IOException {
 		JSONObject jsonObject = TestHelper.invokeAvailableProcessor(
+				WEIGHT_FACETS,
 				"/range/prefix-suffix.properties",
 				"/",
 				"",
 				10,
 				true);
+		System.out.println(jsonObject.toString(2));
+
 		JSONObject urisObject = jsonObject.getJSONArray(Processor.JSON_KEY_RANGE_FACETS)
 				.getJSONObject(0)
 				.getJSONObject(Processor.JSON_KEY_URIS);
@@ -116,6 +125,7 @@ public class AvailableProcessorRangeFacetTest {
 
 	void testExistingRange() throws PanlServerException, IOException {
 		JSONObject jsonObject = TestHelper.invokeAvailableProcessor(
+				WEIGHT_FACETS,
 				"/range/prefix-infix-suffix.properties",
 				"/test/default/weighing+from+18+to+35+grams/w-w/",
 				"",
@@ -151,6 +161,7 @@ public class AvailableProcessorRangeFacetTest {
 
 	private void assertResetOfPageNumbers(String uriPath, String after) throws PanlServerException, IOException {
 		JSONObject jsonObject = TestHelper.invokeAvailableProcessor(
+				WEIGHT_FACETS,
 				"/range/none.properties",
 				uriPath,
 				"",
@@ -173,6 +184,7 @@ public class AvailableProcessorRangeFacetTest {
 
 	@Test public void testNoInfixSuffix() throws PanlServerException, IOException {
 		JSONObject jsonObject = TestHelper.invokeAvailableProcessor(
+				WEIGHT_FACETS,
 				"/range/suffix.properties",
 				"/test/default/10+grams~20+grams/w+w/",
 				"",

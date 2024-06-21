@@ -423,10 +423,6 @@ public class CollectionProperties {
 
 			lpseFieldLookup.put(lpseCode, facetField);
 
-			if (facetField.getIsRangeFacet()) {
-				PANL_CODE_RANGE_FIELDS.add(lpseCode);
-			}
-
 			LPSE_CODE_TO_FACET_FIELD_MAP.put(facetField.getLpseCode(), facetField);
 			SOLR_NAME_TO_FACET_FIELD_MAP.put(facetField.getSolrFieldName(), facetField);
 		}

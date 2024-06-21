@@ -6,6 +6,8 @@ import com.synapticloop.panl.server.handler.processor.Processor;
 import com.synapticloop.panl.server.handler.properties.CollectionProperties;
 import com.synapticloop.panl.server.handler.tokeniser.token.LpseToken;
 import com.synapticloop.panl.server.handler.tokeniser.token.facet.FacetLpseToken;
+import com.synapticloop.panl.server.handler.tokeniser.token.facet.RangeFacetLpseToken;
+import com.synapticloop.panl.server.handler.tokeniser.token.facet.bean.FromToBean;
 import org.apache.solr.client.solrj.SolrQuery;
 import org.apache.solr.client.solrj.response.FacetField;
 import org.json.JSONArray;
@@ -13,6 +15,7 @@ import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.net.URLDecoder;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.util.*;
@@ -103,32 +106,32 @@ public class PanlRangeFacetField extends PanlFacetField {
 
 	@Override protected void applyToQueryInternal(SolrQuery solrQuery, List<LpseToken> lpseTokens) {
 		for (LpseToken lpseToken : lpseTokens) {
-			FacetLpseToken facetLpseToken = (FacetLpseToken) lpseToken;
+			RangeFacetLpseToken rangeFacetLpseToken = (RangeFacetLpseToken) lpseToken;
 
 			// even though this field is set to be a range facet, we still allow
 			// single values
 
-			if (facetLpseToken.getIsRangeToken()) {
-				String value = (hasMinRangeWildcard && facetLpseToken.getValue().equals(getMinRange())) ? "*" : facetLpseToken.getValue();
-				String toValue = (hasMaxRangeWildcard && facetLpseToken.getToValue().equals(getMaxRange())) ? "*" : facetLpseToken.getToValue();
+			if (rangeFacetLpseToken.getIsRangeToken()) {
+				String value = (hasMinRangeWildcard && rangeFacetLpseToken.getValue().equals(getMinRange())) ? "*" : rangeFacetLpseToken.getValue();
+				String toValue = (hasMaxRangeWildcard && rangeFacetLpseToken.getToValue().equals(getMaxRange())) ? "*" : rangeFacetLpseToken.getToValue();
 				solrQuery.addFilterQuery(
 						String.format("%s:[%s TO %s]",
-								facetLpseToken.getSolrField(),
+								rangeFacetLpseToken.getSolrField(),
 								value,
 								toValue));
 			} else {
 				solrQuery.addFilterQuery(String.format("%s:\"%s\"",
-						facetLpseToken.getSolrField(),
-						facetLpseToken.getValue()));
+						rangeFacetLpseToken.getSolrField(),
+						rangeFacetLpseToken.getValue()));
 			}
 		}
 	}
 
 	@Override public String getLpseCode(LpseToken token, CollectionProperties collectionProperties) {
-		FacetLpseToken facetLpseToken = (FacetLpseToken) token;
-		return (facetLpseToken.getLpseCode() +
-				(facetLpseToken.getHasMidfix() ? "-" : "+") +
-				facetLpseToken.getLpseCode());
+		RangeFacetLpseToken rangeFacetLpseToken = (RangeFacetLpseToken) token;
+		return (rangeFacetLpseToken.getLpseCode() +
+				(this.hasRangeInfix ? "-" : "+") +
+				this.lpseCode);
 	}
 
 	public static final String JSON_KEY_IS_RANGE_FACET = "is_range_facet";
@@ -252,20 +255,101 @@ public class PanlRangeFacetField extends PanlFacetField {
 		// if we already have this facet selected - add in the to and from
 		// values - only allowed one facet code per range
 		if (panlTokenMap.containsKey(lpseCode)) {
-			FacetLpseToken facetLpseToken = (FacetLpseToken) panlTokenMap.get(lpseCode).get(0);
-			if (null != facetLpseToken.getToValue()) {
-				rangeFacetObject.put(JSON_KEY_VALUE, facetLpseToken.getValue());
-				rangeFacetObject.put(JSON_KEY_VALUE_TO, facetLpseToken.getToValue());
+			RangeFacetLpseToken rangeFacetLpseToken = (RangeFacetLpseToken) panlTokenMap.get(lpseCode).get(0);
+			if (null != rangeFacetLpseToken.getToValue()) {
+				rangeFacetObject.put(JSON_KEY_VALUE, rangeFacetLpseToken.getValue());
+				rangeFacetObject.put(JSON_KEY_VALUE_TO, rangeFacetLpseToken.getToValue());
 			}
 		}
-
 		// addition URIs are a little bit different...
-		JSONObject additionURIObject = getAdditionURIObject(collectionProperties, panlTokenMap);
+		JSONObject additionURIObject = getRangeAdditionURIObject(collectionProperties, panlTokenMap, true);
 		rangeFacetObject.put(JSON_KEY_URIS, additionURIObject);
+
 
 		return (true);
 	}
 
+	protected JSONObject getRangeAdditionURIObject(CollectionProperties collectionProperties, Map<String, List<LpseToken>> panlTokenMap, boolean shouldRange) {
+		String additionLpseCode = lpseCode;
+		JSONObject additionObject = new JSONObject();
+		StringBuilder lpseUri = new StringBuilder(FORWARD_SLASH);
+		StringBuilder lpseUriAfterMax = new StringBuilder();
+		StringBuilder lpseCodeUri = new StringBuilder();
+
+		for (BaseField baseField : collectionProperties.getLpseFields()) {
+			if (panlTokenMap.containsKey(baseField.getLpseCode()) &&
+					!(shouldRange &&
+							baseField.getLpseCode().equals(additionLpseCode))) {
+
+				String resetUriPath = baseField.getResetUriPath(panlTokenMap, collectionProperties);
+				lpseUri.append(resetUriPath);
+
+				if(lpseUriAfterMax.length() != 0) {
+					lpseUriAfterMax.append(resetUriPath);
+				}
+
+				lpseCodeUri.append(baseField.getResetLpseCode(panlTokenMap, collectionProperties));
+			}
+
+			if (baseField.getLpseCode().equals(additionLpseCode)) {
+				if (shouldRange) {
+					// depends on whether there is an infix
+					// at this point we want to also do the min value replacement, if it
+					// exists
+					if(null != baseField.getRangeMinValueReplacement()) {
+						additionObject.put(JSON_KEY_BEFORE_MIN_VALUE, lpseUri.toString() + URLEncoder.encode(baseField.getRangeMinValueReplacement(), StandardCharsets.UTF_8));
+					}
+
+					if (hasRangeInfix) {
+						// we have an infix - we will be using the range value prefix/suffix
+						lpseUri.append(URLEncoder.encode(baseField.getRangePrefix(), StandardCharsets.UTF_8));
+					} else {
+						// we don't have an infix - we will be using the value prefix/suffix
+						lpseUri.append(URLEncoder.encode(baseField.getValuePrefix(), StandardCharsets.UTF_8));
+					}
+
+					lpseCodeUri.append(lpseCode);
+					lpseCodeUri.append((hasRangeInfix ? "-" : "+"));
+
+					if (baseField.getHasRangeInfix()) {
+						// we have the infix
+						additionObject.put(JSON_KEY_HAS_INFIX, true);
+						additionObject.put(JSON_KEY_DURING, URLEncoder.encode(baseField.getRangeValueInfix(), StandardCharsets.UTF_8));
+					} else {
+						// we shall use the value suffix and prefix;
+						additionObject.put(JSON_KEY_HAS_INFIX, false);
+						additionObject.put(
+								JSON_KEY_DURING,
+								URLEncoder.encode(baseField.getValueSuffix(), StandardCharsets.UTF_8) +
+										JSON_VALUE_NO_INFIX_REPLACEMENT +
+										URLEncoder.encode(baseField.getValuePrefix(), StandardCharsets.UTF_8));
+					}
+				}
+
+				additionObject.put(JSON_KEY_BEFORE, lpseUri.toString());
+				lpseUri.setLength(0);
+				lpseCodeUri.append(baseField.getLpseCode());
+
+				if(shouldRange) {
+					if(baseField.getHasRangeInfix()) {
+						lpseUri.append(URLEncoder.encode(baseField.getRangeSuffix(), StandardCharsets.UTF_8));
+					} else {
+						lpseUri.append(URLEncoder.encode(baseField.getValueSuffix(), StandardCharsets.UTF_8));
+					}
+
+					if(null != baseField.getRangeMaxValueReplacement()) {
+						lpseUriAfterMax.append(URLEncoder.encode(baseField.getRangeMaxValueReplacement(), StandardCharsets.UTF_8))
+								.append(FORWARD_SLASH);
+					}
+				}
+				lpseUri.append(FORWARD_SLASH);
+			}
+		}
+
+		additionObject.put(JSON_KEY_AFTER, lpseUri.toString() + lpseCodeUri.toString() + FORWARD_SLASH);
+		additionObject.put(JSON_KEY_AFTER_MAX_VALUE, lpseUriAfterMax.toString() + lpseCodeUri.toString() + FORWARD_SLASH);
+		return (additionObject);
+	}
 	/**
 	 * <p>This is an OR facet, so we can additional </p>
 	 *
@@ -310,6 +394,293 @@ public class PanlRangeFacetField extends PanlFacetField {
 		additionObject.put(JSON_KEY_BEFORE, lpseUriBefore.toString());
 
 		additionObject.put(JSON_KEY_AFTER, FORWARD_SLASH + lpseUri.toString() + lpseUriCode.toString() + FORWARD_SLASH);
+		return (additionObject);
+	}
+
+
+	/**
+	 * <p>Decode a range facet values which are in one of two formats, which
+	 * depends on whether the RANGE facet has <code>hasRangeInfix</code> set.</p>
+	 *
+	 * <p><strong><code>hasRangeInfix == true</code></strong></p>
+	 *
+	 * <ul>
+	 *   <li>The value will be URL decoded, then</li>
+	 *   <li>The value will be split on the <code>rangeInfix</code></li>
+	 *   <li>If the split is exactly two Strings, carry on else return null.</li>
+	 * </ul>
+	 *
+	 * <p><strong><code>hasRangeInfix == false</code></strong></p>
+	 *
+	 * <ul>
+	 *   <li>The value will be split on the <code>/</code> character</li>
+	 *   <li>If the split is exactly two Strings, carry on else return null.</li>
+	 *   <li>The two values will be s URL decoded.</li>
+	 * </ul>
+	 *
+	 * <p>The <code>fromValue</code> will have it's prefix removed.</p>
+	 *
+	 * <p>The <code>toValue</code> will have it's suffix removed.</p>
+	 *
+	 * <p>If all validation tests are passed, then return the bean.</p>
+	 *
+	 * @param value The value to decode for a range
+	 *
+	 * @return The FromToBean with the from and to values set.
+	 */
+	public FromToBean getDecodedRangeValues(String value) {
+
+		String fromString = "";
+		String toString = "";
+
+		if (hasRangeInfix) {
+			// It is OK to decode the value as it is all in one
+			String decodedValue = URLDecoder.decode(value, StandardCharsets.UTF_8);
+			// then we need to split by the infix
+			String[] fromToSplit = decodedValue.split(rangeValueInfix);
+			if (fromToSplit.length != 2) {
+				return (null);
+			} else {
+				fromString = fromToSplit[0];
+				toString = fromToSplit[1];
+			}
+		} else {
+			String[] fromToSplit = value.split(Processor.JSON_VALUE_NO_INFIX_REPLACEMENT);
+			if (fromToSplit.length != 2) {
+				return (null);
+			} else {
+				fromString = URLDecoder.decode(fromToSplit[0], StandardCharsets.UTF_8);
+				toString = URLDecoder.decode(fromToSplit[1], StandardCharsets.UTF_8);
+			}
+		}
+
+		// at this point we have two values, the from and to - although they may
+		// have a min or max value replacement
+
+		String rangeMinValueReplace = getRangeMinValueReplacement();
+		String rangeMaxValueReplace = getRangeMaxValueReplacement();
+
+		if (hasRangeInfix) {
+			if (null != rangeMinValueReplace) {
+				if (fromString.equals(rangeMinValueReplace)) {
+					fromString = getMinRange();
+				}
+			} else if (hasRangePrefix) {
+				if (fromString.startsWith(rangePrefix)) {
+					fromString = fromString.substring(rangePrefix.length());
+				} else {
+					return (null);
+				}
+			}
+
+			if (null != rangeMaxValueReplace) {
+				if (toString.equals(rangeMaxValueReplace)) {
+					toString = getMaxRange();
+				} else if (hasRangeSuffix) {
+					if (toString.endsWith(rangeSuffix)) {
+						toString = toString.substring(0, toString.length() - rangeSuffix.length());
+					} else {
+						return (null);
+					}
+				}
+			}
+		} else {
+			if (null != rangeMinValueReplace) {
+				if (fromString.equals(rangeMinValueReplace)) {
+					fromString = getMinRange();
+				}
+			} else if (hasValuePrefix) {
+				if (fromString.startsWith(valuePrefix)) {
+					fromString = fromString.substring(valuePrefix.length());
+				} else {
+					return (null);
+				}
+			}
+
+			if (null != rangeMaxValueReplace) {
+				if (toString.equals(rangeMaxValueReplace)) {
+					toString = getMaxRange();
+				}
+			} else if (hasValueSuffix) {
+				if (toString.endsWith(valueSuffix)) {
+					toString = toString.substring(0, toString.length() - valueSuffix.length());
+				} else {
+					return (null);
+				}
+			}
+		}
+
+		// lastly we are going to validate the values
+
+		String validatedFromString = getValidatedValue(fromString);
+		String validatedToString = getValidatedValue(toString);
+
+		if (null == validatedFromString || null == validatedToString || validatedFromString.isBlank() || validatedToString.isBlank()) {
+			return (null);
+		}
+		// now we have all that we need
+		return (new FromToBean(validatedFromString, validatedToString));
+	}
+
+	public String getLpseCode(Map<String, List<LpseToken>> panlTokenMap, CollectionProperties collectionProperties) {
+		StringBuilder sb = new StringBuilder();
+		boolean hasRange = false;
+		for (LpseToken lpseToken : panlTokenMap.getOrDefault(lpseCode, new ArrayList<>())) {
+			if (lpseToken.getIsValid()) {
+				// this facet could be either a range facet, or just a simple facet
+				// value
+				RangeFacetLpseToken rangeFacetLpseToken = (RangeFacetLpseToken) lpseToken;
+				if (rangeFacetLpseToken.getIsRangeToken() && !hasRange) {
+					sb.append(lpseCode);
+					sb.append((rangeFacetLpseToken.getHasInfix() ? "-" : "+"));
+					sb.append(lpseCode);
+
+					// there may be only one range
+					hasRange = true;
+				} else {
+					// we may have multiple values for the non range token
+					sb.append(lpseCode);
+				}
+			}
+		}
+		return (sb.toString());
+	}
+
+	public String getEncodedPanlValue(LpseToken token) {
+		if (null == token.getValue()) {
+			return ("");
+		}
+
+		if (isRangeFacet) {
+			return (getEncodedRangeFacetValueUriPart((RangeFacetLpseToken) token));
+		} else {
+			return (getEncodedRegularFacetValueUriPart(token.getValue()));
+		}
+	}
+
+	/**
+	 * <p>For a specific Token which is a range value, get the encoded URI path
+	 * value.  This will take care of prefixes, suffixes, min and max range
+	 * values, and range prefix/suffixes, and infix if available</p>
+	 *
+	 * @param facetLpseToken The FacetLpseToken to interrogate
+	 *
+	 * @return The encoded URI path part for a range token
+	 */
+	private String getEncodedRangeFacetValueUriPart(RangeFacetLpseToken facetLpseToken) {
+
+		// we can still have a single facet value which is not a range facet
+		if (null == facetLpseToken.getToValue()) {
+			return (getEncodedRegularFacetValueUriPart(facetLpseToken.getValue()));
+		}
+
+		// at this point it is a range facet
+		StringBuilder sb = new StringBuilder();
+
+		if (hasRangeInfix) {
+			if (facetLpseToken.getValue().equals(rangeMinValue) && rangeMinValueReplacement != null) {
+				sb.append(rangeMinValueReplacement);
+			} else {
+				if (hasRangePrefix) {
+					sb.append(rangePrefix);
+				} else if (hasValuePrefix) {
+					sb.append(valuePrefix);
+				}
+
+				sb.append(facetLpseToken.getValue());
+
+				if (hasValueSuffix) {
+					sb.append(valueSuffix);
+				}
+			}
+
+			sb.append(rangeValueInfix);
+
+			if (facetLpseToken.getToValue().equals(rangeMaxValue) && rangeMaxValueReplacement != null) {
+				sb.append(rangeMaxValueReplacement);
+			} else {
+				if (hasValuePrefix) {
+					sb.append(valuePrefix);
+				}
+
+				sb.append(facetLpseToken.getToValue());
+
+				if (hasRangeSuffix) {
+					sb.append(rangeSuffix);
+				} else if (hasValueSuffix) {
+					sb.append(valueSuffix);
+				}
+			}
+
+			return (URLEncoder.encode(sb.toString(), StandardCharsets.UTF_8));
+		} else {
+			// we will have a two part URI path, split by a '~' and both values need
+			// to be URLEncoded before.
+			if (facetLpseToken.getValue().equals(rangeMinValue) && null != rangeMinValueReplacement) {
+				sb.append(URLEncoder.encode(rangeMinValueReplacement, StandardCharsets.UTF_8));
+			} else {
+				if (hasValuePrefix) {
+					sb.append(URLEncoder.encode(valuePrefix, StandardCharsets.UTF_8));
+				}
+				sb.append(URLEncoder.encode(facetLpseToken.getValue(), StandardCharsets.UTF_8));
+				if (hasValueSuffix) {
+					sb.append(URLEncoder.encode(valueSuffix, StandardCharsets.UTF_8));
+				}
+
+			}
+
+			sb.append(Processor.JSON_VALUE_NO_INFIX_REPLACEMENT);
+
+			if (facetLpseToken.getToValue().equals(rangeMaxValue) && null != rangeMaxValueReplacement) {
+				sb.append(URLEncoder.encode(rangeMaxValueReplacement, StandardCharsets.UTF_8));
+			} else {
+				if (hasValuePrefix) {
+					sb.append(URLEncoder.encode(valuePrefix, StandardCharsets.UTF_8));
+				}
+				sb.append(URLEncoder.encode(facetLpseToken.getToValue(), StandardCharsets.UTF_8));
+				if (hasValueSuffix) {
+					sb.append(URLEncoder.encode(valueSuffix, StandardCharsets.UTF_8));
+				}
+			}
+
+			return (sb.toString());
+		}
+	}
+
+	@Override protected JSONObject getAdditionURIObject(CollectionProperties collectionProperties, BaseField lpseField, Map<String, List<LpseToken>> panlTokenMap) {
+		String additionLpseCode = lpseField.getLpseCode();
+		JSONObject additionObject = new JSONObject();
+		StringBuilder lpseUri = new StringBuilder(FORWARD_SLASH);
+		StringBuilder lpseUriAfterMax = new StringBuilder();
+		StringBuilder lpseCode = new StringBuilder();
+
+		for (BaseField baseField : collectionProperties.getLpseFields()) {
+
+			if (panlTokenMap.containsKey(baseField.getLpseCode()) &&
+					!(baseField.getLpseCode().equals(additionLpseCode))) {
+
+				String resetUriPath = baseField.getResetUriPath(panlTokenMap, collectionProperties);
+				lpseUri.append(resetUriPath);
+
+				if (lpseUriAfterMax.length() != 0) {
+					lpseUriAfterMax.append(resetUriPath);
+				}
+
+				lpseCode.append(baseField.getResetLpseCode(panlTokenMap, collectionProperties));
+			}
+
+			if (baseField.getLpseCode().equals(additionLpseCode)) {
+
+				additionObject.put(JSON_KEY_BEFORE, lpseUri.toString());
+				lpseUri.setLength(0);
+				lpseCode.append(baseField.getLpseCode());
+
+				lpseUri.append(FORWARD_SLASH);
+			}
+		}
+
+		additionObject.put(JSON_KEY_AFTER, lpseUri.toString() + lpseCode.toString() + FORWARD_SLASH);
+		additionObject.put(JSON_KEY_AFTER_MAX_VALUE, lpseUriAfterMax.toString() + lpseCode.toString() + FORWARD_SLASH);
 		return (additionObject);
 	}
 }

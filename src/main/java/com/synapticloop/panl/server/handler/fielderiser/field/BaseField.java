@@ -347,14 +347,7 @@ public abstract class BaseField {
 	}
 
 	/**
-	 * <p>The panl value (from the URI) can have a prefix or suffix, or both
-	 * applied to it.</p>
-	 *
-	 * <p>Remove any suffixes, or prefixes from a URI parameter, should they be
-	 * defined for the LPSE code.</p>
-	 *
-	 * <p>Additionally, if this is a boolean field, it may be that there also is
-	 * a replacement for true/false for it.</p>
+	 * <p>URL Decodes the URI Path value and validates it.</p>
 	 *
 	 * <p>This will also validate the value by the Solr field type, at the
 	 * moment, the only fields that have additional validation are:</p>
@@ -368,27 +361,11 @@ public abstract class BaseField {
 	 *
 	 * @param value the value to convert if any conversions are required
 	 *
-	 * @return the de-suffixed, de-prefixed, and de-replaced value.  This will
-	 * 		return <code>null</code> if it is invalid.
+	 * @return The URL decoded value This will return <code>null</code> if it is
+	 * 		invalid.
 	 */
 	@Deprecated public String getDecodedValue(String value) {
 		String decodedValue = URLDecoder.decode(value, StandardCharsets.UTF_8);
-
-		if (hasValuePrefix) {
-			if (decodedValue.startsWith(valuePrefix)) {
-				decodedValue = decodedValue.substring(valuePrefix.length());
-			} else {
-				return (null);
-			}
-		}
-
-		if (hasValueSuffix) {
-			if (decodedValue.endsWith(valueSuffix)) {
-				decodedValue = decodedValue.substring(0, decodedValue.length() - valueSuffix.length());
-			} else {
-				return (null);
-			}
-		}
 
 		// now we are going to validate the fields, boolean and string fields have
 		// their own validation
@@ -430,7 +407,7 @@ public abstract class BaseField {
 	 *
 	 * @return The FromToBean with the from and to values set.
 	 */
-	public FromToBean getDecodedRangeValues(String value) {
+	@Deprecated public FromToBean getDecodedRangeValues(String value) {
 
 		String fromString = "";
 		String toString = "";
@@ -679,7 +656,7 @@ public abstract class BaseField {
 		}
 	}
 
-	private String getEncodedRegularFacetValueUriPart(String value) {
+	protected String getEncodedRegularFacetValueUriPart(String value) {
 		StringBuilder sb = new StringBuilder();
 
 		if (hasValuePrefix) {

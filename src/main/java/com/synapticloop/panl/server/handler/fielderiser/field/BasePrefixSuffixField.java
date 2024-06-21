@@ -18,6 +18,15 @@ public abstract class BasePrefixSuffixField extends BaseField {
 	protected String valuePrefix;
 	protected String valueSuffix;
 
+	/**
+	 *
+	 * @param lpseCode
+	 * @param propertyKey
+	 * @param properties
+	 * @param solrCollection
+	 * @param lpseLength
+	 * @throws PanlServerException
+	 */
 	public BasePrefixSuffixField(String lpseCode, String propertyKey, Properties properties, String solrCollection, int lpseLength) throws PanlServerException {
 		super(lpseCode, propertyKey, properties, solrCollection, lpseLength);
 
@@ -97,7 +106,7 @@ public abstract class BasePrefixSuffixField extends BaseField {
 	 * @return the de-suffixed, de-prefixed, and de-replaced value.  This will
 	 * 		return <code>null</code> if it is invalid.
 	 */
-	public String getDecodedValue(String value) {
+	@Override public String getDecodedValue(String value) {
 		String decodedValue = URLDecoder.decode(value, StandardCharsets.UTF_8);
 
 		if (hasValuePrefix) {

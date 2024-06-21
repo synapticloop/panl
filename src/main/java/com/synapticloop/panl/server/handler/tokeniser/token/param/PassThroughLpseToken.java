@@ -46,7 +46,7 @@ public class PassThroughLpseToken extends LpseToken {
 	}
 
 	@Override public String explain() {
-		return ("PANL [  VALID  ] <passthrough>   LPSE code '" +
+		return ("PANL [  VALID  ] <passthrough>     LPSE code '" +
 				this.lpseCode +
 				"' with value '" +
 				value +

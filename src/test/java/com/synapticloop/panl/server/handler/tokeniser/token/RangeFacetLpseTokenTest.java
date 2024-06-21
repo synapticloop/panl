@@ -5,6 +5,7 @@ import com.synapticloop.panl.generator.bean.PanlCollection;
 import com.synapticloop.panl.server.handler.properties.CollectionProperties;
 import com.synapticloop.panl.server.handler.tokeniser.LpseTokeniser;
 import com.synapticloop.panl.server.handler.tokeniser.token.facet.FacetLpseToken;
+import com.synapticloop.panl.server.handler.tokeniser.token.facet.RangeFacetLpseToken;
 import org.junit.jupiter.api.Test;
 
 import java.util.StringTokenizer;
@@ -13,15 +14,15 @@ import static com.synapticloop.panl.TestHelper.getLpseTokeniser;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-public class FacetLpseRangeTokenTest {
+public class RangeFacetLpseTokenTest {
 	private void testDefaults(String propertiesLocation, String uri) {
 		CollectionProperties collectionProperties = TestHelper.getCollectionProperties(propertiesLocation);
 		StringTokenizer stringTokenizer = new StringTokenizer(uri, "/", false);
 
-		FacetLpseToken lpseToken = (FacetLpseToken) LpseToken.getLpseToken(collectionProperties, "w", "", stringTokenizer, getLpseTokeniser("-w"));
-		assertTrue(lpseToken.getIsValid());
-		assertEquals("10", lpseToken.getValue());
-		assertEquals("50", lpseToken.getToValue());
+		RangeFacetLpseToken rangeFacetLpseToken = (RangeFacetLpseToken) LpseToken.getLpseToken(collectionProperties, "w", "", stringTokenizer, getLpseTokeniser("-w"));
+		assertTrue(rangeFacetLpseToken.getIsValid());
+		assertEquals("10", rangeFacetLpseToken.getValue());
+		assertEquals("50", rangeFacetLpseToken.getToValue());
 	}
 
 	@Test public void testPreMidSufRangeDecoding() {
@@ -64,17 +65,17 @@ public class FacetLpseRangeTokenTest {
 		StringTokenizer stringTokenizer = new StringTokenizer(uriPath, "/", false);
 		LpseTokeniser lpseTokeniser = new LpseTokeniser(lpsePath, PanlCollection.CODES_AND_METADATA, true);
 		String lpseToken = lpseTokeniser.nextToken();
-		FacetLpseToken facetLpseToken = (FacetLpseToken) LpseToken.getLpseToken(
+		RangeFacetLpseToken rangeFacetLpseToken = (RangeFacetLpseToken) LpseToken.getLpseToken(
 				collectionProperties,
 				lpseToken,
 				"",
 				stringTokenizer,
 				lpseTokeniser);
-		System.out.println(facetLpseToken.explain());
+		System.out.println(rangeFacetLpseToken.explain());
 
-		assertTrue(facetLpseToken.getIsValid());
-		assertEquals(from, Integer.parseInt(facetLpseToken.getValue()));
-		assertEquals(to, Integer.parseInt(facetLpseToken.getToValue()));
+		assertTrue(rangeFacetLpseToken.getIsValid());
+		assertEquals(from, Integer.parseInt(rangeFacetLpseToken.getValue()));
+		assertEquals(to, Integer.parseInt(rangeFacetLpseToken.getToValue()));
 	}
 
 	@Test public void testAppendageVariations() {

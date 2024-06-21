@@ -15,9 +15,12 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class AvailableProcessorTest {
 
-	private static final List<FacetCountBean> WEIGHT_NAME_FACETS = new ArrayList<>();
+	public static final List<FacetCountBean> WEIGHT_NAME_FACETS = new ArrayList<>();
+	public static final List<FacetCountBean> WEIGHT_FACETS = new ArrayList<>();
 	static {
 		WEIGHT_NAME_FACETS.add(new FacetCountBean("weight", new long[] { 1L, 45L, 128L }));
+		WEIGHT_FACETS.add(new FacetCountBean("weight", new long[] { 1L, 45L, 128L }));
+
 		WEIGHT_NAME_FACETS.add(new FacetCountBean("name", new long[] { 3L, 12L, 17L }));
 	}
 

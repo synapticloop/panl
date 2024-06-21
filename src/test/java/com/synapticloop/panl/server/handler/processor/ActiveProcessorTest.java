@@ -9,6 +9,7 @@ import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
 
+import static com.synapticloop.panl.server.handler.processor.AvailableProcessorTest.WEIGHT_FACETS;
 import static org.junit.jupiter.api.Assertions.*;
 
 public class ActiveProcessorTest {
