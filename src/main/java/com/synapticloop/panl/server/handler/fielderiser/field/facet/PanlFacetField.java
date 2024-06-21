@@ -28,6 +28,7 @@ import com.synapticloop.panl.exception.PanlServerException;
 import com.synapticloop.panl.server.handler.fielderiser.field.BaseField;
 import com.synapticloop.panl.server.handler.fielderiser.field.BasePrefixSuffixField;
 import com.synapticloop.panl.server.handler.properties.CollectionProperties;
+import com.synapticloop.panl.server.handler.tokeniser.LpseTokeniser;
 import com.synapticloop.panl.server.handler.tokeniser.token.facet.FacetLpseToken;
 import com.synapticloop.panl.server.handler.tokeniser.token.LpseToken;
 import org.apache.solr.client.solrj.SolrQuery;
@@ -38,6 +39,7 @@ import org.slf4j.LoggerFactory;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
+import java.util.StringTokenizer;
 
 /**
  * <p>A Panl facet field comes in five flavours</p>
@@ -60,13 +62,8 @@ public class PanlFacetField extends BasePrefixSuffixField {
 
 		populateSolrFieldType();
 		validateProperties();
-
 		populateSolrFieldTypeValidation();
 		populatePanlAndSolrFieldNames();
-
-		populateRanges();
-		// lastly, we are going to check to see whether this is an 'OR' field
-//		populateFacetOr();
 
 		logDetails();
 	}
@@ -87,81 +84,7 @@ public class PanlFacetField extends BasePrefixSuffixField {
 	}
 
 
-	private void applyRangeFacetToQuery(SolrQuery solrQuery, List<LpseToken> lpseTokens) {
-		for (LpseToken lpseToken : lpseTokens) {
-			FacetLpseToken facetLpseToken = (FacetLpseToken) lpseToken;
-
-			// even though this field is set to be a range facet, we still allow
-			// single values
-
-			if(facetLpseToken.getIsRangeToken()) {
-				String value = (hasMinRangeWildcard && facetLpseToken.getValue().equals(getMinRange())) ? "*" : facetLpseToken.getValue();
-				String toValue = (hasMaxRangeWildcard && facetLpseToken.getToValue().equals(getMaxRange())) ? "*" : facetLpseToken.getToValue();
-				solrQuery.addFilterQuery(
-						String.format("%s:[%s TO %s]",
-								facetLpseToken.getSolrField(),
-								value,
-								toValue));
-			} else {
-				solrQuery.addFilterQuery(String.format("%s:\"%s\"",
-						facetLpseToken.getSolrField(),
-						facetLpseToken.getValue()));
-			}
-		}
-	}
-
-	private void applyOrFacetToQuery(SolrQuery solrQuery, List<LpseToken> lpseTokens) {
-		// if there is only one...
-		if (lpseTokens.size() == 1) {
-			FacetLpseToken facetLpseToken = (FacetLpseToken) lpseTokens.get(0);
-
-			solrQuery.addFilterQuery(
-					String.format("%s:\"%s\"",
-							facetLpseToken.getSolrField(),
-							facetLpseToken.getValue()));
-			return;
-		}
-
-		StringBuilder stringBuilder = new StringBuilder();
-		boolean isFirst = true;
-		// at this point, we are going through the or filters
-		for (LpseToken lpseToken : lpseTokens) {
-			FacetLpseToken facetLpseToken = (FacetLpseToken) lpseToken;
-			if (isFirst) {
-				stringBuilder
-						.append(facetLpseToken.getSolrField())
-						.append(":(");
-			}
-
-			if (!isFirst) {
-				stringBuilder.append(" OR ");
-			}
-
-			stringBuilder
-					.append("\"")
-					.append(facetLpseToken.getValue())
-					.append("\"");
-
-			isFirst = false;
-		}
-
-		stringBuilder.append(")");
-		solrQuery.addFilterQuery(stringBuilder.toString());
-	}
-
 	protected void applyToQueryInternal(SolrQuery solrQuery, List<LpseToken> lpseTokenList) {
-		// check to see whether this is a RANGE facet
-
-		if (isRangeFacet) {
-			applyRangeFacetToQuery(solrQuery, lpseTokenList);
-			return;
-		}
-
-		if (isOrFacet) {
-			applyOrFacetToQuery(solrQuery, lpseTokenList);
-			return;
-		}
-
 		// At this point, we just have regular facets.
 		for (LpseToken lpseToken : lpseTokenList) {
 			FacetLpseToken facetLpseToken = (FacetLpseToken) lpseToken;
@@ -173,5 +96,10 @@ public class PanlFacetField extends BasePrefixSuffixField {
 
 	@Override public void appendAvailableObjectInternal(JSONObject jsonObject) {
 
+	}
+
+	@Override
+	public LpseToken instantiateToken(CollectionProperties collectionProperties, String lpseCode, String query, StringTokenizer valueTokeniser, LpseTokeniser lpseTokeniser) {
+		return(new FacetLpseToken(collectionProperties, this.lpseCode, lpseTokeniser, valueTokeniser));
 	}
 }

@@ -142,7 +142,6 @@ public class AvailableProcessor extends Processor {
 	 * @param panlTokenMap The Map of existing tokens that are already in the URI
 	 *
 	 * @return The addition URI
-	 */
 
 	private JSONObject getAdditionURIObject(BaseField lpseField, Map<String, List<LpseToken>> panlTokenMap, boolean shouldRange) {
 		String additionLpseCode = lpseField.getLpseCode();
@@ -232,4 +231,6 @@ public class AvailableProcessor extends Processor {
 		additionObject.put(JSON_KEY_AFTER_MAX_VALUE, lpseUriAfterMax.toString() + lpseCode.toString() + FORWARD_SLASH);
 		return (additionObject);
 	}
+	 */
+
 }

@@ -26,7 +26,11 @@ package com.synapticloop.panl.server.handler.fielderiser.field.param;
 
 import com.synapticloop.panl.exception.PanlServerException;
 import com.synapticloop.panl.server.handler.fielderiser.field.BaseField;
+import com.synapticloop.panl.server.handler.properties.CollectionProperties;
+import com.synapticloop.panl.server.handler.tokeniser.LpseTokeniser;
 import com.synapticloop.panl.server.handler.tokeniser.token.LpseToken;
+import com.synapticloop.panl.server.handler.tokeniser.token.param.PageNumLpseToken;
+import com.synapticloop.panl.server.handler.tokeniser.token.param.QueryLpseToken;
 import org.apache.solr.client.solrj.SolrQuery;
 import org.json.JSONObject;
 import org.slf4j.Logger;
@@ -35,6 +39,7 @@ import org.slf4j.LoggerFactory;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
+import java.util.StringTokenizer;
 
 public class PanlQueryField extends BaseField {
 	private static final Logger LOGGER = LoggerFactory.getLogger(PanlQueryField.class);
@@ -72,4 +77,9 @@ public class PanlQueryField extends BaseField {
 	@Override public void appendAvailableObjectInternal(JSONObject jsonObject) {
 
 	}
+
+	@Override public LpseToken instantiateToken(CollectionProperties collectionProperties, String lpseCode, String query, StringTokenizer valueTokeniser, LpseTokeniser lpseTokeniser) {
+		return(new QueryLpseToken(collectionProperties, this.lpseCode, query, valueTokeniser));
+	}
+
 }

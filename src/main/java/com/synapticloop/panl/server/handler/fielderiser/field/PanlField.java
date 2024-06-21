@@ -26,16 +26,16 @@ package com.synapticloop.panl.server.handler.fielderiser.field;
 
 import com.synapticloop.panl.exception.PanlServerException;
 import com.synapticloop.panl.server.handler.properties.CollectionProperties;
+import com.synapticloop.panl.server.handler.tokeniser.LpseTokeniser;
 import com.synapticloop.panl.server.handler.tokeniser.token.LpseToken;
+import com.synapticloop.panl.server.handler.tokeniser.token.facet.RangeFacetLpseToken;
+import com.synapticloop.panl.server.handler.tokeniser.token.param.PageNumLpseToken;
 import org.apache.solr.client.solrj.SolrQuery;
 import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Properties;
+import java.util.*;
 
 public class PanlField extends BaseField {
 	private static final Logger LOGGER = LoggerFactory.getLogger(PanlField.class);
@@ -77,6 +77,10 @@ public class PanlField extends BaseField {
 
 	@Override public void appendAvailableObjectInternal(JSONObject jsonObject) {
 
+	}
+
+	public LpseToken instantiateToken(CollectionProperties collectionProperties, String lpseCode, String query, StringTokenizer valueTokeniser, LpseTokeniser lpseTokeniser) {
+		return(new PageNumLpseToken(collectionProperties, this.lpseCode, valueTokeniser));
 	}
 
 }

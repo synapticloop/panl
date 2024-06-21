@@ -4,6 +4,7 @@ import com.synapticloop.panl.exception.PanlServerException;
 import com.synapticloop.panl.server.handler.fielderiser.field.BaseField;
 import com.synapticloop.panl.server.handler.fielderiser.field.BasePrefixSuffixField;
 import com.synapticloop.panl.server.handler.properties.CollectionProperties;
+import com.synapticloop.panl.server.handler.tokeniser.LpseTokeniser;
 import com.synapticloop.panl.server.handler.tokeniser.token.LpseToken;
 import com.synapticloop.panl.server.handler.tokeniser.token.facet.FacetLpseToken;
 import com.synapticloop.panl.server.handler.tokeniser.token.facet.OrFacetLpseToken;
@@ -31,7 +32,6 @@ public class PanlOrFacetField extends PanlFacetField {
 	public PanlOrFacetField(String lpseCode, String propertyKey, Properties properties, String solrCollection, int lpseLength) throws PanlServerException {
 		super(lpseCode, propertyKey, properties, solrCollection, lpseLength);
 
-		populateParamSuffixAndPrefix();
 		populateFacetOr();
 	}
 
@@ -247,4 +247,9 @@ public class PanlOrFacetField extends PanlFacetField {
 		additionObject.put(JSON_KEY_AFTER, FORWARD_SLASH +lpseUri.toString() + lpseUriCode.toString() + FORWARD_SLASH);
 		return (additionObject);
 	}
+
+	public LpseToken instantiateToken(CollectionProperties collectionProperties, String lpseCode, String query, StringTokenizer valueTokeniser, LpseTokeniser lpseTokeniser) {
+		return(new OrFacetLpseToken(collectionProperties, this.lpseCode, lpseTokeniser, valueTokeniser));
+	}
+
 }

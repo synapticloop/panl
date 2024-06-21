@@ -26,8 +26,10 @@ package com.synapticloop.panl.server.handler.fielderiser.field.facet;
 
 import com.synapticloop.panl.exception.PanlServerException;
 import com.synapticloop.panl.server.handler.properties.CollectionProperties;
+import com.synapticloop.panl.server.handler.tokeniser.LpseTokeniser;
 import com.synapticloop.panl.server.handler.tokeniser.token.LpseToken;
 import com.synapticloop.panl.server.handler.tokeniser.token.facet.DateFacetLpseToken;
+import com.synapticloop.panl.server.handler.tokeniser.token.facet.RangeFacetLpseToken;
 import org.apache.solr.client.solrj.SolrQuery;
 import org.json.JSONObject;
 import org.slf4j.Logger;
@@ -343,4 +345,9 @@ public class PanlDateFacetField extends PanlFacetField {
 
 		additionObject.put(JSON_KEY_DESIGNATOR, designatorObject);
 	}
+
+	public LpseToken instantiateToken(CollectionProperties collectionProperties, String lpseCode, String query, StringTokenizer valueTokeniser, LpseTokeniser lpseTokeniser) {
+		return(new DateFacetLpseToken(collectionProperties, this.lpseCode, lpseTokeniser, valueTokeniser));
+	}
+
 }

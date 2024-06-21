@@ -2,8 +2,10 @@ package com.synapticloop.panl.server.handler.fielderiser.field.facet;
 
 import com.synapticloop.panl.exception.PanlServerException;
 import com.synapticloop.panl.server.handler.properties.CollectionProperties;
+import com.synapticloop.panl.server.handler.tokeniser.LpseTokeniser;
 import com.synapticloop.panl.server.handler.tokeniser.token.LpseToken;
 import com.synapticloop.panl.server.handler.tokeniser.token.facet.BooleanFacetLpseToken;
+import com.synapticloop.panl.server.handler.tokeniser.token.facet.RangeFacetLpseToken;
 import org.apache.solr.client.solrj.SolrQuery;
 
 import java.net.URLDecoder;
@@ -12,8 +14,12 @@ import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
+import java.util.StringTokenizer;
 
 public class PanlBooleanFacetField extends PanlFacetField {
+	public static final String BOOLEAN_TRUE_VALUE = "true";
+	public static final String BOOLEAN_FALSE_VALUE = "false";
+
 	// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - //
 	//                         BOOLEAN Facet properties                        //
 	// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - //
@@ -196,4 +202,9 @@ public class PanlBooleanFacetField extends PanlFacetField {
 			return;
 		}
 	}
+
+	public LpseToken instantiateToken(CollectionProperties collectionProperties, String lpseCode, String query, StringTokenizer valueTokeniser, LpseTokeniser lpseTokeniser) {
+		return(new BooleanFacetLpseToken(collectionProperties, this.lpseCode, lpseTokeniser, valueTokeniser));
+	}
+
 }

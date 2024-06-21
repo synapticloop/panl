@@ -24,6 +24,7 @@ package com.synapticloop.panl.server.handler.tokeniser.token.facet;
  *  IN THE SOFTWARE.
  */
 
+import com.synapticloop.panl.server.handler.fielderiser.field.facet.PanlRangeFacetField;
 import com.synapticloop.panl.server.handler.properties.CollectionProperties;
 import com.synapticloop.panl.server.handler.fielderiser.field.BaseField;
 import com.synapticloop.panl.server.handler.tokeniser.LpseTokeniser;
@@ -138,7 +139,7 @@ public class FacetLpseToken extends LpseToken {
 				this.originalValue = valueTokeniser.nextToken();
 
 				if (isRangeToken && this.isValid) {
-					FromToBean fromToBean = lpseField.getDecodedRangeValues(this.originalValue);
+					FromToBean fromToBean = ((PanlRangeFacetField)lpseField).getDecodedRangeValues(this.originalValue);
 					if(null == fromToBean) {
 						this.isValid = false;
 					} else {

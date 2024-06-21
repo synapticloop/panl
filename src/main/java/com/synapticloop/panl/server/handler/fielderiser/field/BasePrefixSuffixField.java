@@ -107,6 +107,10 @@ public abstract class BasePrefixSuffixField extends BaseField {
 	 * 		return <code>null</code> if it is invalid.
 	 */
 	@Override public String getDecodedValue(String value) {
+		if(null == value) {
+			return(null);
+		}
+
 		String decodedValue = URLDecoder.decode(value, StandardCharsets.UTF_8);
 
 		if (hasValuePrefix) {
