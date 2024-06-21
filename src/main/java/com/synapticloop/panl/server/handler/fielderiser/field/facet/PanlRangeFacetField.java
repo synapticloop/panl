@@ -38,6 +38,8 @@ public class PanlRangeFacetField extends PanlFacetField {
 	public static final String PROPERTY_KEY_PANL_RANGE_MIN_VALUE = "panl.range.min.value.";
 	public static final String PROPERTY_KEY_PANL_RANGE_MAX_VALUE = "panl.range.max.value.";
 
+	public static final String JSON_KEY_IS_RANGE_FACET = "is_range_facet";
+
 	// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - //
 	//                          RANGE Facet properties                         //
 	// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - //
@@ -141,8 +143,6 @@ public class PanlRangeFacetField extends PanlFacetField {
 				this.lpseCode);
 	}
 
-	public static final String JSON_KEY_IS_RANGE_FACET = "is_range_facet";
-
 	@Override public void appendToAvailableObjectInternal(JSONObject jsonObject) {
 		jsonObject.put(JSON_KEY_IS_RANGE_FACET, true);
 	}
@@ -158,7 +158,7 @@ public class PanlRangeFacetField extends PanlFacetField {
 	 * @param collectionProperties The collection properties
 	 * @param panlTokenMap The panl token map
 	 * @param existingLpseValues The existing LPSE values for this lpseCode
-	 * @param values The Facet values from Solr
+	 * @param facetCountValues The Facet values from Solr
 	 * @param numFound The number of results found
 	 * @param numFoundExact Whether the number of results found is an exact
 	 * 		number
@@ -170,7 +170,7 @@ public class PanlRangeFacetField extends PanlFacetField {
 			CollectionProperties collectionProperties,
 			Map<String, List<LpseToken>> panlTokenMap,
 			Set<String> existingLpseValues,
-			List<FacetField.Count> values,
+			List<FacetField.Count> facetCountValues,
 			long numFound,
 			boolean numFoundExact) {
 
@@ -183,7 +183,7 @@ public class PanlRangeFacetField extends PanlFacetField {
 		}
 
 
-		for (FacetField.Count value : values) {
+		for (FacetField.Count value : facetCountValues) {
 			boolean shouldAdd = true;
 			// at this point - we need to see whether we already have the 'value'
 			// as a facet - as there is no need to have it again
@@ -245,7 +245,6 @@ public class PanlRangeFacetField extends PanlFacetField {
 			Map<String, List<LpseToken>> panlTokenMap) {
 
 		// put this in the array please
-		String lpseCode = this.lpseCode;
 		rangeFacetObject.put(JSON_KEY_FACET_NAME, collectionProperties.getSolrFieldNameFromLpseCode(lpseCode));
 		rangeFacetObject.put(JSON_KEY_NAME, collectionProperties.getPanlNameFromPanlCode(lpseCode));
 		rangeFacetObject.put(JSON_KEY_PANL_CODE, lpseCode);
@@ -374,46 +373,46 @@ public class PanlRangeFacetField extends PanlFacetField {
 	 *
 	 * @return The JSON object with the keys appended
 	 */
-	protected JSONObject getAdditionURIObject(
-			CollectionProperties collectionProperties,
-			Map<String, List<LpseToken>> panlTokenMap) {
-		JSONObject additionObject = new JSONObject();
-
-		StringBuilder lpseUri = new StringBuilder(FORWARD_SLASH);
-		StringBuilder lpseUriBefore = new StringBuilder();
-		StringBuilder lpseUriCode = new StringBuilder();
-
-		for (BaseField baseField : collectionProperties.getLpseFields()) {
-			// we need to add in any other token values in the correct order
-			String orderedLpseCode = baseField.getLpseCode();
-
-			// if we don't have a current token, just carry on
-			if (!panlTokenMap.containsKey(orderedLpseCode)) {
-				continue;
-			}
-
-			if (orderedLpseCode.equals(this.lpseCode)) {
-				// we have found the current LPSE code, so reset the URI and add it to
-				// the after
-				lpseUri.append(baseField.getURIPath(panlTokenMap, collectionProperties));
-				lpseUriBefore.append(lpseUri);
-				lpseUri.setLength(0);
-				lpseUriCode.append(this.lpseCode);
-
-				// we add an additional LPSE code for the additional value that we are
-				// going to put in
-				lpseUriCode.append(this.lpseCode);
-			} else {
-				lpseUri.append(baseField.getURIPath(panlTokenMap, collectionProperties));
-				lpseUriCode.append(baseField.getLpseCode());
-			}
-		}
-
-		additionObject.put(JSON_KEY_BEFORE, lpseUriBefore.toString());
-
-		additionObject.put(JSON_KEY_AFTER, FORWARD_SLASH + lpseUri.toString() + lpseUriCode.toString() + FORWARD_SLASH);
-		return (additionObject);
-	}
+//	protected JSONObject getAdditionURIObject(
+//			CollectionProperties collectionProperties,
+//			Map<String, List<LpseToken>> panlTokenMap) {
+//		JSONObject additionObject = new JSONObject();
+//
+//		StringBuilder lpseUri = new StringBuilder(FORWARD_SLASH);
+//		StringBuilder lpseUriBefore = new StringBuilder();
+//		StringBuilder lpseUriCode = new StringBuilder();
+//
+//		for (BaseField baseField : collectionProperties.getLpseFields()) {
+//			// we need to add in any other token values in the correct order
+//			String orderedLpseCode = baseField.getLpseCode();
+//
+//			// if we don't have a current token, just carry on
+//			if (!panlTokenMap.containsKey(orderedLpseCode)) {
+//				continue;
+//			}
+//
+//			if (orderedLpseCode.equals(this.lpseCode)) {
+//				// we have found the current LPSE code, so reset the URI and add it to
+//				// the after
+//				lpseUri.append(baseField.getURIPath(panlTokenMap, collectionProperties));
+//				lpseUriBefore.append(lpseUri);
+//				lpseUri.setLength(0);
+//				lpseUriCode.append(this.lpseCode);
+//
+//				// we add an additional LPSE code for the additional value that we are
+//				// going to put in
+//				lpseUriCode.append(this.lpseCode);
+//			} else {
+//				lpseUri.append(baseField.getURIPath(panlTokenMap, collectionProperties));
+//				lpseUriCode.append(baseField.getLpseCode());
+//			}
+//		}
+//
+//		additionObject.put(JSON_KEY_BEFORE, lpseUriBefore.toString());
+//
+//		additionObject.put(JSON_KEY_AFTER, FORWARD_SLASH + lpseUri.toString() + lpseUriCode.toString() + FORWARD_SLASH);
+//		return (additionObject);
+//	}
 
 
 	/**

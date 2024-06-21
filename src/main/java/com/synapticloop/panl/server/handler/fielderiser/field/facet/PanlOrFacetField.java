@@ -108,21 +108,22 @@ public class PanlOrFacetField extends PanlFacetField {
 	 * <p>OR facets are different, in that they will return a currently selected
 	 * facet and more</p>
 	 *
-	 * @param facetObject
-	 * @param collectionProperties
-	 * @param panlTokenMap
-	 * @param values
-	 * @param numFound
-	 * @param numFoundExact
+	 * @param facetObject The facet object to append to
+	 * @param collectionProperties The colleciton properties
+	 * @param panlTokenMap The incoming Panl tokens
+	 * @param existingLpseValues The existing LPSE values
+	 * @param facetCountValues The facet count values
+	 * @param numFound Number of results found
+	 * @param numFoundExact Whether the number of results were exact
 	 *
-	 * @return whether things were appended
+	 * @return Whether any values were appended
 	 */
-	public boolean appendAvailableValues(
+	@Override public boolean appendAvailableValues(
 			JSONObject facetObject,
 			CollectionProperties collectionProperties,
 			Map<String, List<LpseToken>> panlTokenMap,
 			Set<String> existingLpseValues,
-			List<FacetField.Count> values,
+			List<FacetField.Count> facetCountValues,
 			long numFound,
 			boolean numFoundExact) {
 
@@ -135,7 +136,7 @@ public class PanlOrFacetField extends PanlFacetField {
 		}
 
 
-		for (FacetField.Count value : values) {
+		for (FacetField.Count value : facetCountValues) {
 			boolean shouldAdd = true;
 			// at this point - we need to see whether we already have the 'value'
 			// as a facet - as there is no need to have it again
@@ -164,20 +165,9 @@ public class PanlOrFacetField extends PanlFacetField {
 			}
 		}
 
-		int length = facetValueArrays.length();
-		boolean shouldIncludeFacet = true;
-		switch (length) {
-			case 0:
-				shouldIncludeFacet = false;
-				break;
-			case 1:
-				shouldIncludeFacet = panlIncludeSingleFacets;
-				break;
-		}
-
 		// if we don't have any values for this facet, don't put it in
 
-		if (shouldIncludeFacet) {
+		if (!facetValueArrays.isEmpty()) {
 			facetObject.put(JSON_KEY_VALUES, facetValueArrays);
 			if (null != lpseCode) {
 				facetObject.put(JSON_KEY_URIS,
@@ -194,13 +184,19 @@ public class PanlOrFacetField extends PanlFacetField {
 	/**
 	 * <p>This is an OR facet, so we can additional </p>
 	 *
-	 * @param collectionProperties
-	 * @param lpseField
-	 * @param panlTokenMap
+	 * @param collectionProperties The collection properties
+	 * @param lpseField The LPSE field that this applies to
+	 * @param panlTokenMap The inbound Panl tokens
 	 *
-	 * @return
+	 * @return The JSON object with the URIs for adding this field to the
+	 * 		existing search URI.
 	 */
-	protected JSONObject getAdditionURIObject(CollectionProperties collectionProperties, BaseField lpseField, Map<String, List<LpseToken>> panlTokenMap) {
+	@Override
+	protected JSONObject getAdditionURIObject(
+			CollectionProperties collectionProperties,
+			BaseField lpseField,
+			Map<String, List<LpseToken>> panlTokenMap) {
+
 		JSONObject additionObject = new JSONObject();
 
 		StringBuilder lpseUri = new StringBuilder(FORWARD_SLASH);
@@ -211,47 +207,37 @@ public class PanlOrFacetField extends PanlFacetField {
 			// we need to add in any other token values in the correct order
 			String orderedLpseCode = baseField.getLpseCode();
 
-			// if we don't have a current token, just carry on
-			if (!panlTokenMap.containsKey(orderedLpseCode)) {
-				continue;
-			}
-
 			if (orderedLpseCode.equals(this.lpseCode)) {
 				// we have found the current LPSE code, so reset the URI and add it to
 				// the after
+
 				lpseUri.append(baseField.getURIPath(panlTokenMap, collectionProperties));
 				lpseUriBefore.append(lpseUri);
 				lpseUri.setLength(0);
+				lpseUriCode.append(baseField.getLpseCode(panlTokenMap, collectionProperties));
 				lpseUriCode.append(this.lpseCode);
 
-				// we add an additional LPSE code for the additional value that we are
-				// going to put in
-				lpseUriCode.append(this.lpseCode);
 			} else {
+				// if we don't have a current token, just carry on
+				if (!panlTokenMap.containsKey(orderedLpseCode)) {
+					continue;
+				}
 				lpseUri.append(baseField.getURIPath(panlTokenMap, collectionProperties));
 				lpseUriCode.append(baseField.getLpseCode());
 			}
 		}
 
-//		int size = panlTokenMap.getOrDefault(this.lpseCode, new ArrayList<>()).size();
-//		for (int i = 0; i < size; i++) {
-//			lpseUriCode.append(lpseCode);
-//		}
-//
-//		lpseUriCode.append(lpseCode);
-
 		additionObject.put(JSON_KEY_BEFORE, lpseUriBefore.toString());
 
-		additionObject.put(JSON_KEY_AFTER, FORWARD_SLASH +lpseUri.toString() + lpseUriCode.toString() + FORWARD_SLASH);
+		additionObject.put(JSON_KEY_AFTER, FORWARD_SLASH + lpseUri.toString() + lpseUriCode.toString() + FORWARD_SLASH);
 		return (additionObject);
 	}
 
-	public LpseToken instantiateToken(CollectionProperties collectionProperties, String lpseCode, String query, StringTokenizer valueTokeniser, LpseTokeniser lpseTokeniser) {
-		return(new OrFacetLpseToken(collectionProperties, this.lpseCode, lpseTokeniser, valueTokeniser));
+	@Override public LpseToken instantiateToken(CollectionProperties collectionProperties, String lpseCode, String query, StringTokenizer valueTokeniser, LpseTokeniser lpseTokeniser) {
+		return (new OrFacetLpseToken(collectionProperties, this.lpseCode, lpseTokeniser, valueTokeniser));
 	}
 
-	public void addToRemoveObject(JSONObject removeObject, LpseToken lpseToken) {
+	@Override public void addToRemoveObject(JSONObject removeObject, LpseToken lpseToken) {
 		removeObject.put(JSON_KEY_IS_OR_FACET, true);
 	}
-
 }

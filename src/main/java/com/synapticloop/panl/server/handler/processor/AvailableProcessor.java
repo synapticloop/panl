@@ -88,6 +88,7 @@ public class AvailableProcessor extends Processor {
 		Map<String, JSONObject> panlFacetOrderMap = new LinkedHashMap<>();
 
 		JSONArray rangeFacetArray = new JSONArray();
+		JSONArray dateRangeFacetArray = new JSONArray();
 
 		for (FacetField facetField : queryResponse.getFacetFields()) {
 			// These codes are ignored, just carry on
@@ -104,7 +105,6 @@ public class AvailableProcessor extends Processor {
 
 			if (facetField.getValueCount() != 0) {
 				JSONObject facetObject = new JSONObject();
-				JSONObject rangeFacetObject = new JSONObject();
 				baseField.appendToAvailableFacetObject(facetObject);
 				if(baseField.appendAvailableValues(
 						facetObject,
@@ -114,15 +114,25 @@ public class AvailableProcessor extends Processor {
 						facetField.getValues(),
 						numFound,
 						numFoundExact)) {
+
 					panlFacetOrderMap.put(lpseCode, facetObject);
 				}
 
 				baseField.addToAdditionObject(facetObject, panlTokenMap);
 
-				if(baseField.appendAvailableRangeValues(rangeFacetObject, collectionProperties, panlTokenMap)) {
-					rangeFacetArray.put(rangeFacetObject);
-				}
 			}
+
+			// these range facets will always appear
+			JSONObject rangeFacetObject = new JSONObject();
+			if(baseField.appendAvailableRangeValues(rangeFacetObject, collectionProperties, panlTokenMap)) {
+				rangeFacetArray.put(rangeFacetObject);
+			}
+
+			JSONObject dateRangeFacetObject = new JSONObject();
+			if(baseField.appendAvailableDateRangeValues(dateRangeFacetObject, collectionProperties, panlTokenMap)) {
+				dateRangeFacetArray.put(dateRangeFacetObject);
+			}
+
 		}
 
 
@@ -133,8 +143,8 @@ public class AvailableProcessor extends Processor {
 		}
 
 		jsonObject.put(JSON_KEY_FACETS, panlFacets);
-
 		jsonObject.put(JSON_KEY_RANGE_FACETS, rangeFacetArray);
+		jsonObject.put(JSON_KEY_DATE_RANGE_FACETS, dateRangeFacetArray);
 		return (jsonObject);
 	}
 

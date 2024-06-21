@@ -24,19 +24,24 @@ package com.synapticloop.panl.server.handler.tokeniser.token.facet;
  *  IN THE SOFTWARE.
  */
 
-import com.synapticloop.panl.server.handler.fielderiser.field.facet.PanlDateFacetField;
+import com.synapticloop.panl.server.handler.fielderiser.field.facet.PanlDateRangeFacetField;
 import com.synapticloop.panl.server.handler.properties.CollectionProperties;
 import com.synapticloop.panl.server.handler.tokeniser.LpseTokeniser;
 import com.synapticloop.panl.server.handler.tokeniser.token.LpseToken;
+import com.synapticloop.panl.server.handler.tokeniser.token.facet.bean.PreviousNextValueBean;
 
 import java.util.StringTokenizer;
 
-public class DateFacetLpseToken extends LpseToken {
+public class DateRangeFacetLpseToken extends LpseToken {
 	public static final String TOKEN_TYPE = "facet";
 
+	// TODO - should be done in the BaseField
 	private String solrField = null;
 
-	public DateFacetLpseToken(
+	private String previousNext;
+	private String designator;
+
+	public DateRangeFacetLpseToken(
 			CollectionProperties collectionProperties,
 			String lpseCode,
 			LpseTokeniser lpseTokeniser,
@@ -66,12 +71,16 @@ public class DateFacetLpseToken extends LpseToken {
 		if (collectionProperties.hasFacetCode(lpseCode)) {
 			this.solrField = collectionProperties.getSolrFieldNameFromLpseCode(lpseCode);
 
-			PanlDateFacetField lpseField = (PanlDateFacetField) collectionProperties.getLpseField(this.lpseCode);
+			PanlDateRangeFacetField lpseField = (PanlDateRangeFacetField) collectionProperties.getLpseField(this.lpseCode);
 
-			this.value = lpseField.getDecodedValue(this.originalValue);
 
-			if(null == this.value) {
+			PreviousNextValueBean previousNextValueBean = lpseField.getDecodedRangeValue(this.originalValue);
+			if(null == previousNextValueBean) {
 				this.isValid = false;
+			} else {
+				this.value = previousNextValueBean.getValue();
+				this.previousNext = previousNextValueBean.getPreviousNext();
+				this.designator = previousNextValueBean.getDesignator();
 			}
 		} else {
 			this.isValid = false;
@@ -87,7 +96,11 @@ public class DateFacetLpseToken extends LpseToken {
 				"' (solr field '" +
 				this.solrField +
 				"') with parsed value '" +
-				value +
+				this.previousNext +
+				" " +
+ 				value +
+				" " +
+				this.designator +
 				"', incoming value '" +
 				this.originalValue +
 				"'.");
@@ -99,5 +112,13 @@ public class DateFacetLpseToken extends LpseToken {
 
 	public String getSolrField() {
 		return solrField;
+	}
+
+	public String getPreviousNext() {
+		return previousNext;
+	}
+
+	public String getDesignator() {
+		return designator;
 	}
 }

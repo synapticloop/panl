@@ -131,15 +131,12 @@ public class CollectionProperties {
 	private final Map<String, PanlField> SOLR_NAME_TO_FIELD_MAP = new HashMap<>();
 	private final Map<String, PanlSortField> LPSE_CODE_TO_SORT_FIELD_MAP = new HashMap<>();
 	private final Map<String, PanlSortField> SOLR_NAME_TO_SORT_FIELD_MAP = new HashMap<>();
-	private final Map<String, PanlDateFacetField> LPSE_CODE_DATE_FACET_MAP = new HashMap<>();
+	private final Map<String, PanlDateRangeFacetField> LPSE_CODE_DATE_FACET_MAP = new HashMap<>();
 	private final Map<String, PanlBooleanFacetField> LPSE_CODE_BOOLEAN_FACET_MAP = new HashMap<>();
 
 	private final Set<String> PANL_CODE_OR_FIELDS = new HashSet<>();
 	private final Set<String> PANL_CODE_RANGE_FIELDS = new HashSet<>();
 
-
-	private boolean panlIncludeSingleFacets;
-	private boolean panlIncludeSameNumberFacets;
 
 	private final String validUrlString;
 
@@ -292,8 +289,6 @@ public class CollectionProperties {
 	 * 		could not be adequately parsed
 	 */
 	private void parseDefaultProperties() throws PanlServerException {
-		this.panlIncludeSingleFacets = properties.getProperty(PROPERTY_KEY_PANL_INCLUDE_SINGLE_FACETS, "false").equals("true");
-		this.panlIncludeSameNumberFacets = properties.getProperty(PROPERTY_KEY_PANL_INCLUDE_SAME_NUMBER_FACETS, "false").equals("true");
 		this.formQueryRespondTo = properties.getProperty(PROPERTY_KEY_PANL_FORM_QUERY_RESPONDTO, "q");
 
 		this.facetMinCount = PropertyHelper.getIntProperty(properties, PROPERTY_KEY_SOLR_FACET_MIN_COUNT, 1);
@@ -400,8 +395,8 @@ public class CollectionProperties {
 
 			PanlFacetField facetField;
 			if(TYPE_SOLR_DATE_POINT_FIELD.equals(solrFieldType)) {
-				facetField = new PanlDateFacetField(lpseCode, panlFieldKey, properties, solrCollection, lpseLength);
-				LPSE_CODE_DATE_FACET_MAP.put(lpseCode, (PanlDateFacetField) facetField);
+				facetField = new PanlDateRangeFacetField(lpseCode, panlFieldKey, properties, solrCollection, lpseLength);
+				LPSE_CODE_DATE_FACET_MAP.put(lpseCode, (PanlDateRangeFacetField) facetField);
 			} else if(TYPE_SOLR_BOOL_FIELD.equals(solrFieldType)) {
 				facetField = new PanlBooleanFacetField(lpseCode, panlFieldKey, properties, solrCollection, lpseLength);
 				LPSE_CODE_BOOLEAN_FACET_MAP.put(lpseCode, (PanlBooleanFacetField) facetField);

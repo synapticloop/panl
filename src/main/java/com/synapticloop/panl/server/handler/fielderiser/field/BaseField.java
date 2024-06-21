@@ -526,18 +526,32 @@ public abstract class BaseField {
 		return (false);
 	}
 
+	/**
+	 * <p>Append to the facet object any available facet values (not including
+	 * the currently selected facet value.</p>
+	 *
+	 * @param facetObject The facet object to append to
+	 * @param collectionProperties The colleciton properties
+	 * @param panlTokenMap The incoming Panl tokens
+	 * @param existingLpseValues The existing LPSE values
+	 * @param facetCountValues The facet count values
+	 * @param numFound Number of results found
+	 * @param numFoundExact Whether the number of results were exact
+	 *
+	 * @return Whether any values were appended
+	 */
 	public boolean appendAvailableValues(
 			JSONObject facetObject,
 			CollectionProperties collectionProperties,
 			Map<String, List<LpseToken>> panlTokenMap,
 			Set<String> existingLpseValues,
-			List<FacetField.Count> values,
+			List<FacetField.Count> facetCountValues,
 			long numFound,
 			boolean numFoundExact) {
 
 		JSONArray facetValueArrays = new JSONArray();
 
-		for (FacetField.Count value : values) {
+		for (FacetField.Count value : facetCountValues) {
 			// at this point - we need to see whether we already have the 'value'
 			// as a facet - as there is no need to have it again
 			boolean shouldAdd = true;
@@ -671,5 +685,9 @@ public abstract class BaseField {
 
 	public void addToRemoveObject(JSONObject removeObject, LpseToken lpseToken) {
 
+	}
+
+	public boolean appendAvailableDateRangeValues(JSONObject dateRangeFacetObject, CollectionProperties collectionProperties, Map<String, List<LpseToken>> panlTokenMap) {
+		return(false);
 	}
 }
