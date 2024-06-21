@@ -2,7 +2,6 @@ package com.synapticloop.panl.server.handler.fielderiser.field;
 
 import com.synapticloop.panl.exception.PanlServerException;
 import com.synapticloop.panl.server.handler.tokeniser.token.LpseToken;
-import com.synapticloop.panl.server.handler.tokeniser.token.facet.FacetLpseToken;
 import org.json.JSONObject;
 
 import java.net.URLDecoder;
@@ -163,7 +162,7 @@ public abstract class BasePrefixSuffixField extends BaseField {
 		}
 	}
 
-	@Override public void appendAvailableObjectInternal(JSONObject jsonObject) {
+	@Override protected void appendToAvailableObjectInternal(JSONObject jsonObject) {
 
 	}
 }

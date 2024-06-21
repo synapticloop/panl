@@ -74,7 +74,7 @@ public class PanlQueryField extends BaseField {
 		return(explanations);
 	}
 
-	@Override public void appendAvailableObjectInternal(JSONObject jsonObject) {
+	@Override public void appendToAvailableObjectInternal(JSONObject jsonObject) {
 
 	}
 

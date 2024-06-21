@@ -2,11 +2,9 @@ package com.synapticloop.panl.server.handler.fielderiser.field.facet;
 
 import com.synapticloop.panl.exception.PanlServerException;
 import com.synapticloop.panl.server.handler.fielderiser.field.BaseField;
-import com.synapticloop.panl.server.handler.fielderiser.field.BasePrefixSuffixField;
 import com.synapticloop.panl.server.handler.properties.CollectionProperties;
 import com.synapticloop.panl.server.handler.tokeniser.LpseTokeniser;
 import com.synapticloop.panl.server.handler.tokeniser.token.LpseToken;
-import com.synapticloop.panl.server.handler.tokeniser.token.facet.FacetLpseToken;
 import com.synapticloop.panl.server.handler.tokeniser.token.facet.OrFacetLpseToken;
 import org.apache.solr.client.solrj.SolrQuery;
 import org.apache.solr.client.solrj.response.FacetField;
@@ -26,7 +24,6 @@ public class PanlOrFacetField extends PanlFacetField {
 	// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - //
 	//                            OR Facet properties                          //
 	// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - //
-	// we don't need this
 	protected boolean isOrFacet = false;
 
 	public PanlOrFacetField(String lpseCode, String propertyKey, Properties properties, String solrCollection, int lpseLength) throws PanlServerException {
@@ -103,7 +100,7 @@ public class PanlOrFacetField extends PanlFacetField {
 
 	public static final String JSON_KEY_IS_OR_FACET = "is_or_facet";
 
-	@Override public void appendAvailableObjectInternal(JSONObject jsonObject) {
+	@Override public void appendToAvailableObjectInternal(JSONObject jsonObject) {
 		jsonObject.put(JSON_KEY_IS_OR_FACET, true);
 	}
 
@@ -251,6 +248,10 @@ public class PanlOrFacetField extends PanlFacetField {
 
 	public LpseToken instantiateToken(CollectionProperties collectionProperties, String lpseCode, String query, StringTokenizer valueTokeniser, LpseTokeniser lpseTokeniser) {
 		return(new OrFacetLpseToken(collectionProperties, this.lpseCode, lpseTokeniser, valueTokeniser));
+	}
+
+	public void addToRemoveObject(JSONObject removeObject, LpseToken lpseToken) {
+		removeObject.put(JSON_KEY_IS_OR_FACET, true);
 	}
 
 }

@@ -131,7 +131,7 @@ public class PanlQueryOperandField extends BaseField {
 		return ("");
 	}
 
-	@Override public void appendAvailableObjectInternal(JSONObject jsonObject) {
+	@Override public void appendToAvailableObjectInternal(JSONObject jsonObject) {
 
 	}
 	@Override public LpseToken instantiateToken(CollectionProperties collectionProperties, String lpseCode, String query, StringTokenizer valueTokeniser, LpseTokeniser lpseTokeniser) {

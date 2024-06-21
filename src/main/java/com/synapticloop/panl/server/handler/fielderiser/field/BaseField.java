@@ -25,12 +25,10 @@ package com.synapticloop.panl.server.handler.fielderiser.field;
  */
 
 import com.synapticloop.panl.exception.PanlServerException;
-import com.synapticloop.panl.server.handler.processor.Processor;
 import com.synapticloop.panl.server.handler.properties.CollectionProperties;
 import com.synapticloop.panl.server.handler.tokeniser.LpseTokeniser;
 import com.synapticloop.panl.server.handler.tokeniser.token.facet.FacetLpseToken;
 import com.synapticloop.panl.server.handler.tokeniser.token.LpseToken;
-import com.synapticloop.panl.server.handler.tokeniser.token.facet.bean.FromToBean;
 import org.apache.solr.client.solrj.SolrQuery;
 import org.apache.solr.client.solrj.response.FacetField;
 import org.json.JSONArray;
@@ -46,8 +44,6 @@ import static com.synapticloop.panl.server.handler.processor.Processor.*;
 import static com.synapticloop.panl.server.handler.properties.CollectionProperties.PROPERTY_KEY_PANL_SORT_FIELDS;
 
 public abstract class BaseField {
-	public static final String PROPERTY_KEY_PANL_INCLUDE_SAME_NUMBER_FACETS = "panl.include.same.number.facets";
-	public static final String PROPERTY_KEY_PANL_INCLUDE_SINGLE_FACETS = "panl.include.single.facets";
 
 	public static final String JSON_KEY_FACET_NAME = "facet_name";
 	public static final String JSON_KEY_NAME = "name";
@@ -68,16 +64,11 @@ public abstract class BaseField {
 	public static final String PROPERTY_KEY_PANL_SUFFIX = "panl.suffix.";
 	public static final String PROPERTY_KEY_SOLR_FACET_MIN_COUNT = "solr.facet.min.count";
 
+	public static final String PROPERTY_KEY_PANL_INCLUDE_SAME_NUMBER_FACETS = "panl.include.same.number.facets";
+	public static final String PROPERTY_KEY_PANL_INCLUDE_SINGLE_FACETS = "panl.include.single.facets";
+
 	public static final String PROPERTY_KEY_PANL_RANGE_FACET = "panl.range.facet.";
-	public static final String PROPERTY_KEY_PANL_RANGE_MIN = "panl.range.min.";
-	public static final String PROPERTY_KEY_PANL_RANGE_MAX = "panl.range.max.";
-	public static final String PROPERTY_KEY_PANL_RANGE_MIN_WILDCARD = "panl.range.min.wildcard.";
-	public static final String PROPERTY_KEY_PANL_RANGE_MAX_WILDCARD = "panl.range.max.wildcard.";
-	public static final String PROPERTY_KEY_PANL_RANGE_PREFIX = "panl.range.prefix.";
-	public static final String PROPERTY_KEY_PANL_RANGE_SUFFIX = "panl.range.suffix.";
 	public static final String PROPERTY_KEY_PANL_RANGE_INFIX = "panl.range.infix.";
-	public static final String PROPERTY_KEY_PANL_RANGE_MIN_VALUE = "panl.range.min.value.";
-	public static final String PROPERTY_KEY_PANL_RANGE_MAX_VALUE = "panl.range.max.value.";
 
 	public static final String TYPE_SOLR_BOOL_FIELD = "solr.BoolField";
 	public static final String TYPE_SOLR_INT_POINT_FIELD = "solr.IntPointField";
@@ -224,6 +215,11 @@ public abstract class BaseField {
 		}
 	}
 
+	/**
+	 * <p>Get the logger for the child object.</p>
+	 *
+	 * @return The logger for the object
+	 */
 	public abstract Logger getLogger();
 
 	public String getLpseCode() {
@@ -319,7 +315,8 @@ public abstract class BaseField {
 	}
 
 	public String getEncodedPanlValue(String value) {
-		return (URLEncoder.encode(value, StandardCharsets.UTF_8));	}
+		return (URLEncoder.encode(value, StandardCharsets.UTF_8));
+	}
 
 	public String getEncodedPanlValue(LpseToken token) {
 		if (null == token.getValue()) {
@@ -513,12 +510,22 @@ public abstract class BaseField {
 		}
 	}
 
-	public void appendAvailableFacetObject(JSONObject jsonObject) {
+	/**
+	 * <p>Append information to the available facet object.</p>
+	 *
+	 * <p>This will add the base information to the facet object, and then calls
+	 * the internal method <code>appendAvailableObjectInternal</code> which sub
+	 * classes can override and append additional information to the JSON
+	 * object.</p>
+	 *
+	 * @param jsonObject
+	 */
+	public void appendToAvailableFacetObject(JSONObject jsonObject) {
 		jsonObject.put(JSON_KEY_FACET_NAME, this.solrFieldName);
 		jsonObject.put(JSON_KEY_NAME, this.panlFieldName);
 		jsonObject.put(JSON_KEY_PANL_CODE, this.lpseCode);
 
-		appendAvailableObjectInternal(jsonObject);
+		appendToAvailableObjectInternal(jsonObject);
 	}
 
 	public boolean appendAvailableRangeValues(
@@ -547,7 +554,7 @@ public abstract class BaseField {
 			String valueName = value.getName();
 
 			// if we already have this value, then skip it
-			if(existingLpseValues.contains(valueName)) {
+			if (existingLpseValues.contains(valueName)) {
 				continue;
 			}
 
@@ -602,6 +609,17 @@ public abstract class BaseField {
 		return (false);
 	}
 
+	/**
+	 * <p>Get the JSON object for the URIs that add this field (And consequently
+	 * lengthen the URI).</p>
+	 *
+	 * @param collectionProperties The collection properties
+	 * @param lpseField The LPSE field that this applies to
+	 * @param panlTokenMap The inbound Panl tokens
+	 *
+	 * @return The JSON object with the URIs for adding this field to the
+	 * 		existing search URI.
+	 */
 	protected JSONObject getAdditionURIObject(CollectionProperties collectionProperties, BaseField lpseField, Map<String, List<LpseToken>> panlTokenMap) {
 		String additionLpseCode = lpseField.getLpseCode();
 		JSONObject additionObject = new JSONObject();
@@ -639,11 +657,28 @@ public abstract class BaseField {
 		return (additionObject);
 	}
 
-	public abstract void appendAvailableObjectInternal(JSONObject jsonObject);
 
-	public abstract LpseToken instantiateToken(CollectionProperties collectionProperties,
-	                                           String lpseCode,
-	                                           String query,
-	                                           StringTokenizer valueTokeniser,
-	                                           LpseTokeniser lpseTokeniser);
+	protected abstract void appendToAvailableObjectInternal(JSONObject jsonObject);
+
+	/**
+	 * <p>Instantiate a token for this field type.</p>
+	 *
+	 * @param collectionProperties The collection properties
+	 * @param lpseCode The lpseCode for this field
+	 * @param query The query parameter
+	 * @param valueTokeniser The value tokeniser
+	 * @param lpseTokeniser The lpse tokeniser
+	 *
+	 * @return The correct LPSE token for this lpseCode
+	 */
+	public abstract LpseToken instantiateToken(
+			CollectionProperties collectionProperties,
+			String lpseCode,
+			String query,
+			StringTokenizer valueTokeniser,
+			LpseTokeniser lpseTokeniser);
+
+	public void addToRemoveObject(JSONObject removeObject, LpseToken lpseToken) {
+
+	}
 }

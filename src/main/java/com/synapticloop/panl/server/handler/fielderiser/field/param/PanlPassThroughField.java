@@ -102,9 +102,10 @@ public class PanlPassThroughField extends BaseField {
 		// do nothing
 	}
 
-	@Override public void appendAvailableObjectInternal(JSONObject jsonObject) {
+	@Override protected void appendToAvailableObjectInternal(JSONObject jsonObject) {
 
 	}
+
 	@Override public LpseToken instantiateToken(CollectionProperties collectionProperties, String lpseCode, String query, StringTokenizer valueTokeniser, LpseTokeniser lpseTokeniser) {
 		return(new PassThroughLpseToken(collectionProperties, this.lpseCode, valueTokeniser));
 	}

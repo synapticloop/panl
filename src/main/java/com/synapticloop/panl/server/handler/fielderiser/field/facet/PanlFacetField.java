@@ -72,8 +72,7 @@ public class PanlFacetField extends BasePrefixSuffixField {
 		this.solrFieldType = properties.getProperty(PROPERTY_KEY_PANL_TYPE + lpseCode);
 	}
 
-	@Override
-	public Logger getLogger() {
+	@Override public Logger getLogger() {
 		return (LOGGER);
 	}
 
@@ -92,10 +91,6 @@ public class PanlFacetField extends BasePrefixSuffixField {
 					facetLpseToken.getSolrField(),
 					facetLpseToken.getValue()));
 		}
-	}
-
-	@Override public void appendAvailableObjectInternal(JSONObject jsonObject) {
-
 	}
 
 	@Override

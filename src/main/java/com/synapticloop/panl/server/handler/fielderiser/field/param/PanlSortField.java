@@ -137,7 +137,7 @@ public class PanlSortField extends BaseField {
 		solrQuery.setSorts(sortClauses);
 	}
 
-	@Override public void appendAvailableObjectInternal(JSONObject jsonObject) {
+	@Override protected void appendToAvailableObjectInternal(JSONObject jsonObject) {
 
 	}
 

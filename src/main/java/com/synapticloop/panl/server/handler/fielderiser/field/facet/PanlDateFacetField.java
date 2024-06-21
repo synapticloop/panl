@@ -102,8 +102,24 @@ public class PanlDateFacetField extends PanlFacetField {
 		logDetails();
 	}
 
-	@Override
-	public Logger getLogger() {
+	/**
+	 * <p>Instantiate a <code>DateFacetLpseToken</code> for this field.</p>
+	 *
+	 * @param collectionProperties The collection properties
+	 * @param lpseCode The lpseCode for this field
+	 * @param query The query parameter
+	 * @param valueTokeniser The value tokeniser
+	 * @param lpseTokeniser The lpse tokeniser
+	 *
+	 * @return The newly instantiated DateFacetLpseToken
+	 *
+	 * @see DateFacetLpseToken
+	 */
+	public LpseToken instantiateToken(CollectionProperties collectionProperties, String lpseCode, String query, StringTokenizer valueTokeniser, LpseTokeniser lpseTokeniser) {
+		return (new DateFacetLpseToken(collectionProperties, this.lpseCode, lpseTokeniser, valueTokeniser));
+	}
+
+	@Override public Logger getLogger() {
 		return (LOGGER);
 	}
 
@@ -113,11 +129,7 @@ public class PanlDateFacetField extends PanlFacetField {
 		return (explanations);
 	}
 
-	@Override public String getLpseCode(LpseToken token, CollectionProperties collectionProperties) {
-		return (token.getLpseCode());
-	}
-
-	protected void populateDateReplacements() {
+	private void populateDateReplacements() {
 		populateSolrFieldTypeValidation();
 
 		// look for the previous and next keys
@@ -332,6 +344,13 @@ public class PanlDateFacetField extends PanlFacetField {
 		return (decodedValue);
 	}
 
+	/**
+	 * <p>Adds additional information useful for implementing the Date Facet
+	 * Range</p>
+	 *
+	 * @param additionObject The JSON object for the addition URIs
+	 * @param panlTokenMap The panl token map
+	 */
 	@Override public void addToAdditionObject(JSONObject additionObject, Map<String, List<LpseToken>> panlTokenMap) {
 		additionObject.put(JSON_KEY_IS_DATE_FACET, true);
 		additionObject.put(JSON_KEY_NEXT, URLEncoder.encode(nextIndicator, StandardCharsets.UTF_8));
@@ -346,8 +365,12 @@ public class PanlDateFacetField extends PanlFacetField {
 		additionObject.put(JSON_KEY_DESIGNATOR, designatorObject);
 	}
 
-	public LpseToken instantiateToken(CollectionProperties collectionProperties, String lpseCode, String query, StringTokenizer valueTokeniser, LpseTokeniser lpseTokeniser) {
-		return(new DateFacetLpseToken(collectionProperties, this.lpseCode, lpseTokeniser, valueTokeniser));
+	@Override public void appendToAvailableObjectInternal(JSONObject jsonObject) {
+		jsonObject.put(JSON_KEY_IS_DATE_FACET, true);
+	}
+
+	@Override public void addToRemoveObject(JSONObject removeObject, LpseToken lpseToken) {
+		removeObject.put(JSON_KEY_IS_DATE_FACET, true);
 	}
 
 }

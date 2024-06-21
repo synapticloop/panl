@@ -77,7 +77,7 @@ public class PanlField extends BaseField {
 		// do nothing
 	}
 
-	@Override public void appendAvailableObjectInternal(JSONObject jsonObject) {
+	@Override protected void appendToAvailableObjectInternal(JSONObject jsonObject) {
 
 	}
 
