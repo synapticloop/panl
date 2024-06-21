@@ -88,7 +88,7 @@ public class CollectionProperties {
 	 * <p>The name of this collection</p>
 	 */
 	private final String solrCollection;
-	private final String panCollectionUri;
+	private final String panlCollectionUri;
 	/**
 	 * <p>The collection.panl.properties that drive this collection</p>
 	 */
@@ -203,7 +203,7 @@ public class CollectionProperties {
 	 */
 	public CollectionProperties(String solrCollection, String panlCollectionUri, Properties properties) throws PanlServerException {
 		this.solrCollection = solrCollection;
-		this.panCollectionUri = panlCollectionUri;
+		this.panlCollectionUri = panlCollectionUri;
 		this.properties = properties;
 
 		parseDefaultProperties();
@@ -258,9 +258,9 @@ public class CollectionProperties {
 			}
 
 			if (null == lpseCode) {
-				LOGGER.warn("[{}] Sort Fields - '{}' Could not look up the Panl LPSE code for Solr field name '{}', ignoring...", solrCollection, PROPERTY_KEY_PANL_SORT_FIELDS, sortField);
+				LOGGER.warn("[ Panl collection '{}' ] Sort Fields - '{}' Could not look up the Panl LPSE code for Solr field name '{}', ignoring...", panlCollectionUri, PROPERTY_KEY_PANL_SORT_FIELDS, sortField);
 			} else {
-				LOGGER.info("[{}] Sort Fields - adding Panl LPSE code '{}' for Solr field name '{}'.", solrCollection, lpseCode, sortField);
+				LOGGER.info("[ Panl collection '{}' ] Sort Fields - adding Panl LPSE code '{}' for Solr field name '{}'.", panlCollectionUri, lpseCode, sortField);
 				lpseCodeSortFields.add(lpseCode);
 				PanlSortField panlSortField = new PanlSortField(
 						lpseCode,
@@ -509,10 +509,14 @@ public class CollectionProperties {
 		String panlLpseIgnore = properties.getProperty(PROPERTY_KEY_PANL_LPSE_IGNORE, "");
 		for (String ignore : panlLpseIgnore.split(",")) {
 			String trimmed = ignore.trim();
+			if(trimmed.isBlank()) {
+				continue;
+			}
+
 			if (LPSE_URI_CODES.contains(trimmed)) {
 				LPSE_IGNORED_URI_CODES.add(trimmed);
 			} else {
-				LOGGER.warn("Attempting to ignore a facet with code '{}' which was not defined by the lpse order property '{}", trimmed, PROPERTY_KEY_PANL_LPSE_ORDER);
+				LOGGER.warn("Attempting to ignore a facet with code '{}' which was not defined by the lpse order property '{}'", trimmed, PROPERTY_KEY_PANL_LPSE_ORDER);
 			}
 		}
 	}
@@ -524,7 +528,7 @@ public class CollectionProperties {
 		}
 		// there must always be a default field
 		if (!resultFieldsMap.containsKey(FIELDSETS_DEFAULT)) {
-			LOGGER.warn("[{}] Missing default field set, adding one which will return all fields.", solrCollection);
+			LOGGER.warn("[ Panl collection '{}' ] Missing default field set, adding one which will return all fields.", panlCollectionUri);
 			resultFieldsMap.put(FIELDSETS_DEFAULT, new ArrayList<>());
 		}
 	}
@@ -534,7 +538,7 @@ public class CollectionProperties {
 			throw new PanlServerException("panl.results.fields.'" + resultFieldsName + "' is already defined.");
 		}
 
-		LOGGER.info("[{}] Adding result fields with key '{}', and fields '{}'.", solrCollection, resultFieldsName, resultFields);
+		LOGGER.info("[ Panl collection '{}' ] Adding result fields with key '{}', and fields '{}'.", solrCollection, resultFieldsName, resultFields);
 		List<String> fields = new ArrayList<>();
 		for (String resultField : resultFields.split(",")) {
 			fields.add(resultField.trim());
@@ -744,8 +748,8 @@ public class CollectionProperties {
 	 *
 	 * @return The Panl collection URI for this collection
 	 */
-	public String getPanCollectionUri() {
-		return panCollectionUri;
+	public String getPanlCollectionUri() {
+		return panlCollectionUri;
 	}
 
 	/**

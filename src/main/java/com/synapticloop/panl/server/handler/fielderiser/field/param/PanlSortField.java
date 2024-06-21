@@ -48,9 +48,6 @@ public class PanlSortField extends BaseField {
 
 	public PanlSortField(String lpseCode, String propertyKey, Properties properties, String solrCollection) throws PanlServerException {
 		super(lpseCode, properties, propertyKey, solrCollection);
-
-		populatePanlAndSolrFieldNames();
-		logDetails();
 	}
 
 	@Override public String getCanonicalUriPath(Map<String, List<LpseToken>> panlTokenMap, CollectionProperties collectionProperties) {
@@ -144,4 +141,11 @@ public class PanlSortField extends BaseField {
 	@Override public LpseToken instantiateToken(CollectionProperties collectionProperties, String lpseCode, String query, StringTokenizer valueTokeniser, LpseTokeniser lpseTokeniser) {
 		return(new SortLpseToken(collectionProperties, this.lpseCode, lpseTokeniser));
 	}
+
+	@Override protected void logDetails() {
+		getLogger().info("[ Solr collection: '{}' ] Sort parameter mapped to '{}'.",
+				solrCollection,
+				lpseCode);
+	}
+
 }

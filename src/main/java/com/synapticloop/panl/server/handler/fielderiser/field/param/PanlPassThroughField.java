@@ -46,7 +46,6 @@ public class PanlPassThroughField extends BaseField {
 		super(lpseCode, properties, propertyKey, solrCollection);
 
 		this.panlParamPassThroughCanonical = properties.getProperty(PROPERTY_KEY_PANL_PARAM_PASSTHROUGH_CANONICAL, "false").equals("true");
-		logDetails();
 	}
 
 	@Override
@@ -107,6 +106,12 @@ public class PanlPassThroughField extends BaseField {
 
 	@Override public LpseToken instantiateToken(CollectionProperties collectionProperties, String lpseCode, String query, StringTokenizer valueTokeniser, LpseTokeniser lpseTokeniser) {
 		return(new PassThroughLpseToken(collectionProperties, this.lpseCode, valueTokeniser));
+	}
+
+	@Override protected void logDetails() {
+		getLogger().info("[ Solr collection: '{}' ] Pass through parameter mapped to '{}'.",
+				solrCollection,
+				lpseCode);
 	}
 
 }

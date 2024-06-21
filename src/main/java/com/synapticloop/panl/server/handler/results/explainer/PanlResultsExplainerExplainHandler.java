@@ -74,7 +74,7 @@ public class PanlResultsExplainerExplainHandler implements HttpRequestHandler {
 		CollectionProperties collectionProperties = null;
 		String panlCollectionUri = splits[3];
 		for(CollectionProperties collectionPropertiesTemp : collectionPropertiesList) {
-			if(collectionPropertiesTemp.getPanCollectionUri().equals(panlCollectionUri)) {
+			if(collectionPropertiesTemp.getPanlCollectionUri().equals(panlCollectionUri)) {
 				collectionProperties = collectionPropertiesTemp;
 				break;
 			}

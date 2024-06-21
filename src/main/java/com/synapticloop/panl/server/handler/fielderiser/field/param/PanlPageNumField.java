@@ -41,7 +41,6 @@ public class PanlPageNumField extends BasePrefixSuffixField {
 
 	public PanlPageNumField(String lpseCode, String propertyKey, Properties properties, String solrCollection) throws PanlServerException {
 		super(lpseCode, propertyKey, properties, solrCollection);
-		logDetails();
 	}
 
 	/**
@@ -176,4 +175,11 @@ public class PanlPageNumField extends BasePrefixSuffixField {
 	@Override public LpseToken instantiateToken(CollectionProperties collectionProperties, String lpseCode, String query, StringTokenizer valueTokeniser, LpseTokeniser lpseTokeniser) {
 		return(new PageNumLpseToken(collectionProperties, this.lpseCode, valueTokeniser));
 	}
+
+	@Override protected void logDetails() {
+		getLogger().info("[ Solr collection: '{}' ] Page number parameter mapped to '{}'.",
+				solrCollection,
+				lpseCode);
+	}
+
 }

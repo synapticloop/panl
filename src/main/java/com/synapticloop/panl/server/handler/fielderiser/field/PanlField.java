@@ -59,26 +59,30 @@ public class PanlField extends BaseField {
 		return ("");
 	}
 
-	@Override
-	public Logger getLogger() {
+	@Override public Logger getLogger() {
 		return (LOGGER);
 	}
 
 	@Override public List<String> explainAdditional() {
 		List<String> explanations = new ArrayList<>();
 		explanations.add("A Solr field that can be configured to be sorted by, or returned in the field set.");
-		return(explanations);
+		return (explanations);
 	}
 
-	public void applyToQueryInternal(SolrQuery solrQuery, List<LpseToken> lpseTokenList) {
-		// do nothing
-	}
+	@Override public void applyToQueryInternal(SolrQuery solrQuery, List<LpseToken> lpseTokenList) { /* do nothing */ }
 
-	@Override protected void appendToAvailableObjectInternal(JSONObject jsonObject) {
-
-	}
+	@Override protected void appendToAvailableObjectInternal(JSONObject jsonObject) { /* do nothing */ }
 
 	public LpseToken instantiateToken(CollectionProperties collectionProperties, String lpseCode, String query, StringTokenizer valueTokeniser, LpseTokeniser lpseTokeniser) {
-		return(new FacetLpseToken(collectionProperties, this.lpseCode, lpseTokeniser, valueTokeniser));
+		return (new FacetLpseToken(collectionProperties, this.lpseCode, lpseTokeniser, valueTokeniser));
 	}
+
+	protected void logDetails() {
+		getLogger().info("[ Solr collection: '{}' ] Mapping Solr field name '{}' to panl key '{}', LPSE length {}",
+				solrCollection,
+				solrFieldName,
+				lpseCode,
+				lpseLength);
+	}
+
 }

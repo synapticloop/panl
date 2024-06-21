@@ -44,8 +44,6 @@ public class PanlNumRowsField extends BasePrefixSuffixField {
 
 	public PanlNumRowsField(String lpseCode, String propertyKey, Properties properties, String solrCollection) throws PanlServerException {
 		super(lpseCode, propertyKey, properties, solrCollection);
-
-		logDetails();
 	}
 
 	@Override
@@ -100,4 +98,11 @@ public class PanlNumRowsField extends BasePrefixSuffixField {
 	@Override public LpseToken instantiateToken(CollectionProperties collectionProperties, String lpseCode, String query, StringTokenizer valueTokeniser, LpseTokeniser lpseTokeniser) {
 		return(new NumRowsLpseToken(collectionProperties, this.lpseCode, valueTokeniser));
 	}
+
+	@Override protected void logDetails() {
+		getLogger().info("[ Solr collection: '{}' ] Number of results per page parameter mapped to '{}'.",
+				solrCollection,
+				lpseCode);
+	}
+
 }

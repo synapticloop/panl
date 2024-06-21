@@ -79,14 +79,14 @@ public abstract class BaseField {
 
 	protected String lpseCode;
 	private String panlFieldName;
-	private String solrFieldName;
+	protected String solrFieldName;
 	private String solrFieldType;
 
 	protected final Properties properties;
-	private final String solrCollection;
+	protected final String solrCollection;
 	private final String propertyKey;
 
-	private final int lpseLength;
+	protected final int lpseLength;
 
 	private static final int VALIDATION_TYPE_NONE = 0;
 	private static final int VALIDATION_TYPE_NUMBER = 1;
@@ -289,6 +289,7 @@ public abstract class BaseField {
 		// TODO - should change this to objects...
 		String replaced;
 		switch (this.validationType) {
+			case VALIDATION_TYPE_DATE:
 			case VALIDATION_TYPE_NUMBER:
 				replaced = temp.replaceAll("[^0-9]", "");
 				if (replaced.isBlank()) {
@@ -298,13 +299,6 @@ public abstract class BaseField {
 				}
 			case VALIDATION_TYPE_DECIMAL:
 				replaced = temp.replaceAll("[^0-9.]", "");
-				if (replaced.isBlank()) {
-					return (null);
-				} else {
-					return replaced;
-				}
-			case VALIDATION_TYPE_DATE:
-				replaced = temp.replaceAll("[^0-9]", "");
 				if (replaced.isBlank()) {
 					return (null);
 				} else {
@@ -325,10 +319,6 @@ public abstract class BaseField {
 		return (getEncodedPanlValue(token.getValue()));
 	}
 
-
-	public String getSolrFieldType() {
-		return solrFieldType;
-	}
 
 	public String getURIPath(LpseToken token, CollectionProperties collectionProperties) {
 		return (getEncodedPanlValue(token) + "/");
@@ -476,10 +466,11 @@ public abstract class BaseField {
 		}
 	}
 
-	public void logDetails() {
-		getLogger().info("[{}] Mapping Solr field name '{}' to panl key '{}', LPSE length {}",
+	protected void logDetails() {
+		getLogger().info("[ Solr collection '{}' ] Mapping Solr field name '{}' of type '{}' to panl key '{}', LPSE length {}",
 				solrCollection,
 				solrFieldName,
+				solrFieldType,
 				lpseCode,
 				lpseLength);
 	}

@@ -43,8 +43,6 @@ public class PanlQueryOperandField extends BaseField {
 
 	public PanlQueryOperandField(String lpseCode, String propertyKey, Properties properties, String solrCollection) throws PanlServerException {
 		super(lpseCode, properties, propertyKey, solrCollection);
-
-		logDetails();
 	}
 
 	@Override
@@ -135,6 +133,12 @@ public class PanlQueryOperandField extends BaseField {
 	}
 	@Override public LpseToken instantiateToken(CollectionProperties collectionProperties, String lpseCode, String query, StringTokenizer valueTokeniser, LpseTokeniser lpseTokeniser) {
 		return(new QueryOperandLpseToken(collectionProperties, this.lpseCode, lpseTokeniser));
+	}
+
+	@Override protected void logDetails() {
+		getLogger().info("[ Solr collection: '{}' ] Query operand parameter mapped to '{}'.",
+				solrCollection,
+				lpseCode);
 	}
 
 }
