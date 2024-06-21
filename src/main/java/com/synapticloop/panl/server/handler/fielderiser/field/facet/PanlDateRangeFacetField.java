@@ -195,7 +195,7 @@ public class PanlDateRangeFacetField extends PanlFacetField {
 					// now we are ready for the query
 					// the original value is the number
 					try {
-						solrQuery.addFilterQuery(String.format("%s:[NOW TO NOW-%d%s]",
+						solrQuery.addFilterQuery(String.format("%s:[NOW TO NOW+%d%s]",
 								lpseToken.getSolrField(),
 								Integer.parseInt(originalValue),
 								solrRangeDesignator));
@@ -382,6 +382,10 @@ public class PanlDateRangeFacetField extends PanlFacetField {
 			CollectionProperties collectionProperties,
 			Map<String, List<LpseToken>> panlTokenMap) {
 
+		additionObject.put(JSON_KEY_FACET_NAME, this.solrFieldName);
+		additionObject.put(JSON_KEY_NAME, this.panlFieldName);
+		additionObject.put(JSON_KEY_PANL_CODE, this.lpseCode);
+
 		additionObject.put(JSON_KEY_NEXT, URLEncoder.encode(nextIndicator, StandardCharsets.UTF_8));
 		additionObject.put(JSON_KEY_PREVIOUS, URLEncoder.encode(previousIndicator, StandardCharsets.UTF_8));
 
@@ -399,7 +403,7 @@ public class PanlDateRangeFacetField extends PanlFacetField {
 				DateRangeFacetLpseToken dateRangeFacetLpseToken = (DateRangeFacetLpseToken)lpseToken;
 				additionObject.put(JSON_KEY_VALUE, dateRangeFacetLpseToken.getValue());
 				additionObject.put(PREVIOUS_NEXT, dateRangeFacetLpseToken.getPreviousNext());
-				additionObject.put(JSON_KEY_DESIGNATOR, dateRangeFacetLpseToken.getDesignator());
+				additionObject.put(JSON_KEY_DESIGNATOR, URLEncoder.encode(dateRangeFacetLpseToken.getDesignator(), StandardCharsets.UTF_8));
 				shouldBreak = true;
 			}
 			// only one date range is allowed - the first valid one

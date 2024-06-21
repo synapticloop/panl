@@ -78,7 +78,7 @@ public abstract class BaseField {
 	public static final String TYPE_SOLR_DATE_POINT_FIELD = "solr.DatePointField";
 
 	protected String lpseCode;
-	private String panlFieldName;
+	protected String panlFieldName;
 	protected String solrFieldName;
 	private String solrFieldType;
 

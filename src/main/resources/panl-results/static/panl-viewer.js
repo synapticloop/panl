@@ -509,6 +509,51 @@ function addAvailableFilters(availableObject, activeObject) {
 			$("." +facet.facet_name + "-link").text(text);
 		});
 	}
+
+	// now check for the date
+	for(const facet of availableObject.date_range_facets) {
+		$("#ranges-marker").removeClass("hidden");
+
+		ranges.append("<p><strong>" + facet.name + " <em>(" + facet.panl_code + ") Date Range</em></strong></p>");
+
+		ranges.append("<form method=\"GET\">" +
+	                "	<select name=\"previous_next\" id=\"previous_next" + facet.facet_name + "\">" +
+	                "		<option value=\"next\"" + (facet.next == facet.previous_next ? "selected=\"selected\"" : "") + ">" + decodePanl(facet.next) + "</option>" +
+	                "		<option value=\"previous\" " + (facet.previous == facet.previous_next ? "selected=\"selected\"" : "") + ">" + decodePanl(facet.previous) + "</option>" +
+	                "	</select>" +
+	                "	<label><input class=\"date_number\" id=\"date_number" + facet.facet_name + "\" type=\"text\" name=\"date_number\" value=\"" + (facet.value !== undefined ? facet.value : "") + "\"></label>" +
+	                "	<select name=\"designator\" id=\"designator" + facet.facet_name + "\">" +
+	                "		<option value=\"hours\" " + (facet.designator === "HOURS" ? "selected=\"selected\"" : "") + ">" + decodePanl(facet.designators.hours) + "</option>" +
+	                "		<option value=\"days\" " + (facet.designator === "DAYS" ? "selected=\"selected\"" : "") + ">" + decodePanl(facet.designators.days) + "</option>" +
+	                "		<option value=\"months\" " + (facet.designator === "MONTHS" ? "selected=\"selected\"" : "") + ">" + decodePanl(facet.designators.months) + "</option>" +
+	                "		<option value=\"years\" " + (facet.designator === "YEARS" ? "selected=\"selected\"" : "") + ">" + decodePanl(facet.designators.years) + "</option>" +
+	                "	</select>" +
+	                "</form>");
+
+	    ranges.append("<div class=\"center\"><a href=\"\" class=\"range-link\" id=\"anchor-date-range-" + facet.facet_name + "\">" + getDateRangeText(facet.facet_name) + "</a></div>");
+
+	    $("#previous_next" + facet.facet_name).on('change', { facetName : facet.facet_name }, function (e) {
+        var rangeLink = $("#anchor-date-range-" + e.data.facetName);
+        rangeLink.text(getDateRangeText(e.data.facetName));
+     });
+
+	    $("#designator" + facet.facet_name).on('change', { facetName : facet.facet_name }, function (e) {
+        var rangeLink = $("#anchor-date-range-" + e.data.facetName);
+        rangeLink.text(getDateRangeText(e.data.facetName));
+     });
+
+	    $("#date_number" + facet.facet_name).on('change', { facetName : facet.facet_name }, function (e) {
+        var rangeLink = $("#anchor-date-range-" + e.data.facetName);
+        rangeLink.text(getDateRangeText(e.data.facetName));
+     });
+	}
+}
+
+function getDateRangeText(facetName) {
+	var previousNext = $("#previous_next" + facetName + " option:selected").text();
+	var dateNumber = $("#date_number" + facetName).val();
+	var designator = $("#designator" + facetName + " option:selected").text();
+	return(decodePanl(previousNext + dateNumber + designator));
 }
 
 function decodePanl(text) {
