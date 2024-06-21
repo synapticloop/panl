@@ -29,7 +29,6 @@ import com.synapticloop.panl.server.handler.fielderiser.field.BaseField;
 import com.synapticloop.panl.server.handler.properties.CollectionProperties;
 import com.synapticloop.panl.server.handler.tokeniser.LpseTokeniser;
 import com.synapticloop.panl.server.handler.tokeniser.token.LpseToken;
-import com.synapticloop.panl.server.handler.tokeniser.token.param.PageNumLpseToken;
 import com.synapticloop.panl.server.handler.tokeniser.token.param.PassThroughLpseToken;
 import org.apache.solr.client.solrj.SolrQuery;
 import org.json.JSONObject;

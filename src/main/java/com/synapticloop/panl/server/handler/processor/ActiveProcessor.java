@@ -85,36 +85,24 @@ public class ActiveProcessor extends Processor {
 			String tokenType = lpseToken.getType();
 			String lpseCode = lpseToken.getLpseCode();
 			BaseField lpseField = collectionProperties.getLpseField(lpseCode);
+
+
 			boolean shouldAddObject = true;
 
 			JSONArray jsonArray = jsonObject.optJSONArray(tokenType, new JSONArray());
 			JSONObject removeObject = new JSONObject();
 
+
 			removeObject.put(JSON_KEY_VALUE, lpseToken.getValue());
 			removeObject.put(JSON_KEY_REMOVE_URI, getRemoveURIFromPath(i, uriComponents, lpseComponents));
 			removeObject.put(JSON_KEY_PANL_CODE, lpseCode);
 
-			if (lpseToken instanceof FacetLpseToken) {
-				FacetLpseToken facetLpseToken = (FacetLpseToken) lpseToken;
-				if (facetLpseToken.getIsRangeToken()) {
-					String toValue = facetLpseToken.getToValue();
-					removeObject.put(JSON_KEY_HAS_INFIX, true);
-					if(null == toValue) {
-						removeObject.remove(JSON_KEY_VALUE_TO);
-					} else {
-						removeObject.put(JSON_KEY_VALUE_TO, toValue);
-					}
-				} else {
-					removeObject.put(JSON_KEY_HAS_INFIX, false);
-				}
+			// add any additional keys that are required by the children of the base
+			// fields
+			lpseField.addToRemoveObject(removeObject, lpseToken);
 
-				removeObject.put(JSON_KEY_IS_RANGE_FACET, facetLpseToken.getIsRangeToken());
-
-				removeObject.put(JSON_KEY_IS_OR_FACET, collectionProperties.getIsOrFacetField(lpseCode));
-				boolean isRangeFacetField = collectionProperties.getIsRangeFacetField(lpseCode);
-				removeObject.put(JSON_KEY_IS_RANGE_FACET, isRangeFacetField);
-			}
-
+			// Sort objects are a little bit different, as they add to two different
+			// JSON objects, the sort order, and the sort order lookups
 			if (lpseToken instanceof SortLpseToken) {
 				SortLpseToken sortLpseToken = (SortLpseToken) lpseToken;
 

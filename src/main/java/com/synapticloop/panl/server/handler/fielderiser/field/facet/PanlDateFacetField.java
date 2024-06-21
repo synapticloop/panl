@@ -29,7 +29,6 @@ import com.synapticloop.panl.server.handler.properties.CollectionProperties;
 import com.synapticloop.panl.server.handler.tokeniser.LpseTokeniser;
 import com.synapticloop.panl.server.handler.tokeniser.token.LpseToken;
 import com.synapticloop.panl.server.handler.tokeniser.token.facet.DateFacetLpseToken;
-import com.synapticloop.panl.server.handler.tokeniser.token.facet.RangeFacetLpseToken;
 import org.apache.solr.client.solrj.SolrQuery;
 import org.json.JSONObject;
 import org.slf4j.Logger;

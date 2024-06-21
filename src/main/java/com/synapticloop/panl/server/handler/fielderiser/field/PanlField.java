@@ -25,13 +25,10 @@ package com.synapticloop.panl.server.handler.fielderiser.field;
  */
 
 import com.synapticloop.panl.exception.PanlServerException;
-import com.synapticloop.panl.server.handler.fielderiser.field.facet.PanlFacetField;
 import com.synapticloop.panl.server.handler.properties.CollectionProperties;
 import com.synapticloop.panl.server.handler.tokeniser.LpseTokeniser;
 import com.synapticloop.panl.server.handler.tokeniser.token.LpseToken;
 import com.synapticloop.panl.server.handler.tokeniser.token.facet.FacetLpseToken;
-import com.synapticloop.panl.server.handler.tokeniser.token.facet.RangeFacetLpseToken;
-import com.synapticloop.panl.server.handler.tokeniser.token.param.PageNumLpseToken;
 import org.apache.solr.client.solrj.SolrQuery;
 import org.json.JSONObject;
 import org.slf4j.Logger;
