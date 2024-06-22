@@ -2,7 +2,9 @@
 
 **_WORK IN PROGRESS_**
 
-Usable, but not released... yet...  The book and generated instructions are coming along nicely.
+Usable, but not released... yet...  The book and generated instructions are coming along nicely. 
+
+[https://synapticloop.github.io/panl/](https://synapticloop.github.io/panl/)
 
 **BECAUSE**
 
