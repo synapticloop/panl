@@ -17,23 +17,33 @@ Panl was designed to convert rather long and unfriendly (both in human readable 
 
 Working with a Solr schema, the Panl configuration files translate unwieldy URI parameters into concise and precise URI paths.
 
+## The Panl Results Viewer Web App
+
 <img src="src/docs/panl-features.png">
 
 _**Image**: The features and functionality of the Panl server_
 
-1. **A list of available Collections and FieldSet URI Paths (CaFUPs)** that Panl is configured to serve.  CaFUPs enable different Solr fields to be returned with the same search parameters.
+_The image is a screenshot of the in-built Panl Results Viewer Web App available in the release package, and whilst not intended as a production search page, can be used to fine-tune the configuration, or just to have a quick overview of the results._
 
-1. **A textual representation of the CaFUPs** that the Panl Results Viewer web application is using.
+1. **A list of available Collections and FieldSet URI Paths (CaFUPs)** that Panl is configured to serve.  CaFUPs enable different Solr fields to be returned in the documents with the same search parameters.
 
-1. **The canonical URI path** (which is returned with the Panl results JSON object) - this is important as multiple Panl LPSE URI paths will return exactly the same results - this is the unique URI path for this result set.
+1. **A textual representation of the CaFUPs** that the Panl Results Viewer web app is using.
+
+1. **The canonical URI path** (which is returned with the Panl results JSON object) - this is important as multiple Panl LPSE URI paths will return exactly the same results - this is the unique URI path for this result set and necessary for de-duplicating the search engine results.
 
 1. **The search query box**, by default, Panl responds to the same parameter name as The Solr server - i.e. 'q'.  This can be configured to be a different value should you choose.
 
-1. **Active filters** - either queries, selected facets, or sorting options that are currently limiting the results - the [Remove] link is the URI path that will remove this query, facet, or sorting option from the results. If it is an active sorting filter, the [Change to DESC] link will invert the sorting order without affecting any further sub-ordering.
+1. **Active filters** - either queries, selected facets, or sorting options that are currently limiting the results - the [Remove] link is the URI path that will remove this query, facet, or sorting option from the results. If it is an active sorting filter, the [Change to DESC] or [Change to ASC] links will invert the sorting order without affecting any further sub-ordering.
 
-1. **Range filters** - for facets that are defined as ranges - the values are inclusive (i.e. include the minimum and maximum values).
+1. **Range filters** - for facets that are defined as ranges - allowing end-users to select a range of values - the values are inclusive (i.e. include the minimum and maximum values).
 
-1. **Available filters** - additional facets that can further refine and limit the results.
+   **Date Range filters (not shown)** - Enabling searching on a range of dates (but not a specific date) in the form of:
+   next/previous <any_integer> hours/days/months/years.
+    - For example:
+    - Last 30 days
+    - Previous 24 hours
+
+1. **Available filters** - additional facets that can further refine and limit the Solr search results.
 
 1. **Number of results found**, and whether this is an exact match.
 
@@ -49,7 +59,34 @@ _**Image**: The features and functionality of the Panl server_
 
 1. **Timing information** about how long the Panl server took to build and return the results (including how much time the Solr server took to find and return the results).
 
-1. **The results** - the fields that are shown are configured by the CaFUPs.
+1. **The results** -  the fields that are returned with the documents and are shown in the results sections which are configured by the CaFUPs. Multiple field sets can be configured for the collection.
+
+## The Panl Results Explainer Web App
+
+<img src="src/docs/panl-results-explainer.png">
+
+_**Image**: The features and functionality of the Panl results explainer_
+
+_The image is a screenshot of the in-built Panl Results Explainer Web App available in the release package, and whilst not intended as a production search page, can be used to look into, troubleshoot, and fine-tune the configuration._
+
+1. **A list of available Collections and FieldSet URI Paths (CaFUPs)** that Panl is configured to serve.  CaFUPs enable different Solr fields to be returned in the documents with the same search parameters.
+1. **A textual representation of the CaFUPs** that the Panl Results Viewer web app is using.
+1. **The canonical URI path entry field** allows you to enter any canonical URI path and have the parsing and tokenising explained to you, including whether the parsed token was valid, the LPSE code found and the original value that Panl attempted to decode.
+1. **The request token explainer** - for any canonical URI entered, this will list the parsing and decoding steps, with the following details
+   1. Whether the token is valid (if it is invalid, it will be ignored and not passed through to the Solr search server),
+   1. The type of token that was found,
+   1. The LPSE code,
+   1. The parsed value,
+   1. The original value, and
+   1. Where pertinent, additional information pertaining to the specific code.
+1. **Configuration parameters** - parameters that are not fields or facets with information about the value, a description, and the property that set the value.
+1. **Field configuration explainer** - for each of the fields or facets that are configured in the LPSE order an explanation of their configuration including:
+   1. The type of Java field type,
+   1. The LPSE code,
+   1. The Solr field name,
+   1. The Solr field type, the Panl field name, and
+   1. Additional configuration items which may include Prefixes, Suffixes, Ranges, Facet type, or Minimum/maximum values
+   1. **Any configuration warning messages** that were found whilst parsing the properties files.
 
 ## Additional Panl Niceties
 
@@ -66,6 +103,7 @@ _**Image**: The features and functionality of the Panl server_
 1. **PAGINATION** - easy to generate pagination URI paths giving you control of how you would like to implement it.
 
 1. **STATIC SITE GENERATION** - without a query parameter, the entire available links for every conceivable URI path can be statically generated ahead of time, with canonical URLs
+
 
 
 # Quick Start - The 5 Steps
