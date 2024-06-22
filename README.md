@@ -98,12 +98,11 @@ _The image is a screenshot of the in-built Panl Results Explainer Web App availa
 
 1. **FIELD VALUE validation** - By default, Solr can error when an invalid value is passed through - for example, if Solr is expecting a numeric value and it could not be parsed.  Panl can protect against this, by attempting to parse the value as best it can, and silently dropping the parameter if it cannot be sensibly parsed.
 
-1. **SORTING options** - sort by any of the Solr fields, either ascending, or descending
+1. **SORTING options** -  sort by any of the Solr fields, either ascending, or descending and with multiple sub-sorting available - e.g. sorting by a brand name, than the model number
 
 1. **PAGINATION** - easy to generate pagination URI paths giving you control of how you would like to implement it.
 
-1. **STATIC SITE GENERATION** - without a query parameter, the entire available links for every conceivable URI path can be statically generated ahead of time, with canonical URLs
-
+1. **STATIC SITE GENERATION** - With the exception of a query parameter, all available links for every conceivable URI path can be statically generated ahead of time, with canonical URLs.
 
 
 # Quick Start - The 5 Steps
