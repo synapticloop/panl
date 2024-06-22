@@ -64,18 +64,27 @@ public class Main {
 		}
 		template = template.replace("##STYLE##", styles.toString());
 
+		boolean hasRemovedFirstDiv = false;
 		StringBuilder contents = new StringBuilder();
 		for (Element body : doc.getElementsByTag("body")) {
-			for (Element allElement : body.getAllElements()) {
-				if(allElement.tag().getName().equals("h1")) {
-					// todo get nicer page name
+			for (Element allElement : body.children()) {
+				String tagName = allElement.tag().getName();
+				if(tagName.equals("h1")) {
 					String temp = template.replace("##CONTENT##", contents.toString());
+					System.out.println(temp.length());
 					FileUtils.writeStringToFile(new File(outputPage), temp, Charset.defaultCharset());
 					outputPage = "book/" + getNicePageName(allElement.text()) +".html";
 					System.out.println(outputPage);
 					contents.setLength(0);
-				} else {
 					contents.append(allElement.outerHtml());
+				} else {
+
+					if(!hasRemovedFirstDiv && tagName.equals("div")) {
+						// skip this one
+					} else {
+						contents.append(allElement.outerHtml());
+					}
+
 				}
 			}
 		}
