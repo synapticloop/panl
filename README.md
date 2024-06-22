@@ -2,7 +2,7 @@
 
 **_WORK IN PROGRESS_**
 
-Usable, but not released... yet...
+Usable, but not released... yet...  The book and generated instructions are coming along nicely.
 
 **BECAUSE**
 
@@ -119,7 +119,7 @@ _**Image**: The In-Build Panl Results Viewer Web Application_
 ## 0. Download Solr and Panl
 
 Download the latest release of Synapticloop Panl - this example is using the 
-`panl9-1.0.0` version.
+`solr-panl-9-1.0.0` version.
 
 [https://github.com/synapticloop/panl/releases](https://github.com/synapticloop/panl/releases)
 
