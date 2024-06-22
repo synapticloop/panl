@@ -39,6 +39,7 @@ public class DateRangeFacetLpseToken extends LpseToken {
 	private String solrField = null;
 
 	private String previousNext;
+	private String solrRangeDesignator;
 	private String designator;
 
 	public DateRangeFacetLpseToken(
@@ -60,7 +61,7 @@ public class DateRangeFacetLpseToken extends LpseToken {
 
 		this.lpseCode = sb.toString();
 
-		if(!valueTokeniser.hasMoreTokens()) {
+		if (!valueTokeniser.hasMoreTokens()) {
 			this.isValid = false;
 			return;
 		}
@@ -75,11 +76,12 @@ public class DateRangeFacetLpseToken extends LpseToken {
 
 
 			PreviousNextValueBean previousNextValueBean = lpseField.getDecodedRangeValue(this.originalValue);
-			if(null == previousNextValueBean) {
+			if (null == previousNextValueBean) {
 				this.isValid = false;
 			} else {
 				this.value = previousNextValueBean.getValue();
 				this.previousNext = previousNextValueBean.getPreviousNext();
+				this.solrRangeDesignator = previousNextValueBean.getSolrRangeDesignator();
 				this.designator = previousNextValueBean.getDesignator();
 			}
 		} else {
@@ -98,9 +100,9 @@ public class DateRangeFacetLpseToken extends LpseToken {
 				"') with parsed value '" +
 				this.previousNext +
 				" " +
- 				value +
+				value +
 				" " +
-				this.designator +
+				this.solrRangeDesignator +
 				"', incoming value '" +
 				this.originalValue +
 				"'.");
@@ -118,7 +120,11 @@ public class DateRangeFacetLpseToken extends LpseToken {
 		return previousNext;
 	}
 
+	public String getSolrRangeDesignator() {
+		return solrRangeDesignator;
+	}
+
 	public String getDesignator() {
-		return designator;
+		return (designator);
 	}
 }

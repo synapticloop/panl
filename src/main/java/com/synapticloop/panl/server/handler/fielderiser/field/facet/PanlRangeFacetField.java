@@ -279,7 +279,7 @@ public class PanlRangeFacetField extends PanlFacetField {
 		return (true);
 	}
 
-	protected JSONObject getRangeAdditionURIObject(
+	private JSONObject getRangeAdditionURIObject(
 			CollectionProperties collectionProperties,
 			Map<String, List<LpseToken>> panlTokenMap,
 			boolean shouldRange) {
@@ -561,11 +561,11 @@ public class PanlRangeFacetField extends PanlFacetField {
 		return (sb.toString());
 	}
 
-	public String getEncodedPanlValue(LpseToken token) {
-		if (null == token.getValue()) {
+	public String getEncodedPanlValue(LpseToken lpseToken) {
+		if (null == lpseToken.getValue()) {
 			return ("");
 		}
-		return (getEncodedRangeFacetValueUriPart((RangeFacetLpseToken) token));
+		return (getEncodedRangeFacetValueUriPart((RangeFacetLpseToken) lpseToken));
 	}
 
 	/**

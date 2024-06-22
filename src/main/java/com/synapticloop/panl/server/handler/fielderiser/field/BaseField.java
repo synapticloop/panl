@@ -339,6 +339,9 @@ public abstract class BaseField {
 				if (lpseToken.getIsValid()) {
 					sb.append(getEncodedPanlValue(lpseToken));
 					sb.append("/");
+
+					// we only every have one
+					return(sb.toString());
 				}
 			}
 		}
@@ -514,7 +517,7 @@ public abstract class BaseField {
 	 * classes can override and append additional information to the JSON
 	 * object.</p>
 	 *
-	 * @param jsonObject
+	 * @param jsonObject The JSON object to append values to
 	 */
 	public void appendToAvailableFacetObject(JSONObject jsonObject) {
 		jsonObject.put(JSON_KEY_FACET_NAME, this.solrFieldName);
@@ -634,7 +637,6 @@ public abstract class BaseField {
 		String additionLpseCode = lpseField.getLpseCode();
 		JSONObject additionObject = new JSONObject();
 		StringBuilder lpseUri = new StringBuilder(FORWARD_SLASH);
-		StringBuilder lpseUriAfterMax = new StringBuilder();
 		StringBuilder lpseCode = new StringBuilder();
 
 		for (BaseField baseField : collectionProperties.getLpseFields()) {
@@ -644,10 +646,6 @@ public abstract class BaseField {
 
 				String resetUriPath = baseField.getResetUriPath(panlTokenMap, collectionProperties);
 				lpseUri.append(resetUriPath);
-
-				if (lpseUriAfterMax.length() != 0) {
-					lpseUriAfterMax.append(resetUriPath);
-				}
 
 				lpseCode.append(baseField.getResetLpseCode(panlTokenMap, collectionProperties));
 			}
@@ -663,7 +661,6 @@ public abstract class BaseField {
 		}
 
 		additionObject.put(JSON_KEY_AFTER, lpseUri.toString() + lpseCode.toString() + FORWARD_SLASH);
-		additionObject.put(JSON_KEY_AFTER_MAX_VALUE, lpseUriAfterMax.toString() + lpseCode.toString() + FORWARD_SLASH);
 		return (additionObject);
 	}
 
