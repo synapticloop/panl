@@ -75,6 +75,10 @@ public class PanlPassThroughField extends BaseField {
 		}
 	}
 
+	@Override public Logger getLogger() {
+		return (LOGGER);
+	}
+
 	@Override public List<String> explain() {
 		List<String> temp = new ArrayList<>();
 		temp.add("FIELD CONFIG [ " +
@@ -83,16 +87,12 @@ public class PanlPassThroughField extends BaseField {
 				lpseCode +
 				"'.");
 
+		temp.addAll(explainAdditional());
 		return (temp);
 	}
-
-	@Override public Logger getLogger() {
-		return (LOGGER);
-	}
-
 	@Override public List<String> explainAdditional() {
 		List<String> explanations = new ArrayList<>();
-		explanations.add("This field is ignored by the Panl server and is not passed through to Solr.");
+		explanations.add("This field is ignored by the Panl server and is not passed through to Solr query.");
 		return(explanations);
 	}
 
@@ -114,5 +114,4 @@ public class PanlPassThroughField extends BaseField {
 				panlCollectionUri,
 				lpseCode);
 	}
-
 }

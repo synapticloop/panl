@@ -563,7 +563,7 @@ var facetName = facet.facet_name;
 	}
 
 	var text = previousNext + dateNumber + designator;
-	rangeLink.text(decodePanl(text));
+	rangeLink.text("Apply range: " + decodePanl(text));
 
 	rangeLink.attr("href",
 			panlResultsViewerUrl +

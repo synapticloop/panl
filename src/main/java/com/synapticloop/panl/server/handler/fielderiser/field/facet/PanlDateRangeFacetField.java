@@ -99,14 +99,34 @@ public class PanlDateRangeFacetField extends PanlFacetField {
 
 		validateProperties();
 
-		populateDateReplacements();
+		populateSolrFieldTypeValidation();
+
+		// look for the previous and next keys
+		nextIndicator = properties.getProperty(PROPERTY_KEY_PREFIX_PANL_DATE + this.lpseCode + PROPERTY_KEY_SUFFIX_NEXT, null);
+		hasNext = nullCheck(nextIndicator);
+
+		previousIndicator = properties.getProperty(PROPERTY_KEY_PREFIX_PANL_DATE + this.lpseCode + PROPERTY_KEY_SUFFIX_PREVIOUS, null);
+		hasPrevious = nullCheck(previousIndicator);
+
 		populateSolrFieldTypeValidation();
 		populatePanlAndSolrFieldNames();
+
+		if (null != nextIndicator || null != previousIndicator) {
+			String yearsSuffix = properties.getProperty(PROPERTY_KEY_PREFIX_PANL_DATE + this.lpseCode + PROPERTY_KEY_SUFFIX_YEARS, null);
+			addToSolrLookupMap(yearsSuffix, SOLR_DESIGNATOR_YEARS);
+			String monthsSuffix = properties.getProperty(PROPERTY_KEY_PREFIX_PANL_DATE + this.lpseCode + PROPERTY_KEY_SUFFIX_MONTHS, null);
+			addToSolrLookupMap(monthsSuffix, SOLR_DESIGNATOR_MONTHS);
+			String daysSuffix = properties.getProperty(PROPERTY_KEY_PREFIX_PANL_DATE + this.lpseCode + PROPERTY_KEY_SUFFIX_DAYS, null);
+			addToSolrLookupMap(daysSuffix, SOLR_DESIGNATOR_DAYS);
+			String hoursSuffix = properties.getProperty(PROPERTY_KEY_PREFIX_PANL_DATE + this.lpseCode + PROPERTY_KEY_SUFFIX_HOURS, null);
+			addToSolrLookupMap(hoursSuffix, SOLR_DESIGNATOR_HOURS);
+		}
 
 		logWarnProperties(this.lpseCode, PROPERTY_KEY_PANL_OR_FACET + this.lpseCode);
 		logWarnProperties(this.lpseCode, PROPERTY_KEY_PANL_RANGE_FACET + this.lpseCode);
 		logWarnProperties(this.lpseCode, PROPERTY_KEY_PANL_PREFIX + this.lpseCode);
 		logWarnProperties(this.lpseCode, PROPERTY_KEY_PANL_SUFFIX + this.lpseCode);
+
 		logDetails();
 	}
 
@@ -131,34 +151,6 @@ public class PanlDateRangeFacetField extends PanlFacetField {
 		return (LOGGER);
 	}
 
-	@Override public List<String> explainAdditional() {
-		List<String> explanations = new ArrayList<>();
-		explanations.add("A Solr field that can be used as a facet, returned in the field set, or configured to be sorted by.");
-		return (explanations);
-	}
-
-	private void populateDateReplacements() {
-		populateSolrFieldTypeValidation();
-
-		// look for the previous and next keys
-		nextIndicator = properties.getProperty(PROPERTY_KEY_PREFIX_PANL_DATE + this.lpseCode + PROPERTY_KEY_SUFFIX_NEXT, null);
-		hasNext = nullCheck(nextIndicator);
-
-		previousIndicator = properties.getProperty(PROPERTY_KEY_PREFIX_PANL_DATE + this.lpseCode + PROPERTY_KEY_SUFFIX_PREVIOUS, null);
-		hasPrevious = nullCheck(previousIndicator);
-
-		if (null != nextIndicator || null != previousIndicator) {
-			String yearsSuffix = properties.getProperty(PROPERTY_KEY_PREFIX_PANL_DATE + this.lpseCode + PROPERTY_KEY_SUFFIX_YEARS, null);
-			addToSolrLookupMap(yearsSuffix, SOLR_DESIGNATOR_YEARS);
-			String monthsSuffix = properties.getProperty(PROPERTY_KEY_PREFIX_PANL_DATE + this.lpseCode + PROPERTY_KEY_SUFFIX_MONTHS, null);
-			addToSolrLookupMap(monthsSuffix, SOLR_DESIGNATOR_MONTHS);
-			String daysSuffix = properties.getProperty(PROPERTY_KEY_PREFIX_PANL_DATE + this.lpseCode + PROPERTY_KEY_SUFFIX_DAYS, null);
-			addToSolrLookupMap(daysSuffix, SOLR_DESIGNATOR_DAYS);
-			String hoursSuffix = properties.getProperty(PROPERTY_KEY_PREFIX_PANL_DATE + this.lpseCode + PROPERTY_KEY_SUFFIX_HOURS, null);
-			addToSolrLookupMap(hoursSuffix, SOLR_DESIGNATOR_HOURS);
-		}
-	}
-
 	private void addToSolrLookupMap(String key, String value) {
 		if (null != key) {
 			solrRangeDesignatorLookupMap.put(key, value);
@@ -168,6 +160,7 @@ public class PanlDateRangeFacetField extends PanlFacetField {
 	}
 
 	private boolean nullCheck(String propertyValue) {
+		// TODO - exception here if it is null
 		return (null != propertyValue);
 	}
 
@@ -494,8 +487,31 @@ public class PanlDateRangeFacetField extends PanlFacetField {
 		sb.append(dateRangeFacetLpseToken.getValue());
 		sb.append(dateRangeFacetLpseToken.getDesignator());
 
-
-
 		return (URLEncoder.encode(sb.toString(), StandardCharsets.UTF_8));
+	}
+
+	@Override public List<String> explainAdditional() {
+		List<String> explanations = new ArrayList<>(super.explainAdditional());
+		explanations.add("Is a DATE RANGE facet which will allow selection of values within a range.");
+
+		if(hasNext) {
+			explanations.add("Will start a 'NEXT' query with the prefix '" + nextIndicator + "'.");
+		} else {
+			explanations.add("Will not start a 'NEXT' query.");
+		}
+
+		if(hasPrevious) {
+			explanations.add("Will start a 'PREVIOUS' query with the prefix '" + previousIndicator + "'.");
+		} else {
+			explanations.add("Will not start a 'PREVIOUS' query.");
+		}
+
+		explanations.add("Has an 'HOURS' date range designator of '" + URLDecoder.decode(solrRangeDesignatorEncodedLookupMap.get(SOLR_DESIGNATOR_HOURS), StandardCharsets.UTF_8) + "'.");
+		explanations.add("Has an 'DAYS' date range designator of '" + URLDecoder.decode(solrRangeDesignatorEncodedLookupMap.get(SOLR_DESIGNATOR_DAYS), StandardCharsets.UTF_8) + "'.");
+		explanations.add("Has an 'MONTHS' date range designator of '" + URLDecoder.decode(solrRangeDesignatorEncodedLookupMap.get(SOLR_DESIGNATOR_MONTHS), StandardCharsets.UTF_8) + "'.");
+		explanations.add("Has an 'YEARS' date range designator of '" + URLDecoder.decode(solrRangeDesignatorEncodedLookupMap.get(SOLR_DESIGNATOR_YEARS), StandardCharsets.UTF_8) + "'.");
+
+
+		return (explanations);
 	}
 }

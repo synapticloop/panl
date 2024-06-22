@@ -7,6 +7,8 @@ import org.json.JSONObject;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Properties;
 
 public abstract class BasePrefixSuffixField extends BaseField {
@@ -164,5 +166,22 @@ public abstract class BasePrefixSuffixField extends BaseField {
 
 	@Override protected void appendToAvailableObjectInternal(JSONObject jsonObject) {
 
+	}
+
+	@Override public List<String> explainAdditional() {
+		List<String> explanations = new ArrayList<>();
+		if(hasValuePrefix) {
+			explanations.add("Has a prefix of '" + getValuePrefix() + "' which will be prepended to the value in the URI path.");
+		} else {
+			explanations.add("Has no prefix.");
+		}
+
+		if(hasValueSuffix) {
+			explanations.add("Has a suffix of '" + getValueSuffix() + "' which will be appended to the value in the URI path.");
+		} else {
+			explanations.add("Has no suffix.");
+		}
+
+		return(explanations);
 	}
 }

@@ -14,6 +14,9 @@ $(document).ready(function() {
 			$("#collection").append("/" + collection + "/" + fieldset);
 			$("#explain").removeAttr("disabled");
 			$("#uris").removeAttr("disabled");
+
+				panlExplain();
+
 			$("button#explain").on("click", function (event) {
 				event.preventDefault();
 				panlExplain();
@@ -25,7 +28,7 @@ $(document).ready(function() {
 function panlExplain() {
 	var text = $("#uris").val();
 	if(text.length == 0) {
-		return;
+		text = "/";
 	}
 	if(!text.startsWith("/")) {
 		text = "/" + text;
@@ -54,20 +57,41 @@ function isValidUrl(collection, fieldset) {
 }
 
 function populateExplainResults(panlJsonData) {
+	console.log(panlJsonData);
+
 	$("#documents").empty();
-	$("#documents").append("<h1>Request Explainer</h1>");
-	for(const expl of panlJsonData.explanation) {
-		$("#documents").append("<pre class=\"explain\">" + escapeHTML(expl) + "</pre>")
+	$("#documents").append("<h1>Request Token Explainer</h1>");
+	if(panlJsonData.explanation.length === 0) {
+		$("#documents").append("<code class=\"explain\">No URI path entered, nothing to explain.</pre>")
 	}
 
-	$("#documents").append("<h1>Configuration Explainer</h1>");
+	for(const expl of panlJsonData.explanation) {
+		$("#documents").append("<code class=\"explain\">" + escapeHTML(expl) + "</pre>")
+	}
+
+	$("#documents").append("<h1>Configuration Parameters</h1>");
+	for(const parameter of panlJsonData.parameters) {
+		var innerCode = "<strong>[ " + parameter.value + " ] </strong> ";
+
+		for(const inner of parameter.description) {
+			innerCode = innerCode + inner + "<br />";
+		}
+
+		 innerCode = innerCode + " <em>(set by the property '" + parameter.property + "')</em>";
+		$("#documents").append("<code class=\"explain\">" + innerCode + "</pre>")
+	}
+
+	$("#documents").append("<h1>Field Configuration Explainer</h1>");
 	$("#documents").append("<p>In order of URI path</p>");
 	for(const conf of panlJsonData.configuration) {
-		var innerPre = "";
+		var isFirst = true;
+		var innerCode = "";
 		for(const inner of conf) {
-			innerPre = innerPre + escapeHTML(inner) + "\n";
+
+			innerCode = innerCode + (isFirst ? "" : " - ") +escapeHTML(inner) + "<br />";
+			isFirst = false;
 		}
-		$("#documents").append("<pre class=\"explain\">" + innerPre + "</pre>")
+		$("#documents").append("<code class=\"explain\">" + innerCode + "</pre>")
 	}
 }
 

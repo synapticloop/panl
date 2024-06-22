@@ -1,3 +1,4 @@
 div#content { width: 1024px !important; }
-#documents pre:nth-child(odd) { background-color: #efefef; padding: 12px; }
-pre.explain { padding: 0 12px; }
+#documents code { padding: 12px; }
+#documents code:nth-child(odd) { background-color: #efefef; }
+code.explain { padding: 0 12px; display: block; }

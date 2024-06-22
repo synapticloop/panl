@@ -11,10 +11,9 @@ import org.json.JSONObject;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
-import java.util.List;
-import java.util.Map;
-import java.util.Properties;
-import java.util.StringTokenizer;
+import java.util.*;
+
+import static com.synapticloop.panl.server.handler.processor.Processor.JSON_VALUE_NO_INFIX_REPLACEMENT;
 
 public class PanlBooleanFacetField extends PanlFacetField {
 	public static final String BOOLEAN_TRUE_VALUE = "true";
@@ -216,4 +215,22 @@ public class PanlBooleanFacetField extends PanlFacetField {
 		removeObject.put(JSON_KEY_IS_BOOLEAN_FACET, true);
 	}
 
+	@Override public List<String> explainAdditional() {
+		List<String> explanations = new ArrayList<>(super.explainAdditional());
+		explanations.add("Is a BOOLEAN facet which will allow a selection of either 'true' or 'false'.");
+
+		if(hasBooleanTrueReplacement) {
+			explanations.add("Will replace boolean 'true' values with '" + booleanTrueReplacement + "'.");
+		} else {
+			explanations.add("Will not replace boolean 'true' values.");
+		}
+
+		if(hasBooleanFalseReplacement) {
+			explanations.add("Will replace boolean 'false' values with '" + booleanFalseReplacement + "'.");
+		} else {
+			explanations.add("Will not replace boolean 'false' values.");
+		}
+
+		return (explanations);
+	}
 }

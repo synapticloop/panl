@@ -99,6 +99,8 @@ public abstract class BaseField {
 
 	private int validationType;
 
+	private final List<String> WARNING_MESSAGES = new ArrayList<>();
+
 	public BaseField(
 			String lpseCode,
 			Properties properties,
@@ -452,13 +454,18 @@ public abstract class BaseField {
 				solrFieldName +
 				"' of type '" +
 				solrFieldType +
+				"', Panl name '" +
+				panlFieldName +
 				"'.");
 
 		temp.addAll(explainAdditional());
+
+		temp.addAll(WARNING_MESSAGES);
+
 		return (temp);
 	}
 
-	protected abstract List<String> explainAdditional();
+	public abstract List<String> explainAdditional();
 
 	/**
 	 * <p>Apply the token to the Solr Query </p>
@@ -505,7 +512,9 @@ public abstract class BaseField {
 
 	protected void logWarnProperties(String lpseCode, String propertyKey) {
 		if (properties.containsKey(propertyKey)) {
-			getLogger().warn("LPSE code '{}' has a property of '{}' which is invalid and should be removed.  (It has been ignored...)", lpseCode, propertyKey);
+			String message = String.format("LPSE code '%s' has a property of '%s' which is invalid and should be removed.  (It has been ignored...)", lpseCode, propertyKey);
+			getLogger().warn(message);
+			WARNING_MESSAGES.add("[ CONFIGURATION WARNING ] " + message);
 		}
 	}
 

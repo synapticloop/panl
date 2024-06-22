@@ -151,7 +151,7 @@ public class CollectionProperties {
 
 	private String solrDefaultQueryOperand;
 	private int solrFacetLimit;
-
+	private String panlLpseOrder;
 	private final Set<String> LPSE_URI_CODES = new HashSet<>();
 	private final Set<String> LPSE_IGNORED_URI_CODES = new HashSet<>();
 	private final List<BaseField> lpseFields = new ArrayList<>();
@@ -176,6 +176,8 @@ public class CollectionProperties {
 	 * <p>Are there any OR facet fields registered for this collection</p>
 	 */
 	private boolean hasOrFacetFields = false;
+	protected boolean panlIncludeSingleFacets;
+	protected boolean panlIncludeSameNumberFacets;
 
 	/**
 	 * <p>Used as a holder for panl LPSE codes which are mandatory to have in the
@@ -290,6 +292,9 @@ public class CollectionProperties {
 	 * 		could not be adequately parsed
 	 */
 	private void parseDefaultProperties() throws PanlServerException {
+		this.panlIncludeSingleFacets = properties.getProperty(PROPERTY_KEY_PANL_INCLUDE_SINGLE_FACETS, "false").equals("true");
+		this.panlIncludeSameNumberFacets = properties.getProperty(PROPERTY_KEY_PANL_INCLUDE_SAME_NUMBER_FACETS, "false").equals("true");
+
 		this.formQueryRespondTo = properties.getProperty(PROPERTY_KEY_PANL_FORM_QUERY_RESPONDTO, "q");
 
 		this.facetMinCount = PropertyHelper.getIntProperty(properties, PROPERTY_KEY_SOLR_FACET_MIN_COUNT, 1);
@@ -456,7 +461,7 @@ public class CollectionProperties {
 	 * @throws PanlServerException if the panl.lpse.order does not exist
 	 */
 	private void parseLpseOrder() throws PanlServerException {
-		String panlLpseOrder = properties.getProperty(PROPERTY_KEY_PANL_LPSE_ORDER, null);
+		panlLpseOrder = properties.getProperty(PROPERTY_KEY_PANL_LPSE_ORDER, null);
 		if (null == panlLpseOrder) {
 			throw new PanlServerException("Could not find the MANDATORY property " + PROPERTY_KEY_PANL_LPSE_ORDER);
 		}
@@ -760,12 +765,16 @@ public class CollectionProperties {
 		return (LPSE_IGNORED_URI_CODES.contains(lpseCode));
 	}
 
-	public boolean getIsDateFacetField(String lpseCode) {
-		return(LPSE_CODE_DATE_FACET_MAP.containsKey(lpseCode));
+	public boolean getPanlIncludeSingleFacets() {
+		return (panlIncludeSingleFacets);
 	}
 
-	public boolean getIsBooleanFacetField(String lpseCode) {
-		return(LPSE_CODE_BOOLEAN_FACET_MAP.containsKey(lpseCode));
+	public boolean getPanlIncludeSameNumberFacets() {
+		return (panlIncludeSameNumberFacets);
 	}
 
+	public String getPanlLpseOrder() {
+		return (panlLpseOrder);
+	}
 }
+

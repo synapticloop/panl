@@ -47,9 +47,10 @@ public class PanlOrFacetField extends PanlFacetField {
 	}
 
 	@Override public List<String> explainAdditional() {
-		return List.of();
+		List<String> explanations = new ArrayList<>(super.explainAdditional());
+		explanations.add("Is an OR facet which will allow multiple selections of this facet, consequently increasing the number of results.");
+		return (explanations);
 	}
-
 
 	@Override public Logger getLogger() {
 		return (LOGGER);

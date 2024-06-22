@@ -78,6 +78,11 @@ public class PanlField {
 	public String toProperties() {
 		String booleanFieldText = "";
 		String dateFieldText = "";
+
+		String prefixSuffix = "# The following two properties are optional and the values should be changed\n" +
+				String.format("#panl.prefix.%s=prefix\n", lpseCode) +
+				String.format("#panl.suffix.%s=suffix\n", lpseCode);
+
 		if (solrFieldType.equals("solr.BoolField")) {
 			booleanFieldText = "# Because this is a Boolean field, you can use a boolean value replacement for\n" +
 					"# either the true value, the false value, or neither.  This makes a more human-\n" +
@@ -96,16 +101,16 @@ public class PanlField {
 					String.format("#panl.date.%s.months=\\ months\n", lpseCode) +
 					String.format("#panl.date.%s.days=\\ days\n", lpseCode) +
 					String.format("#panl.date.%s.hours=\\ hours\n", lpseCode);
+			// no prefix or suffix for date fields
+			prefixSuffix = "";
 		}
 
-		// TODO - add in all of the properties
+		// TODO - add in all of the properties (RANGE etc)
 		return (String.format("\n# %s\n", schemaXmlLine) +
 				String.format("panl.facet.%s=%s\n", lpseCode, solrFieldName) +
 				String.format("panl.name.%s=%s\n", lpseCode, getPrettyName(solrFieldName)) +
 				String.format("panl.type.%s=%s\n", lpseCode, solrFieldType) +
-				"# The following two properties are optional and the values should be changed\n" +
-				String.format("#panl.prefix.%s=prefix\n", lpseCode) +
-				String.format("#panl.suffix.%s=suffix\n", lpseCode) +
+				prefixSuffix +
 				booleanFieldText +
 				dateFieldText
 		);

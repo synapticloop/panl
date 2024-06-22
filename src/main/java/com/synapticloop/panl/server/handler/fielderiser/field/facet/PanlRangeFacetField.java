@@ -105,7 +105,59 @@ public class PanlRangeFacetField extends PanlFacetField {
 	}
 
 	@Override public List<String> explainAdditional() {
-		return List.of();
+		List<String> explanations = new ArrayList<>(super.explainAdditional());
+		explanations.add("Is a RANGE facet which will allow either a single value to be selected, or values within a range.");
+
+		if(hasRangePrefix) {
+			explanations.add("Has a range prefix of '" + rangePrefix + "'.");
+		} else {
+			explanations.add("No range prefix");
+		}
+
+		if(hasRangeInfix) {
+			explanations.add("Has a range infix of '" + rangeValueInfix + "'.");
+		} else {
+			explanations.add("No range infix, and is set to the default '" + JSON_VALUE_NO_INFIX_REPLACEMENT + "'.");
+		}
+
+		if(hasRangeSuffix) {
+			explanations.add("Has a range suffix of '" + rangeSuffix + "'.");
+		} else {
+			explanations.add("No range suffix");
+		}
+
+		if(hasMinRange) {
+			explanations.add("Has the minimum range value set at '" + rangeMinValue + "'.");
+			if(null != rangeMinValueReplacement) {
+				explanations.add("Additionally, if the value is the minimum range, the replacement for this value is set to  '" + rangeMinValueReplacement + "'.");
+			}
+		} else {
+			explanations.add("Does __NOT__ have a minimum range value set.");
+		}
+
+		if(hasMaxRange) {
+			explanations.add("Has the maximum range value set at '" + rangeMaxValue + "'.");
+			if(null != rangeMinValueReplacement) {
+				explanations.add("Additionally, if the value is the maximum range, the replacement for this value is set to  '" + rangeMaxValueReplacement + "'.");
+			}
+		} else {
+			explanations.add("Does __NOT__ have a maximum range value set.");
+		}
+
+		if(hasMinRangeWildcard) {
+			explanations.add("When the range value is the minimum configured value, the Solr query will include any results less than the minimum value (wildcard '*' search).");
+		} else {
+			explanations.add("The Solr query will include any results equal to or greater to the minimum value (inclusive search).");
+		}
+
+		if(hasMaxRangeWildcard) {
+			explanations.add("When the range value is the maximum configured value, the Solr query will include any results greater than the maximum value (wildcard '*' search).");
+		} else {
+			explanations.add("The Solr query will include any results equal to or less than the maximum value (inclusive search).");
+		}
+
+
+		return (explanations);
 	}
 
 

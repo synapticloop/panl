@@ -77,6 +77,7 @@ public class PanlFacetField extends BasePrefixSuffixField {
 	@Override public List<String> explainAdditional() {
 		List<String> explanations = new ArrayList<>();
 		explanations.add("A Solr field that can be used as a facet, returned in the field set, or configured to be sorted by.");
+		explanations.addAll(super.explainAdditional());
 		return(explanations);
 	}
 
@@ -95,4 +96,5 @@ public class PanlFacetField extends BasePrefixSuffixField {
 	public LpseToken instantiateToken(CollectionProperties collectionProperties, String lpseCode, String query, StringTokenizer valueTokeniser, LpseTokeniser lpseTokeniser) {
 		return(new FacetLpseToken(collectionProperties, this.lpseCode, lpseTokeniser, valueTokeniser));
 	}
+
 }
