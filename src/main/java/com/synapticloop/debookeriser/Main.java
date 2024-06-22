@@ -24,36 +24,72 @@ package com.synapticloop.debookeriser;
  *  IN THE SOFTWARE.
  */
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.commons.io.FileUtils;
+import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
+import org.jsoup.select.Elements;
 
-import javax.xml.namespace.QName;
-import javax.xml.stream.XMLEventReader;
-import javax.xml.stream.XMLInputFactory;
-import javax.xml.stream.XMLStreamException;
-import javax.xml.stream.events.Attribute;
-import javax.xml.stream.events.StartElement;
-import javax.xml.stream.events.XMLEvent;
 import java.io.*;
-import java.util.*;
+import java.nio.charset.Charset;
+import java.util.LinkedHashMap;
+import java.util.Map;
+
+import org.jsoup.*;
 
 public class Main {
-	private static final Logger LOGGER = LoggerFactory.getLogger(Main.class);
-
 	private final File googleDocsHTMLFile;
+	private String template;
 	public Main(String fileName) {
 		this.googleDocsHTMLFile = new File(fileName);
 	}
 
-	public void generate() {
+	public void generate() throws IOException {
+		loadTemplate();
 		parseGoogleHTMLFile();
 	}
-	public void parseGoogleHTMLFile() {
 
+	public void loadTemplate() throws IOException {
+		template = FileUtils.readFileToString(new File("src/main/resources/template.html"), Charset.defaultCharset());
+	}
+
+	private Map<String, String> pages = new LinkedHashMap<>();
+	public void parseGoogleHTMLFile() throws IOException {
+		Document doc = Jsoup.parse(googleDocsHTMLFile);
+		boolean hasFirstPage = false;
+		String outputPage = "book/index.html";
+
+		StringBuilder styles = new StringBuilder();
+		for (Element style : doc.getElementsByTag("style")) {
+			styles.append(style.outerHtml());
+		}
+		template = template.replace("##STYLE##", styles.toString());
+
+		StringBuilder contents = new StringBuilder();
+		for (Element body : doc.getElementsByTag("body")) {
+			for (Element allElement : body.getAllElements()) {
+				if(allElement.tag().getName().equals("h1")) {
+					// todo get nicer page name
+					String temp = template.replace("##CONTENT##", contents.toString());
+					FileUtils.writeStringToFile(new File(outputPage), temp, Charset.defaultCharset());
+					outputPage = "book/" + getNicePageName(allElement.text()) +".html";
+					System.out.println(outputPage);
+					contents.setLength(0);
+				} else {
+					contents.append(allElement.outerHtml());
+				}
+			}
+		}
+	}
+	private String getNicePageName(String pageName) {
+		return(pageName.toLowerCase().replaceAll("[^a-z0-9]", "-"));
 	}
 
 	public static void main(String[] args) {
 		Main main = new Main(args[0]);
-		main.generate();
+		try {
+			main.generate();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 }
