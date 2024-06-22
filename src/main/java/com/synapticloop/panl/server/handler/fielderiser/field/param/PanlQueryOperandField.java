@@ -27,6 +27,7 @@ package com.synapticloop.panl.server.handler.fielderiser.field.param;
 import com.synapticloop.panl.exception.PanlServerException;
 import com.synapticloop.panl.server.handler.fielderiser.field.BaseField;
 import com.synapticloop.panl.server.handler.properties.CollectionProperties;
+import com.synapticloop.panl.server.handler.tokeniser.LpseTokeniser;
 import com.synapticloop.panl.server.handler.tokeniser.token.LpseToken;
 import com.synapticloop.panl.server.handler.tokeniser.token.param.QueryOperandLpseToken;
 import org.apache.solr.client.solrj.SolrQuery;
@@ -34,19 +35,14 @@ import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Properties;
+import java.util.*;
 
 public class PanlQueryOperandField extends BaseField {
 	private static final Logger LOGGER = LoggerFactory.getLogger(PanlQueryOperandField.class);
 	public static final String SOLR_PARAM_Q_OP = "q.op";
 
-	public PanlQueryOperandField(String lpseCode, String propertyKey, Properties properties, String solrCollection) throws PanlServerException {
-		super(lpseCode, properties, propertyKey, solrCollection);
-
-		logDetails();
+	public PanlQueryOperandField(String lpseCode, String propertyKey, Properties properties, String solrCollection, String panlCollectionUri) throws PanlServerException {
+		super(lpseCode, properties, propertyKey, solrCollection, panlCollectionUri);
 	}
 
 	@Override
@@ -132,8 +128,18 @@ public class PanlQueryOperandField extends BaseField {
 		return ("");
 	}
 
-	@Override public void appendAvailableObjectInternal(JSONObject jsonObject) {
+	@Override public void appendToAvailableObjectInternal(JSONObject jsonObject) {
 
+	}
+	@Override public LpseToken instantiateToken(CollectionProperties collectionProperties, String lpseCode, String query, StringTokenizer valueTokeniser, LpseTokeniser lpseTokeniser) {
+		return(new QueryOperandLpseToken(collectionProperties, this.lpseCode, lpseTokeniser));
+	}
+
+	@Override protected void logDetails() {
+		getLogger().info("[ Solr/Panl '{}/{}' ] Query operand parameter mapped to '{}'.",
+				solrCollection,
+				panlCollectionUri,
+				lpseCode);
 	}
 
 }

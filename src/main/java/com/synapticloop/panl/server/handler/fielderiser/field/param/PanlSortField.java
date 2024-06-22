@@ -27,6 +27,7 @@ package com.synapticloop.panl.server.handler.fielderiser.field.param;
 import com.synapticloop.panl.exception.PanlServerException;
 import com.synapticloop.panl.server.handler.fielderiser.field.BaseField;
 import com.synapticloop.panl.server.handler.properties.CollectionProperties;
+import com.synapticloop.panl.server.handler.tokeniser.LpseTokeniser;
 import com.synapticloop.panl.server.handler.tokeniser.token.LpseToken;
 import com.synapticloop.panl.server.handler.tokeniser.token.param.SortLpseToken;
 import org.apache.solr.client.solrj.SolrQuery;
@@ -34,10 +35,7 @@ import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Properties;
+import java.util.*;
 
 /**
  * <p>The sort field controls the order in which the results are sorted.  This
@@ -48,11 +46,8 @@ import java.util.Properties;
 public class PanlSortField extends BaseField {
 	private static final Logger LOGGER = LoggerFactory.getLogger(PanlSortField.class);
 
-	public PanlSortField(String lpseCode, String propertyKey, Properties properties, String solrCollection) throws PanlServerException {
-		super(lpseCode, properties, propertyKey, solrCollection);
-
-		populatePanlAndSolrFieldNames();
-		logDetails();
+	public PanlSortField(String lpseCode, String propertyKey, Properties properties, String solrCollection, String panlCollectionUri) throws PanlServerException {
+		super(lpseCode, properties, propertyKey, solrCollection, panlCollectionUri);
 	}
 
 	@Override public String getCanonicalUriPath(Map<String, List<LpseToken>> panlTokenMap, CollectionProperties collectionProperties) {
@@ -139,8 +134,19 @@ public class PanlSortField extends BaseField {
 		solrQuery.setSorts(sortClauses);
 	}
 
-	@Override public void appendAvailableObjectInternal(JSONObject jsonObject) {
+	@Override protected void appendToAvailableObjectInternal(JSONObject jsonObject) {
 
+	}
+
+	@Override public LpseToken instantiateToken(CollectionProperties collectionProperties, String lpseCode, String query, StringTokenizer valueTokeniser, LpseTokeniser lpseTokeniser) {
+		return(new SortLpseToken(collectionProperties, this.lpseCode, lpseTokeniser));
+	}
+
+	@Override protected void logDetails() {
+		getLogger().info("[ Solr/Panl: '{}/{}' ] Sort parameter mapped to '{}'.",
+				solrCollection,
+				panlCollectionUri,
+				lpseCode);
 	}
 
 }

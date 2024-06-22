@@ -24,7 +24,7 @@ package com.synapticloop.panl.server.handler.tokeniser.token.facet;
  *  IN THE SOFTWARE.
  */
 
-import com.synapticloop.panl.server.handler.fielderiser.field.BaseField;
+import com.synapticloop.panl.server.handler.fielderiser.field.facet.PanlRangeFacetField;
 import com.synapticloop.panl.server.handler.properties.CollectionProperties;
 import com.synapticloop.panl.server.handler.tokeniser.LpseTokeniser;
 import com.synapticloop.panl.server.handler.tokeniser.token.LpseToken;
@@ -76,7 +76,16 @@ public class RangeFacetLpseToken extends LpseToken {
 	private String solrField = null;
 	private String toValue = null;
 	protected boolean hasInfix = false;
+	protected boolean isRangeToken = false;
 
+	/**
+	 * <p>Instantiate a RANGE facet, although there may not  </p>
+	 *
+	 * @param collectionProperties The collection properties
+	 * @param lpseCode The lpse code to respond to
+	 * @param lpseTokeniser The lpse tokeniser for the URI
+	 * @param valueTokeniser The value tokeniser for the URI
+	 */
 	public RangeFacetLpseToken(
 			CollectionProperties collectionProperties,
 			String lpseCode,
@@ -106,6 +115,8 @@ public class RangeFacetLpseToken extends LpseToken {
 					this.hasInfix = true;
 				}
 
+				this.isRangeToken = true;
+
 				StringBuilder nextLpse = new StringBuilder();
 				int j = 0;
 
@@ -122,38 +133,45 @@ public class RangeFacetLpseToken extends LpseToken {
 					isValid = false;
 				}
 			} else {
-				this.isValid = false;
+				// this is not a range, just a single value
+				lpseTokeniser.decrementCurrentPosition();
 			}
 		}
 
-		BaseField lpseField = collectionProperties.getLpseField(this.lpseCode);
+		PanlRangeFacetField panlRangeFacetField = (PanlRangeFacetField) collectionProperties.getLpseField(this.lpseCode);
 
-		if (null != lpseField) {
-			if(!valueTokeniser.hasMoreTokens()) {
+		if (null != panlRangeFacetField) {
+			if (!valueTokeniser.hasMoreTokens()) {
 				this.isValid = false;
 			} else {
 				// we have a token - get it
 				this.originalValue = valueTokeniser.nextToken();
+			}
+		}
 
-				if (this.isValid) {
-					FromToBean fromToBean = lpseField.getDecodedRangeValues(this.originalValue);
-					if(null == fromToBean) {
-						this.isValid = false;
-					} else {
-						this.value = fromToBean.getFromValue();
-						this.toValue = fromToBean.getToValue();
-					}
-				} else {
-					this.value = lpseField.getDecodedValue(this.originalValue);
+		// we now have the original value and the token  should be valid so far...
+		if(!this.isValid) {
+			return;
+		}
 
-					if (null == this.value) {
-						isValid = false;
-					}
-				}
+		// now we need to decode the original value
+		if(this.isRangeToken) {
+			FromToBean fromToBean = panlRangeFacetField.getDecodedRangeValues(this.originalValue);
+			if (null == fromToBean) {
+				this.isValid = false;
+			} else {
+				this.value = fromToBean.getFromValue();
+				this.toValue = fromToBean.getToValue();
 			}
 		} else {
-			this.isValid = false;
+			// this is a singular value
+			this.value = panlRangeFacetField.getDecodedValue(this.originalValue);
+
+			if (null == this.value) {
+				isValid = false;
+			}
 		}
+
 
 		if (collectionProperties.hasFacetCode(lpseCode)) {
 			this.solrField = collectionProperties.getSolrFieldNameFromLpseCode(lpseCode);
@@ -166,14 +184,14 @@ public class RangeFacetLpseToken extends LpseToken {
 	@Override public String explain() {
 		return ("PANL " +
 				(this.isValid ? "[  VALID  ]" : "[ INVALID ]") +
-				" <facet (RANGE)> LPSE code '" +
+				" <facet (RANGE)>   LPSE code '" +
 				this.lpseCode +
 				"' (solr field '" +
 				this.solrField +
-				"') with parsed value '" +
-				value +
-				"', incoming value '" +
+				"') incoming value '" +
 				this.originalValue +
+				"', parsed value '" +
+				(isRangeToken ? "RANGE(" + value +":" + toValue + ") " + (hasInfix ? "with" : "without") + " infix" : value) +
 				"'.");
 	}
 
@@ -191,5 +209,9 @@ public class RangeFacetLpseToken extends LpseToken {
 
 	public boolean getHasInfix() {
 		return hasInfix;
+	}
+
+	public boolean getIsRangeToken() {
+		return (isRangeToken);
 	}
 }

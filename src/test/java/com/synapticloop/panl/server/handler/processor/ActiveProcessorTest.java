@@ -9,6 +9,7 @@ import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
 
+import static com.synapticloop.panl.server.handler.processor.AvailableProcessorTest.WEIGHT_FACETS;
 import static org.junit.jupiter.api.Assertions.*;
 
 public class ActiveProcessorTest {
@@ -24,7 +25,6 @@ public class ActiveProcessorTest {
 
 		JSONObject facetObject = facetArray.getJSONObject(0);
 		assertTrue(facetObject.getBoolean(Processor.JSON_KEY_IS_RANGE_FACET));
-		assertFalse(facetObject.getBoolean(Processor.JSON_KEY_IS_OR_FACET));
 
 		assertEquals("weight", facetObject.getString(Processor.JSON_KEY_FACET_NAME));
 		assertEquals("Weight", facetObject.getString(Processor.JSON_KEY_NAME));

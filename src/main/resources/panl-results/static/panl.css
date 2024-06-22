@@ -50,8 +50,10 @@ div#footer p { text-align: center; text-justify: none }
 
 #timings { padding-top: 12px; border-top: 1px solid #efefef; }
 
-input { width: 50%; }
-input, button { font-family: "Libre Baskerville", serif; padding: 4px; }
+/* inputs */
+input#searchfield { width: 50%; }
+input, button, select { font-family: "Libre Baskerville", serif; padding: 4px; }
+input.date_number { width: 10%; margin: 0 8px; text-align: right; }
 
 /* styling of the nouislider and ranges */
 #ranges { padding: 0 14px; }

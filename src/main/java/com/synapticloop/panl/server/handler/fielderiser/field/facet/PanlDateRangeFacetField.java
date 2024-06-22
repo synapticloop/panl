@@ -25,10 +25,14 @@ package com.synapticloop.panl.server.handler.fielderiser.field.facet;
  */
 
 import com.synapticloop.panl.exception.PanlServerException;
+import com.synapticloop.panl.server.handler.fielderiser.field.BaseField;
 import com.synapticloop.panl.server.handler.properties.CollectionProperties;
+import com.synapticloop.panl.server.handler.tokeniser.LpseTokeniser;
 import com.synapticloop.panl.server.handler.tokeniser.token.LpseToken;
-import com.synapticloop.panl.server.handler.tokeniser.token.facet.DateFacetLpseToken;
+import com.synapticloop.panl.server.handler.tokeniser.token.facet.DateRangeFacetLpseToken;
+import com.synapticloop.panl.server.handler.tokeniser.token.facet.bean.PreviousNextValueBean;
 import org.apache.solr.client.solrj.SolrQuery;
+import org.apache.solr.client.solrj.response.FacetField;
 import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -37,6 +41,9 @@ import java.net.URLDecoder;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.util.*;
+
+import static com.synapticloop.panl.server.handler.processor.Processor.*;
+import static com.synapticloop.panl.server.handler.processor.Processor.FORWARD_SLASH;
 
 /**
  * <p>A Panl facet field comes in five flavours</p>
@@ -49,11 +56,14 @@ import java.util.*;
  *   <li>A DATE facet</li>
  * </ol>
  */
-public class PanlDateFacetField extends PanlFacetField {
-	private static final Logger LOGGER = LoggerFactory.getLogger(PanlDateFacetField.class);
+public class PanlDateRangeFacetField extends PanlFacetField {
+	public static final String PREVIOUS_NEXT = "previous_next";
+	private static final Logger LOGGER = LoggerFactory.getLogger(PanlDateRangeFacetField.class);
 
 	public static final String JSON_KEY_DAYS = "days";
+	public static final String JSON_KEY_SOLR_DESIGNATOR = "solr_range_designator";
 	public static final String JSON_KEY_DESIGNATOR = "designator";
+	public static final String JSON_KEY_DESIGNATORS = "designators";
 	public static final String JSON_KEY_HOURS = "hours";
 	public static final String JSON_KEY_IS_DATE_FACET = "is_date_facet";
 	public static final String JSON_KEY_MONTHS = "months";
@@ -84,8 +94,8 @@ public class PanlDateFacetField extends PanlFacetField {
 	private boolean hasNext = false;
 	private boolean hasPrevious = false;
 
-	public PanlDateFacetField(String lpseCode, String propertyKey, Properties properties, String solrCollection, int lpseLength) throws PanlServerException {
-		super(lpseCode, propertyKey, properties, solrCollection, lpseLength);
+	public PanlDateRangeFacetField(String lpseCode, String propertyKey, Properties properties, String solrCollection, String panlCollectionUri, int lpseLength) throws PanlServerException {
+		super(lpseCode, propertyKey, properties, solrCollection, panlCollectionUri, lpseLength);
 
 		validateProperties();
 
@@ -100,8 +110,24 @@ public class PanlDateFacetField extends PanlFacetField {
 		logDetails();
 	}
 
-	@Override
-	public Logger getLogger() {
+	/**
+	 * <p>Instantiate a <code>DateRangeFacetLpseToken</code> for this field.</p>
+	 *
+	 * @param collectionProperties The collection properties
+	 * @param lpseCode The lpseCode for this field
+	 * @param query The query parameter
+	 * @param valueTokeniser The value tokeniser
+	 * @param lpseTokeniser The lpse tokeniser
+	 *
+	 * @return The newly instantiated DateRangeFacetLpseToken
+	 *
+	 * @see DateRangeFacetLpseToken
+	 */
+	public LpseToken instantiateToken(CollectionProperties collectionProperties, String lpseCode, String query, StringTokenizer valueTokeniser, LpseTokeniser lpseTokeniser) {
+		return (new DateRangeFacetLpseToken(collectionProperties, this.lpseCode, lpseTokeniser, valueTokeniser));
+	}
+
+	@Override public Logger getLogger() {
 		return (LOGGER);
 	}
 
@@ -111,11 +137,7 @@ public class PanlDateFacetField extends PanlFacetField {
 		return (explanations);
 	}
 
-	@Override public String getLpseCode(LpseToken token, CollectionProperties collectionProperties) {
-		return (token.getLpseCode());
-	}
-
-	protected void populateDateReplacements() {
+	private void populateDateReplacements() {
 		populateSolrFieldTypeValidation();
 
 		// look for the previous and next keys
@@ -158,15 +180,24 @@ public class PanlDateFacetField extends PanlFacetField {
 		return (null);
 	}
 
+	private String getDesignator(String originalValue) {
+		for (String key : solrRangeDesignatorLookupMap.keySet()) {
+			if (originalValue.endsWith(key)) {
+				return (key);
+			}
+		}
+		return (null);
+	}
+
 	private Integer getSolrRangeDesignatorLength(String solrRangeDesignator) {
 		return (solrRangeDesignatorLengthLookupMap.getOrDefault(solrRangeDesignator, 0));
 	}
 
 	@Override protected void applyToQueryInternal(SolrQuery solrQuery, List<LpseToken> lpseTokenList) {
 		// there can be only one date next/previous
-		DateFacetLpseToken lpseToken;
+		DateRangeFacetLpseToken lpseToken;
 		if (!lpseTokenList.isEmpty()) {
-			lpseToken = (DateFacetLpseToken) lpseTokenList.get(0);
+			lpseToken = (DateRangeFacetLpseToken) lpseTokenList.get(0);
 			String originalValue = URLDecoder.decode(lpseToken.getOriginalValue(), StandardCharsets.UTF_8);
 			if (hasNext && originalValue.startsWith(nextIndicator)) {
 				// then we are going to do a range from NOW to x years/months/days
@@ -177,7 +208,7 @@ public class PanlDateFacetField extends PanlFacetField {
 					// now we are ready for the query
 					// the original value is the number
 					try {
-						solrQuery.addFilterQuery(String.format("%s:[NOW TO NOW-%d%s]",
+						solrQuery.addFilterQuery(String.format("%s:[NOW TO NOW+%d%s]",
 								lpseToken.getSolrField(),
 								Integer.parseInt(originalValue),
 								solrRangeDesignator));
@@ -188,6 +219,7 @@ public class PanlDateFacetField extends PanlFacetField {
 				// then we are going to do a range from x years/months/days to NOW
 				originalValue = originalValue.substring(previousIndicator.length());
 				String solrRangeDesignator = getSolrRangeDesignator(originalValue);
+
 				if (null != solrRangeDesignator) {
 					originalValue = originalValue.substring(0, (originalValue.length() - getSolrRangeDesignatorLength(solrRangeDesignator) - 1));
 					// now we are ready for the query
@@ -240,9 +272,9 @@ public class PanlDateFacetField extends PanlFacetField {
 
 			List<LpseToken> lpseTokens = panlTokenMap.get(lpseCode);
 
-			DateFacetLpseToken lpseToken;
+			DateRangeFacetLpseToken lpseToken;
 			if (!lpseTokens.isEmpty()) {
-				lpseToken = (DateFacetLpseToken) lpseTokens.get(0);
+				lpseToken = (DateRangeFacetLpseToken) lpseTokens.get(0);
 				if (!lpseToken.getIsValid()) {
 					return ("");
 				}
@@ -270,14 +302,17 @@ public class PanlDateFacetField extends PanlFacetField {
 			return (false);
 		}
 
-		String originalValue = lpseToken.getOriginalValue();
+		String originalValue = URLDecoder.decode(lpseToken.getOriginalValue(), StandardCharsets.UTF_8);
 		boolean isValidNextPrevious = true;
 		if (hasNext && !originalValue.startsWith(nextIndicator)) {
 			isValidNextPrevious = false;
 		}
 
-		if (hasPrevious && !originalValue.startsWith(previousIndicator)) {
-			isValidNextPrevious = false;
+		if(!isValidNextPrevious) {
+			// maybe it is a previous
+			if (hasPrevious && originalValue.startsWith(previousIndicator)) {
+				isValidNextPrevious = true;
+			}
 		}
 
 		return (isValidNextPrevious);
@@ -290,15 +325,17 @@ public class PanlDateFacetField extends PanlFacetField {
 	 *
 	 * @return The decoded value, or null if it couldn't be decoded
 	 */
-	@Override public String getDecodedValue(String value) {
+	public PreviousNextValueBean getDecodedRangeValue(String value) {
 		String decodedValue = URLDecoder.decode(value, StandardCharsets.UTF_8);
 
+		String previousNext = null;
 		boolean decodedNextPrevious = false;
 		if (hasNext || hasPrevious) {
 			if (hasNext) {
 				if (decodedValue.startsWith(nextIndicator)) {
 					decodedValue = decodedValue.substring(nextIndicator.length());
 					decodedNextPrevious = true;
+					previousNext = nextIndicator;
 				}
 			}
 
@@ -306,6 +343,7 @@ public class PanlDateFacetField extends PanlFacetField {
 				if (decodedValue.startsWith(previousIndicator)) {
 					decodedValue = decodedValue.substring(previousIndicator.length());
 					decodedNextPrevious = true;
+					previousNext = previousIndicator;
 				}
 			}
 		}
@@ -315,23 +353,57 @@ public class PanlDateFacetField extends PanlFacetField {
 			// hours, days, etc)
 			// parse the value
 			String solrRangeDesignator = getSolrRangeDesignator(decodedValue);
+			String designator = getDesignator(decodedValue);
 			if (null != solrRangeDesignator) {
 				decodedValue = decodedValue.substring(0, (decodedValue.length() - getSolrRangeDesignatorLength(solrRangeDesignator) - 1));
 				// now we are ready for the query
 				// the original value is the number
 				try {
-					return (Integer.toString(Integer.parseInt(decodedValue)));
+					String parsedInt = Integer.toString(Integer.parseInt(decodedValue));
+					return (new PreviousNextValueBean(previousNext, designator, solrRangeDesignator, parsedInt));
 				} catch (NumberFormatException e) {
 					return (null);
 				}
 			}
 		}
 
-		return (decodedValue);
+		return (null);
 	}
 
-	@Override public void addToAdditionObject(JSONObject additionObject, Map<String, List<LpseToken>> panlTokenMap) {
-		additionObject.put(JSON_KEY_IS_DATE_FACET, true);
+	@Override public void appendToAvailableObjectInternal(JSONObject jsonObject) {
+		jsonObject.put(JSON_KEY_IS_DATE_FACET, true);
+	}
+
+	@Override public void addToRemoveObject(JSONObject removeObject, LpseToken lpseToken) {
+		removeObject.put(JSON_KEY_IS_DATE_FACET, true);
+	}
+
+	/**
+	 * @param facetObject The facet object to append to
+	 * @param collectionProperties The colleciton properties
+	 * @param panlTokenMap The incoming Panl tokens
+	 * @param existingLpseValues The existing LPSE values
+	 * @param facetCountValues The facet count values
+	 * @param numFound Number of results found
+	 * @param numFoundExact Whether the number of results were exact
+	 *
+	 * @return __ALWAYS__ returns false and __DOES_NOT__ add any values to the
+	 * 		passed in JSON object
+	 */
+	@Override
+	public boolean appendAvailableValues(JSONObject facetObject, CollectionProperties collectionProperties, Map<String, List<LpseToken>> panlTokenMap, Set<String> existingLpseValues, List<FacetField.Count> facetCountValues, long numFound, boolean numFoundExact) {
+		return (false);
+	}
+
+	@Override public boolean appendAvailableDateRangeValues(
+			JSONObject additionObject,
+			CollectionProperties collectionProperties,
+			Map<String, List<LpseToken>> panlTokenMap) {
+
+		additionObject.put(JSON_KEY_FACET_NAME, this.solrFieldName);
+		additionObject.put(JSON_KEY_NAME, this.panlFieldName);
+		additionObject.put(JSON_KEY_PANL_CODE, this.lpseCode);
+
 		additionObject.put(JSON_KEY_NEXT, URLEncoder.encode(nextIndicator, StandardCharsets.UTF_8));
 		additionObject.put(JSON_KEY_PREVIOUS, URLEncoder.encode(previousIndicator, StandardCharsets.UTF_8));
 
@@ -341,6 +413,89 @@ public class PanlDateFacetField extends PanlFacetField {
 		designatorObject.put(JSON_KEY_MONTHS, solrRangeDesignatorEncodedLookupMap.get(SOLR_DESIGNATOR_MONTHS));
 		designatorObject.put(JSON_KEY_YEARS, solrRangeDesignatorEncodedLookupMap.get(SOLR_DESIGNATOR_YEARS));
 
-		additionObject.put(JSON_KEY_DESIGNATOR, designatorObject);
+		additionObject.put(JSON_KEY_DESIGNATORS, designatorObject);
+
+		boolean shouldBreak = false;
+		for (LpseToken lpseToken : panlTokenMap.getOrDefault(this.lpseCode, new ArrayList<>())) {
+			if (lpseToken.getIsValid()) {
+				DateRangeFacetLpseToken dateRangeFacetLpseToken = (DateRangeFacetLpseToken) lpseToken;
+				additionObject.put(JSON_KEY_VALUE, dateRangeFacetLpseToken.getValue());
+				additionObject.put(PREVIOUS_NEXT, URLEncoder.encode(dateRangeFacetLpseToken.getPreviousNext(), StandardCharsets.UTF_8));
+				additionObject.put(JSON_KEY_SOLR_DESIGNATOR, URLEncoder.encode(dateRangeFacetLpseToken.getSolrRangeDesignator(), StandardCharsets.UTF_8));
+				additionObject.put(JSON_KEY_DESIGNATOR, URLEncoder.encode(dateRangeFacetLpseToken.getDesignator(), StandardCharsets.UTF_8));
+				shouldBreak = true;
+			}
+
+			// only one date range is allowed - the first valid one
+			if (shouldBreak) {
+				break;
+			}
+		}
+
+		JSONObject additionURIObject = getRangeAdditionURIObject(collectionProperties, panlTokenMap);
+		additionObject.put(JSON_KEY_URIS, additionURIObject);
+
+		return (true);
+	}
+
+	private JSONObject getRangeAdditionURIObject(
+			CollectionProperties collectionProperties,
+			Map<String, List<LpseToken>> panlTokenMap) {
+
+		JSONObject additionObject = new JSONObject();
+
+		StringBuilder lpseUri = new StringBuilder(FORWARD_SLASH);
+		StringBuilder lpseUriBefore = new StringBuilder();
+		StringBuilder lpseUriCode = new StringBuilder();
+
+		for (BaseField baseField : collectionProperties.getLpseFields()) {
+			// we need to add in any other token values in the correct order
+			String orderedLpseCode = baseField.getLpseCode();
+
+			if (orderedLpseCode.equals(this.lpseCode)) {
+				// we have found the current LPSE code, so reset the URI and add it to
+				// the after
+
+				lpseUri.append(getResetUriPath(panlTokenMap, collectionProperties));
+				lpseUriBefore.append(lpseUri);
+				lpseUri.setLength(0);
+//				lpseUriCode.append(baseField.getLpseCode(panlTokenMap, collectionProperties));
+				lpseUriCode.append(this.lpseCode);
+
+			} else {
+				// if we don't have a current token, just carry on
+				if (!panlTokenMap.containsKey(orderedLpseCode)) {
+					continue;
+				}
+				lpseUri.append(baseField.getURIPath(panlTokenMap, collectionProperties));
+				lpseUriCode.append(baseField.getLpseCode());
+			}
+		}
+
+		additionObject.put(JSON_KEY_BEFORE, lpseUriBefore.toString());
+
+		additionObject.put(JSON_KEY_AFTER, FORWARD_SLASH + lpseUri.toString() + lpseUriCode.toString() + FORWARD_SLASH);
+		return (additionObject);
+	}
+
+	@Override public String getResetUriPath(Map<String, List<LpseToken>> panlTokenMap, CollectionProperties collectionProperties) {
+		return("");
+	}
+
+	@Override public String getEncodedPanlValue(LpseToken lpseToken) {
+		if (null == lpseToken.getValue()) {
+			return ("");
+		}
+
+		// at this point it is a date range facet
+		DateRangeFacetLpseToken dateRangeFacetLpseToken = (DateRangeFacetLpseToken) lpseToken;
+		StringBuilder sb = new StringBuilder();
+		sb.append(dateRangeFacetLpseToken.getPreviousNext());
+		sb.append(dateRangeFacetLpseToken.getValue());
+		sb.append(dateRangeFacetLpseToken.getDesignator());
+
+
+
+		return (URLEncoder.encode(sb.toString(), StandardCharsets.UTF_8));
 	}
 }

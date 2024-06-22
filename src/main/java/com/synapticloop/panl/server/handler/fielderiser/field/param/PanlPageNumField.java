@@ -27,23 +27,20 @@ package com.synapticloop.panl.server.handler.fielderiser.field.param;
 import com.synapticloop.panl.exception.PanlServerException;
 import com.synapticloop.panl.server.handler.fielderiser.field.BasePrefixSuffixField;
 import com.synapticloop.panl.server.handler.properties.CollectionProperties;
+import com.synapticloop.panl.server.handler.tokeniser.LpseTokeniser;
 import com.synapticloop.panl.server.handler.tokeniser.token.LpseToken;
 import com.synapticloop.panl.server.handler.tokeniser.token.param.PageNumLpseToken;
 import org.apache.solr.client.solrj.SolrQuery;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Properties;
+import java.util.*;
 
 public class PanlPageNumField extends BasePrefixSuffixField {
 	private static final Logger LOGGER = LoggerFactory.getLogger(PanlPageNumField.class);
 
-	public PanlPageNumField(String lpseCode, String propertyKey, Properties properties, String solrCollection) throws PanlServerException {
-		super(lpseCode, propertyKey, properties, solrCollection);
-		logDetails();
+	public PanlPageNumField(String lpseCode, String propertyKey, Properties properties, String solrCollection, String panlCollectionUri) throws PanlServerException {
+		super(lpseCode, propertyKey, properties, solrCollection, panlCollectionUri);
 	}
 
 	/**
@@ -174,4 +171,16 @@ public class PanlPageNumField extends BasePrefixSuffixField {
 	public void applyToQueryInternal(SolrQuery solrQuery, List<LpseToken> lpseTokenList) {
 		// do nothing - this relies on other data and is set by the handler
 	}
+
+	@Override public LpseToken instantiateToken(CollectionProperties collectionProperties, String lpseCode, String query, StringTokenizer valueTokeniser, LpseTokeniser lpseTokeniser) {
+		return(new PageNumLpseToken(collectionProperties, this.lpseCode, valueTokeniser));
+	}
+
+	@Override protected void logDetails() {
+		getLogger().info("[ Solr/Panl '{}/{}' ] Page number parameter mapped to '{}'.",
+				solrCollection,
+				panlCollectionUri,
+				lpseCode);
+	}
+
 }

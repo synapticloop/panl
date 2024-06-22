@@ -27,27 +27,25 @@ package com.synapticloop.panl.server.handler.fielderiser.field.param;
 import com.synapticloop.panl.exception.PanlServerException;
 import com.synapticloop.panl.server.handler.fielderiser.field.BaseField;
 import com.synapticloop.panl.server.handler.properties.CollectionProperties;
+import com.synapticloop.panl.server.handler.tokeniser.LpseTokeniser;
 import com.synapticloop.panl.server.handler.tokeniser.token.LpseToken;
+import com.synapticloop.panl.server.handler.tokeniser.token.param.PassThroughLpseToken;
 import org.apache.solr.client.solrj.SolrQuery;
 import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Properties;
+import java.util.*;
 
 public class PanlPassThroughField extends BaseField {
 	private static final Logger LOGGER = LoggerFactory.getLogger(PanlPassThroughField.class);
 	public static final String PROPERTY_KEY_PANL_PARAM_PASSTHROUGH_CANONICAL = "panl.param.passthrough.canonical";
 	private final boolean panlParamPassThroughCanonical;
 
-	public PanlPassThroughField(String lpseCode, String propertyKey, Properties properties, String solrCollection) throws PanlServerException {
-		super(lpseCode, properties, propertyKey, solrCollection);
+	public PanlPassThroughField(String lpseCode, String propertyKey, Properties properties, String solrCollection, String panlCollectionUri) throws PanlServerException {
+		super(lpseCode, properties, propertyKey, solrCollection, panlCollectionUri);
 
 		this.panlParamPassThroughCanonical = properties.getProperty(PROPERTY_KEY_PANL_PARAM_PASSTHROUGH_CANONICAL, "false").equals("true");
-		logDetails();
 	}
 
 	@Override
@@ -102,8 +100,19 @@ public class PanlPassThroughField extends BaseField {
 		// do nothing
 	}
 
-	@Override public void appendAvailableObjectInternal(JSONObject jsonObject) {
+	@Override protected void appendToAvailableObjectInternal(JSONObject jsonObject) {
 
+	}
+
+	@Override public LpseToken instantiateToken(CollectionProperties collectionProperties, String lpseCode, String query, StringTokenizer valueTokeniser, LpseTokeniser lpseTokeniser) {
+		return(new PassThroughLpseToken(collectionProperties, this.lpseCode, valueTokeniser));
+	}
+
+	@Override protected void logDetails() {
+		getLogger().info("[ Solr/Panl '{}/{}' ] Pass through parameter mapped to '{}'.",
+				solrCollection,
+				panlCollectionUri,
+				lpseCode);
 	}
 
 }

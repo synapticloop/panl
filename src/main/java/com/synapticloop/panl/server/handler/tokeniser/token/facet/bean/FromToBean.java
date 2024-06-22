@@ -1,18 +1,68 @@
 package com.synapticloop.panl.server.handler.tokeniser.token.facet.bean;
 
+/*
+ * Copyright (c) 2008-2024 synapticloop.
+ *
+ * https://github.com/synapticloop/panl
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to
+ * deal in the Software without restriction, including without limitation the
+ * rights to use, copy, modify, merge, publish, distribute, sublicense, and/or
+ * sell copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in
+ * all copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+ * FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
+ * IN THE SOFTWARE.
+ */
+
+/**
+ * <p>The from to bean encapsulates a RANGE facet's information.</p>
+ *
+ * <ul>
+ *   <li><code>from</code> The starting value for the range.</li>
+ *   <li><code>to</code> The ending value for the range.</li>
+ * </ul>
+ *
+ * @author synapticloop
+ */
 public class FromToBean {
 	private final String from;
 	private final String to;
 
+	/**
+	 * <p>Instantiate the bean.</p>
+	 *
+	 * @param from The starting value for the range
+	 * @param to The ending value for the range
+	 */
 	public FromToBean(String from, String to) {
 		this.from = from;
 		this.to = to;
 	}
 
+	/**
+	 * <p>Get the starting value for the range.</p>
+	 *
+	 * @return The starting value for the range
+	 */
 	public String getFromValue() {
 		return from;
 	}
 
+	/**
+	 * <p>Get the ending value for the range</p>
+	 *
+	 * @return The ending value for the range
+	 */
 	public String getToValue() {
 		return to;
 	}

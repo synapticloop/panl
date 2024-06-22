@@ -74,6 +74,7 @@ public abstract class Processor {
 	public static final String JSON_KEY_PREFIX = "prefix";
 	public static final String JSON_KEY_PREVIOUS = "previous";
 	public static final String JSON_KEY_RANGE_FACETS = "range_facets";
+	public static final String JSON_KEY_DATE_RANGE_FACETS = "date_range_facets";
 	public static final String JSON_KEY_RANGE_MAX_VALUE = "range_max_value";
 	public static final String JSON_KEY_RANGE_MIN_VALUE = "range_min_value";
 	public static final String JSON_KEY_REMOVE_URI = "remove_uri";

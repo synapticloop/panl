@@ -2,9 +2,11 @@ package com.synapticloop.panl.server.handler.fielderiser.field.facet;
 
 import com.synapticloop.panl.exception.PanlServerException;
 import com.synapticloop.panl.server.handler.properties.CollectionProperties;
+import com.synapticloop.panl.server.handler.tokeniser.LpseTokeniser;
 import com.synapticloop.panl.server.handler.tokeniser.token.LpseToken;
 import com.synapticloop.panl.server.handler.tokeniser.token.facet.BooleanFacetLpseToken;
 import org.apache.solr.client.solrj.SolrQuery;
+import org.json.JSONObject;
 
 import java.net.URLDecoder;
 import java.net.URLEncoder;
@@ -12,8 +14,13 @@ import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
+import java.util.StringTokenizer;
 
 public class PanlBooleanFacetField extends PanlFacetField {
+	public static final String BOOLEAN_TRUE_VALUE = "true";
+	public static final String BOOLEAN_FALSE_VALUE = "false";
+	public static final String JSON_KEY_IS_BOOLEAN_FACET = "is_boolean_facet";
+
 	// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - //
 	//                         BOOLEAN Facet properties                        //
 	// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - //
@@ -22,8 +29,8 @@ public class PanlBooleanFacetField extends PanlFacetField {
 	private String booleanTrueReplacement;
 	private String booleanFalseReplacement;
 
-	public PanlBooleanFacetField(String lpseCode, String propertyKey, Properties properties, String solrCollection, int lpseLength) throws PanlServerException {
-		super(lpseCode, propertyKey, properties, solrCollection, lpseLength);
+	public PanlBooleanFacetField(String lpseCode, String propertyKey, Properties properties, String solrCollection, String panlCollectionUri, int lpseLength) throws PanlServerException {
+		super(lpseCode, propertyKey, properties, solrCollection, panlCollectionUri, lpseLength);
 		validateProperties();
 
 		populateBooleanReplacements();
@@ -165,17 +172,17 @@ public class PanlBooleanFacetField extends PanlFacetField {
 			sb.append(valuePrefix);
 		}
 
-		if (decoded.equals("true")) {
+		if (decoded.equals(BOOLEAN_TRUE_VALUE)) {
 			if (hasBooleanTrueReplacement) {
 				sb.append(booleanTrueReplacement);
 			} else {
-				sb.append("true");
+				sb.append(BOOLEAN_TRUE_VALUE);
 			}
 		} else {
 			if (hasBooleanFalseReplacement) {
 				sb.append(booleanFalseReplacement);
 			} else {
-				sb.append("false");
+				sb.append(BOOLEAN_FALSE_VALUE);
 			}
 		}
 
@@ -196,4 +203,17 @@ public class PanlBooleanFacetField extends PanlFacetField {
 			return;
 		}
 	}
+
+	public LpseToken instantiateToken(CollectionProperties collectionProperties, String lpseCode, String query, StringTokenizer valueTokeniser, LpseTokeniser lpseTokeniser) {
+		return(new BooleanFacetLpseToken(collectionProperties, this.lpseCode, lpseTokeniser, valueTokeniser));
+	}
+
+	@Override public void appendToAvailableObjectInternal(JSONObject jsonObject) {
+		jsonObject.put(JSON_KEY_IS_BOOLEAN_FACET, true);
+	}
+
+	@Override public void addToRemoveObject(JSONObject removeObject, LpseToken lpseToken) {
+		removeObject.put(JSON_KEY_IS_BOOLEAN_FACET, true);
+	}
+
 }

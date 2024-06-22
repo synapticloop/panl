@@ -26,22 +26,21 @@ package com.synapticloop.panl.server.handler.fielderiser.field;
 
 import com.synapticloop.panl.exception.PanlServerException;
 import com.synapticloop.panl.server.handler.properties.CollectionProperties;
+import com.synapticloop.panl.server.handler.tokeniser.LpseTokeniser;
 import com.synapticloop.panl.server.handler.tokeniser.token.LpseToken;
+import com.synapticloop.panl.server.handler.tokeniser.token.facet.FacetLpseToken;
 import org.apache.solr.client.solrj.SolrQuery;
 import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Properties;
+import java.util.*;
 
 public class PanlField extends BaseField {
 	private static final Logger LOGGER = LoggerFactory.getLogger(PanlField.class);
 
-	public PanlField(String lpseCode, String propertyKey, Properties properties, String solrCollection, int lpseLength) throws PanlServerException {
-		super(lpseCode, propertyKey, properties, solrCollection, lpseLength);
+	public PanlField(String lpseCode, String propertyKey, Properties properties, String solrCollection, String panlCollectionUri, int lpseLength) throws PanlServerException {
+		super(lpseCode, propertyKey, properties, solrCollection, panlCollectionUri, lpseLength);
 
 		// fields don't have prefixes/suffixes or URI parts
 		populatePanlAndSolrFieldNames();
@@ -60,23 +59,31 @@ public class PanlField extends BaseField {
 		return ("");
 	}
 
-	@Override
-	public Logger getLogger() {
+	@Override public Logger getLogger() {
 		return (LOGGER);
 	}
 
 	@Override public List<String> explainAdditional() {
 		List<String> explanations = new ArrayList<>();
 		explanations.add("A Solr field that can be configured to be sorted by, or returned in the field set.");
-		return(explanations);
+		return (explanations);
 	}
 
-	public void applyToQueryInternal(SolrQuery solrQuery, List<LpseToken> lpseTokenList) {
-		// do nothing
+	@Override public void applyToQueryInternal(SolrQuery solrQuery, List<LpseToken> lpseTokenList) { /* do nothing */ }
+
+	@Override protected void appendToAvailableObjectInternal(JSONObject jsonObject) { /* do nothing */ }
+
+	public LpseToken instantiateToken(CollectionProperties collectionProperties, String lpseCode, String query, StringTokenizer valueTokeniser, LpseTokeniser lpseTokeniser) {
+		return (new FacetLpseToken(collectionProperties, this.lpseCode, lpseTokeniser, valueTokeniser));
 	}
 
-	@Override public void appendAvailableObjectInternal(JSONObject jsonObject) {
-
+	@Override protected void logDetails() {
+		getLogger().info("[ Solr/Panl '{}/{}' ] Mapping Solr field name '{}' to panl key '{}', LPSE length {}",
+				solrCollection,
+				panlCollectionUri,
+				solrFieldName,
+				lpseCode,
+				lpseLength);
 	}
 
 }

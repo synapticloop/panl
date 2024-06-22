@@ -124,20 +124,21 @@ public class PanlServer {
 					try {
 						File collectionPropertiesFile = new File(propertiesFileDirectory + File.separator + propertyFileName.trim());
 
-						LOGGER.info("Found collection named '{}' with file location '{}'.", solrCollection, collectionPropertiesFile.getName());
+						String fileName = collectionPropertiesFile.getName();
+						// TODO - need a set to lookup so that there aren't multiple panl
+						//  collection names bound
+
+						panlCollectionUri = fileName.substring(0, fileName.indexOf("."));
+
+						LOGGER.info("Found Solr collection named '{}' with properties file named '{}'.", solrCollection, fileName);
 
 						propertiesCollectionProperties.load(new FileReader(collectionPropertiesFile));
 
 						collectionProperties = new CollectionProperties(
-								propertyFileName.substring(0, propertyFileName.indexOf(".")),
 								solrCollection,
+								panlCollectionUri,
 								propertiesCollectionProperties);
 
-						// TODO - need a set to lookup so that there aren't multiple panl
-						//  collection names bound
-
-						String fileName = collectionPropertiesFile.getName();
-						panlCollectionUri = fileName.substring(0, fileName.indexOf("."));
 
 						collectionPropertiesList.add(collectionProperties);
 					} catch (IOException e) {
@@ -232,7 +233,7 @@ public class PanlServer {
 			String solrCollection = collectionRequestHandler.getSolrCollection();
 			String panlCollectionUri = collectionRequestHandler.getPanlCollectionUri();
 			bootstrap.registerHandler("/" + panlCollectionUri + "/*", new PanlRequestHandler(panlProperties, collectionRequestHandler));
-			LOGGER.info("Binding Solr collection of '{}' to /{}/*", solrCollection, panlCollectionUri);
+			LOGGER.info("Binding Solr collection of '{}' to Panl collection URI path /{}/*", solrCollection, panlCollectionUri);
 			for (String resultFieldsName : collectionRequestHandler.getResultFieldsNames()) {
 				LOGGER.info("Results will be available on /{}/{}/*", panlCollectionUri, resultFieldsName);
 			}

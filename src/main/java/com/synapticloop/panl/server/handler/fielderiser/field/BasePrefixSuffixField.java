@@ -2,7 +2,6 @@ package com.synapticloop.panl.server.handler.fielderiser.field;
 
 import com.synapticloop.panl.exception.PanlServerException;
 import com.synapticloop.panl.server.handler.tokeniser.token.LpseToken;
-import com.synapticloop.panl.server.handler.tokeniser.token.facet.FacetLpseToken;
 import org.json.JSONObject;
 
 import java.net.URLDecoder;
@@ -18,14 +17,23 @@ public abstract class BasePrefixSuffixField extends BaseField {
 	protected String valuePrefix;
 	protected String valueSuffix;
 
-	public BasePrefixSuffixField(String lpseCode, String propertyKey, Properties properties, String solrCollection, int lpseLength) throws PanlServerException {
-		super(lpseCode, propertyKey, properties, solrCollection, lpseLength);
+	/**
+	 *
+	 * @param lpseCode
+	 * @param propertyKey
+	 * @param properties
+	 * @param solrCollection
+	 * @param lpseLength
+	 * @throws PanlServerException
+	 */
+	public BasePrefixSuffixField(String lpseCode, String propertyKey, Properties properties, String solrCollection, String panlCollectionUri, int lpseLength) throws PanlServerException {
+		super(lpseCode, propertyKey, properties, solrCollection, panlCollectionUri, lpseLength);
 
 		populateSuffixAndPrefix();
 	}
 
-	public BasePrefixSuffixField(String lpseCode, String propertyKey, Properties properties, String solrCollection) throws PanlServerException {
-		super(lpseCode, propertyKey, properties, solrCollection, 1);
+	public BasePrefixSuffixField(String lpseCode, String propertyKey, Properties properties, String solrCollection, String panlCollectionUri) throws PanlServerException {
+		super(lpseCode, propertyKey, properties, solrCollection, panlCollectionUri, 1);
 
 		populateParamSuffixAndPrefix(propertyKey);
 	}
@@ -97,7 +105,11 @@ public abstract class BasePrefixSuffixField extends BaseField {
 	 * @return the de-suffixed, de-prefixed, and de-replaced value.  This will
 	 * 		return <code>null</code> if it is invalid.
 	 */
-	public String getDecodedValue(String value) {
+	@Override public String getDecodedValue(String value) {
+		if(null == value) {
+			return(null);
+		}
+
 		String decodedValue = URLDecoder.decode(value, StandardCharsets.UTF_8);
 
 		if (hasValuePrefix) {
@@ -150,7 +162,7 @@ public abstract class BasePrefixSuffixField extends BaseField {
 		}
 	}
 
-	@Override public void appendAvailableObjectInternal(JSONObject jsonObject) {
+	@Override protected void appendToAvailableObjectInternal(JSONObject jsonObject) {
 
 	}
 }

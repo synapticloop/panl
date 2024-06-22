@@ -111,7 +111,7 @@ public class CollectionRequestHandler {
 	                                String panlCollectionUri,
 	                                PanlProperties panlProperties,
 	                                CollectionProperties collectionProperties) throws PanlServerException {
-		LOGGER.info("[{}] Initialising Panl collection URI {}", solrCollection, panlCollectionUri);
+		LOGGER.info("[ Solr collection '{}' ] Initialising Panl collection URI {}", solrCollection, panlCollectionUri);
 
 		this.solrCollection = solrCollection;
 		this.panlCollectionUri = panlCollectionUri;

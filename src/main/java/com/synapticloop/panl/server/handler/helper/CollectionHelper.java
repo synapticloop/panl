@@ -35,7 +35,7 @@ public class CollectionHelper {
 	private static final Logger LOGGER = LoggerFactory.getLogger(CollectionHelper.class);
 
 	public static PanlClient getPanlClient(String solrJClient, String solrCollection, PanlProperties panlProperties, CollectionProperties collectionProperties) throws PanlServerException {
-		LOGGER.info("[{}] Looking up solrjClient of '{}'", solrCollection, solrJClient);
+		LOGGER.info("[ Solr collection '{}' ] Looking up solrjClient of '{}'", solrCollection, solrJClient);
 
 		switch (solrJClient) {
 			case "Http2SolrClient":

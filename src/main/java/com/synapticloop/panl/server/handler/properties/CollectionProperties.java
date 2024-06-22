@@ -88,7 +88,7 @@ public class CollectionProperties {
 	 * <p>The name of this collection</p>
 	 */
 	private final String solrCollection;
-	private final String panCollectionUri;
+	private final String panlCollectionUri;
 	/**
 	 * <p>The collection.panl.properties that drive this collection</p>
 	 */
@@ -131,15 +131,12 @@ public class CollectionProperties {
 	private final Map<String, PanlField> SOLR_NAME_TO_FIELD_MAP = new HashMap<>();
 	private final Map<String, PanlSortField> LPSE_CODE_TO_SORT_FIELD_MAP = new HashMap<>();
 	private final Map<String, PanlSortField> SOLR_NAME_TO_SORT_FIELD_MAP = new HashMap<>();
-	private final Map<String, PanlDateFacetField> LPSE_CODE_DATE_FACET_MAP = new HashMap<>();
+	private final Map<String, PanlDateRangeFacetField> LPSE_CODE_DATE_FACET_MAP = new HashMap<>();
 	private final Map<String, PanlBooleanFacetField> LPSE_CODE_BOOLEAN_FACET_MAP = new HashMap<>();
 
 	private final Set<String> PANL_CODE_OR_FIELDS = new HashSet<>();
 	private final Set<String> PANL_CODE_RANGE_FIELDS = new HashSet<>();
 
-
-	private boolean panlIncludeSingleFacets;
-	private boolean panlIncludeSameNumberFacets;
 
 	private final String validUrlString;
 
@@ -203,7 +200,7 @@ public class CollectionProperties {
 	 */
 	public CollectionProperties(String solrCollection, String panlCollectionUri, Properties properties) throws PanlServerException {
 		this.solrCollection = solrCollection;
-		this.panCollectionUri = panlCollectionUri;
+		this.panlCollectionUri = panlCollectionUri;
 		this.properties = properties;
 
 		parseDefaultProperties();
@@ -258,15 +255,16 @@ public class CollectionProperties {
 			}
 
 			if (null == lpseCode) {
-				LOGGER.warn("[{}] Sort Fields - '{}' Could not look up the Panl LPSE code for Solr field name '{}', ignoring...", solrCollection, PROPERTY_KEY_PANL_SORT_FIELDS, sortField);
+				LOGGER.warn("[ Solr/Panl '{}/{}' ] Sort Fields - '{}' Could not look up the Panl LPSE code for Solr field name '{}', ignoring...", solrCollection, panlCollectionUri, PROPERTY_KEY_PANL_SORT_FIELDS, sortField);
 			} else {
-				LOGGER.info("[{}] Sort Fields - adding Panl LPSE code '{}' for Solr field name '{}'.", solrCollection, lpseCode, sortField);
+				LOGGER.info("[ Solr/Panl '{}/{}' ] Sort Fields - adding Panl LPSE code '{}' for Solr field name '{}'.", solrCollection, panlCollectionUri, lpseCode, sortField);
 				lpseCodeSortFields.add(lpseCode);
 				PanlSortField panlSortField = new PanlSortField(
 						lpseCode,
 						PROPERTY_KEY_PANL_SORT_FIELDS,
 						properties,
-						solrCollection);
+						solrCollection,
+						panlCollectionUri);
 
 				LPSE_CODE_TO_SORT_FIELD_MAP.put(lpseCode, panlSortField);
 				SOLR_NAME_TO_SORT_FIELD_MAP.put(sortField, panlSortField);
@@ -292,8 +290,6 @@ public class CollectionProperties {
 	 * 		could not be adequately parsed
 	 */
 	private void parseDefaultProperties() throws PanlServerException {
-		this.panlIncludeSingleFacets = properties.getProperty(PROPERTY_KEY_PANL_INCLUDE_SINGLE_FACETS, "false").equals("true");
-		this.panlIncludeSameNumberFacets = properties.getProperty(PROPERTY_KEY_PANL_INCLUDE_SAME_NUMBER_FACETS, "false").equals("true");
 		this.formQueryRespondTo = properties.getProperty(PROPERTY_KEY_PANL_FORM_QUERY_RESPONDTO, "q");
 
 		this.facetMinCount = PropertyHelper.getIntProperty(properties, PROPERTY_KEY_SOLR_FACET_MIN_COUNT, 1);
@@ -315,23 +311,23 @@ public class CollectionProperties {
 		LPSE_METADATA.add(this.solrDefaultQueryOperand);
 
 		this.panlParamQuery = initialiseStringProperty(PROPERTY_KEY_PANL_PARAM_QUERY, true);
-		lpseFieldLookup.put(this.panlParamQuery, new PanlQueryField(panlParamQuery, PROPERTY_KEY_PANL_PARAM_QUERY, properties, solrCollection));
+		lpseFieldLookup.put(this.panlParamQuery, new PanlQueryField(panlParamQuery, PROPERTY_KEY_PANL_PARAM_QUERY, properties, solrCollection, panlCollectionUri));
 
 		this.panlParamSort = initialiseStringProperty(PROPERTY_KEY_PANL_PARAM_SORT, true);
-		lpseFieldLookup.put(this.panlParamSort, new PanlSortField(panlParamSort, PROPERTY_KEY_PANL_PARAM_SORT, properties, solrCollection));
+		lpseFieldLookup.put(this.panlParamSort, new PanlSortField(panlParamSort, PROPERTY_KEY_PANL_PARAM_SORT, properties, solrCollection, panlCollectionUri));
 
 		this.panlParamPage = initialiseStringProperty(PROPERTY_KEY_PANL_PARAM_PAGE, true);
-		lpseFieldLookup.put(this.panlParamPage, new PanlPageNumField(panlParamPage, PROPERTY_KEY_PANL_PARAM_PAGE, properties, solrCollection));
+		lpseFieldLookup.put(this.panlParamPage, new PanlPageNumField(panlParamPage, PROPERTY_KEY_PANL_PARAM_PAGE, properties, solrCollection, panlCollectionUri));
 
 		this.panlParamNumRows = initialiseStringProperty(PROPERTY_KEY_PANL_PARAM_NUMROWS, true);
-		lpseFieldLookup.put(this.panlParamNumRows, new PanlNumRowsField(panlParamNumRows, PROPERTY_KEY_PANL_PARAM_NUMROWS, properties, solrCollection));
+		lpseFieldLookup.put(this.panlParamNumRows, new PanlNumRowsField(panlParamNumRows, PROPERTY_KEY_PANL_PARAM_NUMROWS, properties, solrCollection, panlCollectionUri));
 
 		this.panlParamQueryOperand = initialiseStringProperty(PROPERTY_KEY_PANL_PARAM_QUERY_OPERAND, true);
-		lpseFieldLookup.put(this.panlParamQueryOperand, new PanlQueryOperandField(panlParamQueryOperand, PROPERTY_KEY_PANL_PARAM_QUERY_OPERAND, properties, solrCollection));
+		lpseFieldLookup.put(this.panlParamQueryOperand, new PanlQueryOperandField(panlParamQueryOperand, PROPERTY_KEY_PANL_PARAM_QUERY_OPERAND, properties, solrCollection, panlCollectionUri));
 
 		this.panlParamPassThrough = initialiseStringProperty(PROPERTY_KEY_PANL_PARAM_PASSTHROUGH, false);
 		if (null != panlParamPassThrough) {
-			lpseFieldLookup.put(this.panlParamPassThrough, new PanlPassThroughField(panlParamPassThrough, PROPERTY_KEY_PANL_PARAM_PASSTHROUGH, properties, solrCollection));
+			lpseFieldLookup.put(this.panlParamPassThrough, new PanlPassThroughField(panlParamPassThrough, PROPERTY_KEY_PANL_PARAM_PASSTHROUGH, properties, solrCollection, panlCollectionUri));
 		}
 	}
 
@@ -400,19 +396,19 @@ public class CollectionProperties {
 
 			PanlFacetField facetField;
 			if(TYPE_SOLR_DATE_POINT_FIELD.equals(solrFieldType)) {
-				facetField = new PanlDateFacetField(lpseCode, panlFieldKey, properties, solrCollection, lpseLength);
-				LPSE_CODE_DATE_FACET_MAP.put(lpseCode, (PanlDateFacetField) facetField);
+				facetField = new PanlDateRangeFacetField(lpseCode, panlFieldKey, properties, solrCollection, panlCollectionUri, lpseLength);
+				LPSE_CODE_DATE_FACET_MAP.put(lpseCode, (PanlDateRangeFacetField) facetField);
 			} else if(TYPE_SOLR_BOOL_FIELD.equals(solrFieldType)) {
-				facetField = new PanlBooleanFacetField(lpseCode, panlFieldKey, properties, solrCollection, lpseLength);
+				facetField = new PanlBooleanFacetField(lpseCode, panlFieldKey, properties, solrCollection, panlCollectionUri, lpseLength);
 				LPSE_CODE_BOOLEAN_FACET_MAP.put(lpseCode, (PanlBooleanFacetField) facetField);
 			} else if(isOrFacet) {
-				facetField = new PanlOrFacetField(lpseCode, panlFieldKey, properties, solrCollection, lpseLength);
+				facetField = new PanlOrFacetField(lpseCode, panlFieldKey, properties, solrCollection, panlCollectionUri, lpseLength);
 				PANL_CODE_OR_FIELDS.add(lpseCode);
 			} else if(isRangeFacet) {
-				facetField = new PanlRangeFacetField(lpseCode, panlFieldKey, properties, solrCollection, lpseLength);
+				facetField = new PanlRangeFacetField(lpseCode, panlFieldKey, properties, solrCollection, panlCollectionUri, lpseLength);
 				PANL_CODE_RANGE_FIELDS.add(lpseCode);
 			} else {
-				facetField = new PanlFacetField(lpseCode, panlFieldKey, properties, solrCollection, lpseLength);
+				facetField = new PanlFacetField(lpseCode, panlFieldKey, properties, solrCollection, panlCollectionUri, lpseLength);
 			}
 
 			// we need to determine whether it is an OR facet
@@ -422,10 +418,6 @@ public class CollectionProperties {
 			LPSE_FACET_FIELDS.add(facetField.getLpseCode());
 
 			lpseFieldLookup.put(lpseCode, facetField);
-
-			if (facetField.getIsRangeFacet()) {
-				PANL_CODE_RANGE_FIELDS.add(lpseCode);
-			}
 
 			LPSE_CODE_TO_FACET_FIELD_MAP.put(facetField.getLpseCode(), facetField);
 			SOLR_NAME_TO_FACET_FIELD_MAP.put(facetField.getSolrFieldName(), facetField);
@@ -448,7 +440,7 @@ public class CollectionProperties {
 	private void parseFields() throws PanlServerException {
 		for (String panlFieldKey : PropertyHelper.getPropertiesByPrefix(properties, PROPERTY_KEY_PANL_FIELD)) {
 			String lpseCode = panlFieldKey.substring(panlFieldKey.lastIndexOf(".") + 1);
-			PanlField field = new PanlField(lpseCode, panlFieldKey, properties, solrCollection, lpseLength);
+			PanlField field = new PanlField(lpseCode, panlFieldKey, properties, solrCollection, panlCollectionUri, lpseLength);
 			NON_FACET_FIELDS.add(field);
 			LPSE_FIELDS.add(field.getLpseCode());
 			lpseFieldLookup.put(lpseCode, field);
@@ -513,10 +505,14 @@ public class CollectionProperties {
 		String panlLpseIgnore = properties.getProperty(PROPERTY_KEY_PANL_LPSE_IGNORE, "");
 		for (String ignore : panlLpseIgnore.split(",")) {
 			String trimmed = ignore.trim();
+			if(trimmed.isBlank()) {
+				continue;
+			}
+
 			if (LPSE_URI_CODES.contains(trimmed)) {
 				LPSE_IGNORED_URI_CODES.add(trimmed);
 			} else {
-				LOGGER.warn("Attempting to ignore a facet with code '{}' which was not defined by the lpse order property '{}", trimmed, PROPERTY_KEY_PANL_LPSE_ORDER);
+				LOGGER.warn("Attempting to ignore a facet with code '{}' which was not defined by the lpse order property '{}'", trimmed, PROPERTY_KEY_PANL_LPSE_ORDER);
 			}
 		}
 	}
@@ -528,7 +524,7 @@ public class CollectionProperties {
 		}
 		// there must always be a default field
 		if (!resultFieldsMap.containsKey(FIELDSETS_DEFAULT)) {
-			LOGGER.warn("[{}] Missing default field set, adding one which will return all fields.", solrCollection);
+			LOGGER.warn("[ Solr/Panl '{}/{}' ] Missing default field set, adding one which will return all fields.", solrCollection, panlCollectionUri);
 			resultFieldsMap.put(FIELDSETS_DEFAULT, new ArrayList<>());
 		}
 	}
@@ -538,7 +534,7 @@ public class CollectionProperties {
 			throw new PanlServerException("panl.results.fields.'" + resultFieldsName + "' is already defined.");
 		}
 
-		LOGGER.info("[{}] Adding result fields with key '{}', and fields '{}'.", solrCollection, resultFieldsName, resultFields);
+		LOGGER.info("[ Solr/Panl '{}/{}' ] Adding result fields with key '{}', and fields '{}'.", solrCollection, panlCollectionUri, resultFieldsName, resultFields);
 		List<String> fields = new ArrayList<>();
 		for (String resultField : resultFields.split(",")) {
 			fields.add(resultField.trim());
@@ -748,8 +744,8 @@ public class CollectionProperties {
 	 *
 	 * @return The Panl collection URI for this collection
 	 */
-	public String getPanCollectionUri() {
-		return panCollectionUri;
+	public String getPanlCollectionUri() {
+		return panlCollectionUri;
 	}
 
 	/**

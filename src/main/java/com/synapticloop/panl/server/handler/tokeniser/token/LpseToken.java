@@ -24,6 +24,7 @@ package com.synapticloop.panl.server.handler.tokeniser.token;
  *  IN THE SOFTWARE.
  */
 
+import com.synapticloop.panl.server.handler.fielderiser.field.BaseField;
 import com.synapticloop.panl.server.handler.fielderiser.field.facet.PanlOrFacetField;
 import com.synapticloop.panl.server.handler.properties.CollectionProperties;
 import com.synapticloop.panl.server.handler.tokeniser.LpseTokeniser;
@@ -83,7 +84,7 @@ public abstract class LpseToken {
 	 * valid or not.</p>
 	 *
 	 * @param collectionProperties The collection properties
-	 * @param lpseToken The lpseCode
+	 * @param lpseCode The lpseCode
 	 * @param query The query string (this may be blank or null)
 	 * @param valueTokeniser The LPSE URI tokeniser
 	 * @param lpseTokeniser The LPSE code tokeniser
@@ -92,47 +93,16 @@ public abstract class LpseToken {
 	 */
 	public static LpseToken getLpseToken(
 			CollectionProperties collectionProperties,
-			String lpseToken,
+			String lpseCode,
 			String query,
 			StringTokenizer valueTokeniser,
 			LpseTokeniser lpseTokeniser) {
 
-		if (lpseToken.equals(collectionProperties.getPanlParamQuery())) {
-			// having a query on the URL always trumps whether we have a query
-			// parameter in the URI path
-			return (new QueryLpseToken(
-					collectionProperties,
-					lpseToken,
-					query,
-					valueTokeniser));
-		} else if (lpseToken.equals(collectionProperties.getPanlParamSort())) {
-			return (new SortLpseToken(
-					collectionProperties,
-					lpseToken,
-					lpseTokeniser));
-		} else if (lpseToken.equals(collectionProperties.getPanlParamQueryOperand())) {
-			return (new QueryOperandLpseToken(
-					collectionProperties,
-					lpseToken,
-					lpseTokeniser));
-		} else if (lpseToken.equals(collectionProperties.getPanlParamNumRows())) {
-			return (new NumRowsLpseToken(
-					collectionProperties,
-					lpseToken,
-					valueTokeniser));
-		} else if (lpseToken.equals(collectionProperties.getPanlParamPage())) {
-			return (new PageNumLpseToken(
-					collectionProperties,
-					lpseToken,
-					valueTokeniser));
 
-		} else if (lpseToken.equals(collectionProperties.getPanlParamPassThrough())) {
-			return (new PassThroughLpseToken(
-					collectionProperties,
-					lpseToken,
-					valueTokeniser));
-		} else {
-			StringBuilder lpseCodeBuilder = new StringBuilder(lpseToken);
+		BaseField lpseField = collectionProperties.getLpseField(lpseCode);
+		if(null == lpseField) {
+			// it may be that it is more than a single code
+			StringBuilder lpseCodeBuilder = new StringBuilder(lpseCode);
 			// it is a lpseCodeBuilder field - unlike parameters and operands, the token
 			// must be the length LPSE length
 			while (lpseCodeBuilder.length() < collectionProperties.getLpseLength()) {
@@ -143,41 +113,18 @@ public abstract class LpseToken {
 				}
 			}
 
-			// this may be a date facet field
-			String lpseCode = lpseCodeBuilder.toString();
-			if(collectionProperties.getIsDateFacetField(lpseCode)) {
-				return(new DateFacetLpseToken(
+			lpseField = collectionProperties.getLpseField(lpseCodeBuilder.toString());
+			if(null == lpseField) {
+				// still null
+				return (new FacetLpseToken(
 						collectionProperties,
-						lpseCode,
+						lpseCodeBuilder.toString(),
 						lpseTokeniser,
 						valueTokeniser));
-			} else if(collectionProperties.getIsBooleanFacetField(lpseCode)) {
-				return(new BooleanFacetLpseToken(
-						collectionProperties,
-						lpseCode,
-						lpseTokeniser,
-						valueTokeniser));
-			} else if(collectionProperties.getIsOrFacetField(lpseCode)) {
-				return(new OrFacetLpseToken(
-						collectionProperties,
-						lpseCode,
-						lpseTokeniser,
-						valueTokeniser));
-			} else if(collectionProperties.getIsRangeFacetField(lpseCode)) {
-				return(new RangeFacetLpseToken(
-						collectionProperties,
-						lpseCode,
-						lpseTokeniser,
-						valueTokeniser));
-			}
 
-			// now we have the regular facetField
-			return (new FacetLpseToken(
-					collectionProperties,
-					lpseCode,
-					lpseTokeniser,
-					valueTokeniser));
+			}
 		}
+		return(lpseField.instantiateToken(collectionProperties, lpseCode, query, valueTokeniser, lpseTokeniser));
 	}
 
 	/**

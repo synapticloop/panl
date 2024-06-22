@@ -26,7 +26,6 @@ package com.synapticloop.panl.server.handler.processor;
 
 import com.synapticloop.panl.server.handler.properties.CollectionProperties;
 import com.synapticloop.panl.server.handler.fielderiser.field.BaseField;
-import com.synapticloop.panl.server.handler.tokeniser.token.facet.FacetLpseToken;
 import com.synapticloop.panl.server.handler.tokeniser.token.LpseToken;
 import org.apache.solr.client.solrj.response.FacetField;
 import org.apache.solr.client.solrj.response.QueryResponse;
@@ -34,8 +33,6 @@ import org.apache.solr.common.SolrDocumentList;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-import java.net.URLEncoder;
-import java.nio.charset.StandardCharsets;
 import java.util.*;
 
 /**
@@ -63,10 +60,6 @@ public class AvailableProcessor extends Processor {
 			lpseTokens.addAll(panlTokenMap.getOrDefault(lpseField.getLpseCode(), new ArrayList<>()));
 		}
 
-		SolrDocumentList solrDocuments = (SolrDocumentList) queryResponse.getResponse().get(JSON_KEY_SOLR_JSON_KEY_RESPONSE);
-		long numFound = solrDocuments.getNumFound();
-		boolean numFoundExact = solrDocuments.getNumFoundExact();
-
 		Map<String, Set<String>> panlLookupMap = new HashMap<>();
 		for (LpseToken lpseToken : lpseTokens) {
 			String panlLpseValue = lpseToken.getValue();
@@ -87,10 +80,15 @@ public class AvailableProcessor extends Processor {
 			}
 		}
 
+		SolrDocumentList solrDocuments = (SolrDocumentList) queryResponse.getResponse().get(JSON_KEY_SOLR_JSON_KEY_RESPONSE);
+		long numFound = solrDocuments.getNumFound();
+		boolean numFoundExact = solrDocuments.getNumFoundExact();
+
 		JSONArray panlFacets = new JSONArray();
 		Map<String, JSONObject> panlFacetOrderMap = new LinkedHashMap<>();
 
 		JSONArray rangeFacetArray = new JSONArray();
+		JSONArray dateRangeFacetArray = new JSONArray();
 
 		for (FacetField facetField : queryResponse.getFacetFields()) {
 			// These codes are ignored, just carry on
@@ -100,21 +98,41 @@ public class AvailableProcessor extends Processor {
 
 			String lpseCode = collectionProperties.getPanlCodeFromSolrFacetFieldName(facetField.getName());
 			BaseField baseField = collectionProperties.getLpseField(lpseCode);
+			// unlikely to get a facet field that wasn't selected...
+			if(null == baseField) {
+				continue;
+			}
 
 			if (facetField.getValueCount() != 0) {
 				JSONObject facetObject = new JSONObject();
-				JSONObject rangeFacetObject = new JSONObject();
-				baseField.appendAvailableFacetObject(facetObject);
-				if(baseField.appendAvailableValues(facetObject, collectionProperties, panlTokenMap, facetField.getValues(), numFound, numFoundExact)) {
+				baseField.appendToAvailableFacetObject(facetObject);
+				if(baseField.appendAvailableValues(
+						facetObject,
+						collectionProperties,
+						panlTokenMap,
+						panlLookupMap.getOrDefault(lpseCode, new HashSet<>()),
+						facetField.getValues(),
+						numFound,
+						numFoundExact)) {
+
 					panlFacetOrderMap.put(lpseCode, facetObject);
 				}
 
 				baseField.addToAdditionObject(facetObject, panlTokenMap);
 
-				if(baseField.appendAvailableRangeValues(rangeFacetObject, collectionProperties, panlTokenMap)) {
-					rangeFacetArray.put(rangeFacetObject);
-				}
 			}
+
+			// these range facets will always appear
+			JSONObject rangeFacetObject = new JSONObject();
+			if(baseField.appendAvailableRangeValues(rangeFacetObject, collectionProperties, panlTokenMap)) {
+				rangeFacetArray.put(rangeFacetObject);
+			}
+
+			JSONObject dateRangeFacetObject = new JSONObject();
+			if(baseField.appendAvailableDateRangeValues(dateRangeFacetObject, collectionProperties, panlTokenMap)) {
+				dateRangeFacetArray.put(dateRangeFacetObject);
+			}
+
 		}
 
 
@@ -125,8 +143,8 @@ public class AvailableProcessor extends Processor {
 		}
 
 		jsonObject.put(JSON_KEY_FACETS, panlFacets);
-
 		jsonObject.put(JSON_KEY_RANGE_FACETS, rangeFacetArray);
+		jsonObject.put(JSON_KEY_DATE_RANGE_FACETS, dateRangeFacetArray);
 		return (jsonObject);
 	}
 
@@ -138,7 +156,6 @@ public class AvailableProcessor extends Processor {
 	 * @param panlTokenMap The Map of existing tokens that are already in the URI
 	 *
 	 * @return The addition URI
-	 */
 
 	private JSONObject getAdditionURIObject(BaseField lpseField, Map<String, List<LpseToken>> panlTokenMap, boolean shouldRange) {
 		String additionLpseCode = lpseField.getLpseCode();
@@ -228,4 +245,6 @@ public class AvailableProcessor extends Processor {
 		additionObject.put(JSON_KEY_AFTER_MAX_VALUE, lpseUriAfterMax.toString() + lpseCode.toString() + FORWARD_SLASH);
 		return (additionObject);
 	}
+	 */
+
 }
