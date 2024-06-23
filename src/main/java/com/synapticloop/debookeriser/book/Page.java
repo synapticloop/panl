@@ -72,6 +72,10 @@ public class Page {
 			String content = linkElement.getContent();
 			if(foundUs) {
 				if(!content.isBlank()) {
+					content = content
+							.replaceAll(">", "&gt;")
+							.replaceAll("<", "&lt;");
+
 					switch(linkElement.getTagName()) {
 						case "h1":
 							sb.append(String.format("<h1 style=\"margin: 0px; padding: 2px;\">%s</h1>", content));
@@ -80,7 +84,7 @@ public class Page {
 							sb.append(String.format("<h2 style=\"margin: 0px 0px 0px 4px; padding: 2px;\"><a href=\"%s\">%s</a></h2>", linkElement.getLink(), content));
 							break;
 						case "h3":
-							sb.append(String.format("<h3 style=\"margin: 0px 0px 0px 8px; padding: 2px;\"><a href=\"%s\">%s</a></h3>", linkElement.getLink(), content));
+							sb.append(String.format("<h3 style=\"margin: 0px 0px 0px 12px; padding: 2px;\"> - <a href=\"%s\">%s</a></h3>", linkElement.getLink(), content));
 							break;
 					}
 				}
