@@ -100,6 +100,7 @@ public class Main {
 				} else {
 					if (!hasRemovedFirstDiv && tagName.equals("div")) {
 						// skip this one
+						hasRemovedFirstDiv = true;
 					} else {
 						page.addPageElement(childElement);
 					}
