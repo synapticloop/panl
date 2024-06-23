@@ -12,56 +12,62 @@
 	##STYLE##
 
 	<style>
-		#header h1, #sidebar a, #sidebar h3, #sidebar p, #banner h2, #banner p {
-			  text-decoration: none;
-	  font-family: "Raleway", Helvetica, sans-serif;
-		font-feature-settings: normal;
-		font-kerning: auto;
-		font-language-override: normal;
-		font-optical-sizing: auto;
-		font-size-adjust: none;
-		font-stretch: 100%;
-		font-style: normal;
-		font-variant-alternates: normal;
-		font-variant-caps: normal;
-		font-variant-east-asian: normal;
-		font-variant-ligatures: normal;
-		font-variant-numeric: normal;
-		font-variant-position: normal;
-		font-variation-settings: normal;
-	}
-	#header h1 {
-		border-width: 0px;
-		font-size: 14.6667px;
-	}
+		/** RESET THE STYLES THAT WERE OVER-WRITTEN */
 
-	#sidebar a {
-font-size: 11.7333px;
-font-weight: 700;
-text-align: left;
+		#header h1, #sidebar a, #sidebar h3, #sidebar p, #banner h2, #banner p {
+			text-decoration: none;
+			font-family: "Raleway", Helvetica, sans-serif;
+			font-feature-settings: normal;
+			font-kerning: auto;
+			font-language-override: normal;
+			font-optical-sizing: auto;
+			font-size-adjust: none;
+			font-stretch: 100%;
+			font-style: normal;
+			font-variant-alternates: normal;
+			font-variant-caps: normal;
+			font-variant-east-asian: normal;
+			font-variant-ligatures: normal;
+			font-variant-numeric: normal;
+			font-variant-position: normal;
+			font-variation-settings: normal;
 		}
+		#header h1 {
+			border-width: 0px;
+			font-size: 14.6667px;
+		}
+
+		#sidebar a {
+			font-size: 11.7333px;
+			font-weight: 700;
+			text-align: left;
+		}
+
 		#sidebar h3 {
-font-size: 19.8px;
-font-weight: 700;
-text-align: left;
+			font-size: 19.8px;
+			font-weight: 700;
+			text-align: left;
 		}
+
 		#sidebar p {
-font-size: 14.6667px;
-font-weight: 400;
+			font-size: 14.6667px;
+			font-weight: 400;
 		}
 
 		#banner h2 {
-font-size: 36.6667px;
-font-weight: 700;
-text-align: center;
-text-shadow: 1px 1px 0 #444, -1px 1px 0 #444, -1px -1px 0 #444, 1px -1px 0 #444;
+			font-size: 36.6667px;
+			font-weight: 700;
+			text-align: center;
+			text-shadow: 1px 1px 0 #444, -1px 1px 0 #444, -1px -1px 0 #444, 1px -1px 0 #444;
 		}
+
 		#banner p {
-font-size: 18.3333px;
-font-weight: 400;
-text-align: center;
-text-shadow: 1px 1px 0 #444, -1px 1px 0 #444, -1px -1px 0 #444, 1px -1px 0 #444;
+			font-size: 18.3333px;
+			font-weight: 400;
+			text-align: center;
+			text-shadow: 1px 1px 0 #444, -1px 1px 0 #444, -1px -1px 0 #444, 1px -1px 0 #444;
 		}
+
 		#sidebar section a, #sidebar section h1 {
 			text-align: left;
 		}
@@ -69,12 +75,13 @@ text-shadow: 1px 1px 0 #444, -1px 1px 0 #444, -1px -1px 0 #444, 1px -1px 0 #444;
 			margin: 12px;
 		}
 		section.current-page {
-	background-color: #efefef;
-  padding: 7px 12px 12px 12px;
-  border-left: 4px solid black !important;
-  border: 1px solid #aaa;
-  margin: 12px 0;
-}
+			background-color: #efefef;
+		  padding: 7px 12px 12px 12px;
+		  border-left: 4px solid black !important;
+		  border: 1px solid #aaa;
+		  margin: 12px 0;
+		}
+		.next-page { float: right; }
 	</style>
 </head>
 <body>
@@ -113,7 +120,12 @@ text-shadow: 1px 1px 0 #444, -1px 1px 0 #444, -1px -1px 0 #444, 1px -1px 0 #444;
 			<div class="8u$ 12u$(medium) important(medium)">
 				<section id="content">
 					##CONTENT##
+					<footer>
+						<ul class="actions">
+						</ul>
+					</footer>
 				</section>
+
 			</div>
 		</div>
 	</div>

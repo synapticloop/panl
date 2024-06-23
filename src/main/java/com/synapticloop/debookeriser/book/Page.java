@@ -16,6 +16,8 @@ public class Page {
 	private final String template;
 	private List<String> styles;
 	private List<PageElement> pageElements = new ArrayList<>();
+	private String previousPage = "";
+	private String nextPage = "";
 
 	public Page(String pageTitle, String baseDirectory, String template) {
 		this.pageTitle = pageTitle;
@@ -88,14 +90,12 @@ public class Page {
 				}
 			} else {
 				if(!content.isBlank()) {
-					switch (linkElement.getTagName()) {
-						case "h1":
-							if(hasFinished) {
-								sb.append("</section>");
-								hasFinished = false;
-							}
-							sb.append(String.format("<h2 style=\"margin: 0px 0px 0px 4px; padding: 2px;\"><a href=\"%s\">&raquo;%s</a></h2>", linkElement.getLink(), content));
-							break;
+					if (linkElement.getTagName().equals("h1")) {
+						if (hasFinished) {
+							sb.append("</section>");
+							hasFinished = false;
+						}
+						sb.append(String.format("<h2 style=\"margin: 0px 0px 0px 4px; padding: 2px;\"><a href=\"%s\">&raquo;%s</a></h2>", linkElement.getLink(), content));
 					}
 				}
 			}

@@ -57,7 +57,15 @@ public class Main {
 	}
 
 	public void parseGoogleHTMLFile() throws IOException {
-		Document doc = Jsoup.parse(googleDocsHTMLFile);
+		String googleDocsContent = FileUtils.readFileToString(googleDocsHTMLFile, Charset.defaultCharset());
+		googleDocsContent = googleDocsContent.replaceAll("&rsquo;", "'")
+				.replaceAll("&lsquo;","'")
+				.replaceAll("&trade;","™")
+				.replaceAll("&ndash;","-")
+				.replaceAll("&hellip;","...")
+				.replaceAll("&reg;", "®");
+
+		Document doc = Jsoup.parse(googleDocsContent);
 
 		StringBuilder styles = new StringBuilder();
 		for (Element style : doc.getElementsByTag("style")) {
@@ -76,7 +84,7 @@ public class Main {
 
 				getAllIds(page.getPageTitle(), childElement);
 
-				if(tagName.equals("h1")) {
+				if (tagName.equals("h1")) {
 					// now start a new page
 					pages.add(page);
 
@@ -84,7 +92,7 @@ public class Main {
 					linkElements.put("#" + childElement.attr("id"), new LinkElement(page.getPageTitle(), childElement));
 					page.addPageElement(childElement);
 				} else {
-					if(!hasRemovedFirstDiv && tagName.equals("div")) {
+					if (!hasRemovedFirstDiv && tagName.equals("div")) {
 						// skip this one
 					} else {
 						page.addPageElement(childElement);
@@ -95,8 +103,8 @@ public class Main {
 			pages.add(page);
 		}
 
-		for(Page outputPage : pages) {
-			if(!outputPage.getPageTitle().isBlank()) {
+		for (Page outputPage : pages) {
+			if (!outputPage.getPageTitle().isBlank()) {
 				outputPage.writeContent(linkElements);
 			}
 		}
@@ -104,11 +112,11 @@ public class Main {
 
 	private void getAllIds(String pageTitle, Element element) {
 		String id = element.attr("id");
-		if(!id.isBlank()) {
+		if (!id.isBlank()) {
 			linkElements.put("#" + id, new LinkElement(pageTitle, element));
 		}
 
-		for(Element childElement : element.children()) {
+		for (Element childElement : element.children()) {
 			getAllIds(pageTitle, childElement);
 		}
 	}
