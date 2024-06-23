@@ -14,8 +14,7 @@ public class Page {
 	private final String pageTitle;
 	private final String baseDirectory;
 	private final String template;
-	private List<String> styles;
-	private List<PageElement> pageElements = new ArrayList<>();
+	private final List<PageElement> pageElements = new ArrayList<>();
 	private String previousPage = "";
 	private String nextPage = "";
 
@@ -29,13 +28,10 @@ public class Page {
 		pageElements.add(new PageElement(element));
 	}
 
-	public void setStyles(List<String> styles) {
-		this.styles = styles;
-	}
-
 	public void writeContent(Map<String, LinkElement> linkElements) throws IOException {
 		String temp = template.replace("##CONTENT##", getPageContent(linkElements))
 				.replace("##NAVIGATION##", getPageNavigation(linkElements));
+
 		FileUtils.writeStringToFile(new File(baseDirectory + getNicePageName(pageTitle) + ".html"), temp, Charset.defaultCharset());
 	}
 
