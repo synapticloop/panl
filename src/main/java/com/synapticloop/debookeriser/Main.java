@@ -24,21 +24,25 @@ package com.synapticloop.debookeriser;
  *  IN THE SOFTWARE.
  */
 
+import com.synapticloop.debookeriser.book.LinkElement;
+import com.synapticloop.debookeriser.book.Page;
 import org.apache.commons.io.FileUtils;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
-import org.jsoup.select.Elements;
 
 import java.io.*;
 import java.nio.charset.Charset;
-import java.util.LinkedHashMap;
-import java.util.Map;
+import java.util.*;
 
 import org.jsoup.*;
 
 public class Main {
 	private final File googleDocsHTMLFile;
 	private String template;
+
+	private final List<Page> pages = new ArrayList<>();
+	private final Map<String, LinkElement> linkElements = new LinkedHashMap<>();
+
 	public Main(String fileName) {
 		this.googleDocsHTMLFile = new File(fileName);
 	}
@@ -52,45 +56,64 @@ public class Main {
 		template = FileUtils.readFileToString(new File("src/main/resources/template.html"), Charset.defaultCharset());
 	}
 
-	private Map<String, String> pages = new LinkedHashMap<>();
 	public void parseGoogleHTMLFile() throws IOException {
 		Document doc = Jsoup.parse(googleDocsHTMLFile);
-		boolean hasFirstPage = false;
-		String outputPage = "book/index.html";
 
 		StringBuilder styles = new StringBuilder();
 		for (Element style : doc.getElementsByTag("style")) {
 			styles.append(style.outerHtml());
 		}
+
 		template = template.replace("##STYLE##", styles.toString());
 
-		boolean hasRemovedFirstDiv = false;
-		StringBuilder contents = new StringBuilder();
-		for (Element body : doc.getElementsByTag("body")) {
-			for (Element allElement : body.children()) {
-				String tagName = allElement.tag().getName();
-				if(tagName.equals("h1")) {
-					String temp = template.replace("##CONTENT##", contents.toString());
-					System.out.println(temp.length());
-					FileUtils.writeStringToFile(new File(outputPage), temp, Charset.defaultCharset());
-					outputPage = "book/" + getNicePageName(allElement.text()) +".html";
-					System.out.println(outputPage);
-					contents.setLength(0);
-					contents.append(allElement.outerHtml());
-				} else {
+		Page page = new Page("index", "book/", template);
 
+		boolean hasRemovedFirstDiv = false;
+
+		for (Element body : doc.getElementsByTag("body")) {
+			for (Element childElement : body.children()) {
+				String tagName = childElement.tag().getName();
+
+				getAllIds(page.getPageTitle(), childElement);
+
+				if(tagName.equals("h1")) {
+					// now start a new page
+					pages.add(page);
+
+					page = new Page(childElement.text(), "book/", template);
+					linkElements.put("#" + childElement.attr("id"), new LinkElement(page.getPageTitle(), childElement));
+					page.addPageElement(childElement);
+				} else {
 					if(!hasRemovedFirstDiv && tagName.equals("div")) {
 						// skip this one
 					} else {
-						contents.append(allElement.outerHtml());
+						page.addPageElement(childElement);
 					}
-
 				}
 			}
+
+			pages.add(page);
+		}
+
+		for(Page outputPage : pages) {
+			outputPage.writeContent(linkElements);
 		}
 	}
-	private String getNicePageName(String pageName) {
-		return(pageName.toLowerCase().replaceAll("[^a-z0-9]", "-"));
+
+	private void getAllIds(String pageTitle, Element element) {
+		String id = element.attr("id");
+		// we only want to put in heading, which will be in order, not links to headings
+//		if(element.tagName().startsWith("h") && !id.isBlank()) {
+//			linkElements.put("#" + id, new LinkElement(pageTitle, element));
+//		}
+
+		if(!id.isBlank()) {
+			linkElements.put("#" + id, new LinkElement(pageTitle, element));
+		}
+
+		for(Element childElement : element.children()) {
+			getAllIds(pageTitle, childElement);
+		}
 	}
 
 	public static void main(String[] args) {
