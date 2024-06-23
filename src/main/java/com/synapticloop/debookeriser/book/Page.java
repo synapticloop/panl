@@ -76,10 +76,10 @@ public class Page {
 				if(!content.isBlank()) {
 					switch(linkElement.getTagName()) {
 						case "h1":
-							sb.append(String.format("<h1 style=\"margin: 0px; padding: 2px;\">%s</h4>", content));
+							sb.append(String.format("<h1 style=\"margin: 0px; padding: 2px;\">%s</h1>", content));
 							break;
 						case "h2":
-							sb.append(String.format("<h2 style=\"margin: 0px 0px 0px 4px; padding: 2px;\"><a href=\"%s\">%s</a></2>", linkElement.getLink(), content));
+							sb.append(String.format("<h2 style=\"margin: 0px 0px 0px 4px; padding: 2px;\"><a href=\"%s\">%s</a></h2>", linkElement.getLink(), content));
 							break;
 						case "h3":
 							sb.append(String.format("<h3 style=\"margin: 0px 0px 0px 8px; padding: 2px;\"><a href=\"%s\">%s</a></h3>", linkElement.getLink(), content));
@@ -94,7 +94,7 @@ public class Page {
 								sb.append("</section>");
 								hasFinished = false;
 							}
-							sb.append(String.format("<h2 style=\"margin: 0px 0px 0px 4px; padding: 2px;\"><a href=\"%s\">&raquo;%s</a></h5>", linkElement.getLink(), content));
+							sb.append(String.format("<h2 style=\"margin: 0px 0px 0px 4px; padding: 2px;\"><a href=\"%s\">&raquo;%s</a></h2>", linkElement.getLink(), content));
 							break;
 					}
 				}

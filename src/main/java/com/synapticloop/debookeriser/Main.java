@@ -96,17 +96,14 @@ public class Main {
 		}
 
 		for(Page outputPage : pages) {
-			outputPage.writeContent(linkElements);
+			if(!outputPage.getPageTitle().isBlank()) {
+				outputPage.writeContent(linkElements);
+			}
 		}
 	}
 
 	private void getAllIds(String pageTitle, Element element) {
 		String id = element.attr("id");
-		// we only want to put in heading, which will be in order, not links to headings
-//		if(element.tagName().startsWith("h") && !id.isBlank()) {
-//			linkElements.put("#" + id, new LinkElement(pageTitle, element));
-//		}
-
 		if(!id.isBlank()) {
 			linkElements.put("#" + id, new LinkElement(pageTitle, element));
 		}
