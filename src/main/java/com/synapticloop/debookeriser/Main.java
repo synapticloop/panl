@@ -39,11 +39,20 @@ import org.jsoup.*;
 public class Main {
 	private final File googleDocsHTMLFile;
 	private String template;
-
+	private Map<String, String> replacements = new HashMap<>();
 	private final List<Page> pages = new ArrayList<>();
 	private final Map<String, LinkElement> linkElements = new LinkedHashMap<>();
 
 	public Main(String fileName) {
+		Properties properties = new Properties();
+		try {
+			properties.load(new FileReader("replacements.properties"));
+			for (Object key : properties.keySet()) {
+				String stringKey = key.toString();
+				replacements.put(stringKey, properties.getProperty(key.toString()));
+			}
+		} catch (IOException ignored) {
+		}
 		this.googleDocsHTMLFile = new File(fileName);
 	}
 
@@ -58,12 +67,9 @@ public class Main {
 
 	public void parseGoogleHTMLFile() throws IOException {
 		String googleDocsContent = FileUtils.readFileToString(googleDocsHTMLFile, Charset.defaultCharset());
-		googleDocsContent = googleDocsContent.replaceAll("&rsquo;", "'")
-				.replaceAll("&lsquo;","'")
-				.replaceAll("&trade;","™")
-				.replaceAll("&ndash;","-")
-				.replaceAll("&hellip;","...")
-				.replaceAll("&reg;", "®");
+		for (String key : replacements.keySet()) {
+			googleDocsContent = googleDocsContent.replaceAll(key, replacements.get(key));
+		}
 
 		Document doc = Jsoup.parse(googleDocsContent);
 
