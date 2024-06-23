@@ -84,6 +84,16 @@
 
 		table tbody td:nth-child(2) p { border-left: 0; }
 		table { border-collapse: separate !important; }
+		#content footer {
+			padding-top: 40px;
+		}
+		#content footer .actions li {
+			display: block;
+		}
+		#content footer .actions li a span {
+			text-transform: none;
+		  font-style: italic;
+		}
 	</style>
 </head>
 <body>
@@ -124,6 +134,9 @@
 					<h1 class="c103 c48 c24" id="h.rstp02sm86ve"><span class="c55 c123 c10 c7">Panl LPSE URI Paths Explained</span></h1><p class="c22 c25 c24"><span class="c2 c15 c10"></span></p><p class="c22 c25 c24"><span class="c2 c15 c10"></span></p><h2 class="c43 c24" id="h.5kvkecsgtpgj"><span class="c50 c10 c7">Sort Order</span></h2><p class="c22 c24"><span class="c2 c15 c10">The sort order </span></p><p class="c22 c24"><span class="c2 c15 c10">By default the Solr results return in search relevance order </span></p><p class="c22 c24"><span class="c2 c15 c10">/s+/ order the search results by relevance in ascending order</span></p><p class="c22 c24"><span class="c2 c15 c10">/s-/ order the search results by relevance in descending order (the default)</span></p><p class="c22 c24"><span class="c2 c15 c10">Ordering by a Solr field.</span></p><p class="c22 c24"><span class="c2 c15 c10">Search ordering for fields is controlled by the panl.order.fields property in the &lt;panl_collection_uri&gt;.panl.properties file.</span></p><p class="c22 c24"><span class="c2 c15 c10">/sb/ order the search results by brand in ascending order</span></p><p class="c22 c24"><span class="c2 c15 c10">/sb-/ order the search results by brand in descending order</span></p><p class="c22 c24"><span class="c2 c15 c10">If no Panl LPSE field definition is included, then it defaults to the relevance ordering. If the relevance ordering is the default</span></p><p class="c22 c24"><span class="c2 c15 c10">For any of the orderings, you have the option to replace the ordering with a new ordering, or add to the ordering with an additional ordering.</span></p><p class="c22 c24"><span class="c2 c15 c10">For most cases, if you are ordering by relevance, then you will want to replace the ordering with something new.</span></p><p class="c22 c24"><span class="c2 c15 c10">If you are ordering by some other field, then you may want to add to the ordering.</span></p><p class="c22 c24"><span class="c2 c15 c10">Note: the sort order does not have a query URI path component, only a LPSE URI path component.</span></p><p class="c22 c25 c24"><span class="c2 c15 c10"></span></p><p class="c22 c25 c24"><span class="c2 c15 c10"></span></p>
 					<footer>
 						<ul class="actions">
+							<li><a href="how-it-all-fits-together.html#h.aghsxpd74ami" class="button small">Previous Page &laquo; <span>(How It All Fits Together)</span></a></li>
+							<li><a href="/panl/book/" class="button small alt">Table of Contents</a> <a href="#" class="button small alt">Back to the top</a></li>
+							<li><a href="the-panl-response-object.html#h.ptcvgc4pgkql" class="button small">Next Page &raquo; <span>(The Panl Response Object)</span></a></li>
 						</ul>
 					</footer>
 				</section>

@@ -84,6 +84,16 @@
 
 		table tbody td:nth-child(2) p { border-left: 0; }
 		table { border-collapse: separate !important; }
+		#content footer {
+			padding-top: 40px;
+		}
+		#content footer .actions li {
+			display: block;
+		}
+		#content footer .actions li a span {
+			text-transform: none;
+		  font-style: italic;
+		}
 	</style>
 </head>
 <body>
@@ -124,6 +134,9 @@
 					##CONTENT##
 					<footer>
 						<ul class="actions">
+							##PREVIOUS_LINK##
+							<li><a href="/panl/book/" class="button small alt">Table of Contents</a> <a href="#" class="button small alt">Back to the top</a></li>
+							##NEXT_LINK##
 						</ul>
 					</footer>
 				</section>
