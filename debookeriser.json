@@ -11,6 +11,9 @@
     "&reg;" : "®"
   },
   "contents": {
+    "table_of_contents_link": "<h2 style=\"margin: 0px 0px 0px 4px; padding: 2px;\"><a href=\"/panl/book/\">&raquo;Table of Contents</a></h2>",
+
+
 
   }
 }

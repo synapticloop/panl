@@ -6,6 +6,7 @@ import org.jsoup.nodes.Element;
 import java.io.File;
 import java.io.IOException;
 import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -35,7 +36,7 @@ public class Page {
 				.replace("##PREVIOUS_LINK##", previousPage)
 				.replace("##NEXT_LINK##", nextPage);
 
-		FileUtils.writeStringToFile(new File(baseDirectory + getNicePageName(pageTitle) + ".html"), temp, Charset.defaultCharset());
+		FileUtils.writeStringToFile(new File(baseDirectory + getNicePageName(pageTitle) + ".html"), temp, StandardCharsets.UTF_8);
 	}
 
 	private String getNicePageName(String pageName) {

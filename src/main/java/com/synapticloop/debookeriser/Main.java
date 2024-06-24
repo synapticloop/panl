@@ -27,6 +27,7 @@ package com.synapticloop.debookeriser;
 import com.synapticloop.debookeriser.book.LinkElement;
 import com.synapticloop.debookeriser.book.Page;
 import org.apache.commons.io.FileUtils;
+import org.json.JSONObject;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 
@@ -45,15 +46,16 @@ public class Main {
 	private final Map<String, LinkElement> linkElements = new LinkedHashMap<>();
 
 	public Main(String fileName) {
-		try (BufferedReader br = new BufferedReader(new FileReader("replacements.csv", StandardCharsets.UTF_8))) {
-			String line;
-			while ((line = br.readLine()) != null) {
-				String[] split = line.split(",");
-				if(split.length == 2) {
-					replacements.put(split[0], split[1]);
-				}
-			}
-		} catch (IOException ignored) {
+		JSONObject jsonObject = new JSONObject();
+		try {
+			jsonObject = new JSONObject(FileUtils.readFileToString(new File("debookeriser.json"), StandardCharsets.UTF_8));
+		} catch (IOException e) {
+			throw new RuntimeException(e);
+		}
+
+		JSONObject replacementsObject = jsonObject.optJSONObject("replacements");
+		for (String key : replacementsObject.keySet()) {
+			replacements.put(key, replacementsObject.getString(key));
 		}
 
 		this.googleDocsHTMLFile = new File(fileName);
@@ -70,13 +72,9 @@ public class Main {
 
 	public void parseGoogleHTMLFile() throws IOException {
 		String googleDocsContent = FileUtils.readFileToString(googleDocsHTMLFile, StandardCharsets.UTF_8);
-		googleDocsContent = googleDocsContent.replaceAll("&rsquo;", "'");
-		googleDocsContent = googleDocsContent.replaceAll("&lsquo;", "'");
-		googleDocsContent = googleDocsContent.replaceAll("&trade;", "™");
-		googleDocsContent = googleDocsContent.replaceAll("&ndash;", "-");
-		googleDocsContent = googleDocsContent.replaceAll("&hellip;", "...");
-		googleDocsContent = googleDocsContent.replaceAll("&#8617;", "↩");
-		googleDocsContent = googleDocsContent.replaceAll("&reg;", "®");
+		for (String key : replacements.keySet()) {
+			googleDocsContent = googleDocsContent.replaceAll(key, replacements.get(key));
+		}
 
 		Document doc = Jsoup.parse(googleDocsContent);
 
