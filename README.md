@@ -165,7 +165,7 @@ SOLR_INSTALL_DIRECTORY\bin\solr start -e cloud -noprompt
 This will set up the mechanical pencil collection and schema so that the data can be indexed.
 Command(s)
 ```shell
-SOLR_INSTALL_DIRECTORY\bin\solr create -c mechanical-pencils -d PANL_INSTALL_DIRECTORY\solr\mechanical-pencils\ -s 2 -rf 2
+SOLR_INSTALL_DIRECTORY\bin\solr create -c mechanical-pencils -d PANL_INSTALL_DIRECTORY\sample\solr\mechanical-pencils\ -s 2 -rf 2
 ```
 
 ## 3. Index the mechanical pencils data
@@ -174,7 +174,7 @@ This will index all mechanical pencil data into the Solr instance.
 Command(s)
 
 ```shell
-SOLR_INSTALL_DIRECTORY\bin\solr	post -c mechanical-pencils PANL_INSTALL_DIRECTORY\data\mechanical-mechanical-pencils.json
+SOLR_INSTALL_DIRECTORY\bin\solr	post -c mechanical-pencils PANL_INSTALL_DIRECTORY\sample\data\mechanical-mechanical-pencils.json
 ```
 
 ## 4. Start the Panl Server
@@ -182,7 +182,7 @@ SOLR_INSTALL_DIRECTORY\bin\solr	post -c mechanical-pencils PANL_INSTALL_DIRECTOR
 This will start the server and be ready to accept requests.
 Command(s)
 ```shell
-PANL_INSTALL_DIRECTORY\bin\panl.bat -properties PANL_INSTALL_DIRECTORY\panl\mechanical-properties\panl.properties
+PANL_INSTALL_DIRECTORY\bin\panl.bat -properties PANL_INSTALL_DIRECTORY\sample\panl\mechanical-properties\panl.properties
 ```
 
 ## 5. Start searching and faceting
@@ -211,7 +211,7 @@ SOLR_INSTALL_DIRECTORY/bin/solr start -e cloud -noprompt
 Set up the schema so that the data can be indexed.
 Command(s)
 ```shell
-SOLR_INSTALL_DIRECTORY/bin/solr create -c mechanical-pencils -d PANL_INSTALL_DIRECTORY/solr/mechanical-pencils/ -s 2 -rf 2
+SOLR_INSTALL_DIRECTORY/bin/solr create -c mechanical-pencils -d PANL_INSTALL_DIRECTORY/sample/solr/mechanical-pencils/ -s 2 -rf 2
 ```
 
 ## 3. Index the mechanical pencils data
@@ -219,7 +219,7 @@ SOLR_INSTALL_DIRECTORY/bin/solr create -c mechanical-pencils -d PANL_INSTALL_DIR
 Index all of the data into the Solr instance
 Command(s)
 ```shell
-SOLR_INSTALL_DIRECTORY/bin/solr post -c mechanical-pencils PANL_INSTALL_DIRECTORY/examples/data/mechanical-mechanical-pencils.json
+SOLR_INSTALL_DIRECTORY/bin/solr post -c mechanical-pencils PANL_INSTALL_DIRECTORY/sample/data/mechanical-mechanical-pencils.json
 ```
 
 ## 4. Start the Panl Server
@@ -228,7 +228,7 @@ Ready to go.
 Command(s)
 
 ```shell
-PANL_INSTALL_DIRECTORY/bin/panl -properties PANL_INSTALL_DIRECTORY/panl/mechanical-properties/panl.properties
+PANL_INSTALL_DIRECTORY/bin/panl -properties PANL_INSTALL_DIRECTORY/sample/panl/mechanical-properties/panl.properties
 ```
 
 View the in-built Panl Results Viewer web application
