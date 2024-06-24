@@ -1,0 +1,16 @@
+{
+  "template": "src/main/resources/template.html",
+  "baseUrl": "book/",
+  "replacements": {
+    "&rsquo;" : "'",
+    "&lsquo;" : "'",
+    "&trade;" : "™",
+    "&ndash;" : "-",
+    "&hellip;" : "...",
+    "&#8617;" : "↩",
+    "&reg;" : "®"
+  },
+  "contents": {
+
+  }
+}
