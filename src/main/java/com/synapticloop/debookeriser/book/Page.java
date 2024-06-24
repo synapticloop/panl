@@ -30,6 +30,7 @@ public class Page {
 
 	public void writeContent(Map<String, LinkElement> linkElements) throws IOException {
 		String temp = template.replace("##CONTENT##", getPageContent(linkElements))
+				.replace("##PAGE_TITLE##", pageTitle)
 				.replace("##NAVIGATION##", getPageNavigation(linkElements))
 				.replace("##PREVIOUS_LINK##", previousPage)
 				.replace("##NEXT_LINK##", nextPage);
