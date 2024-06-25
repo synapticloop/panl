@@ -1,4 +1,4 @@
-package com.synapticloop.panl.server.handler.helper;
+package com.synapticloop.panl.server.client;
 
 /*
  * Copyright (c) 2008-2024 synapticloop.
@@ -21,34 +21,22 @@ package com.synapticloop.panl.server.handler.helper;
  * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
  * FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
- * IN THE SOFTWARE.
+ *  IN THE SOFTWARE.
  */
 
 import com.synapticloop.panl.exception.PanlServerException;
-import com.synapticloop.panl.server.client.*;
 import com.synapticloop.panl.server.handler.properties.CollectionProperties;
 import com.synapticloop.panl.server.handler.properties.PanlProperties;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.solr.client.solrj.SolrClient;
+import org.apache.solr.client.solrj.impl.LBHttpSolrClient;
 
-public class CollectionHelper {
-	private static final Logger LOGGER = LoggerFactory.getLogger(CollectionHelper.class);
+public class PanlLBHttpSolrClient extends PanlClient {
+	public PanlLBHttpSolrClient(String solrCollection, PanlProperties panlProperties, CollectionProperties collectionProperties) throws PanlServerException {
+		super(solrCollection, panlProperties, collectionProperties);
+	}
 
-	public static PanlClient getPanlClient(String solrJClient, String solrCollection, PanlProperties panlProperties, CollectionProperties collectionProperties) throws PanlServerException {
-		LOGGER.info("[ Solr collection '{}' ] Looking up solrjClient of '{}'", solrCollection, solrJClient);
-
-		switch (solrJClient) {
-			case "Http2SolrClient":
-				return (new PanlHttp2SolrClient(solrCollection, panlProperties, collectionProperties));
-			case "HttpJdkSolrClient":
-				return (new PanlHttpSolrClient(solrCollection, panlProperties, collectionProperties));
-			case "LBHttp2SolrClient":
-				return (new PanlLBHttp2SolrClient(solrCollection, panlProperties, collectionProperties));
-			case "CloudSolrClient":
-				return (new PanlCloudSolrClient(solrCollection, panlProperties, collectionProperties));
-			default:
-				throw new PanlServerException("Unknown property value for 'solrj.client' of '" + solrJClient + "', available values are 'Http2SolrClient', 'HttpJdkSolrClient', 'LBHttp2SolrClient', or 'CloudSolrClient'.");
-		}
-
+	@Override
+	public SolrClient getClient() {
+		return(new LBHttpSolrClient.Builder().withBaseSolrUrls(panlProperties.getSolrSearchServerUrl()).build());
 	}
 }
