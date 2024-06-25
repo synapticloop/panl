@@ -167,7 +167,10 @@ public class CollectionRequestHandler {
 			}
 
 			solrQuery.setFacetMinCount(collectionProperties.getFacetMinCount());
-			solrQuery.setHighlight(collectionProperties.getHighlight());
+			if(collectionProperties.getHighlight()) {
+				solrQuery.setParam("hl.fl", "*");
+			}
+
 
 			// this may be overridden by the lpse status
 			solrQuery.setRows(collectionProperties.getNumResultsPerPage());
