@@ -12,13 +12,12 @@ repositories {
 }
 
 dependencies {
-	// solrj
-	implementation 'org.apache.solr:solr-solrj:9.6.0'
-	implementation 'org.apache.solr:solr-solrj-zookeeper:9.6.0'
-
 	// note - the following map to the solrj dependencies
-	implementation 'org.eclipse.jetty.http2:http2-server:10.0.20'
-	implementation 'org.eclipse.jetty:jetty-servlet:10.0.20'
+	implementation 'org.eclipse.jetty.http2:http2-server:9.4.54.v20240208'
+	implementation 'org.eclipse.jetty:jetty-servlet:9.4.54.v20240208'
+
+	// solrj
+	implementation 'org.apache.solr:solr-solrj:8.11.3'
 
 	// logging
 	implementation 'org.slf4j:slf4j-api:2.0.13'
@@ -44,7 +43,7 @@ application {
 
 distributions {
 	main {
-		distributionBaseName = 'solr-panl-9'
+		distributionBaseName = 'solr-panl-8'
 	}
 }
 

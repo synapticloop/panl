@@ -25,13 +25,13 @@ package com.synapticloop.panl.server.client;
  */
 
 import com.synapticloop.panl.exception.PanlServerException;
-import com.synapticloop.panl.server.handler.properties.PanlProperties;
 import com.synapticloop.panl.server.handler.properties.CollectionProperties;
+import com.synapticloop.panl.server.handler.properties.PanlProperties;
 import org.apache.solr.client.solrj.SolrClient;
 import org.apache.solr.client.solrj.impl.LBHttpSolrClient;
 
-public class PanlLBHttp2SolrClient extends PanlClient {
-	public PanlLBHttp2SolrClient(String solrCollection, PanlProperties panlProperties, CollectionProperties collectionProperties) throws PanlServerException {
+public class PanlLBHttpSolrClient extends PanlClient {
+	public PanlLBHttpSolrClient(String solrCollection, PanlProperties panlProperties, CollectionProperties collectionProperties) throws PanlServerException {
 		super(solrCollection, panlProperties, collectionProperties);
 	}
 
