@@ -3,7 +3,6 @@
     <option name="ALTERNATIVE_JRE_PATH" value="11" />
     <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="true" />
     <option name="MAIN_CLASS_NAME" value="com.synapticloop.debookeriser.Main" />
-    <module name="ghpages-panl.main" />
     <option name="PROGRAM_PARAMETERS" value="src/docs/GettingStartedWithSynapticloopPanl.html" />
     <method v="2">
       <option name="Make" enabled="true" />
