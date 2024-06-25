@@ -29,8 +29,7 @@ configurations {
 
 dependencies {
 	// solrj
-	implementation 'org.apache.solr:solr-solrj:9.6.0'
-	implementation 'org.apache.solr:solr-solrj-zookeeper:9.6.0'
+	implementation 'org.apache.solr:solr-solrj:8.11.3'
 
 	// HTTP server
 	implementation 'org.eclipse.jetty.http2:http2-server:10.0.20'
@@ -68,7 +67,7 @@ application {
 
 distributions {
 	main {
-		distributionBaseName = 'solr-panl-9'
+		distributionBaseName = 'solr-panl-8'
 	}
 }
 
