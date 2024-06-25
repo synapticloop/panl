@@ -24,7 +24,15 @@ package com.synapticloop.panl.exception;
  *  IN THE SOFTWARE.
  */
 
+/**
+ * <p>This exception is thrown if there was an error with the Panl generator.</p>
+ */
 public class PanlGenerateException extends Exception {
+	/**
+	 * <p>Instantiate the exception</p>
+	 *
+	 * @param message The exception message
+	 */
 	public PanlGenerateException(String message) {
 		super(message);
 	}

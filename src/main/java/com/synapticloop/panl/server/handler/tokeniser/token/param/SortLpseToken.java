@@ -31,7 +31,9 @@ import org.apache.solr.client.solrj.SolrQuery;
 
 /**
  * <p>The sort token defines the sort order for the returned results.  By
- * default the results are already sorted by relevance DESCending.</p>
+ * default the results are already sorted by relevance DESCending. (NOTE: there
+ * is no relevance ASCending as this would be useless and include every non
+ * relevant document.)</p>
  *
  * <p>Apart from the default sort order of relevance, other sort fields are
  * defined by the <code>panl.sort.fields</code> property in the

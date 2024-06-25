@@ -57,23 +57,23 @@ import java.util.concurrent.TimeUnit;
 public class CollectionRequestHandler {
 	private static final Logger LOGGER = LoggerFactory.getLogger(CollectionRequestHandler.class);
 
+	public static final String SOLR_PARAM_HL_FL = "hl.fl";
 	public static final String SOLR_PARAM_Q_OP = "q.op";
 
-	public static final String JSON_KEY_AVAILABLE = "available";
 	public static final String JSON_KEY_ACTIVE = "active";
-	public static final String JSON_KEY_PAGINATION = "pagination";
-	public static final String JSON_KEY_TIMINGS = "timings";
-	public static final String JSON_KEY_SORTING = "sorting";
-	public static final String JSON_KEY_QUERY_OPERAND = "query_operand";
-	public static final String JSON_KEY_FIELDS = "fields";
+	public static final String JSON_KEY_AVAILABLE = "available";
 	public static final String JSON_KEY_CANONICAL_URI = "canonical_uri";
+	public static final String JSON_KEY_FIELDS = "fields";
+	public static final String JSON_KEY_PAGINATION = "pagination";
 	public static final String JSON_KEY_PANL = "panl";
-
+	public static final String JSON_KEY_PANL_BUILD_REQUEST_TIME = "panl_build_request_time";
+	public static final String JSON_KEY_PANL_BUILD_RESPONSE_TIME = "panl_build_response_time";
 	public static final String JSON_KEY_PANL_PARSE_REQUEST_TIME = "panl_parse_request_time";
 	public static final String JSON_KEY_PANL_SEND_REQUEST_TIME = "panl_send_request_time";
 	public static final String JSON_KEY_PANL_TOTAL_TIME = "panl_total_time";
-	public static final String JSON_KEY_PANL_BUILD_REQUEST_TIME = "panl_build_request_time";
-	public static final String JSON_KEY_PANL_BUILD_RESPONSE_TIME = "panl_build_response_time";
+	public static final String JSON_KEY_QUERY_OPERAND = "query_operand";
+	public static final String JSON_KEY_SORTING = "sorting";
+	public static final String JSON_KEY_TIMINGS = "timings";
 
 	private final String solrCollection;
 	private final CollectionProperties collectionProperties;
@@ -155,7 +155,6 @@ public class CollectionRequestHandler {
 		startNanos = System.nanoTime();
 
 		try (SolrClient solrClient = panlClient.getClient()) {
-
 			// we set the default query - to be overridden later if one exists
 			SolrQuery solrQuery = panlClient.getQuery(query);
 			// set the operand - to be over-ridden later if it is in the URI path
@@ -168,9 +167,8 @@ public class CollectionRequestHandler {
 
 			solrQuery.setFacetMinCount(collectionProperties.getFacetMinCount());
 			if(collectionProperties.getHighlight()) {
-				solrQuery.setParam("hl.fl", "*");
+				solrQuery.setParam(SOLR_PARAM_HL_FL, "*");
 			}
-
 
 			// this may be overridden by the lpse status
 			solrQuery.setRows(collectionProperties.getNumResultsPerPage());
@@ -419,7 +417,7 @@ public class CollectionRequestHandler {
 		return (lpseTokens);
 	}
 
-	public String getValidUrlString() {
+	public String getValidUrlsString() {
 		return (collectionProperties.getValidUrlsString());
 	}
 

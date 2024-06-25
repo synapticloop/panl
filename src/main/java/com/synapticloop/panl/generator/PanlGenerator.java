@@ -36,7 +36,8 @@ import java.util.*;
 
 /**
  * <p>This is the generator for both the panl.properties configuration file
- * and the collection.panl.properties file. It will prompt for </p>
+ * and the collection.panl.properties file. It will prompt for the various
+ * parameters that need to be set (including the one optional one).</p>
  *
  * @author synapticloop
  */
@@ -78,18 +79,19 @@ public class PanlGenerator {
 	 * <p>Instantiate the Panl generator.</p>
 	 *
 	 * @param propertiesFileLocation The location of the output for the
-	 *         properties file
+	 * 		properties file
 	 * @param schemaFileLocations The comma separated list of Solr schema file
-	 *         locations
+	 * 		locations
 	 * @param shouldOverwrite If true, this will overwrite the panl.properties
-	 *         file and the collection.panl.properties file
+	 * 		file and the collection.panl.properties file
+	 *
 	 * @throws PanlGenerateException If there was a problem finding the files
-	 *         to parse, generating the files
+	 * 		to parse, generating the files
 	 */
 	public PanlGenerator(
-					String propertiesFileLocation,
-					String schemaFileLocations,
-					boolean shouldOverwrite) throws PanlGenerateException {
+			String propertiesFileLocation,
+			String schemaFileLocations,
+			boolean shouldOverwrite) throws PanlGenerateException {
 		this.propertiesFileLocation = propertiesFileLocation;
 		this.schemaFileLocations = schemaFileLocations;
 
@@ -100,25 +102,37 @@ public class PanlGenerator {
 		checkSchemaFileLocations();
 	}
 
+	/**
+	 * <p>Check the location of the schema file.</p>
+	 *
+	 * @throws PanlGenerateException If the schema file does not exist, or
+	 * 		cannot be read
+	 */
 	private void checkSchemaFileLocations() throws PanlGenerateException {
 		for (String schemaFileLocation : this.schemaFileLocations.split(",")) {
 			File schemaFile = new File(schemaFileLocation);
 			if (!schemaFile.exists() & !schemaFile.canRead()) {
 				throw new PanlGenerateException("Could not find or read the '" +
-								schemaFile.getAbsolutePath() +
-								"' file, exiting...");
+						schemaFile.getAbsolutePath() +
+						"' file, exiting...");
 			} else {
 				schemasToParse.add(schemaFile);
 			}
 		}
 	}
 
+	/**
+	 * <p>Check for the location of the properties file to ensure that it does
+	 * not exist.</p>
+	 *
+	 * @throws PanlGenerateException If the properties file exists
+	 */
 	private void checkPropertiesFileLocation() throws PanlGenerateException {
 		if (new File(propertiesFileLocation).exists()) {
 			throw new PanlGenerateException("Properties file '" +
-							this.propertiesFileLocation +
-							"' exists, and we are not overwriting.  " +
-							"Use the '-overwrite true' command line option to overwrite this file.");
+					this.propertiesFileLocation +
+					"' exists, and we are not overwriting.  " +
+					"Use the '-overwrite true' command line option to overwrite this file.");
 		}
 	}
 
@@ -135,11 +149,13 @@ public class PanlGenerator {
 	 *   <li><code>panl.param.page</code> - The page number</li>
 	 *   <li><code>panl.param.numrows</code> - The number of results to return per page/li>
 	 *   <li><code>panl.param.query.operand</code> - The default query operand (q.op)</li>
-	 *   <li><code>panl.param.passthrough</code> - The URI path passthrough</li>
+	 *   <li><code>panl.param.passthrough</code> - The URI path passthrough -
+	 *   whilst this is an optional parameter, it is included and can then be
+	 *   removed later on from the generated properties file.</li>
 	 * </ul>
 	 *
 	 * @throws PanlGenerateException If there was an error generating the
-	 *         properties files.
+	 * 		properties files.
 	 */
 	public void generate() throws PanlGenerateException {
 		// we need to parse each of the schema files before writing out the top
@@ -148,22 +164,22 @@ public class PanlGenerator {
 		// now ask the questions:
 
 		//		$panl.param.query
-		getParameterInput("The search query parameter", PANL_PARAM_QUERY, "q", null);
+		getAndValidateParameterInput("The search query parameter", PANL_PARAM_QUERY, "q", null);
 
 		//		$panl.param.page
-		getParameterInput("The page number", PANL_PARAM_PAGE, "p", null);
+		getAndValidateParameterInput("The page number", PANL_PARAM_PAGE, "p", null);
 
 		//		$panl.param.numrows
-		getParameterInput("The number of results to return per page", PANL_PARAM_NUMROWS, "n", null);
+		getAndValidateParameterInput("The number of results to return per page", PANL_PARAM_NUMROWS, "n", null);
 
 		//		$panl.param.sort
-		getParameterInput("The results sorting parameter", PANL_PARAM_SORT, "s", null);
+		getAndValidateParameterInput("The results sorting parameter", PANL_PARAM_SORT, "s", null);
 
 		//		$panl.param.query.operand
-		getParameterInput("The default query operand (q.op)", PANL_PARAM_QUERY_OPERAND, "o", null);
+		getAndValidateParameterInput("The default query operand (q.op)", PANL_PARAM_QUERY_OPERAND, "o", null);
 
 		//		$panl.param.passthrough
-		getParameterInput("The URI path passthrough", PANL_PARAM_PASSTHROUGH, "z", null);
+		getAndValidateParameterInput("The URI path passthrough", PANL_PARAM_PASSTHROUGH, "z", null);
 
 
 		for (File schema : schemasToParse) {
@@ -180,7 +196,28 @@ public class PanlGenerator {
 
 	}
 
-	private String getParameterInput(String description, String panlParamProperty, String defaultValue, String errorPrompt) {
+	/**
+	 * <p>Get and validate that the input parameter is correct, it will do the following
+	 * validations:</p>
+	 *
+	 * <ul>
+	 *   <li>If the character is not __EXACTLY__ 1 character</li>
+	 *   <li>It is an alphanumeric character (lower or uppercased)</li>
+	 *   <li>That it has not been used before</li>
+	 * </ul>
+	 *
+	 * <p>This will be recursively called until a correct parameter is input.</p>
+	 *
+	 * @param description The description to output to the prompt
+	 * @param panlParamProperty The property that this will replace in the
+	 * 		properties file
+	 * @param defaultValue The default value - which will be set if an empty
+	 * 		string is sent through
+	 * @param errorPrompt The error prompt
+	 *
+	 * @return The inputted parameter
+	 */
+	private String getAndValidateParameterInput(String description, String panlParamProperty, String defaultValue, String errorPrompt) {
 		if (null != errorPrompt) {
 			System.out.printf("Invalid value. %s, please try again.\n", errorPrompt);
 		}
@@ -195,23 +232,23 @@ public class PanlGenerator {
 		}
 
 		if (temp.length() != 1) {
-			return (getParameterInput(panlParamProperty, description, defaultValue, "Value must be exactly 1 character."));
+			return (getAndValidateParameterInput(panlParamProperty, description, defaultValue, "Value must be exactly 1 character."));
 		} else {
 			// the value must be one of the available codes
-			if(!PanlCollection.CODES.contains(temp)) {
-				return (getParameterInput(
-								panlParamProperty,
-								description,
-								defaultValue,
-								String.format("Value '%s' __MUST__ be one of '%s'.", temp, PanlCollection.CODES)));
+			if (!PanlCollection.CODES.contains(temp)) {
+				return (getAndValidateParameterInput(
+						panlParamProperty,
+						description,
+						defaultValue,
+						String.format("Value '%s' __MUST__ be one of '%s'.", temp, PanlCollection.CODES)));
 			}
 			// It cannot be already in use
 			if (panlParamMap.containsKey(temp)) {
-				return (getParameterInput(
-								panlParamProperty,
-								description,
-								defaultValue,
-								String.format("Value '%s' already assigned to property '%s'.", temp, panlParamMap.get(temp))));
+				return (getAndValidateParameterInput(
+						panlParamProperty,
+						description,
+						defaultValue,
+						String.format("Value '%s' already assigned to property '%s'.", temp, panlParamMap.get(temp))));
 
 			}
 			System.out.printf("Property '%s' set to value '%s'.\n", panlParamProperty, temp);
@@ -238,7 +275,7 @@ public class PanlGenerator {
 						outputString.append(panlCollection.getPanlProperty(line));
 					} else {
 						outputString.append(line)
-										.append("\n");
+								.append("\n");
 					}
 				}
 
@@ -263,10 +300,10 @@ public class PanlGenerator {
 		for (PanlCollection panlCollection : panlCollections) {
 			String niceCollectionName = panlCollection.getCollectionName().toLowerCase().replaceAll("[^a-z0-9]", "-");
 			collectionPropertyFiles.append("panl.panlCollection.")
-							.append(niceCollectionName)
-							.append("=")
-							.append(niceCollectionName)
-							.append(".panl.properties\n");
+					.append(niceCollectionName)
+					.append("=")
+					.append(niceCollectionName)
+					.append(".panl.properties\n");
 		}
 
 		try (InputStream inputStream = PanlGenerator.class.getResourceAsStream(TEMPLATE_LOCATION_PANL_PROPERTIES)) {
@@ -282,10 +319,10 @@ public class PanlGenerator {
 				while ((line = reader.readLine()) != null) {
 					if (line.startsWith("$panl.panlCollections")) {
 						outputString.append(collectionPropertyFiles)
-										.append("\n");
+								.append("\n");
 					} else {
 						outputString.append(line)
-										.append("\n");
+								.append("\n");
 
 					}
 				}

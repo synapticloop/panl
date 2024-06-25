@@ -24,11 +24,25 @@ package com.synapticloop.panl.exception;
  *  IN THE SOFTWARE.
  */
 
+/**
+ * <p>This exception is thrown if there was an error with the Panl server.</p>
+ */
 public class PanlServerException extends Exception {
+	/**
+	 * <p>Instantiate the exception</p>
+	 *
+	 * @param message The exception message
+	 */
 	public PanlServerException(String message) {
 		super(message);
 	}
 
+	/**
+	 * <p>Instantiate the exception</p>
+	 *
+	 * @param message The exception message
+	 * @param cause The base cause for the exception
+	 */
 	public PanlServerException(String message, Throwable cause) {
 		super(message, cause);
 	}

@@ -70,10 +70,25 @@ import java.util.StringTokenizer;
  * @author synapticloop
  */
 public abstract class LpseToken {
+	/**
+	 * <p>The LPSE code that was found in the last path encoding</p>
+	 */
 	protected String lpseCode;
+	/**
+	 * <p>The original value </p>
+	 */
 	protected String originalValue;
+	/**
+	 * <p>The parsed value</p>
+	 */
 	protected String value;
+	/**
+	 * <p>Whether this token is valid</p>
+	 */
 	protected boolean isValid = true;
+	/**
+	 * <p>The collection properties for lookup</p>
+	 */
 	protected CollectionProperties collectionProperties;
 
 	/**
@@ -124,6 +139,7 @@ public abstract class LpseToken {
 
 			}
 		}
+
 		return(lpseField.instantiateToken(collectionProperties, lpseCode, query, valueTokeniser, lpseTokeniser));
 	}
 
@@ -222,10 +238,20 @@ public abstract class LpseToken {
 	}
 
 
+	/**
+	 * <p>Set whether this token is valid</p>
+	 *
+	 * @param isValid Whether this token is valid
+	 */
 	public void setIsValid(boolean isValid) {
 		this.isValid = isValid;
 	}
 
+	/**
+	 * <p>Get the original value that came through in the URI path</p>
+	 *
+	 * @return The original value
+	 */
 	public String getOriginalValue() {
 		return(this.originalValue);
 	}
