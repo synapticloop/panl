@@ -32,6 +32,7 @@ import com.synapticloop.panl.server.handler.fielderiser.field.*;
 import com.synapticloop.panl.server.handler.fielderiser.field.facet.*;
 import com.synapticloop.panl.server.handler.fielderiser.field.param.*;
 import com.synapticloop.panl.server.handler.helper.PropertyHelper;
+import com.synapticloop.panl.server.handler.tokeniser.token.facet.DateRangeFacetLpseToken;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.slf4j.Logger;
@@ -786,6 +787,10 @@ public class CollectionProperties {
 
 	public boolean getHighlight() {
 		return (highlight);
+	}
+
+	public List<PanlDateRangeFacetField> getDateRangeFacetFields() {
+		return(List.of(LPSE_CODE_DATE_FACET_MAP.values().toArray(new PanlDateRangeFacetField[0])));
 	}
 }
 

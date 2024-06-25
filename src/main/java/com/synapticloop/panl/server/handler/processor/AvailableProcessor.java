@@ -24,6 +24,7 @@ package com.synapticloop.panl.server.handler.processor;
  *  IN THE SOFTWARE.
  */
 
+import com.synapticloop.panl.server.handler.fielderiser.field.facet.PanlDateRangeFacetField;
 import com.synapticloop.panl.server.handler.properties.CollectionProperties;
 import com.synapticloop.panl.server.handler.fielderiser.field.BaseField;
 import com.synapticloop.panl.server.handler.tokeniser.token.LpseToken;
@@ -128,8 +129,12 @@ public class AvailableProcessor extends Processor {
 				rangeFacetArray.put(rangeFacetObject);
 			}
 
+		}
+
+		// Date ranges always appear, but they are not included in the field set
+		for (PanlDateRangeFacetField dateRangeFacetField : collectionProperties.getDateRangeFacetFields()) {
 			JSONObject dateRangeFacetObject = new JSONObject();
-			if(baseField.appendAvailableDateRangeValues(dateRangeFacetObject, collectionProperties, panlTokenMap)) {
+			if(dateRangeFacetField.appendAvailableDateRangeValues(dateRangeFacetObject, collectionProperties, panlTokenMap)) {
 				dateRangeFacetArray.put(dateRangeFacetObject);
 			}
 
