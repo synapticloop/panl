@@ -167,6 +167,7 @@ public class CollectionRequestHandler {
 			}
 
 			solrQuery.setFacetMinCount(collectionProperties.getFacetMinCount());
+			solrQuery.setHighlight(collectionProperties.getHighlight());
 
 			// this may be overridden by the lpse status
 			solrQuery.setRows(collectionProperties.getNumResultsPerPage());

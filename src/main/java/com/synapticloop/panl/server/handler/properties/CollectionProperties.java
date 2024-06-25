@@ -62,6 +62,7 @@ public class CollectionProperties {
 	public static final String PROPERTY_KEY_PANL_FORM_QUERY_RESPONDTO = "panl.form.query.respondto";
 	public static final String PROPERTY_KEY_PANL_INCLUDE_SAME_NUMBER_FACETS = "panl.include.same.number.facets";
 	public static final String PROPERTY_KEY_PANL_INCLUDE_SINGLE_FACETS = "panl.include.single.facets";
+	public static final String PROPERTY_KEY_SOLR_HIGHLIGHT = "solr.highlight";
 	public static final String PROPERTY_KEY_PANL_LPSE_LENGTH = "panl.lpse.length";
 	public static final String PROPERTY_KEY_PANL_LPSE_ORDER = "panl.lpse.order";
 	public static final String PROPERTY_KEY_PANL_LPSE_IGNORE = "panl.lpse.ignore";
@@ -185,6 +186,7 @@ public class CollectionProperties {
 	 * when the property is set.</p>
 	 */
 	private final Map<String, String> MANDATORY_LPSE_ORDER_FIELDS = new HashMap<>();
+	private boolean highlight;
 
 	/**
 	 * <p>Instantiate the Collection properties which maps to one Panl collection
@@ -298,6 +300,7 @@ public class CollectionProperties {
 		this.formQueryRespondTo = properties.getProperty(PROPERTY_KEY_PANL_FORM_QUERY_RESPONDTO, "q");
 
 		this.facetMinCount = PropertyHelper.getIntProperty(properties, PROPERTY_KEY_SOLR_FACET_MIN_COUNT, 1);
+		this.highlight = properties.getProperty(PROPERTY_KEY_SOLR_HIGHLIGHT, "true").equals("true");
 		this.numResultsPerPage = PropertyHelper.getIntProperty(properties, PROPERTY_KEY_SOLR_NUMROWS_DEFAULT, 10);
 		this.solrFacetLimit = PropertyHelper.getIntProperty(properties, PROPERTY_KEY_SOLR_FACET_LIMIT, 100);
 
@@ -430,7 +433,11 @@ public class CollectionProperties {
 
 		List<String> temp = new ArrayList<>();
 		for (PanlFacetField facetField : FACET_FIELDS) {
-			temp.add(facetField.getSolrFieldName());
+			// we do not ever return the Date facet - no point in enlarging the
+			// response object for no purpose
+			if(!(facetField instanceof PanlDateRangeFacetField)) {
+				temp.add(facetField.getSolrFieldName());
+			}
 		}
 
 		this.solrFacetFields = temp.toArray(new String[0]);
@@ -775,6 +782,10 @@ public class CollectionProperties {
 
 	public String getPanlLpseOrder() {
 		return (panlLpseOrder);
+	}
+
+	public boolean getHighlight() {
+		return (highlight);
 	}
 }
 
