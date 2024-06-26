@@ -43,34 +43,6 @@ public class PanlPageNumField extends BasePrefixSuffixField {
 		super(lpseCode, propertyKey, properties, solrCollection, panlCollectionUri);
 	}
 
-	/**
-	 * <p>Get the canonical URI path for the page number.  This __ALWAYS__
-	 * returns a URI path. The path will be encoded with a prefix and/or
-	 * suffix if they have been set.</p>
-	 *
-	 * @param panlTokenMap The token map with all fields and a list of their
-	 * 		values
-	 * @param collectionProperties The collection properties
-	 *
-	 * @return The URI path, never an empty string
-	 */
-	@Override
-	public String getCanonicalUriPath(Map<String, List<LpseToken>> panlTokenMap, CollectionProperties collectionProperties) {
-		StringBuilder sb = new StringBuilder();
-		if (panlTokenMap.containsKey(lpseCode) && !panlTokenMap.get(lpseCode).isEmpty()) {
-
-			// get the first token out of the list - there can be only one, so we
-			// choose the first one.
-
-			PageNumLpseToken pageNumLpseToken = (PageNumLpseToken) panlTokenMap.get(lpseCode).get(0);
-			sb.append(getEncodedPanlValue(Integer.toString(pageNumLpseToken.getPageNum())));
-		} else {
-			sb.append(getEncodedPanlValue("1"));
-		}
-
-		sb.append("/");
-		return (sb.toString());
-	}
 
 	@Override public String getURIPath(LpseToken token, CollectionProperties collectionProperties) {
 		PageNumLpseToken pageNumLpseToken = (PageNumLpseToken) token;
@@ -136,9 +108,47 @@ public class PanlPageNumField extends BasePrefixSuffixField {
 		return("");
 	}
 
+	/**
+	 * <p>Get the canonical LPSE token - this will <strong>ALWAYS</strong> be the
+	 * LPSE code</p>
+	 *
+	 * @param panlTokenMap The panl token map to look at
+	 * @param collectionProperties The collection properties
+	 *
+	 * @return This will <strong>ALWAYS</strong> be the LPSE code
+	 */
 	@Override
 	public String getCanonicalLpseCode(Map<String, List<LpseToken>> panlTokenMap, CollectionProperties collectionProperties) {
 		return (lpseCode);
+	}
+
+	/**
+	 * <p>Get the canonical URI path for the page number.  This __ALWAYS__
+	 * returns a URI path. The path will be encoded with a prefix and/or
+	 * suffix if they have been set.</p>
+	 *
+	 * @param panlTokenMap The token map with all fields and a list of their
+	 * 		values
+	 * @param collectionProperties The collection properties
+	 *
+	 * @return The URI path, never an empty string
+	 */
+	@Override
+	public String getCanonicalUriPath(Map<String, List<LpseToken>> panlTokenMap, CollectionProperties collectionProperties) {
+		StringBuilder sb = new StringBuilder();
+		if (panlTokenMap.containsKey(lpseCode) && !panlTokenMap.get(lpseCode).isEmpty()) {
+
+			// get the first token out of the list - there can be only one, so we
+			// choose the first one.
+
+			PageNumLpseToken pageNumLpseToken = (PageNumLpseToken) panlTokenMap.get(lpseCode).get(0);
+			sb.append(getEncodedPanlValue(Integer.toString(pageNumLpseToken.getPageNum())));
+		} else {
+			sb.append(getEncodedPanlValue("1"));
+		}
+
+		sb.append("/");
+		return (sb.toString());
 	}
 
 	/**
@@ -146,41 +156,87 @@ public class PanlPageNumField extends BasePrefixSuffixField {
 	 * exists in the panl token map.  This is because when we add/remove etc, we
 	 * go back to the first page always</p>
 	 *
-	 * @param panlTokenMap
-	 * @param collectionProperties
-	 * @return
+	 * @param panlTokenMap The panl token map
+	 * @param collectionProperties The collection properties
+	 *
+	 * @return The reset URI path
 	 */
 	public String getResetUriPath(Map<String, List<LpseToken>> panlTokenMap, CollectionProperties collectionProperties) {
 		return("");
 	}
 
+	/**
+	 * <p>Get the reset LPSE code for the page number.  This will always return
+	 * an empty string as a rest will always return to the first page of results.</p>
+	 *
+	 * @param panlTokenMap The panlToken map to see if a list of tokens is
+	 * 		available to generate the resetLpseCode for
+	 * @param collectionProperties The collection properties to look up defaults
+	 * 		if required
+	 *
+	 * @return The reset LPSE code - always an empty string
+	 */
 	public String getResetLpseCode(Map<String, List<LpseToken>> panlTokenMap, CollectionProperties collectionProperties) {
 		return ("");
 	}
 
+	/**
+	 * <p>Get the logger</p>
+	 *
+	 * @return The logger for the object
+	 */
 	@Override public Logger getLogger() {
 		return (LOGGER);
 	}
 
+	/**
+	 * <p>Return the additional explanation for debugging/information used in the
+	 * Panl results explainer web app.</p>
+	 *
+	 * @return The additional explanation for debugging/information
+	 */
 	@Override public List<String> explainAdditional() {
 		List<String> explanations = new ArrayList<>();
 		explanations.add("The page number of the results (works in conjunction with the number of results).");
 		return(explanations);
 	}
 
+	/**
+	 * <p>Apply the token to the Solr Query - this does do anything as Solr only
+	 * has a concept of a <code>start</code> parameter, which is worked out in
+	 * conjunction with the number of results per page.</p>
+	 *
+	 * @param solrQuery The SolrQuery to apply the tokens to
+	 * @param lpseTokenList The list of tokens to apply to the Solr query
+	 */
 	public void applyToQueryInternal(SolrQuery solrQuery, List<LpseToken> lpseTokenList) {
 		// do nothing - this relies on other data and is set by the handler
 	}
 
+	/**
+	 * <p>Instantiate the token for this field, which is a PageNumLpseToken</p>
+	 *
+	 * @param collectionProperties The collection properties
+	 * @param lpseCode The lpseCode for this field
+	 * @param query The query parameter
+	 * @param valueTokeniser The value tokeniser
+	 * @param lpseTokeniser The lpse tokeniser
+	 *
+	 * @return the token for this field, which is a PageNumLpseToken
+	 *
+	 * @see PageNumLpseToken
+	 */
 	@Override public LpseToken instantiateToken(CollectionProperties collectionProperties, String lpseCode, String query, StringTokenizer valueTokeniser, LpseTokeniser lpseTokeniser) {
 		return(new PageNumLpseToken(collectionProperties, this.lpseCode, valueTokeniser));
 	}
 
+	/**
+	 * <p>Log the details upon instantiation.</p>
+	 */
 	@Override protected void logDetails() {
 		getLogger().info("[ Solr/Panl '{}/{}' ] Page number parameter mapped to '{}'.",
 				solrCollection,
 				panlCollectionUri,
 				lpseCode);
 	}
-
 }
