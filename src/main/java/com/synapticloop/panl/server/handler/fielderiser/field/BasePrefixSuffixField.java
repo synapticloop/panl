@@ -11,22 +11,33 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
 
+/**
+ * <p>The abstract BasePrefixSuffixField is the parent object for any
+ * parameter, operand, or facet that allows a prefix and/or suffix.</p>
+ */
 public abstract class BasePrefixSuffixField extends BaseField {
 	public static final String PROPERTY_KEY_SUFFIX_PREFIX = ".prefix";
 	public static final String PROPERTY_KEY_SUFFIX_SUFFIX = ".suffix";
+
 	protected boolean hasValuePrefix = false;
 	protected boolean hasValueSuffix = false;
 	protected String valuePrefix;
 	protected String valueSuffix;
 
 	/**
+	 * <p>Instantiate the BasePrefixSuffixField</p>
 	 *
-	 * @param lpseCode
-	 * @param propertyKey
-	 * @param properties
-	 * @param solrCollection
-	 * @param lpseLength
-	 * @throws PanlServerException
+	 * @param lpseCode The LPSE code that this is bound to
+	 * @param propertyKey The property key from the properties file
+	 * @param properties The properties to look up
+	 * @param solrCollection The Solr collection that this will connect to (this
+	 * 		is used for debugging and logging output)
+	 * @param panlCollectionUri The Panl collection URI that this is bound to
+	 * 		(this is used for debugging and logging output)
+	 * @param lpseLength The length of the LPSE code
+	 *
+	 * @throws PanlServerException If there was an error parsing/decoding the
+	 * 		token
 	 */
 	public BasePrefixSuffixField(String lpseCode, String propertyKey, Properties properties, String solrCollection, String panlCollectionUri, int lpseLength) throws PanlServerException {
 		super(lpseCode, propertyKey, properties, solrCollection, panlCollectionUri, lpseLength);
@@ -34,12 +45,32 @@ public abstract class BasePrefixSuffixField extends BaseField {
 		populateSuffixAndPrefix();
 	}
 
+	/**
+	 * <p>Instantiate the BasePrefixSuffixField</p>
+	 *
+	 * @param lpseCode The LPSE code that this is bound to
+	 * @param propertyKey The property key from the properties file
+	 * @param properties The properties to look up
+	 * @param solrCollection The Solr collection that this will connect to (this
+	 * 		is used for debugging and logging output)
+	 * @param panlCollectionUri The Panl collection URI that this is bound to
+	 * 		(this is used for debugging and logging output)
+	 *
+	 * @throws PanlServerException If there was an error parsing/decoding the
+	 * 		token
+	 */
 	public BasePrefixSuffixField(String lpseCode, String propertyKey, Properties properties, String solrCollection, String panlCollectionUri) throws PanlServerException {
 		super(lpseCode, propertyKey, properties, solrCollection, panlCollectionUri, 1);
 
 		populateParamSuffixAndPrefix(propertyKey);
 	}
 
+	/**
+	 * <p>Populate the prefix and suffix for a parameter LPSE code from the
+	 * properties file if they exist.</p>
+	 *
+	 * @param propertyKey The property key to look up
+	 */
 	protected void populateParamSuffixAndPrefix(String propertyKey) {
 		this.valuePrefix = properties.getProperty(propertyKey + PROPERTY_KEY_SUFFIX_PREFIX);
 
@@ -48,6 +79,10 @@ public abstract class BasePrefixSuffixField extends BaseField {
 		checkPrefixSuffix();
 	}
 
+	/**
+	 * <p>Populate the prefix and suffix for a facet field from the properties
+	 * file if they exist.</p>
+	 */
 	protected void populateSuffixAndPrefix() {
 		this.valuePrefix = properties.getProperty(PROPERTY_KEY_PANL_PREFIX + lpseCode);
 
@@ -56,6 +91,11 @@ public abstract class BasePrefixSuffixField extends BaseField {
 		checkPrefixSuffix();
 	}
 
+	/**
+	 * <p>Check the prefix and suffix value to determine whether they exist.  If
+	 * they are null, whitespace only or an empty string then they will be set as
+	 * not having a prefix, or suffix respectively.</p>
+	 */
 	private void checkPrefixSuffix() {
 		if (this.valuePrefix != null && !this.valuePrefix.isEmpty()) {
 			hasValuePrefix = true;
@@ -66,6 +106,12 @@ public abstract class BasePrefixSuffixField extends BaseField {
 		}
 	}
 
+	/**
+	 * <p>Get the value prefix for this field, or an empty string if it does not
+	 * exist.</p>
+	 *
+	 * @return The value prefix
+	 */
 	public String getValuePrefix() {
 		if (hasValuePrefix) {
 			return (valuePrefix);
@@ -74,6 +120,12 @@ public abstract class BasePrefixSuffixField extends BaseField {
 		}
 	}
 
+	/**
+	 * <p>Get the value suffix for this field, or an empty string if it does not
+	 * exist.</p>
+	 *
+	 * @return The value suffix
+	 */
 	public String getValueSuffix() {
 		if (hasValueSuffix) {
 			return (valueSuffix);
@@ -108,8 +160,8 @@ public abstract class BasePrefixSuffixField extends BaseField {
 	 * 		return <code>null</code> if it is invalid.
 	 */
 	@Override public String getDecodedValue(String value) {
-		if(null == value) {
-			return(null);
+		if (null == value) {
+			return (null);
 		}
 
 		String decodedValue = URLDecoder.decode(value, StandardCharsets.UTF_8);
@@ -140,6 +192,14 @@ public abstract class BasePrefixSuffixField extends BaseField {
 		}
 	}
 
+	/**
+	 * <p>Get the encoded URL encoded Panl value which will add a prefix, suffix,
+	 * both or neither, and then URL encode it.</p>
+	 *
+	 * @param value The value
+	 *
+	 * @return The URL encoded Panl value
+	 */
 	@Override public String getEncodedPanlValue(String value) {
 		StringBuilder sb = new StringBuilder();
 
@@ -156,32 +216,52 @@ public abstract class BasePrefixSuffixField extends BaseField {
 		return (URLEncoder.encode(sb.toString(), StandardCharsets.UTF_8));
 	}
 
+	/**
+	 * <p>Get the encoded URL encoded Panl value which will add a prefix, suffix,
+	 * both or neither, and then URL encode it.</p>
+	 *
+	 * @param lpseToken The incoming token
+	 *
+	 * @return The URL encoded Panl value
+	 */
 	@Override public String getEncodedPanlValue(LpseToken lpseToken) {
 		if (null == lpseToken.getValue()) {
 			return ("");
 		} else {
-			return(getEncodedPanlValue(lpseToken.getValue()));
+			return (getEncodedPanlValue(lpseToken.getValue()));
 		}
 	}
 
+	/**
+	 * <p>Append any keys to the available JSON response object.  This method
+	 * does not add any additional keys.</p>
+	 *
+	 * @param jsonObject The JSON object to append to
+	 */
 	@Override protected void appendToAvailableObjectInternal(JSONObject jsonObject) {
 
 	}
 
+	/**
+	 * <p>Add additional detail to the explanation, this is used for debugging
+	 * and informational purposes through the Panl viewer explainer web app.</p>
+	 *
+	 * @return The list of additional explanations for this object
+	 */
 	@Override public List<String> explainAdditional() {
 		List<String> explanations = new ArrayList<>();
-		if(hasValuePrefix) {
+		if (hasValuePrefix) {
 			explanations.add("Has a prefix of '" + getValuePrefix() + "' which will be prepended to the value in the URI path.");
 		} else {
 			explanations.add("Has no prefix.");
 		}
 
-		if(hasValueSuffix) {
+		if (hasValueSuffix) {
 			explanations.add("Has a suffix of '" + getValueSuffix() + "' which will be appended to the value in the URI path.");
 		} else {
 			explanations.add("Has no suffix.");
 		}
 
-		return(explanations);
+		return (explanations);
 	}
 }

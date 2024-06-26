@@ -21,7 +21,7 @@ package com.synapticloop.panl.server.handler;
  * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
  * FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
- *  IN THE SOFTWARE.
+ * IN THE SOFTWARE.
  */
 
 import com.synapticloop.panl.exception.PanlServerException;
@@ -166,7 +166,7 @@ public class CollectionRequestHandler {
 			}
 
 			solrQuery.setFacetMinCount(collectionProperties.getFacetMinCount());
-			if(collectionProperties.getHighlight()) {
+			if (collectionProperties.getHighlight()) {
 				solrQuery.setParam(SOLR_PARAM_HL_FL, "*");
 			}
 
@@ -268,7 +268,7 @@ public class CollectionRequestHandler {
 		Map<String, List<LpseToken>> panlTokenMap = new HashMap<>();
 		for (LpseToken lpseToken : lpseTokens) {
 			// These codes are ignored, just carry on
-			if(collectionProperties.getIsIgnoredLpseCode(lpseToken.getLpseCode())) {
+			if (collectionProperties.getIsIgnoredLpseCode(lpseToken.getLpseCode())) {
 				continue;
 			}
 
@@ -417,22 +417,54 @@ public class CollectionRequestHandler {
 		return (lpseTokens);
 	}
 
-	public String getValidUrlsString() {
-		return (collectionProperties.getValidUrlsString());
+	/**
+	 * <p>Get the valid URLs as a JSON array string.</p>
+	 *
+	 * @return The valid URLs as a JSON array string
+	 */
+	public String getValidUrlsJSONArrayString() {
+		return (collectionProperties.getValidUrlsJSONArrayString());
 	}
 
+	/**
+	 * <p>Return whether this is a valid results field for this path, i.e. this
+	 * collection handler can respond to this.</p>
+	 *
+	 * @param path The path to check to see whether this handler can respond to is
+	 *
+	 * @return Whether this is a valid results field for this path
+	 */
 	public boolean isValidResultsFields(String path) {
 		return (collectionProperties.isValidResultFieldsName(path));
 	}
 
+	/**
+	 * <p>Get the Solr collection that this handler will connect to.  This is
+	 * used for debugging/explanation/information usage with the Panl results
+	 * explainer web app.</p>
+	 *
+	 * @return The solr collection that this handler will connect to.
+	 */
 	public String getSolrCollection() {
 		return solrCollection;
 	}
 
+	/**
+	 * <p>Get the names for the result fields that will be returned with this
+	 * handler.</p>
+	 *
+	 * @return The names for the result fields that will be returned with this
+	 * 		handler.
+	 */
 	public List<String> getResultFieldsNames() {
 		return (new ArrayList<>(collectionProperties.getResultFieldsNames()));
 	}
 
+	/**
+	 * <p>Get the Panl collection URI for this handler</p>
+	 *
+	 * @return The Panl collection URI for this handler
+	 */
 	public String getPanlCollectionUri() {
 		return panlCollectionUri;
 	}

@@ -21,7 +21,7 @@ package com.synapticloop.panl.server.handler.tokeniser.token.param;
  * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
  * FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
- *  IN THE SOFTWARE.
+ * IN THE SOFTWARE.
  */
 
 import com.synapticloop.panl.server.handler.tokeniser.LpseTokeniser;
@@ -50,6 +50,13 @@ public class SortLpseToken extends LpseToken {
 	private SolrQuery.ORDER sortOrder = SolrQuery.ORDER.desc;
 	private String sortOrderUriKey = SORT_ORDER_URI_KEY_DESCENDING;
 
+	/**
+	 * <p>Instantiate a Sort LPSE token</p>
+	 *
+	 * @param collectionProperties The collection properties to look up
+	 * @param lpseCode The LPSe code that this token is bound to
+	 * @param lpseTokeniser The LPSE tokeniser
+	 */
 	public SortLpseToken(
 			CollectionProperties collectionProperties,
 			String lpseCode,
@@ -97,7 +104,7 @@ public class SortLpseToken extends LpseToken {
 			}
 		}
 
-		if(!hasFound) {
+		if (!hasFound) {
 			this.isValid = false;
 		}
 
@@ -147,27 +154,58 @@ public class SortLpseToken extends LpseToken {
 		return (lpseSortCode);
 	}
 
+	/**
+	 * <p>Get the sort order URI key which will be either a '+' or '-'.</p>
+	 *
+	 * @return The sort order URI key
+	 *
+	 * @see #SORT_ORDER_URI_KEY_ASCENDING
+	 * @see #SORT_ORDER_URI_KEY_DESCENDING
+	 */
 	public String getSortOrderUriKey() {
 		return (sortOrderUriKey);
 	}
 
+	/**
+	 * <p>Return the inverse of this sort order (i.e. if ascending, then
+	 * descending and vice versa).</p>
+	 *
+	 * @return The inverse sort order URI key
+	 */
 	public String getInverseSortOrderUriKey() {
-		if (sortOrderUriKey.equals("+")) {
-			return ("-");
+		if (sortOrderUriKey.equals(SORT_ORDER_URI_KEY_ASCENDING)) {
+			return (SORT_ORDER_URI_KEY_DESCENDING);
 		}
-		return ("+");
+		return (SORT_ORDER_URI_KEY_ASCENDING);
 	}
 
+	/**
+	 * <p>Return the Solr facet field - unlike other facets, this will return the
+	 * Solr facet field name for the sort order.</p>
+	 *
+	 * @return The Solr facet field for the sort order.
+	 */
 	public String getSolrFacetField() {
 		return solrFacetField;
 	}
 
-	public SolrQuery.ORDER getSortOrder() {
+	/**
+	 * <p>Get the Solr sort order for the Solr query</p>
+	 *
+	 * @return The Solr sort order
+	 */
+	public SolrQuery.ORDER getSolrSortOrder() {
 		return sortOrder;
 	}
 
+	/**
+	 * <p>Get the equivalence value - which is the LPSE code and the LPSE code
+	 * for the sort order.</p>
+	 *
+	 * @return The sort order equivalence key.
+	 */
 	public String getEquivalenceValue() {
-		return(lpseCode + "/" + this.lpseSortCode);
+		return (lpseCode + "/" + this.lpseSortCode);
 	}
 
 }

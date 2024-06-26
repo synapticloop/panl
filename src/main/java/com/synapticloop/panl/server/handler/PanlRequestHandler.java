@@ -21,7 +21,7 @@ package com.synapticloop.panl.server.handler;
  * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
  * FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
- *  IN THE SOFTWARE.
+ * IN THE SOFTWARE.
  */
 
 import com.synapticloop.panl.server.handler.results.util.ResourceHelper;
@@ -47,9 +47,11 @@ public class PanlRequestHandler implements HttpRequestHandler {
 	private final CollectionRequestHandler collectionRequestHandler;
 
 	/**
-	 * <p></p>
-	 *
-	 * @param collectionRequestHandler The collection that will handle this request
+	 * <p>Instantiate The Panl request handler which will bind the request URL to
+	 * the collection request handle.</p>
+	 * @param panlProperties The panl properties file
+	 * @param collectionRequestHandler The collection request handler that will
+	 * 		handle this request
 	 */
 	public PanlRequestHandler(PanlProperties panlProperties, CollectionRequestHandler collectionRequestHandler) {
 		super();
@@ -61,12 +63,18 @@ public class PanlRequestHandler implements HttpRequestHandler {
 	 * <p>Do some initial checking on the request (including the query string if
 	 * one is available) and pass it off to the CollectionRequestHandler.</p>
 	 *
-	 * <p>This request handler also returns the 500 internal error status if
+	 * <p>This request handler returns a 500 internal error HTTP status code if
 	 * there was an error processing the request.</p>
+	 *
+	 * <p>This request handler returns a 404 internal error HTTPS status code if
+	 * there is no registered <code>CollectionRequestHandler</code> registered for
+	 * the URL.</p>
 	 *
 	 * @param request the HTTP request.
 	 * @param response the HTTP response.
 	 * @param context the HTTP execution context. (which is ignored by this processor)
+	 *
+	 * @see CollectionRequestHandler
 	 */
 	@Override public void handle(HttpRequest request, HttpResponse response, HttpContext context) {
 
@@ -88,7 +96,7 @@ public class PanlRequestHandler implements HttpRequestHandler {
 			response.setStatusCode(HttpStatus.SC_NOT_FOUND);
 			response.setEntity(
 					new StringEntity(
-							collectionRequestHandler.getValidUrlsString(),
+							collectionRequestHandler.getValidUrlsJSONArrayString(),
 							ResourceHelper.CONTENT_TYPE_JSON));
 			return;
 		}
@@ -110,6 +118,7 @@ public class PanlRequestHandler implements HttpRequestHandler {
 						String.format("Class: %s, message: %s.",
 								e.getClass().getCanonicalName(),
 								e.getMessage()));
+				// TODO - remove this
 				e.printStackTrace();
 				response.setEntity(new StringEntity(jsonObject.toString(), ResourceHelper.CONTENT_TYPE_JSON));
 			} else {

@@ -21,15 +21,13 @@ package com.synapticloop.panl.server.handler.tokeniser.token;
  * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
  * FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
- *  IN THE SOFTWARE.
+ * IN THE SOFTWARE.
  */
 
 import com.synapticloop.panl.server.handler.fielderiser.field.BaseField;
-import com.synapticloop.panl.server.handler.fielderiser.field.facet.PanlOrFacetField;
 import com.synapticloop.panl.server.handler.properties.CollectionProperties;
 import com.synapticloop.panl.server.handler.tokeniser.LpseTokeniser;
 import com.synapticloop.panl.server.handler.tokeniser.token.facet.*;
-import com.synapticloop.panl.server.handler.tokeniser.token.param.*;
 
 import java.util.StringTokenizer;
 
@@ -252,7 +250,7 @@ public abstract class LpseToken {
 	 *
 	 * @return The original value
 	 */
-	public String getOriginalValue() {
+	public String getOriginalURIValue() {
 		return(this.originalValue);
 	}
 }

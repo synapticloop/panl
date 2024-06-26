@@ -147,7 +147,7 @@ public class PanlGenerator {
 	 *   <li><code>panl.param.query</code> - The search query parameter</li>
 	 *   <li><code>panl.param.sort</code> - The results sorting parameter</li>
 	 *   <li><code>panl.param.page</code> - The page number</li>
-	 *   <li><code>panl.param.numrows</code> - The number of results to return per page/li>
+	 *   <li><code>panl.param.numrows</code> - The number of results to return per page</li>
 	 *   <li><code>panl.param.query.operand</code> - The default query operand (q.op)</li>
 	 *   <li><code>panl.param.passthrough</code> - The URI path passthrough -
 	 *   whilst this is an optional parameter, it is included and can then be
