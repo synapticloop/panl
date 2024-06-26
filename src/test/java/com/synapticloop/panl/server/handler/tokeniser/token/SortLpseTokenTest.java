@@ -22,7 +22,7 @@ public class SortLpseTokenTest {
 		assertEquals(lpseCode, sortLpseToken.getLpseSortCode());
 		assertEquals(name, sortLpseToken.getSolrFacetField());
 		assertEquals((asc ? "+" : "-"), sortLpseToken.getSortOrderUriKey());
-		assertEquals((asc ?  SolrQuery.ORDER.asc : SolrQuery.ORDER.desc), sortLpseToken.getSortOrder());
+		assertEquals((asc ?  SolrQuery.ORDER.asc : SolrQuery.ORDER.desc), sortLpseToken.getSolrSortOrder());
 	}
 
 	private void assertInvalidUriPaths(String remainingUri) throws PanlServerException, IOException {
