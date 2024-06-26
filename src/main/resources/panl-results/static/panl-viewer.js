@@ -50,6 +50,8 @@ function populatePanlResults(panlJsonData) {
 	console.log("[ RETURNED PANL CANONICAL URI JSON OBJECT ]")
 	console.log(panlJsonData.panl.timings);
 
+	$("#explain-collection").attr("href", "/panl-results-explainer" + $("#collection").text() + "/?explain=" + panlJsonData.panl.canonical_uri)
+
 	$("#canonical_uri").append(panlJsonData.panl.canonical_uri);
 
 	// first up the total results
