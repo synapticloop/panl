@@ -31,10 +31,12 @@ function panlExplain() {
 
 	if(text.length == 0) {
 		text = getURLParameter("explain");
-		if(text.explain != 0) {
+		if(text !== undefined && text.length != 0) {
 			$("#uris").val(text)
 			var url = window.location.href;
       window.history.replaceState({}, "", url.split('?')[0]);
+		} else {
+			text = "";
 		}
 	}
 
@@ -89,7 +91,11 @@ function populateExplainResults(panlJsonData) {
 	}
 
 	for(const expl of panlJsonData.explanation) {
-		$("#documents").append("<code class=\"explain\">" + escapeHTML(expl) + "</pre>")
+		if(expl.includes("[ INVALID ]")) {
+			$("#documents").append("<code class=\"explain invalid\">" + escapeHTML(expl) + "</pre>")
+		} else {
+			$("#documents").append("<code class=\"explain valid\">" + escapeHTML(expl) + "</pre>")
+		}
 	}
 
 	$("#documents").append("<h1>Configuration Parameters</h1>");
