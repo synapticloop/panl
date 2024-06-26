@@ -21,7 +21,7 @@ package com.synapticloop.panl.server.handler.fielderiser.field.facet;
  * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
  * FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
- *  IN THE SOFTWARE.
+ * IN THE SOFTWARE.
  */
 
 import com.synapticloop.panl.exception.PanlServerException;
@@ -191,7 +191,7 @@ public class PanlDateRangeFacetField extends PanlFacetField {
 		DateRangeFacetLpseToken lpseToken;
 		if (!lpseTokenList.isEmpty()) {
 			lpseToken = (DateRangeFacetLpseToken) lpseTokenList.get(0);
-			String originalValue = URLDecoder.decode(lpseToken.getOriginalValue(), StandardCharsets.UTF_8);
+			String originalValue = URLDecoder.decode(lpseToken.getOriginalURIValue(), StandardCharsets.UTF_8);
 			if (hasNext && originalValue.startsWith(nextIndicator)) {
 				// then we are going to do a range from NOW to x years/months/days
 				originalValue = originalValue.substring(nextIndicator.length());
@@ -254,7 +254,7 @@ public class PanlDateRangeFacetField extends PanlFacetField {
 			if (hasNext || hasPrevious) {
 				boolean isValidNextPrevious = getIsValidNextPrevious(lpseToken);
 				if (isValidNextPrevious) {
-					return (lpseToken.getOriginalValue() + "/");
+					return (lpseToken.getOriginalURIValue() + "/");
 				}
 			}
 		}
@@ -272,7 +272,7 @@ public class PanlDateRangeFacetField extends PanlFacetField {
 					return ("");
 				}
 
-				String originalValue = URLDecoder.decode(lpseToken.getOriginalValue(), StandardCharsets.UTF_8);
+				String originalValue = URLDecoder.decode(lpseToken.getOriginalURIValue(), StandardCharsets.UTF_8);
 				boolean isDateRangeDesignator = true;
 				if (hasNext && !originalValue.startsWith(nextIndicator)) {
 					isDateRangeDesignator = false;
@@ -283,7 +283,7 @@ public class PanlDateRangeFacetField extends PanlFacetField {
 				}
 
 				if (isDateRangeDesignator) {
-					return (lpseToken.getOriginalValue() + "/");
+					return (lpseToken.getOriginalURIValue() + "/");
 				}
 			}
 		}
@@ -295,7 +295,7 @@ public class PanlDateRangeFacetField extends PanlFacetField {
 			return (false);
 		}
 
-		String originalValue = URLDecoder.decode(lpseToken.getOriginalValue(), StandardCharsets.UTF_8);
+		String originalValue = URLDecoder.decode(lpseToken.getOriginalURIValue(), StandardCharsets.UTF_8);
 		boolean isValidNextPrevious = true;
 		if (hasNext && !originalValue.startsWith(nextIndicator)) {
 			isValidNextPrevious = false;

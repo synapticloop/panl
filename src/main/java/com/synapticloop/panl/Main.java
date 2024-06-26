@@ -21,7 +21,7 @@ package com.synapticloop.panl;
  * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
  * FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
- *  IN THE SOFTWARE.
+ * IN THE SOFTWARE.
  */
 
 import com.synapticloop.panl.exception.CommandLineOptionException;
@@ -43,7 +43,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 /**
- * This is the main starting point for the PANL server/generator
+ * <p>This is the main entry point for the PANL server/generator.</p>
  */
 public class Main {
 	private static final Logger LOGGER = LoggerFactory.getLogger(Main.class);
@@ -131,6 +131,13 @@ public class Main {
 		}
 	}
 
+	/**
+	 * <p>Parse and execute the server component</p>
+	 *
+	 * @throws PanlServerException If there was an error starting the server
+	 * @throws CommandLineOptionException If there was an error with the command
+	 * line options
+	 */
 	private void parseAndExecuteServerCommands() throws PanlServerException, CommandLineOptionException {
 		this.propertiesFileLocation = OPTIONS_MAP.getOrDefault(CMD_OPTION_PROPERTIES, DEFAULT_PANL_PROPERTIES);
 		String portNumberString = OPTIONS_MAP.getOrDefault(CMD_OPTION_PORT, DEFAULT_PORT_NUMBER);

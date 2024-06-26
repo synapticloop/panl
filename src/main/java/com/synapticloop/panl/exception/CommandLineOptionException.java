@@ -24,7 +24,16 @@ package com.synapticloop.panl.exception;
  * IN THE SOFTWARE.
  */
 
+/**
+ * <p>A command line option exception is thrown if there was an error parsing
+ * the command line options.</p>
+ */
 public class CommandLineOptionException extends Exception {
+	/**
+	 * <p>Instantiate the exception</p>
+	 *
+	 * @param message The exception message
+	 */
 	public CommandLineOptionException(String message) {
 		super(message);
 	}

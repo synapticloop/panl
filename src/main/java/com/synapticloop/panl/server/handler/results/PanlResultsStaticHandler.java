@@ -21,7 +21,7 @@ package com.synapticloop.panl.server.handler.results;
  * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
  * FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
- *  IN THE SOFTWARE.
+ * IN THE SOFTWARE.
  */
 
 import com.synapticloop.panl.server.handler.results.util.ResourceHelper;
@@ -30,12 +30,31 @@ import org.apache.http.HttpResponse;
 import org.apache.http.protocol.HttpContext;
 import org.apache.http.protocol.HttpRequestHandler;
 
-
+/**
+ * <p>The Static handler passes any requests to the resource helper to serve
+ * static resources from the classpath.</p>
+ *
+ * @author synapticloop
+ * @see ResourceHelper
+ */
 public class PanlResultsStaticHandler implements HttpRequestHandler {
 
+	/**
+	 * <p>Instantiate the PanlResultsStaticHandler and do nothing</p>
+	 */
 	public PanlResultsStaticHandler() {
 	}
 
+	/**
+	 * <p>Handle a request for a static resource loading it from the classpath.
+	 * In effect this passes this through to the ResourceHelper.</p>
+	 *
+	 * @param request The request
+	 * @param response The response
+	 * @param context The context (unused)
+	 *
+	 * @see ResourceHelper
+	 */
 	@Override public void handle(HttpRequest request, HttpResponse response, HttpContext context) {
 		ResourceHelper.serveResource(request.getRequestLine().getUri(), response);
 	}

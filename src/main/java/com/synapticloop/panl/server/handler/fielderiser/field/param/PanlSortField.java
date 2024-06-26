@@ -21,7 +21,7 @@ package com.synapticloop.panl.server.handler.fielderiser.field.param;
  * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
  * FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
- *  IN THE SOFTWARE.
+ * IN THE SOFTWARE.
  */
 
 import com.synapticloop.panl.exception.PanlServerException;
@@ -127,7 +127,7 @@ public class PanlSortField extends BaseField {
 		for (LpseToken lpseToken : lpseTokenList) {
 			SortLpseToken sortLpseToken = (SortLpseToken)lpseToken;
 			if(sortLpseToken.getIsValid()) {
-				sortClauses.add(SolrQuery.SortClause.create(sortLpseToken.getSolrFacetField(), sortLpseToken.getSortOrder()));
+				sortClauses.add(SolrQuery.SortClause.create(sortLpseToken.getSolrFacetField(), sortLpseToken.getSolrSortOrder()));
 			}
 		}
 

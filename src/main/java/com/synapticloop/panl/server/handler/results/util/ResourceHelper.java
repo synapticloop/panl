@@ -21,7 +21,7 @@ package com.synapticloop.panl.server.handler.results.util;
  * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
  * FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
- *  IN THE SOFTWARE.
+ * IN THE SOFTWARE.
  */
 
 import com.synapticloop.panl.server.handler.results.PanlResultsStaticHandler;
@@ -35,6 +35,7 @@ import org.json.JSONObject;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -55,11 +56,11 @@ public class ResourceHelper {
 	public static final String JSON_VALUE_MESSAGE_404 = "Not found";
 	public static final String JSON_VALUE_MESSAGE_500 = "internal server error";
 
-	public static final ContentType CONTENT_TYPE_JSON = ContentType.create("application/json", "UTF-8");
-	public static final ContentType CONTENT_TYPE_TEXT = ContentType.create("text/plain", "UTF-8");
-	public static final ContentType CONTENT_TYPE_CSS = ContentType.create("text/css", "UTF-8");
-	public static final ContentType CONTENT_TYPE_HTML = ContentType.create("text/html", "UTF-8");
-	public static final ContentType CONTENT_TYPE_JS = ContentType.create("text/javascript ", "UTF-8");
+	public static final ContentType CONTENT_TYPE_JSON = ContentType.create("application/json", StandardCharsets.UTF_8);
+	public static final ContentType CONTENT_TYPE_TEXT = ContentType.create("text/plain", StandardCharsets.UTF_8);
+	public static final ContentType CONTENT_TYPE_CSS = ContentType.create("text/css", StandardCharsets.UTF_8);
+	public static final ContentType CONTENT_TYPE_HTML = ContentType.create("text/html", StandardCharsets.UTF_8);
+	public static final ContentType CONTENT_TYPE_JS = ContentType.create("text/javascript ", StandardCharsets.UTF_8);
 
 	private static final Map<String, ContentType> CONTENT_TYPE_MAP = new HashMap<>();
 	static {
@@ -69,8 +70,11 @@ public class ResourceHelper {
 		CONTENT_TYPE_MAP.put(".html", CONTENT_TYPE_HTML);
 	}
 
+	private static final Map<String, String> CONTENT_CACHE = new HashMap<>();
+	private static final Map<String, ContentType> CONTENT_TYPE_CACHE = new HashMap<>();
+	private static final Map<String, Integer> CONTENT_RESPONSE_CODE_CACHE = new HashMap<>();
 	/**
-	 * <p>Serve a resourcePath from the class loader.</p>
+	 * <p>Serve a resourcePath from the class loader and cache the response.</p>
 	 *
 	 * <p><strong> NOTE:</strong> that this is not supposed to be performant.</p>
 	 *
@@ -78,26 +82,37 @@ public class ResourceHelper {
 	 * @param response The response object to write to
 	 */
 	public static void serveResource(String resourcePath, HttpResponse response) {
+		if(CONTENT_CACHE.containsKey(resourcePath)) {
+			response.setStatusCode(CONTENT_RESPONSE_CODE_CACHE.get(resourcePath));
+			response.setEntity(new StringEntity(CONTENT_CACHE.get(resourcePath), CONTENT_TYPE_CACHE.get(resourcePath)));
+			return;
+		}
 
 		InputStreamReader reader = null;
 		try (InputStream resourceAsStream = PanlResultsStaticHandler.class.getResourceAsStream(resourcePath)) {
 			if (null != resourceAsStream) {
 				reader = new InputStreamReader(resourceAsStream);
-				response.setEntity(new StringEntity(IOUtils.toString(reader), getContentType(resourcePath)));
+				String content = IOUtils.toString(reader);
+				ContentType contentType = getContentType(resourcePath);
+				CONTENT_CACHE.put(resourcePath, content);
+				CONTENT_TYPE_CACHE.put(resourcePath, contentType);
+				CONTENT_RESPONSE_CODE_CACHE.put(resourcePath, HttpStatus.SC_OK);
 				reader.close();
 			} else {
 				JSONObject jsonObject = new JSONObject();
 				jsonObject.put(JSON_KEY_ERROR, true);
 				jsonObject.put(JSON_KEY_MESSAGE, "Could not find the resourcePath '" + resourcePath + "'");
-				response.setStatusCode(HttpStatus.SC_NOT_FOUND);
-				response.setEntity(new StringEntity(jsonObject.toString(), CONTENT_TYPE_JSON));
+				CONTENT_CACHE.put(resourcePath, jsonObject.toString());
+				CONTENT_TYPE_CACHE.put(resourcePath, CONTENT_TYPE_JSON);
+				CONTENT_RESPONSE_CODE_CACHE.put(resourcePath, HttpStatus.SC_NOT_FOUND);
 			}
 		} catch (IOException ignored) {
 			JSONObject jsonObject = new JSONObject();
 			jsonObject.put(JSON_KEY_ERROR, true);
 			jsonObject.put(JSON_KEY_MESSAGE, "Could not serve the resourcePath '" + resourcePath + "'");
-			response.setStatusCode(HttpStatus.SC_INTERNAL_SERVER_ERROR);
-			response.setEntity(new StringEntity(jsonObject.toString(), CONTENT_TYPE_JSON));
+			CONTENT_CACHE.put(resourcePath, jsonObject.toString());
+			CONTENT_TYPE_CACHE.put(resourcePath, CONTENT_TYPE_JSON);
+			CONTENT_RESPONSE_CODE_CACHE.put(resourcePath, HttpStatus.SC_INTERNAL_SERVER_ERROR);
 		} finally {
 			if(null != reader) {
 				try {
@@ -106,6 +121,9 @@ public class ResourceHelper {
 				}
 			}
 		}
+
+		response.setStatusCode(CONTENT_RESPONSE_CODE_CACHE.get(resourcePath));
+		response.setEntity(new StringEntity(CONTENT_CACHE.get(resourcePath), CONTENT_TYPE_CACHE.get(resourcePath)));
 	}
 
 	/**

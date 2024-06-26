@@ -21,10 +21,18 @@ package com.synapticloop.panl.exception;
  * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
  * FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
- *  IN THE SOFTWARE.
+ * IN THE SOFTWARE.
  */
 
+/**
+ * <p>This exception is thrown if there was an error with the Panl generator.</p>
+ */
 public class PanlGenerateException extends Exception {
+	/**
+	 * <p>Instantiate the exception</p>
+	 *
+	 * @param message The exception message
+	 */
 	public PanlGenerateException(String message) {
 		super(message);
 	}
