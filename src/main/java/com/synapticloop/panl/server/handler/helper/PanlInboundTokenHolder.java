@@ -24,6 +24,8 @@ package com.synapticloop.panl.server.handler.helper;
  * IN THE SOFTWARE.
  */
 
+import com.synapticloop.panl.server.handler.fielderiser.field.BaseField;
+import com.synapticloop.panl.server.handler.properties.CollectionProperties;
 import com.synapticloop.panl.server.handler.tokeniser.token.LpseToken;
 import com.synapticloop.panl.server.handler.tokeniser.token.param.NumRowsLpseToken;
 import com.synapticloop.panl.server.handler.tokeniser.token.param.PageNumLpseToken;
@@ -33,20 +35,27 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * <p>The PanlInboundTokenHolder builds data structures and contains all
+ * information that is required to process the Panl response object.</p>
+ */
 public class PanlInboundTokenHolder {
 	private Map<String, List<LpseToken>> panlTokenMap = new HashMap<>();
 	private final boolean numFoundExact;
 	private final long numFound;
+	private final List<BaseField> lpseFields;
 
 	long numRows = 10;
 	long pageNum = 1;
 
 	public PanlInboundTokenHolder(
+			CollectionProperties collectionProperties,
 			List<LpseToken> lpseTokens,
 			long defaultNumPerPage,
 			long numFound,
 			boolean numFoundExact) {
 
+		this.lpseFields = collectionProperties.getLpseFields();
 		this.pageNum = defaultNumPerPage;
 		this.numFound = numFound;
 		this.numFoundExact = numFoundExact;
