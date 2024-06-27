@@ -28,6 +28,7 @@ import com.synapticloop.panl.server.handler.results.PanlResultsStaticHandler;
 import org.apache.commons.io.IOUtils;
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
+import org.apache.http.entity.ByteArrayEntity;
 import org.apache.http.entity.ContentType;
 import org.apache.http.entity.StringEntity;
 import org.json.JSONObject;
@@ -61,16 +62,18 @@ public class ResourceHelper {
 	public static final ContentType CONTENT_TYPE_CSS = ContentType.create("text/css", StandardCharsets.UTF_8);
 	public static final ContentType CONTENT_TYPE_HTML = ContentType.create("text/html", StandardCharsets.UTF_8);
 	public static final ContentType CONTENT_TYPE_JS = ContentType.create("text/javascript ", StandardCharsets.UTF_8);
+	public static final ContentType CONTENT_TYPE_PNG = ContentType.create("image/png");
 
 	private static final Map<String, ContentType> CONTENT_TYPE_MAP = new HashMap<>();
 	static {
 		CONTENT_TYPE_MAP.put(".json", CONTENT_TYPE_JSON);
 		CONTENT_TYPE_MAP.put(".css", CONTENT_TYPE_CSS);
 		CONTENT_TYPE_MAP.put(".js", CONTENT_TYPE_JS);
+		CONTENT_TYPE_MAP.put(".png", CONTENT_TYPE_PNG);
 		CONTENT_TYPE_MAP.put(".html", CONTENT_TYPE_HTML);
 	}
 
-	private static final Map<String, String> CONTENT_CACHE = new HashMap<>();
+	private static final Map<String, byte[]> CONTENT_CACHE = new HashMap<>();
 	private static final Map<String, ContentType> CONTENT_TYPE_CACHE = new HashMap<>();
 	private static final Map<String, Integer> CONTENT_RESPONSE_CODE_CACHE = new HashMap<>();
 	/**
@@ -84,7 +87,7 @@ public class ResourceHelper {
 	public static void serveResource(String resourcePath, HttpResponse response) {
 		if(CONTENT_CACHE.containsKey(resourcePath)) {
 			response.setStatusCode(CONTENT_RESPONSE_CODE_CACHE.get(resourcePath));
-			response.setEntity(new StringEntity(CONTENT_CACHE.get(resourcePath), CONTENT_TYPE_CACHE.get(resourcePath)));
+			response.setEntity(new ByteArrayEntity(CONTENT_CACHE.get(resourcePath), CONTENT_TYPE_CACHE.get(resourcePath)));
 			return;
 		}
 
@@ -92,8 +95,8 @@ public class ResourceHelper {
 		try (InputStream resourceAsStream = PanlResultsStaticHandler.class.getResourceAsStream(resourcePath)) {
 			if (null != resourceAsStream) {
 				reader = new InputStreamReader(resourceAsStream);
-				String content = IOUtils.toString(reader);
 				ContentType contentType = getContentType(resourcePath);
+				byte[] content = IOUtils.toByteArray(reader, StandardCharsets.UTF_8);
 				CONTENT_CACHE.put(resourcePath, content);
 				CONTENT_TYPE_CACHE.put(resourcePath, contentType);
 				CONTENT_RESPONSE_CODE_CACHE.put(resourcePath, HttpStatus.SC_OK);
@@ -102,7 +105,7 @@ public class ResourceHelper {
 				JSONObject jsonObject = new JSONObject();
 				jsonObject.put(JSON_KEY_ERROR, true);
 				jsonObject.put(JSON_KEY_MESSAGE, "Could not find the resourcePath '" + resourcePath + "'");
-				CONTENT_CACHE.put(resourcePath, jsonObject.toString());
+				CONTENT_CACHE.put(resourcePath, jsonObject.toString().getBytes());
 				CONTENT_TYPE_CACHE.put(resourcePath, CONTENT_TYPE_JSON);
 				CONTENT_RESPONSE_CODE_CACHE.put(resourcePath, HttpStatus.SC_NOT_FOUND);
 			}
@@ -110,7 +113,7 @@ public class ResourceHelper {
 			JSONObject jsonObject = new JSONObject();
 			jsonObject.put(JSON_KEY_ERROR, true);
 			jsonObject.put(JSON_KEY_MESSAGE, "Could not serve the resourcePath '" + resourcePath + "'");
-			CONTENT_CACHE.put(resourcePath, jsonObject.toString());
+			CONTENT_CACHE.put(resourcePath, jsonObject.toString().getBytes());
 			CONTENT_TYPE_CACHE.put(resourcePath, CONTENT_TYPE_JSON);
 			CONTENT_RESPONSE_CODE_CACHE.put(resourcePath, HttpStatus.SC_INTERNAL_SERVER_ERROR);
 		} finally {
@@ -123,7 +126,7 @@ public class ResourceHelper {
 		}
 
 		response.setStatusCode(CONTENT_RESPONSE_CODE_CACHE.get(resourcePath));
-		response.setEntity(new StringEntity(CONTENT_CACHE.get(resourcePath), CONTENT_TYPE_CACHE.get(resourcePath)));
+		response.setEntity(new ByteArrayEntity(CONTENT_CACHE.get(resourcePath), CONTENT_TYPE_CACHE.get(resourcePath)));
 	}
 
 	/**
