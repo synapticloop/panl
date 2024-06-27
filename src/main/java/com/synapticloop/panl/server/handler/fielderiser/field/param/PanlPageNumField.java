@@ -49,7 +49,7 @@ public class PanlPageNumField extends BasePrefixSuffixField {
 		if(pageNumLpseToken.getPageNum() == 1) {
 			return("");
 		} else {
-			return(getDecodedValue(token.getValue()) + "/");
+			return(getEncodedPanlValue(token.getValue()) + "/");
 		}
 	}
 
@@ -164,6 +164,15 @@ public class PanlPageNumField extends BasePrefixSuffixField {
 	public String getResetUriPath(Map<String, List<LpseToken>> panlTokenMap, CollectionProperties collectionProperties) {
 		return("");
 	}
+
+	public String getResetUriPath(LpseToken lpseToken, CollectionProperties collectionProperties) {
+		return("");
+	}
+
+	public String getResetLpseCode(LpseToken lpseToken, CollectionProperties collectionProperties) {
+		return ("");
+	}
+
 
 	/**
 	 * <p>Get the reset LPSE code for the page number.  This will always return

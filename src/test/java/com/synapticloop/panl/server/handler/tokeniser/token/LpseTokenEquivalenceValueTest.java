@@ -31,18 +31,18 @@ public class LpseTokenEquivalenceValueTest {
 
 	@Test public void testPageNumberEquivalence() {
 		LpseToken lpseToken = getLpseToken("/default.properties", "/1/", "p");
-		assertEquals("p/1", lpseToken.getEquivalenceValue());
+		assertEquals("p/", lpseToken.getEquivalenceValue());
 
 		lpseToken = getLpseToken("/default.properties", "/2/", "p");
-		assertEquals("p/2", lpseToken.getEquivalenceValue());
+		assertEquals("p/", lpseToken.getEquivalenceValue());
 	}
 
 	@Test public void testNumPerPageEquivalence() {
 		LpseToken lpseToken = getLpseToken("/default.properties", "/1/", "n");
-		assertEquals("n/1", lpseToken.getEquivalenceValue());
+		assertEquals("n/", lpseToken.getEquivalenceValue());
 
 		lpseToken = getLpseToken("/default.properties", "/2/", "n");
-		assertEquals("n/2", lpseToken.getEquivalenceValue());
+		assertEquals("n/", lpseToken.getEquivalenceValue());
 	}
 
 	@Test public void testFacetEquivalence() {

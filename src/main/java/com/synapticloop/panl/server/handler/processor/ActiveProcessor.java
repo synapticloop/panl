@@ -75,8 +75,8 @@ public class ActiveProcessor extends Processor {
 		for (LpseToken lpseToken : lpseTokens) {
 			BaseField lpseField = collectionProperties.getLpseField(lpseToken.getLpseCode());
 			if (null != lpseField && lpseToken.getIsValid()) {
-				lpseComponents.add(lpseField.getLpseCode(lpseToken, collectionProperties));
-				uriComponents.add(lpseField.getURIPath(lpseToken, collectionProperties));
+				lpseComponents.add(lpseField.getResetLpseCode(lpseToken, collectionProperties));
+				uriComponents.add(lpseField.getResetUriPath(lpseToken, collectionProperties));
 			}
 		}
 

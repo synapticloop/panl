@@ -96,6 +96,4 @@ public class PageNumLpseToken extends LpseToken {
 	@Override public String getEquivalenceValue() {
 		return(this.getLpseCode() + "/");
 	}
-
-
 }
