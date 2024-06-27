@@ -26,6 +26,7 @@ package com.synapticloop.panl.server.handler;
 
 import com.synapticloop.panl.exception.PanlServerException;
 import com.synapticloop.panl.generator.bean.PanlCollection;
+import com.synapticloop.panl.server.PanlServer;
 import com.synapticloop.panl.server.client.PanlClient;
 import com.synapticloop.panl.server.handler.helper.CollectionHelper;
 import com.synapticloop.panl.server.handler.helper.PanlInboundTokenHolder;

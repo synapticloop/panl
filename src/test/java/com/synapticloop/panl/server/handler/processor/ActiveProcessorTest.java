@@ -2,6 +2,7 @@ package com.synapticloop.panl.server.handler.processor;
 
 import com.synapticloop.panl.TestHelper;
 import com.synapticloop.panl.exception.PanlServerException;
+import com.synapticloop.panl.server.handler.fielderiser.field.facet.PanlRangeFacetField;
 import com.synapticloop.panl.server.handler.tokeniser.token.facet.FacetLpseToken;
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -24,7 +25,7 @@ public class ActiveProcessorTest {
 		assertEquals(1, facetArray.length());
 
 		JSONObject facetObject = facetArray.getJSONObject(0);
-		assertTrue(facetObject.getBoolean(Processor.JSON_KEY_IS_RANGE_FACET));
+		assertTrue(facetObject.getBoolean(PanlRangeFacetField.JSON_KEY_IS_RANGE_FACET));
 
 		assertEquals("weight", facetObject.getString(Processor.JSON_KEY_FACET_NAME));
 		assertEquals("Weight", facetObject.getString(Processor.JSON_KEY_NAME));
