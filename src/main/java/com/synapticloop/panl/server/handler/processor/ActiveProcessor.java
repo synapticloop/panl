@@ -125,7 +125,7 @@ public class ActiveProcessor extends Processor {
 			}
 
 
-			if (shouldAddObject) {
+			if (shouldAddObject && lpseToken.getCanHaveMultiple()) {
 				jsonArray.put(removeObject);
 			}
 			i++;
@@ -134,7 +134,11 @@ public class ActiveProcessor extends Processor {
 				jsonObject.put(JSON_KEY_SORT_FIELDS, activeSortObject);
 			}
 
-			jsonObject.put(tokenType, jsonArray);
+			if(lpseToken.getCanHaveMultiple()) {
+				jsonObject.put(tokenType, jsonArray);
+			} else {
+				jsonObject.put(tokenType, removeObject);
+			}
 		}
 		return (jsonObject);
 	}

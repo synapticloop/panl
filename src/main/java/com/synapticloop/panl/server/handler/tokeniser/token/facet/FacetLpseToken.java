@@ -155,4 +155,8 @@ public class FacetLpseToken extends LpseToken {
 	public boolean getHasMidfix() {
 		return hasMidfix;
 	}
+
+	@Override public boolean getCanHaveMultiple() {
+		return (true);
+	}
 }

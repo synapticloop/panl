@@ -127,4 +127,8 @@ public class DateRangeFacetLpseToken extends LpseToken {
 	public String getDesignator() {
 		return (designator);
 	}
+
+	@Override public boolean getCanHaveMultiple() {
+		return (true);
+	}
 }

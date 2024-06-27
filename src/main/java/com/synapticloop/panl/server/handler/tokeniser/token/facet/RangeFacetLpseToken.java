@@ -214,4 +214,8 @@ public class RangeFacetLpseToken extends LpseToken {
 	public boolean getIsRangeToken() {
 		return (isRangeToken);
 	}
+
+	@Override public boolean getCanHaveMultiple() {
+		return (true);
+	}
 }

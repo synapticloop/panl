@@ -100,4 +100,8 @@ public class BooleanFacetLpseToken extends LpseToken {
 	public String getSolrField() {
 		return solrField;
 	}
+
+	@Override public boolean getCanHaveMultiple() {
+		return (true);
+	}
 }

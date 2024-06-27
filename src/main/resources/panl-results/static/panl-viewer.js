@@ -267,12 +267,12 @@ function addActiveFilters(activeObject, removeUri) {
 	const active = $("#active");
 	// first up the query
 	if(activeObject.query !== undefined) {
-		active.append("<li><strong>Query <em>(" + activeObject.query[0].panl_code + ")</em></strong></li>");
+		active.append("<li><strong>Query <em>(" + activeObject.query.panl_code + ")</em></strong></li>");
 		active.append("<li><a href=\"" + panlResultsViewerUrl +
 				$("#collection").text() +
-				activeObject.query[0].remove_uri +
+				activeObject.query.remove_uri +
 				"\">[remove]</a>&nbsp;" +
-				activeObject.query[0].value +
+				activeObject.query.value +
 				"</li><li><hr /></li>");
 	}
 

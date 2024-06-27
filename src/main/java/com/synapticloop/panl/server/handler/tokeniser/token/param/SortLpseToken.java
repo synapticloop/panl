@@ -208,4 +208,15 @@ public class SortLpseToken extends LpseToken {
 		return (lpseCode + "/" + this.lpseSortCode);
 	}
 
+	/**
+	 * <p>Return whether there can be multiple tokens for this request, in
+	 * general you may only have one token per request, however facets can have
+	 * multiple.</p>
+	 *
+	 * @return Whether there can be multiple tokens for this URI
+	 */
+	public boolean getCanHaveMultiple() {
+		return (true);
+	}
+
 }
