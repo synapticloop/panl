@@ -37,7 +37,7 @@ import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.util.*;
 
-import static com.synapticloop.panl.server.handler.processor.Processor.JSON_VALUE_NO_INFIX_REPLACEMENT;
+import static com.synapticloop.panl.server.handler.processor.Processor.*;
 
 public class PanlBooleanFacetField extends PanlFacetField {
 	public static final String BOOLEAN_TRUE_VALUE = "true";
@@ -237,6 +237,11 @@ public class PanlBooleanFacetField extends PanlFacetField {
 
 	@Override public void addToRemoveObject(JSONObject removeObject, LpseToken lpseToken) {
 		removeObject.put(JSON_KEY_IS_BOOLEAN_FACET, true);
+		BooleanFacetLpseToken booleanFacetLpseToken = (BooleanFacetLpseToken)lpseToken;
+		// now we need to put in the inverse URI
+		if(lpseToken.getIsValid()) {
+			removeObject.put(JSON_KEY_INVERSE_ENCODED, booleanFacetLpseToken.getInverseBooleanValue(lpseToken));
+		}
 	}
 
 	@Override public List<String> explainAdditional() {

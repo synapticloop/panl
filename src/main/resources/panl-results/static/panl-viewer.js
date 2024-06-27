@@ -297,12 +297,22 @@ function addActiveFacets(facets) {
 			active.append("<li><strong>" + facet.name + " <em>(" + facet.panl_code + ")</em></strong></li>");
 			currentFacetName = facet.facet_name;
 		}
+
 		active.append("<li><a href=\"" + panlResultsViewerUrl +
 				$("#collection").text() +
 				facet.remove_uri +
 				"\">[remove]</a>&nbsp;" +
 				decodePanl(facet.encoded) +
 				"</li>");
+
+		if(facet.is_boolean_facet) {
+			active.append("<li><a href=\"" + panlResultsViewerUrl +
+					$("#collection").text() +
+					facet.inverse_uri +
+					"\">[invert]</a>&nbsp;" +
+					decodePanl(facet.inverse_encoded) +
+					"</li>");
+		}
 
 	}
 	active.append("<li><hr /></li>");

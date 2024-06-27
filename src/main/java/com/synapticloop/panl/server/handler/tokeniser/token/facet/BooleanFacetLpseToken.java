@@ -93,6 +93,16 @@ public class BooleanFacetLpseToken extends LpseToken {
 				"'.");
 	}
 
+	public String getInverseBooleanValue(LpseToken lpseToken) {
+		PanlBooleanFacetField lpseField = (PanlBooleanFacetField) collectionProperties.getLpseField(this.lpseCode);
+		if(value.equals("true")) {
+			return(lpseField.getEncodedPanlValue("false"));
+		} else {
+			return(lpseField.getEncodedPanlValue("true"));
+		}
+
+	}
+
 	@Override public String getType() {
 		return TOKEN_TYPE;
 	}

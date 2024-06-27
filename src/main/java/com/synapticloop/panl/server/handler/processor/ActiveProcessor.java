@@ -26,6 +26,7 @@ package com.synapticloop.panl.server.handler.processor;
 
 import com.synapticloop.panl.server.handler.properties.CollectionProperties;
 import com.synapticloop.panl.server.handler.fielderiser.field.BaseField;
+import com.synapticloop.panl.server.handler.tokeniser.token.facet.BooleanFacetLpseToken;
 import com.synapticloop.panl.server.handler.tokeniser.token.facet.FacetLpseToken;
 import com.synapticloop.panl.server.handler.tokeniser.token.LpseToken;
 import com.synapticloop.panl.server.handler.tokeniser.token.param.SortLpseToken;
@@ -118,6 +119,13 @@ public class ActiveProcessor extends Processor {
 				} else {
 					shouldAddObject = false;
 				}
+			} else if (lpseToken instanceof BooleanFacetLpseToken) {
+				BooleanFacetLpseToken booleanFacetLpseToken = (BooleanFacetLpseToken) lpseToken;
+				removeObject.put(JSON_KEY_INVERSE_URI, getBooleanReplaceURI(booleanFacetLpseToken, uriComponents, lpseComponents));
+				removeObject.put(JSON_KEY_FACET_NAME, collectionProperties.getSolrFieldNameFromLpseCode(lpseCode));
+				removeObject.put(JSON_KEY_NAME, collectionProperties.getPanlNameFromPanlCode(lpseCode));
+				removeObject.put(JSON_KEY_ENCODED, lpseField.getEncodedPanlValue(lpseToken));
+
 			} else {
 				removeObject.put(JSON_KEY_FACET_NAME, collectionProperties.getSolrFieldNameFromLpseCode(lpseCode));
 				removeObject.put(JSON_KEY_NAME, collectionProperties.getPanlNameFromPanlCode(lpseCode));
@@ -184,6 +192,38 @@ public class ActiveProcessor extends Processor {
 				lpse.append(lpseComponents.get(i));
 			}
 			uri.append(uriComponents.get(i));
+		}
+
+		String test = "/" + uri + lpse + "/";
+
+		if (test.equals("//")) {
+			return ("/");
+		} else {
+			return test;
+		}
+	}
+
+	private String getBooleanReplaceURI(BooleanFacetLpseToken booleanFacetLpseToken, List<String> uriComponents, List<String> lpseComponents) {
+		String booleanLpseCode = booleanFacetLpseToken.getLpseCode();
+		String inverseBooleanValue = booleanFacetLpseToken.getInverseBooleanValue(booleanFacetLpseToken);
+
+		StringBuilder uri = new StringBuilder();
+		StringBuilder lpse = new StringBuilder();
+
+		boolean found = false;
+		for (int i = 0; i < uriComponents.size(); i++) {
+			if (!found && booleanLpseCode.equals(lpseComponents.get(i))) {
+				found = true;
+				lpse.append(booleanFacetLpseToken.getLpseCode());
+				uri.append(inverseBooleanValue)
+						.append("/");
+			} else {
+				lpse.append(lpseComponents.get(i));
+				uri.append(uriComponents.get(i));
+				if(uri.length() > 0 && uri.charAt(uri.length() - 1) != '/') {
+					uri.append("/");
+				}
+			}
 		}
 
 		String test = "/" + uri + lpse + "/";
