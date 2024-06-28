@@ -22,9 +22,27 @@
  * IN THE SOFTWARE.
  */
 
-package json.panl;
+package response.json.response;
 
-public class QueryOperand {
-	public String AND;
-	public String OR;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import response.json.response.panl.Available;
+import response.json.response.panl.Pagination;
+import response.json.response.panl.QueryOperand;
+import response.json.response.panl.Sorting;
+import response.json.response.panl.timings.Timings;
+
+import java.util.Map;
+
+public class Panl {
+	public Timings timings;
+	public Pagination pagination;
+	public QueryOperand query_operand;
+	public Sorting sorting;
+	public String canonical_uri;
+	public String query_respond_to;
+
+	public Available available;
+	public Map<String, String> fields;
+
+	@JsonIgnore public Object active;
 }

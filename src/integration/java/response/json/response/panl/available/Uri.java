@@ -22,16 +22,13 @@
  * IN THE SOFTWARE.
  */
 
-package json;
+package response.json.response.panl.available;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonProperty;
-
-public class Response {
-	@JsonIgnore public Object response;
-	@JsonIgnore public Object responseHeader;
-	@JsonIgnore public Object facet_counts;
-
-	public Panl panl;
-	public boolean error;
+public class Uri {
+	public String before; // 	"/weighing+from+"
+	public String before_min_value; // 	"/from+light"
+	public boolean has_infix; // 	true
+	public String after_max_value; // 	"heavy+pencils/w-w/"
+	public String during; // 	"+to+"
+	public String after; // 	"+grams/w-w/"
 }

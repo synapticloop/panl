@@ -22,20 +22,9 @@
  * IN THE SOFTWARE.
  */
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import json.Response;
-import org.junit.jupiter.api.Test;
+package response.json.response.panl.uris;
 
-import java.io.IOException;
-import java.net.URL;
-
-import static org.junit.jupiter.api.Assertions.*;
-
-public class SortOrderSelectedTest {
-	@Test public void testRangeFacetSelected() throws IOException {
-		ObjectMapper mapper = new ObjectMapper();
-		Response response = mapper.readValue(new URL("http://localhost:8181/mechanical-pencils/brandandname/weighing+from+17+grams+to+39+grams/w-w/"), Response.class);
-		assertFalse(response.error);
-
-	}
+public class NumPerPageUris {
+	public String before;
+	public String after;
 }

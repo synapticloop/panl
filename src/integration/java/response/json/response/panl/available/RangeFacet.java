@@ -22,9 +22,19 @@
  * IN THE SOFTWARE.
  */
 
-package json.panl.uris;
+package response.json.response.panl.available;
 
-public class NumPerPageUris {
-	public String before;
-	public String after;
+public class RangeFacet {
+	public Uri uris;
+	public String min; //	"10"
+	public String max; //	"50"
+	public String prefix; //	""
+	public String range_min_value; //	"from+light"
+	public String facet_name; //	"weight"
+	public String name; //	"Weight"
+	public String panl_code; //	"w"
+	public String suffix; //	"+grams"
+	public String range_max_value; //	"heavy+pencils"
+	public int value; //	"heavy+pencils"
+	public int value_to; //	"heavy+pencils"
 }

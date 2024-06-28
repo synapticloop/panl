@@ -22,10 +22,17 @@
  * IN THE SOFTWARE.
  */
 
-package json.panl.available;
+package response.json.response.panl;
 
-public class Value {
-	public int count;
-	public String encoded;
-	public String value;
+import response.json.response.panl.uris.NumPerPageUris;
+import response.json.response.panl.uris.PageUris;
+
+public class Pagination {
+	public int num_pages;
+	public boolean num_results_exact;
+	public PageUris page_uris;
+	public int page_num;
+	public int num_results;
+	public int num_per_page;
+	public NumPerPageUris num_per_page_uris;
 }

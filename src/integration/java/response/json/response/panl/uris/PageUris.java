@@ -22,13 +22,11 @@
  * IN THE SOFTWARE.
  */
 
-package json.panl.sorting;
+package response.json.response.panl.uris;
 
-public class Field {
-	public String add_uri_desc;
-	public String name;
-	public String facet_name;
-	public String add_uri_asc;
-	public String set_uri_desc;
-	public String set_uri_asc;
+public class PageUris {
+	public String next;
+	public String previous;
+	public String before;
+	public String after;
 }

@@ -22,14 +22,15 @@
  * IN THE SOFTWARE.
  */
 
-package json.panl;
+package response.json.response.panl.available;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import json.panl.available.Facet;
-import json.panl.available.RangeFacet;
-
-public class Available {
-	public RangeFacet[] range_facets;
-	public Facet[] facets;
-	@JsonIgnore public Object[] date_range_facets;
+public class Facet {
+	public Uri uris;
+	public Value[] values;
+	public String facet_name;
+	public String name;
+	public String panl_code;
+	public boolean is_boolean_facet;
+	public boolean is_range_facet;
+	public boolean is_date_facet;
 }

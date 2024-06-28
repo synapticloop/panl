@@ -23,7 +23,7 @@
  */
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import json.Response;
+import response.json.Response;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
@@ -42,7 +42,7 @@ public class DefaultsTest {
 		assertEquals(55, response.panl.pagination.num_results);
 		assertEquals(10, response.panl.pagination.num_per_page);
 		assertEquals(1, response.panl.pagination.page_num);
-		assertEquals(true, response.panl.pagination.num_results_exact);
+		assertTrue(response.panl.pagination.num_results_exact);
 
 		// now for the uris
 		assertEquals("/p/", response.panl.pagination.page_uris.after);
@@ -93,7 +93,7 @@ public class DefaultsTest {
 
 		assertEquals("/weighing+from+", response.panl.available.range_facets[0].uris.before);
 		assertEquals("/from+light", response.panl.available.range_facets[0].uris.before_min_value);
-		assertEquals(true, response.panl.available.range_facets[0].uris.has_infix);
+		assertTrue(response.panl.available.range_facets[0].uris.has_infix);
 		assertEquals("heavy+pencils/w-w/", response.panl.available.range_facets[0].uris.after_max_value);
 		assertEquals("+to+", response.panl.available.range_facets[0].uris.during);
 		assertEquals("+grams/w-w/", response.panl.available.range_facets[0].uris.after);

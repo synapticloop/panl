@@ -22,12 +22,16 @@
  * IN THE SOFTWARE.
  */
 
-package json.panl.timings;
+package response.json;
 
-public class Timings {
-	public int panl_total_time; //	157
-	public int panl_parse_request_time; //	0
-	public int panl_build_request_time; //	50
-	public int panl_send_request_time; //	105
-	public int panl_build_response_time; //	1
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import response.json.response.Panl;
+
+public class Response {
+	@JsonIgnore public Object response;
+	@JsonIgnore public Object responseHeader;
+	@JsonIgnore public Object facet_counts;
+
+	public Panl panl;
+	public boolean error;
 }

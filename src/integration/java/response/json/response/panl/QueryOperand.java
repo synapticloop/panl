@@ -22,11 +22,9 @@
  * IN THE SOFTWARE.
  */
 
-package json.panl.uris;
+package response.json.response.panl;
 
-public class PageUris {
-	public String next;
-	public String previous;
-	public String before;
-	public String after;
+public class QueryOperand {
+	public String AND;
+	public String OR;
 }

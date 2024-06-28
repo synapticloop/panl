@@ -22,15 +22,10 @@
  * IN THE SOFTWARE.
  */
 
-package json.panl.available;
+package response.json.response.panl.available;
 
-public class Facet {
-	public Uri uris;
-	public Value[] values;
-	public String facet_name;
-	public String name;
-	public String panl_code;
-	public boolean is_boolean_facet;
-	public boolean is_range_facet;
-	public boolean is_date_facet;
+public class Value {
+	public int count;
+	public String encoded;
+	public String value;
 }

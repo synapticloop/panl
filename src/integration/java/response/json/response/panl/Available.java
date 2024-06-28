@@ -22,13 +22,14 @@
  * IN THE SOFTWARE.
  */
 
-package json.panl.available;
+package response.json.response.panl;
 
-public class Uri {
-	public String before; // 	"/weighing+from+"
-	public String before_min_value; // 	"/from+light"
-	public boolean has_infix; // 	true
-	public String after_max_value; // 	"heavy+pencils/w-w/"
-	public String during; // 	"+to+"
-	public String after; // 	"+grams/w-w/"
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import response.json.response.panl.available.Facet;
+import response.json.response.panl.available.RangeFacet;
+
+public class Available {
+	public RangeFacet[] range_facets;
+	public Facet[] facets;
+	@JsonIgnore public Object[] date_range_facets;
 }

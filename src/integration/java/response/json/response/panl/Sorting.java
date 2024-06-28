@@ -22,9 +22,9 @@
  * IN THE SOFTWARE.
  */
 
-package json.panl;
+package response.json.response.panl;
 
-import json.panl.sorting.Field;
+import response.json.response.panl.sorting.Field;
 
 public class Sorting {
 	public String remove_uri;

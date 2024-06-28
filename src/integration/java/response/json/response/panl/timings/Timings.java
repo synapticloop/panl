@@ -22,17 +22,12 @@
  * IN THE SOFTWARE.
  */
 
-package json.panl;
+package response.json.response.panl.timings;
 
-import json.panl.uris.NumPerPageUris;
-import json.panl.uris.PageUris;
-
-public class Pagination {
-	public int num_pages;
-	public boolean num_results_exact;
-	public PageUris page_uris;
-	public int page_num;
-	public int num_results;
-	public int num_per_page;
-	public NumPerPageUris num_per_page_uris;
+public class Timings {
+	public int panl_total_time; //	157
+	public int panl_parse_request_time; //	0
+	public int panl_build_request_time; //	50
+	public int panl_send_request_time; //	105
+	public int panl_build_response_time; //	1
 }

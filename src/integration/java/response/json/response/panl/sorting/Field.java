@@ -22,27 +22,13 @@
  * IN THE SOFTWARE.
  */
 
-package json;
+package response.json.response.panl.sorting;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import json.panl.Available;
-import json.panl.Pagination;
-import json.panl.QueryOperand;
-import json.panl.Sorting;
-import json.panl.timings.Timings;
-
-import java.util.Map;
-
-public class Panl {
-	public Timings timings;
-	public Pagination pagination;
-	public QueryOperand query_operand;
-	public Sorting sorting;
-	public String canonical_uri;
-	public String query_respond_to;
-
-	public Available available;
-	public Map<String, String> fields;
-
-	@JsonIgnore public Object active;
+public class Field {
+	public String add_uri_desc;
+	public String name;
+	public String facet_name;
+	public String add_uri_asc;
+	public String set_uri_desc;
+	public String set_uri_asc;
 }
