@@ -16,7 +16,7 @@ dependencies {
 	implementation 'org.apache.solr:solr-solrj:9.6.0'
 	implementation 'org.apache.solr:solr-solrj-zookeeper:9.6.0'
 
-	// note - the following map to the solrj dependencies
+	// HTTP server
 	implementation 'org.eclipse.jetty.http2:http2-server:10.0.20'
 	implementation 'org.eclipse.jetty:jetty-servlet:10.0.20'
 
