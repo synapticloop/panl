@@ -39,6 +39,9 @@ import java.util.Map;
 
 public class PaginationProcessor extends Processor {
 
+	public static final String JSON_KEY_NUM_RESULTS = "num_results";
+	public static final String JSON_KEY_NUM_RESULTS_EXACT = "num_results_exact";
+
 	public PaginationProcessor(CollectionProperties collectionProperties) {
 		super(collectionProperties);
 	}
@@ -69,6 +72,8 @@ public class PaginationProcessor extends Processor {
 		}
 
 		JSONObject paginationObject = new JSONObject();
+		paginationObject.put(JSON_KEY_NUM_RESULTS, numFound);
+		paginationObject.put(JSON_KEY_NUM_RESULTS_EXACT, solrDocuments.getNumFoundExact());
 		paginationObject.put(JSON_KEY_NUM_PER_PAGE, numPerPage);
 		paginationObject.put(JSON_KEY_PAGE_NUM, pageNumber);
 		long numPages = numFound / numPerPage;
