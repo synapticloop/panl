@@ -40,6 +40,7 @@ import java.util.StringTokenizer;
  *   <li>Regular Facet</li>
  *   <li>Boolean Facet</li>
  *   <li>OR Facet</li>
+ *   <li>DATE Facet</li>
  *   <li>RANGE Facet</li>
  * </ol>
  *
@@ -79,7 +80,7 @@ public class RangeFacetLpseToken extends LpseToken {
 	protected boolean isRangeToken = false;
 
 	/**
-	 * <p>Instantiate a RANGE facet, although there may not  </p>
+	 * <p>Instantiate a RANGE facet.</p>
 	 *
 	 * @param collectionProperties The collection properties
 	 * @param lpseCode The lpse code to respond to
