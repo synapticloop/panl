@@ -7,6 +7,8 @@
 #                                                                             #
 #                                ~ ~ ~ * ~ ~ ~                                #
 #                                                                             #
+#             [ INTEGRATING WITH APACHE SOLR VERSION 8.X.X ]                  #
+#                                                                             #
 #                PANL/SOLR SERVER CONNECTION CONFIGURATION                    #
 #                --------- ------ ---------- -------------                    #
 #                                                                             #
@@ -24,8 +26,10 @@
 #       you choose.  The SolrJ client __MUST__ be one of
 #
 #  - Http2SolrClient
+#  - HttpSolrClient
 #  - HttpJdkSolrClient
 #  - LBHttp2SolrClient
+#  - LBHttpSolrClient
 #  - CloudSolrClient
 #
 # By default - we will be using the CloudSolrClient as it works with the
@@ -33,8 +37,10 @@
 #
 #                                ~ ~ ~ * ~ ~ ~
 
+#solrj.client=HttpSolrClient
 #solrj.client=Http2SolrClient
 #solrj.client=HttpJdkSolrClient
+#solrj.client=LBHttpSolrClient
 #solrj.client=LBHttp2SolrClient
 solrj.client=CloudSolrClient
 

@@ -34,7 +34,6 @@
 	<field name="cap_material" type="string" indexed="true" stored="true" multiValued="false" />
 
 	<field name="hardness_indicator" type="string" indexed="true" stored="true" multiValued="false" />
-	<field name="lead_grade_indicator" type="string" indexed="true" stored="true" multiValued="false" />
 	<field name="lead_size_indicator" type="string" indexed="true" stored="true" multiValued="false" />
 
 	<field name="in_built_eraser" type="boolean" indexed="true" stored="false" multiValued="false" />
