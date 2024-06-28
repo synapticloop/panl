@@ -763,7 +763,6 @@ public class PanlRangeFacetField extends PanlFacetField {
 		}
 	}
 
-
 	public String getPrefix() {
 		if (hasRangeInfix) {
 			return (getRangePrefix());
