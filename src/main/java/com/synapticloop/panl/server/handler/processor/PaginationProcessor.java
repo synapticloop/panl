@@ -73,7 +73,7 @@ public class PaginationProcessor extends Processor {
 
 		JSONObject paginationObject = new JSONObject();
 		paginationObject.put(JSON_KEY_NUM_RESULTS, numFound);
-		paginationObject.put(JSON_KEY_NUM_RESULTS_EXACT, solrDocuments.getNumFoundExact());
+		paginationObject.put(JSON_KEY_NUM_RESULTS_EXACT, true);
 		paginationObject.put(JSON_KEY_NUM_PER_PAGE, numPerPage);
 		paginationObject.put(JSON_KEY_PAGE_NUM, pageNumber);
 		long numPages = numFound / numPerPage;

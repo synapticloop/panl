@@ -83,7 +83,7 @@ public class AvailableProcessor extends Processor {
 
 		SolrDocumentList solrDocuments = (SolrDocumentList) queryResponse.getResponse().get(JSON_KEY_SOLR_JSON_KEY_RESPONSE);
 		long numFound = solrDocuments.getNumFound();
-		boolean numFoundExact = solrDocuments.getNumFoundExact();
+		boolean numFoundExact = true;
 
 		JSONArray panlFacets = new JSONArray();
 		Map<String, JSONObject> panlFacetOrderMap = new LinkedHashMap<>();

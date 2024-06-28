@@ -28,7 +28,7 @@ import com.synapticloop.panl.exception.PanlServerException;
 import com.synapticloop.panl.server.handler.properties.PanlProperties;
 import com.synapticloop.panl.server.handler.properties.CollectionProperties;
 import org.apache.solr.client.solrj.SolrClient;
-import org.apache.solr.client.solrj.impl.CloudHttp2SolrClient;
+import org.apache.solr.client.solrj.impl.CloudSolrClient;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -57,9 +57,9 @@ public class PanlCloudSolrClient extends PanlClient {
 	@Override
 	public SolrClient getClient() {
 		if (hasZookeeper) {
-			return (new CloudHttp2SolrClient.Builder(solrUrls, Optional.empty()).build());
+			return (new CloudSolrClient.Builder(solrUrls, Optional.empty()).build());
 		} else {
-			return (new CloudHttp2SolrClient.Builder(solrUrls).build());
+			return (new CloudSolrClient.Builder(solrUrls).build());
 		}
 	}
 }

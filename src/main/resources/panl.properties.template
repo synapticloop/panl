@@ -7,7 +7,7 @@
 #                                                                             #
 #                                ~ ~ ~ * ~ ~ ~                                #
 #                                                                             #
-#             [ INTEGRATING WITH APACHE SOLR VERSION 8.X.X ]                  #
+#             [ INTEGRATING WITH APACHE SOLR VERSION 7.X.X ]                  #
 #                                                                             #
 #                PANL/SOLR SERVER CONNECTION CONFIGURATION                    #
 #                --------- ------ ---------- -------------                    #
@@ -25,10 +25,7 @@
 # NOTE: What the solr.search.server.url will be will depend on the client that
 #       you choose.  The SolrJ client __MUST__ be one of
 #
-#  - Http2SolrClient
 #  - HttpSolrClient
-#  - HttpJdkSolrClient
-#  - LBHttp2SolrClient
 #  - LBHttpSolrClient
 #  - CloudSolrClient
 #
@@ -38,10 +35,7 @@
 #                                ~ ~ ~ * ~ ~ ~
 
 #solrj.client=HttpSolrClient
-#solrj.client=Http2SolrClient
-#solrj.client=HttpJdkSolrClient
 #solrj.client=LBHttpSolrClient
-#solrj.client=LBHttp2SolrClient
 solrj.client=CloudSolrClient
 
 #                           Which URLs To Connect To

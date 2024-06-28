@@ -160,7 +160,6 @@ public class TestHelper {
 		when(mockedQueryResponse.getResponse()).thenReturn(mockedNamedListResponse);
 		when(mockedNamedListResponse.get("response")).thenReturn(mockedSolrDocumentList);
 		when(mockedSolrDocumentList.getNumFound()).thenReturn(numFound);
-		when(mockedSolrDocumentList.getNumFoundExact()).thenReturn(numFoundExact);
 
 		return (mockedQueryResponse);
 	}
