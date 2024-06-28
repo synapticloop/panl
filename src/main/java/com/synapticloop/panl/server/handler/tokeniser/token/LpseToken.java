@@ -21,15 +21,13 @@ package com.synapticloop.panl.server.handler.tokeniser.token;
  * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
  * FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
- *  IN THE SOFTWARE.
+ * IN THE SOFTWARE.
  */
 
 import com.synapticloop.panl.server.handler.fielderiser.field.BaseField;
-import com.synapticloop.panl.server.handler.fielderiser.field.facet.PanlOrFacetField;
 import com.synapticloop.panl.server.handler.properties.CollectionProperties;
 import com.synapticloop.panl.server.handler.tokeniser.LpseTokeniser;
 import com.synapticloop.panl.server.handler.tokeniser.token.facet.*;
-import com.synapticloop.panl.server.handler.tokeniser.token.param.*;
 
 import java.util.StringTokenizer;
 
@@ -70,10 +68,25 @@ import java.util.StringTokenizer;
  * @author synapticloop
  */
 public abstract class LpseToken {
+	/**
+	 * <p>The LPSE code that was found in the last path encoding</p>
+	 */
 	protected String lpseCode;
+	/**
+	 * <p>The original value </p>
+	 */
 	protected String originalValue;
+	/**
+	 * <p>The parsed value</p>
+	 */
 	protected String value;
+	/**
+	 * <p>Whether this token is valid</p>
+	 */
 	protected boolean isValid = true;
+	/**
+	 * <p>The collection properties for lookup</p>
+	 */
 	protected CollectionProperties collectionProperties;
 
 	/**
@@ -100,7 +113,7 @@ public abstract class LpseToken {
 
 
 		BaseField lpseField = collectionProperties.getLpseField(lpseCode);
-		if(null == lpseField) {
+		if (null == lpseField) {
 			// it may be that it is more than a single code
 			StringBuilder lpseCodeBuilder = new StringBuilder(lpseCode);
 			// it is a lpseCodeBuilder field - unlike parameters and operands, the token
@@ -114,7 +127,7 @@ public abstract class LpseToken {
 			}
 
 			lpseField = collectionProperties.getLpseField(lpseCodeBuilder.toString());
-			if(null == lpseField) {
+			if (null == lpseField) {
 				// still null
 				return (new FacetLpseToken(
 						collectionProperties,
@@ -124,7 +137,8 @@ public abstract class LpseToken {
 
 			}
 		}
-		return(lpseField.instantiateToken(collectionProperties, lpseCode, query, valueTokeniser, lpseTokeniser));
+
+		return (lpseField.instantiateToken(collectionProperties, lpseCode, query, valueTokeniser, lpseTokeniser));
 	}
 
 	/**
@@ -191,7 +205,6 @@ public abstract class LpseToken {
 	 * and validation.  Valid tokens will be applied to the Solr query, invalid
 	 * tokens will be silently ignored.</p>
 	 *
-	 *
 	 * @return Whether this is a valid incoming token
 	 */
 	public boolean getIsValid() {
@@ -222,11 +235,32 @@ public abstract class LpseToken {
 	}
 
 
+	/**
+	 * <p>Set whether this token is valid</p>
+	 *
+	 * @param isValid Whether this token is valid
+	 */
 	public void setIsValid(boolean isValid) {
 		this.isValid = isValid;
 	}
 
-	public String getOriginalValue() {
-		return(this.originalValue);
+	/**
+	 * <p>Get the original value that came through in the URI path</p>
+	 *
+	 * @return The original value
+	 */
+	public String getOriginalURIValue() {
+		return (this.originalValue);
+	}
+
+	/**
+	 * <p>Return whether there can be multiple tokens for this request, in
+	 * general you may only have one token per request, however facets can have
+	 * multiple.</p>
+	 *
+	 * @return Whether there can be multiple tokens for this URI
+	 */
+	public boolean getCanHaveMultiple() {
+		return (false);
 	}
 }

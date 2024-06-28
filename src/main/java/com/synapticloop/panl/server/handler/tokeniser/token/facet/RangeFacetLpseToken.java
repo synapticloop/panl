@@ -21,7 +21,7 @@ package com.synapticloop.panl.server.handler.tokeniser.token.facet;
  * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
  * FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
- *  IN THE SOFTWARE.
+ * IN THE SOFTWARE.
  */
 
 import com.synapticloop.panl.server.handler.fielderiser.field.facet.PanlRangeFacetField;
@@ -213,5 +213,9 @@ public class RangeFacetLpseToken extends LpseToken {
 
 	public boolean getIsRangeToken() {
 		return (isRangeToken);
+	}
+
+	@Override public boolean getCanHaveMultiple() {
+		return (true);
 	}
 }

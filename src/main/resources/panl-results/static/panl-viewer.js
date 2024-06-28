@@ -50,6 +50,8 @@ function populatePanlResults(panlJsonData) {
 	console.log("[ RETURNED PANL CANONICAL URI JSON OBJECT ]")
 	console.log(panlJsonData.panl.timings);
 
+	$("#explain-collection").attr("href", "/panl-results-explainer" + $("#collection").text() + "/?explain=" + panlJsonData.panl.canonical_uri)
+
 	$("#canonical_uri").append(panlJsonData.panl.canonical_uri);
 
 	// first up the total results
@@ -265,12 +267,12 @@ function addActiveFilters(activeObject, removeUri) {
 	const active = $("#active");
 	// first up the query
 	if(activeObject.query !== undefined) {
-		active.append("<li><strong>Query <em>(" + activeObject.query[0].panl_code + ")</em></strong></li>");
+		active.append("<li><strong>Query <em>(" + activeObject.query.panl_code + ")</em></strong></li>");
 		active.append("<li><a href=\"" + panlResultsViewerUrl +
 				$("#collection").text() +
-				activeObject.query[0].remove_uri +
+				activeObject.query.remove_uri +
 				"\">[remove]</a>&nbsp;" +
-				activeObject.query[0].value +
+				activeObject.query.value +
 				"</li><li><hr /></li>");
 	}
 
@@ -295,12 +297,22 @@ function addActiveFacets(facets) {
 			active.append("<li><strong>" + facet.name + " <em>(" + facet.panl_code + ")</em></strong></li>");
 			currentFacetName = facet.facet_name;
 		}
+
 		active.append("<li><a href=\"" + panlResultsViewerUrl +
 				$("#collection").text() +
 				facet.remove_uri +
 				"\">[remove]</a>&nbsp;" +
 				decodePanl(facet.encoded) +
 				"</li>");
+
+		if(facet.is_boolean_facet) {
+			active.append("<li><a href=\"" + panlResultsViewerUrl +
+					$("#collection").text() +
+					facet.inverse_uri +
+					"\">[invert]</a>&nbsp;" +
+					decodePanl(facet.inverse_encoded) +
+					"</li>");
+		}
 
 	}
 	active.append("<li><hr /></li>");

@@ -21,13 +21,15 @@ package com.synapticloop.panl.server.handler;
  * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
  * FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
- *  IN THE SOFTWARE.
+ * IN THE SOFTWARE.
  */
 
 import com.synapticloop.panl.exception.PanlServerException;
 import com.synapticloop.panl.generator.bean.PanlCollection;
+import com.synapticloop.panl.server.PanlServer;
 import com.synapticloop.panl.server.client.PanlClient;
 import com.synapticloop.panl.server.handler.helper.CollectionHelper;
+import com.synapticloop.panl.server.handler.helper.PanlInboundTokenHolder;
 import com.synapticloop.panl.server.handler.processor.*;
 import com.synapticloop.panl.server.handler.results.util.ResourceHelper;
 import com.synapticloop.panl.server.handler.properties.CollectionProperties;
@@ -57,23 +59,24 @@ import java.util.concurrent.TimeUnit;
 public class CollectionRequestHandler {
 	private static final Logger LOGGER = LoggerFactory.getLogger(CollectionRequestHandler.class);
 
+	public static final String SOLR_PARAM_HL_FL = "hl.fl";
 	public static final String SOLR_PARAM_Q_OP = "q.op";
 
-	public static final String JSON_KEY_AVAILABLE = "available";
 	public static final String JSON_KEY_ACTIVE = "active";
-	public static final String JSON_KEY_PAGINATION = "pagination";
-	public static final String JSON_KEY_TIMINGS = "timings";
-	public static final String JSON_KEY_SORTING = "sorting";
-	public static final String JSON_KEY_QUERY_OPERAND = "query_operand";
-	public static final String JSON_KEY_FIELDS = "fields";
+	public static final String JSON_KEY_AVAILABLE = "available";
 	public static final String JSON_KEY_CANONICAL_URI = "canonical_uri";
+	public static final String JSON_KEY_FIELDS = "fields";
+	public static final String JSON_KEY_PAGINATION = "pagination";
 	public static final String JSON_KEY_PANL = "panl";
-
+	public static final String JSON_KEY_PANL_BUILD_REQUEST_TIME = "panl_build_request_time";
+	public static final String JSON_KEY_PANL_BUILD_RESPONSE_TIME = "panl_build_response_time";
 	public static final String JSON_KEY_PANL_PARSE_REQUEST_TIME = "panl_parse_request_time";
 	public static final String JSON_KEY_PANL_SEND_REQUEST_TIME = "panl_send_request_time";
 	public static final String JSON_KEY_PANL_TOTAL_TIME = "panl_total_time";
-	public static final String JSON_KEY_PANL_BUILD_REQUEST_TIME = "panl_build_request_time";
-	public static final String JSON_KEY_PANL_BUILD_RESPONSE_TIME = "panl_build_response_time";
+	public static final String JSON_KEY_QUERY_OPERAND = "query_operand";
+	public static final String JSON_KEY_QUERY_RESPOND_TO = "query_respond_to";
+	public static final String JSON_KEY_SORTING = "sorting";
+	public static final String JSON_KEY_TIMINGS = "timings";
 
 	private final String solrCollection;
 	private final CollectionProperties collectionProperties;
@@ -155,7 +158,6 @@ public class CollectionRequestHandler {
 		startNanos = System.nanoTime();
 
 		try (SolrClient solrClient = panlClient.getClient()) {
-
 			// we set the default query - to be overridden later if one exists
 			SolrQuery solrQuery = panlClient.getQuery(query);
 			// set the operand - to be over-ridden later if it is in the URI path
@@ -167,10 +169,9 @@ public class CollectionRequestHandler {
 			}
 
 			solrQuery.setFacetMinCount(collectionProperties.getFacetMinCount());
-			if(collectionProperties.getHighlight()) {
-				solrQuery.setParam("hl.fl", "*");
+			if (collectionProperties.getHighlight()) {
+				solrQuery.setParam(SOLR_PARAM_HL_FL, "*");
 			}
-
 
 			// this may be overridden by the lpse status
 			solrQuery.setRows(collectionProperties.getNumResultsPerPage());
@@ -270,7 +271,7 @@ public class CollectionRequestHandler {
 		Map<String, List<LpseToken>> panlTokenMap = new HashMap<>();
 		for (LpseToken lpseToken : lpseTokens) {
 			// These codes are ignored, just carry on
-			if(collectionProperties.getIsIgnoredLpseCode(lpseToken.getLpseCode())) {
+			if (collectionProperties.getIsIgnoredLpseCode(lpseToken.getLpseCode())) {
 				continue;
 			}
 
@@ -314,6 +315,7 @@ public class CollectionRequestHandler {
 		panlObject.put(JSON_KEY_QUERY_OPERAND, queryOperandProcessor.processToObject(panlTokenMap));
 		panlObject.put(JSON_KEY_FIELDS, fieldsProcessor.processToObject(panlTokenMap));
 		panlObject.put(JSON_KEY_CANONICAL_URI, canonicalURIProcessor.processToString(panlTokenMap));
+		panlObject.put(JSON_KEY_QUERY_RESPOND_TO, collectionProperties.getFormQueryRespondTo());
 
 		// now add in the timings
 		JSONObject timingsObject = new JSONObject();
@@ -419,22 +421,54 @@ public class CollectionRequestHandler {
 		return (lpseTokens);
 	}
 
-	public String getValidUrlString() {
-		return (collectionProperties.getValidUrlsString());
+	/**
+	 * <p>Get the valid URLs as a JSON array string.</p>
+	 *
+	 * @return The valid URLs as a JSON array string
+	 */
+	public String getValidUrlsJSONArrayString() {
+		return (collectionProperties.getValidUrlsJSONArrayString());
 	}
 
+	/**
+	 * <p>Return whether this is a valid results field for this path, i.e. this
+	 * collection handler can respond to this.</p>
+	 *
+	 * @param path The path to check to see whether this handler can respond to is
+	 *
+	 * @return Whether this is a valid results field for this path
+	 */
 	public boolean isValidResultsFields(String path) {
 		return (collectionProperties.isValidResultFieldsName(path));
 	}
 
+	/**
+	 * <p>Get the Solr collection that this handler will connect to.  This is
+	 * used for debugging/explanation/information usage with the Panl results
+	 * explainer web app.</p>
+	 *
+	 * @return The solr collection that this handler will connect to.
+	 */
 	public String getSolrCollection() {
 		return solrCollection;
 	}
 
+	/**
+	 * <p>Get the names for the result fields that will be returned with this
+	 * handler.</p>
+	 *
+	 * @return The names for the result fields that will be returned with this
+	 * 		handler.
+	 */
 	public List<String> getResultFieldsNames() {
 		return (new ArrayList<>(collectionProperties.getResultFieldsNames()));
 	}
 
+	/**
+	 * <p>Get the Panl collection URI for this handler</p>
+	 *
+	 * @return The Panl collection URI for this handler
+	 */
 	public String getPanlCollectionUri() {
 		return panlCollectionUri;
 	}

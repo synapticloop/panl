@@ -21,11 +21,12 @@ package com.synapticloop.panl.server.handler.processor;
  * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
  * FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
- *  IN THE SOFTWARE.
+ * IN THE SOFTWARE.
  */
 
 import com.synapticloop.panl.server.handler.properties.CollectionProperties;
 import com.synapticloop.panl.server.handler.fielderiser.field.BaseField;
+import com.synapticloop.panl.server.handler.tokeniser.token.facet.BooleanFacetLpseToken;
 import com.synapticloop.panl.server.handler.tokeniser.token.facet.FacetLpseToken;
 import com.synapticloop.panl.server.handler.tokeniser.token.LpseToken;
 import com.synapticloop.panl.server.handler.tokeniser.token.param.SortLpseToken;
@@ -74,8 +75,8 @@ public class ActiveProcessor extends Processor {
 		for (LpseToken lpseToken : lpseTokens) {
 			BaseField lpseField = collectionProperties.getLpseField(lpseToken.getLpseCode());
 			if (null != lpseField && lpseToken.getIsValid()) {
-				lpseComponents.add(lpseField.getLpseCode(lpseToken, collectionProperties));
-				uriComponents.add(lpseField.getURIPath(lpseToken, collectionProperties));
+				lpseComponents.add(lpseField.getResetLpseCode(lpseToken, collectionProperties));
+				uriComponents.add(lpseField.getResetUriPath(lpseToken, collectionProperties));
 			}
 		}
 
@@ -118,6 +119,13 @@ public class ActiveProcessor extends Processor {
 				} else {
 					shouldAddObject = false;
 				}
+			} else if (lpseToken instanceof BooleanFacetLpseToken) {
+				BooleanFacetLpseToken booleanFacetLpseToken = (BooleanFacetLpseToken) lpseToken;
+				removeObject.put(JSON_KEY_INVERSE_URI, getBooleanReplaceURI(booleanFacetLpseToken, uriComponents, lpseComponents));
+				removeObject.put(JSON_KEY_FACET_NAME, collectionProperties.getSolrFieldNameFromLpseCode(lpseCode));
+				removeObject.put(JSON_KEY_NAME, collectionProperties.getPanlNameFromPanlCode(lpseCode));
+				removeObject.put(JSON_KEY_ENCODED, lpseField.getEncodedPanlValue(lpseToken));
+
 			} else {
 				removeObject.put(JSON_KEY_FACET_NAME, collectionProperties.getSolrFieldNameFromLpseCode(lpseCode));
 				removeObject.put(JSON_KEY_NAME, collectionProperties.getPanlNameFromPanlCode(lpseCode));
@@ -125,7 +133,7 @@ public class ActiveProcessor extends Processor {
 			}
 
 
-			if (shouldAddObject) {
+			if (shouldAddObject && lpseToken.getCanHaveMultiple()) {
 				jsonArray.put(removeObject);
 			}
 			i++;
@@ -134,7 +142,11 @@ public class ActiveProcessor extends Processor {
 				jsonObject.put(JSON_KEY_SORT_FIELDS, activeSortObject);
 			}
 
-			jsonObject.put(tokenType, jsonArray);
+			if(lpseToken.getCanHaveMultiple()) {
+				jsonObject.put(tokenType, jsonArray);
+			} else {
+				jsonObject.put(tokenType, removeObject);
+			}
 		}
 		return (jsonObject);
 	}
@@ -180,6 +192,38 @@ public class ActiveProcessor extends Processor {
 				lpse.append(lpseComponents.get(i));
 			}
 			uri.append(uriComponents.get(i));
+		}
+
+		String test = "/" + uri + lpse + "/";
+
+		if (test.equals("//")) {
+			return ("/");
+		} else {
+			return test;
+		}
+	}
+
+	private String getBooleanReplaceURI(BooleanFacetLpseToken booleanFacetLpseToken, List<String> uriComponents, List<String> lpseComponents) {
+		String booleanLpseCode = booleanFacetLpseToken.getLpseCode();
+		String inverseBooleanValue = booleanFacetLpseToken.getInverseBooleanValue(booleanFacetLpseToken);
+
+		StringBuilder uri = new StringBuilder();
+		StringBuilder lpse = new StringBuilder();
+
+		boolean found = false;
+		for (int i = 0; i < uriComponents.size(); i++) {
+			if (!found && booleanLpseCode.equals(lpseComponents.get(i))) {
+				found = true;
+				lpse.append(booleanFacetLpseToken.getLpseCode());
+				uri.append(inverseBooleanValue)
+						.append("/");
+			} else {
+				lpse.append(lpseComponents.get(i));
+				uri.append(uriComponents.get(i));
+				if(uri.length() > 0 && uri.charAt(uri.length() - 1) != '/') {
+					uri.append("/");
+				}
+			}
 		}
 
 		String test = "/" + uri + lpse + "/";

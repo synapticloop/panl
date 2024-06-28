@@ -1,5 +1,29 @@
 package com.synapticloop.panl.server.handler.fielderiser.field.facet;
 
+/*
+ * Copyright (c) 2008-2024 synapticloop.
+ *
+ * https://github.com/synapticloop/panl
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to
+ * deal in the Software without restriction, including without limitation the
+ * rights to use, copy, modify, merge, publish, distribute, sublicense, and/or
+ * sell copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in
+ * all copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+ * FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
+ * IN THE SOFTWARE.
+ */
+
 import com.synapticloop.panl.exception.PanlServerException;
 import com.synapticloop.panl.server.handler.fielderiser.field.BaseField;
 import com.synapticloop.panl.server.handler.processor.Processor;
@@ -39,6 +63,9 @@ public class PanlRangeFacetField extends PanlFacetField {
 	public static final String PROPERTY_KEY_PANL_RANGE_MAX_VALUE = "panl.range.max.value.";
 
 	public static final String JSON_KEY_IS_RANGE_FACET = "is_range_facet";
+	public static final String JSON_KEY_BEFORE_MIN_VALUE = "before_min_value";
+	public static final String JSON_KEY_RANGE_MAX_VALUE = "range_max_value";
+	public static final String JSON_KEY_RANGE_MIN_VALUE = "range_min_value";
 
 	// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - //
 	//                          RANGE Facet properties                         //
@@ -307,11 +334,11 @@ public class PanlRangeFacetField extends PanlFacetField {
 
 		// range min and max values
 		if (null != rangeMaxValueReplacement) {
-			rangeFacetObject.put(Processor.JSON_KEY_RANGE_MAX_VALUE, URLEncoder.encode(rangeMaxValueReplacement, StandardCharsets.UTF_8));
+			rangeFacetObject.put(JSON_KEY_RANGE_MAX_VALUE, URLEncoder.encode(rangeMaxValueReplacement, StandardCharsets.UTF_8));
 		}
 
 		if (null != rangeMinValueReplacement) {
-			rangeFacetObject.put(Processor.JSON_KEY_RANGE_MIN_VALUE, URLEncoder.encode(rangeMinValueReplacement, StandardCharsets.UTF_8));
+			rangeFacetObject.put(JSON_KEY_RANGE_MIN_VALUE, URLEncoder.encode(rangeMinValueReplacement, StandardCharsets.UTF_8));
 		}
 
 		// if we already have this facet selected - add in the to and from
@@ -416,56 +443,6 @@ public class PanlRangeFacetField extends PanlFacetField {
 		additionObject.put(JSON_KEY_AFTER_MAX_VALUE, lpseUriAfterMax.toString() + lpseCodeUri.toString() + FORWARD_SLASH);
 		return (additionObject);
 	}
-
-	/**
-	 * <p>This is an OR facet, so we can additional </p>
-	 *
-	 * @param collectionProperties The collection properties
-	 * @param panlTokenMap The Panl token map of incoming tokens
-	 *
-	 * @return The JSON object with the keys appended
-	 */
-//	protected JSONObject getAdditionURIObject(
-//			CollectionProperties collectionProperties,
-//			Map<String, List<LpseToken>> panlTokenMap) {
-//		JSONObject additionObject = new JSONObject();
-//
-//		StringBuilder lpseUri = new StringBuilder(FORWARD_SLASH);
-//		StringBuilder lpseUriBefore = new StringBuilder();
-//		StringBuilder lpseUriCode = new StringBuilder();
-//
-//		for (BaseField baseField : collectionProperties.getLpseFields()) {
-//			// we need to add in any other token values in the correct order
-//			String orderedLpseCode = baseField.getLpseCode();
-//
-//			// if we don't have a current token, just carry on
-//			if (!panlTokenMap.containsKey(orderedLpseCode)) {
-//				continue;
-//			}
-//
-//			if (orderedLpseCode.equals(this.lpseCode)) {
-//				// we have found the current LPSE code, so reset the URI and add it to
-//				// the after
-//				lpseUri.append(baseField.getURIPath(panlTokenMap, collectionProperties));
-//				lpseUriBefore.append(lpseUri);
-//				lpseUri.setLength(0);
-//				lpseUriCode.append(this.lpseCode);
-//
-//				// we add an additional LPSE code for the additional value that we are
-//				// going to put in
-//				lpseUriCode.append(this.lpseCode);
-//			} else {
-//				lpseUri.append(baseField.getURIPath(panlTokenMap, collectionProperties));
-//				lpseUriCode.append(baseField.getLpseCode());
-//			}
-//		}
-//
-//		additionObject.put(JSON_KEY_BEFORE, lpseUriBefore.toString());
-//
-//		additionObject.put(JSON_KEY_AFTER, FORWARD_SLASH + lpseUri.toString() + lpseUriCode.toString() + FORWARD_SLASH);
-//		return (additionObject);
-//	}
-
 
 	/**
 	 * <p>Decode a range facet values which are in one of two formats, which

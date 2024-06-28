@@ -21,7 +21,7 @@ package com.synapticloop.panl.server.handler.properties;
  * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
  * FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
- *  IN THE SOFTWARE.
+ * IN THE SOFTWARE.
  */
 
 import com.synapticloop.panl.exception.PanlServerException;
@@ -139,7 +139,7 @@ public class CollectionProperties {
 	private final Set<String> PANL_CODE_RANGE_FIELDS = new HashSet<>();
 
 
-	private final String validUrlString;
+	private final String validUrlsJSONArrayString;
 
 	private String panlParamQuery;
 	private String panlParamSort;
@@ -225,7 +225,7 @@ public class CollectionProperties {
 
 		JSONObject temp = new JSONObject();
 		temp.put("valid_urls", jsonArray);
-		this.validUrlString = temp.toString();
+		this.validUrlsJSONArrayString = temp.toString();
 
 		// now for the solr field to panl name lookup
 		for (PanlFacetField facetField : FACET_FIELDS) {
@@ -612,8 +612,13 @@ public class CollectionProperties {
 		return (resultFieldsMap.containsKey(name));
 	}
 
-	public String getValidUrlsString() {
-		return (this.validUrlString);
+	/**
+	 * <p>Return the valid URLs JSON array as a string.</p>
+	 *
+	 * @return The valid URls JSON array as a string
+	 */
+	public String getValidUrlsJSONArrayString() {
+		return (this.validUrlsJSONArrayString);
 	}
 
 	public int getFacetMinCount() {
@@ -729,7 +734,7 @@ public class CollectionProperties {
 	 *
 	 * <pre>
 	 * &lt;form method="GET"&gt;
-	 *   &lt;label>&lt;input type="text" name="q" /&gt;&lt;/label&gt;
+	 *   &lt;labe&gt;&lt;input type="text" name="q" /&gt;&lt;/label&gt;
 	 *   &lt;button type="submit"&gt;Search&lt;/button&gt;
 	 * &lt;/form&gt;
 	 * </pre>
@@ -740,7 +745,7 @@ public class CollectionProperties {
 	 *
 	 * <pre>
 	 * &lt;form method="GET"&gt;
-	 *   &lt;label>&lt;input type="text" name="search" /&gt;&lt;/label&gt;
+	 *   &lt;label&gt;&lt;input type="text" name="search" /&gt;&lt;/label&gt;
 	 *   &lt;button type="submit"&gt;Search&lt;/button&gt;
 	 * &lt;/form&gt;
 	 * </pre>
@@ -786,6 +791,10 @@ public class CollectionProperties {
 
 	public boolean getHighlight() {
 		return (highlight);
+	}
+
+	public List<PanlDateRangeFacetField> getDateRangeFacetFields() {
+		return(List.of(LPSE_CODE_DATE_FACET_MAP.values().toArray(new PanlDateRangeFacetField[0])));
 	}
 }
 

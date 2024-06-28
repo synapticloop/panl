@@ -18,6 +18,8 @@ ul li { line-height: 1.6; }
 .clear { clear: left; }
 .center { text-align: center; margin-top: 5px;}
 .hidden { display: none; }
+.invalid { color: #ff4545; }
+.valid { color: #008000; }
 
 /* header */
 div#header { position: relative; text-align: center; border-bottom: 1px solid #afafaf; }

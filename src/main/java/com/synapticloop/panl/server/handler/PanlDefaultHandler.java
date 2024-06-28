@@ -21,7 +21,7 @@ package com.synapticloop.panl.server.handler;
  * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
  * FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
- *  IN THE SOFTWARE.
+ * IN THE SOFTWARE.
  */
 
 import com.synapticloop.panl.server.handler.properties.PanlProperties;
@@ -90,8 +90,8 @@ public class PanlDefaultHandler implements HttpRequestHandler {
 	}
 
 	/**
-	 * <p>As the default handler for the PANL server - this will always return a
-	 * 404 response with JSON body.</p>
+	 * <p>As the default handler for the PANL server - this will
+	 * <strong>ALWAYS</strong> return a 404 response with JSON body.</p>
 	 *
 	 * @param request the HTTP request.
 	 * @param response the HTTP response.

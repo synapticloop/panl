@@ -15,7 +15,7 @@ $(document).ready(function() {
 			$("#explain").removeAttr("disabled");
 			$("#uris").removeAttr("disabled");
 
-				panlExplain();
+			panlExplain();
 
 			$("button#explain").on("click", function (event) {
 				event.preventDefault();
@@ -27,9 +27,23 @@ $(document).ready(function() {
 
 function panlExplain() {
 	var text = $("#uris").val();
+	// maybe we will have a query parameter...?
+
+	if(text.length == 0) {
+		text = getURLParameter("explain");
+		if(text !== undefined && text.length != 0) {
+			$("#uris").val(text)
+			var url = window.location.href;
+      window.history.replaceState({}, "", url.split('?')[0]);
+		} else {
+			text = "";
+		}
+	}
+
 	if(text.length == 0) {
 		text = "/";
 	}
+
 	if(!text.startsWith("/")) {
 		text = "/" + text;
 	}
@@ -43,6 +57,17 @@ function panlExplain() {
 			populateExplainResults(panlJsonData);
 	  }
 	});
+}
+
+function getURLParameter(sParam) {
+	var sPageURL = window.location.search.substring(1);
+	var sURLVariables = sPageURL.split('&');
+	for (var i = 0; i < sURLVariables.length; i++) {
+		var sParameterName = sURLVariables[i].split('=');
+		if (sParameterName[0] == sParam)  {
+			return sParameterName[1];
+     }
+	}
 }
 
 function isValidUrl(collection, fieldset) {
@@ -66,7 +91,11 @@ function populateExplainResults(panlJsonData) {
 	}
 
 	for(const expl of panlJsonData.explanation) {
-		$("#documents").append("<code class=\"explain\">" + escapeHTML(expl) + "</pre>")
+		if(expl.includes("[ INVALID ]")) {
+			$("#documents").append("<code class=\"explain invalid\">" + escapeHTML(expl) + "</pre>")
+		} else {
+			$("#documents").append("<code class=\"explain valid\">" + escapeHTML(expl) + "</pre>")
+		}
 	}
 
 	$("#documents").append("<h1>Configuration Parameters</h1>");

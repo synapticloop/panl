@@ -21,7 +21,7 @@ package com.synapticloop.panl.server.handler.fielderiser.field;
  * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
  * FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
- *  IN THE SOFTWARE.
+ * IN THE SOFTWARE.
  */
 
 import com.synapticloop.panl.exception.PanlServerException;
@@ -423,6 +423,10 @@ public abstract class BaseField {
 		return (getURIPath(panlTokenMap, collectionProperties));
 	}
 
+	public String getResetUriPath(LpseToken lpseToken, CollectionProperties collectionProperties) {
+		return (getURIPath(lpseToken, collectionProperties));
+	}
+
 	/**
 	 * <p>The reset LPSE code, this will reset the LPSE code where adding a new
 	 * filter to the query will want the user to go back to page 1.</p>
@@ -437,6 +441,10 @@ public abstract class BaseField {
 	 */
 	public String getResetLpseCode(Map<String, List<LpseToken>> panlTokenMap, CollectionProperties collectionProperties) {
 		return (getLpseCode(panlTokenMap, collectionProperties));
+	}
+
+	public String getResetLpseCode(LpseToken lpseToken, CollectionProperties collectionProperties) {
+		return (getLpseCode(lpseToken, collectionProperties));
 	}
 
 	/**
