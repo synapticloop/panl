@@ -135,7 +135,6 @@ public class PanlSortField extends BaseField {
 	}
 
 	@Override protected void appendToAvailableObjectInternal(JSONObject jsonObject) {
-
 	}
 
 	@Override public LpseToken instantiateToken(CollectionProperties collectionProperties, String lpseCode, String query, StringTokenizer valueTokeniser, LpseTokeniser lpseTokeniser) {

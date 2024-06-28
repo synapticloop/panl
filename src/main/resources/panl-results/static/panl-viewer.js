@@ -57,9 +57,9 @@ function populatePanlResults(panlJsonData) {
 	// first up the total results
 	$("#num_results")
 		.append("- Found " +
-			panlJsonData.response.numFound +
+			panlJsonData.panl.pagination.num_results +
 			" result(s) " +
-			(panlJsonData.response.numFoundExact ? "(exact)" : "estimated)"));
+			(panlJsonData.panl.pagination.num_results_exact ? "(exact)" : "estimated)"));
 
 	console.log("[ RETURNED PANL TIMINGS JSON OBJECT ]")
 	console.log(panlJsonData.panl.timings);
@@ -74,11 +74,17 @@ function populatePanlResults(panlJsonData) {
 				"ms, parse response " + timings.panl_build_response_time +
 				"ms. Total time " + timings.panl_total_time + "ms.");
 
+	// Solr previous to 9 has a different structure
+	var documents = [];
 	// now the number that we are showing
-	$("#num_shown").append(panlJsonData.response.docs.length);
+	if(panlJsonData.response.docs !== undefined) {
+		documents = panlJsonData.response.docs;
+	} else {
+		documents = panlJsonData.response;
+	}
 
 	// add in the results
-	for(const document of panlJsonData.response.docs) {
+	for(const document of documents) {
 		var innerList = "";
 		for(const fieldName in document) {
 			innerList += "<dt>" + panlJsonData.panl.fields[fieldName] + " (" + fieldName + ")</dt>";
@@ -267,12 +273,12 @@ function addActiveFilters(activeObject, removeUri) {
 	const active = $("#active");
 	// first up the query
 	if(activeObject.query !== undefined) {
-		active.append("<li><strong>Query <em>(" + activeObject.query[0].panl_code + ")</em></strong></li>");
+		active.append("<li><strong>Query <em>(" + activeObject.query.panl_code + ")</em></strong></li>");
 		active.append("<li><a href=\"" + panlResultsViewerUrl +
 				$("#collection").text() +
-				activeObject.query[0].remove_uri +
+				activeObject.query.remove_uri +
 				"\">[remove]</a>&nbsp;" +
-				activeObject.query[0].value +
+				activeObject.query.value +
 				"</li><li><hr /></li>");
 	}
 
@@ -297,12 +303,22 @@ function addActiveFacets(facets) {
 			active.append("<li><strong>" + facet.name + " <em>(" + facet.panl_code + ")</em></strong></li>");
 			currentFacetName = facet.facet_name;
 		}
+
 		active.append("<li><a href=\"" + panlResultsViewerUrl +
 				$("#collection").text() +
 				facet.remove_uri +
 				"\">[remove]</a>&nbsp;" +
 				decodePanl(facet.encoded) +
 				"</li>");
+
+		if(facet.is_boolean_facet) {
+			active.append("<li><a href=\"" + panlResultsViewerUrl +
+					$("#collection").text() +
+					facet.inverse_uri +
+					"\">[invert]</a>&nbsp;" +
+					decodePanl(facet.inverse_encoded) +
+					"</li>");
+		}
 
 	}
 	active.append("<li><hr /></li>");
@@ -518,7 +534,7 @@ function addAvailableFilters(availableObject, activeObject) {
 
 		ranges.append("<p><strong>" + facet.name + " <em>(" + facet.panl_code + ") Date Range</em></strong></p>");
 
-		ranges.append("<form method=\"GET\">" +
+		ranges.append("<form method=\"GET\" id=\"date-range-" + facet.facet_name +"\">" +
 				"	<select name=\"previous_next\" id=\"previous_next" + facet.facet_name + "\">" +
 				"		<option value=\"next\"" + (facet.next === facet.previous_next ? "selected=\"selected\"" : "") + ">" + decodePanl(facet.next) + "</option>" +
 				"		<option value=\"previous\" " + (facet.previous === facet.previous_next ? "selected=\"selected\"" : "") + ">" + decodePanl(facet.previous) + "</option>" +
@@ -534,17 +550,24 @@ function addAvailableFilters(availableObject, activeObject) {
 
 			ranges.append("<div class=\"center\"><a href=\"\" class=\"range-link\" id=\"anchor-date-range-" + facet.facet_name + "\"></a></div>");
 
+			$("#date-range-" + facet.facet_name).on("keydown", function(event) {
+				return event.key != "Enter";
+			});
+
 			updateDateRangeLink(facet);
 
 			$("#previous_next" + facet.facet_name).on('change', { facet : facet }, function (e) {
+				e.preventDefault();
 				updateDateRangeLink(e.data.facet);
 			});
 
 			$("#designator" + facet.facet_name).on('change', { facet : facet }, function (e) {
+				e.preventDefault();
 				updateDateRangeLink(e.data.facet);
 			});
 
-			$("#date_number" + facet.facet_name).on('change', { facet : facet }, function (e) {
+			$("#date_number" + facet.facet_name).on('input', { facet : facet }, function (e) {
+				e.preventDefault();
 				updateDateRangeLink(e.data.facet);
 		});
 	}

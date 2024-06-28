@@ -86,4 +86,14 @@ public class PageNumLpseToken extends LpseToken {
 		return (this.pageNum);
 	}
 
+	/**
+	 * <p>Return the equivalence value for this token, which will always be
+	 * <code>&lt;lpse_code&gt;/</code> as you may ony ever have one page number
+	 * per LPSE URI path part.</p>
+	 *
+	 * @return The equivalence values
+	 */
+	@Override public String getEquivalenceValue() {
+		return(this.getLpseCode() + "/");
+	}
 }

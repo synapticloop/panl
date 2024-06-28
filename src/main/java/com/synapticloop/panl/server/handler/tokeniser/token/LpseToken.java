@@ -113,7 +113,7 @@ public abstract class LpseToken {
 
 
 		BaseField lpseField = collectionProperties.getLpseField(lpseCode);
-		if(null == lpseField) {
+		if (null == lpseField) {
 			// it may be that it is more than a single code
 			StringBuilder lpseCodeBuilder = new StringBuilder(lpseCode);
 			// it is a lpseCodeBuilder field - unlike parameters and operands, the token
@@ -127,7 +127,7 @@ public abstract class LpseToken {
 			}
 
 			lpseField = collectionProperties.getLpseField(lpseCodeBuilder.toString());
-			if(null == lpseField) {
+			if (null == lpseField) {
 				// still null
 				return (new FacetLpseToken(
 						collectionProperties,
@@ -138,7 +138,7 @@ public abstract class LpseToken {
 			}
 		}
 
-		return(lpseField.instantiateToken(collectionProperties, lpseCode, query, valueTokeniser, lpseTokeniser));
+		return (lpseField.instantiateToken(collectionProperties, lpseCode, query, valueTokeniser, lpseTokeniser));
 	}
 
 	/**
@@ -205,7 +205,6 @@ public abstract class LpseToken {
 	 * and validation.  Valid tokens will be applied to the Solr query, invalid
 	 * tokens will be silently ignored.</p>
 	 *
-	 *
 	 * @return Whether this is a valid incoming token
 	 */
 	public boolean getIsValid() {
@@ -251,6 +250,17 @@ public abstract class LpseToken {
 	 * @return The original value
 	 */
 	public String getOriginalURIValue() {
-		return(this.originalValue);
+		return (this.originalValue);
+	}
+
+	/**
+	 * <p>Return whether there can be multiple tokens for this request, in
+	 * general you may only have one token per request, however facets can have
+	 * multiple.</p>
+	 *
+	 * @return Whether there can be multiple tokens for this URI
+	 */
+	public boolean getCanHaveMultiple() {
+		return (false);
 	}
 }

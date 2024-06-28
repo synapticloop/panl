@@ -48,8 +48,6 @@ public abstract class Processor {
 	public static final String JSON_KEY_AFTER_MAX_VALUE = "after_max_value";
 	public static final String JSON_KEY_AND = "AND";
 	public static final String JSON_KEY_BEFORE = "before";
-	public static final String JSON_KEY_BEFORE_MIN_VALUE = "before_min_value";
-	public static final String JSON_KEY_COUNT = "count";
 	public static final String JSON_KEY_DURING = "during";
 	public static final String JSON_KEY_ENCODED = "encoded";
 	public static final String JSON_KEY_FACETS = "facets";
@@ -57,9 +55,8 @@ public abstract class Processor {
 	public static final String JSON_KEY_FIELDS = "fields";
 	public static final String JSON_KEY_HAS_INFIX = "has_infix";
 	public static final String JSON_KEY_INVERSE_URI = "inverse_uri";
+	public static final String JSON_KEY_INVERSE_ENCODED = "inverse_encoded";
 	public static final String JSON_KEY_IS_DESCENDING = "is_descending";
-	public static final String JSON_KEY_IS_OR_FACET = "is_or_facet";
-	public static final String JSON_KEY_IS_RANGE_FACET = "is_range_facet";
 	public static final String JSON_KEY_MAX = "max";
 	public static final String JSON_KEY_MIN = "min";
 	public static final String JSON_KEY_NAME = "name";
@@ -75,8 +72,6 @@ public abstract class Processor {
 	public static final String JSON_KEY_PREVIOUS = "previous";
 	public static final String JSON_KEY_RANGE_FACETS = "range_facets";
 	public static final String JSON_KEY_DATE_RANGE_FACETS = "date_range_facets";
-	public static final String JSON_KEY_RANGE_MAX_VALUE = "range_max_value";
-	public static final String JSON_KEY_RANGE_MIN_VALUE = "range_min_value";
 	public static final String JSON_KEY_REMOVE_URI = "remove_uri";
 	public static final String JSON_KEY_SET_URI_ASC = "set_uri_asc";
 	public static final String JSON_KEY_SET_URI_DESC = "set_uri_desc";
@@ -84,7 +79,6 @@ public abstract class Processor {
 	public static final String JSON_KEY_SUFFIX = "suffix";
 	public static final String JSON_KEY_URIS = "uris";
 	public static final String JSON_KEY_VALUE = "value";
-	public static final String JSON_KEY_VALUES = "values";
 	public static final String JSON_KEY_VALUE_TO = "value_to";
 
 	//

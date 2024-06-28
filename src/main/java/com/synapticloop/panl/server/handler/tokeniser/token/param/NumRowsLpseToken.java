@@ -90,4 +90,16 @@ public class NumRowsLpseToken extends LpseToken {
 	public int getNumRows() {
 		return(this.numRows);
 	}
+
+	/**
+	 * <p>Return the equivalence value for this token, which will always be
+	 * <code>&lt;lpse_code&gt;/</code> as you may ony ever have one number of
+	 * rows per LPSE URI path part.</p>
+	 *
+	 * @return The equivalence values
+	 */
+	@Override public String getEquivalenceValue() {
+		return(this.getLpseCode() + "/");
+	}
+
 }

@@ -26,6 +26,7 @@ package com.synapticloop.panl.server.handler;
 
 import com.synapticloop.panl.exception.PanlServerException;
 import com.synapticloop.panl.generator.bean.PanlCollection;
+import com.synapticloop.panl.server.PanlServer;
 import com.synapticloop.panl.server.client.PanlClient;
 import com.synapticloop.panl.server.handler.helper.CollectionHelper;
 import com.synapticloop.panl.server.handler.helper.PanlInboundTokenHolder;
@@ -73,6 +74,7 @@ public class CollectionRequestHandler {
 	public static final String JSON_KEY_PANL_SEND_REQUEST_TIME = "panl_send_request_time";
 	public static final String JSON_KEY_PANL_TOTAL_TIME = "panl_total_time";
 	public static final String JSON_KEY_QUERY_OPERAND = "query_operand";
+	public static final String JSON_KEY_QUERY_RESPOND_TO = "query_respond_to";
 	public static final String JSON_KEY_SORTING = "sorting";
 	public static final String JSON_KEY_TIMINGS = "timings";
 
@@ -313,6 +315,7 @@ public class CollectionRequestHandler {
 		panlObject.put(JSON_KEY_QUERY_OPERAND, queryOperandProcessor.processToObject(panlTokenMap));
 		panlObject.put(JSON_KEY_FIELDS, fieldsProcessor.processToObject(panlTokenMap));
 		panlObject.put(JSON_KEY_CANONICAL_URI, canonicalURIProcessor.processToString(panlTokenMap));
+		panlObject.put(JSON_KEY_QUERY_RESPOND_TO, collectionProperties.getFormQueryRespondTo());
 
 		// now add in the timings
 		JSONObject timingsObject = new JSONObject();
