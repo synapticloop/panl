@@ -88,8 +88,8 @@ public class PanlDateRangeFacetField extends PanlFacetField {
 	private final Map<String, String> solrRangeDesignatorEncodedLookupMap = new HashMap<>();
 	private final Map<String, Integer> solrRangeDesignatorLengthLookupMap = new HashMap<>();
 
-	private String nextIndicator;
-	private String previousIndicator;
+	private final String nextIndicator;
+	private final String previousIndicator;
 
 	private boolean hasNext = false;
 	private boolean hasPrevious = false;
@@ -145,10 +145,6 @@ public class PanlDateRangeFacetField extends PanlFacetField {
 	 */
 	public LpseToken instantiateToken(CollectionProperties collectionProperties, String lpseCode, String query, StringTokenizer valueTokeniser, LpseTokeniser lpseTokeniser) {
 		return (new DateRangeFacetLpseToken(collectionProperties, this.lpseCode, lpseTokeniser, valueTokeniser));
-	}
-
-	@Override public Logger getLogger() {
-		return (LOGGER);
 	}
 
 	private void addToSolrLookupMap(String key, String value) {
@@ -372,6 +368,9 @@ public class PanlDateRangeFacetField extends PanlFacetField {
 	}
 
 	/**
+	 * <p>The date range facet never appends the available values to the Panl
+	 * response object.</p>
+	 *
 	 * @param facetObject The facet object to append to
 	 * @param collectionProperties The colleciton properties
 	 * @param panlTokenMap The incoming Panl tokens
@@ -384,7 +383,14 @@ public class PanlDateRangeFacetField extends PanlFacetField {
 	 * 		passed in JSON object
 	 */
 	@Override
-	public boolean appendAvailableValues(JSONObject facetObject, CollectionProperties collectionProperties, Map<String, List<LpseToken>> panlTokenMap, Set<String> existingLpseValues, List<FacetField.Count> facetCountValues, long numFound, boolean numFoundExact) {
+	public boolean appendAvailableValues(
+			JSONObject facetObject,
+			CollectionProperties collectionProperties,
+			Map<String, List<LpseToken>> panlTokenMap,
+			Set<String> existingLpseValues,
+			List<FacetField.Count> facetCountValues,
+			long numFound,
+			boolean numFoundExact) {
 		return (false);
 	}
 
@@ -473,10 +479,6 @@ public class PanlDateRangeFacetField extends PanlFacetField {
 		return (additionObject);
 	}
 
-//	@Override public String getResetUriPath(Map<String, List<LpseToken>> panlTokenMap, CollectionProperties collectionProperties) {
-//		return("");
-//	}
-
 	@Override public String getEncodedPanlValue(LpseToken lpseToken) {
 		if (null == lpseToken.getValue()) {
 			return ("");
@@ -516,4 +518,9 @@ public class PanlDateRangeFacetField extends PanlFacetField {
 
 		return (explanations);
 	}
+
+	@Override public Logger getLogger() {
+		return (LOGGER);
+	}
+
 }
