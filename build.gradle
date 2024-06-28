@@ -12,12 +12,11 @@ repositories {
 }
 
 dependencies {
-	// HTTP server
-	implementation 'org.eclipse.jetty.http2:http2-server:10.0.20'
-	implementation 'org.eclipse.jetty:jetty-servlet:10.0.20'
-
 	// solrj
 	implementation 'org.apache.solr:solr-solrj:8.11.3'
+
+	// HTTP server
+	implementation 'org.eclipse.jetty:jetty-servlet:10.0.20'
 
 	// logging
 	implementation 'org.slf4j:slf4j-api:2.0.13'

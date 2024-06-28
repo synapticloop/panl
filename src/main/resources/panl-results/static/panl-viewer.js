@@ -59,7 +59,7 @@ function populatePanlResults(panlJsonData) {
 		.append("- Found " +
 			panlJsonData.panl.pagination.num_results +
 			" result(s) " +
-			(panlJsonData.panl.pagination.num_results_exact ? "(exact)" : "(estimated)"));
+			(panlJsonData.panl.pagination.num_results_exact ? "(exact)" : "estimated)"));
 
 	console.log("[ RETURNED PANL TIMINGS JSON OBJECT ]")
 	console.log(panlJsonData.panl.timings);
@@ -534,7 +534,7 @@ function addAvailableFilters(availableObject, activeObject) {
 
 		ranges.append("<p><strong>" + facet.name + " <em>(" + facet.panl_code + ") Date Range</em></strong></p>");
 
-		ranges.append("<form method=\"GET\">" +
+		ranges.append("<form method=\"GET\" id=\"date-range-" + facet.facet_name +"\">" +
 				"	<select name=\"previous_next\" id=\"previous_next" + facet.facet_name + "\">" +
 				"		<option value=\"next\"" + (facet.next === facet.previous_next ? "selected=\"selected\"" : "") + ">" + decodePanl(facet.next) + "</option>" +
 				"		<option value=\"previous\" " + (facet.previous === facet.previous_next ? "selected=\"selected\"" : "") + ">" + decodePanl(facet.previous) + "</option>" +
@@ -550,17 +550,24 @@ function addAvailableFilters(availableObject, activeObject) {
 
 			ranges.append("<div class=\"center\"><a href=\"\" class=\"range-link\" id=\"anchor-date-range-" + facet.facet_name + "\"></a></div>");
 
+			$("#date-range-" + facet.facet_name).on("keydown", function(event) {
+				return event.key != "Enter";
+			});
+
 			updateDateRangeLink(facet);
 
 			$("#previous_next" + facet.facet_name).on('change', { facet : facet }, function (e) {
+				e.preventDefault();
 				updateDateRangeLink(e.data.facet);
 			});
 
 			$("#designator" + facet.facet_name).on('change', { facet : facet }, function (e) {
+				e.preventDefault();
 				updateDateRangeLink(e.data.facet);
 			});
 
-			$("#date_number" + facet.facet_name).on('change', { facet : facet }, function (e) {
+			$("#date_number" + facet.facet_name).on('input', { facet : facet }, function (e) {
+				e.preventDefault();
 				updateDateRangeLink(e.data.facet);
 		});
 	}
