@@ -57,9 +57,9 @@ function populatePanlResults(panlJsonData) {
 	// first up the total results
 	$("#num_results")
 		.append("- Found " +
-			panlJsonData.paginationObject.num_found +
+			panlJsonData.panl.pagination.num_results +
 			" result(s) " +
-			(panlJsonData.paginationObject.num_found_exact ? "(exact)" : "estimated)"));
+			(panlJsonData.panl.pagination.num_results_exact ? "(exact)" : "(estimated)"));
 
 	console.log("[ RETURNED PANL TIMINGS JSON OBJECT ]")
 	console.log(panlJsonData.panl.timings);
