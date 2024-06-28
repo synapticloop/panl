@@ -74,11 +74,17 @@ function populatePanlResults(panlJsonData) {
 				"ms, parse response " + timings.panl_build_response_time +
 				"ms. Total time " + timings.panl_total_time + "ms.");
 
+	// Solr previous to 9 has a different structure
+	var documents = [];
 	// now the number that we are showing
-	$("#num_shown").append(panlJsonData.response.docs.length);
+	if(panlJsonData.response.docs !== undefined) {
+		documents = panlJsonData.response.docs;
+	} else {
+		documents = panlJsonData.response;
+	}
 
 	// add in the results
-	for(const document of panlJsonData.response.docs) {
+	for(const document of documents) {
 		var innerList = "";
 		for(const fieldName in document) {
 			innerList += "<dt>" + panlJsonData.panl.fields[fieldName] + " (" + fieldName + ")</dt>";
