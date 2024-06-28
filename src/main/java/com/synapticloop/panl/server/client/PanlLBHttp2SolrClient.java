@@ -28,6 +28,8 @@ import com.synapticloop.panl.exception.PanlServerException;
 import com.synapticloop.panl.server.handler.properties.PanlProperties;
 import com.synapticloop.panl.server.handler.properties.CollectionProperties;
 import org.apache.solr.client.solrj.SolrClient;
+import org.apache.solr.client.solrj.impl.Http2SolrClient;
+import org.apache.solr.client.solrj.impl.LBHttp2SolrClient;
 import org.apache.solr.client.solrj.impl.LBHttpSolrClient;
 
 public class PanlLBHttp2SolrClient extends PanlClient {
@@ -37,6 +39,10 @@ public class PanlLBHttp2SolrClient extends PanlClient {
 
 	@Override
 	public SolrClient getClient() {
-		return(new LBHttpSolrClient.Builder().withBaseSolrUrls(panlProperties.getSolrSearchServerUrl()).build());
+		return (new LBHttp2SolrClient(
+				new Http2SolrClient.Builder(
+						panlProperties.getSolrSearchServerUrl())
+						.build(),
+				panlProperties.getSolrSearchServerUrl()));
 	}
 }

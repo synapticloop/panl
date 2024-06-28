@@ -40,10 +40,12 @@ public class CollectionHelper {
 		switch (solrJClient) {
 			case "Http2SolrClient":
 				return (new PanlHttp2SolrClient(solrCollection, panlProperties, collectionProperties));
-			case "HttpJdkSolrClient":
+			case "HttpSolrClient":
 				return (new PanlHttpSolrClient(solrCollection, panlProperties, collectionProperties));
 			case "LBHttp2SolrClient":
 				return (new PanlLBHttp2SolrClient(solrCollection, panlProperties, collectionProperties));
+			case "LBHttpSolrClient":
+				return (new PanlLBHttpSolrClient(solrCollection, panlProperties, collectionProperties));
 			case "CloudSolrClient":
 				return (new PanlCloudSolrClient(solrCollection, panlProperties, collectionProperties));
 			default:
