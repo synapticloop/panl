@@ -11,6 +11,22 @@ repositories {
 	mavenCentral()
 }
 
+sourceSets {
+	integrationTest {
+		java {
+			compileClasspath += main.output + test.output
+			runtimeClasspath += main.output + test.output
+			srcDir file('src/integration/java')
+		}
+		resources.srcDir file('src/integration/resources')
+	}
+}
+
+configurations {
+	integrationTestCompile.extendsFrom testCompile
+	integrationTestRuntime.extendsFrom testRuntime
+}
+
 dependencies {
 	// solrj
 	implementation 'org.apache.solr:solr-solrj:9.6.0'
@@ -36,6 +52,14 @@ dependencies {
 	testImplementation 'org.junit.jupiter:junit-jupiter'
 	testImplementation 'org.mockito:mockito-core:5.12.0'
 	testImplementation 'com.fasterxml.jackson.core:jackson-databind:2.17.1'
+
+	// integration testing
+	integrationTestImplementation platform('org.junit:junit-bom:5.9.1')
+	integrationTestImplementation 'org.junit.jupiter:junit-jupiter'
+	integrationTestImplementation 'org.mockito:mockito-core:5.12.0'
+	integrationTestImplementation 'com.fasterxml.jackson.core:jackson-databind:2.17.1'
+	integrationTestImplementation 'commons-io:commons-io:2.16.1'
+	integrationTestImplementation 'org.json:json:20240303'
 }
 
 application {
@@ -52,6 +76,13 @@ distributions {
 test {
 	useJUnitPlatform()
 	finalizedBy jacocoTestReport
+}
+
+tasks.register('integrationTest', Test) {
+	useJUnitPlatform()
+	testClassesDirs = sourceSets.integrationTest.output.classesDirs
+	classpath = sourceSets.integrationTest.runtimeClasspath
+	outputs.upToDateWhen { false }
 }
 
 jacocoTestReport {

@@ -70,7 +70,7 @@
        is found that matches, a warning will be logged.
 
        The examples below can be used to load some Solr Modules along
-       with their external dependencies as an alternative to using a
+       with their live dependencies as an alternative to using a
        startup parameter to define the modules to load globally.  For more info
        see https://solr.apache.org/guide/solr/latest/configuration-guide/solr-modules.html.
     -->
