@@ -57,7 +57,7 @@ public class SortOrderSelectedTest {
 		assertEquals("/weighing+from+17+grams+to+39+grams/w-wsb+/", response.panl.sorting.fields[0].add_uri_asc);
 		assertEquals("/weighing+from+17+grams+to+39+grams/w-wsb-/", response.panl.sorting.fields[0].add_uri_desc);
 		assertEquals("/weighing+from+17+grams+to+39+grams/w-wsb+/", response.panl.sorting.fields[0].set_uri_asc);
-		assertEquals("/weighing+from+17+grams+to+39+grams/w-wsb+/", response.panl.sorting.fields[0].set_uri_desc);
+		assertEquals("/weighing+from+17+grams+to+39+grams/w-wsb-/", response.panl.sorting.fields[0].set_uri_desc);
 	}
 
 	@Test public void testRegularFacetSelected() throws IOException {
