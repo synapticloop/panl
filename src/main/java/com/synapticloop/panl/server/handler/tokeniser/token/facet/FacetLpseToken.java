@@ -144,10 +144,6 @@ public class FacetLpseToken extends LpseToken {
 		return solrField;
 	}
 
-	public String getToValue() {
-		return toValue;
-	}
-
 	public boolean getIsRangeToken() {
 		return isRangeToken;
 	}
