@@ -30,7 +30,10 @@
     "variants": [ "Blue and gold pinstriping" ],
     "colours": [ "Blue" ],
     "description": "The basic, everyday pencil from Faber-Castell Goldfaber.  A classic hexagonal wooden pencil with gorgeous blue and gold pinstriping.  Not a mechanical pencil, but always worth including as a reference point.",
-    "id": 4
+    "id": 4,
+    "images": [
+      "400-goldfaber-blue.jpg"
+    ]
   },
   {
     "brand" :"Alvin",
@@ -63,7 +66,10 @@
     "variants": [ "Blue" ],
     "colours": [ "Blue" ],
     "id": 5,
-    "description": ""
+    "description": "",
+    "images": [
+      "400-alvin-pro-matic-blue.jpg"
+    ]
   },
   {
     "brand" :"Alvin",
@@ -96,7 +102,13 @@
     "variants": [ "Red", "Blue", "Green", "Yellow" ],
     "colours": [ "Red", "Blue", "Green", "Yellow" ],
     "id": 6,
-    "description": ""
+    "description": "",
+    "images": [
+      "400-alvin-scott-no--b-2-red.jpg",
+      "400-alvin-scott-no--b-2-blue.jpg",
+      "400-alvin-scott-no--b-2-green.jpg",
+      "400-alvin-scott-no--b-2-yellow.jpg"
+    ]
   },
   {
     "brand" :"Alvin",
@@ -129,7 +141,12 @@
     "variants": [ "Light Blue" ],
     "colours": [ "Blue" ],
     "id": 7,
-    "description": ""
+    "description": "",
+    "images": [
+      "400-alvin-tech-da-blue-body-with-red-cap.jpg",
+      "400-alvin-tech-da-blue-body-with-green-cap.jpg",
+      "400-alvin-tech-da-blue-body-with-white-cap.jpg"
+    ]
   },
   {
     "brand" :"BIC",
@@ -162,7 +179,12 @@
     "variants": [ "Silver", "Black", "White" ],
     "colours": [ "Silver", "Black", "White" ],
     "id": 8,
-    "description": ""
+    "description": "",
+    "images": [
+      "400-bic-criterium-silver.jpg",
+      "400-bic-criterium-white.jpg",
+      "400-bic-criterium-black.jpg"
+    ]
   },
   {
     "brand" :"Caran d'Ache",
@@ -195,7 +217,12 @@
     "variants": [ "Black with red cap", "Black with blue cap", "Black with black cap" ],
     "colours": [ "Black" ],
     "id": 9,
-    "description": ""
+    "description": "",
+    "images": [
+      "400-caran-d-ache-fixpencil-22--smooth--black-body-with-red-cap.jpg",
+      "400-caran-d-ache-fixpencil-22--smooth--black-body-with-blue-cap.jpg",
+      "400-caran-d-ache-fixpencil-22--smooth--black-body-with-black-cap.jpg"
+    ]
   },
   {
     "brand" :"Caran d'Ache",
@@ -228,7 +255,12 @@
     "variants": [ "Black with red cap", "Black with blue cap", "Black with black cap" ],
     "colours": [ "Black" ],
     "id": 10,
-    "description": ""
+    "description": "",
+    "images": [
+      "400-caran-d-ache-fixpencil-22--textured--black-body-with-red-cap.jpg",
+      "400-caran-d-ache-fixpencil-22--textured--black-body-with-blue-cap.jpg",
+      "400-caran-d-ache-fixpencil-22--textured--black-body-with-black-cap.jpg"
+    ]
   },
   {
     "brand" :"Caran d'Ache",
@@ -261,7 +293,12 @@
     "variants": [ "Green", "Blue", "Red" ],
     "colours": [ "Green", "Blue", "Red" ],
     "id": 11,
-    "description": ""
+    "description": "",
+    "images": [
+      "400-caran-d-ache-fixpencil-884-red.jpg",
+      "400-caran-d-ache-fixpencil-884-green.jpg",
+      "400-caran-d-ache-fixpencil-884-blue.jpg"
+    ]
   },
   {
     "brand" :"Caran d'Ache",
@@ -294,7 +331,11 @@
     "variants": [ "Ochre", "Dharkan Blue" ],
     "colours": [ "Orange", "Blue" ],
     "id": 12,
-    "description": ""
+    "description": "",
+    "images": [
+      "400-caran-d-ache-nepresso-limited-edition-ochre.jpg",
+      "400-caran-d-ache-nepresso-limited-edition-dharkan-blue.jpg"
+    ]
   },
   {
     "brand" :"DEDEDEPRAISE",
@@ -327,7 +368,10 @@
     "variants": [ "Black" ],
     "colours": [ "Black" ],
     "id": 13,
-    "description": ""
+    "description": "",
+    "images": [
+      "400-dededepraise-sketch-black.jpg"
+    ]
   },
   {
     "brand" :"Faber-Castell",
@@ -393,7 +437,10 @@
     "variants": [ "Green with various lead grades etched into the body." ],
     "colours": [ "Green" ],
     "id": 15,
-    "description": ""
+    "description": "",
+    "images": [
+      "400-faber-castell-tk-4600-green.jpg"
+    ]
   },
   {
     "brand" :"Faber-Castell",
@@ -426,7 +473,10 @@
     "variants": [ "Green with various lead grades etched into the body." ],
     "colours": [ "Green" ],
     "id": 16,
-    "description": ""
+    "description": "",
+    "images": [
+      "400-faber-castell-tk-9500-green-with-various-lead-grades-etched-into-the-body-.jpg"
+    ]
   },
   {
     "brand" :"Hightide Penco",
@@ -459,7 +509,15 @@
     "variants": [ "Red", "Green", "Light Green", "Orange", "Blue", "Light Blue" ],
     "colours": [ "Red", "Green", "Orange", "Blue" ],
     "id": 17,
-    "description": ""
+    "description": "",
+    "images": [
+      "400-hightide-penco-prime-timber-red.jpg",
+      "400-hightide-penco-prime-timber-green.jpg",
+      "400-hightide-penco-prime-timber-light-green.jpg",
+      "400-hightide-penco-prime-timber-orange.jpg",
+      "400-hightide-penco-prime-timber-blue.jpg",
+      "400-hightide-penco-prime-timber-light-blue.jpg"
+    ]
   },
   {
     "brand" :"Hightide Penco",
@@ -492,7 +550,13 @@
     "variants": [ "Black", "White", "Blue", "Red" ],
     "colours": [ "Black", "White", "Blue", "Red" ],
     "id": 18,
-    "description": ""
+    "description": "",
+    "images": [
+      "400-hightide-penco-prime-timber-brass-black.jpg",
+      "400-hightide-penco-prime-timber-brass-white.jpg",
+      "400-hightide-penco-prime-timber-brass-blue.jpg",
+      "400-hightide-penco-prime-timber-brass-red.jpg"
+    ]
   },
   {
     "brand" :"Ito-Ya",
@@ -525,7 +589,13 @@
     "variants": [ "Red", "Black", "White", "Grey" ],
     "colours": [ "Red", "Black", "White", "Grey" ],
     "id": 19,
-    "description": ""
+    "description": "",
+    "images": [
+      "400-ito-ya-helvetica-red.jpg",
+      "400-ito-ya-helvetica-black.jpg",
+      "400-ito-ya-helvetica-white.jpg",
+      "400-ito-ya-helvetica-grey.jpg"
+    ]
   },
   {
     "brand" :"Kaweco",
@@ -558,7 +628,10 @@
     "variants": [ "Black" ],
     "colours": [ "Black" ],
     "id": 20,
-    "description": ""
+    "description": "",
+    "images": [
+      "400-kaweco-special-black.jpg"
+    ]
   },
   {
     "brand" :"Kaweco",
@@ -591,7 +664,10 @@
     "variants": [ "Brass" ],
     "colours": [ "Brass" ],
     "id": 21,
-    "description": ""
+    "description": "",
+    "images": [
+      "400-kaweco-special-brass-brass.jpg"
+    ]
   },
   {
     "brand" :"Kaweco",
@@ -624,7 +700,10 @@
     "variants": [ "Black" ],
     "colours": [ "Black" ],
     "id": 22,
-    "description": ""
+    "description": "",
+    "images": [
+      "400-kaweco-special-s-black.jpg"
+    ]
   },
   {
     "brand" :"Kita-Boshi",
@@ -657,7 +736,21 @@
     "variants": [ "Blue lacquered, or with flowers, fans, checks, or chevrons", "Red lacquered, or with flowers, fans, checks, or chevrons", "Wood", "Black" ],
     "colours": [ "Blue", "Red", "Wood" ],
     "id": 23,
-    "description": ""
+    "description": "",
+    "images": [
+      "400-kita-boshi-680-blue-lacquered.jpg",
+      "400-kita-boshi-680-blue-flowers-on-a-white-background.jpg",
+      "400-kita-boshi-680-blue-fans-on-a-white-background.jpg",
+      "400-kita-boshi-680-blue-chevrons-on-a-white-background.jpg",
+      "400-kita-boshi-680-blue-check-on-a-white-background.jpg",
+      "400-kita-boshi-680-red-lacquered.jpg",
+      "400-kita-boshi-680-red-flowers-on-a-white-background.jpg",
+      "400-kita-boshi-680-red-fans-on-a-white-background.jpg",
+      "400-kita-boshi-680-red-chevrons-on-a-white-background.jpg",
+      "400-kita-boshi-680-red-check-on-a-white-background.jpg",
+      "400-kita-boshi-680-wood.jpg",
+      "400-kita-boshi-680-black.jpg"
+    ]
   },
   {
     "brand" :"Kita-Boshi",
@@ -690,7 +783,10 @@
     "variants": [ "Wood" ],
     "colours": [ "Wood" ],
     "id": 24,
-    "description": ""
+    "description": "",
+    "images": [
+      "400-kita-boshi-680-with-clip-wood.jpg"
+    ]
   },
   {
     "brand" :"Koh-i-Noor",
@@ -723,7 +819,11 @@
     "variants": [ "Yellow" ],
     "colours": [ "Yellow" ],
     "id": 25,
-    "description": ""
+    "description": "",
+    "images": [
+      "400-koh-i-noor-5201-yellow.jpg",
+      "400-koh-i-noor-5201-yellow-with-clip.jpg"
+    ]
   },
   {
     "brand" :"Koh-i-Noor",
@@ -756,7 +856,14 @@
     "variants": [ "Blue", "Green", "Purple", "Red", "Yellow" ],
     "colours": [ "Blue", "Green", "Purple", "Red", "Yellow" ],
     "id": 26,
-    "description": ""
+    "description": "",
+    "images": [
+      "400-koh-i-noor-5209-blue.jpg",
+      "400-koh-i-noor-5209-green.jpg",
+      "400-koh-i-noor-5209-purple.jpg",
+      "400-koh-i-noor-5209-red.jpg",
+      "400-koh-i-noor-5209-yellow.jpg"
+    ]
   },
   {
     "brand" :"Koh-i-Noor",
@@ -789,7 +896,14 @@
     "variants": [ "Black", "Green", "Purple", "Yellow", "Red" ],
     "colours": [ "Black", "Green", "Purple", "Yellow", "Red" ],
     "id": 27,
-    "description": ""
+    "description": "",
+    "images": [
+      "400-koh-i-noor-5211-black.jpg",
+      "400-koh-i-noor-5211-green.jpg",
+      "400-koh-i-noor-5211-purple.jpg",
+      "400-koh-i-noor-5211-yellow.jpg",
+      "400-koh-i-noor-5211-red.jpg"
+    ]
   },
   {
     "brand" :"Koh-i-Noor",
@@ -822,7 +936,19 @@
     "variants": [ "Black", "Blue", "Dark Red", "Green", "Light Blue", "Light Green", "Light Purple", "Purple", "Red", "Yellow" ],
     "colours": [ "Black", "Blue", "Green",  "Purple", "Red", "Yellow" ],
     "id": 28,
-    "description": ""
+    "description": "",
+    "images": [
+      "400-koh-i-noor-5216-black.jpg",
+      "400-koh-i-noor-5216-blue.jpg",
+      "400-koh-i-noor-5216-dark-red.jpg",
+      "400-koh-i-noor-5216-green.jpg",
+      "400-koh-i-noor-5216-light-blue.jpg",
+      "400-koh-i-noor-5216-light-green.jpg",
+      "400-koh-i-noor-5216-light-purple.jpg",
+      "400-koh-i-noor-5216-purple.jpg",
+      "400-koh-i-noor-5216-yellow.jpg",
+      "400-koh-i-noor-5216-red.jpg"
+    ]
   },
   {
     "brand" :"Koh-i-Noor",
@@ -855,7 +981,15 @@
     "variants": [ "Black", "Blue", "Brown", "Green", "Red", "Yellow" ],
     "colours": [ "Black", "Blue", "Brown", "Green", "Red", "Yellow" ],
     "id": 29,
-    "description": ""
+    "description": "",
+    "images": [
+      "400-koh-i-noor-5217-black.jpg",
+      "400-koh-i-noor-5217-blue.jpg",
+      "400-koh-i-noor-5217-brown.jpg",
+      "400-koh-i-noor-5217-green.jpg",
+      "400-koh-i-noor-5217-red.jpg",
+      "400-koh-i-noor-5217-yellow.jpg"
+    ]
   },
   {
     "brand" :"Koh-i-Noor",
@@ -888,7 +1022,14 @@
     "variants": [ "Blue", "Green", "Purple", "Red", "Yellow" ],
     "colours": [ "Blue", "Green", "Purple", "Red", "Yellow" ],
     "id": 30,
-    "description": ""
+    "description": "",
+    "images": [
+      "400-koh-i-noor-5218-blue.jpg",
+      "400-koh-i-noor-5218-green.jpg",
+      "400-koh-i-noor-5218-purple.jpg",
+      "400-koh-i-noor-5218-red.jpg",
+      "400-koh-i-noor-5218-yellow.jpg"
+    ]
   },
   {
     "brand" :"Koh-i-Noor",
@@ -921,7 +1062,14 @@
     "variants": [ "Blue", "Green", "Purple", "Red", "Yellow" ],
     "colours": [ "Blue", "Green", "Purple", "Red", "Yellow" ],
     "id": 31,
-    "description": ""
+    "description": "",
+    "images": [
+      "400-koh-i-noor-5219-blue.jpg",
+      "400-koh-i-noor-5219-green.jpg",
+      "400-koh-i-noor-5219-purple.jpg",
+      "400-koh-i-noor-5219-red.jpg",
+      "400-koh-i-noor-5219-yellow.jpg"
+    ]
   },
   {
     "brand" :"Koh-i-Noor",
@@ -954,7 +1102,12 @@
     "variants": [ "Blue", "Green", "Red" ],
     "colours": [ "Blue", "Green", "Red" ],
     "id": 32,
-    "description": ""
+    "description": "",
+    "images": [
+      "400-koh-i-noor-5221-blue.jpg",
+      "400-koh-i-noor-5221-green.jpg",
+      "400-koh-i-noor-5221-red.jpg"
+    ]
   },
   {
     "brand" :"Koh-i-Noor",
@@ -987,7 +1140,15 @@
     "variants": [ "Black", "Red", "Yellow", "Blue", "Green", "Silver" ],
     "colours": [ "Black", "Red", "Yellow", "Blue", "Green", "Silver" ],
     "id": 33,
-    "description": ""
+    "description": "",
+    "images": [
+      "400-koh-i-noor-5228-black.jpg",
+      "400-koh-i-noor-5228-red.jpg",
+      "400-koh-i-noor-5228-yellow.jpg",
+      "400-koh-i-noor-5228-blue.jpg",
+      "400-koh-i-noor-5228-green.jpg",
+      "400-koh-i-noor-5228-silver.jpg"
+    ]
   },
   {
     "brand" :"Koh-i-Noor",
@@ -1020,7 +1181,10 @@
     "variants": [ "Black" ],
     "colours": [ "Black" ],
     "id": 34,
-    "description": ""
+    "description": "",
+    "images": [
+      "400-koh-i-noor-5608-black.jpg"
+    ]
   },
   {
     "brand" :"Koh-i-Noor",
@@ -1053,7 +1217,10 @@
     "variants": [ "Black" ],
     "colours": [ "Black" ],
     "id": 35,
-    "description": ""
+    "description": "",
+    "images": [
+      "400-koh-i-noor-5900-black.jpg"
+    ]
   },
   {
     "brand" :"Küelox",
@@ -1086,7 +1253,10 @@
     "variants": [ "Silver" ],
     "colours": [ "Silver" ],
     "id": 36,
-    "description": ""
+    "description": "",
+    "images": [
+      "400-k-elox-3308-silver.jpg"
+    ]
   },
   {
     "brand" :"Küelox",
@@ -1119,7 +1289,10 @@
     "variants": [ "Blue" ],
     "colours": [ "Blue" ],
     "id": 37,
-    "description": ""
+    "description": "",
+    "images": [
+      "400-k-elox-5320-blue.jpg"
+    ]
   },
   {
     "brand" :"Mitsubishi",
@@ -1152,7 +1325,12 @@
     "variants": [ "Red", "Grey", "Black" ],
     "colours": [ "Red", "Grey", "Black" ],
     "id": 38,
-    "description": ""
+    "description": "",
+    "images": [
+      "400-mitsubishi-field-pencil-red.jpg",
+      "400-mitsubishi-field-pencil-grey.jpg",
+      "400-mitsubishi-field-pencil-black.jpg"
+    ]
   },
   {
     "brand" :"Mitsubishi",
@@ -1185,7 +1363,20 @@
     "variants": [ "Brown with varying cap colours to indicate lead grade.", "Red" ],
     "colours": [ "Brown", "Red" ],
     "id": 39,
-    "description": ""
+    "description": "",
+    "images": [
+      "400-mitsubishi-uni-red.jpg",
+      "400-mitsubishi-uni-brown-with-pink-cap--4b-is-etched-into-the-top-of-the-cap-.jpg",
+      "400-mitsubishi-uni-brown-with-yellow-cap--3b-is-etched-into-the-top-of-the-cap-.jpg",
+      "400-mitsubishi-uni-brown-with-orange-cap--2b-is-etched-into-the-top-of-the-cap-.jpg",
+      "400-mitsubishi-uni-brown-with-red-cap--b-is-etched-into-the-top-of-the-cap-.jpg",
+      "400-mitsubishi-uni-brown-with-black-cap--hb-is-etched-into-the-top-of-the-cap-.jpg",
+      "400-mitsubishi-uni-brown-with-brown-cap--f-is-etched-into-the-top-of-the-cap-.jpg",
+      "400-mitsubishi-uni-brown-with-light-blue-cap--h-is-etched-into-the-top-of-the-cap-.jpg",
+      "400-mitsubishi-uni-brown-with-blue-cap--2h-is-etched-into-the-top-of-the-cap-.jpg",
+      "400-mitsubishi-uni-brown-with-light-green-cap--3h-is-etched-into-the-top-of-the-cap-.jpg",
+      "400-mitsubishi-uni-brown-with-green-cap--4h-is-etched-into-the-top-of-the-cap-.jpg"
+    ]
   },
   {
     "brand" :"Mr. Pen",
@@ -1218,7 +1409,10 @@
     "variants": [ "Silver" ],
     "colours": [ "Silver" ],
     "id": 40,
-    "description": ""
+    "description": "",
+    "images": [
+      "400-mr--pen-mk03-silver.jpg"
+    ]
   },
   {
     "brand" :"OHTO",
@@ -1251,7 +1445,14 @@
     "variants": [ "Brown", "Dark Pink", "Orange", "Pink", "White" ],
     "colours": [ "Brown", "Orange", "Pink", "White" ],
     "id": 41,
-    "description": ""
+    "description": "",
+    "images": [
+      "400-ohto-maruta-brown.jpg",
+      "400-ohto-maruta-dark-pink.jpg",
+      "400-ohto-maruta-orange.jpg",
+      "400-ohto-maruta-pink.jpg",
+      "400-ohto-maruta-white.jpg"
+    ]
   },
   {
     "brand" :"OHTO",
@@ -1284,7 +1485,16 @@
     "variants": [ "Dark Green", "Green", "Purple", "Red", "Wood", "Black", "Yellow" ],
     "colours": [ "Green", "Purple", "Red", "Wood", "Black", "Yellow" ],
     "id": 42,
-    "description": ""
+    "description": "",
+    "images": [
+      "400-ohto-sharp-pencil-dark-green.jpg",
+      "400-ohto-sharp-pencil-green.jpg",
+      "400-ohto-sharp-pencil-purple.jpg",
+      "400-ohto-sharp-pencil-red.jpg",
+      "400-ohto-sharp-pencil-wood.jpg",
+      "400-ohto-sharp-pencil-black.jpg",
+      "400-ohto-sharp-pencil-yellow.jpg"
+    ]
   },
   {
     "brand" :"Pacific Arc",
@@ -1317,7 +1527,11 @@
     "variants": [ "Black", "Blue" ],
     "colours": [ "Black", "Blue" ],
     "id": 43,
-    "description": ""
+    "description": "",
+    "images": [
+      "400-pacific-arc-collegiate-black.jpg",
+      "400-pacific-arc-collegiate-blue.jpg"
+    ]
   },
   {
     "brand" :"Pacific Arc",
@@ -1383,7 +1597,14 @@
     "variants": [ "Black", "Blue", "Brown", "Green", "Red" ],
     "colours": [ "Black", "Blue", "Brown", "Green", "Red" ],
     "id": 45,
-    "description": ""
+    "description": "",
+    "images": [
+      "400-pacific-arc-tech-pro-black.jpg",
+      "400-pacific-arc-tech-pro-blue.jpg",
+      "400-pacific-arc-tech-pro-brown.jpg",
+      "400-pacific-arc-tech-pro-red.jpg",
+      "400-pacific-arc-tech-pro-green.jpg"
+    ]
   },
   {
     "brand" :"Pacific Arc",
@@ -1416,7 +1637,11 @@
     "variants": [ "Silver", "Black" ],
     "colours": [ "Silver", "Black" ],
     "id": 46,
-    "description": ""
+    "description": "",
+    "images": [
+      "400-pacific-arc-premium-silver.jpg",
+      "400-pacific-arc-premium-black.jpg"
+    ]
   },
   {
     "brand" :"Redcircle",
@@ -1449,7 +1674,12 @@
     "variants": [ "Silver", "Black", "Gold" ],
     "colours": [ "Silver", "Black", "Gold" ],
     "id": 47,
-    "description": ""
+    "description": "",
+    "images": [
+      "400-redcircle-600-silver.jpg",
+      "400-redcircle-600-black.jpg",
+      "400-redcircle-600-gold.jpg"
+    ]
   },
   {
     "brand" :"Rotring",
@@ -1482,7 +1712,10 @@
     "variants": [ "Black" ],
     "colours": [ "Black" ],
     "id": 48,
-    "description": ""
+    "description": "",
+    "images": [
+      "400-rotring-300-black.jpg"
+    ]
   },
   {
     "brand" :"Rotring",
@@ -1515,7 +1748,11 @@
     "variants": [ "Silver", "Black" ],
     "colours": [ "Silver", "Black" ],
     "id": 49,
-    "description": ""
+    "description": "",
+    "images": [
+      "400-rotring-600-silver.jpg",
+      "400-rotring-600-black.jpg"
+    ]
   },
   {
     "brand" :"Rotring",
@@ -1548,7 +1785,10 @@
     "variants": [ "Black" ],
     "colours": [ "Black" ],
     "id": 50,
-    "description": ""
+    "description": "",
+    "images": [
+      "400-rotring-rapid-pro-black.jpg"
+    ]
   },
   {
     "brand" :"Scrikks",
@@ -1581,7 +1821,13 @@
     "variants": [ "Ivory", "Matt Black", "Satin Grey", "Satin Chrome" ],
     "colours": [ "White", "Black", "Grey", "Silver" ],
     "id": 51,
-    "description": ""
+    "description": "",
+    "images": [
+      "400-scrikks-graph-x-ivory.jpg",
+      "400-scrikks-graph-x-matte-black.jpg",
+      "400-scrikks-graph-x-satin-grey.jpg",
+      "400-scrikks-graph-x-satin-chrome.jpg"
+    ]
   },
   {
     "brand" :"Scrikks",
@@ -1614,7 +1860,15 @@
     "variants": [ "Pink", "Green", "Grey", "Blue", "Black", "Orange" ],
     "colours": [ "Pink", "Green", "Grey", "Blue", "Black", "Orange" ],
     "id": 52,
-    "description": ""
+    "description": "",
+    "images": [
+      "400-scrikks-twist-pink.jpg",
+      "400-scrikks-twist-green.jpg",
+      "400-scrikks-twist-grey.jpg",
+      "400-scrikks-twist-blue.jpg",
+      "400-scrikks-twist-black.jpg",
+      "400-scrikks-twist-orange.jpg"
+    ]
   },
   {
     "brand" :"Staedtler",
@@ -1647,7 +1901,12 @@
     "variants": [ "Black", "Blue", "Silver" ],
     "colours": [ "Black", "Blue", "Silver" ],
     "id": 53,
-    "description": ""
+    "description": "",
+    "images": [
+      "400-staedtler-925-matte-black.jpg",
+      "400-staedtler-925-blue.jpg",
+      "400-staedtler-925-silver.jpg"
+    ]
   },
   {
     "brand" :"Staedtler",
@@ -1680,7 +1939,11 @@
     "variants": [ "Blue", "Black" ],
     "colours": [ "Blue", "Black" ],
     "id": 54,
-    "description": ""
+    "description": "",
+    "images": [
+      "400-staedtler-mars-technico-blue.jpg",
+      "400-staedtler-mars-technico-black.jpg"
+    ]
   },
   {
     "brand" :"Unbranded",
@@ -1713,7 +1976,10 @@
     "variants": [ "Black" ],
     "colours": [ "Black" ],
     "id": 55,
-    "description": ""
+    "description": "",
+    "images": [
+      "400-unbranded-black-black.jpg"
+    ]
   },
   {
     "brand" :"WSD",
@@ -1746,7 +2012,14 @@
     "variants": [ "Black", "Blue", "Gold", "Pink", "Silver" ],
     "colours": [ "Black", "Blue", "Gold", "Pink", "Silver" ],
     "id": 56,
-    "description": ""
+    "description": "",
+    "images": [
+      "400-wsd-magnetic-black.jpg",
+      "400-wsd-magnetic-blue.jpg",
+      "400-wsd-magnetic-gold.jpg",
+      "400-wsd-magnetic-pink.jpg",
+      "400-wsd-magnetic-silver.jpg"
+    ]
   },
   {
     "brand" :"YStudio",
@@ -1779,7 +2052,11 @@
     "variants": [ "Black", "Brass" ],
     "colours": [ "Black", "Brass" ],
     "id": 57,
-    "description": ""
+    "description": "",
+    "images": [
+      "400-ystudio-classic-revolve-black.jpg",
+      "400-ystudio-classic-revolve-brass.jpg"
+    ]
   },
   {
     "brand" :"Muji",
@@ -1812,6 +2089,9 @@
     "variants": [ "Wood" ],
     "colours": [ "Wood" ],
     "id": 58,
-    "description": ""
+    "description": "",
+    "images": [
+      "400-muji-wooden-mechanical-pencil-wood.jpg"
+    ]
   }
 ]

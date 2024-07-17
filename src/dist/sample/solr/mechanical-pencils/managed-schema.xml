@@ -44,6 +44,7 @@
 	<field name="variants" type="string" stored="true" multiValued="true" />
 
 	<field name="description" type="text_general" indexed="true" stored="true" multiValued="false"/>
+	<field name="images" type="string" stored="true" multiValued="true" />
 	<field name="text" type="text_general" indexed="true" stored="true" multiValued="true"/>
 
 	<uniqueKey>id</uniqueKey>
