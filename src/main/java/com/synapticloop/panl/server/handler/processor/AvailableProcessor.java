@@ -137,7 +137,6 @@ public class AvailableProcessor extends Processor {
 			if(dateRangeFacetField.appendAvailableDateRangeValues(dateRangeFacetObject, collectionProperties, panlTokenMap)) {
 				dateRangeFacetArray.put(dateRangeFacetObject);
 			}
-
 		}
 
 

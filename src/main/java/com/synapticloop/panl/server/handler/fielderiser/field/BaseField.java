@@ -342,8 +342,8 @@ public abstract class BaseField {
 					sb.append(getEncodedPanlValue(lpseToken));
 					sb.append("/");
 
-					// we only every have one
-					return(sb.toString());
+//					// we only ever have one
+//					return(sb.toString());
 				}
 			}
 		}
@@ -387,6 +387,7 @@ public abstract class BaseField {
 						FacetLpseToken facetLpseToken = (FacetLpseToken) lpseToken;
 						if (facetLpseToken.getIsRangeToken()) {
 							sb.append(lpseToken.getLpseCode());
+							// TODO - surely INFIX???
 							sb.append((facetLpseToken.getHasMidfix() ? "-" : "+"));
 							sb.append(lpseToken.getLpseCode());
 						} else {
@@ -589,7 +590,7 @@ public abstract class BaseField {
 			}
 
 			// if we have an or Facet and this is an or facet, then we keep all
-			// values, otherwise we strip out the xero values
+			// values, otherwise we strip out the zero values
 			if (value.getCount() == 0) {
 				continue;
 			}
@@ -656,6 +657,7 @@ public abstract class BaseField {
 		StringBuilder lpseUri = new StringBuilder(FORWARD_SLASH);
 		StringBuilder lpseCode = new StringBuilder();
 
+		// go through the LPSE fields in order
 		for (BaseField baseField : collectionProperties.getLpseFields()) {
 
 			if (panlTokenMap.containsKey(baseField.getLpseCode()) &&
@@ -669,8 +671,10 @@ public abstract class BaseField {
 
 			if (baseField.getLpseCode().equals(additionLpseCode)) {
 
-				additionObject.put(JSON_KEY_BEFORE, lpseUri.toString());
+				additionObject.put(JSON_KEY_BEFORE, lpseUri.toString() +  baseField.getResetUriPath(panlTokenMap, collectionProperties));
+//				additionObject.put(JSON_KEY_BEFORE, baseField.getResetUriPath(panlTokenMap, collectionProperties));
 				lpseUri.setLength(0);
+				lpseCode.append(baseField.getResetLpseCode(panlTokenMap, collectionProperties));
 				lpseCode.append(baseField.getLpseCode());
 
 				lpseUri.append(FORWARD_SLASH);

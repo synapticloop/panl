@@ -31,7 +31,7 @@ _The image is a screenshot of the in-built Panl Results Viewer Web App available
 
 1. **A textual representation of the CaFUPs** that the Panl Results Viewer web app is using.
 
-1. **The canonical URI path** (which is returned with the Panl results JSON object) - this is important as multiple Panl LPSE URI paths will return exactly the same results - this is the unique URI path for this result set and necessary for de-duplicating the search engine results.  This also includes a link tp the Panl Results Explainer web app.
+1. **The canonical URI path** (which is returned with the Panl results JSON object) - this is important as multiple Panl LPSE URI paths will return exactly the same results - this is the unique URI path for this result set and necessary for de-duplicating the search engine results.  This also includes a link to the Panl Results Explainer web app.
 
 1. **The search query box**, by default, Panl responds to the same parameter name as The Solr server - i.e. 'q'.  This can be configured to be a different value should you choose.
 
