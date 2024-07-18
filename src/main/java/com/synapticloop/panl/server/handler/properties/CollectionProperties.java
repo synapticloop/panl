@@ -83,13 +83,19 @@ public class CollectionProperties {
 
 	public static final String SOLR_DEFAULT_QUERY_OPERAND_OR = "OR";
 	public static final String SOLR_DEFAULT_QUERY_OPERAND_AND = "AND";
+	public static final String JSON_KEY_VALID_URLS = "valid_urls";
 
 
 	/**
 	 * <p>The name of this collection</p>
 	 */
 	private final String solrCollection;
+
+	/**
+	 * <p>The URI that this collection is bound to</p>
+	 */
 	private final String panlCollectionUri;
+
 	/**
 	 * <p>The collection.panl.properties that drive this collection</p>
 	 */
@@ -224,7 +230,7 @@ public class CollectionProperties {
 		}
 
 		JSONObject temp = new JSONObject();
-		temp.put("valid_urls", jsonArray);
+		temp.put(JSON_KEY_VALID_URLS, jsonArray);
 		this.validUrlsJSONArrayString = temp.toString();
 
 		// now for the solr field to panl name lookup
@@ -421,7 +427,6 @@ public class CollectionProperties {
 
 			// we need to determine whether it is an OR facet
 
-
 			FACET_FIELDS.add(facetField);
 			LPSE_FACET_FIELDS.add(facetField.getLpseCode());
 
@@ -463,7 +468,7 @@ public class CollectionProperties {
 	}
 
 	/**
-	 * <p></p>
+	 * <p>Parse the LPSE order</p>
 	 *
 	 * @throws PanlServerException if the panl.lpse.order does not exist
 	 */
@@ -693,14 +698,6 @@ public class CollectionProperties {
 		}
 		return (null);
 	}
-
-//	public boolean getPanlIncludeSingleFacets() {
-//		return (panlIncludeSingleFacets);
-//	}
-//
-//	public boolean getPanlIncludeSameNumberFacets() {
-//		return (panlIncludeSameNumberFacets);
-//	}
 
 	public List<String> getSortFieldLpseCodes() {
 		return (lpseCodeSortFields);

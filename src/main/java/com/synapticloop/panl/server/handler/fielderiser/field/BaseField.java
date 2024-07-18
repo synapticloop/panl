@@ -99,7 +99,7 @@ public abstract class BaseField {
 
 	private int validationType;
 
-	private final List<String> WARNING_MESSAGES = new ArrayList<>();
+	protected final List<String> WARNING_MESSAGES = new ArrayList<>();
 
 	public BaseField(
 			String lpseCode,

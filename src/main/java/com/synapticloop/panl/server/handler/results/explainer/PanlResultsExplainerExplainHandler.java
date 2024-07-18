@@ -204,19 +204,25 @@ public class PanlResultsExplainerExplainHandler implements HttpRequestHandler {
 	}
 
 	private String getDescriptionOfLpseCode(CollectionProperties collectionProperties, int order, String lpseCode) {
+
 		StringBuilder sb = new StringBuilder();
-		sb
-				.append(" ")
+		String solrFieldNameFromLpseCode = collectionProperties.getSolrFieldNameFromLpseCode(lpseCode);
+		String panlNameFromPanlCode = collectionProperties.getPanlNameFromPanlCode(lpseCode);
+		sb.append(" ")
 				.append(order)
 				.append(". ")
 				.append("Panl LPSE code [ ")
 				.append(lpseCode)
-				.append(" ] ")
-				.append(" Solr field '")
-				.append(collectionProperties.getSolrFieldNameFromLpseCode(lpseCode))
-				.append("', Panl name '")
-				.append(collectionProperties.getPanlNameFromPanlCode(lpseCode))
-				.append("'");
+				.append(" ] ");
+		if(null != solrFieldNameFromLpseCode) {
+			sb.append(" Solr field '")
+					.append(solrFieldNameFromLpseCode)
+					.append("', Panl name '")
+					.append(panlNameFromPanlCode)
+					.append("'.");
+		} else {
+			sb.append(" Not mapped to a Solr field.");
+		}
 
 		return(sb.toString());
 	}

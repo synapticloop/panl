@@ -47,8 +47,6 @@ public class PanlQueryField extends BaseField {
 		super(lpseCode, properties, propertyKey, solrCollection, panlCollectionUri);
 	}
 
-
-
 	/**
 	 * <p>We only apply the first query</p>
 	 *
@@ -67,7 +65,7 @@ public class PanlQueryField extends BaseField {
 
 	@Override public List<String> explainAdditional() {
 		List<String> explanations = new ArrayList<>();
-		explanations.add("The text query which maps to the 'q' parameter of Solr.");
+		explanations.add("The search text or phrase query which maps to the 'q' parameter of Solr.");
 		return(explanations);
 	}
 
@@ -84,6 +82,19 @@ public class PanlQueryField extends BaseField {
 				solrCollection,
 				panlCollectionUri,
 				lpseCode);
+	}
+
+	@Override public List<String> explain() {
+		List<String> temp = new ArrayList<>();
+		temp.add("PARAM CONFIG [ " +
+				this.getClass().getSimpleName() +
+				" ] LPSE code '" +
+				lpseCode +
+				"'.");
+
+		temp.addAll(explainAdditional());
+		temp.addAll(WARNING_MESSAGES);
+		return(temp);
 	}
 
 }
