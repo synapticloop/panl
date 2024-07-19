@@ -22,9 +22,8 @@
  * IN THE SOFTWARE.
  */
 
-package com.synapticloop.integration.test.base;import com.fasterxml.jackson.databind.ObjectMapper;
+package com.synapticloop.integration.test.standard;import com.fasterxml.jackson.databind.ObjectMapper;
 import com.synapticloop.integration.BeforeAllExtension;
-import com.synapticloop.integration.test.BeforeAllTests;
 import org.junit.jupiter.api.Test;
 import com.synapticloop.integration.response.json.Root;
 import org.junit.jupiter.api.extension.ExtendWith;
