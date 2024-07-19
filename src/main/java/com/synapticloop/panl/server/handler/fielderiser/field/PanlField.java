@@ -36,6 +36,10 @@ import org.slf4j.LoggerFactory;
 
 import java.util.*;
 
+/**
+ * <p>This class is just a field which maps to a Solr field.  The field is not
+ * available for faceting, but is returned in the document results.</p>
+ */
 public class PanlField extends BaseField {
 	private static final Logger LOGGER = LoggerFactory.getLogger(PanlField.class);
 
@@ -49,16 +53,42 @@ public class PanlField extends BaseField {
 	}
 
 
+	/**
+	 * <p>A field __NEVER__ appears in the URI path - __ALWAYS__ returns an empty
+	 * string</p>
+	 *
+	 * @param panlTokenMap The token map with all fields and a list of their
+	 * 		values
+	 * @param collectionProperties THe collection properties
+	 *
+	 * @return an empty string
+	 */
 	@Override
 	public String getCanonicalUriPath(Map<String, List<LpseToken>> panlTokenMap, CollectionProperties collectionProperties) {
 		return ("");
 	}
 
+	/**
+	 * <p>Whilst a field has a LPSE code, the field will __NEVER__ appear in the
+	 * URI path and consequently does not require the LPSE code to be in the URI
+	 * - __ALWAYS__ returns an empty string</p>
+	 *
+	 * @param panlTokenMap The token map with all fields and a list of their
+	 * 		values
+	 * @param collectionProperties THe collection properties
+	 *
+	 * @return an empty string
+	 */
 	@Override
 	public String getCanonicalLpseCode(Map<String, List<LpseToken>> panlTokenMap, CollectionProperties collectionProperties) {
 		return ("");
 	}
 
+	/**
+	 * <p>Gets the logger for this class.</p>
+	 *
+	 * @return The logger for this class
+	 */
 	@Override public Logger getLogger() {
 		return (LOGGER);
 	}
@@ -85,5 +115,4 @@ public class PanlField extends BaseField {
 				lpseCode,
 				lpseLength);
 	}
-
 }

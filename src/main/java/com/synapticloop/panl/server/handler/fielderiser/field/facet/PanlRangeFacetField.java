@@ -351,7 +351,7 @@ public class PanlRangeFacetField extends PanlFacetField {
 			}
 		}
 		// addition URIs are a little bit different...
-		JSONObject additionURIObject = getRangeAdditionURIObject(collectionProperties, panlTokenMap, true);
+		JSONObject additionURIObject = getRangeAdditionURIObject(collectionProperties, panlTokenMap);
 		rangeFacetObject.put(JSON_KEY_URIS, additionURIObject);
 
 
@@ -360,8 +360,7 @@ public class PanlRangeFacetField extends PanlFacetField {
 
 	private JSONObject getRangeAdditionURIObject(
 			CollectionProperties collectionProperties,
-			Map<String, List<LpseToken>> panlTokenMap,
-			boolean shouldRange) {
+			Map<String, List<LpseToken>> panlTokenMap) {
 
 		String additionLpseCode = lpseCode;
 		JSONObject additionObject = new JSONObject();
@@ -371,8 +370,7 @@ public class PanlRangeFacetField extends PanlFacetField {
 
 		for (BaseField baseField : collectionProperties.getLpseFields()) {
 			if (panlTokenMap.containsKey(baseField.getLpseCode()) &&
-					!(shouldRange &&
-							baseField.getLpseCode().equals(additionLpseCode))) {
+					!(baseField.getLpseCode().equals(additionLpseCode))) {
 
 				String resetUriPath = baseField.getResetUriPath(panlTokenMap, collectionProperties);
 				lpseUri.append(resetUriPath);
@@ -385,7 +383,6 @@ public class PanlRangeFacetField extends PanlFacetField {
 			}
 
 			if (baseField.getLpseCode().equals(additionLpseCode)) {
-				if (shouldRange) {
 					// depends on whether there is an infix
 					// at this point we want to also do the min value replacement, if it
 					// exists
@@ -417,13 +414,12 @@ public class PanlRangeFacetField extends PanlFacetField {
 										JSON_VALUE_NO_INFIX_REPLACEMENT +
 										URLEncoder.encode(getValuePrefix(), StandardCharsets.UTF_8));
 					}
-				}
+
 
 				additionObject.put(JSON_KEY_BEFORE, lpseUri.toString());
 				lpseUri.setLength(0);
 				lpseCodeUri.append(baseField.getLpseCode());
 
-				if (shouldRange) {
 					if (hasRangeInfix) {
 						lpseUri.append(URLEncoder.encode(getRangeSuffix(), StandardCharsets.UTF_8));
 					} else {
@@ -434,7 +430,6 @@ public class PanlRangeFacetField extends PanlFacetField {
 						lpseUriAfterMax.append(URLEncoder.encode(rangeMaxValueReplacement, StandardCharsets.UTF_8))
 								.append(FORWARD_SLASH);
 					}
-				}
 				lpseUri.append(FORWARD_SLASH);
 			}
 		}

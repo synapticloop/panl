@@ -43,6 +43,9 @@ import java.util.*;
 import static com.synapticloop.panl.server.handler.processor.Processor.*;
 import static com.synapticloop.panl.server.handler.properties.CollectionProperties.PROPERTY_KEY_PANL_SORT_FIELDS;
 
+/**
+ * <p>This is the Base Field for all fields.</p>
+ */
 public abstract class BaseField {
 
 	public static final String JSON_KEY_FACET_NAME = "facet_name";
@@ -177,6 +180,10 @@ public abstract class BaseField {
 		}
 	}
 
+	/**
+	 * <p>Populate the type of validation that the Panl server will perform based
+	 * on the Solr field type.</p>
+	 */
 	protected void populateSolrFieldTypeValidation() {
 		if (null == this.solrFieldType) {
 			this.solrFieldType = properties.getProperty(PROPERTY_KEY_PANL_TYPE + lpseCode);
@@ -228,14 +235,31 @@ public abstract class BaseField {
 	 */
 	public abstract Logger getLogger();
 
+	/**
+	 * <p>Get the LPSE code for this field.</p>
+	 *
+	 * @return The LPSE code for the field
+	 */
 	public String getLpseCode() {
 		return lpseCode;
 	}
 
+	/**
+	 * <p>Get the Panl field name for this field.  The Panl field name is the
+	 * more 'human-readable' version of the Solr field name.</p>
+	 *
+	 * @return The Panl field name for this field
+	 */
 	public String getPanlFieldName() {
 		return panlFieldName;
 	}
 
+	/**
+	 * <p>Get the Solr field name for this field.  This maps to the defined field
+	 * in the Solr schema.</p>
+	 *
+	 * @return The Solr field name
+	 */
 	public String getSolrFieldName() {
 		return solrFieldName;
 	}
@@ -314,10 +338,30 @@ public abstract class BaseField {
 		return (temp);
 	}
 
+	/**
+	 * <p>Get the encoded value for this field - which will URL encoded.  If there
+	 * are any other transformations (i.e. prefixes, infixes, suffixes, or value
+	 * replacements, this will be done in a sub-class by the overriding method).</p>
+	 *
+	 * @param value The value to URL encode
+	 *
+	 * @return The URL encoded value
+	 */
 	public String getEncodedPanlValue(String value) {
 		return (URLEncoder.encode(value, StandardCharsets.UTF_8));
 	}
 
+	/**
+	 * <p>Get the encoded value for this field - which will URL encoded.  If there
+	 * are any other transformations (i.e. prefixes, infixes, suffixes, or value
+	 * replacements, this will be done in a sub-class by the overriding method).</p>
+	 *
+	 * <p>If the value is null, then an empty string will be returned</p>
+	 *
+	 * @param token The LPSE token to encode
+	 *
+	 * @return The encoded value
+	 */
 	public String getEncodedPanlValue(LpseToken token) {
 		if (null == token.getValue()) {
 			return ("");
@@ -499,26 +543,55 @@ public abstract class BaseField {
 				lpseLength);
 	}
 
+	/**
+	 * <p>Get the value prefix.  This method will __ALWAYS__ return an empty
+	 * string and relies on being overridden for those fields that allow a prefix
+	 * to be set.</p>
+	 *
+	 * @return The prefix for this value
+	 */
 	public String getValuePrefix() {
 		return ("");
 	}
 
+	/**
+	 * <p>Get the value suffix.  This method will __ALWAYS__ return an empty
+	 * string and relies on being overridden for those fields that allow a suffix
+	 * to be set.</p>
+	 *
+	 * @return The suffix for this value
+	 */
 	public String getValueSuffix() {
 		return ("");
 	}
 
+	/**
+	 * <p>Add information - i.e. JSON keys and values - to the addition object.</p>
+	 *
+	 * <p>This method __NEVER__ adds any keys and values to the object, only
+	 * overriding methods will add things to the object.</p>
+	 *
+	 * @param additionObject The addition object to add keys and values to
+	 * @param panlTokenMap The panl token map to use as a reference
+	 */
 	public void addToAdditionObject(JSONObject additionObject, Map<String, List<LpseToken>> panlTokenMap) {
 		// do nothing
 	}
 
 	/**
-	 * <p>The internal implementation for applying the tokens to the SolrQuery</p>
+	 * <p>The internal implementation for applying the tokens to the Solr Query.</p>
 	 *
 	 * @param solrQuery The SolrQuery to apply the tokens to
 	 * @param lpseTokenList The list of tokens to apply to the Solr query
 	 */
 	protected abstract void applyToQueryInternal(SolrQuery solrQuery, List<LpseToken> lpseTokenList);
 
+	/**
+	 * <p>Log a warning message for a property key.</p>
+	 *
+	 * @param lpseCode The LPSE code that this warning is about
+	 * @param propertyKey The property key from the properties file
+	 */
 	protected void logWarnProperties(String lpseCode, String propertyKey) {
 		if (properties.containsKey(propertyKey)) {
 			String message = String.format("LPSE code '%s' has a property of '%s' which is invalid and should be removed.  (It has been ignored...)", lpseCode, propertyKey);
@@ -671,7 +744,7 @@ public abstract class BaseField {
 
 			if (baseField.getLpseCode().equals(additionLpseCode)) {
 
-				additionObject.put(JSON_KEY_BEFORE, lpseUri.toString() +  baseField.getResetUriPath(panlTokenMap, collectionProperties));
+				additionObject.put(JSON_KEY_BEFORE, lpseUri.toString() + baseField.getResetUriPath(panlTokenMap, collectionProperties));
 //				additionObject.put(JSON_KEY_BEFORE, baseField.getResetUriPath(panlTokenMap, collectionProperties));
 				lpseUri.setLength(0);
 				lpseCode.append(baseField.getResetLpseCode(panlTokenMap, collectionProperties));
@@ -711,6 +784,6 @@ public abstract class BaseField {
 	}
 
 	public boolean appendAvailableDateRangeValues(JSONObject dateRangeFacetObject, CollectionProperties collectionProperties, Map<String, List<LpseToken>> panlTokenMap) {
-		return(false);
+		return (false);
 	}
 }

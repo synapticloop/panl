@@ -66,6 +66,7 @@ public class PanlServer {
 	private final List<CollectionRequestHandler> collectionRequestHandlers = new ArrayList<>();
 	private final List<CollectionProperties> collectionPropertiesList = new ArrayList<>();
 
+	private HttpServer httpServer;
 	/**
 	 * <p>Instantiate a new PanlServer instance.  This will parse the
 	 * <code>properties.properties</code> and any linked
@@ -240,7 +241,7 @@ public class PanlServer {
 		}
 
 		// create the server
-		HttpServer httpServer = bootstrap.create();
+		httpServer = bootstrap.create();
 
 		// Attempt to start the server
 		try {
@@ -251,5 +252,9 @@ public class PanlServer {
 		} catch (Exception e) {
 			throw new PanlServerException("Could not start the server.", e);
 		}
+	}
+
+	public void stop() {
+		httpServer.stop();
 	}
 }

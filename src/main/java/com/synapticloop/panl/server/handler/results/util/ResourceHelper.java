@@ -42,7 +42,7 @@ import java.util.Map;
 
 /**
  * <p>A helper class for serving up assets from the classpath.  Used by the
- * panl result viewer (and helpers) in-built handler.</p>
+ * panl result viewer / explainer (and helpers) in-built handler.</p>
  *
  * @author synapticloop
  */
@@ -76,6 +76,7 @@ public class ResourceHelper {
 	private static final Map<String, byte[]> CONTENT_CACHE = new HashMap<>();
 	private static final Map<String, ContentType> CONTENT_TYPE_CACHE = new HashMap<>();
 	private static final Map<String, Integer> CONTENT_RESPONSE_CODE_CACHE = new HashMap<>();
+
 	/**
 	 * <p>Serve a resourcePath from the class loader and cache the response.</p>
 	 *
