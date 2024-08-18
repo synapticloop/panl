@@ -432,8 +432,7 @@ public abstract class BaseField {
 						FacetLpseToken facetLpseToken = (FacetLpseToken) lpseToken;
 						if (facetLpseToken.getIsRangeToken()) {
 							sb.append(lpseToken.getLpseCode());
-							// TODO - surely INFIX???
-							sb.append((facetLpseToken.getHasMidfix() ? "-" : "+"));
+							sb.append((facetLpseToken.getHasInfix() ? "-" : "+"));
 							sb.append(lpseToken.getLpseCode());
 						} else {
 							sb.append(lpseToken.getLpseCode());
@@ -500,7 +499,8 @@ public abstract class BaseField {
 	 */
 	public List<String> explain() {
 		List<String> temp = new ArrayList<>();
-		temp.add("FIELD CONFIG [ " +
+		temp.add("FIELD CONFIG - property key: '" + propertyKey +
+				"' [ " +
 				this.getClass().getSimpleName() +
 				" ] LPSE code '" +
 				lpseCode +

@@ -142,7 +142,7 @@ public class CollectionProperties {
 	private final Map<String, PanlDateRangeFacetField> LPSE_CODE_DATE_FACET_MAP = new HashMap<>();
 	private final Map<String, PanlBooleanFacetField> LPSE_CODE_BOOLEAN_FACET_MAP = new HashMap<>();
 
-	private final Map<String, Set<String>> LPSE_CODE_WHEN = new HashMap<>();
+	private final Map<String, Set<String>> LPSE_CODE_WHEN_MAP = new HashMap<>();
 	private final Map<String, String> SOLR_NAME_TO_LPSE_CODE_MAP = new HashMap<>();
 
 	private final Set<String> PANL_CODE_OR_FIELDS = new HashSet<>();
@@ -436,11 +436,11 @@ public class CollectionProperties {
 					String trim = split.trim();
 
 					if(!trim.isEmpty()) {
-						if (!LPSE_CODE_WHEN.containsKey(lpseCode)) {
-							LPSE_CODE_WHEN.put(lpseCode, new HashSet<>());
+						if (!LPSE_CODE_WHEN_MAP.containsKey(lpseCode)) {
+							LPSE_CODE_WHEN_MAP.put(lpseCode, new HashSet<>());
 						}
 
-						LPSE_CODE_WHEN.get(lpseCode).add(trim);
+						LPSE_CODE_WHEN_MAP.get(lpseCode).add(trim);
 					}
 				}
 			}
@@ -658,13 +658,13 @@ public class CollectionProperties {
 	 * <p>Get the facet fields that should be passed through to Solr, ensuring
 	 * that any hierarchical lpse codes filter out those that are not supposed to
 	 * be retrieved.</p>
-	 * 
+	 *
 	 * @param lpseTokens The current active LPSE tokens
 	 *
 	 * @return The array of solr fields to facet on
 	 */
 	public String[] getWhenSolrFacetFields(List<LpseToken> lpseTokens) {
-		if(LPSE_CODE_WHEN.isEmpty()) {
+		if(LPSE_CODE_WHEN_MAP.isEmpty()) {
 			return(solrFacetFields);
 		}
 
@@ -681,9 +681,9 @@ public class CollectionProperties {
 				returnedFacetFields.add(solrFacetFieldName);
 			} else {
 				// now we need to lookup the lpseCode in the WHEN map
-				if(LPSE_CODE_WHEN.containsKey(lpseCode)) {
+				if(LPSE_CODE_WHEN_MAP.containsKey(lpseCode)) {
 					// do we have the 'when' code in the token map?
-					Iterator<String> iterator = LPSE_CODE_WHEN.get(lpseCode).iterator();
+					Iterator<String> iterator = LPSE_CODE_WHEN_MAP.get(lpseCode).iterator();
 					while(iterator.hasNext()) {
 						if(activeLpseCodes.contains(iterator.next())) {
 							returnedFacetFields.add(solrFacetFieldName);
@@ -853,5 +853,10 @@ public class CollectionProperties {
 	public List<PanlDateRangeFacetField> getDateRangeFacetFields() {
 		return(List.of(LPSE_CODE_DATE_FACET_MAP.values().toArray(new PanlDateRangeFacetField[0])));
 	}
+
+	public Set<String> getLpseWhenCode(String lpseCode) {
+		return(LPSE_CODE_WHEN_MAP.get(lpseCode));
+	}
+
 }
 

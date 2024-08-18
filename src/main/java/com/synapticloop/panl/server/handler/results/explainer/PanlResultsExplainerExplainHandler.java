@@ -42,6 +42,7 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.StringTokenizer;
 
@@ -214,12 +215,32 @@ public class PanlResultsExplainerExplainHandler implements HttpRequestHandler {
 				.append("Panl LPSE code [ ")
 				.append(lpseCode)
 				.append(" ] ");
+
 		if(null != solrFieldNameFromLpseCode) {
 			sb.append(" Solr field '")
 					.append(solrFieldNameFromLpseCode)
 					.append("', Panl name '")
 					.append(panlNameFromPanlCode)
-					.append("'.");
+					.append("'.  ");
+
+			if(collectionProperties.getLpseWhenCode(lpseCode) != null) {
+				sb.append("Will only be available if any of the following LPSE codes are selected: ");
+				Iterator<String> iterator = collectionProperties.getLpseWhenCode(lpseCode).iterator();
+				while(iterator.hasNext()) {
+					String nextLpseCode = iterator.next();
+					sb.append("'")
+							.append(nextLpseCode)
+							.append("' - solr field '")
+							.append(collectionProperties.getSolrFieldNameFromLpseCode(nextLpseCode))
+							.append("'");
+					if(iterator.hasNext()) {
+						sb.append(", ");
+					} else {
+						sb.append(".  ");
+					}
+				}
+			}
+
 		} else {
 			sb.append(" Not mapped to a Solr field.");
 		}

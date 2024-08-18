@@ -24,12 +24,10 @@ package com.synapticloop.panl.server.handler.tokeniser.token.facet;
  * IN THE SOFTWARE.
  */
 
-import com.synapticloop.panl.server.handler.fielderiser.field.facet.PanlRangeFacetField;
 import com.synapticloop.panl.server.handler.properties.CollectionProperties;
 import com.synapticloop.panl.server.handler.fielderiser.field.BaseField;
 import com.synapticloop.panl.server.handler.tokeniser.LpseTokeniser;
 import com.synapticloop.panl.server.handler.tokeniser.token.LpseToken;
-import com.synapticloop.panl.server.handler.tokeniser.token.facet.bean.FromToBean;
 
 import java.util.StringTokenizer;
 
@@ -77,7 +75,7 @@ public class FacetLpseToken extends LpseToken {
 	private String solrField = null;
 	private String toValue = null;
 	protected boolean isRangeToken = false;
-	protected boolean hasMidfix = false;
+	protected boolean hasInfix = false;
 
 	public FacetLpseToken(
 			CollectionProperties collectionProperties,
@@ -148,8 +146,8 @@ public class FacetLpseToken extends LpseToken {
 		return isRangeToken;
 	}
 
-	public boolean getHasMidfix() {
-		return hasMidfix;
+	public boolean getHasInfix() {
+		return hasInfix;
 	}
 
 	@Override public boolean getCanHaveMultiple() {
