@@ -66,6 +66,7 @@ public abstract class BaseField {
 	public static final String PROPERTY_KEY_PANL_PREFIX = "panl.prefix.";
 	public static final String PROPERTY_KEY_PANL_SUFFIX = "panl.suffix.";
 	public static final String PROPERTY_KEY_SOLR_FACET_MIN_COUNT = "solr.facet.min.count";
+	public static final String PROPERTY_KEY_PANL_WHEN = "panl.when.";
 
 	public static final String PROPERTY_KEY_PANL_INCLUDE_SAME_NUMBER_FACETS = "panl.include.same.number.facets";
 	public static final String PROPERTY_KEY_PANL_INCLUDE_SINGLE_FACETS = "panl.include.single.facets";

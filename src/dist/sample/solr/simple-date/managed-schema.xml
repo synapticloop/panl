@@ -7,6 +7,7 @@
 	<field name="solr_date" type="pdate" indexed="true" stored="true" multiValued="false" />
 	<field name="text_date" type="string" indexed="true" stored="true" multiValued="false" />
 	<field name="year" type="pint" indexed="true" stored="true" multiValued="false" />
+	<field name="decade" type="pint" indexed="true" stored="true" multiValued="false" />
 	<field name="month" type="string" indexed="true" stored="true" multiValued="false" />
 	<field name="day" type="pint" indexed="true" stored="true" multiValued="false" />
 	<field name="day_of_week" type="string" indexed="true" stored="true" multiValued="false" />

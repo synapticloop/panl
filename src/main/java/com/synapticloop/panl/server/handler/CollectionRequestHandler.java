@@ -176,7 +176,11 @@ public class CollectionRequestHandler {
 			// this may be overridden by the lpse status
 			solrQuery.setRows(collectionProperties.getNumResultsPerPage());
 
-			solrQuery.addFacetField(collectionProperties.getSolrFacetFields());
+			// no we need to go through all tokens and only return the ones that we
+			// need to be displayed
+			String[] whenSolrFacetFields = collectionProperties.getWhenSolrFacetFields(lpseTokens);
+			System.out.println(Arrays.toString(whenSolrFacetFields));
+			solrQuery.addFacetField(whenSolrFacetFields);
 
 			// now we need to go through the panl facets and add them
 

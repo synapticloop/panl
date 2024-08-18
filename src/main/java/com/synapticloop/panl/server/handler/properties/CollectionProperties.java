@@ -32,6 +32,7 @@ import com.synapticloop.panl.server.handler.fielderiser.field.*;
 import com.synapticloop.panl.server.handler.fielderiser.field.facet.*;
 import com.synapticloop.panl.server.handler.fielderiser.field.param.*;
 import com.synapticloop.panl.server.handler.helper.PropertyHelper;
+import com.synapticloop.panl.server.handler.tokeniser.token.LpseToken;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.slf4j.Logger;
@@ -140,6 +141,9 @@ public class CollectionProperties {
 	private final Map<String, PanlSortField> SOLR_NAME_TO_SORT_FIELD_MAP = new HashMap<>();
 	private final Map<String, PanlDateRangeFacetField> LPSE_CODE_DATE_FACET_MAP = new HashMap<>();
 	private final Map<String, PanlBooleanFacetField> LPSE_CODE_BOOLEAN_FACET_MAP = new HashMap<>();
+
+	private final Map<String, Set<String>> LPSE_CODE_WHEN = new HashMap<>();
+	private final Map<String, String> SOLR_NAME_TO_LPSE_CODE_MAP = new HashMap<>();
 
 	private final Set<String> PANL_CODE_OR_FIELDS = new HashSet<>();
 	private final Set<String> PANL_CODE_RANGE_FIELDS = new HashSet<>();
@@ -425,6 +429,21 @@ public class CollectionProperties {
 				facetField = new PanlFacetField(lpseCode, panlFieldKey, properties, solrCollection, panlCollectionUri, lpseLength);
 			}
 
+			String lpseWhen = properties.getProperty(PROPERTY_KEY_PANL_WHEN + lpseCode);
+			if(null != lpseWhen) {
+				String[] splits = lpseWhen.split(",");
+				for(String split: splits) {
+					String trim = split.trim();
+
+					if(!trim.isEmpty()) {
+						if (!LPSE_CODE_WHEN.containsKey(lpseCode)) {
+							LPSE_CODE_WHEN.put(lpseCode, new HashSet<>());
+						}
+
+						LPSE_CODE_WHEN.get(lpseCode).add(trim);
+					}
+				}
+			}
 			// we need to determine whether it is an OR facet
 
 			FACET_FIELDS.add(facetField);
@@ -434,6 +453,7 @@ public class CollectionProperties {
 
 			LPSE_CODE_TO_FACET_FIELD_MAP.put(facetField.getLpseCode(), facetField);
 			SOLR_NAME_TO_FACET_FIELD_MAP.put(facetField.getSolrFieldName(), facetField);
+			SOLR_NAME_TO_LPSE_CODE_MAP.put(facetField.getSolrFieldName(), facetField.getLpseCode());
 		}
 
 		List<String> temp = new ArrayList<>();
@@ -632,6 +652,41 @@ public class CollectionProperties {
 
 	public int getNumResultsPerPage() {
 		return numResultsPerPage;
+	}
+
+	public String[] getWhenSolrFacetFields(List<LpseToken> lpseTokens) {
+		if(LPSE_CODE_WHEN.isEmpty()) {
+			return(solrFacetFields);
+		}
+
+		Set<String> activeLpseCodes = new HashSet<>();
+		for(LpseToken lpseToken: lpseTokens) {
+			activeLpseCodes.add(lpseToken.getLpseCode());
+		}
+
+		List<String> returnedFacetFields = new ArrayList<>();
+		for(String solrFacetFieldName: solrFacetFields) {
+			String lpseCode = SOLR_NAME_TO_LPSE_CODE_MAP.get(solrFacetFieldName);
+			if(null == lpseCode) {
+				// shouldn't happen, but doesn't matter
+				returnedFacetFields.add(solrFacetFieldName);
+			} else {
+				// now we need to lookup the lpseCode in the WHEN map
+				if(LPSE_CODE_WHEN.containsKey(lpseCode)) {
+					// do we have the 'when' code in the token map?
+					Iterator<String> iterator = LPSE_CODE_WHEN.get(lpseCode).iterator();
+					while(iterator.hasNext()) {
+						if(activeLpseCodes.contains(iterator.next())) {
+							returnedFacetFields.add(solrFacetFieldName);
+							break;
+						}
+					}
+				} else {
+					returnedFacetFields.add(solrFacetFieldName);
+				}
+			}
+		}
+		return(returnedFacetFields.toArray(new String[0]));
 	}
 
 	public String[] getSolrFacetFields() {

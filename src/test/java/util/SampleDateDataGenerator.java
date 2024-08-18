@@ -67,7 +67,10 @@ public class SampleDateDataGenerator {
 			jsonObject.put("id", SDF_ID.format(date));
 			jsonObject.put("solr_date", SDF_SOLR.format(date));
 			jsonObject.put("text_date", SDF_TEXT.format(date));
-			jsonObject.put("year", Integer.parseInt(SDF_YEAR.format(date)));
+			int year = Integer.parseInt(SDF_YEAR.format(date));
+			int decade = year - year % 10;
+			jsonObject.put("year", year);
+			jsonObject.put("decade", decade);
 			jsonObject.put("month", SDF_MONTH.format(date));
 			jsonObject.put("day", Integer.parseInt(SDF_DAY.format(date)));
 			jsonObject.put("day_of_week", SDF_DAY_OF_WEEK.format(date));
@@ -77,7 +80,7 @@ public class SampleDateDataGenerator {
 
 		try {
 			FileUtils.writeStringToFile(
-					new File("src/dist/data/simple-date.json"),
+					new File("src/dist/sample/data/simple-date.json"),
 					jsonArray.toString(2),
 					Charset.defaultCharset(), false);
 
