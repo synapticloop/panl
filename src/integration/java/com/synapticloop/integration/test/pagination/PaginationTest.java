@@ -1,3 +1,5 @@
+package com.synapticloop.integration.test.pagination;
+
 /*
  * Copyright (c) 2008-2024 synapticloop.
  *
@@ -21,9 +23,6 @@
  * FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
  * IN THE SOFTWARE.
  */
-
-package com.synapticloop.integration.test.pagination;
-
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.synapticloop.integration.BeforeAllExtension;
