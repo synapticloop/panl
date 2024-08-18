@@ -178,9 +178,7 @@ public class CollectionRequestHandler {
 
 			// no we need to go through all tokens and only return the ones that we
 			// need to be displayed
-			String[] whenSolrFacetFields = collectionProperties.getWhenSolrFacetFields(lpseTokens);
-			System.out.println(Arrays.toString(whenSolrFacetFields));
-			solrQuery.addFacetField(whenSolrFacetFields);
+			solrQuery.addFacetField(collectionProperties.getWhenSolrFacetFields(lpseTokens));
 
 			// now we need to go through the panl facets and add them
 
@@ -226,6 +224,8 @@ public class CollectionRequestHandler {
 
 			// now we need to set the start
 			solrQuery.setStart((pageNum - 1) * numRows);
+			solrQuery.setRows(numRows);
+
 			System.out.println(solrQuery);
 
 			long buildRequestNanos = System.nanoTime() - startNanos;
