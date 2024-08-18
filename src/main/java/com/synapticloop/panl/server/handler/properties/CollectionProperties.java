@@ -654,6 +654,15 @@ public class CollectionProperties {
 		return numResultsPerPage;
 	}
 
+	/**
+	 * <p>Get the facet fields that should be passed through to Solr, ensuring
+	 * that any hierarchical lpse codes filter out those that are not supposed to
+	 * be retrieved.</p>
+	 * 
+	 * @param lpseTokens The current active LPSE tokens
+	 *
+	 * @return The array of solr fields to facet on
+	 */
 	public String[] getWhenSolrFacetFields(List<LpseToken> lpseTokens) {
 		if(LPSE_CODE_WHEN.isEmpty()) {
 			return(solrFacetFields);
@@ -687,10 +696,6 @@ public class CollectionProperties {
 			}
 		}
 		return(returnedFacetFields.toArray(new String[0]));
-	}
-
-	public String[] getSolrFacetFields() {
-		return (solrFacetFields);
 	}
 
 	/**
