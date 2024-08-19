@@ -28,17 +28,21 @@ import com.synapticloop.panl.server.handler.results.PanlResultsStaticHandler;
 import org.apache.commons.io.IOUtils;
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
-import org.apache.http.entity.ByteArrayEntity;
-import org.apache.http.entity.ContentType;
-import org.apache.http.entity.StringEntity;
+import org.apache.http.entity.*;
+import org.apache.http.util.EntityUtils;
 import org.json.JSONObject;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.net.URISyntaxException;
+import java.net.URL;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * <p>A helper class for serving up assets from the classpath.  Used by the
@@ -95,9 +99,10 @@ public class ResourceHelper {
 		InputStreamReader reader = null;
 		try (InputStream resourceAsStream = PanlResultsStaticHandler.class.getResourceAsStream(resourcePath)) {
 			if (null != resourceAsStream) {
+				URL resourceURL = PanlResultsStaticHandler.class.getResource(resourcePath);
 				reader = new InputStreamReader(resourceAsStream);
 				ContentType contentType = getContentType(resourcePath);
-				byte[] content = IOUtils.toByteArray(reader, StandardCharsets.UTF_8);
+				byte[] content = Files.readAllBytes(Path.of(Objects.requireNonNull(resourceURL).toURI()));
 				CONTENT_CACHE.put(resourcePath, content);
 				CONTENT_TYPE_CACHE.put(resourcePath, contentType);
 				CONTENT_RESPONSE_CODE_CACHE.put(resourcePath, HttpStatus.SC_OK);
@@ -110,7 +115,7 @@ public class ResourceHelper {
 				CONTENT_TYPE_CACHE.put(resourcePath, CONTENT_TYPE_JSON);
 				CONTENT_RESPONSE_CODE_CACHE.put(resourcePath, HttpStatus.SC_NOT_FOUND);
 			}
-		} catch (IOException ignored) {
+		} catch (IOException | URISyntaxException ignored) {
 			JSONObject jsonObject = new JSONObject();
 			jsonObject.put(JSON_KEY_ERROR, true);
 			jsonObject.put(JSON_KEY_MESSAGE, "Could not serve the resourcePath '" + resourcePath + "'");

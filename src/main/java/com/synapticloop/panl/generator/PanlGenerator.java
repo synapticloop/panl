@@ -242,6 +242,7 @@ public class PanlGenerator {
 						defaultValue,
 						String.format("Value '%s' __MUST__ be one of '%s'.", temp, PanlCollection.CODES)));
 			}
+
 			// It cannot be already in use
 			if (panlParamMap.containsKey(temp)) {
 				return (getAndValidateParameterInput(
@@ -258,6 +259,11 @@ public class PanlGenerator {
 		}
 	}
 
+	/**
+	 * <p>Generate the collection_uri.panl.properties file.</p>
+	 *
+	 * @param panlCollection The panl collection object to generate the file with
+	 */
 	private void generateCollectionDotPanlDotProperties(PanlCollection panlCollection) {
 		StringBuilder outputString = new StringBuilder();
 

@@ -103,6 +103,17 @@ public class PanlField extends BaseField {
 
 	@Override protected void appendToAvailableObjectInternal(JSONObject jsonObject) { /* do nothing */ }
 
+	/**
+	 * <p>Instantiate the token for this field.</p>
+	 *
+	 * @param collectionProperties The collection properties
+	 * @param lpseCode The lpseCode for this field
+	 * @param query The query parameter
+	 * @param valueTokeniser The value tokeniser
+	 * @param lpseTokeniser The lpse tokeniser
+	 *
+	 * @return The LpseToken - in this case a subset of the FacetLpseToken
+	 */
 	public LpseToken instantiateToken(CollectionProperties collectionProperties, String lpseCode, String query, StringTokenizer valueTokeniser, LpseTokeniser lpseTokeniser) {
 		return (new FacetLpseToken(collectionProperties, this.lpseCode, lpseTokeniser, valueTokeniser));
 	}

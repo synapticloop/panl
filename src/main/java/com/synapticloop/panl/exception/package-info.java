@@ -1,5 +1,6 @@
 /**
- * <p>Contains all exceptions that can be thrown by the Panl generator, or the Panl server.</p>
+ * <p>Contains all exceptions that can be thrown by the Panl generator, or the
+ * Panl server.</p>
  *
  * @since 1.0
  * @author synapticloop

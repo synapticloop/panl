@@ -41,6 +41,10 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.util.*;
 
+/**
+ *
+ * @author synapticloop
+ */
 public class PanlCollection {
 	private static final Logger LOGGER = LoggerFactory.getLogger(PanlCollection.class);
 
