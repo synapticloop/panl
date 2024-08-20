@@ -31,6 +31,7 @@ import org.slf4j.LoggerFactory;
 
 import java.io.*;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.FileSystems;
 import java.nio.file.Files;
 import java.util.*;
 
@@ -56,6 +57,7 @@ public class PanlGenerator {
 
 	private final String propertiesFileLocation;
 	private final String schemaFileLocations;
+	private final String collectionPropertiesOutputDirectory;
 
 	/**
 	 * <p>The list of schemas to parse and add to the panl.properties file which
@@ -98,7 +100,8 @@ public class PanlGenerator {
 		if (!shouldOverwrite) {
 			checkPropertiesFileLocation();
 		}
-
+		File file = new File(propertiesFileLocation);
+		this.collectionPropertiesOutputDirectory = file.getParentFile().getAbsolutePath();
 		checkSchemaFileLocations();
 	}
 
@@ -128,7 +131,8 @@ public class PanlGenerator {
 	 * @throws PanlGenerateException If the properties file exists
 	 */
 	private void checkPropertiesFileLocation() throws PanlGenerateException {
-		if (new File(propertiesFileLocation).exists()) {
+		File propertiesFile = new File(propertiesFileLocation);
+		if (propertiesFile.exists()) {
 			throw new PanlGenerateException("Properties file '" +
 					this.propertiesFileLocation +
 					"' exists, and we are not overwriting.  " +
@@ -271,7 +275,7 @@ public class PanlGenerator {
 			assert inputStream != null;
 			try (InputStreamReader streamReader = new InputStreamReader(inputStream, StandardCharsets.UTF_8);
 			     BufferedReader reader = new BufferedReader(streamReader);
-			     OutputStream outputStream = Files.newOutputStream(new File(panlCollection.getCollectionName() + ".panl.properties").toPath());
+			     OutputStream outputStream = Files.newOutputStream(new File(this.collectionPropertiesOutputDirectory + FileSystems.getDefault().getSeparator() +panlCollection.getCollectionName() + ".panl.properties").toPath());
 			     OutputStreamWriter outputStreamWriter = new OutputStreamWriter(outputStream);
 			     BufferedWriter writer = new BufferedWriter(outputStreamWriter)) {
 
@@ -315,15 +319,17 @@ public class PanlGenerator {
 		try (InputStream inputStream = PanlGenerator.class.getResourceAsStream(TEMPLATE_LOCATION_PANL_PROPERTIES)) {
 			assert inputStream != null;
 
+			// determine the output directory for the panl.properties and the
+			// associated directory
 			try (InputStreamReader streamReader = new InputStreamReader(inputStream, StandardCharsets.UTF_8);
 			     BufferedReader reader = new BufferedReader(streamReader);
-			     OutputStream outputStream = Files.newOutputStream(new File("panl.properties").toPath());
+			     OutputStream outputStream = Files.newOutputStream(new File(this.propertiesFileLocation).toPath());
 			     OutputStreamWriter outputStreamWriter = new OutputStreamWriter(outputStream);
 			     BufferedWriter writer = new BufferedWriter(outputStreamWriter)) {
 
 				String line;
 				while ((line = reader.readLine()) != null) {
-					if (line.startsWith("$panl.panlCollections")) {
+					if (line.startsWith("$panl.collection")) {
 						outputString.append(collectionPropertyFiles)
 								.append("\n");
 					} else {
