@@ -53,7 +53,6 @@ public class PanlField {
 		this.solrFieldType = solrFieldType;
 		this.schemaXmlLine = schemaXmlLine;
 		this.isFacet = isFacet;
-
 	}
 
 	private String getPrettyName(String name) {
@@ -115,7 +114,8 @@ public class PanlField {
 				String.format("panl.type.%s=%s\n", lpseCode, solrFieldType) +
 				prefixSuffix +
 				booleanFieldText +
-				dateFieldText
+				dateFieldText +
+				String.format("panl.when.%s=\n", lpseCode)
 		);
 	}
 

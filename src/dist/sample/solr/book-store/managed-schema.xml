@@ -2,7 +2,7 @@
 <schema name="book-store" version="1.6">
 	<field name="_version_" type="plong" indexed="false" stored="false"/>
 
-	<field name="id" type="string" stored="true" required="true" multiValued="false" />
+	<field name="id" type="string" stored="true" indexed="true" required="true" multiValued="false" />
 
 	<field name="author" type="string" indexed="true" stored="true" multiValued="true" />
 	<field name="title" type="string" indexed="true" stored="true" multiValued="false" />
