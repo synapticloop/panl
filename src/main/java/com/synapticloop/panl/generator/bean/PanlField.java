@@ -115,7 +115,7 @@ public class PanlField {
 				prefixSuffix +
 				booleanFieldText +
 				dateFieldText +
-				String.format("panl.when.%s=\n", lpseCode)
+				String.format("#panl.when.%s=\n", lpseCode)
 		);
 	}
 

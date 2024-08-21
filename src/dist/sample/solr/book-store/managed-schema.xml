@@ -6,12 +6,12 @@
 
 	<field name="author" type="string" indexed="true" stored="true" multiValued="true" />
 	<field name="title" type="string" indexed="true" stored="true" multiValued="false" />
-	<field name="description" type="pint" indexed="true" stored="true" multiValued="false" />
+	<field name="description" type="string" indexed="true" stored="true" multiValued="false" />
 	<field name="book_image" type="string" indexed="false" stored="true" multiValued="false" />
 	<field name="buy_url" type="string" indexed="false" stored="true" multiValued="false" />
 	<field name="genre" type="string" indexed="true" stored="true" multiValued="true" />
 	<field name="num_pages" type="pint" indexed="false" stored="true" multiValued="false" />
-	<field name="first_published_year" type="pint" indexed="false" stored="true" multiValued="false" />
+	<field name="first_published_year" type="pint" indexed="true" stored="true" multiValued="false" />
 	<field name="language" type="string" indexed="true" stored="true" multiValued="false" />
 	<field name="is_paperback" type="boolean" indexed="true" stored="true" multiValued="false" />
 	<field name="series" type="string" indexed="true" stored="true" multiValued="false" />
@@ -21,7 +21,7 @@
 	<field name="decade_published" type="pint" indexed="true" stored="false" multiValued="false" />
 	<field name="book_length" type="string" indexed="true" stored="false" multiValued="false" />
 
-	<field name="text" type="text_general" indexed="true" stored="true" multiValued="true" />
+	<field name="text" type="text_general" indexed="true" stored="false" multiValued="true" />
 
 	<uniqueKey>id</uniqueKey>
 
