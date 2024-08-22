@@ -62,6 +62,7 @@ public abstract class BaseField {
 	public static final String PROPERTY_KEY_PANL_NAME = "panl.name.";
 	public static final String PROPERTY_KEY_PANL_FACET = "panl.facet.";
 	public static final String PROPERTY_KEY_PANL_OR_FACET = "panl.or.facet.";
+	public static final String PROPERTY_KEY_PANL_FACETSORT = "panl.facetsort.";
 	public static final String PROPERTY_KEY_PANL_TYPE = "panl.type.";
 	public static final String PROPERTY_KEY_PANL_PREFIX = "panl.prefix.";
 	public static final String PROPERTY_KEY_PANL_SUFFIX = "panl.suffix.";
@@ -85,6 +86,7 @@ public abstract class BaseField {
 	protected String panlFieldName;
 	protected String solrFieldName;
 	private String solrFieldType;
+	private boolean facetSortByIndex = false;
 
 	protected final Properties properties;
 	protected final String solrCollection;
@@ -131,6 +133,7 @@ public abstract class BaseField {
 		this.solrCollection = solrCollection;
 		this.panlCollectionUri = panlCollectionUri;
 		this.lpseLength = lpseLength;
+		this.facetSortByIndex = properties.getProperty(PROPERTY_KEY_PANL_FACETSORT + this.lpseCode, "count").equals("index");
 
 		if (!propertyKey.equals(PROPERTY_KEY_PANL_SORT_FIELDS)) {
 			// sort keys can be longer than the panlParamSort property code
@@ -786,5 +789,9 @@ public abstract class BaseField {
 
 	public boolean appendAvailableDateRangeValues(JSONObject dateRangeFacetObject, CollectionProperties collectionProperties, Map<String, List<LpseToken>> panlTokenMap) {
 		return (false);
+	}
+
+	public boolean getIsFacetSortByIndex() {
+		return(facetSortByIndex);
 	}
 }

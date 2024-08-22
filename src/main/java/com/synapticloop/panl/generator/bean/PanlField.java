@@ -115,7 +115,13 @@ public class PanlField {
 				prefixSuffix +
 				booleanFieldText +
 				dateFieldText +
-				String.format("#panl.when.%s=\n", lpseCode)
+				"# If you want this facet to only appear if another facet has already been \n" +
+				"# passed through then add the LPSE code(s) in a comma separated list below\n" +
+				String.format("#panl.when.%s=\n", lpseCode) +
+				"# By default Solr will always return facet ordered by count descending (i.e.\n" +
+				"# The largest counts first) - uncomment the below line to return it in value\n" +
+				"# order (e.g. alphabetical/numerical)\n" +
+				String.format("#panl.facetsort.%s=index\n", lpseCode)
 		);
 	}
 

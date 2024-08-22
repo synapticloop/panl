@@ -1,0 +1,568 @@
+[
+  {
+    "id": 1,
+    "author": "Michael Connelly",
+    "title": "The Black Echo",
+    "description": "No description provided",
+    "book_image": "http://example.com/image/",
+    "buy_url": "http://example.com/buy/",
+    "genre": [
+      "Mystery",
+      "Crime",
+      "Detective",
+      "Thriller"
+    ],
+    "num_pages": 842,
+    "first_published_year": 1992,
+    "language": "English",
+    "is_paperback": "true",
+    "series": "Harry Bosch",
+    "price": 19.99,
+    "a_to_z_index": "C",
+    "decade_published": 1990,
+    "book_length": "Novel"
+  },
+  {
+    "id": 2,
+    "author": "Michael Connelly",
+    "title": "The Black Ice",
+    "description": "No description provided",
+    "book_image": "http://example.com/image/",
+    "buy_url": "http://example.com/buy/",
+    "genre": [
+      "Mystery",
+      "Crime",
+      "Detective",
+      "Thriller"
+    ],
+    "num_pages": 439,
+    "first_published_year": 1993,
+    "language": "English",
+    "is_paperback": "true",
+    "series": "Harry Bosch",
+    "price": 19.99,
+    "a_to_z_index": "C",
+    "decade_published": 1990,
+    "book_length": "Novel"
+  },
+  {
+    "id": 3,
+    "author": "Michael Connelly",
+    "title": "The Concrete Blonde",
+    "description": "No description provided",
+    "book_image": "http://example.com/image/",
+    "buy_url": "http://example.com/buy/",
+    "genre": [
+      "Mystery",
+      "Crime",
+      "Detective",
+      "Thriller"
+    ],
+    "num_pages": 484,
+    "first_published_year": 1994,
+    "language": "English",
+    "is_paperback": "true",
+    "series": "Harry Bosch",
+    "price": 19.99,
+    "a_to_z_index": "C",
+    "decade_published": 1990,
+    "book_length": "Novel"
+  },
+  {
+    "id": 4,
+    "author": "Michael Connelly",
+    "title": "The Last Coyote",
+    "description": "No description provided",
+    "book_image": "http://example.com/image/",
+    "buy_url": "http://example.com/buy/",
+    "genre": [
+      "Mystery",
+      "Crime",
+      "Detective",
+      "Thriller"
+    ],
+    "num_pages": 400,
+    "first_published_year": 1992,
+    "language": "English",
+    "is_paperback": "true",
+    "series": "Harry Bosch",
+    "price": 19.99,
+    "a_to_z_index": "C",
+    "decade_published": 1990,
+    "book_length": "Novel"
+  },
+  {
+    "id": 5,
+    "author": "Michael Connelly",
+    "title": "Trunk Music",
+    "description": "No description provided",
+    "book_image": "http://example.com/image/",
+    "buy_url": "http://example.com/buy/",
+    "genre": [
+      "Mystery",
+      "Crime",
+      "Detective",
+      "Thriller"
+    ],
+    "num_pages": 448,
+    "first_published_year": 1997,
+    "language": "English",
+    "is_paperback": "true",
+    "series": "Harry Bosch",
+    "price": 19.99,
+    "a_to_z_index": "C",
+    "decade_published": 1990,
+    "book_length": "Novel"
+  },
+  {
+    "id": 6,
+    "author": "Michael Connelly",
+    "title": "Angels Flight",
+    "description": "No description provided",
+    "book_image": "http://example.com/image/",
+    "buy_url": "http://example.com/buy/",
+    "genre": [
+      "Mystery",
+      "Crime",
+      "Detective",
+      "Thriller"
+    ],
+    "num_pages": 454,
+    "first_published_year": 1999,
+    "language": "English",
+    "is_paperback": "true",
+    "series": "Harry Bosch",
+    "price": 19.99,
+    "a_to_z_index": "C",
+    "decade_published": 1990,
+    "book_length": "Novel"
+  },
+  {
+    "id": 7,
+    "author": "Michael Connelly",
+    "title": "A Darkness More Than Night",
+    "description": "No description provided",
+    "book_image": "http://example.com/image/",
+    "buy_url": "http://example.com/buy/",
+    "genre": [
+      "Mystery",
+      "Crime",
+      "Detective",
+      "Thriller"
+    ],
+    "num_pages": 470,
+    "first_published_year": 2000,
+    "language": "English",
+    "is_paperback": "true",
+    "series": "Harry Bosch",
+    "price": 19.99,
+    "a_to_z_index": "C",
+    "decade_published": 2000,
+    "book_length": "Novel"
+  },
+  {
+    "id": 8,
+    "author": "Michael Connelly",
+    "title": "City of Bones",
+    "description": "No description provided",
+    "book_image": "http://example.com/image/",
+    "buy_url": "http://example.com/buy/",
+    "genre": [
+      "Mystery",
+      "Crime",
+      "Detective",
+      "Thriller"
+    ],
+    "num_pages": 408,
+    "first_published_year": 2002,
+    "language": "English",
+    "is_paperback": "true",
+    "series": "Harry Bosch",
+    "price": 19.99,
+    "a_to_z_index": "C",
+    "decade_published": 2000,
+    "book_length": "Novel"
+  },
+
+
+
+
+
+  {
+    "id": 11,
+    "author": "Maeve Binchy",
+    "title": "Circle of Friends",
+    "description": "No description provided",
+    "book_image": "http://example.com/image/",
+    "buy_url": "http://example.com/buy/",
+    "genre": [
+      "Romance",
+      "Drama"
+    ],
+    "num_pages": 722,
+    "first_published_year": 1980,
+    "language": "English",
+    "is_paperback": "true",
+    "price": 19.99,
+    "a_to_z_index": "B",
+    "decade_published": 1980,
+    "book_length": "Novel"
+  },
+  {
+    "id": 12,
+    "author": "Maeve Binchy",
+    "title": "Tara Road",
+    "description": "No description provided",
+    "book_image": "http://example.com/image/",
+    "buy_url": "http://example.com/buy/",
+    "genre": [
+      "Romance",
+      "Drama"
+    ],
+    "num_pages": 648,
+    "first_published_year": 1998,
+    "language": "English",
+    "is_paperback": "true",
+    "price": 19.99,
+    "a_to_z_index": "B",
+    "decade_published": 1990,
+    "book_length": "Novel"
+  },
+  {
+    "id": 12,
+    "author": "Maeve Binchy",
+    "title": "Chestnut Street",
+    "description": "No description provided",
+    "book_image": "http://example.com/image/",
+    "buy_url": "http://example.com/buy/",
+    "genre": [
+      "Romance",
+      "Drama"
+    ],
+    "num_pages": 430,
+    "first_published_year": 2014,
+    "language": "English",
+    "is_paperback": "true",
+    "price": 19.99,
+    "a_to_z_index": "B",
+    "decade_published": 2010,
+    "book_length": "Novel"
+  },
+
+
+
+
+
+  {
+    "id": 21,
+    "author": "Stephenie Meyer",
+    "title": "Twilight",
+    "description": "No description provided",
+    "book_image": "http://example.com/image/",
+    "buy_url": "http://example.com/buy/",
+    "genre": [
+      "Fantasy",
+      "Young Adult",
+      "Romance"
+    ],
+    "num_pages": 498,
+    "first_published_year": 2005,
+    "language": "English",
+    "is_paperback": "true",
+    "series": "The Twilight Saga",
+    "price": 19.99,
+    "a_to_z_index": "M",
+    "decade_published": 2000,
+    "book_length": "Novel"
+  },
+  {
+    "id": 22,
+    "author": "Stephenie Meyer",
+    "title": "New Moon",
+    "description": "No description provided",
+    "book_image": "http://example.com/image/",
+    "buy_url": "http://example.com/buy/",
+    "genre": [
+      "Fantasy",
+      "Young Adult",
+      "Romance"
+    ],
+    "num_pages": 563,
+    "first_published_year": 2006,
+    "language": "English",
+    "is_paperback": "true",
+    "series": "The Twilight Saga",
+    "price": 19.99,
+    "a_to_z_index": "M",
+    "decade_published": 2000,
+    "book_length": "Novel"
+  },
+  {
+    "id": 23,
+    "author": "Stephenie Meyer",
+    "title": "Eclipse",
+    "description": "No description provided",
+    "book_image": "http://example.com/image/",
+    "buy_url": "http://example.com/buy/",
+    "genre": [
+      "Fantasy",
+      "Young Adult",
+      "Romance"
+    ],
+    "num_pages": 629,
+    "first_published_year": 2007,
+    "language": "English",
+    "is_paperback": "true",
+    "series": "The Twilight Saga",
+    "price": 19.99,
+    "a_to_z_index": "M",
+    "decade_published": 2000,
+    "book_length": "Novel"
+  },
+  {
+    "id": 24,
+    "author": "Stephenie Meyer",
+    "title": "Breaking Dawn",
+    "description": "No description provided",
+    "book_image": "http://example.com/image/",
+    "buy_url": "http://example.com/buy/",
+    "genre": [
+      "Fantasy",
+      "Young Adult",
+      "Romance"
+    ],
+    "num_pages": 756,
+    "first_published_year": 2008,
+    "language": "English",
+    "is_paperback": "true",
+    "series": "The Twilight Saga",
+    "price": 19.99,
+    "a_to_z_index": "M",
+    "decade_published": 2000,
+    "book_length": "Novel"
+  },
+  {
+    "id": 25,
+    "author": "Stephenie Meyer",
+    "title": "Midnight Sun",
+    "description": "No description provided",
+    "book_image": "http://example.com/image/",
+    "buy_url": "http://example.com/buy/",
+    "genre": [
+      "Fantasy",
+      "Young Adult",
+      "Romance"
+    ],
+    "num_pages": 756,
+    "first_published_year": 2020,
+    "language": "English",
+    "is_paperback": "true",
+    "series": "The Twilight Saga",
+    "price": 19.99,
+    "a_to_z_index": "M",
+    "decade_published": 2020,
+    "book_length": "Novel"
+  },
+  {
+    "id": 26,
+    "author": "Stephenie Meyer",
+    "title": "The Chemist",
+    "description": "No description provided",
+    "book_image": "http://example.com/image/",
+    "buy_url": "http://example.com/buy/",
+    "genre": [
+      "Thriller",
+      "Mystery",
+      "Romance"
+    ],
+    "num_pages": 521,
+    "first_published_year": 2016,
+    "language": "English",
+    "is_paperback": "true",
+    "price": 19.99,
+    "a_to_z_index": "M",
+    "decade_published": 2010,
+    "book_length": "Novel"
+  },
+
+
+
+  {
+    "id": 31,
+    "author": "Roald Dahl",
+    "title": "Matilda",
+    "description": "No description provided",
+    "book_image": "http://example.com/image/",
+    "buy_url": "http://example.com/buy/",
+    "genre": [
+      "Young Adult",
+      "Fantasy",
+      "Children",
+      "Humour"
+    ],
+    "num_pages": 240,
+    "first_published_year": 1988,
+    "language": "English",
+    "is_paperback": "true",
+    "price": 19.99,
+    "a_to_z_index": "D",
+    "decade_published": 1980,
+    "book_length": "Novella"
+  },
+  {
+    "id": 32,
+    "author": "Roald Dahl",
+    "title": "The BFG",
+    "description": "No description provided",
+    "book_image": "http://example.com/image/",
+    "buy_url": "http://example.com/buy/",
+    "genre": [
+      "Young Adult",
+      "Fantasy",
+      "Children",
+      "Humour"
+    ],
+    "num_pages": 199,
+    "first_published_year": 1982,
+    "language": "English",
+    "is_paperback": "true",
+    "price": 19.99,
+    "a_to_z_index": "D",
+    "decade_published": 1980,
+    "book_length": "Novella"
+  },
+  {
+    "id": 33,
+    "author": "Roald Dahl",
+    "title": "James and the Giant Peach",
+    "description": "No description provided",
+    "book_image": "http://example.com/image/",
+    "buy_url": "http://example.com/buy/",
+    "genre": [
+      "Young Adult",
+      "Fantasy",
+      "Children",
+      "Humour"
+    ],
+    "num_pages": 176,
+    "first_published_year": 1961,
+    "language": "English",
+    "is_paperback": "true",
+    "price": 19.99,
+    "a_to_z_index": "D",
+    "decade_published": 1960,
+    "book_length": "Novella"
+  },
+  {
+    "id": 33,
+    "author": "Roald Dahl",
+    "title": "The Witches",
+    "description": "No description provided",
+    "book_image": "http://example.com/image/",
+    "buy_url": "http://example.com/buy/",
+    "genre": [
+      "Young Adult",
+      "Fantasy",
+      "Children",
+      "Humour"
+    ],
+    "num_pages": 208,
+    "first_published_year": 1981,
+    "language": "English",
+    "is_paperback": "true",
+    "price": 19.99,
+    "a_to_z_index": "D",
+    "decade_published": 1980,
+    "book_length": "Novella"
+  },
+
+  {
+    "id": 33,
+    "author": "Roald Dahl",
+    "title": "The Witches",
+    "description": "No description provided",
+    "book_image": "http://example.com/image/",
+    "buy_url": "http://example.com/buy/",
+    "genre": [
+      "Young Adult",
+      "Fantasy",
+      "Children",
+      "Humour"
+    ],
+    "num_pages": 208,
+    "first_published_year": 1981,
+    "language": "English",
+    "is_paperback": "true",
+    "price": 19.99,
+    "a_to_z_index": "D",
+    "decade_published": 1980,
+    "book_length": "Novella"
+  },
+
+
+  {
+    "id": 41,
+    "author": "Suzanne Collins",
+    "title": "The Hunger Games",
+    "description": "No description provided",
+    "book_image": "http://example.com/image/",
+    "buy_url": "http://example.com/buy/",
+    "genre": [
+      "Young Adult",
+      "Fantasy",
+      "Dystopia"
+    ],
+    "num_pages": 374,
+    "first_published_year": 2008,
+    "language": "English",
+    "is_paperback": "true",
+    "series": "The Hunger Games",
+    "price": 19.99,
+    "a_to_z_index": "C",
+    "decade_published": 2000,
+    "book_length": "Novella"
+  },
+  {
+    "id": 42,
+    "author": "Suzanne Collins",
+    "title": "Catching Fire",
+    "description": "No description provided",
+    "book_image": "http://example.com/image/",
+    "buy_url": "http://example.com/buy/",
+    "genre": [
+      "Young Adult",
+      "Fantasy",
+      "Dystopia"
+    ],
+    "num_pages": 391,
+    "first_published_year": 2009,
+    "language": "English",
+    "is_paperback": "true",
+    "series": "The Hunger Games",
+    "price": 19.99,
+    "a_to_z_index": "C",
+    "decade_published": 2000,
+    "book_length": "Novella"
+   },
+  {
+    "id": 43,
+    "author": "Suzanne Collins",
+    "title": "Mockingjat",
+    "description": "No description provided",
+    "book_image": "http://example.com/image/",
+    "buy_url": "http://example.com/buy/",
+    "genre": [
+      "Young Adult",
+      "Fantasy",
+      "Dystopia"
+    ],
+    "num_pages": 390,
+    "first_published_year": 2010,
+    "language": "English",
+    "is_paperback": "true",
+    "price": 19.99,
+    "a_to_z_index": "C",
+    "decade_published": 2010,
+    "book_length": "Novella"
+  }
+]

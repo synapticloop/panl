@@ -122,6 +122,7 @@ public class CollectionProperties {
 	 * These fields may be used as facets.</p>
 	 */
 	private final List<PanlFacetField> FACET_FIELDS = new ArrayList<>();
+	private final List<PanlFacetField> FACET_INDEX_SORT_FIELDS = new ArrayList<>();
 
 	/**
 	 * <p>This is the list of all fields that are registered with panl. Unlike
@@ -157,6 +158,8 @@ public class CollectionProperties {
 	private String panlParamNumRows;
 	private String panlParamQueryOperand;
 	private String panlParamPassThrough;
+
+	private String facetSortFieldsIndex;
 
 	private String formQueryRespondTo;
 
@@ -225,6 +228,7 @@ public class CollectionProperties {
 		parseSortFields();
 		parseLpseOrder();
 		parseLpseIgnore();
+		parseFacetSortFields();
 
 
 		// Generate some static information
@@ -858,5 +862,16 @@ public class CollectionProperties {
 		return(LPSE_CODE_WHEN_MAP.get(lpseCode));
 	}
 
+	public List<PanlFacetField> getFacetIndexSortFields() {
+		return(FACET_INDEX_SORT_FIELDS);
+	}
+
+	private void parseFacetSortFields() {
+		for (PanlFacetField facetField : FACET_FIELDS) {
+			if(facetField.getIsFacetSortByIndex()) {
+				FACET_INDEX_SORT_FIELDS.add(facetField);
+			}
+		}
+	}
 }
 
