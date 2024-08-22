@@ -92,6 +92,8 @@ _The image is a screenshot of the in-built Panl Results Explainer Web App availa
 
 ## Additional Panl Niceties
 
+1. **MULTIPLE ways to 'SLICE and DICE'** - From one Solr collection, the Panl server can present the results and facets in multiple different ways, providing individual use cases for specific needs.
+
 1. **PREFIXES and SUFFIXES** - Panl can also add prefixes and suffixes to the URI path to increase readability, for example, with configuration.  For the example LPSE URI path of `/Caran+d'Ache/true/Black/bDW/` could also have the brand Solr field prefixed with ‘Manufactured By ’ and suffixed by ‘ Company’ to produce the URI path
 `/Manufactured+By+The+Caran+d'Ache+Company/true/Black/bDW/`
 
@@ -101,6 +103,8 @@ _The image is a screenshot of the in-built Panl Results Explainer Web App availa
 1. **FIELD VALUE validation** - By default, Solr can error when an invalid value is passed through - for example, if Solr is expecting a numeric value and it could not be parsed.  Panl can protect against this, by attempting to parse the value as best it can, and silently dropping the parameter if it cannot be sensibly parsed.
 
 1. **HIERARCHICAL facets** - Only show facets if a parent facet is currently selected, allowing you to narrow down the facet results and lead users through the search journey. 
+
+1. **SORTED facets** - Each individual facet can be sorted by either the facet count (which is the default), or the facet value (e.g. alphabetic/numeric)
 
 1. **SORTING options** -  sort by any of the Solr fields, either ascending, or descending and with multiple sub-sorting available - e.g. sorting by a brand name, than the model number
 
