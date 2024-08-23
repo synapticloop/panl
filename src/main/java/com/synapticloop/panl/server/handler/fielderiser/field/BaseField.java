@@ -389,9 +389,6 @@ public abstract class BaseField {
 				if (lpseToken.getIsValid()) {
 					sb.append(getEncodedPanlValue(lpseToken));
 					sb.append("/");
-
-//					// we only ever have one
-//					return(sb.toString());
 				}
 			}
 		}

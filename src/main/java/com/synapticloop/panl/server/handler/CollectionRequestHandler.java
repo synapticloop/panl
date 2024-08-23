@@ -158,6 +158,35 @@ public class CollectionRequestHandler {
 
 		startNanos = System.nanoTime();
 
+		// now we need to go through the panl facets and add them
+
+		int numRows = 0;
+		int pageNum = 0;
+
+		// set up the data structure
+		Map<String, List<LpseToken>> panlTokenMap = new HashMap<>();
+
+		for (LpseToken lpseToken : lpseTokens) {
+			String lpseCode = lpseToken.getLpseCode();
+
+			List<LpseToken> lpseTokenList = panlTokenMap.get(lpseCode);
+			if (null == lpseTokenList) {
+				lpseTokenList = new ArrayList<>();
+			}
+
+			// only adding valid tokens
+			if (lpseToken.getIsValid()) {
+				lpseTokenList.add(lpseToken);
+				panlTokenMap.put(lpseCode, lpseTokenList);
+			}
+
+			if (lpseToken instanceof NumRowsLpseToken) {
+				numRows = ((NumRowsLpseToken) lpseToken).getNumRows();
+			} else if (lpseToken instanceof PageNumLpseToken) {
+				pageNum = ((PageNumLpseToken) lpseToken).getPageNum();
+			}
+		}
+
 		try (SolrClient solrClient = panlClient.getClient()) {
 			// we set the default query - to be overridden later if one exists
 			SolrQuery solrQuery = panlClient.getQuery(query);
@@ -169,7 +198,8 @@ public class CollectionRequestHandler {
 				solrQuery.addField(fieldName);
 			}
 
-			solrQuery.setFacetMinCount(collectionProperties.getFacetMinCount());
+			collectionProperties.setFacetMinCounts(solrQuery, panlTokenMap);
+
 			if (collectionProperties.getHighlight()) {
 				solrQuery.setParam(SOLR_PARAM_HL_FL, "*");
 			}
@@ -185,34 +215,6 @@ public class CollectionRequestHandler {
 			}
 
 
-			// now we need to go through the panl facets and add them
-
-			int numRows = 0;
-			int pageNum = 0;
-
-			// set up the data structure
-			Map<String, List<LpseToken>> panlTokenMap = new HashMap<>();
-
-			for (LpseToken lpseToken : lpseTokens) {
-				String lpseCode = lpseToken.getLpseCode();
-
-				List<LpseToken> lpseTokenList = panlTokenMap.get(lpseCode);
-				if (null == lpseTokenList) {
-					lpseTokenList = new ArrayList<>();
-				}
-
-				// only adding valid tokens
-				if (lpseToken.getIsValid()) {
-					lpseTokenList.add(lpseToken);
-					panlTokenMap.put(lpseCode, lpseTokenList);
-				}
-
-				if (lpseToken instanceof NumRowsLpseToken) {
-					numRows = ((NumRowsLpseToken) lpseToken).getNumRows();
-				} else if (lpseToken instanceof PageNumLpseToken) {
-					pageNum = ((PageNumLpseToken) lpseToken).getPageNum();
-				}
-			}
 
 			for (BaseField lpseField : collectionProperties.getLpseFields()) {
 				lpseField.applyToQuery(solrQuery, panlTokenMap);
