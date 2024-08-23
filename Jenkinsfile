@@ -3,10 +3,18 @@ pipeline {
   stages {
     stage('build') {
       steps {
-        withGradle {
+        withGradle() {
           sh './gradlew assemble'
         }
+
       }
     }
+
+    stage('archive') {
+      steps {
+        archiveArtifacts 'build/distributions/*'
+      }
+    }
+
   }
 }
