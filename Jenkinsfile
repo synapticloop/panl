@@ -1,20 +1,19 @@
 pipeline {
   agent any
   stages {
-    stage('build') {
+    stage('distribution') {
       steps {
         withGradle() {
           sh './gradlew assemble'
         }
-
       }
     }
-
-    stage('archive') {
-      steps {
-        archiveArtifacts 'build/distributions/*'
-      }
-    }
-
   }
+
+	post {
+    always {
+			archiveArtifacts 'build/distributions/*'
+			junit 'build/reports/**/*.xml'
+		}
+	}
 }
