@@ -223,7 +223,7 @@ public class PanlGenerator {
 	 */
 	private String getAndValidateParameterInput(String description, String panlParamProperty, String defaultValue, String errorPrompt) {
 		if (null != errorPrompt) {
-			System.out.printf("Invalid value. %s, please try again.\n", errorPrompt);
+			System.out.printf("Invalid value. %s Please try again.\n", errorPrompt);
 		}
 		System.out.printf("Enter the 1 character property value for '%s' (%s), default [%s]: ", panlParamProperty, description, defaultValue);
 		Scanner in = new Scanner(System.in);
