@@ -4,8 +4,8 @@ plugins {
 	id 'jacoco'
 }
 
+version = findProperty("panl.version")
 group = 'com.synapticloop'
-version = '1.0.0'
 
 repositories {
 	mavenCentral()
@@ -25,6 +25,7 @@ sourceSets {
 configurations {
 	integrationTestCompile.extendsFrom testCompile
 	integrationTestRuntime.extendsFrom testRuntime
+	integrationTestRuntime.extendsFrom runtime
 }
 
 dependencies {
@@ -52,14 +53,36 @@ dependencies {
 	testImplementation 'org.mockito:mockito-core:5.12.0'
 	testImplementation 'com.fasterxml.jackson.core:jackson-databind:2.17.1'
 
+
+
+
+
+
+	// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+	//
 	// integration testing
+	//
+	// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 	integrationTestImplementation platform('org.junit:junit-bom:5.9.1')
 	integrationTestImplementation 'org.junit.jupiter:junit-jupiter'
 	integrationTestImplementation 'org.mockito:mockito-core:5.12.0'
 	integrationTestImplementation 'com.fasterxml.jackson.core:jackson-databind:2.17.1'
 	integrationTestImplementation 'commons-io:commons-io:2.16.1'
 	integrationTestImplementation 'org.json:json:20240303'
-}
+	// HTTP server
+	integrationTestImplementation 'org.eclipse.jetty.http2:http2-server:10.0.20'
+	integrationTestImplementation 'org.eclipse.jetty:jetty-servlet:10.0.20'
+
+	// logging
+	integrationTestImplementation 'org.slf4j:slf4j-api:2.0.13'
+	integrationTestImplementation 'org.apache.logging.log4j:log4j-core:2.23.1'
+	integrationTestImplementation 'org.apache.logging.log4j:log4j-api:2.23.1'
+	integrationTestImplementation 'org.apache.logging.log4j:log4j-slf4j2-impl:2.23.1'
+
+
+	// additional utilities
+	integrationTestImplementation 'commons-io:commons-io:2.16.1'
+	integrationTestImplementation 'org.json:json:20240303'}
 
 application {
 	mainClass = 'com.synapticloop.panl.Main'
@@ -81,6 +104,7 @@ tasks.register('integrationTest', Test) {
 	useJUnitPlatform()
 	testClassesDirs = sourceSets.integrationTest.output.classesDirs
 	classpath = sourceSets.integrationTest.runtimeClasspath
+	classpath += sourceSets.main.runtimeClasspath
 	outputs.upToDateWhen { false }
 }
 

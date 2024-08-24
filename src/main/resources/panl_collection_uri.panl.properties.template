@@ -26,6 +26,10 @@
 #                                                                             #
 #   /something/something-else/se/                                             #
 #                                                                             #
+# In the above URI Path, the LPSE part is the /se/ part of the URI            #
+#                                                                             #
+# The above URI is equivalent to the request parameters below:                #
+#                                                                             #
 # rather than ?firstfield=something&secondfield=something-else                #
 #                                                                             #
 # The following characters may be used in the url for the encoding of the     #
@@ -39,6 +43,7 @@
 # modifiers that the Panl server users, or are reserved for future use.       #
 #                                                                             #
 #        + - . ~ [ ] ^ ( )                                                    #
+#                                                                             #
 #                                ~ ~ ~ * ~ ~ ~                                #
 #                                                                             #
 #   NOTE: The Panl server will not enforce the above two rules.  If either    #
@@ -224,15 +229,6 @@ solr.facet.limit=100
 # If the query would return a facet with a count value less than this amount,
 # then it will not be returned.
 #
-# The reasoning for this, is that if you were to choose this facet, the results
-# are guaranteed to return zero rows - therefore useless.
-#
-#                                ~ ~ ~ * ~ ~ ~
-#
-# IMPORTANT: If you have a 'facet OR' enabled for one or more of the facet
-#            fields, then you __MUST__ set this to 0 (zero) to ensure that the
-#            correct facets are returned.
-#
 #                                ~ ~ ~ * ~ ~ ~
 
 solr.facet.min.count=1
@@ -257,12 +253,12 @@ solr.numrows.default=10
 # with the markup being defined in the solrconfig.xml file (see line ~1060 in
 # the included sample configuration files.
 #
-# The default for this is true, i.e.
+# The default for this is false, i.e.
 #
-#   solr.highlight=true
+#   solr.highlight=false
 #                                ~ ~ ~ * ~ ~ ~
 
-solr.highlight=true
+solr.highlight=false
 
 #                             Panl Facet Configuration
 #                             ---- ----- -------------

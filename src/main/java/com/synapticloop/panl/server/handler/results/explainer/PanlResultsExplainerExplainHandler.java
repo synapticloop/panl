@@ -42,6 +42,7 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.StringTokenizer;
 
@@ -204,19 +205,45 @@ public class PanlResultsExplainerExplainHandler implements HttpRequestHandler {
 	}
 
 	private String getDescriptionOfLpseCode(CollectionProperties collectionProperties, int order, String lpseCode) {
+
 		StringBuilder sb = new StringBuilder();
-		sb
-				.append(" ")
+		String solrFieldNameFromLpseCode = collectionProperties.getSolrFieldNameFromLpseCode(lpseCode);
+		String panlNameFromPanlCode = collectionProperties.getPanlNameFromPanlCode(lpseCode);
+		sb.append(" ")
 				.append(order)
 				.append(". ")
 				.append("Panl LPSE code [ ")
 				.append(lpseCode)
-				.append(" ] ")
-				.append(" Solr field '")
-				.append(collectionProperties.getSolrFieldNameFromLpseCode(lpseCode))
-				.append("', Panl name '")
-				.append(collectionProperties.getPanlNameFromPanlCode(lpseCode))
-				.append("'");
+				.append(" ] ");
+
+		if(null != solrFieldNameFromLpseCode) {
+			sb.append(" Solr field '")
+					.append(solrFieldNameFromLpseCode)
+					.append("', Panl name '")
+					.append(panlNameFromPanlCode)
+					.append("'.  ");
+
+			if(collectionProperties.getLpseWhenCode(lpseCode) != null) {
+				sb.append("Will only be available if any of the following LPSE codes are selected: ");
+				Iterator<String> iterator = collectionProperties.getLpseWhenCode(lpseCode).iterator();
+				while(iterator.hasNext()) {
+					String nextLpseCode = iterator.next();
+					sb.append("'")
+							.append(nextLpseCode)
+							.append("' - solr field '")
+							.append(collectionProperties.getSolrFieldNameFromLpseCode(nextLpseCode))
+							.append("'");
+					if(iterator.hasNext()) {
+						sb.append(", ");
+					} else {
+						sb.append(".  ");
+					}
+				}
+			}
+
+		} else {
+			sb.append(" Not mapped to a Solr field.");
+		}
 
 		return(sb.toString());
 	}

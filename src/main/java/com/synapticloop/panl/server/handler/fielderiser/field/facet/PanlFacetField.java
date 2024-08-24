@@ -59,8 +59,11 @@ public class PanlFacetField extends BasePrefixSuffixField {
 		super(lpseCode, propertyKey, properties, solrCollection, panlCollectionUri, lpseLength);
 
 		populateSolrFieldType();
+
 		validateProperties();
+
 		populateSolrFieldTypeValidation();
+
 		populatePanlAndSolrFieldNames();
 
 		logDetails();
@@ -96,5 +99,4 @@ public class PanlFacetField extends BasePrefixSuffixField {
 	public LpseToken instantiateToken(CollectionProperties collectionProperties, String lpseCode, String query, StringTokenizer valueTokeniser, LpseTokeniser lpseTokeniser) {
 		return(new FacetLpseToken(collectionProperties, this.lpseCode, lpseTokeniser, valueTokeniser));
 	}
-
 }

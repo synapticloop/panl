@@ -41,14 +41,18 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.util.*;
 
+/**
+ *
+ * @author synapticloop
+ */
 public class PanlCollection {
 	private static final Logger LOGGER = LoggerFactory.getLogger(PanlCollection.class);
 
 	private String collectionName;
-	private final List<String> facetFieldNames = new ArrayList<>();
+	private final List<SolrField> solrFields = new ArrayList<>();
 	private final List<String> resultFieldNames = new ArrayList<>();
 	private final List<PanlField> panlFields = new ArrayList<>();
-	private final List<String> unassignedFieldNames = new ArrayList<>();
+	private final List<SolrField> unassignedSolrFields = new ArrayList<>();
 	private final Map<String, String> fieldXmlMap = new HashMap<>();
 	private int lpseLength = 1;
 
@@ -64,10 +68,10 @@ public class PanlCollection {
 		parseSchemaFile(schema);
 
 		// each character can be one of the letters and numbers
-		this.lpseLength = facetFieldNames.size() / 62;
+		this.lpseLength = solrFields.size() / 62;
 
 		// don't forget that we have pre-defined 'params'
-		if ((facetFieldNames.size() % 62 - panlReplacementPropertyMap.size()) > 0) {
+		if ((solrFields.size() % 62 - panlReplacementPropertyMap.size()) > 0) {
 			this.lpseLength++;
 		}
 
@@ -76,7 +80,7 @@ public class PanlCollection {
 		}
 
 		LOGGER.info("PanlCollection: {}", this.collectionName);
-		LOGGER.info("Have {} panlFields, LPSE length is set to {}", facetFieldNames.size(), this.lpseLength);
+		LOGGER.info("Have {} panlFields, LPSE length is set to {}", solrFields.size(), this.lpseLength);
 
 		// now we are going to remove all codes that are in use by the panl replacement map
 		for (String code : panlReplacementPropertyMap.values()) {
@@ -94,7 +98,8 @@ public class PanlCollection {
 		}
 
 		// now go through to panlFields and assign a code which is close to what they want...
-		for (String fieldName : facetFieldNames) {
+		for (SolrField solrField : solrFields) {
+			String fieldName = solrField.getName();
 			String cleanedName = fieldName.replaceAll("[^A-Za-z0-9]", "");
 			String possibleCode = cleanedName.substring(0, this.lpseLength);
 			if (CODES_AVAILABLE.contains(possibleCode)) {
@@ -102,7 +107,8 @@ public class PanlCollection {
 						possibleCode,
 						fieldName,
 						SOLR_FIELD_TYPE_NAME_TO_SOLR_CLASS.get(SOLR_FIELD_NAME_TO_SOLR_FIELD_TYPE.get(fieldName)),
-						fieldXmlMap.get(fieldName)));
+						fieldXmlMap.get(fieldName),
+						solrField.getIsFacet()));
 				LOGGER.info("Assigned field '{}' to panl code '{}'", fieldName, possibleCode);
 				CODES_AVAILABLE.remove(possibleCode);
 			} else if (CODES_AVAILABLE.contains(possibleCode.toUpperCase())) {
@@ -111,18 +117,19 @@ public class PanlCollection {
 						nextPossibleCode,
 						fieldName,
 						SOLR_FIELD_TYPE_NAME_TO_SOLR_CLASS.get(SOLR_FIELD_NAME_TO_SOLR_FIELD_TYPE.get(fieldName)),
-						fieldXmlMap.get(fieldName)));
+						fieldXmlMap.get(fieldName),
+						solrField.getIsFacet()));
 				LOGGER.info("Assigned field '{}' to panl code '{}'", fieldName, nextPossibleCode);
 				CODES_AVAILABLE.remove(nextPossibleCode);
 			} else {
 				LOGGER.warn("No nice panl code for field '{}', '{}' and '{}' already taken", fieldName, possibleCode, possibleCode.toUpperCase());
-				unassignedFieldNames.add(fieldName);
+				unassignedSolrFields.add(solrField);
 			}
 		}
 
 		// at this point, we are going to go through all unassigned field names and
 		// try and determine what we should mark them as
-		for (String unassignedFieldName : unassignedFieldNames) {
+		for (SolrField solrField : unassignedSolrFields) {
 			int size = CODES_AVAILABLE.size();
 			int item = new Random().nextInt(size); // In real life, the Random object should be rather more shared than this
 			int i = 0;
@@ -130,13 +137,16 @@ public class PanlCollection {
 			for (String code : CODES_AVAILABLE) {
 				if (i == item) {
 					assignedCode = code;
+
+					String fieldName = solrField.getName();
 					panlFields.add(new PanlField(
 							assignedCode,
-							unassignedFieldName,
-							fieldXmlMap.get(unassignedFieldName),
-							SOLR_FIELD_TYPE_NAME_TO_SOLR_CLASS.get(SOLR_FIELD_NAME_TO_SOLR_FIELD_TYPE.get(unassignedFieldName))));
+							fieldName,
+							SOLR_FIELD_TYPE_NAME_TO_SOLR_CLASS.get(SOLR_FIELD_NAME_TO_SOLR_FIELD_TYPE.get(fieldName)),
+							fieldXmlMap.get(fieldName),
+							solrField.getIsFacet()));
 
-					LOGGER.info("Assigned field '{}' to RANDOM panl code '{}'", unassignedFieldName, assignedCode);
+					LOGGER.info("Assigned field '{}' to RANDOM panl code '{}'", fieldName, assignedCode);
 					break;
 				}
 				i++;
@@ -172,7 +182,7 @@ public class PanlCollection {
 
 
 		PANL_PROPERTIES.put("$panl.lpse.order", new PanlProperty("panl.lpse.order", panlLpseOrder.toString()));
-		PANL_PROPERTIES.put("$panl.lpse.panlFields", new PanlProperty("panl.lpse.fields", panlLpseFields.toString(), true));
+		PANL_PROPERTIES.put("$panl.lpse.fields", new PanlProperty("panl.lpse.fields", panlLpseFields.toString(), true));
 
 		StringBuilder panlResultsFieldsDefault = new StringBuilder();
 		StringBuilder panlResultsFieldsFirstFive = new StringBuilder();
@@ -192,8 +202,8 @@ public class PanlCollection {
 		}
 		panlResultsFieldsDefault.append("\n");
 
-		PANL_PROPERTIES.put("$panl.results.panlFields.default", new PanlProperty("panl.results.fields.default", panlResultsFieldsDefault.toString()));
-		PANL_PROPERTIES.put("$panl.results.panlFields.firstfive", new PanlProperty("panl.results.fields.firstfive", panlResultsFieldsFirstFive.toString()));
+		PANL_PROPERTIES.put("$panl.results.fields.default", new PanlProperty("panl.results.fields.default", panlResultsFieldsDefault.toString()));
+		PANL_PROPERTIES.put("$panl.results.fields.firstfive", new PanlProperty("panl.results.fields.firstfive", panlResultsFieldsFirstFive.toString()));
 	}
 
 	private void generateAvailableCodesForFields() {
@@ -267,16 +277,18 @@ public class PanlCollection {
 							boolean isIndexedOrStored = false;
 
 							if (indexed.equals("true")) {
-								LOGGER.info("Adding facet field name '{}' as it is indexed.", name);
+								LOGGER.info("Adding facet field names '{}' as it is indexed.", name);
 								isIndexedOrStored = true;
-								this.facetFieldNames.add(name);
-							}
-
-							if (stored.equals("true")) {
-								// then this can be returned as a field in the results
-								LOGGER.info("Adding result field name '{}' as it is stored.", name);
-								isIndexedOrStored = true;
+								this.solrFields.add(new SolrField(name, true));
 								this.resultFieldNames.add(name);
+							} else {
+								if (stored.equals("true")) {
+									// then this can be returned as a field in the results
+									LOGGER.info("Adding field names '{}' as it is stored, but not indexed.", name);
+									isIndexedOrStored = true;
+									this.solrFields.add(new SolrField(name, false));
+									this.resultFieldNames.add(name);
+								}
 							}
 
 							if (!isIndexedOrStored) {

@@ -243,8 +243,15 @@ public class PanlOrFacetField extends PanlFacetField {
 				if (!panlTokenMap.containsKey(orderedLpseCode)) {
 					continue;
 				}
+
+				// normally
 				lpseUri.append(baseField.getURIPath(panlTokenMap, collectionProperties));
-				lpseUriCode.append(baseField.getLpseCode());
+				int numTokens = panlTokenMap.get(orderedLpseCode).size();
+				if(numTokens == 1) {
+					lpseUriCode.append(baseField.getLpseCode());
+				} else {
+					lpseUriCode.append(new String(new char[numTokens]).replace("\0", baseField.getLpseCode()));
+				}
 			}
 		}
 

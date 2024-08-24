@@ -59,7 +59,7 @@ function populatePanlResults(panlJsonData) {
 		.append("- Found " +
 			panlJsonData.panl.pagination.num_results +
 			" result(s) " +
-			(panlJsonData.panl.pagination.num_results_exact ? "(exact)" : "estimated)"));
+			(panlJsonData.panl.pagination.num_results_exact ? "(exact)" : "(estimated)"));
 
 	console.log("[ RETURNED PANL TIMINGS JSON OBJECT ]")
 	console.log(panlJsonData.panl.timings);
@@ -93,6 +93,8 @@ function populatePanlResults(panlJsonData) {
 
 		$("#documents").append("<dl>" + innerList + "</dl>");
 	}
+
+	$("#num_shown").append(documents.length);
 
 	addQueryOperand(panlJsonData.panl.query_operand);
 	addSortingOptions(panlJsonData.panl.sorting, panlJsonData.panl.active);
@@ -227,6 +229,7 @@ function addPagination(paginationObject) {
 	$("#page_num").append(paginationObject.page_num);
 	$("#num_pages").append(paginationObject.num_pages);
 	$("#num_per_page").append(paginationObject.num_per_page);
+
 
 	if(paginationObject.page_uris.next) {
 		$("#next").append(

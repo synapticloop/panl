@@ -1,3 +1,5 @@
+package util;
+
 /*
  * Copyright (c) 2008-2024 synapticloop.
  *
@@ -22,8 +24,6 @@
  * IN THE SOFTWARE.
  */
 
-package util;
-
 import org.apache.commons.io.FileUtils;
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -37,8 +37,8 @@ import java.util.Date;
 import java.util.Random;
 
 /**
- * <p>Generate sample date data from 10 years ago, one date for every 10 days,
- * and 800 entries.</p>
+ * <p>Generate sample date data from 10 years ago, adding a random number of
+ * days between each addition for 1,000 values.</p>
  *
  * @author synapticloop
  */
@@ -60,14 +60,17 @@ public class SampleDateDataGenerator {
 		Calendar calendar = Calendar.getInstance();
 		calendar.add(Calendar.YEAR, -10);
 
-		// we are to add about 800
+		// we are to add about 1000
 		for(int i = 0; i < 1000; i++) {
 			JSONObject jsonObject = new JSONObject();
 			Date date = calendar.getTime();
 			jsonObject.put("id", SDF_ID.format(date));
 			jsonObject.put("solr_date", SDF_SOLR.format(date));
 			jsonObject.put("text_date", SDF_TEXT.format(date));
-			jsonObject.put("year", Integer.parseInt(SDF_YEAR.format(date)));
+			int year = Integer.parseInt(SDF_YEAR.format(date));
+			int decade = year - year % 10;
+			jsonObject.put("year", year);
+			jsonObject.put("decade", decade);
 			jsonObject.put("month", SDF_MONTH.format(date));
 			jsonObject.put("day", Integer.parseInt(SDF_DAY.format(date)));
 			jsonObject.put("day_of_week", SDF_DAY_OF_WEEK.format(date));
@@ -77,7 +80,7 @@ public class SampleDateDataGenerator {
 
 		try {
 			FileUtils.writeStringToFile(
-					new File("src/dist/data/simple-date.json"),
+					new File("src/dist/sample/data/simple-date.json"),
 					jsonArray.toString(2),
 					Charset.defaultCharset(), false);
 
