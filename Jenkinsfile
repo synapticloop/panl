@@ -13,7 +13,6 @@ pipeline {
 	post {
     always {
 			archiveArtifacts 'build/distributions/*'
-			junit 'build/test-results/**/*.xml'
 		}
 	}
 }
