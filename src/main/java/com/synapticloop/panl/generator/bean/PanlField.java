@@ -36,6 +36,7 @@ public class PanlField {
 	private final String solrFieldName;
 	private final String schemaXmlLine;
 	private final String solrFieldType;
+	private final boolean isFacet;
 
 	/**
 	 * <p>Instantiate a field</p>
@@ -46,11 +47,12 @@ public class PanlField {
 	 * 		managed-schema.xml line
 	 * @param solrFieldType The field storage type for the Solr field
 	 */
-	public PanlField(String lpseCode, String solrFieldName, String solrFieldType, String schemaXmlLine) {
+	public PanlField(String lpseCode, String solrFieldName, String solrFieldType, String schemaXmlLine, boolean isFacet) {
 		this.lpseCode = lpseCode;
 		this.solrFieldName = solrFieldName;
 		this.solrFieldType = solrFieldType;
 		this.schemaXmlLine = schemaXmlLine;
+		this.isFacet = isFacet;
 	}
 
 	private String getPrettyName(String name) {
@@ -107,12 +109,19 @@ public class PanlField {
 
 		// TODO - add in all of the properties (RANGE etc)
 		return (String.format("\n# %s\n", schemaXmlLine) +
-				String.format("panl.facet.%s=%s\n", lpseCode, solrFieldName) +
+				String.format("panl.%s.%s=%s\n", (isFacet ? "facet" : "field"), lpseCode, solrFieldName) +
 				String.format("panl.name.%s=%s\n", lpseCode, getPrettyName(solrFieldName)) +
 				String.format("panl.type.%s=%s\n", lpseCode, solrFieldType) +
 				prefixSuffix +
 				booleanFieldText +
-				dateFieldText
+				dateFieldText +
+				"# If you want this facet to only appear if another facet has already been \n" +
+				"# passed through then add the LPSE code(s) in a comma separated list below\n" +
+				String.format("#panl.when.%s=\n", lpseCode) +
+				"# By default Solr will always return facet ordered by count descending (i.e.\n" +
+				"# The largest counts first) - uncomment the below line to return it in value\n" +
+				"# order (e.g. alphabetical/numerical)\n" +
+				String.format("#panl.facetsort.%s=index\n", lpseCode)
 		);
 	}
 

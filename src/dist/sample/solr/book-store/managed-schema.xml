@@ -1,0 +1,422 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<schema name="book-store" version="1.6">
+	<field name="_version_" type="plong" indexed="false" stored="false"/>
+
+	<field name="id" type="string" stored="true" indexed="true" required="true" multiValued="false" />
+
+	<field name="author" type="string" indexed="true" stored="true" multiValued="true" />
+	<field name="title" type="string" indexed="true" stored="true" multiValued="false" />
+	<field name="description" type="string" indexed="true" stored="true" multiValued="false" />
+	<field name="book_image" type="string" indexed="false" stored="true" multiValued="false" />
+	<field name="buy_url" type="string" indexed="false" stored="true" multiValued="false" />
+	<field name="genre" type="string" indexed="true" stored="true" multiValued="true" />
+	<field name="num_pages" type="pint" indexed="false" stored="true" multiValued="false" />
+	<field name="first_published_year" type="pint" indexed="true" stored="true" multiValued="false" />
+	<field name="language" type="string" indexed="true" stored="true" multiValued="false" />
+	<field name="is_paperback" type="boolean" indexed="true" stored="true" multiValued="false" />
+	<field name="series" type="string" indexed="true" stored="true" multiValued="false" />
+	<field name="price" type="pfloat" indexed="true" stored="true" multiValued="false" />
+
+	<field name="a_to_z_index" type="string" indexed="true" stored="false" multiValued="false" />
+	<field name="decade_published" type="pint" indexed="true" stored="false" multiValued="false" />
+	<field name="book_length" type="string" indexed="true" stored="false" multiValued="false" />
+
+	<field name="text" type="text_general" indexed="true" stored="false" multiValued="true" />
+
+	<uniqueKey>id</uniqueKey>
+
+	<copyField source="author" dest="text" />
+	<copyField source="title" dest="text" />
+	<copyField source="description" dest="text" />
+	<copyField source="genre" dest="text" />
+	<copyField source="series" dest="text" />
+
+
+	<!-- The StrField type is not analyzed, but indexed/stored verbatim. -->
+	<fieldType name="string" class="solr.StrField" sortMissingLast="true" />
+	<fieldType name="strings" class="solr.StrField" sortMissingLast="true" multiValued="true" docValues="true" />
+
+
+	<!-- boolean type: "true" or "false" -->
+	<fieldType name="boolean" class="solr.BoolField" sortMissingLast="true"/>
+	<fieldType name="booleans" class="solr.BoolField" sortMissingLast="true" multiValued="true"/>
+
+	<fieldType name="pint" class="solr.IntPointField" docValues="true"/>
+	<fieldType name="pfloat" class="solr.FloatPointField" docValues="true"/>
+	<fieldType name="plong" class="solr.LongPointField" docValues="true"/>
+	<fieldType name="pdouble" class="solr.DoublePointField" docValues="true"/>
+
+	<fieldType name="pints" class="solr.IntPointField" docValues="true" multiValued="true"/>
+	<fieldType name="pfloats" class="solr.FloatPointField" docValues="true" multiValued="true"/>
+	<fieldType name="plongs" class="solr.LongPointField" docValues="true" multiValued="true"/>
+	<fieldType name="pdoubles" class="solr.DoublePointField" docValues="true" multiValued="true"/>
+
+
+	<fieldType name="pdate" class="solr.DatePointField" docValues="true"/>
+	<fieldType name="pdates" class="solr.DatePointField" docValues="true" multiValued="true"/>
+
+	<fieldType name="binary" class="solr.BinaryField"/>
+
+	<fieldType name="random" class="solr.RandomSortField" indexed="true" />
+
+
+	<!-- A text field that only splits on whitespace for exact matching of words -->
+	<fieldType name="text_ws" class="solr.TextField" positionIncrementGap="100">
+		<analyzer>
+			<tokenizer name="whitespace"/>
+		</analyzer>
+	</fieldType>
+
+	<!-- A text type for English text where stopwords and synonyms are managed using the REST API -->
+	<fieldType name="managed_en" class="solr.TextField" positionIncrementGap="100">
+	  <analyzer type="index">
+	    <tokenizer name="standard"/>
+	    <filter name="managedStop" managed="english" />
+	    <filter name="managedSynonymGraph" managed="english" />
+	    <filter name="flattenGraph"/>
+	  </analyzer>
+	  <analyzer type="query">
+	    <tokenizer name="standard"/>
+	    <filter name="managedStop" managed="english" />
+	    <filter name="managedSynonymGraph" managed="english" />
+	  </analyzer>
+	</fieldType>
+
+	<!-- A general text field that has reasonable, generic
+	      cross-language defaults: it tokenizes with StandardTokenizer,
+	removes stop words from case-insensitive "stopwords.txt"
+	(empty by default), and down cases.  At query time only, it
+	also applies synonyms. -->
+	<fieldType name="text_general" class="solr.TextField" positionIncrementGap="100">
+	  <analyzer type="index">
+	    <tokenizer name="standard"/>
+	    <filter name="stop" ignoreCase="true" words="stopwords.txt" />
+	    <!-- in this example, we will only use synonyms at query time
+	    <filter name="synonymGraph" synonyms="index_synonyms.txt" ignoreCase="true" expand="false"/>
+	    <filter name="flattenGraph"/>
+	    -->
+	    <filter name="lowercase"/>
+	  </analyzer>
+	  <analyzer type="query">
+	    <tokenizer name="standard"/>
+	    <filter name="stop" ignoreCase="true" words="stopwords.txt" />
+	    <filter name="synonymGraph" synonyms="synonyms.txt" ignoreCase="true" expand="true"/>
+	    <filter name="lowercase"/>
+	  </analyzer>
+	</fieldType>
+
+	<!-- SortableTextField generaly functions exactly like TextField,
+	   except that it supports, and by default uses, docValues for sorting (or faceting)
+	   on the first 1024 characters of the original field values (which is configurable).
+
+	   This makes it a bit more useful then TextField in many situations, but the trade-off
+	   is that it takes up more space on disk; which is why it's not used in place of TextField
+	   for every fieldType in this _default schema.
+	-->
+	 <fieldType name="text_gen_sort" class="solr.SortableTextField" positionIncrementGap="100" multiValued="true">
+	   <analyzer type="index">
+	     <tokenizer name="standard"/>
+	     <filter name="stop" ignoreCase="true" words="stopwords.txt" />
+	     <filter name="lowercase"/>
+	   </analyzer>
+	   <analyzer type="query">
+	     <tokenizer name="standard"/>
+	     <filter name="stop" ignoreCase="true" words="stopwords.txt" />
+	     <filter name="synonymGraph" synonyms="synonyms.txt" ignoreCase="true" expand="true"/>
+	     <filter name="lowercase"/>
+	   </analyzer>
+	 </fieldType>
+
+	<!-- A text field with defaults appropriate for English: it
+	    tokenizes with StandardTokenizer, removes English stop words
+	    (lang/stopwords_en.txt), down cases, protects words from protwords.txt, and
+	    finally applies Porter's stemming.  The query time analyzer
+	    also applies synonyms from synonyms.txt. -->
+	<fieldType name="text_en" class="solr.TextField" positionIncrementGap="100">
+	  <analyzer type="index">
+	    <tokenizer name="standard"/>
+	    <!-- in this example, we will only use synonyms at query time
+	   <filter name="synonymGraph" synonyms="index_synonyms.txt" ignoreCase="true" expand="false"/>
+	   <filter name="flattenGraph"/>
+	   -->
+	   <!-- Case insensitive stop word removal.
+	   -->
+	   <filter name="stop"
+	           ignoreCase="true"
+	           words="lang/stopwords_en.txt"
+	           />
+	   <filter name="lowercase"/>
+	   <filter name="englishPossessive"/>
+	   <filter name="keywordMarker" protected="protwords.txt"/>
+	   <!-- Optionally you may want to use this less aggressive stemmer instead of PorterStemFilterFactory:
+	   <filter name="englishMinimalStem"/>
+	   -->
+	   <filter name="porterStem"/>
+	 </analyzer>
+	 <analyzer type="query">
+	   <tokenizer name="standard"/>
+	   <filter name="synonymGraph" synonyms="synonyms.txt" ignoreCase="true" expand="true"/>
+	   <filter name="stop"
+	           ignoreCase="true"
+	           words="lang/stopwords_en.txt"
+	           />
+	   <filter name="lowercase"/>
+	   <filter name="englishPossessive"/>
+	   <filter name="keywordMarker" protected="protwords.txt"/>
+	   <!-- Optionally you may want to use this less aggressive stemmer instead of PorterStemFilterFactory:
+	   <filter name="englishMinimalStem"/>
+	   -->
+	    <filter name="porterStem"/>
+	  </analyzer>
+	</fieldType>
+
+    <!-- A text field with defaults appropriate for English, plus
+   aggressive word-splitting and autophrase features enabled.
+   This field is just like text_en, except it adds
+   WordDelimiterGraphFilter to enable splitting and matching of
+   words on case-change, alpha numeric boundaries, and
+   non-alphanumeric chars.  This means certain compound word
+   cases will work, for example query "wi fi" will match
+   document "WiFi" or "wi-fi".
+        -->
+    <fieldType name="text_en_splitting" class="solr.TextField" positionIncrementGap="100" autoGeneratePhraseQueries="true">
+      <analyzer type="index">
+        <tokenizer name="whitespace"/>
+        <!-- in this example, we will only use synonyms at query time
+        <filter name="synonymGraph" synonyms="index_synonyms.txt" ignoreCase="true" expand="false"/>
+        -->
+        <!-- Case insensitive stop word removal.
+        -->
+        <filter name="stop"
+                ignoreCase="true"
+                words="lang/stopwords_en.txt"
+                />
+        <filter name="wordDelimiterGraph" generateWordParts="1" generateNumberParts="1" catenateWords="1" catenateNumbers="1" catenateAll="0" splitOnCaseChange="1"/>
+        <filter name="lowercase"/>
+        <filter name="keywordMarker" protected="protwords.txt"/>
+        <filter name="porterStem"/>
+        <filter name="flattenGraph" />
+      </analyzer>
+      <analyzer type="query">
+        <tokenizer name="whitespace"/>
+        <filter name="synonymGraph" synonyms="synonyms.txt" ignoreCase="true" expand="true"/>
+        <filter name="stop"
+                ignoreCase="true"
+                words="lang/stopwords_en.txt"
+                />
+        <filter name="wordDelimiterGraph" generateWordParts="1" generateNumberParts="1" catenateWords="0" catenateNumbers="0" catenateAll="0" splitOnCaseChange="1"/>
+        <filter name="lowercase"/>
+        <filter name="keywordMarker" protected="protwords.txt"/>
+        <filter name="porterStem"/>
+      </analyzer>
+    </fieldType>
+
+    <!-- Less flexible matching, but less false matches.  Probably not ideal for product names,
+         but may be good for SKUs.  Can insert dashes in the wrong place and still match. -->
+    <fieldType name="text_en_splitting_tight" class="solr.TextField" positionIncrementGap="100" autoGeneratePhraseQueries="true">
+      <analyzer type="index">
+        <tokenizer name="whitespace"/>
+        <filter name="synonymGraph" synonyms="synonyms.txt" ignoreCase="true" expand="false"/>
+        <filter name="stop" ignoreCase="true" words="lang/stopwords_en.txt"/>
+        <filter name="wordDelimiterGraph" generateWordParts="0" generateNumberParts="0" catenateWords="1" catenateNumbers="1" catenateAll="0"/>
+        <filter name="lowercase"/>
+        <filter name="keywordMarker" protected="protwords.txt"/>
+        <filter name="englishMinimalStem"/>
+        <!-- this filter can remove any duplicate tokens that appear at the same position - sometimes
+             possible with WordDelimiterGraphFilter in conjuncton with stemming. -->
+        <filter name="removeDuplicates"/>
+        <filter name="flattenGraph" />
+      </analyzer>
+      <analyzer type="query">
+        <tokenizer name="whitespace"/>
+        <filter name="synonymGraph" synonyms="synonyms.txt" ignoreCase="true" expand="false"/>
+        <filter name="stop" ignoreCase="true" words="lang/stopwords_en.txt"/>
+        <filter name="wordDelimiterGraph" generateWordParts="0" generateNumberParts="0" catenateWords="1" catenateNumbers="1" catenateAll="0"/>
+        <filter name="lowercase"/>
+        <filter name="keywordMarker" protected="protwords.txt"/>
+        <filter name="englishMinimalStem"/>
+        <!-- this filter can remove any duplicate tokens that appear at the same position - sometimes
+             possible with WordDelimiterGraphFilter in conjuncton with stemming. -->
+        <filter name="removeDuplicates"/>
+      </analyzer>
+    </fieldType>
+
+    <!-- Just like text_general except it reverses the characters of
+   each token, to enable more efficient leading wildcard queries. -->
+    <fieldType name="text_general_rev" class="solr.TextField" positionIncrementGap="100">
+      <analyzer type="index">
+        <tokenizer name="standard"/>
+        <filter name="stop" ignoreCase="true" words="stopwords.txt" />
+        <filter name="lowercase"/>
+        <filter name="reversedWildcard" withOriginal="true"
+           maxPosAsterisk="3" maxPosQuestion="2" maxFractionAsterisk="0.33"/>
+      </analyzer>
+      <analyzer type="query">
+        <tokenizer name="standard"/>
+        <filter name="synonymGraph" synonyms="synonyms.txt" ignoreCase="true" expand="true"/>
+        <filter name="stop" ignoreCase="true" words="stopwords.txt" />
+        <filter name="lowercase"/>
+      </analyzer>
+    </fieldType>
+
+    <!-- charFilter + WhitespaceTokenizer  -->
+    <!--
+    <fieldType name="text_char_norm" class="solr.TextField" positionIncrementGap="100" >
+      <analyzer>
+        <charFilter name="mapping" mapping="mapping-ISOLatin1Accent.txt"/>
+        <tokenizer name="whitespace"/>
+      </analyzer>
+    </fieldType>
+    -->
+
+    <!-- This is an example of using the KeywordTokenizer along
+         With various TokenFilterFactories to produce a sortable field
+         that does not include some properties of the source text
+      -->
+    <fieldType name="alphaOnlySort" class="solr.TextField" sortMissingLast="true" omitNorms="true">
+      <analyzer>
+        <!-- KeywordTokenizer does no actual tokenizing, so the entire
+             input string is preserved as a single token
+          -->
+        <tokenizer name="keyword"/>
+        <!-- The LowerCase TokenFilter does what you expect, which can be
+             when you want your sorting to be case insensitive
+          -->
+        <filter name="lowercase" />
+        <!-- The TrimFilter removes any leading or trailing whitespace -->
+        <filter name="trim" />
+        <!-- The PatternReplaceFilter gives you the flexibility to use
+             Java Regular expression to replace any sequence of characters
+             matching a pattern with an arbitrary replacement string,
+             which may include back references to portions of the original
+             string matched by the pattern.
+
+             See the Java Regular Expression documentation for more
+             information on pattern and replacement string syntax.
+
+             http://docs.oracle.com/javase/8/docs/api/java/util/regex/package-summary.html
+          -->
+        <filter name="patternReplace"
+                pattern="([^a-z])" replacement="" replace="all"
+        />
+      </analyzer>
+    </fieldType>
+
+    <fieldType name="phonetic" stored="false" indexed="true" class="solr.TextField" >
+      <analyzer>
+        <tokenizer name="standard"/>
+        <filter name="doubleMetaphone" inject="false"/>
+      </analyzer>
+    </fieldType>
+
+    <fieldType name="payloads" stored="false" indexed="true" class="solr.TextField" >
+      <analyzer>
+        <tokenizer name="whitespace"/>
+        <!--
+        The DelimitedPayloadTokenFilter can put payloads on tokens... for example,
+        a token of "foo|1.4"  would be indexed as "foo" with a payload of 1.4f
+        Attributes of the DelimitedPayloadTokenFilterFactory :
+         "delimiter" - a one character delimiter. Default is | (pipe)
+   "encoder" - how to encode the following value into a playload
+      float -> org.apache.lucene.analysis.payloads.FloatEncoder,
+      integer -> o.a.l.a.p.IntegerEncoder
+      identity -> o.a.l.a.p.IdentityEncoder
+            Fully Qualified class name implementing PayloadEncoder, Encoder must have a no arg constructor.
+         -->
+        <filter name="delimitedPayload" encoder="float"/>
+      </analyzer>
+    </fieldType>
+
+    <!-- lowercases the entire field value, keeping it as a single token.  -->
+    <fieldType name="lowercase" class="solr.TextField" positionIncrementGap="100">
+      <analyzer>
+        <tokenizer name="keyword"/>
+        <filter name="lowercase" />
+      </analyzer>
+    </fieldType>
+
+    <!--
+      Example of using PathHierarchyTokenizerFactory at index time, so
+      queries for paths match documents at that path, or in descendent paths
+    -->
+    <fieldType name="descendent_path" class="solr.TextField">
+      <analyzer type="index">
+  <tokenizer name="pathHierarchy" delimiter="/" />
+      </analyzer>
+      <analyzer type="query">
+  <tokenizer name="keyword" />
+      </analyzer>
+    </fieldType>
+    <!--
+      Example of using PathHierarchyTokenizerFactory at query time, so
+      queries for paths match documents at that path, or in ancestor paths
+    -->
+    <fieldType name="ancestor_path" class="solr.TextField">
+      <analyzer type="index">
+  <tokenizer name="keyword" />
+      </analyzer>
+      <analyzer type="query">
+  <tokenizer name="pathHierarchy" delimiter="/" />
+      </analyzer>
+    </fieldType>
+
+    <!-- since fields of this type are by default not stored or indexed,
+         any data added to them will be ignored outright.  -->
+    <fieldType name="ignored" stored="false" indexed="false" multiValued="true" class="solr.StrField" />
+
+    <!-- This point type indexes the coordinates as separate fields (subFields)
+      If subFieldType is defined, it references a type, and a dynamic field
+      definition is created matching *___<typename>.  Alternately, if
+      subFieldSuffix is defined, that is used to create the subFields.
+      Example: if subFieldType="double", then the coordinates would be
+        indexed in fields myloc_0___double,myloc_1___double.
+      Example: if subFieldSuffix="_d" then the coordinates would be indexed
+        in fields myloc_0_d,myloc_1_d
+      The subFields are an implementation detail of the fieldType, and end
+      users normally should not need to know about them.
+     -->
+    <fieldType name="point" class="solr.PointType" dimension="2" subFieldSuffix="_d"/>
+
+    <!-- A specialized field for geospatial search filters and distance sorting. -->
+    <fieldType name="location" class="solr.LatLonPointSpatialField" docValues="true"/>
+
+    <!-- An alternative geospatial field type new to Solr 4.  It supports multiValued and polygon shapes.
+      For more information about this and other Spatial fields new to Solr 4, see:
+      https://solr.apache.org/guide/solr/latest/query-guide/spatial-search.html
+    -->
+    <fieldType name="location_rpt" class="solr.SpatialRecursivePrefixTreeFieldType"
+        geo="true" distErrPct="0.025" maxDistErr="0.001" distanceUnits="kilometers" />
+
+    <!-- Spatial rectangle (bounding box) field. It supports most spatial predicates, and has
+     special relevancy modes: score=overlapRatio|area|area2D (local-param to the query).  DocValues is recommended for
+     relevancy. -->
+    <fieldType name="bbox" class="solr.BBoxField"
+               geo="true" distanceUnits="kilometers" numberType="pdouble" />
+
+   <!-- Money/currency field type. See https://solr.apache.org/guide/solr/latest/indexing-guide/currencies-exchange-rates.html
+        Parameters:
+          amountLongSuffix: Required. Refers to a dynamic field for the raw amount sub-field.
+                              The dynamic field must have a field type that extends LongValueFieldType.
+                              Note: If you expect to use Atomic Updates, this dynamic field may not be stored.
+          codeStrSuffix:    Required. Refers to a dynamic field for the currency code sub-field.
+                              The dynamic field must have a field type that extends StrField.
+                              Note: If you expect to use Atomic Updates, this dynamic field may not be stored.
+          defaultCurrency:  Specifies the default currency if none specified. Defaults to "USD"
+          providerClass:    Lets you plug in other exchange provider backend:
+                            solr.FileExchangeRateProvider is the default and takes one parameter:
+                              currencyConfig: name of an xml file holding exchange rates
+                            solr.OpenExchangeRatesOrgProvider uses rates from openexchangerates.org:
+                              ratesFileLocation: URL or path to rates JSON file (default latest.json on the web)
+                              refreshInterval: Number of minutes between each rates fetch (default: 1440, min: 60)
+   -->
+
+    <!-- Pre-analyzed field type, allows inserting arbitrary token streams and stored values. -->
+    <fieldType name="preanalyzed" class="solr.PreAnalyzedField">
+      <!-- PreAnalyzedField's builtin index analyzer just decodes the pre-analyzed token stream. -->
+      <analyzer type="query">
+        <tokenizer name="whitespace"/>
+      </analyzer>
+    </fieldType>
+
+
+</schema>

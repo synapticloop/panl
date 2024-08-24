@@ -1,5 +1,6 @@
 /**
- * <p>Utility package</p>
+ * <p>Explainer package containing classes that handle the panl results
+ * explainer</p>
  *
  * @since 1.0
  * @author synapticloop

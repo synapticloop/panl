@@ -35,6 +35,12 @@ import org.slf4j.LoggerFactory;
 
 import java.nio.charset.StandardCharsets;
 
+/**
+ * <p>The abstract Panl client used for connecting to the underying default
+ * Solr server.</p>
+ * 
+ * @author synapticloop
+ */
 public abstract class PanlClient {
 	public static final Logger LOGGER = LoggerFactory.getLogger(PanlClient.class);
 

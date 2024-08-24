@@ -31,6 +31,7 @@ import org.slf4j.LoggerFactory;
 
 import java.io.*;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.FileSystems;
 import java.nio.file.Files;
 import java.util.*;
 
@@ -56,6 +57,7 @@ public class PanlGenerator {
 
 	private final String propertiesFileLocation;
 	private final String schemaFileLocations;
+	private final String collectionPropertiesOutputDirectory;
 
 	/**
 	 * <p>The list of schemas to parse and add to the panl.properties file which
@@ -98,7 +100,8 @@ public class PanlGenerator {
 		if (!shouldOverwrite) {
 			checkPropertiesFileLocation();
 		}
-
+		File file = new File(propertiesFileLocation);
+		this.collectionPropertiesOutputDirectory = file.getParentFile().getAbsolutePath();
 		checkSchemaFileLocations();
 	}
 
@@ -128,7 +131,8 @@ public class PanlGenerator {
 	 * @throws PanlGenerateException If the properties file exists
 	 */
 	private void checkPropertiesFileLocation() throws PanlGenerateException {
-		if (new File(propertiesFileLocation).exists()) {
+		File propertiesFile = new File(propertiesFileLocation);
+		if (propertiesFile.exists()) {
 			throw new PanlGenerateException("Properties file '" +
 					this.propertiesFileLocation +
 					"' exists, and we are not overwriting.  " +
@@ -219,7 +223,7 @@ public class PanlGenerator {
 	 */
 	private String getAndValidateParameterInput(String description, String panlParamProperty, String defaultValue, String errorPrompt) {
 		if (null != errorPrompt) {
-			System.out.printf("Invalid value. %s, please try again.\n", errorPrompt);
+			System.out.printf("Invalid value. %s Please try again.\n", errorPrompt);
 		}
 		System.out.printf("Enter the 1 character property value for '%s' (%s), default [%s]: ", panlParamProperty, description, defaultValue);
 		Scanner in = new Scanner(System.in);
@@ -242,6 +246,7 @@ public class PanlGenerator {
 						defaultValue,
 						String.format("Value '%s' __MUST__ be one of '%s'.", temp, PanlCollection.CODES)));
 			}
+
 			// It cannot be already in use
 			if (panlParamMap.containsKey(temp)) {
 				return (getAndValidateParameterInput(
@@ -258,6 +263,11 @@ public class PanlGenerator {
 		}
 	}
 
+	/**
+	 * <p>Generate the collection_uri.panl.properties file.</p>
+	 *
+	 * @param panlCollection The panl collection object to generate the file with
+	 */
 	private void generateCollectionDotPanlDotProperties(PanlCollection panlCollection) {
 		StringBuilder outputString = new StringBuilder();
 
@@ -265,7 +275,7 @@ public class PanlGenerator {
 			assert inputStream != null;
 			try (InputStreamReader streamReader = new InputStreamReader(inputStream, StandardCharsets.UTF_8);
 			     BufferedReader reader = new BufferedReader(streamReader);
-			     OutputStream outputStream = Files.newOutputStream(new File(panlCollection.getCollectionName() + ".panl.properties").toPath());
+			     OutputStream outputStream = Files.newOutputStream(new File(this.collectionPropertiesOutputDirectory + FileSystems.getDefault().getSeparator() +panlCollection.getCollectionName() + ".panl.properties").toPath());
 			     OutputStreamWriter outputStreamWriter = new OutputStreamWriter(outputStream);
 			     BufferedWriter writer = new BufferedWriter(outputStreamWriter)) {
 
@@ -309,15 +319,17 @@ public class PanlGenerator {
 		try (InputStream inputStream = PanlGenerator.class.getResourceAsStream(TEMPLATE_LOCATION_PANL_PROPERTIES)) {
 			assert inputStream != null;
 
+			// determine the output directory for the panl.properties and the
+			// associated directory
 			try (InputStreamReader streamReader = new InputStreamReader(inputStream, StandardCharsets.UTF_8);
 			     BufferedReader reader = new BufferedReader(streamReader);
-			     OutputStream outputStream = Files.newOutputStream(new File("panl.properties").toPath());
+			     OutputStream outputStream = Files.newOutputStream(new File(this.propertiesFileLocation).toPath());
 			     OutputStreamWriter outputStreamWriter = new OutputStreamWriter(outputStream);
 			     BufferedWriter writer = new BufferedWriter(outputStreamWriter)) {
 
 				String line;
 				while ((line = reader.readLine()) != null) {
-					if (line.startsWith("$panl.panlCollections")) {
+					if (line.startsWith("$panl.collection")) {
 						outputString.append(collectionPropertyFiles)
 								.append("\n");
 					} else {

@@ -31,12 +31,11 @@ import org.apache.solr.client.solrj.SolrClient;
 import org.apache.solr.client.solrj.impl.CloudSolrClient;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
 public class PanlCloudSolrClient extends PanlClient {
-	public static final String PREFIX_ZOOKEPER = "zookeeper:";
+	public static final String PREFIX_ZOOKEEPER = "zookeeper:";
 	private final List<String> solrUrls = new ArrayList<>();
 	private boolean hasZookeeper = false;
 
@@ -45,9 +44,9 @@ public class PanlCloudSolrClient extends PanlClient {
 
 		String[] urls = panlProperties.getSolrSearchServerUrl().split(",");
 		for (String url : urls) {
-			if (url.toLowerCase().startsWith(PREFIX_ZOOKEPER)) {
+			if (url.toLowerCase().startsWith(PREFIX_ZOOKEEPER)) {
 				hasZookeeper = true;
-				solrUrls.add(url.substring(PREFIX_ZOOKEPER.length()));
+				solrUrls.add(url.substring(PREFIX_ZOOKEEPER.length()));
 			} else {
 				solrUrls.add(url);
 			}

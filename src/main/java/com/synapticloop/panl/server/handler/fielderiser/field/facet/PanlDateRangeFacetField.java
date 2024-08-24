@@ -108,6 +108,12 @@ public class PanlDateRangeFacetField extends PanlFacetField {
 		previousIndicator = properties.getProperty(PROPERTY_KEY_PREFIX_PANL_DATE + this.lpseCode + PROPERTY_KEY_SUFFIX_PREVIOUS, null);
 		hasPrevious = nullCheck(previousIndicator);
 
+		if(!hasNext || !hasPrevious) {
+			String message = String.format("LPSE code '%s' is defined as a Date Field but does __NOT__ have both the next and previous property set and will be ignored.", lpseCode);
+			getLogger().warn(message);
+			WARNING_MESSAGES.add("[ CONFIGURATION WARNING ] " + message);
+		}
+
 		populateSolrFieldTypeValidation();
 		populatePanlAndSolrFieldNames();
 
@@ -156,7 +162,6 @@ public class PanlDateRangeFacetField extends PanlFacetField {
 	}
 
 	private boolean nullCheck(String propertyValue) {
-		// TODO - exception here if it is null
 		return (null != propertyValue);
 	}
 
@@ -398,6 +403,10 @@ public class PanlDateRangeFacetField extends PanlFacetField {
 			JSONObject additionObject,
 			CollectionProperties collectionProperties,
 			Map<String, List<LpseToken>> panlTokenMap) {
+
+		if(!hasNext && !hasPrevious) {
+			return(false);
+		}
 
 		additionObject.put(JSON_KEY_FACET_NAME, this.solrFieldName);
 		additionObject.put(JSON_KEY_NAME, this.panlFieldName);

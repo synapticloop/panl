@@ -31,6 +31,19 @@ import com.synapticloop.panl.server.handler.tokeniser.token.LpseToken;
 
 import java.util.StringTokenizer;
 
+/**
+ * <p>As the name would suggest, BOOLEAN facet can have only one of two values</p>
+ *
+ * <ul>
+ *   <li><code>true</code>, or</li>
+ *   <li><code>false</code></li>
+ * </ul>
+ *
+ * <p>BOOLEAN facets can have a prefix, a suffix, neither, or both as well as a
+ * true/false value replacement.</p>
+ *
+ * @author syanapticloop
+ */
 public class BooleanFacetLpseToken extends LpseToken {
 	public static final String TOKEN_TYPE = "facet";
 

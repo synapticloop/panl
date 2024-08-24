@@ -32,6 +32,8 @@ import com.synapticloop.panl.server.handler.fielderiser.field.*;
 import com.synapticloop.panl.server.handler.fielderiser.field.facet.*;
 import com.synapticloop.panl.server.handler.fielderiser.field.param.*;
 import com.synapticloop.panl.server.handler.helper.PropertyHelper;
+import com.synapticloop.panl.server.handler.tokeniser.token.LpseToken;
+import org.apache.solr.client.solrj.SolrQuery;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.slf4j.Logger;
@@ -83,13 +85,19 @@ public class CollectionProperties {
 
 	public static final String SOLR_DEFAULT_QUERY_OPERAND_OR = "OR";
 	public static final String SOLR_DEFAULT_QUERY_OPERAND_AND = "AND";
+	public static final String JSON_KEY_VALID_URLS = "valid_urls";
 
 
 	/**
 	 * <p>The name of this collection</p>
 	 */
 	private final String solrCollection;
+
+	/**
+	 * <p>The URI that this collection is bound to</p>
+	 */
 	private final String panlCollectionUri;
+
 	/**
 	 * <p>The collection.panl.properties that drive this collection</p>
 	 */
@@ -115,6 +123,7 @@ public class CollectionProperties {
 	 * These fields may be used as facets.</p>
 	 */
 	private final List<PanlFacetField> FACET_FIELDS = new ArrayList<>();
+	private final List<PanlFacetField> FACET_INDEX_SORT_FIELDS = new ArrayList<>();
 
 	/**
 	 * <p>This is the list of all fields that are registered with panl. Unlike
@@ -135,6 +144,9 @@ public class CollectionProperties {
 	private final Map<String, PanlDateRangeFacetField> LPSE_CODE_DATE_FACET_MAP = new HashMap<>();
 	private final Map<String, PanlBooleanFacetField> LPSE_CODE_BOOLEAN_FACET_MAP = new HashMap<>();
 
+	private final Map<String, Set<String>> LPSE_CODE_WHEN_MAP = new HashMap<>();
+	private final Map<String, String> SOLR_NAME_TO_LPSE_CODE_MAP = new HashMap<>();
+
 	private final Set<String> PANL_CODE_OR_FIELDS = new HashSet<>();
 	private final Set<String> PANL_CODE_RANGE_FIELDS = new HashSet<>();
 
@@ -147,6 +159,8 @@ public class CollectionProperties {
 	private String panlParamNumRows;
 	private String panlParamQueryOperand;
 	private String panlParamPassThrough;
+
+	private String facetSortFieldsIndex;
 
 	private String formQueryRespondTo;
 
@@ -215,6 +229,7 @@ public class CollectionProperties {
 		parseSortFields();
 		parseLpseOrder();
 		parseLpseIgnore();
+		parseFacetSortFields();
 
 
 		// Generate some static information
@@ -224,7 +239,7 @@ public class CollectionProperties {
 		}
 
 		JSONObject temp = new JSONObject();
-		temp.put("valid_urls", jsonArray);
+		temp.put(JSON_KEY_VALID_URLS, jsonArray);
 		this.validUrlsJSONArrayString = temp.toString();
 
 		// now for the solr field to panl name lookup
@@ -300,7 +315,7 @@ public class CollectionProperties {
 		this.formQueryRespondTo = properties.getProperty(PROPERTY_KEY_PANL_FORM_QUERY_RESPONDTO, "q");
 
 		this.facetMinCount = PropertyHelper.getIntProperty(properties, PROPERTY_KEY_SOLR_FACET_MIN_COUNT, 1);
-		this.highlight = properties.getProperty(PROPERTY_KEY_SOLR_HIGHLIGHT, "true").equals("true");
+		this.highlight = properties.getProperty(PROPERTY_KEY_SOLR_HIGHLIGHT, "false").equals("true");
 		this.numResultsPerPage = PropertyHelper.getIntProperty(properties, PROPERTY_KEY_SOLR_NUMROWS_DEFAULT, 10);
 		this.solrFacetLimit = PropertyHelper.getIntProperty(properties, PROPERTY_KEY_SOLR_FACET_LIMIT, 100);
 
@@ -403,24 +418,38 @@ public class CollectionProperties {
 			boolean isRangeFacet = properties.getProperty(PROPERTY_KEY_PANL_RANGE_FACET + lpseCode, "false").equals("true");
 
 			PanlFacetField facetField;
-			if(TYPE_SOLR_DATE_POINT_FIELD.equals(solrFieldType)) {
+			if (TYPE_SOLR_DATE_POINT_FIELD.equals(solrFieldType)) {
 				facetField = new PanlDateRangeFacetField(lpseCode, panlFieldKey, properties, solrCollection, panlCollectionUri, lpseLength);
 				LPSE_CODE_DATE_FACET_MAP.put(lpseCode, (PanlDateRangeFacetField) facetField);
-			} else if(TYPE_SOLR_BOOL_FIELD.equals(solrFieldType)) {
+			} else if (TYPE_SOLR_BOOL_FIELD.equals(solrFieldType)) {
 				facetField = new PanlBooleanFacetField(lpseCode, panlFieldKey, properties, solrCollection, panlCollectionUri, lpseLength);
 				LPSE_CODE_BOOLEAN_FACET_MAP.put(lpseCode, (PanlBooleanFacetField) facetField);
-			} else if(isOrFacet) {
+			} else if (isOrFacet) {
 				facetField = new PanlOrFacetField(lpseCode, panlFieldKey, properties, solrCollection, panlCollectionUri, lpseLength);
 				PANL_CODE_OR_FIELDS.add(lpseCode);
-			} else if(isRangeFacet) {
+			} else if (isRangeFacet) {
 				facetField = new PanlRangeFacetField(lpseCode, panlFieldKey, properties, solrCollection, panlCollectionUri, lpseLength);
 				PANL_CODE_RANGE_FIELDS.add(lpseCode);
 			} else {
 				facetField = new PanlFacetField(lpseCode, panlFieldKey, properties, solrCollection, panlCollectionUri, lpseLength);
 			}
 
-			// we need to determine whether it is an OR facet
+			String lpseWhen = properties.getProperty(PROPERTY_KEY_PANL_WHEN + lpseCode);
+			if (null != lpseWhen) {
+				String[] splits = lpseWhen.split(",");
+				for (String split : splits) {
+					String trim = split.trim();
 
+					if (!trim.isEmpty()) {
+						if (!LPSE_CODE_WHEN_MAP.containsKey(lpseCode)) {
+							LPSE_CODE_WHEN_MAP.put(lpseCode, new HashSet<>());
+						}
+
+						LPSE_CODE_WHEN_MAP.get(lpseCode).add(trim);
+					}
+				}
+			}
+			// we need to determine whether it is an OR facet
 
 			FACET_FIELDS.add(facetField);
 			LPSE_FACET_FIELDS.add(facetField.getLpseCode());
@@ -429,13 +458,14 @@ public class CollectionProperties {
 
 			LPSE_CODE_TO_FACET_FIELD_MAP.put(facetField.getLpseCode(), facetField);
 			SOLR_NAME_TO_FACET_FIELD_MAP.put(facetField.getSolrFieldName(), facetField);
+			SOLR_NAME_TO_LPSE_CODE_MAP.put(facetField.getSolrFieldName(), facetField.getLpseCode());
 		}
 
 		List<String> temp = new ArrayList<>();
 		for (PanlFacetField facetField : FACET_FIELDS) {
 			// we do not ever return the Date facet - no point in enlarging the
 			// response object for no purpose
-			if(!(facetField instanceof PanlDateRangeFacetField)) {
+			if (!(facetField instanceof PanlDateRangeFacetField)) {
 				temp.add(facetField.getSolrFieldName());
 			}
 		}
@@ -463,7 +493,7 @@ public class CollectionProperties {
 	}
 
 	/**
-	 * <p></p>
+	 * <p>Parse the LPSE order</p>
 	 *
 	 * @throws PanlServerException if the panl.lpse.order does not exist
 	 */
@@ -517,7 +547,7 @@ public class CollectionProperties {
 		String panlLpseIgnore = properties.getProperty(PROPERTY_KEY_PANL_LPSE_IGNORE, "");
 		for (String ignore : panlLpseIgnore.split(",")) {
 			String trimmed = ignore.trim();
-			if(trimmed.isBlank()) {
+			if (trimmed.isBlank()) {
 				continue;
 			}
 
@@ -621,16 +651,108 @@ public class CollectionProperties {
 		return (this.validUrlsJSONArrayString);
 	}
 
+	/**
+	 * <p>Set the minimum count of facets that need to be returned.  If there are
+	 * any OR facets, <strong>__AND__</strong> no other lpseCodes are passed
+	 * through, then return 0 for this field only - i.e. return all of the rows.
+	 * If there is a LPSE code passed through then set value the value to the
+	 * variable facetMinCount (which comes from the properties file.</p>
+	 *
+	 * @param solrQuery The Solr query object to set the facet mincounts on
+	 * @param panlTokenMap The passed in tokens
+	 */
+	public void setFacetMinCounts(SolrQuery solrQuery, Map<String, List<LpseToken>> panlTokenMap) {
+		// always set the facet min count to the property
+
+		solrQuery.setFacetMinCount(facetMinCount);
+		if (panlTokenMap.isEmpty() ||
+				PANL_CODE_OR_FIELDS.isEmpty()) {
+
+			// facet mincount is set for all fields, now run through and set the OR
+			// facets to be '0'
+			for (String panlCodeOrField : PANL_CODE_OR_FIELDS) {
+				solrQuery.add(
+						String.format(
+								"f.%s.facet.mincount",
+								LPSE_CODE_TO_FACET_FIELD_MAP.get(panlCodeOrField).getSolrFieldName()),
+						"0");
+			}
+
+			return;
+		}
+
+		// At this point we have some tokens in the panlTokenMap, we need to go through
+		// the OR fields and set specific facet mincounts.  
+		//
+		// If and ONLY IF the OR facet exists in the panlToken map, then continue 
+		// and there are no other facets selected, then set this OR facet to 0  
+
+		for (String panlCodeOrField : PANL_CODE_OR_FIELDS) {
+			// if there is
+			if (panlTokenMap.containsKey(panlCodeOrField) && panlTokenMap.size() == 1) {
+				// we are faceting on this 
+				solrQuery.add(
+						String.format(
+								"f.%s.facet.mincount",
+								LPSE_CODE_TO_FACET_FIELD_MAP.get(panlCodeOrField).getSolrFieldName()),
+						"0");
+			}
+		}
+	}
+
+	/**
+	 * @return The minimum value for the facet count
+	 */
 	public int getFacetMinCount() {
-		return facetMinCount;
+		return (facetMinCount);
 	}
 
 	public int getNumResultsPerPage() {
 		return numResultsPerPage;
 	}
 
-	public String[] getSolrFacetFields() {
-		return (solrFacetFields);
+	/**
+	 * <p>Get the facet fields that should be passed through to Solr, ensuring
+	 * that any hierarchical lpse codes filter out those that are not supposed to
+	 * be retrieved.</p>
+	 *
+	 * @param lpseTokens The current active LPSE tokens
+	 *
+	 * @return The array of solr fields to facet on
+	 */
+	public String[] getWhenSolrFacetFields(List<LpseToken> lpseTokens) {
+		if (LPSE_CODE_WHEN_MAP.isEmpty()) {
+			return (solrFacetFields);
+		}
+
+		Set<String> activeLpseCodes = new HashSet<>();
+		for (LpseToken lpseToken : lpseTokens) {
+			activeLpseCodes.add(lpseToken.getLpseCode());
+		}
+
+		List<String> returnedFacetFields = new ArrayList<>();
+		for (String solrFacetFieldName : solrFacetFields) {
+			String lpseCode = SOLR_NAME_TO_LPSE_CODE_MAP.get(solrFacetFieldName);
+			if (null == lpseCode) {
+				// shouldn't happen, but doesn't matter
+				returnedFacetFields.add(solrFacetFieldName);
+			} else {
+				// now we need to lookup the lpseCode in the WHEN map
+				if (LPSE_CODE_WHEN_MAP.containsKey(lpseCode)) {
+					// do we have the 'when' code in the token map?
+					Iterator<String> iterator = LPSE_CODE_WHEN_MAP.get(lpseCode).iterator();
+					while (iterator.hasNext()) {
+						if (activeLpseCodes.contains(iterator.next())) {
+							returnedFacetFields.add(solrFacetFieldName);
+							break;
+						}
+					}
+				} else {
+					returnedFacetFields.add(solrFacetFieldName);
+				}
+			}
+		}
+		return (returnedFacetFields.toArray(new String[0]));
 	}
 
 	/**
@@ -667,6 +789,14 @@ public class CollectionProperties {
 		return (null);
 	}
 
+	/**
+	 * <p>Return he Panl name from the Solr field name.  This will look at both
+	 * the facets and fields.</p>
+	 *
+	 * @param solrFieldName The Solr field name to lookup
+	 *
+	 * @return The Panl name that matches the Solr field
+	 */
 	public String getPanlNameFromSolrFieldName(String solrFieldName) {
 		if (SOLR_NAME_TO_FACET_FIELD_MAP.containsKey(solrFieldName)) {
 			return (SOLR_NAME_TO_FACET_FIELD_MAP.get(solrFieldName).getPanlFieldName());
@@ -693,14 +823,6 @@ public class CollectionProperties {
 		}
 		return (null);
 	}
-
-//	public boolean getPanlIncludeSingleFacets() {
-//		return (panlIncludeSingleFacets);
-//	}
-//
-//	public boolean getPanlIncludeSameNumberFacets() {
-//		return (panlIncludeSameNumberFacets);
-//	}
 
 	public List<String> getSortFieldLpseCodes() {
 		return (lpseCodeSortFields);
@@ -794,7 +916,23 @@ public class CollectionProperties {
 	}
 
 	public List<PanlDateRangeFacetField> getDateRangeFacetFields() {
-		return(List.of(LPSE_CODE_DATE_FACET_MAP.values().toArray(new PanlDateRangeFacetField[0])));
+		return (List.of(LPSE_CODE_DATE_FACET_MAP.values().toArray(new PanlDateRangeFacetField[0])));
+	}
+
+	public Set<String> getLpseWhenCode(String lpseCode) {
+		return (LPSE_CODE_WHEN_MAP.get(lpseCode));
+	}
+
+	public List<PanlFacetField> getFacetIndexSortFields() {
+		return (FACET_INDEX_SORT_FIELDS);
+	}
+
+	private void parseFacetSortFields() {
+		for (PanlFacetField facetField : FACET_FIELDS) {
+			if (facetField.getIsFacetSortByIndex()) {
+				FACET_INDEX_SORT_FIELDS.add(facetField);
+			}
+		}
 	}
 }
 
