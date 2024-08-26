@@ -49,6 +49,5 @@ public class CollectionHelper {
 			default:
 				throw new PanlServerException("Unknown property value for 'solrj.client' of '" + solrJClient + "', available values are 'Http2SolrClient', 'HttpJdkSolrClient', 'LBHttp2SolrClient', or 'CloudSolrClient'.");
 		}
-
 	}
 }

@@ -105,5 +105,4 @@ public class PanlNumRowsField extends BasePrefixSuffixField {
 				panlCollectionUri,
 				lpseCode);
 	}
-
 }
