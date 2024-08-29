@@ -32,6 +32,7 @@ import org.apache.http.HttpStatus;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.protocol.HttpContext;
 import org.apache.http.protocol.HttpRequestHandler;
+import org.json.JSONArray;
 import org.json.JSONObject;
 
 import static com.synapticloop.panl.server.handler.results.util.ResourceHelper.*;
@@ -93,10 +94,19 @@ public class PanlRequestHandler implements HttpRequestHandler {
 				paths[2].isBlank() ||
 				!collectionRequestHandler.isValidResultsFields(paths[2])) {
 
-			response.setStatusCode(HttpStatus.SC_NOT_FOUND);
+			JSONObject jsonObject = new JSONObject(collectionRequestHandler.getValidUrlsJSONArrayString());
+
+			jsonObject.put(JSON_KEY_ERROR, true);
+			jsonObject.put(JSON_KEY_STATUS, HttpStatus.SC_NOT_FOUND);
+			if (panlProperties.getUseVerbose404Messages()) {
+				jsonObject.put(JSON_KEY_MESSAGE, PanlDefaultHandler.JSON_VALUE_MESSAGE);
+			} else {
+				jsonObject.put(JSON_KEY_MESSAGE, JSON_VALUE_MESSAGE_404);
+				jsonObject.remove(JSON_KEY_VALID_URLS);
+			}
+
 			response.setEntity(
-					new StringEntity(
-							collectionRequestHandler.getValidUrlsJSONArrayString(),
+					new StringEntity(jsonObject.toString(),
 							ResourceHelper.CONTENT_TYPE_JSON));
 			return;
 		}

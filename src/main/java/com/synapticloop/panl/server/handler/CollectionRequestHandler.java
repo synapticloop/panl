@@ -282,9 +282,9 @@ public class CollectionRequestHandler {
 		Map<String, List<LpseToken>> panlTokenMap = new HashMap<>();
 		for (LpseToken lpseToken : lpseTokens) {
 			// These codes are ignored, just carry on
-			if (collectionProperties.getIsIgnoredLpseCode(lpseToken.getLpseCode())) {
-				continue;
-			}
+//			if (collectionProperties.getIsIgnoredLpseCode(lpseToken.getLpseCode())) {
+//				continue;
+//			}
 
 			String lpseCode = lpseToken.getLpseCode();
 
