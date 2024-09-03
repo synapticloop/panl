@@ -14,23 +14,26 @@ Usage:
     [-config solr_config_location] \
     [-port port_number]
 
-  to start the panl server
+Where:
+  [command] is one of:
+      server - start the server, or
+    generate - generate an example panl.properties file from an existing Solr
+               managed-schema.xml file
+
+  To start the panl server:
+
     java -jar panl.jar \
       server \
       [-properties properties_file_location] \
       [-port port_number]
 
-  to generate the panl.properties file for each collection
+  To generate the panl.properties file for each collection
+
     java -jar panl.jar \
       generate \
       [-properties properties_file_location] \
       [-overwrite true_or_false] \
       -schema solr_schema_location
-
-Where:
-  [command] is one of:
-      server - start the server
-    generate - generate an example panl.properties file
 
 If you choose the 'server' command, the following command line options are
 available:

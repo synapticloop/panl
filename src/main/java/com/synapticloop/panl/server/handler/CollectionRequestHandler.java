@@ -61,6 +61,7 @@ public class CollectionRequestHandler {
 	private static final Logger LOGGER = LoggerFactory.getLogger(CollectionRequestHandler.class);
 
 	public static final String SOLR_PARAM_HL_FL = "hl.fl";
+	public static final String SOLR_PARAM_HL = "hl";
 	public static final String SOLR_PARAM_Q_OP = "q.op";
 
 	public static final String JSON_KEY_ACTIVE = "active";
@@ -202,6 +203,7 @@ public class CollectionRequestHandler {
 
 			if (collectionProperties.getHighlight()) {
 				solrQuery.setParam(SOLR_PARAM_HL_FL, "*");
+				solrQuery.setParam(SOLR_PARAM_HL, "on");
 			}
 
 			// this may be overridden by the lpse status
