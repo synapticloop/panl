@@ -230,9 +230,10 @@ Choose a collection/fieldset and search, facet, sort, paginate and view the resu
 
 # *NIX Commands
 
-```**IMPORTANT**: Each of the commands - either Windows or *NIX must be run on
+```
+**IMPORTANT**: Each of the commands - either Windows or *NIX must be run on
  a single line - watch out for continuations.
- ```
+```
 
 ## 1. Create an example cloud instance
 
