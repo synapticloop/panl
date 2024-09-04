@@ -6,7 +6,11 @@ Usable, but not released... yet...  The book and generated instructions are comi
 
 [https://synapticloop.github.io/panl/](https://synapticloop.github.io/panl/)
 
-**BECAUSE**
+**_Get up and running with a fully featured, SEO friendly, keyword searchable, faceted search engine with an in-built, example search page to test it all out._**
+
+## Why?
+
+Because...
 
 `/Caran+d'Ache/true/Black/bDW/` 
 
@@ -18,6 +22,24 @@ looks A LOT nicer than
 Panl was designed to convert rather long and unfriendly (both in human readable and SEO terms) to shorter, nicer, and friendlier URI paths.
 
 Working with a Solr schema, the Panl configuration files translate unwieldy URI parameters into concise and precise URI paths.
+
+Panl allows
+
+- Multiple ways to slice and dice the underlying Solr collection and present them with different URLs
+- Prefixes, Infixes, and Suffixes for all facets
+- Value replacements for Boolean data types
+- Field value validation to help catch common errors
+- Hierarchical facets, only showing specific facets if another facet has already been selected
+- Sorting of facet values by either count (the default) or value.
+- Sorting by any of the fields or facets
+- Pagination - in built and ready to go
+- Static site generation - for small datasets with few options.  Alternatively they can be seen as easily cacheable and canonical sources for the returned results.
+
+# Getting up to Speed... Fast!
+
+The Solr Panl release package was designed to get you up and running as quickly as possible.
+
+With the in-built tool, point it at your existing Solr `managed-schema.xml` file, run the Panl server and view the results.  From there you can tweak the configuration, generate new configurations and see your results in an instant.
 
 ## The Panl Results Viewer Web App
 
@@ -112,6 +134,7 @@ _The image is a screenshot of the in-built Panl Results Explainer Web App availa
 
 1. **STATIC SITE GENERATION** - With the exception of a query parameter, all available links for every conceivable URI path can be statically generated ahead of time, with canonical URLs.
 
+1. **STATELESS** - No state is stored in the Panl server, all of the state is from the URI path part that is passed through.  No sessions, no memory.
 
 # Quick Start - The 5 Steps
 
@@ -283,3 +306,5 @@ The distributions (both a `.zip` and a `.tar` file) will be created in the build
 I.e.
  - `./build/distributions` (*NIX), or
  - `.\build\distributions` (Windows)
+
+with the release files named `solr-panl-9-x.x.x`

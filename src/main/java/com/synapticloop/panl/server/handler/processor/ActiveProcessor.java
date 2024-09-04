@@ -161,13 +161,7 @@ public class ActiveProcessor extends Processor {
 			}
 		}
 
-		String test = "/" + uri + lpse + "/";
-
-		if (test.equals("//")) {
-			return ("/");
-		} else {
-			return test;
-		}
+		return returnValidURIPath(uri, lpse);
 	}
 
 	private String getSortReplaceURI(SortLpseToken sortLpseToken, List<String> uriComponents, List<String> lpseComponents) {
@@ -194,13 +188,7 @@ public class ActiveProcessor extends Processor {
 			uri.append(uriComponents.get(i));
 		}
 
-		String test = "/" + uri + lpse + "/";
-
-		if (test.equals("//")) {
-			return ("/");
-		} else {
-			return test;
-		}
+		return returnValidURIPath(uri, lpse);
 	}
 
 	private String getBooleanReplaceURI(BooleanFacetLpseToken booleanFacetLpseToken, List<String> uriComponents, List<String> lpseComponents) {
@@ -226,6 +214,20 @@ public class ActiveProcessor extends Processor {
 			}
 		}
 
+		return returnValidURIPath(uri, lpse);
+	}
+
+	/**
+	 * <p>Return a valid URI path, in effect this will test to see whether there
+	 * is a uri part and a LPSE path.  If there isn't then it will return a single
+	 * forward slash '<code>/</code>'</p>
+	 *
+	 * @param uri The URI to test
+	 * @param lpse The LPSE code to test
+	 *
+	 * @return The valid encoded path
+	 */
+	private static String returnValidURIPath(StringBuilder uri, StringBuilder lpse) {
 		String test = "/" + uri + lpse + "/";
 
 		if (test.equals("//")) {

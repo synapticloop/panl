@@ -309,7 +309,7 @@ public class PanlGenerator {
 		StringBuilder collectionPropertyFiles = new StringBuilder();
 		for (PanlCollection panlCollection : panlCollections) {
 			String niceCollectionName = panlCollection.getCollectionName().toLowerCase().replaceAll("[^a-z0-9]", "-");
-			collectionPropertyFiles.append("panl.panlCollection.")
+			collectionPropertyFiles.append("panl.collection.")
 					.append(niceCollectionName)
 					.append("=")
 					.append(niceCollectionName)

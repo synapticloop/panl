@@ -61,6 +61,7 @@ public class CollectionRequestHandler {
 	private static final Logger LOGGER = LoggerFactory.getLogger(CollectionRequestHandler.class);
 
 	public static final String SOLR_PARAM_HL_FL = "hl.fl";
+	public static final String SOLR_PARAM_HL = "hl";
 	public static final String SOLR_PARAM_Q_OP = "q.op";
 
 	public static final String JSON_KEY_ACTIVE = "active";
@@ -202,6 +203,7 @@ public class CollectionRequestHandler {
 
 			if (collectionProperties.getHighlight()) {
 				solrQuery.setParam(SOLR_PARAM_HL_FL, "*");
+				solrQuery.setParam(SOLR_PARAM_HL, "on");
 			}
 
 			// this may be overridden by the lpse status
@@ -233,7 +235,7 @@ public class CollectionRequestHandler {
 			solrQuery.setStart((pageNum - 1) * numRows);
 			solrQuery.setRows(numRows);
 
-			System.out.println(solrQuery);
+			LOGGER.info(solrQuery.toString());
 
 			long buildRequestNanos = System.nanoTime() - startNanos;
 			startNanos = System.nanoTime();
@@ -282,9 +284,9 @@ public class CollectionRequestHandler {
 		Map<String, List<LpseToken>> panlTokenMap = new HashMap<>();
 		for (LpseToken lpseToken : lpseTokens) {
 			// These codes are ignored, just carry on
-			if (collectionProperties.getIsIgnoredLpseCode(lpseToken.getLpseCode())) {
-				continue;
-			}
+//			if (collectionProperties.getIsIgnoredLpseCode(lpseToken.getLpseCode())) {
+//				continue;
+//			}
 
 			String lpseCode = lpseToken.getLpseCode();
 
@@ -426,7 +428,7 @@ public class CollectionRequestHandler {
 		}
 
 		for (LpseToken lpseToken : lpseTokens) {
-			System.out.println(lpseToken.explain());
+			LOGGER.info(lpseToken.explain());
 		}
 
 		return (lpseTokens);

@@ -378,10 +378,26 @@ public abstract class BaseField {
 		return (getEncodedPanlValue(token) + "/");
 	}
 
+	/**
+	 * <p>Get the LPSE code for this token</p>
+	 *
+	 * @param token The token to interrogate
+	 * @param collectionProperties The Collection Properties
+	 *
+	 * @return The LPSE code for this token
+	 */
 	public String getLpseCode(LpseToken token, CollectionProperties collectionProperties) {
 		return (token.getLpseCode());
 	}
 
+	/**
+	 * <p>Get the URI path for this field</p>
+	 *
+	 * @param panlTokenMap The token map with the LPSe codes and values
+	 * @param collectionProperties The Collection Properties
+	 *
+	 * @return The URI path
+	 */
 	public String getURIPath(Map<String, List<LpseToken>> panlTokenMap, CollectionProperties collectionProperties) {
 		StringBuilder sb = new StringBuilder();
 		if (panlTokenMap.containsKey(lpseCode)) {
