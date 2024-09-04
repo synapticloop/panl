@@ -31,6 +31,7 @@ import com.synapticloop.integration.response.json.response.panl.Response;
 public class Root {
 	@JsonIgnore public Object responseHeader;
 	@JsonIgnore public Object facet_counts;
+	@JsonIgnore public Object highlighting;
 
 	public Response response;
 	public Panl panl;
