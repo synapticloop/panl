@@ -1,17 +1,23 @@
 # Synapticloop PANL
 
+<img src="src/docs/synapticloop-logo.png">
+
 ---
 
 **_Get up and running with a fully featured, SEO friendly, keyword searchable, faceted search engine with an in-built, example search page to test it all out._**
 
 ---
 
+## Download the Panl Server Release:
+
+[https://github.com/synapticloop/panl/releases](https://github.com/synapticloop/panl/releases)
+
+## Read the Documentation
 
 - Online book (HTML): [https://synapticloop.github.io/panl/](https://synapticloop.github.io/panl/)
-
 - Offline book (PDF): [Getting Started With Synapticloop Panl.pdf](https://github.com/synapticloop/panl/blob/main/src/dist/book/Getting%20Started%20With%20Synapticloop%20Panl.pdf)
 
-Both of the book versions refer to Solr Panl integration 9 with help for earlier versions of Solr.
+Both of the book links above refer to Solr Panl integration 9 with help for earlier versions of Solr.
 
 ## Why?
 
