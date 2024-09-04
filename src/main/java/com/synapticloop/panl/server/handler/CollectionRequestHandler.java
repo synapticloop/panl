@@ -80,6 +80,9 @@ public class CollectionRequestHandler {
 	public static final String JSON_KEY_SORTING = "sorting";
 	public static final String JSON_KEY_TIMINGS = "timings";
 
+	public static String CODES = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz01234567890";
+	public static String CODES_AND_METADATA = CODES + "[].+-";
+
 	private final String solrCollection;
 	private final CollectionProperties collectionProperties;
 	private final PanlClient panlClient;
@@ -398,7 +401,7 @@ public class CollectionRequestHandler {
 		if (lpseUriPath.length > 3) {
 			String lpseEncoding = lpseUriPath[lpseUriPath.length - 1];
 
-			LpseTokeniser lpseTokeniser = new LpseTokeniser(lpseEncoding, PanlCollection.CODES_AND_METADATA, true);
+			LpseTokeniser lpseTokeniser = new LpseTokeniser(lpseEncoding, CODES_AND_METADATA, true);
 
 			StringTokenizer valueTokeniser = new StringTokenizer(uri, "/", false);
 			// we need to skip the first two - as they will be the collection and the

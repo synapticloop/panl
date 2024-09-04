@@ -99,7 +99,7 @@ public class TestHelper {
 	}
 
 	public static LpseTokeniser getLpseTokeniser(String uriPath) {
-		return (new LpseTokeniser(uriPath, PanlCollection.CODES_AND_METADATA, true));
+		return (new LpseTokeniser(uriPath, CollectionRequestHandler.CODES_AND_METADATA, true));
 	}
 
 	public static Properties getTestProperties(String propertiesName) throws IOException {

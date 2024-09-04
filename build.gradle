@@ -32,7 +32,7 @@ dependencies {
 	// solrj
 	implementation 'org.apache.solr:solr-solrj:7.7.3'
 
-	// HTTP server for panl
+	// HTTP server
 	implementation 'org.eclipse.jetty.http2:http2-server:10.0.20'
 	implementation 'org.eclipse.jetty:jetty-servlet:10.0.20'
 
@@ -91,6 +91,16 @@ application {
 distributions {
 	main {
 		distributionBaseName = 'solr-panl-7'
+	}
+
+	configurations.all {
+		resolutionStrategy {
+			failOnVersionConflict()
+			force "org.slf4j:slf4j-api:2.0.13",
+					"commons-io:commons-io:2.16.1",
+					"com.fasterxml.jackson.core:jackson-databind:2.17.1",
+					"com.fasterxml.jackson.core:jackson-annotations:2.17.1"
+		}
 	}
 }
 
