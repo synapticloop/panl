@@ -49,12 +49,24 @@ public abstract class PanlClient {
 	protected final CollectionProperties collectionProperties;
 	protected String queryParameter = "q";
 
+	/**
+	 * <p>Instantiate a new Panl Client which will return the </p>
+	 *
+	 * @param solrCollection The Solr Collection
+	 * @param panlProperties The Panl properties file
+	 * @param collectionProperties The collection properties file
+	 */
 	public PanlClient(String solrCollection, PanlProperties panlProperties, CollectionProperties collectionProperties) {
 		this.solrCollection = solrCollection;
 		this.panlProperties = panlProperties;
 		this.collectionProperties = collectionProperties;
 	}
 
+	/**
+	 * <p>Get the SolrJClient for this configuration.</p>
+	 *
+	 * @return The configured Solr Client
+	 */
 	public abstract SolrClient getClient();
 
 	/**

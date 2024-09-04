@@ -109,6 +109,7 @@ public class PanlField {
 
 		// TODO - add in all of the properties (RANGE etc)
 		return (String.format("\n# %s\n", schemaXmlLine) +
+				(!isFacet ? "# This configuration can __ONLY__ ever be a field as it is not indexed in Solr\n" : "# This configuration can be either a field or a facet as it is indexed in Solr\n") +
 				String.format("panl.%s.%s=%s\n", (isFacet ? "facet" : "field"), lpseCode, solrFieldName) +
 				String.format("panl.name.%s=%s\n", lpseCode, getPrettyName(solrFieldName)) +
 				String.format("panl.type.%s=%s\n", lpseCode, solrFieldType) +
