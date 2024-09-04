@@ -127,7 +127,7 @@ public class PanlServer {
 
 						String fileName = collectionPropertiesFile.getName();
 						// TODO - need a set to lookup so that there aren't multiple panl
-						//  collection names bound
+						// collection names bound
 
 						panlCollectionUri = fileName.substring(0, fileName.indexOf("."));
 

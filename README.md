@@ -1,12 +1,12 @@
 # Synapticloop PANL
 
+<img src="src/docs/synapticloop-logo.png">
+
 ---
 
 **WARNING:** This is the Solr Panl Release for integrating Solr version 7.x.x and Panl
 
 ---
-
-**_WORK IN PROGRESS_**
 
 ---
 
@@ -14,13 +14,16 @@
 
 ---
 
-Usable, but not released... yet...  The book and generated instructions are coming along nicely.
+## Download the Panl Server Release:
+
+[https://github.com/synapticloop/panl/releases](https://github.com/synapticloop/panl/releases)
+
+## Read the Documentation
 
 - Online book (HTML): [https://synapticloop.github.io/panl/](https://synapticloop.github.io/panl/)
-
 - Offline book (PDF): [Getting Started With Synapticloop Panl.pdf](https://github.com/synapticloop/panl/blob/main/src/dist/book/Getting%20Started%20With%20Synapticloop%20Panl.pdf)
 
-Both of the book versions refer to Solr Panl integration 9 with help for earlier versions of Solr.
+Both of the book links above refer to Solr Panl integration 9 with help for earlier versions of Solr.
 
 ## Why?
 
@@ -332,4 +335,4 @@ I.e.
  - `./build/distributions` (*NIX), or
  - `.\build\distributions` (Windows)
 
-with the release files named `solr-panl-7-x.x.x`
+with the release files named `solr-panl-9-x.x.x`
