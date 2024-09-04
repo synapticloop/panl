@@ -1,14 +1,11 @@
 # Synapticloop PANL
 
-**_WORK IN PROGRESS_**
-
 ---
 
 **_Get up and running with a fully featured, SEO friendly, keyword searchable, faceted search engine with an in-built, example search page to test it all out._**
 
 ---
 
-Usable, but not released... yet...  The book and generated instructions are coming along nicely.
 
 - Online book (HTML): [https://synapticloop.github.io/panl/](https://synapticloop.github.io/panl/)
 
