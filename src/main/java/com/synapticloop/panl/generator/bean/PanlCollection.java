@@ -67,6 +67,8 @@ public class PanlCollection {
 	static {
 		SUPPORTED_SOLR_FIELD_TYPES.add("solr.BoolField");
 		SUPPORTED_SOLR_FIELD_TYPES.add("solr.StrField");
+		SUPPORTED_SOLR_FIELD_TYPES.add("solr.TextField");
+		SUPPORTED_SOLR_FIELD_TYPES.add("solr.UUIDField");
 		SUPPORTED_SOLR_FIELD_TYPES.add("solr.IntPointField");
 		SUPPORTED_SOLR_FIELD_TYPES.add("solr.DatePointField");
 		SUPPORTED_SOLR_FIELD_TYPES.add("solr.FloatPointField");
