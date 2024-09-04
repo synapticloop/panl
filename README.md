@@ -1,5 +1,11 @@
 # Synapticloop PANL
 
+---
+
+**WARNING:** This is the Solr Panl Release for integrating Solr version 7.x.x and Panl
+
+---
+
 **_WORK IN PROGRESS_**
 
 ---
