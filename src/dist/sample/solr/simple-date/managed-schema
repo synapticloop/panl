@@ -13,7 +13,7 @@
     
 	<field name="text" type="text_general" indexed="true" stored="true" multiValued="true"/>
 
-    <uniqueKey>id</uniqueKey>
+  <uniqueKey>id</uniqueKey>
 
 	<copyField source="text_date" dest="text" />
 
