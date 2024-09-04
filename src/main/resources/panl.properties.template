@@ -27,7 +27,6 @@
 #
 #  - Http2SolrClient
 #  - HttpSolrClient
-#  - HttpJdkSolrClient
 #  - LBHttp2SolrClient
 #  - LBHttpSolrClient
 #  - CloudSolrClient
@@ -40,7 +39,6 @@
 
 #solrj.client=HttpSolrClient
 #solrj.client=Http2SolrClient
-#solrj.client=HttpJdkSolrClient
 #solrj.client=LBHttpSolrClient
 #solrj.client=LBHttp2SolrClient
 #solrj.client=CloudHttp2SolrClient
