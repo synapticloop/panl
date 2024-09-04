@@ -42,6 +42,7 @@ import java.io.FileNotFoundException;
 import java.util.*;
 
 /**
+ * <p></p>
  *
  * @author synapticloop
  */
@@ -55,23 +56,47 @@ public class PanlCollection {
 	private final List<SolrField> unassignedSolrFields = new ArrayList<>();
 	private final Map<String, String> fieldXmlMap = new HashMap<>();
 	private int lpseLength = 1;
-
 	public static String CODES = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz01234567890";
-	public static String CODES_AND_METADATA = CODES + "[].+-";
 
 	private static final Set<String> CODES_AVAILABLE = new HashSet<>();
 	private static final Map<String, PanlProperty> PANL_PROPERTIES = new HashMap<>();
 	private static final Map<String, String> SOLR_FIELD_TYPE_NAME_TO_SOLR_CLASS = new HashMap<>();
 	private static final Map<String, String> SOLR_FIELD_NAME_TO_SOLR_FIELD_TYPE = new HashMap<>();
 
+	private static final Set<String> SUPPORTED_SOLR_FIELD_TYPES = new HashSet<>();
+	static {
+		SUPPORTED_SOLR_FIELD_TYPES.add("solr.BoolField");
+		SUPPORTED_SOLR_FIELD_TYPES.add("solr.StrField");
+		SUPPORTED_SOLR_FIELD_TYPES.add("solr.IntPointField");
+		SUPPORTED_SOLR_FIELD_TYPES.add("solr.DatePointField");
+		SUPPORTED_SOLR_FIELD_TYPES.add("solr.FloatPointField");
+		SUPPORTED_SOLR_FIELD_TYPES.add("solr.LongPointField");
+		SUPPORTED_SOLR_FIELD_TYPES.add("solr.DoublePointField");
+	}
+
 	public PanlCollection(File schema, Map<String, String> panlReplacementPropertyMap) throws PanlGenerateException {
 		parseSchemaFile(schema);
 
+		 int numSupported = 0;
+		// now that we have parsed the Solr fields, go through and mark the fields
+		// as either supported or not supported
+		for(SolrField solrField : solrFields) {
+			String fieldName = solrField.getName();
+			String solrClass = SOLR_FIELD_TYPE_NAME_TO_SOLR_CLASS.get(SOLR_FIELD_NAME_TO_SOLR_FIELD_TYPE.get(fieldName));
+			if(SUPPORTED_SOLR_FIELD_TYPES.contains(solrClass)) {
+				solrField.setIsSupported(true);
+				numSupported++;
+			} else {
+				LOGGER.warn("Unsupported Solr field for Panl '{}' of type '{}', ignoring.", fieldName, solrClass);
+			}
+		}
+
+
 		// each character can be one of the letters and numbers
-		this.lpseLength = solrFields.size() / 62;
+		this.lpseLength = numSupported / 62;
 
 		// don't forget that we have pre-defined 'params'
-		if ((solrFields.size() % 62 - panlReplacementPropertyMap.size()) > 0) {
+		if ((numSupported % 62 - panlReplacementPropertyMap.size()) > 0) {
 			this.lpseLength++;
 		}
 
@@ -80,7 +105,7 @@ public class PanlCollection {
 		}
 
 		LOGGER.info("PanlCollection: {}", this.collectionName);
-		LOGGER.info("Have {} panlFields, LPSE length is set to {}", solrFields.size(), this.lpseLength);
+		LOGGER.info("Have {} panlFields, LPSE length is set to {}", numSupported, this.lpseLength);
 
 		// now we are going to remove all codes that are in use by the panl replacement map
 		for (String code : panlReplacementPropertyMap.values()) {
@@ -99,6 +124,10 @@ public class PanlCollection {
 
 		// now go through to panlFields and assign a code which is close to what they want...
 		for (SolrField solrField : solrFields) {
+			if(!solrField.getIsSupported()) {
+				continue;
+			}
+
 			String fieldName = solrField.getName();
 			String cleanedName = fieldName.replaceAll("[^A-Za-z0-9]", "");
 			String possibleCode = cleanedName.substring(0, this.lpseLength);

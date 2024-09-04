@@ -276,7 +276,7 @@ public class PanlResultsExplainerExplainHandler implements HttpRequestHandler {
 		if (searchQuery.length > 5) {
 			String lpseEncoding = searchQuery[searchQuery.length - 1];
 
-			LpseTokeniser lpseTokeniser = new LpseTokeniser(lpseEncoding, PanlCollection.CODES_AND_METADATA, true);
+			LpseTokeniser lpseTokeniser = new LpseTokeniser(lpseEncoding, CollectionRequestHandler.CODES_AND_METADATA, true);
 
 			StringTokenizer valueTokeniser = new StringTokenizer(uri, "/", false);
 			// we need to skip the first two - as they will be the collection and the

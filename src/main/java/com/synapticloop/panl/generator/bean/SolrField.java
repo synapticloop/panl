@@ -27,6 +27,7 @@ package com.synapticloop.panl.generator.bean;
 public class SolrField {
 	private final String name;
 	private final boolean isFacet;
+	private boolean isSupported = false;
 
 	public SolrField(String name, boolean isFacet) {
 		this.name = name;
@@ -39,5 +40,13 @@ public class SolrField {
 
 	public boolean getIsFacet() {
 		return isFacet;
+	}
+
+	public boolean getIsSupported() {
+		return isSupported;
+	}
+
+	public void setIsSupported(boolean supported) {
+		isSupported = supported;
 	}
 }
