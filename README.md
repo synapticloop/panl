@@ -193,7 +193,8 @@ This requires no interaction, will use the default setup, two replicas, and two 
 Command(s)
 
 ```shell
-SOLR_INSTALL_DIRECTORY\bin\solr start -e cloud -noprompt
+cd SOLR_INSTALL_DIRECTORY
+bin\solr start -e cloud -noprompt
 ```
 
 
@@ -202,7 +203,8 @@ SOLR_INSTALL_DIRECTORY\bin\solr start -e cloud -noprompt
 This will set up the mechanical pencil collection and schema so that the data can be indexed.
 Command(s)
 ```shell
-SOLR_INSTALL_DIRECTORY\bin\solr create -c mechanical-pencils -d PANL_INSTALL_DIRECTORY\sample\solr\mechanical-pencils\ -s 2 -rf 2
+cd SOLR_INSTALL_DIRECTORY
+bin\solr create -c mechanical-pencils -d PANL_INSTALL_DIRECTORY\sample\solr\mechanical-pencils\ -s 2 -rf 2
 ```
 
 ## 3. Index the mechanical pencils data
@@ -211,7 +213,8 @@ This will index all mechanical pencil data into the Solr instance.
 Command(s)
 
 ```shell
-SOLR_INSTALL_DIRECTORY\bin\solr	post -c mechanical-pencils PANL_INSTALL_DIRECTORY\sample\data\mechanical-mechanical-pencils.json
+cd SOLR_INSTALL_DIRECTORY
+bin\solr post -c mechanical-pencils PANL_INSTALL_DIRECTORY\sample\data\mechanical-mechanical-pencils.json
 ```
 
 ## 4. Start the Panl Server
@@ -219,7 +222,8 @@ SOLR_INSTALL_DIRECTORY\bin\solr	post -c mechanical-pencils PANL_INSTALL_DIRECTOR
 This will start the server and be ready to accept requests.
 Command(s)
 ```shell
-PANL_INSTALL_DIRECTORY\bin\panl.bat -properties PANL_INSTALL_DIRECTORY\sample\panl\mechanical-properties\panl.properties
+cd PANL_INSTALL_DIRECTORY
+bin\panl.bat -properties PANL_INSTALL_DIRECTORY\sample\panl\mechanical-properties\panl.properties
 ```
 
 ## 5. Start searching and faceting
@@ -241,7 +245,8 @@ No prompting, default setup, two replicas, and two shards under the 'example' cl
 Command(s)
 
 ```shell
-SOLR_INSTALL_DIRECTORY/bin/solr start -e cloud -noprompt
+cd SOLR_INSTALL_DIRECTORY
+bin/solr start -e cloud -noprompt
 ```
 
 ## 2. Create the mechanical pencils collection
@@ -249,7 +254,8 @@ SOLR_INSTALL_DIRECTORY/bin/solr start -e cloud -noprompt
 Set up the schema so that the data can be indexed.
 Command(s)
 ```shell
-SOLR_INSTALL_DIRECTORY/bin/solr create -c mechanical-pencils -d PANL_INSTALL_DIRECTORY/sample/solr/mechanical-pencils/ -s 2 -rf 2
+cd SOLR_INSTALL_DIRECTORY
+bin/solr create -c mechanical-pencils -d PANL_INSTALL_DIRECTORY/sample/solr/mechanical-pencils/ -s 2 -rf 2
 ```
 
 ## 3. Index the mechanical pencils data
@@ -257,7 +263,8 @@ SOLR_INSTALL_DIRECTORY/bin/solr create -c mechanical-pencils -d PANL_INSTALL_DIR
 Index all of the data into the Solr instance
 Command(s)
 ```shell
-SOLR_INSTALL_DIRECTORY/bin/solr post -c mechanical-pencils PANL_INSTALL_DIRECTORY/sample/data/mechanical-mechanical-pencils.json
+cd SOLR_INSTALL_DIRECTORY
+bin/solr post -c mechanical-pencils PANL_INSTALL_DIRECTORY/sample/data/mechanical-mechanical-pencils.json
 ```
 
 ## 4. Start the Panl Server
@@ -266,7 +273,8 @@ Ready to go.
 Command(s)
 
 ```shell
-PANL_INSTALL_DIRECTORY/bin/panl -properties PANL_INSTALL_DIRECTORY/sample/panl/mechanical-properties/panl.properties
+cd PANL_INSTALL_DIRECTORY
+bin/panl -properties PANL_INSTALL_DIRECTORY/sample/panl/mechanical-properties/panl.properties
 ```
 
 View the in-built Panl Results Viewer web application
@@ -285,15 +293,17 @@ If you have stopped the example Solr server, starting it up:
 ### _Windows_
 
 ```shell
-SOLR_INSTALL_DIRECTORY\bin\solr start -cloud -p 8983 -s "example\cloud\node1\solr"
-SOLR_INSTALL_DIRECTORY\bin\solr start -cloud -p 7574 -s "example\cloud\node2\solr" -z localhost:9983
+cd SOLR_INSTALL_DIRECTORY
+bin\solr start -cloud -p 8983 -s "example\cloud\node1\solr"
+bin\solr start -cloud -p 7574 -s "example\cloud\node2\solr" -z localhost:9983
 ```
 
 ### _*NIX_
 
 ```shell
-SOLR_INSTALL_DIRECTORY/bin/solr start -cloud -p 8983 -s "example/cloud/node1/solr"
-SOLR_INSTALL_DIRECTORY/bin/solr start -cloud -p 7574 -s "example/cloud/node2/solr" -z localhost:9983
+cd SOLR_INSTALL_DIRECTORY
+bin/solr start -cloud -p 8983 -s "example/cloud/node1/solr"
+bin/solr start -cloud -p 7574 -s "example/cloud/node2/solr" -z localhost:9983
 ```
 
 # Building The distribution
