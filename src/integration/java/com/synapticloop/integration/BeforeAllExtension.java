@@ -37,7 +37,7 @@ public class BeforeAllExtension implements BeforeAllCallback, ExtensionContext.S
 			return;
 		}
 
-		panlServer = new PanlServer("panl.properties", 8282);
+		panlServer = new PanlServer("src/integration/resources/panl.properties", 8282);
 		new Thread(() -> {
 			try {
 				panlServer.start();

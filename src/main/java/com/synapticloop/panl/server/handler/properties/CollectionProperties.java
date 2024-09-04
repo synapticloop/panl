@@ -82,6 +82,7 @@ public class CollectionProperties {
 	public static final String PROPERTY_KEY_SOLR_NUMROWS_DEFAULT = "solr.numrows.default";
 
 	public static final String FIELDSETS_DEFAULT = "default";
+	public static final String FIELDSETS_EMPTY = "empty";
 
 	public static final String SOLR_DEFAULT_QUERY_OPERAND_OR = "OR";
 	public static final String SOLR_DEFAULT_QUERY_OPERAND_AND = "AND";
@@ -564,11 +565,17 @@ public class CollectionProperties {
 		for (String resultFieldProperty : resultFieldProperties) {
 			addResultsFields(resultFieldProperty.substring(PROPERTY_KEY_PANL_RESULTS_FIELDS.length()), properties.getProperty(resultFieldProperty));
 		}
+
 		// there must always be a default field
 		if (!resultFieldsMap.containsKey(FIELDSETS_DEFAULT)) {
 			LOGGER.warn("[ Solr/Panl '{}/{}' ] Missing default field set, adding one which will return all fields.", solrCollection, panlCollectionUri);
 			resultFieldsMap.put(FIELDSETS_DEFAULT, new ArrayList<>());
 		}
+
+		if (resultFieldsMap.containsKey(FIELDSETS_EMPTY)) {
+			LOGGER.warn("[ Solr/Panl '{}/{}' ] 'empty' fieldset defined.  This will be ignored, and empty fieldset __ALWAYS__ returns no fields.", solrCollection, panlCollectionUri);
+		}
+		resultFieldsMap.put(FIELDSETS_EMPTY, null);
 	}
 
 	private void addResultsFields(String resultFieldsName, String resultFields) throws PanlServerException {
