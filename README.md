@@ -29,15 +29,15 @@ Working with a Solr schema, the Panl configuration files translate unwieldy URI 
 
 Panl allows
 
-- Multiple ways to slice and dice the underlying Solr collection and present them with different URLs
-- Prefixes, Infixes, and Suffixes for all facets
-- Value replacements for Boolean data types
-- Field value validation to help catch common errors
-- Hierarchical facets, only showing specific facets if another facet has already been selected
-- Sorting of facet values by either count (the default) or value.
-- Sorting by any of the fields or facets
-- Pagination - in built and ready to go
-- Static site generation - for small datasets with few options.  Alternatively they can be seen as easily cacheable and canonical sources for the returned results.
+- **Multiple ways to slice and dice** the underlying Solr collection and present them with different URLs
+- **Prefixes, Infixes, and Suffixes** for all facets
+- **Value replacements** for Boolean data types
+- **Field value validation** to help catch common errors
+- **Hierarchical facets**, only showing specific facets if another facet has already been selected
+- **Sorting of facet values** by either count (the default) or value.
+- **Sorting** by any of the fields or facets
+- **Pagination** - in built and ready to go
+- **Static site generation** - for small datasets with few options.  Alternatively they can be seen as easily cacheable and canonical sources for the returned results.
 
 # Getting up to Speed... Fast!
 
