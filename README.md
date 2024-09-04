@@ -6,7 +6,7 @@ Usable, but not released... yet...  The book and generated instructions are comi
 
 - Online book (HTML): [https://synapticloop.github.io/panl/](https://synapticloop.github.io/panl/)
 
-- Offline book (PDF): [Getting Started With Synapticloop Panl.pdf](blob/solr-panl-9/src/dist/book/Getting Started With Synapticloop Panl.pdf)
+- Offline book (PDF): [Getting Started With Synapticloop Panl.pdf](https://github.com/synapticloop/panl/blob/main/src/dist/book/Getting%20Started%20With%20Synapticloop%20Panl.pdf)
 
 Both of the book versions refer to Solr Panl integration 9 with help for earlier versions of Solr. 
 
