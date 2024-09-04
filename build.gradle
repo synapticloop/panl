@@ -99,7 +99,14 @@ distributions {
 			force "org.slf4j:slf4j-api:2.0.13",
 					"commons-io:commons-io:2.16.1",
 					"com.fasterxml.jackson.core:jackson-databind:2.17.1",
-					"com.fasterxml.jackson.core:jackson-annotations:2.17.1"
+					"com.fasterxml.jackson.core:jackson-annotations:2.17.1",
+					"org.eclipse.jetty.http2:http2-common:10.0.20",
+					"org.eclipse.jetty.http2:http2-hpack:10.0.20",
+					"org.eclipse.jetty.http2:http2-server:10.0.20",
+					"org.eclipse.jetty:jetty-http:10.0.20",
+					"org.eclipse.jetty:jetty-io:10.0.20",
+					"org.eclipse.jetty:jetty-util:10.0.20"
+
 		}
 	}
 }
