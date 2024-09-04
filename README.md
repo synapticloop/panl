@@ -2,7 +2,7 @@
 
 ---
 
-This is the Solr Panl Release for integrating Solr version 8.x.x and Panl  
+**WARNING:** This is the Solr Panl Release for integrating Solr version 8.x.x and Panl  
 
 ---
 
