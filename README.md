@@ -2,7 +2,13 @@
 
 **_WORK IN PROGRESS_**
 
+---
+
+<p style="text-align:center">
 **_Get up and running with a fully featured, SEO friendly, keyword searchable, faceted search engine with an in-built, example search page to test it all out._**
+</p>
+
+---
 
 Usable, but not released... yet...  The book and generated instructions are coming along nicely.
 
