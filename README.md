@@ -1,5 +1,11 @@
 # Synapticloop PANL
 
+---
+
+This is the Solr Panl Release for integrating Solr version 8.x.x and Panl  
+
+---
+
 **_WORK IN PROGRESS_**
 
 Usable, but not released... yet...  The book and generated instructions are coming along nicely. 
