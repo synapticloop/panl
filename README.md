@@ -4,7 +4,11 @@
 
 Usable, but not released... yet...  The book and generated instructions are coming along nicely. 
 
-[https://synapticloop.github.io/panl/](https://synapticloop.github.io/panl/)
+- Online book (HTML): [https://synapticloop.github.io/panl/](https://synapticloop.github.io/panl/)
+
+- Offline book (PDF): [Getting Started With Synapticloop Panl.pdf](blob/solr-panl-9/src/dist/book/Getting Started With Synapticloop Panl.pdf)
+
+Both of the book versions refer to Solr Panl integration 9 with help for earlier versions of Solr. 
 
 **_Get up and running with a fully featured, SEO friendly, keyword searchable, faceted search engine with an in-built, example search page to test it all out._**
 
