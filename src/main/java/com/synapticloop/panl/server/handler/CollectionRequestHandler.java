@@ -198,12 +198,9 @@ public class CollectionRequestHandler {
 			solrQuery.setParam(SOLR_PARAM_Q_OP, collectionProperties.getSolrDefaultQueryOperand());
 			solrQuery.setFacetLimit(collectionProperties.getSolrFacetLimit());
 
-			boolean returnNoRows = false;
 			// we are checking for the empty fieldsets
 			List<String> resultFieldsForName = collectionProperties.getResultFieldsForName(resultFields);
-			if(null == resultFieldsForName) {
-				returnNoRows = true;
-			} else {
+			if(null != resultFieldsForName) {
 				for (String fieldName : resultFieldsForName) {
 					solrQuery.addField(fieldName);
 				}
@@ -245,7 +242,8 @@ public class CollectionRequestHandler {
 			solrQuery.setStart((pageNum - 1) * numRows);
 			solrQuery.setRows(numRows);
 
-			if(returnNoRows) {
+			// this is done for the empty fieldset
+			if(null != resultFieldsForName) {
 				solrQuery.setRows(0);
 			}
 

@@ -452,7 +452,14 @@ panl.lpse.ignore=
 # from the Solr server.  If you edit the default fieldset, then only those
 # fields referenced will be sent back.
 #
-# As an example, another property:
+# Additionally, there is a hidden fieldset panl.results.fields.empty which will
+# __ALWAYS__ exist and __ALWAYS__ return no fields in the document.  (This is
+# done by requesting no documents be returned with the results, irrespective of
+# the passed in parameters and default rows parameter.)  If you define a
+# fieldset as empty, then it will log an error on startup and be silently
+# ignored
+#
+# To define a fieldset, as an example, another property:
 #
 #     panl.results.fields.firstfive
 #
