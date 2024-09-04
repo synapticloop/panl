@@ -8,11 +8,19 @@ This is the Solr Panl Release for integrating Solr version 8.x.x and Panl
 
 **_WORK IN PROGRESS_**
 
-Usable, but not released... yet...  The book and generated instructions are coming along nicely. 
-
-[https://synapticloop.github.io/panl/](https://synapticloop.github.io/panl/)
+---
 
 **_Get up and running with a fully featured, SEO friendly, keyword searchable, faceted search engine with an in-built, example search page to test it all out._**
+
+---
+
+Usable, but not released... yet...  The book and generated instructions are coming along nicely.
+
+- Online book (HTML): [https://synapticloop.github.io/panl/](https://synapticloop.github.io/panl/)
+
+- Offline book (PDF): [Getting Started With Synapticloop Panl.pdf](https://github.com/synapticloop/panl/blob/main/src/dist/book/Getting%20Started%20With%20Synapticloop%20Panl.pdf)
+
+Both of the book versions refer to Solr Panl integration 9 with help for earlier versions of Solr.
 
 ## Why?
 
@@ -31,15 +39,15 @@ Working with a Solr schema, the Panl configuration files translate unwieldy URI 
 
 Panl allows
 
-- Multiple ways to slice and dice the underlying Solr collection and present them with different URLs
-- Prefixes, Infixes, and Suffixes for all facets
-- Value replacements for Boolean data types
-- Field value validation to help catch common errors
-- Hierarchical facets, only showing specific facets if another facet has already been selected
-- Sorting of facet values by either count (the default) or value.
-- Sorting by any of the fields or facets
-- Pagination - in built and ready to go
-- Static site generation - for small datasets with few options.  Alternatively they can be seen as easily cacheable and canonical sources for the returned results.
+- **Multiple ways to slice and dice** the underlying Solr collection and present them with different URLs
+- **Prefixes, Infixes, and Suffixes** for all facets
+- **Value replacements** for Boolean data types
+- **Field value validation** to help catch common errors
+- **Hierarchical facets**, only showing specific facets if another facet has already been selected
+- **Sorting of facet values** by either count (the default) or value.
+- **Sorting** by any of the fields or facets
+- **Pagination** - in built and ready to go
+- **Static site generation** - for small datasets with few options.  Alternatively they can be seen as easily cacheable and canonical sources for the returned results.
 
 # Getting up to Speed... Fast!
 
@@ -191,7 +199,8 @@ This requires no interaction, will use the default setup, two replicas, and two 
 Command(s)
 
 ```shell
-SOLR_INSTALL_DIRECTORY\bin\solr start -e cloud -noprompt
+cd SOLR_INSTALL_DIRECTORY
+bin\solr start -e cloud -noprompt
 ```
 
 
@@ -200,7 +209,8 @@ SOLR_INSTALL_DIRECTORY\bin\solr start -e cloud -noprompt
 This will set up the mechanical pencil collection and schema so that the data can be indexed.
 Command(s)
 ```shell
-SOLR_INSTALL_DIRECTORY\bin\solr create -c mechanical-pencils -d PANL_INSTALL_DIRECTORY\sample\solr\mechanical-pencils\ -s 2 -rf 2
+cd SOLR_INSTALL_DIRECTORY
+bin\solr create -c mechanical-pencils -d PANL_INSTALL_DIRECTORY\sample\solr\mechanical-pencils\ -s 2 -rf 2
 ```
 
 ## 3. Index the mechanical pencils data
@@ -209,7 +219,8 @@ This will index all mechanical pencil data into the Solr instance.
 Command(s)
 
 ```shell
-SOLR_INSTALL_DIRECTORY\bin\solr	post -c mechanical-pencils PANL_INSTALL_DIRECTORY\sample\data\mechanical-mechanical-pencils.json
+cd SOLR_INSTALL_DIRECTORY
+bin\solr post -c mechanical-pencils PANL_INSTALL_DIRECTORY\sample\data\mechanical-mechanical-pencils.json
 ```
 
 ## 4. Start the Panl Server
@@ -217,7 +228,8 @@ SOLR_INSTALL_DIRECTORY\bin\solr	post -c mechanical-pencils PANL_INSTALL_DIRECTOR
 This will start the server and be ready to accept requests.
 Command(s)
 ```shell
-PANL_INSTALL_DIRECTORY\bin\panl.bat -properties PANL_INSTALL_DIRECTORY\sample\panl\mechanical-properties\panl.properties
+cd PANL_INSTALL_DIRECTORY
+bin\panl.bat -properties PANL_INSTALL_DIRECTORY\sample\panl\mechanical-properties\panl.properties
 ```
 
 ## 5. Start searching and faceting
@@ -228,9 +240,10 @@ Choose a collection/fieldset and search, facet, sort, paginate and view the resu
 
 # *NIX Commands
 
-```**IMPORTANT**: Each of the commands - either Windows or *NIX must be run on
+```
+**IMPORTANT**: Each of the commands - either Windows or *NIX must be run on
  a single line - watch out for continuations.
- ```
+```
 
 ## 1. Create an example cloud instance
 
@@ -238,7 +251,8 @@ No prompting, default setup, two replicas, and two shards under the 'example' cl
 Command(s)
 
 ```shell
-SOLR_INSTALL_DIRECTORY/bin/solr start -e cloud -noprompt
+cd SOLR_INSTALL_DIRECTORY
+bin/solr start -e cloud -noprompt
 ```
 
 ## 2. Create the mechanical pencils collection
@@ -246,7 +260,8 @@ SOLR_INSTALL_DIRECTORY/bin/solr start -e cloud -noprompt
 Set up the schema so that the data can be indexed.
 Command(s)
 ```shell
-SOLR_INSTALL_DIRECTORY/bin/solr create -c mechanical-pencils -d PANL_INSTALL_DIRECTORY/sample/solr/mechanical-pencils/ -s 2 -rf 2
+cd SOLR_INSTALL_DIRECTORY
+bin/solr create -c mechanical-pencils -d PANL_INSTALL_DIRECTORY/sample/solr/mechanical-pencils/ -s 2 -rf 2
 ```
 
 ## 3. Index the mechanical pencils data
@@ -254,7 +269,8 @@ SOLR_INSTALL_DIRECTORY/bin/solr create -c mechanical-pencils -d PANL_INSTALL_DIR
 Index all of the data into the Solr instance
 Command(s)
 ```shell
-SOLR_INSTALL_DIRECTORY/bin/solr post -c mechanical-pencils PANL_INSTALL_DIRECTORY/sample/data/mechanical-mechanical-pencils.json
+cd SOLR_INSTALL_DIRECTORY
+bin/solr post -c mechanical-pencils PANL_INSTALL_DIRECTORY/sample/data/mechanical-mechanical-pencils.json
 ```
 
 ## 4. Start the Panl Server
@@ -263,7 +279,8 @@ Ready to go.
 Command(s)
 
 ```shell
-PANL_INSTALL_DIRECTORY/bin/panl -properties PANL_INSTALL_DIRECTORY/sample/panl/mechanical-properties/panl.properties
+cd PANL_INSTALL_DIRECTORY
+bin/panl -properties PANL_INSTALL_DIRECTORY/sample/panl/mechanical-properties/panl.properties
 ```
 
 View the in-built Panl Results Viewer web application
@@ -282,15 +299,17 @@ If you have stopped the example Solr server, starting it up:
 ### _Windows_
 
 ```shell
-SOLR_INSTALL_DIRECTORY\bin\solr start -cloud -p 8983 -s "example\cloud\node1\solr"
-SOLR_INSTALL_DIRECTORY\bin\solr start -cloud -p 7574 -s "example\cloud\node2\solr" -z localhost:9983
+cd SOLR_INSTALL_DIRECTORY
+bin\solr start -cloud -p 8983 -s "example\cloud\node1\solr"
+bin\solr start -cloud -p 7574 -s "example\cloud\node2\solr" -z localhost:9983
 ```
 
 ### _*NIX_
 
 ```shell
-SOLR_INSTALL_DIRECTORY/bin/solr start -cloud -p 8983 -s "example/cloud/node1/solr"
-SOLR_INSTALL_DIRECTORY/bin/solr start -cloud -p 7574 -s "example/cloud/node2/solr" -z localhost:9983
+cd SOLR_INSTALL_DIRECTORY
+bin/solr start -cloud -p 8983 -s "example/cloud/node1/solr"
+bin/solr start -cloud -p 7574 -s "example/cloud/node2/solr" -z localhost:9983
 ```
 
 # Building The distribution
