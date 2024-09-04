@@ -28,6 +28,7 @@ import com.synapticloop.panl.exception.PanlServerException;
 import com.synapticloop.panl.server.client.*;
 import com.synapticloop.panl.server.handler.properties.CollectionProperties;
 import com.synapticloop.panl.server.handler.properties.PanlProperties;
+import org.apache.solr.client.solrj.impl.CloudHttp2SolrClient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -48,6 +49,8 @@ public class CollectionHelper {
 				return (new PanlLBHttpSolrClient(solrCollection, panlProperties, collectionProperties));
 			case "CloudSolrClient":
 				return (new PanlCloudSolrClient(solrCollection, panlProperties, collectionProperties));
+			case "CloudHttp2SolrClient":
+				return (new PanlCloudHttp2SolrClient(solrCollection, panlProperties, collectionProperties));
 			default:
 				throw new PanlServerException("Unknown property value for 'solrj.client' of '" + solrJClient + "', available values are 'Http2SolrClient', 'HttpJdkSolrClient', 'LBHttp2SolrClient', or 'CloudSolrClient'.");
 		}

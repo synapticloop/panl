@@ -31,6 +31,7 @@
 #  - LBHttp2SolrClient
 #  - LBHttpSolrClient
 #  - CloudSolrClient
+#  - CloudHttp2SolrClient
 #
 # By default - we will be using the CloudSolrClient as it works with the
 # example instructions for spinning up a test solr instance
@@ -42,6 +43,7 @@
 #solrj.client=HttpJdkSolrClient
 #solrj.client=LBHttpSolrClient
 #solrj.client=LBHttp2SolrClient
+#solrj.client=CloudHttp2SolrClient
 solrj.client=CloudSolrClient
 
 #                           Which URLs To Connect To

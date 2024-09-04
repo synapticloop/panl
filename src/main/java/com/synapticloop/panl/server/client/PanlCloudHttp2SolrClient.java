@@ -25,22 +25,21 @@ package com.synapticloop.panl.server.client;
  */
 
 import com.synapticloop.panl.exception.PanlServerException;
-import com.synapticloop.panl.server.handler.properties.PanlProperties;
 import com.synapticloop.panl.server.handler.properties.CollectionProperties;
+import com.synapticloop.panl.server.handler.properties.PanlProperties;
 import org.apache.solr.client.solrj.SolrClient;
 import org.apache.solr.client.solrj.impl.CloudHttp2SolrClient;
-import org.apache.solr.client.solrj.impl.CloudSolrClient;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-public class PanlCloudSolrClient extends PanlClient {
+public class PanlCloudHttp2SolrClient extends PanlClient {
 	public static final String PREFIX_ZOOKEEPER = "zookeeper:";
 	private final List<String> solrUrls = new ArrayList<>();
 	private boolean hasZookeeper = false;
 
-	public PanlCloudSolrClient(String solrCollection, PanlProperties panlProperties, CollectionProperties collectionProperties) throws PanlServerException {
+	public PanlCloudHttp2SolrClient(String solrCollection, PanlProperties panlProperties, CollectionProperties collectionProperties) throws PanlServerException {
 		super(solrCollection, panlProperties, collectionProperties);
 
 		String[] urls = panlProperties.getSolrSearchServerUrl().split(",");
@@ -57,9 +56,9 @@ public class PanlCloudSolrClient extends PanlClient {
 	@Override
 	public SolrClient getClient() {
 		if (hasZookeeper) {
-			return (new CloudSolrClient.Builder(solrUrls, Optional.empty()).build());
+			return (new CloudHttp2SolrClient.Builder(solrUrls, Optional.empty()).build());
 		} else {
-			return (new CloudSolrClient.Builder(solrUrls).build());
+			return (new CloudHttp2SolrClient.Builder(solrUrls).build());
 		}
 	}
 }
