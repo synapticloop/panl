@@ -30,8 +30,8 @@ configurations {
 
 dependencies {
 	// solrj
-	implementation 'org.apache.solr:solr-solrj:9.6.0'
-	implementation 'org.apache.solr:solr-solrj-zookeeper:9.6.0'
+	implementation 'org.apache.solr:solr-solrj:9.6.1'
+	implementation 'org.apache.solr:solr-solrj-zookeeper:9.6.1'
 
 	// HTTP server
 	implementation 'org.eclipse.jetty.http2:http2-server:10.0.20'
@@ -92,6 +92,16 @@ application {
 distributions {
 	main {
 		distributionBaseName = 'solr-panl-9'
+	}
+
+	configurations.all {
+		resolutionStrategy {
+			failOnVersionConflict()
+			force "org.slf4j:slf4j-api:2.0.13",
+					"commons-io:commons-io:2.16.1",
+					"com.fasterxml.jackson.core:jackson-databind:2.17.1",
+					"com.fasterxml.jackson.core:jackson-annotations:2.17.1"
+		}
 	}
 }
 
