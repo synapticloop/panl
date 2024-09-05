@@ -243,7 +243,7 @@ public class CollectionRequestHandler {
 			solrQuery.setRows(numRows);
 
 			// this is done for the empty fieldset
-			if(null != resultFieldsForName) {
+			if(null == resultFieldsForName) {
 				solrQuery.setRows(0);
 			}
 
