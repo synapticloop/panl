@@ -229,7 +229,10 @@ public class PanlServer {
 			bootstrap.registerHandler("/panl-results-explainer/explain/*", new PanlResultsExplainerExplainHandler(collectionPropertiesList, collectionRequestHandlers));
 		}
 
-		// finally register the collection handlers
+
+		// finally register the collection and configuration handlers
+		bootstrap.registerHandler(PanlConfigurationHandler.PANL_CONFIGURATION_BINDING + "*", new PanlConfigurationHandler(panlProperties, collectionRequestHandlers));
+
 		for (CollectionRequestHandler collectionRequestHandler : collectionRequestHandlers) {
 			String solrCollection = collectionRequestHandler.getSolrCollection();
 			String panlCollectionUri = collectionRequestHandler.getPanlCollectionUri();
@@ -238,6 +241,8 @@ public class PanlServer {
 			for (String resultFieldsName : collectionRequestHandler.getResultFieldsNames()) {
 				LOGGER.info("Results will be available on /{}/{}/*", panlCollectionUri, resultFieldsName);
 			}
+
+			LOGGER.info("Binding Solr collection of '{}' to Panl configuration URI path " + PanlConfigurationHandler.PANL_CONFIGURATION_BINDING + "{}/", solrCollection, panlCollectionUri);
 		}
 
 		// create the server

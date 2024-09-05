@@ -54,6 +54,7 @@ public class PanlRequestHandler implements HttpRequestHandler {
 	/**
 	 * <p>Instantiate The Panl request handler which will bind the request URL to
 	 * the collection request handle.</p>
+	 *
 	 * @param panlProperties The panl properties file
 	 * @param collectionRequestHandler The collection request handler that will
 	 * 		handle this request
@@ -132,6 +133,7 @@ public class PanlRequestHandler implements HttpRequestHandler {
 						String.format("Class: %s, message: %s.",
 								e.getClass().getCanonicalName(),
 								e.getMessage()));
+
 				LOGGER.error("Could not handle the request.", e);
 				response.setEntity(new StringEntity(jsonObject.toString(), ResourceHelper.CONTENT_TYPE_JSON));
 			} else {
