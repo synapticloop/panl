@@ -25,6 +25,8 @@ package com.synapticloop.panl.server.handler.fielderiser.field;
  */
 
 import com.synapticloop.panl.exception.PanlServerException;
+import com.synapticloop.panl.server.handler.fielderiser.field.validator.DecimalValidator;
+import com.synapticloop.panl.server.handler.fielderiser.field.validator.NumberValidator;
 import com.synapticloop.panl.server.handler.properties.CollectionProperties;
 import com.synapticloop.panl.server.handler.tokeniser.LpseTokeniser;
 import com.synapticloop.panl.server.handler.tokeniser.token.facet.FacetLpseToken;
@@ -320,24 +322,11 @@ public abstract class BaseField {
 	 * @return The validated value
 	 */
 	protected String getValidatedValue(String temp) {
-		// TODO - should change this to objects...
-		String replaced;
 		switch (this.validationType) {
-			case VALIDATION_TYPE_DATE:
 			case VALIDATION_TYPE_NUMBER:
-				replaced = temp.replaceAll("[^0-9]", "");
-				if (replaced.isBlank()) {
-					return (null);
-				} else {
-					return replaced;
-				}
+				return(NumberValidator.validate(temp));
 			case VALIDATION_TYPE_DECIMAL:
-				replaced = temp.replaceAll("[^0-9.]", "");
-				if (replaced.isBlank()) {
-					return (null);
-				} else {
-					return replaced;
-				}
+				return(DecimalValidator.validate(temp));
 		}
 		return (temp);
 	}

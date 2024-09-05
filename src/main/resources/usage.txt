@@ -20,7 +20,7 @@ Where:
     generate - generate an example panl.properties file from an existing Solr
                managed-schema.xml file
 
-  To start the panl server:
+  To start the Panl server:
 
     java -jar panl.jar \
       server \
@@ -53,7 +53,7 @@ available:
     the base properties file to write the generated configuration out to. If
     this property is not included, the default panl.properties filename will
     be used with each collection file that is generated named:
-      <collection_uri>.panl.properties
+      <panl_collection_url>.panl.properties
     NOTE: If the files exist, the generation will TERMINATE, you will need to
     remove those files before the generation - unless you have the
     -overwrite true command line option present

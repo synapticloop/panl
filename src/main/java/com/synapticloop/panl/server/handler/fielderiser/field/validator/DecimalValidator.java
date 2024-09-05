@@ -24,13 +24,31 @@ package com.synapticloop.panl.server.handler.fielderiser.field.validator;
  * IN THE SOFTWARE.
  */
 
-public class DecimalValidator implements Validator {
 
-	@Override public String validate(String value) {
-		String replaced = value.replaceAll("[^0-9.]", "");
+import com.synapticloop.panl.server.handler.properties.PanlProperties;
+
+import java.text.NumberFormat;
+import java.text.ParseException;
+import java.util.Locale;
+
+public class DecimalValidator {
+	private static final NumberFormat DECIMAL_FORMAT_POINT = NumberFormat.getInstance(Locale.UK);
+	private static final NumberFormat DECIMAL_FORMAT_COMMA = NumberFormat.getInstance(Locale.FRANCE);
+
+	public static String validate(String value) {
+		String replaced = value.replaceAll("[^0-9.,]", "");
 		if (replaced.isBlank()) {
 			return (null);
 		} else {
+			try {
+				if(PanlProperties.getIsDecimalPoint()) {
+					DECIMAL_FORMAT_POINT.parse(replaced);
+				} else {
+					DECIMAL_FORMAT_COMMA.parse(replaced);
+				}
+			} catch(NumberFormatException | ParseException ex) {
+				return(null);
+			}
 			return replaced;
 		}
 	}
