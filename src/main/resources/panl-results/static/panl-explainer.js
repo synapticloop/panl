@@ -13,6 +13,8 @@ $(document).ready(function() {
 		availableCollections.append("&nbsp;-&nbsp;<a href=\"" + panlResultsViewerUrl + collectionUrl + "\">[&nbsp;" + fieldSet + "&nbsp;]</a>");
 	}
 
+	availableCollections.append("<br />")
+
 	// test to see whether we are ready to invoke the panl search service
 	var uris = window.location.pathname.split("/");
 	if(uris.length >= 4) {
