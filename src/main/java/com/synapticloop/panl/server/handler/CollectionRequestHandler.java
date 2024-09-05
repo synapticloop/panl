@@ -493,4 +493,8 @@ public class CollectionRequestHandler {
 	public String getPanlCollectionUri() {
 		return panlCollectionUri;
 	}
+
+	public List<String> getLpseOrder() {
+		return(collectionProperties.getPanlLpseOrderList());
+	}
 }

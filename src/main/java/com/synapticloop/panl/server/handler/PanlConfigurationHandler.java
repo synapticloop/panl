@@ -81,17 +81,80 @@ public class PanlConfigurationHandler implements HttpRequestHandler {
 		String[] paths = uri.split("/");
 		if (paths.length == 3  && validCollections.containsKey(paths[2])) {
 			try {
-				JSONObject jsonObject = new JSONObject(validCollections.get(paths[2]).handleRequest("/" + paths[2] + "/empty/", ""));
+				CollectionRequestHandler collectionRequestHandler = validCollections.get(paths[2]);
+				JSONObject jsonObject = new JSONObject(collectionRequestHandler.handleRequest("/" + paths[2] + "/empty/", ""));
 
 				// now that we have the JSON object - time to remove the things we don't need
 				jsonObject.remove("responseHeader");
 				jsonObject.remove("response");
 				jsonObject.remove("facet_counts");
-				jsonObject.getJSONObject("panl").remove("pagination");
-				jsonObject.getJSONObject("panl").remove("query_operand");
-				jsonObject.getJSONObject("panl").remove("timings");
-				jsonObject.getJSONObject("panl").remove("canonical_uri");
 
+				JSONObject panlJsonObject = jsonObject.getJSONObject("panl");
+
+				panlJsonObject.remove("pagination");
+				panlJsonObject.remove("active");
+				panlJsonObject.remove("query_operand");
+				panlJsonObject.remove("timings");
+				panlJsonObject.remove("canonical_uri");
+
+				// now to add the data that we do need
+				List<String> lpseOrders = collectionRequestHandler.getLpseOrder();
+				panlJsonObject.put("lpse_order", new ArrayList<>());
+				int i = 0;
+				JSONObject lpseLookupObject = new JSONObject();
+				for(String lpseOrder: lpseOrders) {
+					lpseLookupObject.put(lpseOrder, i);
+					i++;
+				}
+
+				panlJsonObject.put("lpse_lookup", lpseLookupObject);
+
+				// now go through the available facets and place them in the correct place
+				JSONObject availableJsonObject = panlJsonObject.getJSONObject("available");
+
+				// regular facets
+				for (Object rangeFacets : availableJsonObject.getJSONArray("facets")) {
+					JSONObject rangeFacetObject = (JSONObject) rangeFacets;
+					String panlCode = rangeFacetObject.getString("panl_code");
+					if(null != panlCode) {
+						int lpseOrder = lpseLookupObject.optInt(panlCode, -1);
+						if(lpseOrder != -1) {
+							panlJsonObject.getJSONArray("lpse_order").put(lpseOrder, rangeFacetObject);
+						}
+					}
+				}
+
+				// range facets always need to go after regular facets, as they are
+				// both returned, and the range must overwrite the regular one
+				for (Object rangeFacets : availableJsonObject.getJSONArray("range_facets")) {
+					JSONObject rangeFacetObject = (JSONObject) rangeFacets;
+					String panlCode = rangeFacetObject.getString("panl_code");
+					if(null != panlCode) {
+						int lpseOrder = lpseLookupObject.optInt(panlCode, -1);
+						if(lpseOrder != -1) {
+							rangeFacetObject.put("is_range_facet", true);
+							panlJsonObject.getJSONArray("lpse_order").put(lpseOrder, rangeFacetObject);
+						}
+					}
+				}
+
+				// date range facets next
+				for (Object rangeFacets : availableJsonObject.getJSONArray("date_range_facets")) {
+					JSONObject rangeFacetObject = (JSONObject) rangeFacets;
+					String panlCode = rangeFacetObject.getString("panl_code");
+					if(null != panlCode) {
+						int lpseOrder = lpseLookupObject.optInt(panlCode, -1);
+						if(lpseOrder != -1) {
+							rangeFacetObject.put("is_date_range_facet", true);
+							panlJsonObject.getJSONArray("lpse_order").put(lpseOrder, rangeFacetObject);
+						}
+					}
+				}
+
+				// lastly remove the facets
+				panlJsonObject.remove("sorting");
+				panlJsonObject.remove("available");
+				panlJsonObject.remove("fields");
 
 				response.setStatusCode(HttpStatus.SC_OK);
 				response.setEntity(
