@@ -1,7 +1,16 @@
 $(document).ready(function() {
 	var availableCollections = $("#available_collections");
+	var currentCollectionName = "";
 	for (const collectionUrl of collections) {
-		availableCollections.append("[<a href=\"/panl-results-explainer" + collectionUrl + "\">" + collectionUrl + "</a>]&nbsp;");
+		const lastIndex = collectionUrl.lastIndexOf("/");
+		const collectionName = collectionUrl.substring(1, lastIndex);
+		const fieldSet = collectionUrl.substring(lastIndex +1);
+		if(currentCollectionName !== collectionName) {
+			availableCollections.append("<br />&nbsp;<strong>" + collectionName + "</strong>")
+			currentCollectionName = collectionName;
+		}
+
+		availableCollections.append("&nbsp;-&nbsp;<a href=\"" + panlResultsViewerUrl + collectionUrl + "\">[&nbsp;" + fieldSet + "&nbsp;]</a>");
 	}
 
 	// test to see whether we are ready to invoke the panl search service
