@@ -1,5 +1,3 @@
-package com.synapticloop.panl.server.handler.fielderiser.field.validator;
-
 /*
  * Copyright (c) 2008-2024 synapticloop.
  *
@@ -24,6 +22,25 @@ package com.synapticloop.panl.server.handler.fielderiser.field.validator;
  * IN THE SOFTWARE.
  */
 
-public interface Validator {
-	public String validate(String value);
+package com.synapticloop.panl.server.handler.fielderiser.field.validator;
+
+import com.synapticloop.panl.generator.bean.PanlCollection;
+import com.synapticloop.panl.server.handler.properties.PanlProperties;
+import org.junit.jupiter.api.Test;
+import static org.junit.jupiter.api.Assertions.*;
+
+public class DecimalValidatorTest {
+	@Test public void testDecimalPointValidation() {
+		assertEquals("123456", DecimalValidator.validate("123456"));
+		assertEquals("123456", DecimalValidator.validate("123asd456"));
+		assertEquals("1,234.56", DecimalValidator.validate("1,234.56"));
+
+		PanlProperties.setIsDecimalPoint(false);
+
+		assertEquals("123456", DecimalValidator.validate("123456"));
+		assertEquals("123456", DecimalValidator.validate("123asd456"));
+		assertEquals("1.234,56", DecimalValidator.validate("1.234,56"));
+		assertEquals("1.234,56", DecimalValidator.validate("ads1.%2h3()4,56"));
+
+	}
 }

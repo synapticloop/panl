@@ -6,50 +6,104 @@ $(document).ready(function() {
 		const collectionName = collectionUrl.substring(1, lastIndex);
 		const fieldSet = collectionUrl.substring(lastIndex +1);
 		if(currentCollectionName !== collectionName) {
-			availableCollections.append("<br />&nbsp;<strong>" + collectionName + "</strong>")
+			availableCollections.append("<a href=\"/panl-single-page-search/" + collectionName + "/\">[&nbsp;" + collectionName + "&nbsp;]</a>&nbsp;");
 			currentCollectionName = collectionName;
 		}
-
-		availableCollections.append("&nbsp;-&nbsp;<a href=\"" + panlResultsViewerUrl + collectionUrl + "\">[&nbsp;" + fieldSet + "&nbsp;]</a>");
 	}
 
 	availableCollections.append("<br />")
 
 	// test to see whether we are ready to invoke the panl search service
 	var uris = window.location.pathname.split("/");
-	if(uris.length >= 4) {
+	if(uris.length >= 3) {
 		// we have a collection, and field set
 		var collection = uris[2];
-		var fieldset = uris[3];
-		if(isValidUrl(collection, fieldset)) {
-			$("#searchfield").removeAttr("disabled");
-			$("#searchbutton").removeAttr("disabled");
-			$("#collection").append("/" + collection + "/" + fieldset);
-			panlSearch();
+		if(collection != "") {
+			panlConfiguration(collection);
 		}
 	}
 });
 
-function isValidUrl(collection, fieldset) {
-	var fullUrl = "/" + collection + "/" + fieldset;
-	for (const collectionUrl of collections) {
-		if(collectionUrl === fullUrl) {
-			return(true);
-		}
-	}
-
-	return(false);
-}
-
-function panlSearch() {
-	var panlQueryUrl = window.location.pathname.substring(panlResultsViewerUrl.length) + window.location.search;
+function panlConfiguration(collection) {
+	var panlQueryUrl = "/panl-configuration/" + collection + "/";
 	$.ajax({
 		url:panlQueryUrl,
 		success: function (panlJsonData) {
-			populatePanlResults(panlJsonData);
+			populatePanlConfiguration(panlJsonData);
 		}
 	});
 }
+
+function populatePanlConfiguration(panlJsonData) {
+	console.log("[ RETURNED JSON OBJECT ]")
+	console.log(panlJsonData);
+
+	console.log("[ RETURNED PANL JSON OBJECT ]")
+	console.log(panlJsonData.panl);
+
+	// now to go through the fields and just add them
+
+	for(const lpseOrder of panlJsonData.panl.lpse_order) {
+		if(null !== lpseOrder) {
+			$("#searchfields").append(
+					"<div class=\"searchfield\">" +
+	          "<p class=\"searchheading\"><strong>" + lpseOrder.name + "</strong> <em>(" + getFacetType(lpseOrder) + ")</em></p>" +
+	          appendFacet(lpseOrder) +
+	        "</div>");
+		}
+	}
+}
+
+function getFacetType(lpseOrder) {
+	if(lpseOrder.is_boolean_facet) {
+		return("BOOLEAN");
+	} else if(lpseOrder.is_or_facet) {
+		return("OR");
+	} else if(lpseOrder.is_range_facet) {
+		return("RANGE");
+	} else if(lpseOrder.is_date_range_facet) {
+		return("DATE Range");
+	} else {
+		return("Regular");
+	}
+}
+
+function appendFacet(lpseOrder) {
+	if(lpseOrder.is_boolean_facet) {
+		// BOOLEAN facet
+		return(
+			"<select id=\"" + lpseOrder.name + "\">" +
+				"<option></option>" +
+				"<option value=\"" + lpseOrder.values[0].encoded + "\">" + decodePanl(lpseOrder.values[0].encoded) + "</option>" +
+				"<option value=\"" + lpseOrder.values[1].encoded + "\">" + decodePanl(lpseOrder.values[1].encoded) + "</option>" +
+			"</select>"
+		);
+	} else if(lpseOrder.is_or_facet) {
+		// OR facet
+		var returnHTML = "";
+		for(const value of lpseOrder.values) {
+			returnHTML = returnHTML + "<input type=\"checkbox\" name=\"" + lpseOrder.name + "\" value=\"" + value.encoded + "\">&nbsp;" + value.value + "<br />";
+		}
+		return(returnHTML);
+	} else if(lpseOrder.is_range_facet) {
+		// RANGE facet
+		return("");
+	} else if(lpseOrder.is_date_range_facet) {
+		// DATE Range facet
+		return("");
+	} else {
+		// regular facet
+		// go through and print all of the details
+		var returnHTML = "<input type=\"radio\" name=\"" + lpseOrder.name + "\" value=\"\">&nbsp;<em>[Not selected]</em><br />";
+		for(const value of lpseOrder.values) {
+			returnHTML = returnHTML + "<input type=\"radio\" id=\"" + lpseOrder.name + "\" name=\"" + lpseOrder.name + "\" value=\"" + value.encoded + "\">&nbsp;" + decodePanl(value.value) + "<br />";
+		}
+		return(returnHTML);
+	}
+}
+
+
+
 
 function populatePanlResults(panlJsonData) {
 	console.log("[ RETURNED JSON OBJECT ]")
@@ -548,7 +602,7 @@ function addAvailableFilters(availableObject, activeObject) {
 
 		ranges.append("<p><strong>" + facet.name + " <em>(" + facet.panl_code + ") Date Range</em></strong></p>");
 
-		ranges.append("<form method=\"GET\">" +
+		ranges.append("<form method=\"GET\" id=\"date-range-" + facet.facet_name +"\">" +
 				"	<select name=\"previous_next\" id=\"previous_next" + facet.facet_name + "\">" +
 				"		<option value=\"next\"" + (facet.next === facet.previous_next ? "selected=\"selected\"" : "") + ">" + decodePanl(facet.next) + "</option>" +
 				"		<option value=\"previous\" " + (facet.previous === facet.previous_next ? "selected=\"selected\"" : "") + ">" + decodePanl(facet.previous) + "</option>" +
@@ -564,17 +618,24 @@ function addAvailableFilters(availableObject, activeObject) {
 
 			ranges.append("<div class=\"center\"><a href=\"\" class=\"range-link\" id=\"anchor-date-range-" + facet.facet_name + "\"></a></div>");
 
+			$("#date-range-" + facet.facet_name).on("keydown", function(event) {
+				return event.key != "Enter";
+			});
+
 			updateDateRangeLink(facet);
 
 			$("#previous_next" + facet.facet_name).on('change', { facet : facet }, function (e) {
+				e.preventDefault();
 				updateDateRangeLink(e.data.facet);
 			});
 
 			$("#designator" + facet.facet_name).on('change', { facet : facet }, function (e) {
+				e.preventDefault();
 				updateDateRangeLink(e.data.facet);
 			});
 
-			$("#date_number" + facet.facet_name).on('change', { facet : facet }, function (e) {
+			$("#date_number" + facet.facet_name).on('input', { facet : facet }, function (e) {
+				e.preventDefault();
 				updateDateRangeLink(e.data.facet);
 		});
 	}

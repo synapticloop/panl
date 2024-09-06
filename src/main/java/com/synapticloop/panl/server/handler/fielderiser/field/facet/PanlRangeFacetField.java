@@ -503,12 +503,12 @@ public class PanlRangeFacetField extends PanlFacetField {
 			if (null != rangeMinValueReplacement) {
 				if (fromString.equals(rangeMinValueReplacement)) {
 					fromString = getMinRange();
-				}
-			} else if (hasRangePrefix) {
-				if (fromString.startsWith(rangePrefix)) {
-					fromString = fromString.substring(rangePrefix.length());
-				} else {
-					return (null);
+				} else if (hasRangePrefix) {
+					if (fromString.startsWith(rangePrefix)) {
+						fromString = fromString.substring(rangePrefix.length());
+					} else {
+						return (null);
+					}
 				}
 			}
 

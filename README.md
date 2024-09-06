@@ -43,15 +43,16 @@ Working with a Solr schema, the Panl configuration files translate unwieldy URI 
 
 Panl allows
 
-- **Multiple ways to slice and dice** the underlying Solr collection and present them with different URLs
-- **Prefixes, Infixes, and Suffixes** for all facets
-- **Value replacements** for Boolean data types
-- **Field value validation** to help catch common errors
-- **Hierarchical facets**, only showing specific facets if another facet has already been selected
-- **Sorting of facet values** by either count (the default) or value.
-- **Sorting** by any of the fields or facets
-- **Pagination** - in built and ready to go
-- **Static site generation** - for small datasets with few options.  Alternatively they can be seen as easily cacheable and canonical sources for the returned results.
+- **MULTIPLE ways to 'SLICE and DICE'** the underlying Solr collection and present them with different URLs
+- **PREFIXES, INFIXES, and SUFFIXES** for all facets (an infix are only available on RANGE facets)
+- **BOOLEAN Value replacements** for Boolean data types
+- **FIELD VALUE validation** to help catch common Solr errors
+- **HIERARCHICAL facets**, only showing specific facets if another facet has already been selected
+- **SORTED facets** by either count (the default) or value.
+- **RESULTS SORTING options** by any of the fields or facets
+- **PAGINATION** - in built and ready to go
+- **STATIC SITE GENERATION** - for small datasets with few options.  Alternatively they can be seen as easily cacheable and canonical sources for the returned results.
+- **STATELESS** - Quick startup, with no state.
 
 # Getting up to Speed... Fast!
 
@@ -130,14 +131,14 @@ _The image is a screenshot of the in-built Panl Results Explainer Web App availa
    1. Additional configuration items which may include Prefixes, Suffixes, Ranges, Facet type, or Minimum/maximum values
    1. **Any configuration warning messages** that were found whilst parsing the properties files.
 
-## Additional Panl Niceties
+## Additional Panl Niceties In More Detail
 
 1. **MULTIPLE ways to 'SLICE and DICE'** - From one Solr collection, the Panl server can present the results and facets in multiple different ways, providing individual use cases for specific needs.
 
 1. **PREFIXES and SUFFIXES** - Panl can also add prefixes and suffixes to the URI path to increase readability, for example, with configuration.  For the example LPSE URI path of `/Caran+d'Ache/true/Black/bDW/` could also have the brand Solr field prefixed with ‘Manufactured By ’ and suffixed by ‘ Company’ to produce the URI path
 `/Manufactured+By+The+Caran+d'Ache+Company/true/Black/bDW/`
 
-1. **BOOLEAN field translations**, for any Solr field that is defined as a solr.BoolField, then an additional translation can be performed.  ‘True’ and ‘false’ values can be replaced with arbitrary text, which will be transparently converted between Panl and Solr.  For the LPSE URI path of `/Caran+d'Ache/true/Black/bDW/` the true value (which is defined as whether the mechanical pencil can be disassembled could be changed to ‘Able to be disassembled’ for true values, and ‘Cannot be disassembled’ for false values.  The above URI path would then become
+1. **BOOLEAN value translations**, for any Solr field that is defined as a `solr.BoolField`, then an additional translation can be performed.  ‘True’ and ‘false’ values can be replaced with arbitrary text, which will be transparently converted between Panl and Solr.  For the LPSE URI path of `/Caran+d'Ache/true/Black/bDW/` the true value (which is defined as whether the mechanical pencil can be disassembled could be changed to ‘Able to be disassembled’ for true values, and ‘Cannot be disassembled’ for false values.  The above URI path would then become
 `/Caran+d'Ache/Able+to+be+disassembled/Black/bDW/`
 
 1. **FIELD VALUE validation** - By default, Solr can error when an invalid value is passed through - for example, if Solr is expecting a numeric value and it could not be parsed.  Panl can protect against this, by attempting to parse the value as best it can, and silently dropping the parameter if it cannot be sensibly parsed.
@@ -146,13 +147,13 @@ _The image is a screenshot of the in-built Panl Results Explainer Web App availa
 
 1. **SORTED facets** - Each individual facet can be sorted by either the facet count (which is the default), or the facet value (e.g. alphabetic/numeric)
 
-1. **SORTING options** -  sort by any of the Solr fields, either ascending, or descending and with multiple sub-sorting available - e.g. sorting by a brand name, than the model number
+1. **RESULTS SORTING options** - Sort by any of the Solr fields, either ascending, or descending and with multiple sub-sorting available - e.g. sorting by a brand name, than the model number
 
-1. **PAGINATION** - easy to generate pagination URI paths giving you control of how you would like to implement it.
+1. **PAGINATION** - All the data to easily generate pagination URL paths giving you options and control over your own implementation.
 
 1. **STATIC SITE GENERATION** - With the exception of a query parameter, all available links for every conceivable URI path can be statically generated ahead of time, with canonical URLs.
 
-1. **STATELESS** - No state is stored in the Panl server, all of the state is from the URI path part that is passed through.  No sessions, no memory.
+1. **STATELESS** - No state is stored in the Panl server, all of the state is from the URL path part that is passed through.  No sessions, no memory, nothing to backup, easy to update and quick to start and restart.
 
 # Quick Start - The 5 Steps
 

@@ -43,6 +43,7 @@ public class PanlProperties {
 	public static final String PROPERTY_KEY_SOLR_SEARCH_SERVER_URL = "solr.search.server.url";
 	public static final String PROPERTY_KEY_PANL_STATUS_404_VERBOSE = "panl.status.404.verbose";
 	public static final String PROPERTY_KEY_PANL_STATUS_500_VERBOSE = "panl.status.500.verbose";
+	public static final String PROPERTY_KEY_PANL_DECIMAL_POINT = "panl.decimal.point";
 
 	public static final String DEFAULT_CLOUD_SOLR_CLIENT = "CloudSolrClient";
 	public static final String DEFAULT_SOLR_URL = "http://localhost:8983/solr";
@@ -55,6 +56,7 @@ public class PanlProperties {
 	private final boolean hasPanlResultsTestingUrls;
 	private final boolean panlStatus404Verbose;
 	private final boolean panlStatus500Verbose;
+	private static boolean isDecimalPoint = true;
 
 	/**
 	 * <p>Instantiate the Panl properties which defines what Solr server to
@@ -66,6 +68,7 @@ public class PanlProperties {
 	 */
 	public PanlProperties(Properties properties) {
 		this.hasPanlResultsTestingUrls = properties.getProperty(PROPERTY_KEY_PANL_RESULTS_TESTING_URLS, DEFAULT_FALSE).equals(DEFAULT_TRUE);
+		PanlProperties.isDecimalPoint =  properties.getProperty(PROPERTY_KEY_PANL_DECIMAL_POINT, DEFAULT_FALSE).equals(DEFAULT_TRUE);
 
 		String solrjClientTemp;
 		solrjClientTemp = properties.getProperty(PROPERTY_KEY_SOLRJ_CLIENT, null);
@@ -133,4 +136,13 @@ public class PanlProperties {
 	public boolean getUseVerbose500Messages() {
 		return (panlStatus500Verbose);
 	}
+
+	public static boolean getIsDecimalPoint() {
+		return isDecimalPoint;
+	}
+
+	public static void setIsDecimalPoint(boolean isDecimalPoint) {
+		PanlProperties.isDecimalPoint = isDecimalPoint;
+	}
 }
+

@@ -24,8 +24,8 @@ package com.synapticloop.panl.server.handler.fielderiser.field.validator;
  * IN THE SOFTWARE.
  */
 
-public class DefaultValidator implements Validator {
-	@Override public String validate(String value) {
+public class DefaultValidator {
+	public static String validate(String value) {
 		return(value);
 	}
 }
