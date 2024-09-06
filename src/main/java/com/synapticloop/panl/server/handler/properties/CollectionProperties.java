@@ -168,6 +168,8 @@ public class CollectionProperties {
 	private String solrDefaultQueryOperand;
 	private int solrFacetLimit;
 	private String panlLpseOrder;
+	private List<String> panlLpseOrderList = new ArrayList<>();
+
 	private final Set<String> LPSE_URI_CODES = new HashSet<>();
 	private final Set<String> LPSE_IGNORED_URI_CODES = new HashSet<>();
 	private final List<BaseField> lpseFields = new ArrayList<>();
@@ -510,6 +512,8 @@ public class CollectionProperties {
 				lpseFields.add(lpseFieldLookup.get(lpseCode));
 				LPSE_URI_CODES.add(lpseCode);
 			}
+
+			panlLpseOrderList.add(lpseCode);
 
 			if (!LPSE_FACET_FIELDS.contains(lpseCode) &&
 					!LPSE_FIELDS.contains(lpseCode) &&
@@ -940,6 +944,15 @@ public class CollectionProperties {
 				FACET_INDEX_SORT_FIELDS.add(facetField);
 			}
 		}
+	}
+
+	/**
+	 * <p>Get the list of the LPSE codes</p>
+	 *
+	 * @return The list of LPSE codes
+	 */
+	public List<String> getPanlLpseOrderList() {
+		return (panlLpseOrderList);
 	}
 }
 

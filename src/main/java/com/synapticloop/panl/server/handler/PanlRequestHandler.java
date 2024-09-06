@@ -34,6 +34,8 @@ import org.apache.http.protocol.HttpContext;
 import org.apache.http.protocol.HttpRequestHandler;
 import org.json.JSONArray;
 import org.json.JSONObject;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import static com.synapticloop.panl.server.handler.results.util.ResourceHelper.*;
 
@@ -44,12 +46,15 @@ import static com.synapticloop.panl.server.handler.results.util.ResourceHelper.*
  * @author synapticloop
  */
 public class PanlRequestHandler implements HttpRequestHandler {
+	private final static Logger LOGGER = LoggerFactory.getLogger(PanlRequestHandler.class);
+
 	private final PanlProperties panlProperties;
 	private final CollectionRequestHandler collectionRequestHandler;
 
 	/**
 	 * <p>Instantiate The Panl request handler which will bind the request URL to
 	 * the collection request handle.</p>
+	 *
 	 * @param panlProperties The panl properties file
 	 * @param collectionRequestHandler The collection request handler that will
 	 * 		handle this request
@@ -128,8 +133,8 @@ public class PanlRequestHandler implements HttpRequestHandler {
 						String.format("Class: %s, message: %s.",
 								e.getClass().getCanonicalName(),
 								e.getMessage()));
-				// TODO - remove this
-				e.printStackTrace();
+
+				LOGGER.error("Could not handle the request.", e);
 				response.setEntity(new StringEntity(jsonObject.toString(), ResourceHelper.CONTENT_TYPE_JSON));
 			} else {
 				jsonObject.put(JSON_KEY_MESSAGE, JSON_VALUE_MESSAGE_500);

@@ -243,7 +243,7 @@ public class CollectionRequestHandler {
 			solrQuery.setRows(numRows);
 
 			// this is done for the empty fieldset
-			if(null != resultFieldsForName) {
+			if(null == resultFieldsForName) {
 				solrQuery.setRows(0);
 			}
 
@@ -295,10 +295,6 @@ public class CollectionRequestHandler {
 		// set up the data structure
 		Map<String, List<LpseToken>> panlTokenMap = new HashMap<>();
 		for (LpseToken lpseToken : lpseTokens) {
-			// These codes are ignored, just carry on
-//			if (collectionProperties.getIsIgnoredLpseCode(lpseToken.getLpseCode())) {
-//				continue;
-//			}
 
 			String lpseCode = lpseToken.getLpseCode();
 
@@ -496,5 +492,9 @@ public class CollectionRequestHandler {
 	 */
 	public String getPanlCollectionUri() {
 		return panlCollectionUri;
+	}
+
+	public List<String> getLpseOrder() {
+		return(collectionProperties.getPanlLpseOrderList());
 	}
 }

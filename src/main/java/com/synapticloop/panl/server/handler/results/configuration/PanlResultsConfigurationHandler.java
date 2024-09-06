@@ -1,5 +1,3 @@
-package com.synapticloop.panl.server.handler.fielderiser.field.validator;
-
 /*
  * Copyright (c) 2008-2024 synapticloop.
  *
@@ -24,32 +22,23 @@ package com.synapticloop.panl.server.handler.fielderiser.field.validator;
  * IN THE SOFTWARE.
  */
 
+package com.synapticloop.panl.server.handler.results.configuration;
 
-import com.synapticloop.panl.server.handler.properties.PanlProperties;
+import com.synapticloop.panl.server.handler.CollectionRequestHandler;
+import com.synapticloop.panl.server.handler.results.util.ResourceHelper;
+import org.apache.http.HttpRequest;
+import org.apache.http.HttpResponse;
+import org.apache.http.protocol.HttpContext;
+import org.apache.http.protocol.HttpRequestHandler;
 
-import java.text.NumberFormat;
-import java.text.ParseException;
-import java.util.Locale;
+import java.util.List;
 
-public class DecimalValidator {
-	private static final NumberFormat DECIMAL_FORMAT_POINT = NumberFormat.getInstance(Locale.UK);
-	private static final NumberFormat DECIMAL_FORMAT_COMMA = NumberFormat.getInstance(Locale.FRANCE);
 
-	public static String validate(String value) {
-		String replaced = value.replaceAll("[^0-9.,]", "");
-		if (replaced.isBlank()) {
-			return (null);
-		} else {
-			try {
-				if(PanlProperties.getIsDecimalPoint()) {
-					DECIMAL_FORMAT_POINT.parse(replaced);
-				} else {
-					DECIMAL_FORMAT_COMMA.parse(replaced);
-				}
-			} catch(NumberFormatException | ParseException ex) {
-				return(null);
-			}
-			return replaced;
-		}
+public class PanlResultsConfigurationHandler implements HttpRequestHandler {
+	public PanlResultsConfigurationHandler(List<CollectionRequestHandler> collectionRequestHandlers) {
+	}
+
+	@Override public void handle(HttpRequest request, HttpResponse response, HttpContext context) {
+		ResourceHelper.serveResource("/panl-results/configuration/index.html", response);
 	}
 }
