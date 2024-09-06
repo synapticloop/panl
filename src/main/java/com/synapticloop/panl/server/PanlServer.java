@@ -26,6 +26,7 @@ package com.synapticloop.panl.server;
 
 import com.synapticloop.panl.exception.PanlServerException;
 import com.synapticloop.panl.server.handler.*;
+import com.synapticloop.panl.server.handler.results.configuration.PanlResultsConfigurationHandler;
 import com.synapticloop.panl.server.handler.results.explainer.PanlResultsExplainerExplainHandler;
 import com.synapticloop.panl.server.handler.results.explainer.PanlResultsExplainerHandler;
 import com.synapticloop.panl.server.handler.results.viewer.PanlResultsViewerScriptHandler;
@@ -228,6 +229,8 @@ public class PanlServer {
 			bootstrap.registerHandler("/panl-results-explainer/*", new PanlResultsExplainerHandler(collectionPropertiesList, collectionRequestHandlers));
 			bootstrap.registerHandler("/panl-results-explainer/explain/*", new PanlResultsExplainerExplainHandler(collectionPropertiesList, collectionRequestHandlers));
 		}
+
+		bootstrap.registerHandler("/panl-single-page-search/*", new PanlResultsConfigurationHandler(collectionRequestHandlers));
 
 
 		// finally register the collection and configuration handlers
