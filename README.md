@@ -336,4 +336,4 @@ I.e.
  - `./build/distributions` (*NIX), or
  - `.\build\distributions` (Windows)
 
-with the release files named `solr-panl-9-x.x.x`
+with the release files named `solr-panl-7-x.x.x`
