@@ -53,6 +53,7 @@ Panl allows
 - **PAGINATION** - in built and ready to go
 - **STATIC SITE GENERATION** - for small datasets with few options.  Alternatively they can be seen as easily cacheable and canonical sources for the returned results.
 - **STATELESS** - Quick startup, with no state.
+- **TEXT CONFIGURATION** - All configuration for Panl is based on text files (Java `.properties`) files so they can be stored in a source code management system.
 
 # Getting up to Speed... Fast!
 
