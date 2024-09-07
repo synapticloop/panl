@@ -46,6 +46,7 @@ Panl allows
 - **PAGINATION** - in built and ready to go
 - **STATIC SITE GENERATION** - for small datasets with few options.  Alternatively they can be seen as easily cacheable and canonical sources for the returned results.
 - **STATELESS** - Quick startup, with no state.
+- **TEXT CONFIGURATION** - All configuration for Panl is based on text files (Java `.properties`) files so they can be stored in a source code management system.
 
 # Getting up to Speed... Fast!
 
@@ -331,3 +332,21 @@ I.e.
  - `.\build\distributions` (Windows)
 
 with the release files named `solr-panl-9-x.x.x`
+
+# Version History
+
+## 1.1.0
+
+ - Added in `empty` FieldSet to return no documents
+ - Added in Single Search Page functionality
+ - Update Mechanical Pencils 
+   - Added in hierarchy for the Pencil Model
+ - Documentation update
+   - Fixed general spelling and grammar errors
+   - Added in documentation for new features and functionality
+   - Updated mechanical pencils introductory dataset explanations
+   - Added in documentation for Fields
+
+## 1.0.0
+
+- Initial release with base functionality

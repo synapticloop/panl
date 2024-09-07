@@ -39,6 +39,6 @@ public class PanlResultsConfigurationHandler implements HttpRequestHandler {
 	}
 
 	@Override public void handle(HttpRequest request, HttpResponse response, HttpContext context) {
-		ResourceHelper.serveResource("/panl-results/configuration/index.html", response);
+		ResourceHelper.serveResource("/panl-results/single-page-search/index.html", response);
 	}
 }

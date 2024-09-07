@@ -73,7 +73,7 @@ function appendFacet(lpseOrder) {
 		// BOOLEAN facet
 		return(
 			"<select id=\"" + lpseOrder.name + "\">" +
-				"<option></option>" +
+				"<option>[No selection]</option>" +
 				"<option value=\"" + lpseOrder.values[0].encoded + "\">" + decodePanl(lpseOrder.values[0].encoded) + "</option>" +
 				"<option value=\"" + lpseOrder.values[1].encoded + "\">" + decodePanl(lpseOrder.values[1].encoded) + "</option>" +
 			"</select>"
@@ -94,7 +94,7 @@ function appendFacet(lpseOrder) {
 	} else {
 		// regular facet
 		// go through and print all of the details
-		var returnHTML = "<input type=\"radio\" name=\"" + lpseOrder.name + "\" value=\"\">&nbsp;<em>[Not selected]</em><br />";
+		var returnHTML = "<input type=\"radio\" name=\"" + lpseOrder.name + "\" value=\"\">&nbsp;<em>[No selection]</em><br />";
 		for(const value of lpseOrder.values) {
 			returnHTML = returnHTML + "<input type=\"radio\" id=\"" + lpseOrder.name + "\" name=\"" + lpseOrder.name + "\" value=\"" + value.encoded + "\">&nbsp;" + decodePanl(value.value) + "<br />";
 		}
