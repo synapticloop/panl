@@ -26,7 +26,7 @@ package com.synapticloop.panl.server;
 
 import com.synapticloop.panl.exception.PanlServerException;
 import com.synapticloop.panl.server.handler.*;
-import com.synapticloop.panl.server.handler.results.configuration.PanlResultsConfigurationHandler;
+import com.synapticloop.panl.server.handler.results.singlepagesearch.PanlSinglePageSearchHandler;
 import com.synapticloop.panl.server.handler.results.explainer.PanlResultsExplainerExplainHandler;
 import com.synapticloop.panl.server.handler.results.explainer.PanlResultsExplainerHandler;
 import com.synapticloop.panl.server.handler.results.viewer.PanlResultsViewerScriptHandler;
@@ -230,10 +230,10 @@ public class PanlServer {
 			bootstrap.registerHandler("/panl-results-explainer/explain/*", new PanlResultsExplainerExplainHandler(collectionPropertiesList, collectionRequestHandlers));
 		}
 
-		bootstrap.registerHandler("/panl-single-page-search/*", new PanlResultsConfigurationHandler(collectionRequestHandlers));
+		bootstrap.registerHandler("/panl-single-page-search/*", new PanlSinglePageSearchHandler(collectionRequestHandlers));
 
 
-		// finally register the collection and configuration handlers
+		// finally register the collection and singlepagesearch handlers
 		bootstrap.registerHandler(PanlConfigurationHandler.PANL_CONFIGURATION_BINDING + "*", new PanlConfigurationHandler(panlProperties, collectionRequestHandlers));
 
 		for (CollectionRequestHandler collectionRequestHandler : collectionRequestHandlers) {
@@ -245,7 +245,7 @@ public class PanlServer {
 				LOGGER.info("Results will be available on /{}/{}/*", panlCollectionUri, resultFieldsName);
 			}
 
-			LOGGER.info("Binding Solr collection of '{}' to Panl configuration URI path " + PanlConfigurationHandler.PANL_CONFIGURATION_BINDING + "{}/", solrCollection, panlCollectionUri);
+			LOGGER.info("Binding Solr collection of '{}' to Panl singlepagesearch URI path " + PanlConfigurationHandler.PANL_CONFIGURATION_BINDING + "{}/", solrCollection, panlCollectionUri);
 		}
 
 		// create the server

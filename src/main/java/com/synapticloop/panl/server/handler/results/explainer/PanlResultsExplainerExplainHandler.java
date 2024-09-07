@@ -49,7 +49,7 @@ import java.util.StringTokenizer;
 
 public class PanlResultsExplainerExplainHandler implements HttpRequestHandler {
 	private final List<CollectionProperties> collectionPropertiesList;
-	
+
 	public PanlResultsExplainerExplainHandler(List<CollectionProperties> collectionPropertiesList, List<CollectionRequestHandler> collectionRequestHandlers) {
 		this.collectionPropertiesList = collectionPropertiesList;
 	}
