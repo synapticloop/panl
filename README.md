@@ -349,4 +349,8 @@ with the release files named `solr-panl-9-x.x.x`
 
 ## 1.0.0 - the initial release (codename `bright-wildflower`)
 
+[View the code for this release](https://github.com/synapticloop/panl/tree/1.0.0)
+
+[Download the release packages](https://github.com/synapticloop/panl/releases/tag/1.0.0)
+
 - Initial release with base functionality
