@@ -1,3 +1,7 @@
+var panlLpsePath = [];
+var panlObject = {};
+var currentCollection = "";
+
 $(document).ready(function() {
 	var availableCollections = $("#available_collections");
 	var currentCollectionName = "";
@@ -25,6 +29,7 @@ $(document).ready(function() {
 });
 
 function panlConfiguration(collection) {
+	currentCollection = collection;
 	var panlQueryUrl = "/panl-configuration/" + collection + "/";
 	$.ajax({
 		url:panlQueryUrl,
@@ -40,63 +45,114 @@ function populatePanlConfiguration(panlJsonData) {
 
 	console.log("[ RETURNED PANL JSON OBJECT ]")
 	console.log(panlJsonData.panl);
+	panlObject = panlJsonData.panl;
 
 	// now to go through the fields and just add them
 
-	for(const lpseOrder of panlJsonData.panl.lpse_order) {
-		if(null !== lpseOrder) {
+	for(const orderedLpseFacet of panlJsonData.panl.lpse_order) {
+		if(null !== orderedLpseFacet) {
 			$("#searchfields").append(
 					"<div class=\"searchfield\">" +
-	          "<p class=\"searchheading\"><strong>" + lpseOrder.name + "</strong> <em>(" + getFacetType(lpseOrder) + ")</em></p>" +
-	          appendFacet(lpseOrder) +
+	          "<p class=\"searchheading\"><strong>" + orderedLpseFacet.name + "</strong> <em>(" + getFacetType(orderedLpseFacet) + ")</em></p>" +
+	          appendFacet(orderedLpseFacet) +
 	        "</div>");
+
+      $("#" + orderedLpseFacet.facet_name).on('change', { facet : orderedLpseFacet }, function (e) {
+        setLpseValue(this.value, e.data.facet);
+      });
+
+      $("input[type=radio][name=\"" + orderedLpseFacet.facet_name + "\"]").change(function() {
+        setLpseValue(this.value, orderedLpseFacet);
+      });
 		}
 	}
 }
 
-function getFacetType(lpseOrder) {
-	if(lpseOrder.is_boolean_facet) {
+function setLpseValue(value, orderedLpseFacet) {
+	console.log(value, orderedLpseFacet);
+	$("#panl-lpse-path").text("");
+
+
+	var lpseOffset = panlObject.lpse_lookup[orderedLpseFacet.panl_code];
+	if(value === "") {
+		panlLpsePath[lpseOffset] = null;
+	} else {
+		var valueKey = "" + value;
+		panlLpsePath[lpseOffset] = { "lpseCode": orderedLpseFacet.panl_code };
+		panlLpsePath[lpseOffset][value] = value;
+	}
+
+	updateSearchLinks();
+}
+
+function updateSearchLinks() {
+	var lpsePath = "/";
+	var lpseCodePath = "";
+
+	// no go through the new value and then regen the lpse path
+	for(const panlPathValue of panlLpsePath) {
+		if(panlPathValue !== undefined && panlPathValue !== null) {
+			for (var key in panlPathValue) {
+				if (panlPathValue.hasOwnProperty(key)) {
+					if(key === "lpseCode") {
+						lpseCodePath = lpseCodePath + panlPathValue["lpseCode"];
+					} else {
+						lpsePath = lpsePath + key + "/"
+					}
+				}
+			}
+		}
+	}
+
+	const fullPath = lpsePath + lpseCodePath + "/";
+	$("#panl-lpse-path").text(fullPath);
+	$("#searchbutton").attr("href", "/panl-results-viewer/" + currentCollection + "/default/" + fullPath);
+	$("#panl-lpse-path-searchbutton").text(fullPath);
+}
+
+function getFacetType(orderedLpseFacet) {
+	if(orderedLpseFacet.is_boolean_facet) {
 		return("BOOLEAN");
-	} else if(lpseOrder.is_or_facet) {
+	} else if(orderedLpseFacet.is_or_facet) {
 		return("OR");
-	} else if(lpseOrder.is_range_facet) {
+	} else if(orderedLpseFacet.is_range_facet) {
 		return("RANGE");
-	} else if(lpseOrder.is_date_range_facet) {
+	} else if(orderedLpseFacet.is_date_range_facet) {
 		return("DATE Range");
 	} else {
 		return("Regular");
 	}
 }
 
-function appendFacet(lpseOrder) {
-	if(lpseOrder.is_boolean_facet) {
+function appendFacet(orderedLpseFacet) {
+	if(orderedLpseFacet.is_boolean_facet) {
 		// BOOLEAN facet
 		return(
-			"<select id=\"" + lpseOrder.name + "\">" +
-				"<option>[No selection]</option>" +
-				"<option value=\"" + lpseOrder.values[0].encoded + "\">" + decodePanl(lpseOrder.values[0].encoded) + "</option>" +
-				"<option value=\"" + lpseOrder.values[1].encoded + "\">" + decodePanl(lpseOrder.values[1].encoded) + "</option>" +
+			"<select id=\"" + orderedLpseFacet.facet_name + "\">" +
+				"<option value=\"\">[No selection]</option>" +
+				"<option value=\"" + orderedLpseFacet.values[0].encoded + "\">" + decodePanl(orderedLpseFacet.values[0].encoded) + "</option>" +
+				"<option value=\"" + orderedLpseFacet.values[1].encoded + "\">" + decodePanl(orderedLpseFacet.values[1].encoded) + "</option>" +
 			"</select>"
 		);
-	} else if(lpseOrder.is_or_facet) {
+	} else if(orderedLpseFacet.is_or_facet) {
 		// OR facet
 		var returnHTML = "";
-		for(const value of lpseOrder.values) {
-			returnHTML = returnHTML + "<input type=\"checkbox\" name=\"" + lpseOrder.name + "\" value=\"" + value.encoded + "\">&nbsp;" + value.value + "<br />";
+		for(const value of orderedLpseFacet.values) {
+			returnHTML = returnHTML + "<input type=\"checkbox\" name=\"" + orderedLpseFacet.facet_name + "\" value=\"" + value.encoded + "\">&nbsp;" + value.value + "<br />";
 		}
 		return(returnHTML);
-	} else if(lpseOrder.is_range_facet) {
+	} else if(orderedLpseFacet.is_range_facet) {
 		// RANGE facet
 		return("");
-	} else if(lpseOrder.is_date_range_facet) {
+	} else if(orderedLpseFacet.is_date_range_facet) {
 		// DATE Range facet
 		return("");
 	} else {
 		// regular facet
 		// go through and print all of the details
-		var returnHTML = "<input type=\"radio\" name=\"" + lpseOrder.name + "\" value=\"\">&nbsp;<em>[No selection]</em><br />";
-		for(const value of lpseOrder.values) {
-			returnHTML = returnHTML + "<input type=\"radio\" id=\"" + lpseOrder.name + "\" name=\"" + lpseOrder.name + "\" value=\"" + value.encoded + "\">&nbsp;" + decodePanl(value.value) + "<br />";
+		var returnHTML = "<input type=\"radio\" name=\"" + orderedLpseFacet.facet_name + "\" value=\"\">&nbsp;<em>[No selection]</em><br />";
+		for(const value of orderedLpseFacet.values) {
+			returnHTML = returnHTML + "<input type=\"radio\" name=\"" + orderedLpseFacet.facet_name + "\" value=\"" + value.encoded + "\">&nbsp;" + decodePanl(value.value) + "<br />";
 		}
 		return(returnHTML);
 	}
