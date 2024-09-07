@@ -129,7 +129,7 @@ _The image is a screenshot of the in-built Panl Results Explainer Web App availa
 
 <img src="src/docs/panl-single-page-search.png">
 
-_**Image**: The In-Build Panl Single Page Search Web Application
+_**Image**: The In-Build Panl Single Page Search Web Application_
 
 Panl also ships with a URL that will provide a separate JSON response, allowing you to build a single page search interface, giving your users all the options at a glance.
 
