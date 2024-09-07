@@ -125,6 +125,20 @@ _The image is a screenshot of the in-built Panl Results Explainer Web App availa
    1. Additional configuration items which may include Prefixes, Suffixes, Ranges, Facet type, or Minimum/maximum values
    1. **Any configuration warning messages** that were found whilst parsing the properties files.
 
+## The Panl Single Page Search Web App
+
+<img src="src/docs/panl-single-page-search.png">
+
+_**Image**: The In-Build Panl Single Page Search Web Application
+
+Panl also ships with a URL that will provide a separate JSON response, allowing you to build a single page search interface, giving your users all the options at a glance.
+
+1. A list of available Collections URI Paths (CaFUPs) that Panl is configured to serve.
+1. The generated Panl LPSE path from the selections. 
+1. All the facets and the facet values that can be selected.
+1. The generated Panl LPSE path from the selections.
+1. A search button that will take you the in-build Panl Results Viewer web app so that you can view the results instantly.
+
 ## Additional Panl Niceties In More Detail
 
 1. **MULTIPLE ways to 'SLICE and DICE'** - From one Solr collection, the Panl server can present the results and facets in multiple different ways, providing individual use cases for specific needs.
