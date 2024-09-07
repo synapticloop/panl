@@ -26,12 +26,12 @@ package com.synapticloop.panl.server;
 
 import com.synapticloop.panl.exception.PanlServerException;
 import com.synapticloop.panl.server.handler.*;
-import com.synapticloop.panl.server.handler.results.configuration.PanlResultsConfigurationHandler;
-import com.synapticloop.panl.server.handler.results.explainer.PanlResultsExplainerExplainHandler;
-import com.synapticloop.panl.server.handler.results.explainer.PanlResultsExplainerHandler;
-import com.synapticloop.panl.server.handler.results.viewer.PanlResultsViewerScriptHandler;
-import com.synapticloop.panl.server.handler.results.PanlResultsStaticHandler;
-import com.synapticloop.panl.server.handler.results.viewer.PanlResultsViewerHandler;
+import com.synapticloop.panl.server.handler.webapp.singlepagesearch.PanlSinglePageSearchHandler;
+import com.synapticloop.panl.server.handler.webapp.explainer.PanlResultsExplainerExplainHandler;
+import com.synapticloop.panl.server.handler.webapp.explainer.PanlResultsExplainerHandler;
+import com.synapticloop.panl.server.handler.webapp.viewer.PanlResultsViewerScriptHandler;
+import com.synapticloop.panl.server.handler.webapp.PanlResultsStaticHandler;
+import com.synapticloop.panl.server.handler.webapp.viewer.PanlResultsViewerHandler;
 import com.synapticloop.panl.server.handler.properties.PanlProperties;
 import com.synapticloop.panl.server.handler.properties.CollectionProperties;
 import org.apache.http.impl.bootstrap.HttpServer;
@@ -220,7 +220,7 @@ public class PanlServer {
 		// register the panl results viewer - if it enabled
 
 		if (panlProperties.getHasPanlResultsTestingUrls()) {
-			bootstrap.registerHandler("/panl-results/static/*", new PanlResultsStaticHandler());
+			bootstrap.registerHandler("/webapp/static/*", new PanlResultsStaticHandler());
 
 			// the simple search and querying webappp
 			bootstrap.registerHandler("/panl-results-viewer/*", new PanlResultsViewerHandler(collectionRequestHandlers));
@@ -230,10 +230,10 @@ public class PanlServer {
 			bootstrap.registerHandler("/panl-results-explainer/explain/*", new PanlResultsExplainerExplainHandler(collectionPropertiesList, collectionRequestHandlers));
 		}
 
-		bootstrap.registerHandler("/panl-single-page-search/*", new PanlResultsConfigurationHandler(collectionRequestHandlers));
+		bootstrap.registerHandler("/panl-single-page-search/*", new PanlSinglePageSearchHandler(collectionRequestHandlers));
 
 
-		// finally register the collection and configuration handlers
+		// finally register the collection and singlepagesearch handlers
 		bootstrap.registerHandler(PanlConfigurationHandler.PANL_CONFIGURATION_BINDING + "*", new PanlConfigurationHandler(panlProperties, collectionRequestHandlers));
 
 		for (CollectionRequestHandler collectionRequestHandler : collectionRequestHandlers) {

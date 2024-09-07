@@ -6,4 +6,4 @@
  * @author synapticloop
  * @version 1.0
  */
-package com.synapticloop.panl.server.handler.results.explainer;
+package com.synapticloop.panl.server.handler.webapp.explainer;

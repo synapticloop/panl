@@ -1,3 +1,5 @@
+package com.synapticloop.panl.server.handler.webapp.viewer;
+
 /*
  * Copyright (c) 2008-2024 synapticloop.
  *
@@ -22,10 +24,8 @@
  * IN THE SOFTWARE.
  */
 
-package com.synapticloop.panl.server.handler.results.configuration;
-
 import com.synapticloop.panl.server.handler.CollectionRequestHandler;
-import com.synapticloop.panl.server.handler.results.util.ResourceHelper;
+import com.synapticloop.panl.server.handler.webapp.util.ResourceHelper;
 import org.apache.http.HttpRequest;
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
@@ -37,11 +37,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-public class PanlResultsConfigurationConfigHandler implements HttpRequestHandler {
+public class PanlResultsViewerScriptHandler implements HttpRequestHandler {
 
 	private final List<String> panlCollectionUris = new ArrayList<>();
 
-	public PanlResultsConfigurationConfigHandler(List<CollectionRequestHandler> collectionRequestHandlers) {
+	public PanlResultsViewerScriptHandler(List<CollectionRequestHandler> collectionRequestHandlers) {
 		for (CollectionRequestHandler collectionRequestHandler : collectionRequestHandlers) {
 			String panlCollectionUri = collectionRequestHandler.getPanlCollectionUri();
 			for (String resultFieldsName : collectionRequestHandler.getResultFieldsNames()) {
@@ -51,7 +51,7 @@ public class PanlResultsConfigurationConfigHandler implements HttpRequestHandler
 	}
 
 	@Override public void handle(HttpRequest request, HttpResponse response, HttpContext context) {
-		StringBuilder sb = new StringBuilder("var panlResultsConfigurationUrl=\"")
+		StringBuilder sb = new StringBuilder("var panlResultsViewerUrl=\"")
 				.append(ResourceHelper.URL_PANL_RESULTS_VIEWER_SUBSET)
 				.append("\";\n")
 				.append("var collections = [");

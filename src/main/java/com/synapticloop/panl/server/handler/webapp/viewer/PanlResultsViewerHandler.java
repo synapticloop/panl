@@ -1,3 +1,5 @@
+package com.synapticloop.panl.server.handler.webapp.viewer;
+
 /*
  * Copyright (c) 2008-2024 synapticloop.
  *
@@ -22,10 +24,8 @@
  * IN THE SOFTWARE.
  */
 
-package com.synapticloop.panl.server.handler.results.configuration;
-
 import com.synapticloop.panl.server.handler.CollectionRequestHandler;
-import com.synapticloop.panl.server.handler.results.util.ResourceHelper;
+import com.synapticloop.panl.server.handler.webapp.util.ResourceHelper;
 import org.apache.http.HttpRequest;
 import org.apache.http.HttpResponse;
 import org.apache.http.protocol.HttpContext;
@@ -34,11 +34,11 @@ import org.apache.http.protocol.HttpRequestHandler;
 import java.util.List;
 
 
-public class PanlResultsConfigurationHandler implements HttpRequestHandler {
-	public PanlResultsConfigurationHandler(List<CollectionRequestHandler> collectionRequestHandlers) {
+public class PanlResultsViewerHandler implements HttpRequestHandler {
+	public PanlResultsViewerHandler(List<CollectionRequestHandler> collectionRequestHandlers) {
 	}
 
 	@Override public void handle(HttpRequest request, HttpResponse response, HttpContext context) {
-		ResourceHelper.serveResource("/panl-results/configuration/index.html", response);
+		ResourceHelper.serveResource("/webapp/viewer/index.html", response);
 	}
 }

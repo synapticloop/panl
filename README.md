@@ -168,11 +168,11 @@ _**Image**: The In-Build Panl Results Viewer Web Application_
 ## 0. Download Solr and Panl
 
 Download the latest release of Synapticloop Panl - this example is using the 
-`solr-panl-9-1.0.0` version.
+`solr-panl-9-1.1.0` version.
 
 [https://github.com/synapticloop/panl/releases](https://github.com/synapticloop/panl/releases)
 
-Download the latest version of Apache Solr - this book is using the `9.6.0-slim` 
+Download the latest version of Apache Solr - this book is using the `9.6.1-slim` 
 version
 
 [https://solr.apache.org/downloads.html](https://solr.apache.org/downloads.html)
@@ -338,3 +338,21 @@ I.e.
  - `.\build\distributions` (Windows)
 
 with the release files named `solr-panl-8-x.x.x`
+
+# Version History
+
+## 1.1.0 - the better update (codename `broad-firefly`) **UNDER DEVELOPEMENT**
+
+ - Added in `empty` FieldSet to return no documents
+ - Added in Single Search Page functionality
+ - Update Mechanical Pencils 
+   - Added in hierarchy for the Pencil Model
+ - Documentation update
+   - Fixed general spelling and grammar errors
+   - Added in documentation for new features and functionality
+   - Updated mechanical pencils introductory dataset explanations
+   - Added in documentation for Fields
+
+## 1.0.0 - the initial release (codename `bright-wildflower`)
+
+- Initial release with base functionality

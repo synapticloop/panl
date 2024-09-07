@@ -1,4 +1,4 @@
-package com.synapticloop.panl.server.handler.results.explainer;
+package com.synapticloop.panl.server.handler.webapp.explainer;
 
 /*
  * Copyright (c) 2008-2024 synapticloop.
@@ -24,9 +24,8 @@ package com.synapticloop.panl.server.handler.results.explainer;
  * IN THE SOFTWARE.
  */
 
-import com.synapticloop.panl.generator.bean.PanlCollection;
 import com.synapticloop.panl.server.handler.CollectionRequestHandler;
-import com.synapticloop.panl.server.handler.results.util.ResourceHelper;
+import com.synapticloop.panl.server.handler.webapp.util.ResourceHelper;
 import com.synapticloop.panl.server.handler.properties.CollectionProperties;
 import com.synapticloop.panl.server.handler.fielderiser.field.BaseField;
 import com.synapticloop.panl.server.handler.tokeniser.LpseTokeniser;
@@ -49,7 +48,7 @@ import java.util.StringTokenizer;
 
 public class PanlResultsExplainerExplainHandler implements HttpRequestHandler {
 	private final List<CollectionProperties> collectionPropertiesList;
-	
+
 	public PanlResultsExplainerExplainHandler(List<CollectionProperties> collectionPropertiesList, List<CollectionRequestHandler> collectionRequestHandlers) {
 		this.collectionPropertiesList = collectionPropertiesList;
 	}

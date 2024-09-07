@@ -271,6 +271,9 @@ public class PanlCollection {
 						case "schema":
 							this.collectionName = startElement.getAttributeByName(new QName("name")).getValue();
 							LOGGER.info("Found collection name of {}", this.collectionName);
+							if(this.collectionName.startsWith("panl-")) {
+								throw new PanlGenerateException("You CANNOT have a collection that starts with 'panl-'");
+							}
 							break;
 						case "fieldType":
 							String fieldTypeName = startElement.getAttributeByName(new QName("name")).getValue();
