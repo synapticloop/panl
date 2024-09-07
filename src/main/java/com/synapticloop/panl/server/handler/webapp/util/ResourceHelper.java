@@ -1,4 +1,4 @@
-package com.synapticloop.panl.server.handler.results.util;
+package com.synapticloop.panl.server.handler.webapp.util;
 
 /*
  * Copyright (c) 2008-2024 synapticloop.
@@ -24,12 +24,10 @@ package com.synapticloop.panl.server.handler.results.util;
  * IN THE SOFTWARE.
  */
 
-import com.synapticloop.panl.server.handler.results.PanlResultsStaticHandler;
-import org.apache.commons.io.IOUtils;
+import com.synapticloop.panl.server.handler.webapp.PanlResultsStaticHandler;
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
 import org.apache.http.entity.*;
-import org.apache.http.util.EntityUtils;
 import org.json.JSONObject;
 
 import java.io.IOException;

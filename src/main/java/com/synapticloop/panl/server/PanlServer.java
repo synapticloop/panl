@@ -26,12 +26,12 @@ package com.synapticloop.panl.server;
 
 import com.synapticloop.panl.exception.PanlServerException;
 import com.synapticloop.panl.server.handler.*;
-import com.synapticloop.panl.server.handler.results.singlepagesearch.PanlSinglePageSearchHandler;
-import com.synapticloop.panl.server.handler.results.explainer.PanlResultsExplainerExplainHandler;
-import com.synapticloop.panl.server.handler.results.explainer.PanlResultsExplainerHandler;
-import com.synapticloop.panl.server.handler.results.viewer.PanlResultsViewerScriptHandler;
-import com.synapticloop.panl.server.handler.results.PanlResultsStaticHandler;
-import com.synapticloop.panl.server.handler.results.viewer.PanlResultsViewerHandler;
+import com.synapticloop.panl.server.handler.webapp.singlepagesearch.PanlSinglePageSearchHandler;
+import com.synapticloop.panl.server.handler.webapp.explainer.PanlResultsExplainerExplainHandler;
+import com.synapticloop.panl.server.handler.webapp.explainer.PanlResultsExplainerHandler;
+import com.synapticloop.panl.server.handler.webapp.viewer.PanlResultsViewerScriptHandler;
+import com.synapticloop.panl.server.handler.webapp.PanlResultsStaticHandler;
+import com.synapticloop.panl.server.handler.webapp.viewer.PanlResultsViewerHandler;
 import com.synapticloop.panl.server.handler.properties.PanlProperties;
 import com.synapticloop.panl.server.handler.properties.CollectionProperties;
 import org.apache.http.impl.bootstrap.HttpServer;

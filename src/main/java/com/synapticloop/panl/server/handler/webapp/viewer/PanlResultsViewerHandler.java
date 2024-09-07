@@ -1,4 +1,4 @@
-package com.synapticloop.panl.server.handler.results.explainer;
+package com.synapticloop.panl.server.handler.webapp.viewer;
 
 /*
  * Copyright (c) 2008-2024 synapticloop.
@@ -25,8 +25,7 @@ package com.synapticloop.panl.server.handler.results.explainer;
  */
 
 import com.synapticloop.panl.server.handler.CollectionRequestHandler;
-import com.synapticloop.panl.server.handler.results.util.ResourceHelper;
-import com.synapticloop.panl.server.handler.properties.CollectionProperties;
+import com.synapticloop.panl.server.handler.webapp.util.ResourceHelper;
 import org.apache.http.HttpRequest;
 import org.apache.http.HttpResponse;
 import org.apache.http.protocol.HttpContext;
@@ -34,14 +33,12 @@ import org.apache.http.protocol.HttpRequestHandler;
 
 import java.util.List;
 
-public class PanlResultsExplainerHandler implements HttpRequestHandler {
-	private final List<CollectionProperties> collectionPropertiesList;
 
-	public PanlResultsExplainerHandler(List<CollectionProperties> collectionPropertiesList, List<CollectionRequestHandler> collectionRequestHandlers) {
-		this.collectionPropertiesList = collectionPropertiesList;
+public class PanlResultsViewerHandler implements HttpRequestHandler {
+	public PanlResultsViewerHandler(List<CollectionRequestHandler> collectionRequestHandlers) {
 	}
 
 	@Override public void handle(HttpRequest request, HttpResponse response, HttpContext context) {
-		ResourceHelper.serveResource("/panl-results/explainer/index.html", response);
+		ResourceHelper.serveResource("/panl-results/viewer/index.html", response);
 	}
 }

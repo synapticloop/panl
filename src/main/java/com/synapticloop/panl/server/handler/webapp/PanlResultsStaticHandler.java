@@ -1,4 +1,4 @@
-package com.synapticloop.panl.server.handler.results;
+package com.synapticloop.panl.server.handler.webapp;
 
 /*
  * Copyright (c) 2008-2024 synapticloop.
@@ -24,7 +24,7 @@ package com.synapticloop.panl.server.handler.results;
  * IN THE SOFTWARE.
  */
 
-import com.synapticloop.panl.server.handler.results.util.ResourceHelper;
+import com.synapticloop.panl.server.handler.webapp.util.ResourceHelper;
 import org.apache.http.HttpRequest;
 import org.apache.http.HttpResponse;
 import org.apache.http.protocol.HttpContext;

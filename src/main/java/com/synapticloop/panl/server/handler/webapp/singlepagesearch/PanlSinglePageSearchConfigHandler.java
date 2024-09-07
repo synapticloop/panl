@@ -22,10 +22,10 @@
  * IN THE SOFTWARE.
  */
 
-package com.synapticloop.panl.server.handler.results.singlepagesearch;
+package com.synapticloop.panl.server.handler.webapp.singlepagesearch;
 
 import com.synapticloop.panl.server.handler.CollectionRequestHandler;
-import com.synapticloop.panl.server.handler.results.util.ResourceHelper;
+import com.synapticloop.panl.server.handler.webapp.util.ResourceHelper;
 import org.apache.http.HttpRequest;
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;

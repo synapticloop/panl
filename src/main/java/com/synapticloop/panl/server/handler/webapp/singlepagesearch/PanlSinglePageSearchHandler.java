@@ -1,5 +1,3 @@
-package com.synapticloop.panl.server.handler.results.viewer;
-
 /*
  * Copyright (c) 2008-2024 synapticloop.
  *
@@ -24,8 +22,10 @@ package com.synapticloop.panl.server.handler.results.viewer;
  * IN THE SOFTWARE.
  */
 
+package com.synapticloop.panl.server.handler.webapp.singlepagesearch;
+
 import com.synapticloop.panl.server.handler.CollectionRequestHandler;
-import com.synapticloop.panl.server.handler.results.util.ResourceHelper;
+import com.synapticloop.panl.server.handler.webapp.util.ResourceHelper;
 import org.apache.http.HttpRequest;
 import org.apache.http.HttpResponse;
 import org.apache.http.protocol.HttpContext;
@@ -34,11 +34,11 @@ import org.apache.http.protocol.HttpRequestHandler;
 import java.util.List;
 
 
-public class PanlResultsViewerHandler implements HttpRequestHandler {
-	public PanlResultsViewerHandler(List<CollectionRequestHandler> collectionRequestHandlers) {
+public class PanlSinglePageSearchHandler implements HttpRequestHandler {
+	public PanlSinglePageSearchHandler(List<CollectionRequestHandler> collectionRequestHandlers) {
 	}
 
 	@Override public void handle(HttpRequest request, HttpResponse response, HttpContext context) {
-		ResourceHelper.serveResource("/panl-results/viewer/index.html", response);
+		ResourceHelper.serveResource("/panl-results/single-page-search/index.html", response);
 	}
 }

@@ -36,7 +36,7 @@ import org.json.JSONObject;
 
 import java.util.List;
 
-import static com.synapticloop.panl.server.handler.results.util.ResourceHelper.*;
+import static com.synapticloop.panl.server.handler.webapp.util.ResourceHelper.*;
 
 /**
  * <p>This is the default handler for any URLs that are not bound to a
