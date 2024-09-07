@@ -335,7 +335,7 @@ with the release files named `solr-panl-9-x.x.x`
 
 # Version History
 
-## 1.1.0
+## 1.1.0 - the better update (codename `broad-firefly`) **UNDER DEVELOPEMENT**
 
  - Added in `empty` FieldSet to return no documents
  - Added in Single Search Page functionality
@@ -347,6 +347,6 @@ with the release files named `solr-panl-9-x.x.x`
    - Updated mechanical pencils introductory dataset explanations
    - Added in documentation for Fields
 
-## 1.0.0
+## 1.0.0 - the initial release (codename `bright-wildflower`)
 
 - Initial release with base functionality
