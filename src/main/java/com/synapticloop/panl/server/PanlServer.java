@@ -220,7 +220,7 @@ public class PanlServer {
 		// register the panl results viewer - if it enabled
 
 		if (panlProperties.getHasPanlResultsTestingUrls()) {
-			bootstrap.registerHandler("/panl-results/static/*", new PanlResultsStaticHandler());
+			bootstrap.registerHandler("/webapp/static/*", new PanlResultsStaticHandler());
 
 			// the simple search and querying webappp
 			bootstrap.registerHandler("/panl-results-viewer/*", new PanlResultsViewerHandler(collectionRequestHandlers));
@@ -245,7 +245,7 @@ public class PanlServer {
 				LOGGER.info("Results will be available on /{}/{}/*", panlCollectionUri, resultFieldsName);
 			}
 
-			LOGGER.info("Binding Solr collection of '{}' to Panl singlepagesearch URI path " + PanlConfigurationHandler.PANL_CONFIGURATION_BINDING + "{}/", solrCollection, panlCollectionUri);
+			LOGGER.info("Binding Solr collection of '{}' to Panl configuration URI path " + PanlConfigurationHandler.PANL_CONFIGURATION_BINDING + "{}/", solrCollection, panlCollectionUri);
 		}
 
 		// create the server

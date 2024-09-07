@@ -39,6 +39,6 @@ public class PanlSinglePageSearchHandler implements HttpRequestHandler {
 	}
 
 	@Override public void handle(HttpRequest request, HttpResponse response, HttpContext context) {
-		ResourceHelper.serveResource("/panl-results/single-page-search/index.html", response);
+		ResourceHelper.serveResource("/webapp/single-page-search/index.html", response);
 	}
 }

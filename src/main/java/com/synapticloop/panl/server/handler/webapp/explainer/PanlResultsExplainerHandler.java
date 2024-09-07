@@ -42,6 +42,6 @@ public class PanlResultsExplainerHandler implements HttpRequestHandler {
 	}
 
 	@Override public void handle(HttpRequest request, HttpResponse response, HttpContext context) {
-		ResourceHelper.serveResource("/panl-results/explainer/index.html", response);
+		ResourceHelper.serveResource("/webapp/explainer/index.html", response);
 	}
 }

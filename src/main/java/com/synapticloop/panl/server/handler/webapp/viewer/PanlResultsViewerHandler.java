@@ -39,6 +39,6 @@ public class PanlResultsViewerHandler implements HttpRequestHandler {
 	}
 
 	@Override public void handle(HttpRequest request, HttpResponse response, HttpContext context) {
-		ResourceHelper.serveResource("/panl-results/viewer/index.html", response);
+		ResourceHelper.serveResource("/webapp/viewer/index.html", response);
 	}
 }
