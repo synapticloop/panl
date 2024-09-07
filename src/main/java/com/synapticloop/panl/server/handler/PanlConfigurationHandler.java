@@ -25,7 +25,7 @@ package com.synapticloop.panl.server.handler;
  */
 
 import com.synapticloop.panl.server.handler.properties.PanlProperties;
-import com.synapticloop.panl.server.handler.results.util.ResourceHelper;
+import com.synapticloop.panl.server.handler.webapp.util.ResourceHelper;
 import org.apache.http.HttpRequest;
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
@@ -37,7 +37,7 @@ import org.json.JSONObject;
 
 import java.util.*;
 
-import static com.synapticloop.panl.server.handler.results.util.ResourceHelper.*;
+import static com.synapticloop.panl.server.handler.webapp.util.ResourceHelper.*;
 
 /**
  * <p>This is the configuration handler which will return the configuration

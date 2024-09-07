@@ -24,7 +24,7 @@ package com.synapticloop.panl.server.handler;
  * IN THE SOFTWARE.
  */
 
-import com.synapticloop.panl.server.handler.results.util.ResourceHelper;
+import com.synapticloop.panl.server.handler.webapp.util.ResourceHelper;
 import com.synapticloop.panl.server.handler.properties.PanlProperties;
 import org.apache.http.HttpRequest;
 import org.apache.http.HttpResponse;
@@ -32,12 +32,11 @@ import org.apache.http.HttpStatus;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.protocol.HttpContext;
 import org.apache.http.protocol.HttpRequestHandler;
-import org.json.JSONArray;
 import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import static com.synapticloop.panl.server.handler.results.util.ResourceHelper.*;
+import static com.synapticloop.panl.server.handler.webapp.util.ResourceHelper.*;
 
 /**
  * <p>This is the default handler for all requests and simply passes the
