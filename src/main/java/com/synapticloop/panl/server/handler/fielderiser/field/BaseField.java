@@ -58,6 +58,7 @@ public abstract class BaseField {
 	public static final String JSON_KEY_ENCODED = "encoded";
 	public static final String JSON_KEY_VALUES = "values";
 	public static final String JSON_KEY_URIS = "uris";
+	public static final String JSON_KEY_IS_MULTIVALUE = "is_multivalue";
 
 
 	public static final String PROPERTY_KEY_PANL_FIELD = "panl.field.";
@@ -73,6 +74,7 @@ public abstract class BaseField {
 
 	public static final String PROPERTY_KEY_PANL_INCLUDE_SAME_NUMBER_FACETS = "panl.include.same.number.facets";
 	public static final String PROPERTY_KEY_PANL_INCLUDE_SINGLE_FACETS = "panl.include.single.facets";
+	public static final String PROPERTY_KEY_IS_MULTIVALUE = "panl.multivalue.";
 
 	public static final String PROPERTY_KEY_PANL_RANGE_FACET = "panl.range.facet.";
 	public static final String PROPERTY_KEY_PANL_RANGE_INFIX = "panl.range.infix.";
@@ -89,6 +91,7 @@ public abstract class BaseField {
 	protected String solrFieldName;
 	private String solrFieldType;
 	private boolean facetSortByIndex = false;
+	protected boolean isMultiValue = false;
 
 	protected final Properties properties;
 	protected final String solrCollection;
@@ -136,6 +139,7 @@ public abstract class BaseField {
 		this.panlCollectionUri = panlCollectionUri;
 		this.lpseLength = lpseLength;
 		this.facetSortByIndex = properties.getProperty(PROPERTY_KEY_PANL_FACETSORT + this.lpseCode, "count").equals("index");
+		this.isMultiValue = properties.getProperty(PROPERTY_KEY_IS_MULTIVALUE  + this.lpseCode, "false").equals("true");
 
 		if (!propertyKey.equals(PROPERTY_KEY_PANL_SORT_FIELDS)) {
 			// sort keys can be longer than the panlParamSort property code
@@ -620,6 +624,9 @@ public abstract class BaseField {
 		jsonObject.put(JSON_KEY_FACET_NAME, this.solrFieldName);
 		jsonObject.put(JSON_KEY_NAME, this.panlFieldName);
 		jsonObject.put(JSON_KEY_PANL_CODE, this.lpseCode);
+		if(this.isMultiValue) {
+			jsonObject.put(JSON_KEY_IS_MULTIVALUE, this.isMultiValue);
+		}
 
 		appendToAvailableObjectInternal(jsonObject);
 	}
