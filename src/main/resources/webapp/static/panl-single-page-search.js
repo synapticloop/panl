@@ -64,14 +64,16 @@ function populatePanlConfiguration(panlJsonData) {
       $("input[type=radio][name=\"" + orderedLpseFacet.facet_name + "\"]").change(function() {
         setLpseValue(this.value, orderedLpseFacet);
       });
+
+      $("input[type=checkbox][name=\"" + orderedLpseFacet.facet_name + "\"]").change(function() {
+        updateLpseValue(this.value, this.checked, orderedLpseFacet);
+      });
 		}
 	}
 }
 
 function setLpseValue(value, orderedLpseFacet) {
 	console.log(value, orderedLpseFacet);
-	$("#panl-lpse-path").text("");
-
 
 	var lpseOffset = panlObject.lpse_lookup[orderedLpseFacet.panl_code];
 	if(value === "") {
@@ -85,19 +87,40 @@ function setLpseValue(value, orderedLpseFacet) {
 	updateSearchLinks();
 }
 
+function updateLpseValue(value, checked, orderedLpseFacet) {
+	console.log(value, checked, orderedLpseFacet);
+
+	var lpseOffset = panlObject.lpse_lookup[orderedLpseFacet.panl_code];
+
+	if(panlLpsePath[lpseOffset] === null || panlLpsePath[lpseOffset] === undefined) {
+		panlLpsePath[lpseOffset] = { "lpseCode": orderedLpseFacet.panl_code };
+	}
+
+	if(checked) {
+		panlLpsePath[lpseOffset][value] = value;
+	} else {
+		delete panlLpsePath[lpseOffset][value];
+	}
+
+	updateSearchLinks();
+}
 function updateSearchLinks() {
+	$("#panl-lpse-path").text("");
+
 	var lpsePath = "/";
 	var lpseCodePath = "";
 
 	// no go through the new value and then regen the lpse path
 	for(const panlPathValue of panlLpsePath) {
 		if(panlPathValue !== undefined && panlPathValue !== null) {
-			for (var key in panlPathValue) {
-				if (panlPathValue.hasOwnProperty(key)) {
-					if(key === "lpseCode") {
-						lpseCodePath = lpseCodePath + panlPathValue["lpseCode"];
-					} else {
-						lpsePath = lpsePath + key + "/"
+			if(Object.keys(panlPathValue).length > 1) {
+				var lpseCode = panlPathValue["lpseCode"];
+				for (var key in panlPathValue) {
+					if (panlPathValue.hasOwnProperty(key)) {
+						if(key !== "lpseCode") {
+							lpseCodePath = lpseCodePath + lpseCode;
+							lpsePath = lpsePath + key + "/"
+						}
 					}
 				}
 			}
