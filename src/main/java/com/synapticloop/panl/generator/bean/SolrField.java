@@ -28,6 +28,7 @@ public class SolrField {
 	private final String name;
 	private final boolean isFacet;
 	private boolean isSupported = false;
+	private boolean isMultiValued = false;
 
 	public SolrField(String name, boolean isFacet) {
 		this.name = name;
@@ -48,5 +49,13 @@ public class SolrField {
 
 	public void setIsSupported(boolean supported) {
 		isSupported = supported;
+	}
+
+	public boolean getIsMultiValued() {
+		return isMultiValued;
+	}
+
+	public void setIsMultiValued(boolean multiValued) {
+		isMultiValued = multiValued;
 	}
 }
