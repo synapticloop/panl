@@ -8,4 +8,4 @@ div#container, div#content, div#footer { width: 700px !important; }
 select { font-size: larger; width: 100%; }
 #searcharea { width: 100% !important; text-align: center; clear: both; }
 div#footer { margin-top: 26px !important; }
-#searchbutton { font-size: larger; padding: 4px 14px; border: 1px solid black; border-radius: 5px; background-color: #efefef; overflow: auto; }
+#searchbutton { font-size: larger; padding: 4px 14px; border: 1px solid black; border-radius: 5px; background-color: #efefef; overflow: auto; text-decoration: none; color: black; }
