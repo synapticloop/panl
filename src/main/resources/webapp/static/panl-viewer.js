@@ -481,6 +481,7 @@ function addAvailableFilters(availableObject, activeObject) {
 				"\" id=\"range-anchor-" +
 				facet.facet_name +
 				"\">[Apply]</a></div>");
+		ranges.append("<div class=\"center\"><span><em>(Actual dynamic range: " + facet.dynamic_min + " to " + facet.dynamic_max + ")</em></span></div>")
 
 		slider.noUiSlider.on("update", function(values, handle, unencoded, tap, positions, noUiSlider) {
 			var values = values;

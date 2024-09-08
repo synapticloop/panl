@@ -78,6 +78,8 @@ public class CollectionRequestHandler {
 	public static final String JSON_KEY_QUERY_RESPOND_TO = "query_respond_to";
 	public static final String JSON_KEY_SORTING = "sorting";
 	public static final String JSON_KEY_TIMINGS = "timings";
+	public static final String JSON_KEY_DYNAMIC_MIN = "dynamic_min";
+	public static final String JSON_KEY_DYNAMIC_MAX = "dynamic_max";
 
 	public static String CODES = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz01234567890";
 	public static String CODES_AND_METADATA = CODES + "[].+-";
@@ -351,14 +353,15 @@ public class CollectionRequestHandler {
 					for(Object object : jsonArray) {
 						JSONObject rangeObject = (JSONObject) object;
 						if(rangeObject.getString("facet_name").equals(key)) {
-							rangeObject.put("dynamic_min", valueObject.getInt("min"));
-							rangeObject.put("dynamic_max", valueObject.getInt("max"));
+							rangeObject.put(JSON_KEY_DYNAMIC_MIN, valueObject.getInt("min"));
+							rangeObject.put(JSON_KEY_DYNAMIC_MAX, valueObject.getInt("max"));
 						}
 					}
 				}
 			}
 		}
-		System.out.println(statsObject);
+
+		solrJsonObject.remove("stats");
 
 
 

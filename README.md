@@ -355,6 +355,7 @@ with the release files named `solr-panl-9-x.x.x`
  - Added in Single Search Page functionality
  - Update Mechanical Pencils 
    - Added in hierarchy for the Pencil Model example
+ - Dynamic range functionality - pulling actual values for the facet
 
  - Documentation update
    - Fixed general spelling and grammar errors
