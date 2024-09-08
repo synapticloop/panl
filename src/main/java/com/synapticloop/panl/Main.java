@@ -24,6 +24,7 @@ package com.synapticloop.panl;
  * IN THE SOFTWARE.
  */
 
+import com.synapticloop.panl.editor.PanlEditor;
 import com.synapticloop.panl.exception.CommandLineOptionException;
 import com.synapticloop.panl.exception.PanlGenerateException;
 import com.synapticloop.panl.exception.PanlServerException;
@@ -55,12 +56,14 @@ public class Main {
 
 	public static final String CMD_VALUE_SERVER = "server";
 	public static final String CMD_VALUE_GENERATE = "generate";
+	public static final String CMD_VALUE_EDITOR = "editor";
 
 	private static final Set<String> ALLOWABLE_COMMANDS = new HashSet<>();
 
 	static {
 		ALLOWABLE_COMMANDS.add(CMD_VALUE_SERVER);
 		ALLOWABLE_COMMANDS.add(CMD_VALUE_GENERATE);
+		ALLOWABLE_COMMANDS.add(CMD_VALUE_EDITOR);
 	}
 
 	public static final String DEFAULT_PANL_PROPERTIES = "panl.properties";
@@ -126,8 +129,10 @@ public class Main {
 		// now parse the rest of the commands
 		if (command.equals(CMD_VALUE_SERVER)) {
 			parseAndExecuteServerCommands();
-		} else {
+		} else if(command.equals(CMD_VALUE_GENERATE)){
 			parseAndExecuteGenerateCommands();
+		} else if(command.equals(CMD_VALUE_EDITOR)) {
+			new PanlEditor().show();
 		}
 	}
 
