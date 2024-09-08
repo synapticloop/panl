@@ -27,8 +27,10 @@ package com.synapticloop.panl.server.handler;
 import com.synapticloop.panl.exception.PanlServerException;
 import com.synapticloop.panl.server.client.PanlClient;
 import com.synapticloop.panl.server.handler.fielderiser.field.facet.PanlFacetField;
+import com.synapticloop.panl.server.handler.fielderiser.field.facet.PanlRangeFacetField;
 import com.synapticloop.panl.server.handler.helper.CollectionHelper;
 import com.synapticloop.panl.server.handler.processor.*;
+import com.synapticloop.panl.server.handler.tokeniser.token.facet.RangeFacetLpseToken;
 import com.synapticloop.panl.server.handler.webapp.util.ResourceHelper;
 import com.synapticloop.panl.server.handler.properties.CollectionProperties;
 import com.synapticloop.panl.server.handler.properties.PanlProperties;
@@ -222,8 +224,16 @@ public class CollectionRequestHandler {
 
 
 
+			boolean hasStats = false;
 			for (BaseField lpseField : collectionProperties.getLpseFields()) {
 				lpseField.applyToQuery(solrQuery, panlTokenMap);
+				if(lpseField instanceof PanlRangeFacetField) {
+					solrQuery.add("stats.field", lpseField.getSolrFieldName());
+					if(!hasStats) {
+						solrQuery.add("stats", "true");
+						hasStats = true;
+					}
+				}
 			}
 
 
