@@ -30,7 +30,6 @@ import com.synapticloop.panl.server.handler.fielderiser.field.facet.PanlFacetFie
 import com.synapticloop.panl.server.handler.fielderiser.field.facet.PanlRangeFacetField;
 import com.synapticloop.panl.server.handler.helper.CollectionHelper;
 import com.synapticloop.panl.server.handler.processor.*;
-import com.synapticloop.panl.server.handler.tokeniser.token.facet.RangeFacetLpseToken;
 import com.synapticloop.panl.server.handler.webapp.util.ResourceHelper;
 import com.synapticloop.panl.server.handler.properties.CollectionProperties;
 import com.synapticloop.panl.server.handler.properties.PanlProperties;
@@ -43,6 +42,7 @@ import com.synapticloop.panl.server.handler.tokeniser.token.param.QueryLpseToken
 import org.apache.solr.client.solrj.SolrClient;
 import org.apache.solr.client.solrj.SolrQuery;
 import org.apache.solr.client.solrj.response.QueryResponse;
+import org.json.JSONArray;
 import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -269,7 +269,6 @@ public class CollectionRequestHandler {
 					sendAnReceiveNanos));
 
 		} catch (Exception e) {
-			e.printStackTrace();
 			throw new PanlServerException("Could not query the Solr instance, message was: " + e.getMessage(), e);
 		}
 	}
@@ -337,6 +336,32 @@ public class CollectionRequestHandler {
 		}
 
 		panlObject.put(JSON_KEY_AVAILABLE, availableProcessor.processToObject(panlTokenMap, response));
+
+		// now we are going to add the dynamic range if they exist
+		JSONObject statsObject = solrJsonObject.optJSONObject("stats");
+		if(null != statsObject) {
+			JSONObject statsFieldObjects = statsObject.optJSONObject("stats_fields");
+			if(null != statsFieldObjects) {
+				Iterator<String> keys = statsFieldObjects.keys();
+				while(keys.hasNext()) {
+					String key = keys.next();
+					JSONObject valueObject = statsFieldObjects.getJSONObject(key);
+					// now that we have the value, go through the range facets and get the right one.
+					JSONArray jsonArray = panlObject.getJSONObject(JSON_KEY_AVAILABLE).getJSONArray(Processor.JSON_KEY_RANGE_FACETS);
+					for(Object object : jsonArray) {
+						JSONObject rangeObject = (JSONObject) object;
+						if(rangeObject.getString("facet_name").equals(key)) {
+							rangeObject.put("dynamic_min", valueObject.getInt("min"));
+							rangeObject.put("dynamic_max", valueObject.getInt("max"));
+						}
+					}
+				}
+			}
+		}
+		System.out.println(statsObject);
+
+
+
 		panlObject.put(JSON_KEY_ACTIVE, activeProcessor.processToObject(panlTokenMap));
 		panlObject.put(JSON_KEY_PAGINATION, paginationProcessor.processToObject(panlTokenMap, response));
 		panlObject.put(JSON_KEY_SORTING, sortingProcessor.processToObject(panlTokenMap));
