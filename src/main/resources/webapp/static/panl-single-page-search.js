@@ -58,6 +58,7 @@ function populatePanlConfiguration(panlJsonData) {
 	        "</div>");
 
 	    bindRange(orderedLpseFacet);
+	    bindDateRange(orderedLpseFacet);
 
       $("#" + orderedLpseFacet.facet_name).on('change', { facet : orderedLpseFacet }, function (e) {
         setLpseValue(this.value, e.data.facet);
@@ -75,8 +76,6 @@ function populatePanlConfiguration(panlJsonData) {
 }
 
 function setLpseValue(value, orderedLpseFacet) {
-	console.log(value, orderedLpseFacet);
-
 	var lpseOffset = panlObject.lpse_lookup[orderedLpseFacet.panl_code];
 	if(value === "") {
 		panlLpsePath[lpseOffset] = null;
@@ -90,8 +89,6 @@ function setLpseValue(value, orderedLpseFacet) {
 }
 
 function updateLpseValue(value, checked, orderedLpseFacet) {
-	console.log(value, checked, orderedLpseFacet);
-
 	var lpseOffset = panlObject.lpse_lookup[orderedLpseFacet.panl_code];
 
 	if(panlLpsePath[lpseOffset] === null || panlLpsePath[lpseOffset] === undefined) {
@@ -130,9 +127,12 @@ function updateSearchLinks() {
 		}
 	}
 
-	const fullPath = lpsePath + lpseCodePath + "/";
+	var fullPath = lpsePath + lpseCodePath + "/";
+	if(fullPath === "//") {
+		fullPath = "/";
+	}
 	$("#panl-lpse-path").text(fullPath);
-	$("#searchbutton").attr("href", "/panl-results-viewer/" + currentCollection + "/default/" + fullPath);
+	$("#searchbutton").attr("href", "/panl-results-viewer/" + currentCollection + "/default" + fullPath);
 	$("#panl-lpse-path-searchbutton").text(fullPath);
 }
 
@@ -169,10 +169,29 @@ function appendFacet(orderedLpseFacet) {
 		return(returnHTML);
 	} else if(orderedLpseFacet.is_range_facet) {
 		// RANGE facet
-		return("<div style=\"padding-bottom: 30px;\" id=\"range-" + orderedLpseFacet.facet_name + "\"><div id=\"slider-ui-" + orderedLpseFacet.facet_name + "\" class=\"slider-round\"></div></div>");
+		return(
+			"<div style=\"padding-bottom: 30px;\" id=\"range-" + orderedLpseFacet.facet_name + "\">" +
+				"<div id=\"slider-ui-" + orderedLpseFacet.facet_name + "\" class=\"slider-round\"></div>" +
+				"<div style=\"z-index: 1000; padding-top: 80px; text-align: center;\"><a href=\"#\" id=\"range-clear-" + orderedLpseFacet.facet_name + "\">[ clear " + orderedLpseFacet.name + " range ]</a></div>" +
+			"</div>"
+		);
 	} else if(orderedLpseFacet.is_date_range_facet) {
 		// DATE Range facet
-		return("");
+		return("<form method=\"GET\" id=\"date-range-" + orderedLpseFacet.facet_name +"\">" +
+				"	<select class=\"date-range\" name=\"previous_next\" id=\"previous_next" + orderedLpseFacet.facet_name + "\">" +
+				"		<option value=\"next\">" + decodePanl(orderedLpseFacet.next) + "</option>" +
+				"		<option value=\"previous\">" + decodePanl(orderedLpseFacet.previous) + "</option>" +
+				"	</select>" +
+				"	<label><input class=\"date_number\" id=\"date_number" + orderedLpseFacet.facet_name + "\" type=\"text\" name=\"date_number\"></label>" +
+				"	<select  class=\"date-range\" name=\"designator\" id=\"designator" + orderedLpseFacet.facet_name + "\">" +
+				"		<option value=\"hours\" " + (orderedLpseFacet.solr_range_designator === "HOURS" ? "selected=\"selected\"" : "") + ">" + decodePanl(orderedLpseFacet.designators.hours) + "</option>" +
+				"		<option value=\"days\" " + (orderedLpseFacet.solr_range_designator === "DAYS" ? "selected=\"selected\"" : "") + ">" + decodePanl(orderedLpseFacet.designators.days) + "</option>" +
+				"		<option value=\"months\" " + (orderedLpseFacet.solr_range_designator === "MONTHS" ? "selected=\"selected\"" : "") + ">" + decodePanl(orderedLpseFacet.designators.months) + "</option>" +
+				"		<option value=\"years\" " + (orderedLpseFacet.solr_range_designator === "YEARS" ? "selected=\"selected\"" : "") + ">" + decodePanl(orderedLpseFacet.designators.years) + "</option>" +
+				"	</select>" +
+				"</form>" +
+				"<div class=\"center\"><a href=\"\" class=\"range-link\" id=\"anchor-date-range-" + orderedLpseFacet.facet_name + "\"></a></div>" +
+				"<div class=\"center\"><a href=\"\" class=\"range-link\" id=\"anchor-date-range-clear-" + orderedLpseFacet.facet_name + "\">[ clear " + orderedLpseFacet.name + " date range ]</a></div>");
 	} else {
 		// regular facet
 		// go through and print all of the details
@@ -192,6 +211,11 @@ function bindRange(orderedLpseFacet) {
 	const ranges = $("#range" + orderedLpseFacet.facet_name);
 
 	var slider = document.getElementById("slider-ui-" + orderedLpseFacet.facet_name);
+
+	$("#range-clear-" + orderedLpseFacet.facet_name).on('click', { facet : orderedLpseFacet }, function (e) {
+		e.preventDefault();
+		setLpseValue("", e.data.facet);
+  });
 
 	var inboundMinValue = parseInt(orderedLpseFacet.min);
 	var inboundMaxValue = parseInt(orderedLpseFacet.max);
@@ -220,26 +244,6 @@ function bindRange(orderedLpseFacet) {
 	};
 
 	noUiSlider.create(slider, options);
-
-	ranges.append("<br /><div id=\"range-link-" +
-			orderedLpseFacet.facet_name +
-			"\" class=\"clear range-link\">" +
-			"<br /><span class=\"" +
-			orderedLpseFacet.facet_name +
-			"-link\">" +
-			inboundMinValue +
-			" to " +
-			inboundMaxValue +
-			"</span></div><div class=\"center\"><a class=\"range-link\" href=\"" +
-			panlResultsViewerUrl +
-			orderedLpseFacet.uris.before +
-			inboundMinValue +
-			orderedLpseFacet.uris.during +
-			inboundMaxValue +
-			orderedLpseFacet.uris.after +
-			"\" id=\"range-anchor-" +
-			orderedLpseFacet.facet_name +
-			"\">[Apply]</a></div>");
 
 	slider.noUiSlider.on("update", function(values, handle, unencoded, tap, positions, noUiSlider) {
 		var values = values;
@@ -287,6 +291,9 @@ function bindRange(orderedLpseFacet) {
 
 		updateSearchLinks();
 	});
+
+	$("#range-clear-" + orderedLpseFacet.facet_name).click();
+
 }
 
 function updateDateRangeLink(facet) {
@@ -305,15 +312,58 @@ function updateDateRangeLink(facet) {
 
 	var text = previousNext + dateNumber + designator;
 	rangeLink.text("Apply range: " + decodePanl(text));
+}
 
-	rangeLink.attr("href",
-			panlResultsViewerUrl +
-			facet.uris.before +
-			encodePanl(text) +
-			facet.uris.after
-	);
+function bindDateRange(orderedLpseFacet) {
+	if(!orderedLpseFacet.is_date_range_facet) {
+		return;
+	}
+
+	$("#date-range-" + orderedLpseFacet.facet_name).on("keydown", function(event) {
+		return event.key != "Enter";
+	});
+
+	updateDateRangeLink(orderedLpseFacet);
+
+	$("#previous_next" + orderedLpseFacet.facet_name).on('change', { facet : orderedLpseFacet }, function (e) {
+		e.preventDefault();
+		updateDateRangeLink(e.data.facet);
+	});
+
+	$("#designator" + orderedLpseFacet.facet_name).on('change', { facet : orderedLpseFacet }, function (e) {
+		e.preventDefault();
+		updateDateRangeLink(e.data.facet);
+	});
+
+	$("#date_number" + orderedLpseFacet.facet_name).on('input', { facet : orderedLpseFacet }, function (e) {
+		e.preventDefault();
+		updateDateRangeLink(e.data.facet);
+	});
+
+	$("#anchor-date-range-clear-" + orderedLpseFacet.facet_name).on('click', { facet : orderedLpseFacet }, function (e) {
+    e.preventDefault();
+    setLpseValue("", e.data.facet);
+  });
+
+	$("#anchor-date-range-" + orderedLpseFacet.facet_name).on('click', { facet : orderedLpseFacet }, function (e) {
+		e.preventDefault();
+		var facetName = orderedLpseFacet.facet_name;
+
+		var previousNext = $("#previous_next" + encodePanl(facetName) + " option:selected").text();
+		var dateNumber = $("#date_number" + facetName).val();
+		var designator = $("#designator" + encodePanl(facetName) + " option:selected").text();
+		if(dateNumber === "") {
+			return;
+		}
+
+		var text = previousNext + dateNumber + designator;
+
+		updateDateRangeLink(text, e.data.facet);
+		setLpseValue(encodePanl(text), e.data.facet);
+	});
 
 }
+
 
 function encodePanl(text) {
 	return(encodeURI(text.replaceAll(" ", "+")));

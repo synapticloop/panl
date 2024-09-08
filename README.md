@@ -1,6 +1,6 @@
 # Synapticloop PANL
 
-<img src="src/docs/synapticloop-logo.png">
+<img src="src/docs/synapticloop-logo.png" alt="The Synapticloop logo" />
 
 ---
 
@@ -56,7 +56,7 @@ With the in-built tool, point it at your existing Solr `managed-schema.xml` file
 
 ## The Panl Results Viewer Web App
 
-<img src="src/docs/panl-features.png">
+<img src="src/docs/panl-features.png" alt="The Panl Features" />
 
 _**Image**: The features and functionality of the Panl server_
 
@@ -100,7 +100,7 @@ _The image is a screenshot of the in-built Panl Results Viewer Web App available
 
 ## The Panl Results Explainer Web App
 
-<img src="src/docs/panl-results-explainer.png">
+<img src="src/docs/panl-results-explainer.png" alt="The In-Built Panl Results Explainer" /">
 
 _**Image**: The features and functionality of the Panl results explainer_
 
@@ -127,13 +127,13 @@ _The image is a screenshot of the in-built Panl Results Explainer Web App availa
 
 ## The Panl Single Page Search Web App
 
-<img src="src/docs/panl-single-page-search.png">
+<img src="src/docs/panl-single-page-search.png" alt="The Panl Example Single Search Page interface" />
 
 _**Image**: The In-Build Panl Single Page Search Web Application_
 
 Panl also ships with a URL that will provide a separate JSON response, allowing you to build a single page search interface, giving your users all the options at a glance.
 
-1. A list of available Collections URI Paths (CaFUPs) that Panl is configured to serve.
+1. A list of available Collections URI Paths for each available single page search interface.
 1. The generated Panl LPSE path from the selections. 
 1. All the facets and the facet values that can be selected.
 1. The generated Panl LPSE path from the selections.
@@ -169,7 +169,7 @@ At the end of this chapter, you will have a web page up and running with the mec
 http://localhost:8181/panl-results-viewer/
 
 
-<img src="src/docs/panl-results-viewer.png">
+<img src="src/docs/panl-results-viewer.png" alt="The Panl In-Built Simple Results Viewer" />
 
 _**Image**: The In-Build Panl Results Viewer Web Application_
 
@@ -354,7 +354,8 @@ with the release files named `solr-panl-9-x.x.x`
  - Added in `empty` FieldSet to return no documents
  - Added in Single Search Page functionality
  - Update Mechanical Pencils 
-   - Added in hierarchy for the Pencil Model
+   - Added in hierarchy for the Pencil Model example
+
  - Documentation update
    - Fixed general spelling and grammar errors
    - Added in documentation for new features and functionality

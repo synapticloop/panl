@@ -6,6 +6,7 @@ div#container, div#content, div#footer { width: 700px !important; }
 .searchfield { margin: 0 15px 12px 15px; width: 320px !important; display:inline-block; }
 .searchheading { background-color: #efefef; border-left: 6px solid black; text-justify: none; }
 select { font-size: larger; width: 100%; }
+select.date-range { width: 30% !important; }
 #searcharea { width: 100% !important; text-align: center; clear: both; }
 div#footer { margin-top: 26px !important; }
 #searchbutton { font-size: larger; padding: 4px 14px; border: 1px solid black; border-radius: 5px; background-color: #efefef; overflow: auto; text-decoration: none; color: black; }

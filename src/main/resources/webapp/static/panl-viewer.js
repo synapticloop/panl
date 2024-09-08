@@ -583,7 +583,7 @@ function addAvailableFilters(availableObject, activeObject) {
 			$("#date_number" + facet.facet_name).on('input', { facet : facet }, function (e) {
 				e.preventDefault();
 				updateDateRangeLink(e.data.facet);
-		});
+			});
 	}
 }
 
