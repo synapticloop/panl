@@ -353,8 +353,8 @@ public class CollectionRequestHandler {
 					for(Object object : jsonArray) {
 						JSONObject rangeObject = (JSONObject) object;
 						if(rangeObject.getString("facet_name").equals(key)) {
-							rangeObject.put(JSON_KEY_DYNAMIC_MIN, valueObject.getInt("min"));
-							rangeObject.put(JSON_KEY_DYNAMIC_MAX, valueObject.getInt("max"));
+							rangeObject.put(JSON_KEY_DYNAMIC_MIN, valueObject.optInt("min", -1));
+							rangeObject.put(JSON_KEY_DYNAMIC_MAX, valueObject.optInt("max", -1));
 						}
 					}
 				}
