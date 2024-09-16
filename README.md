@@ -100,7 +100,7 @@ _The image is a screenshot of the in-built Panl Results Viewer Web App available
 
 ## The Panl Results Explainer Web App
 
-<img src="src/docs/panl-results-explainer.png" alt="The In-Built Panl Results Explainer" /">
+<img src="src/docs/panl-results-explainer.png" alt="The In-Built Panl Results Explainer" />
 
 _**Image**: The features and functionality of the Panl results explainer_
 
