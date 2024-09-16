@@ -363,6 +363,20 @@ public class CollectionRequestHandler {
 
 		solrJsonObject.remove("stats");
 
+		// now we need to go through the range facets and remove any that are
+		// suppressed
+
+		JSONArray removedRanges = new JSONArray();
+		for (Object jsonObject : panlObject.getJSONObject(JSON_KEY_AVAILABLE).getJSONArray(Processor.JSON_KEY_FACETS)) {
+			JSONObject facetObject = (JSONObject) jsonObject;
+			String lpseCode = facetObject.getString(Processor.JSON_KEY_PANL_CODE);
+			if(!collectionProperties.getIsSuppressedRangeFacet(lpseCode)) {
+				removedRanges.put(facetObject);
+			}
+		}
+
+		panlObject.getJSONObject(JSON_KEY_AVAILABLE).put(Processor.JSON_KEY_FACETS, removedRanges);
+
 
 
 		panlObject.put(JSON_KEY_ACTIVE, activeProcessor.processToObject(panlTokenMap));

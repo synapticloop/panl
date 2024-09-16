@@ -57,6 +57,7 @@ public class PanlRangeFacetField extends PanlFacetField {
 	public static final String PROPERTY_KEY_PANL_RANGE_MAX = "panl.range.max.";
 	public static final String PROPERTY_KEY_PANL_RANGE_MIN_WILDCARD = "panl.range.min.wildcard.";
 	public static final String PROPERTY_KEY_PANL_RANGE_MAX_WILDCARD = "panl.range.max.wildcard.";
+	public static final String PROPERTY_KEY_PANL_RANGE_SUPPRESS = "panl.range.suppress.";
 	public static final String PROPERTY_KEY_PANL_RANGE_PREFIX = "panl.range.prefix.";
 	public static final String PROPERTY_KEY_PANL_RANGE_SUFFIX = "panl.range.suffix.";
 	public static final String PROPERTY_KEY_PANL_RANGE_MIN_VALUE = "panl.range.min.value.";
@@ -89,6 +90,8 @@ public class PanlRangeFacetField extends PanlFacetField {
 
 	private final boolean hasMinRangeWildcard;
 	private final boolean hasMaxRangeWildcard;
+
+	private boolean rangeSuppress = false;
 
 
 	public PanlRangeFacetField(String lpseCode, String propertyKey, Properties properties, String solrCollection, String panlCollectionUri, int lpseLength) throws PanlServerException {
@@ -124,6 +127,7 @@ public class PanlRangeFacetField extends PanlFacetField {
 		this.rangeMaxValueReplacement = properties.getProperty(PROPERTY_KEY_PANL_RANGE_MAX_VALUE + lpseCode, null);
 		this.hasMinRangeWildcard = properties.getProperty(PROPERTY_KEY_PANL_RANGE_MIN_WILDCARD + lpseCode, "false").equals("true");
 		this.hasMaxRangeWildcard = properties.getProperty(PROPERTY_KEY_PANL_RANGE_MAX_WILDCARD + lpseCode, "false").equals("true");
+		this.rangeSuppress = properties.getProperty(PROPERTY_KEY_PANL_RANGE_SUPPRESS + lpseCode, "false").equals("true");
 	}
 
 	@Override
@@ -350,6 +354,7 @@ public class PanlRangeFacetField extends PanlFacetField {
 				rangeFacetObject.put(JSON_KEY_VALUE_TO, rangeFacetLpseToken.getToValue());
 			}
 		}
+
 		// addition URIs are a little bit different...
 		JSONObject additionURIObject = getRangeAdditionURIObject(collectionProperties, panlTokenMap);
 		rangeFacetObject.put(JSON_KEY_URIS, additionURIObject);
@@ -781,5 +786,9 @@ public class PanlRangeFacetField extends PanlFacetField {
 				removeObject.put(JSON_KEY_VALUE_TO, toValue);
 			}
 		}
+	}
+
+	public boolean getRangeSuppress() {
+		return rangeSuppress;
 	}
 }

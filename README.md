@@ -356,10 +356,12 @@ with the release files named `solr-panl-9-x.x.x`
  - Update Mechanical Pencils 
    - Added in hierarchy for the Pencil Model example
  - Dynamic range functionality - pulling actual values for the facet
+ - Suppress facet values for ranges, so that the user may only select from the range UI, and the individual range facet values do not appear 
+
 
  - Documentation update
+   - New documentation for additional features and functionality
    - Fixed general spelling and grammar errors
-   - Added in documentation for new features and functionality
    - Updated mechanical pencils introductory dataset explanations
    - Added in documentation for Fields
 
