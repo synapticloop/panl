@@ -8,6 +8,24 @@
 
 ---
 
+```
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
+#                                              __                             #
+#                          .-----.---.-.-----.|  |                            #
+#                          |  _  |  _  |     ||  |                            #
+#                          |   __|___._|__|__||__|                            #
+#                          |__|     ... .-..                                  #
+#                                                                             #
+#                                ~ ~ ~ * ~ ~ ~                                #
+#                                                                             #
+#                                                                             #
+#                                  SOLR/PANL                                  #
+#                                                                             #
+#                                 ----------                                  #
+#                                                                             #
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
+```
+
 ## Download the Panl Server Release:
 
 [https://github.com/synapticloop/panl/releases](https://github.com/synapticloop/panl/releases)

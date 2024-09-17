@@ -44,7 +44,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 /**
- * <p>This is the main entry point for the PANL server/generator.</p>
+ * <p>This is the main class for the PANL server/generator.</p>
  */
 public class Main {
 	private static final Logger LOGGER = LoggerFactory.getLogger(Main.class);
@@ -78,7 +78,7 @@ public class Main {
 	private final String[] args;
 
 	/**
-	 * <p>Instantiate the Main</p>
+	 * <p>Instantiate the main class.</p>
 	 *
 	 * @param args The command line arguments
 	 */
@@ -141,11 +141,12 @@ public class Main {
 	 *
 	 * @throws PanlServerException If there was an error starting the server
 	 * @throws CommandLineOptionException If there was an error with the command
-	 * line options
+	 *  line options
 	 */
 	private void parseAndExecuteServerCommands() throws PanlServerException, CommandLineOptionException {
 		this.propertiesFileLocation = OPTIONS_MAP.getOrDefault(CMD_OPTION_PROPERTIES, DEFAULT_PANL_PROPERTIES);
 		String portNumberString = OPTIONS_MAP.getOrDefault(CMD_OPTION_PORT, DEFAULT_PORT_NUMBER);
+
 		try {
 			this.portNumber = Integer.parseInt(portNumberString);
 		} catch (NumberFormatException e) {
@@ -237,7 +238,9 @@ public class Main {
 	}
 
 	/**
-	 * <p>Main starting point for the application.</p>
+	 * <p>Main starting point for the application, parsing the command line
+	 * options and executing the required component.  If there was an error when
+	 * parsing the options then it will print out an error message and exit.</p>
 	 *
 	 * @param args The arguments to parse
 	 *
