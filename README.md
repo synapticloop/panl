@@ -28,6 +28,10 @@
 
 `Build and test 'main' branch:` [![CircleCI](https://dl.circleci.com/status-badge/img/circleci/3Y1eqqe4mcvtSZuzJnQ3tJ/DyFKUm7c7AoLa1wHmRjAnf/tree/main.svg?style=svg)](https://dl.circleci.com/status-badge/redirect/circleci/3Y1eqqe4mcvtSZuzJnQ3tJ/DyFKUm7c7AoLa1wHmRjAnf/tree/main)
 
+`Latest release tag:` ![GitHub Tag](https://img.shields.io/github/v/tag/synapticloop/panl)
+
+`Latest release:` ![GitHub Release](https://img.shields.io/github/v/release/synapticloop/panl)
+
 ## Download the Panl Server Release:
 
 [https://github.com/synapticloop/panl/releases](https://github.com/synapticloop/panl/releases)
