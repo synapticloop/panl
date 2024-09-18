@@ -339,23 +339,43 @@ public class CollectionRequestHandler {
 
 		panlObject.put(JSON_KEY_AVAILABLE, availableProcessor.processToObject(panlTokenMap, response));
 
+		// now we are going to add the dynamic range if they exist
 		JSONObject statsObject = solrJsonObject.optJSONObject("stats");
 		if(null != statsObject) {
 			JSONObject statsFieldObjects = statsObject.optJSONObject("stats_fields");
-			if (null != statsFieldObjects) {
-				JSONArray jsonArray = panlObject.getJSONObject(JSON_KEY_AVAILABLE).getJSONArray(Processor.JSON_KEY_RANGE_FACETS);
-				for (Object object : jsonArray) {
-					JSONObject rangeObject = (JSONObject) object;
-					String facetName = rangeObject.getString("facet_name");
-					if(null != statsFieldObjects.optJSONObject(facetName, null)) {
-						rangeObject.put(JSON_KEY_DYNAMIC_MIN, statsFieldObjects.getJSONObject(facetName).getInt("min"));
-						rangeObject.put(JSON_KEY_DYNAMIC_MAX, statsFieldObjects.getJSONObject(facetName).getInt("max"));
+			if(null != statsFieldObjects) {
+				Iterator<String> keys = statsFieldObjects.keys();
+				while(keys.hasNext()) {
+					String key = keys.next();
+					JSONObject valueObject = statsFieldObjects.getJSONObject(key);
+					// now that we have the value, go through the range facets and get the right one.
+					JSONArray jsonArray = panlObject.getJSONObject(JSON_KEY_AVAILABLE).getJSONArray(Processor.JSON_KEY_RANGE_FACETS);
+					for(Object object : jsonArray) {
+						JSONObject rangeObject = (JSONObject) object;
+						if(rangeObject.getString("facet_name").equals(key)) {
+							rangeObject.put(JSON_KEY_DYNAMIC_MIN, valueObject.optInt("min", -1));
+							rangeObject.put(JSON_KEY_DYNAMIC_MAX, valueObject.optInt("max", -1));
+						}
 					}
 				}
 			}
 		}
 
 		solrJsonObject.remove("stats");
+
+		// now we need to go through the range facets and remove any that are
+		// suppressed
+
+		JSONArray removedRanges = new JSONArray();
+		for (Object jsonObject : panlObject.getJSONObject(JSON_KEY_AVAILABLE).getJSONArray(Processor.JSON_KEY_FACETS)) {
+			JSONObject facetObject = (JSONObject) jsonObject;
+			String lpseCode = facetObject.getString(Processor.JSON_KEY_PANL_CODE);
+			if(!collectionProperties.getIsSuppressedRangeFacet(lpseCode)) {
+				removedRanges.put(facetObject);
+			}
+		}
+
+		panlObject.getJSONObject(JSON_KEY_AVAILABLE).put(Processor.JSON_KEY_FACETS, removedRanges);
 
 
 

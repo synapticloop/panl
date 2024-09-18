@@ -81,7 +81,7 @@ public class PanlOrFacetField extends PanlFacetField {
 	}
 
 	@Override protected void applyToQueryInternal(SolrQuery solrQuery, List<LpseToken> lpseTokenList) {
-		// if there is only one...
+		// if there is only one... no need to do anything different
 		if (lpseTokenList.size() == 1) {
 			OrFacetLpseToken facetLpseToken = (OrFacetLpseToken) lpseTokenList.get(0);
 
@@ -94,7 +94,7 @@ public class PanlOrFacetField extends PanlFacetField {
 
 		StringBuilder stringBuilder = new StringBuilder();
 		boolean isFirst = true;
-		// at this point, we are going through the or filters
+		// at this point, we are going through the OR filters
 		for (LpseToken lpseToken : lpseTokenList) {
 			OrFacetLpseToken orFacetLpseToken = (OrFacetLpseToken) lpseToken;
 			if (isFirst) {
@@ -199,6 +199,7 @@ public class PanlOrFacetField extends PanlFacetField {
 				return (true);
 			}
 		}
+
 		return (false);
 	}
 

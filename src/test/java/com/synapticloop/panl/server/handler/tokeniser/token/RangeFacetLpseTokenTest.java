@@ -29,7 +29,7 @@ public class RangeFacetLpseTokenTest {
 	@Test public void testPreMidSufRangeDecoding() {
 		testDefaults("/range/prefix-infix-suffix.properties", "/weighing+from+10+to+50+grams/");
 		testDefaults("/range/prefix-infix-suffix.properties", "/from+light+to+heavy+pencils/");
-		testDefaults("/range/prefix-infix-suffix.properties", "/10+grams+to+heavy+pencils/");
+		testDefaults("/range/prefix-infix-suffix.properties", "/weighing+from+10+to+heavy+pencils/");
 		testDefaults("/range/prefix-infix-suffix.properties", "/from+light+to+50+grams/");
 	}
 

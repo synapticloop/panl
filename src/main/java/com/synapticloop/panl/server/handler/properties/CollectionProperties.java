@@ -142,7 +142,8 @@ public class CollectionProperties {
 	private final Map<String, PanlField> SOLR_NAME_TO_FIELD_MAP = new HashMap<>();
 	private final Map<String, PanlSortField> LPSE_CODE_TO_SORT_FIELD_MAP = new HashMap<>();
 	private final Map<String, PanlSortField> SOLR_NAME_TO_SORT_FIELD_MAP = new HashMap<>();
-	private final Map<String, PanlDateRangeFacetField> LPSE_CODE_DATE_FACET_MAP = new HashMap<>();
+	private final Map<String, PanlDateRangeFacetField> LPSE_CODE_DATE_RANGE_FACET_MAP = new HashMap<>();
+	private final Map<String, PanlRangeFacetField> LPSE_CODE_RANGE_FACET_MAP = new HashMap<>();
 	private final Map<String, PanlBooleanFacetField> LPSE_CODE_BOOLEAN_FACET_MAP = new HashMap<>();
 
 	private final Map<String, Set<String>> LPSE_CODE_WHEN_MAP = new HashMap<>();
@@ -423,7 +424,7 @@ public class CollectionProperties {
 			PanlFacetField facetField;
 			if (TYPE_SOLR_DATE_POINT_FIELD.equals(solrFieldType)) {
 				facetField = new PanlDateRangeFacetField(lpseCode, panlFieldKey, properties, solrCollection, panlCollectionUri, lpseLength);
-				LPSE_CODE_DATE_FACET_MAP.put(lpseCode, (PanlDateRangeFacetField) facetField);
+				LPSE_CODE_DATE_RANGE_FACET_MAP.put(lpseCode, (PanlDateRangeFacetField) facetField);
 			} else if (TYPE_SOLR_BOOL_FIELD.equals(solrFieldType)) {
 				facetField = new PanlBooleanFacetField(lpseCode, panlFieldKey, properties, solrCollection, panlCollectionUri, lpseLength);
 				LPSE_CODE_BOOLEAN_FACET_MAP.put(lpseCode, (PanlBooleanFacetField) facetField);
@@ -432,6 +433,7 @@ public class CollectionProperties {
 				PANL_CODE_OR_FIELDS.add(lpseCode);
 			} else if (isRangeFacet) {
 				facetField = new PanlRangeFacetField(lpseCode, panlFieldKey, properties, solrCollection, panlCollectionUri, lpseLength);
+				LPSE_CODE_RANGE_FACET_MAP.put(lpseCode, (PanlRangeFacetField) facetField);
 				PANL_CODE_RANGE_FIELDS.add(lpseCode);
 			} else {
 				facetField = new PanlFacetField(lpseCode, panlFieldKey, properties, solrCollection, panlCollectionUri, lpseLength);
@@ -927,9 +929,16 @@ public class CollectionProperties {
 	}
 
 	public List<PanlDateRangeFacetField> getDateRangeFacetFields() {
-		return (List.of(LPSE_CODE_DATE_FACET_MAP.values().toArray(new PanlDateRangeFacetField[0])));
+		return (List.of(LPSE_CODE_DATE_RANGE_FACET_MAP.values().toArray(new PanlDateRangeFacetField[0])));
 	}
 
+	public boolean getIsSuppressedRangeFacet(String lpseCode) {
+		if(LPSE_CODE_RANGE_FACET_MAP.containsKey(lpseCode)) {
+			return(LPSE_CODE_RANGE_FACET_MAP.get(lpseCode).getRangeSuppress());
+		}
+		return(false);
+	}
+	
 	public Set<String> getLpseWhenCode(String lpseCode) {
 		return (LPSE_CODE_WHEN_MAP.get(lpseCode));
 	}
