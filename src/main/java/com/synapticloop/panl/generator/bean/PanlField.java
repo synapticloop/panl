@@ -37,6 +37,7 @@ public class PanlField {
 	private final String schemaXmlLine;
 	private final String solrFieldType;
 	private final boolean isFacet;
+	private final boolean isMultiValued;
 
 	/**
 	 * <p>Instantiate a field</p>
@@ -47,12 +48,13 @@ public class PanlField {
 	 * 		managed-schema.xml line
 	 * @param solrFieldType The field storage type for the Solr field
 	 */
-	public PanlField(String lpseCode, String solrFieldName, String solrFieldType, String schemaXmlLine, boolean isFacet) {
+	public PanlField(String lpseCode, String solrFieldName, String solrFieldType, String schemaXmlLine, boolean isFacet, boolean isMultiValued) {
 		this.lpseCode = lpseCode;
 		this.solrFieldName = solrFieldName;
 		this.solrFieldType = solrFieldType;
 		this.schemaXmlLine = schemaXmlLine;
 		this.isFacet = isFacet;
+		this.isMultiValued = isMultiValued;
 	}
 
 	private String getPrettyName(String name) {
@@ -113,6 +115,8 @@ public class PanlField {
 				String.format("panl.%s.%s=%s\n", (isFacet ? "facet" : "field"), lpseCode, solrFieldName) +
 				String.format("panl.name.%s=%s\n", lpseCode, getPrettyName(solrFieldName)) +
 				String.format("panl.type.%s=%s\n", lpseCode, solrFieldType) +
+				(isMultiValued ? "# This Solr field is configured as multiValued, and is added as a property for the single page search\n": "") +
+				(isMultiValued ? String.format("panl.multivalue.%s=true\n", lpseCode) : "") +
 				prefixSuffix +
 				booleanFieldText +
 				dateFieldText +

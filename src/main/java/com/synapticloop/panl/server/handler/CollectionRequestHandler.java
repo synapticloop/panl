@@ -27,6 +27,7 @@ package com.synapticloop.panl.server.handler;
 import com.synapticloop.panl.exception.PanlServerException;
 import com.synapticloop.panl.server.client.PanlClient;
 import com.synapticloop.panl.server.handler.fielderiser.field.facet.PanlFacetField;
+import com.synapticloop.panl.server.handler.fielderiser.field.facet.PanlRangeFacetField;
 import com.synapticloop.panl.server.handler.helper.CollectionHelper;
 import com.synapticloop.panl.server.handler.processor.*;
 import com.synapticloop.panl.server.handler.webapp.util.ResourceHelper;
@@ -41,6 +42,7 @@ import com.synapticloop.panl.server.handler.tokeniser.token.param.QueryLpseToken
 import org.apache.solr.client.solrj.SolrClient;
 import org.apache.solr.client.solrj.SolrQuery;
 import org.apache.solr.client.solrj.response.QueryResponse;
+import org.json.JSONArray;
 import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -76,6 +78,8 @@ public class CollectionRequestHandler {
 	public static final String JSON_KEY_QUERY_RESPOND_TO = "query_respond_to";
 	public static final String JSON_KEY_SORTING = "sorting";
 	public static final String JSON_KEY_TIMINGS = "timings";
+	public static final String JSON_KEY_DYNAMIC_MIN = "dynamic_min";
+	public static final String JSON_KEY_DYNAMIC_MAX = "dynamic_max";
 
 	public static String CODES = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz01234567890";
 	public static String CODES_AND_METADATA = CODES + "[].+-";
@@ -222,8 +226,16 @@ public class CollectionRequestHandler {
 
 
 
+			boolean hasStats = false;
 			for (BaseField lpseField : collectionProperties.getLpseFields()) {
 				lpseField.applyToQuery(solrQuery, panlTokenMap);
+				if(lpseField instanceof PanlRangeFacetField) {
+					solrQuery.add("stats.field", lpseField.getSolrFieldName());
+					if(!hasStats) {
+						solrQuery.add("stats", "true");
+						hasStats = true;
+					}
+				}
 			}
 
 
@@ -259,7 +271,6 @@ public class CollectionRequestHandler {
 					sendAnReceiveNanos));
 
 		} catch (Exception e) {
-			e.printStackTrace();
 			throw new PanlServerException("Could not query the Solr instance, message was: " + e.getMessage(), e);
 		}
 	}
@@ -327,6 +338,47 @@ public class CollectionRequestHandler {
 		}
 
 		panlObject.put(JSON_KEY_AVAILABLE, availableProcessor.processToObject(panlTokenMap, response));
+
+		// now we are going to add the dynamic range if they exist
+		JSONObject statsObject = solrJsonObject.optJSONObject("stats");
+		if(null != statsObject) {
+			JSONObject statsFieldObjects = statsObject.optJSONObject("stats_fields");
+			if(null != statsFieldObjects) {
+				Iterator<String> keys = statsFieldObjects.keys();
+				while(keys.hasNext()) {
+					String key = keys.next();
+					JSONObject valueObject = statsFieldObjects.getJSONObject(key);
+					// now that we have the value, go through the range facets and get the right one.
+					JSONArray jsonArray = panlObject.getJSONObject(JSON_KEY_AVAILABLE).getJSONArray(Processor.JSON_KEY_RANGE_FACETS);
+					for(Object object : jsonArray) {
+						JSONObject rangeObject = (JSONObject) object;
+						if(rangeObject.getString("facet_name").equals(key)) {
+							rangeObject.put(JSON_KEY_DYNAMIC_MIN, valueObject.optInt("min", -1));
+							rangeObject.put(JSON_KEY_DYNAMIC_MAX, valueObject.optInt("max", -1));
+						}
+					}
+				}
+			}
+		}
+
+		solrJsonObject.remove("stats");
+
+		// now we need to go through the range facets and remove any that are
+		// suppressed
+
+		JSONArray removedRanges = new JSONArray();
+		for (Object jsonObject : panlObject.getJSONObject(JSON_KEY_AVAILABLE).getJSONArray(Processor.JSON_KEY_FACETS)) {
+			JSONObject facetObject = (JSONObject) jsonObject;
+			String lpseCode = facetObject.getString(Processor.JSON_KEY_PANL_CODE);
+			if(!collectionProperties.getIsSuppressedRangeFacet(lpseCode)) {
+				removedRanges.put(facetObject);
+			}
+		}
+
+		panlObject.getJSONObject(JSON_KEY_AVAILABLE).put(Processor.JSON_KEY_FACETS, removedRanges);
+
+
+
 		panlObject.put(JSON_KEY_ACTIVE, activeProcessor.processToObject(panlTokenMap));
 		panlObject.put(JSON_KEY_PAGINATION, paginationProcessor.processToObject(panlTokenMap, response));
 		panlObject.put(JSON_KEY_SORTING, sortingProcessor.processToObject(panlTokenMap));

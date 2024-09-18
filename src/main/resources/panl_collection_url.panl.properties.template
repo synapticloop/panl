@@ -218,7 +218,9 @@ solr.default.query.operand=-
 #           The Default Maximum Number Of Facet Values To Return
 #           --- ------- ------- ------ -- ----- ------ -- ------
 # This is not a required property, the default set by Solr is 100, you may
-# change this to any positive integer value.
+# change this to any positive integer value.  This works on a per-facet basis
+# so the maximum number of facet values that are returned for each facet will
+# at most be the value set below.
 #
 #                                ~ ~ ~ * ~ ~ ~
 
@@ -344,6 +346,7 @@ solr.highlight=false
 #     panl.range.max.value.<lpse_code>=<max_value_replacement>
 #     panl.range.min.wildcard.<lpse_code>=<true_or_false>
 #     panl.range.max.wildcard.<lpse_code>=<true_or_false>
+#     panl.range.suppress.<lpse_code>=<true_or_false>
 #
 # Notes:
 #     panl.range.facet.<lpse_code>
@@ -371,6 +374,10 @@ solr.highlight=false
 #     panl.range.max.wildcard.<lpse_code>
 #         (Optional) If the maximum value acts as a wildcard (and therefore
 #         will also include values which are greater than this value)
+#     panl.range.suppress.<lpse_code>
+#         (Optional) By default, panl will return a range and the individual
+#         values for a facet. Setting this to true will only return the range
+#         values.
 #
 #                                ~ ~ ~ * ~ ~ ~
 #
