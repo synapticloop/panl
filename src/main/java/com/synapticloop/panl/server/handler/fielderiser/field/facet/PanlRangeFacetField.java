@@ -391,7 +391,7 @@ public class PanlRangeFacetField extends PanlFacetField {
 					// depends on whether there is an infix
 					// at this point we want to also do the min value replacement, if it
 					// exists
-					if (null != rangeMaxValueReplacement) {
+					if (null != rangeMinValueReplacement) {
 						additionObject.put(JSON_KEY_BEFORE_MIN_VALUE, lpseUri.toString() + URLEncoder.encode(rangeMinValueReplacement, StandardCharsets.UTF_8));
 					}
 
@@ -440,7 +440,10 @@ public class PanlRangeFacetField extends PanlFacetField {
 		}
 
 		additionObject.put(JSON_KEY_AFTER, lpseUri.toString() + lpseCodeUri.toString() + FORWARD_SLASH);
-		additionObject.put(JSON_KEY_AFTER_MAX_VALUE, lpseUriAfterMax.toString() + lpseCodeUri.toString() + FORWARD_SLASH);
+
+		if (null != rangeMaxValueReplacement) {
+			additionObject.put(JSON_KEY_AFTER_MAX_VALUE, lpseUriAfterMax.toString() + lpseCodeUri.toString() + FORWARD_SLASH);
+		}
 		return (additionObject);
 	}
 
