@@ -57,6 +57,7 @@ public class PanlRangeFacetField extends PanlFacetField {
 	public static final String PROPERTY_KEY_PANL_RANGE_MAX = "panl.range.max.";
 	public static final String PROPERTY_KEY_PANL_RANGE_MIN_WILDCARD = "panl.range.min.wildcard.";
 	public static final String PROPERTY_KEY_PANL_RANGE_MAX_WILDCARD = "panl.range.max.wildcard.";
+	public static final String PROPERTY_KEY_PANL_RANGE_SUPPRESS = "panl.range.suppress.";
 	public static final String PROPERTY_KEY_PANL_RANGE_PREFIX = "panl.range.prefix.";
 	public static final String PROPERTY_KEY_PANL_RANGE_SUFFIX = "panl.range.suffix.";
 	public static final String PROPERTY_KEY_PANL_RANGE_MIN_VALUE = "panl.range.min.value.";
@@ -89,6 +90,8 @@ public class PanlRangeFacetField extends PanlFacetField {
 
 	private final boolean hasMinRangeWildcard;
 	private final boolean hasMaxRangeWildcard;
+
+	private boolean rangeSuppress = false;
 
 
 	public PanlRangeFacetField(String lpseCode, String propertyKey, Properties properties, String solrCollection, String panlCollectionUri, int lpseLength) throws PanlServerException {
@@ -124,6 +127,7 @@ public class PanlRangeFacetField extends PanlFacetField {
 		this.rangeMaxValueReplacement = properties.getProperty(PROPERTY_KEY_PANL_RANGE_MAX_VALUE + lpseCode, null);
 		this.hasMinRangeWildcard = properties.getProperty(PROPERTY_KEY_PANL_RANGE_MIN_WILDCARD + lpseCode, "false").equals("true");
 		this.hasMaxRangeWildcard = properties.getProperty(PROPERTY_KEY_PANL_RANGE_MAX_WILDCARD + lpseCode, "false").equals("true");
+		this.rangeSuppress = properties.getProperty(PROPERTY_KEY_PANL_RANGE_SUPPRESS + lpseCode, "false").equals("true");
 	}
 
 	@Override
@@ -350,6 +354,7 @@ public class PanlRangeFacetField extends PanlFacetField {
 				rangeFacetObject.put(JSON_KEY_VALUE_TO, rangeFacetLpseToken.getToValue());
 			}
 		}
+
 		// addition URIs are a little bit different...
 		JSONObject additionURIObject = getRangeAdditionURIObject(collectionProperties, panlTokenMap);
 		rangeFacetObject.put(JSON_KEY_URIS, additionURIObject);
@@ -474,11 +479,20 @@ public class PanlRangeFacetField extends PanlFacetField {
 		String fromString = "";
 		String toString = "";
 
+		boolean hasFrom = false;
+		boolean hasTo = false;
+
+		// if we have a range infix - then there is either a min/max value
+		// replacement, or there is a range prefix/suffix
+
 		if (hasRangeInfix) {
 			// It is OK to decode the value as it is all in one
 			String decodedValue = URLDecoder.decode(value, StandardCharsets.UTF_8);
 			// then we need to split by the infix
 			String[] fromToSplit = decodedValue.split(rangeValueInfix);
+
+			// at this point, with a range infix, determine whether we have a min
+			// /max value replacement
 			if (fromToSplit.length != 2) {
 				return (null);
 			} else {
@@ -496,10 +510,11 @@ public class PanlRangeFacetField extends PanlFacetField {
 		}
 
 		// at this point we have two values, the from and to - although they may
-		// have a min or max value replacement
+		// have a min or max value replacement, and we need to remove the ranges
 
 
 		if (hasRangeInfix) {
+			// test the range min value replacement
 			if (null != rangeMinValueReplacement) {
 				if (fromString.equals(rangeMinValueReplacement)) {
 					fromString = getMinRange();
@@ -781,5 +796,9 @@ public class PanlRangeFacetField extends PanlFacetField {
 				removeObject.put(JSON_KEY_VALUE_TO, toValue);
 			}
 		}
+	}
+
+	public boolean getRangeSuppress() {
+		return rangeSuppress;
 	}
 }

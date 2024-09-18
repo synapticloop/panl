@@ -22,40 +22,32 @@
  * IN THE SOFTWARE.
  */
 
-package com.synapticloop.panl.generator.bean;
+package com.synapticloop.panl.editor;
 
-public class SolrField {
-	private final String name;
-	private final boolean isFacet;
-	private boolean isSupported = false;
-	private boolean isMultiValued = false;
+import com.formdev.flatlaf.FlatLightLaf;
 
-	public SolrField(String name, boolean isFacet) {
-		this.name = name;
-		this.isFacet = isFacet;
-	}
+import javax.swing.*;
+import java.awt.*;
 
-	public String getName() {
-		return name;
-	}
+public class PanlEditor {
+	public void show() {
+		FlatLightLaf.setup();
+		try {
+			UIManager.setLookAndFeel( new FlatLightLaf() );
+		} catch( Exception ex ) {
+			System.err.println( "Failed to initialize Flat Look and Feel" );
+		}
 
-	public boolean getIsFacet() {
-		return isFacet;
-	}
+		//1. Create the frame.
+		JFrame frame = new JFrame("Panl Configuration Editor");
+		JLabel emptyLabel = new JLabel("");
+		emptyLabel.setPreferredSize(new Dimension(400, 600));
+		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
-	public boolean getIsSupported() {
-		return isSupported;
-	}
+		frame.getContentPane().add(emptyLabel, BorderLayout.CENTER);
 
-	public void setIsSupported(boolean supported) {
-		isSupported = supported;
-	}
+		frame.pack();
 
-	public boolean getIsMultiValued() {
-		return isMultiValued;
-	}
-
-	public void setIsMultiValued(boolean multiValued) {
-		isMultiValued = multiValued;
+		frame.setVisible(true);
 	}
 }

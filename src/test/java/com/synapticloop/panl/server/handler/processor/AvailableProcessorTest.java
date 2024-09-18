@@ -46,9 +46,9 @@ public class AvailableProcessorTest {
 
 		}
 
-		JSONArray rageFacets = jsonObject.getJSONArray(Processor.JSON_KEY_RANGE_FACETS);
-		for(int i = 0; i < rageFacets.length(); i++) {
-			JSONObject facetObject = rageFacets.getJSONObject(i);
+		JSONArray rangeFacets = jsonObject.getJSONArray(Processor.JSON_KEY_RANGE_FACETS);
+		for(int i = 0; i < rangeFacets.length(); i++) {
+			JSONObject facetObject = rangeFacets.getJSONObject(i);
 			JSONObject urisObject = facetObject.getJSONObject(Processor.JSON_KEY_URIS);
 
 			assertEquals("/", urisObject.getString(Processor.JSON_KEY_BEFORE));

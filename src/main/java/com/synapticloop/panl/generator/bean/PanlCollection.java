@@ -139,7 +139,8 @@ public class PanlCollection {
 						fieldName,
 						SOLR_FIELD_TYPE_NAME_TO_SOLR_CLASS.get(SOLR_FIELD_NAME_TO_SOLR_FIELD_TYPE.get(fieldName)),
 						fieldXmlMap.get(fieldName),
-						solrField.getIsFacet()));
+						solrField.getIsFacet(),
+						solrField.getIsMultiValued()));
 				LOGGER.info("Assigned field '{}' to panl code '{}'", fieldName, possibleCode);
 				CODES_AVAILABLE.remove(possibleCode);
 			} else if (CODES_AVAILABLE.contains(possibleCode.toUpperCase())) {
@@ -149,7 +150,8 @@ public class PanlCollection {
 						fieldName,
 						SOLR_FIELD_TYPE_NAME_TO_SOLR_CLASS.get(SOLR_FIELD_NAME_TO_SOLR_FIELD_TYPE.get(fieldName)),
 						fieldXmlMap.get(fieldName),
-						solrField.getIsFacet()));
+						solrField.getIsFacet(),
+						solrField.getIsMultiValued()));
 				LOGGER.info("Assigned field '{}' to panl code '{}'", fieldName, nextPossibleCode);
 				CODES_AVAILABLE.remove(nextPossibleCode);
 			} else {
@@ -175,7 +177,8 @@ public class PanlCollection {
 							fieldName,
 							SOLR_FIELD_TYPE_NAME_TO_SOLR_CLASS.get(SOLR_FIELD_NAME_TO_SOLR_FIELD_TYPE.get(fieldName)),
 							fieldXmlMap.get(fieldName),
-							solrField.getIsFacet()));
+							solrField.getIsFacet(),
+							solrField.getIsMultiValued()));
 
 					LOGGER.info("Assigned field '{}' to RANDOM panl code '{}'", fieldName, assignedCode);
 					break;
@@ -290,6 +293,13 @@ public class PanlCollection {
 							if (null != indexedAttribute) {
 								indexed = indexedAttribute.getValue();
 							}
+
+							Attribute multiValuedAttribute = startElement.getAttributeByName(new QName("multiValued"));
+							boolean isMultiValued = false;
+							if (null != multiValuedAttribute) {
+								isMultiValued = (multiValuedAttribute.getValue().compareToIgnoreCase("true") == 0);
+							}
+
 							String stored = startElement.getAttributeByName(new QName("stored")).getValue();
 							String type = startElement.getAttributeByName(new QName("type")).getValue();
 
@@ -313,14 +323,18 @@ public class PanlCollection {
 							if (indexed.equals("true")) {
 								LOGGER.info("Adding facet field names '{}' as it is indexed.", name);
 								isIndexedOrStored = true;
-								this.solrFields.add(new SolrField(name, true));
+								SolrField solrField = new SolrField(name, true);
+								solrField.setIsMultiValued(isMultiValued);
+								this.solrFields.add(solrField);
 								this.resultFieldNames.add(name);
 							} else {
 								if (stored.equals("true")) {
 									// then this can be returned as a field in the results
 									LOGGER.info("Adding field names '{}' as it is stored, but not indexed.", name);
 									isIndexedOrStored = true;
-									this.solrFields.add(new SolrField(name, false));
+									SolrField solrField = new SolrField(name, false);
+									solrField.setIsMultiValued(isMultiValued);
+									this.solrFields.add(solrField);
 									this.resultFieldNames.add(name);
 								}
 							}

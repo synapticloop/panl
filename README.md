@@ -1,6 +1,6 @@
 # Synapticloop PANL
 
-<img src="src/docs/synapticloop-logo.png">
+<img src="src/docs/synapticloop-logo.png" alt="The Synapticloop logo" />
 
 ---
 
@@ -14,6 +14,26 @@
 **_Get up and running with a fully featured, SEO friendly, keyword searchable, faceted search engine with an in-built, example search page to test it all out._**
 
 ---
+
+```
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
+#                                              __                             #
+#                          .-----.---.-.-----.|  |                            #
+#                          |  _  |  _  |     ||  |                            #
+#                          |   __|___._|__|__||__|                            #
+#                          |__|     ... .-..                                  #
+#                                                                             #
+#                                ~ ~ ~ * ~ ~ ~                                #
+#                                                                             #
+#                                                                             #
+#                                  SOLR/PANL                                  #
+#                                                                             #
+#                                 ----------                                  #
+#                                                                             #
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
+```
+
+`Build and test 'main' branch:` [![CircleCI](https://dl.circleci.com/status-badge/img/circleci/3Y1eqqe4mcvtSZuzJnQ3tJ/DyFKUm7c7AoLa1wHmRjAnf/tree/main.svg?style=svg)](https://dl.circleci.com/status-badge/redirect/circleci/3Y1eqqe4mcvtSZuzJnQ3tJ/DyFKUm7c7AoLa1wHmRjAnf/tree/main)
 
 ## Download the Panl Server Release:
 
@@ -63,7 +83,7 @@ With the in-built tool, point it at your existing Solr `managed-schema.xml` file
 
 ## The Panl Results Viewer Web App
 
-<img src="src/docs/panl-features.png">
+<img src="src/docs/panl-features.png" alt="The Panl Features" />
 
 _**Image**: The features and functionality of the Panl server_
 
@@ -107,7 +127,7 @@ _The image is a screenshot of the in-built Panl Results Viewer Web App available
 
 ## The Panl Results Explainer Web App
 
-<img src="src/docs/panl-results-explainer.png">
+<img src="src/docs/panl-results-explainer.png" alt="The In-Built Panl Results Explainer" />
 
 _**Image**: The features and functionality of the Panl results explainer_
 
@@ -131,6 +151,20 @@ _The image is a screenshot of the in-built Panl Results Explainer Web App availa
    1. The Solr field type, the Panl field name, and
    1. Additional configuration items which may include Prefixes, Suffixes, Ranges, Facet type, or Minimum/maximum values
    1. **Any configuration warning messages** that were found whilst parsing the properties files.
+
+## The Panl Single Page Search Web App
+
+<img src="src/docs/panl-single-page-search.png" alt="The Panl Example Single Search Page interface" />
+
+_**Image**: The In-Build Panl Single Page Search Web Application_
+
+Panl also ships with a URL that will provide a separate JSON response, allowing you to build a single page search interface, giving your users all the options at a glance.
+
+1. A list of available Collections URI Paths for each available single page search interface.
+1. The generated Panl LPSE path from the selections. 
+1. All the facets and the facet values that can be selected.
+1. The generated Panl LPSE path from the selections.
+1. A search button that will take you the in-build Panl Results Viewer web app so that you can view the results instantly.
 
 ## Additional Panl Niceties In More Detail
 
@@ -162,7 +196,7 @@ At the end of this chapter, you will have a web page up and running with the mec
 http://localhost:8181/panl-results-viewer/
 
 
-<img src="src/docs/panl-results-viewer.png">
+<img src="src/docs/panl-results-viewer.png" alt="The Panl In-Built Simple Results Viewer" />
 
 _**Image**: The In-Build Panl Results Viewer Web Application_
 
@@ -347,13 +381,21 @@ with the release files named `solr-panl-8-x.x.x`
  - Added in `empty` FieldSet to return no documents
  - Added in Single Search Page functionality
  - Update Mechanical Pencils 
-   - Added in hierarchy for the Pencil Model
+   - Added in hierarchy for the Pencil Model example
+ - Dynamic range functionality - pulling actual values for the facet
+ - Suppress facet values for ranges, so that the user may only select from the range UI, and the individual range facet values do not appear 
+
+
  - Documentation update
+   - New documentation for additional features and functionality
    - Fixed general spelling and grammar errors
-   - Added in documentation for new features and functionality
    - Updated mechanical pencils introductory dataset explanations
    - Added in documentation for Fields
 
 ## 1.0.0 - the initial release (codename `bright-wildflower`)
+
+[View the code for this release](https://github.com/synapticloop/panl/tree/1.0.0)
+
+[Download the release packages](https://github.com/synapticloop/panl/releases/tag/1.0.0)
 
 - Initial release with base functionality
