@@ -425,16 +425,17 @@ public class PanlRangeFacetField extends PanlFacetField {
 				lpseUri.setLength(0);
 				lpseCodeUri.append(baseField.getLpseCode());
 
-					if (hasRangeInfix) {
-						lpseUri.append(URLEncoder.encode(getRangeSuffix(), StandardCharsets.UTF_8));
-					} else {
-						lpseUri.append(URLEncoder.encode(getValueSuffix(), StandardCharsets.UTF_8));
-					}
+				if (hasRangeInfix) {
+					lpseUri.append(URLEncoder.encode(getRangeSuffix(), StandardCharsets.UTF_8));
+				} else {
+					lpseUri.append(URLEncoder.encode(getValueSuffix(), StandardCharsets.UTF_8));
+				}
 
-					if (null != rangeMaxValueReplacement) {
-						lpseUriAfterMax.append(URLEncoder.encode(rangeMaxValueReplacement, StandardCharsets.UTF_8))
-								.append(FORWARD_SLASH);
-					}
+				if (null != rangeMaxValueReplacement) {
+					lpseUriAfterMax.append(URLEncoder.encode(rangeMaxValueReplacement, StandardCharsets.UTF_8))
+							.append(FORWARD_SLASH);
+				}
+
 				lpseUri.append(FORWARD_SLASH);
 			}
 		}
