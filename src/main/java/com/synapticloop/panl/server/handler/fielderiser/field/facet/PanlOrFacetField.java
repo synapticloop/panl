@@ -199,6 +199,7 @@ public class PanlOrFacetField extends PanlFacetField {
 				return (true);
 			}
 		}
+
 		return (false);
 	}
 

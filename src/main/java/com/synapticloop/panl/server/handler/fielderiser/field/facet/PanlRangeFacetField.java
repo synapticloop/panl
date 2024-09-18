@@ -479,11 +479,20 @@ public class PanlRangeFacetField extends PanlFacetField {
 		String fromString = "";
 		String toString = "";
 
+		boolean hasFrom = false;
+		boolean hasTo = false;
+
+		// if we have a range infix - then there is either a min/max value
+		// replacement, or there is a range prefix/suffix
+
 		if (hasRangeInfix) {
 			// It is OK to decode the value as it is all in one
 			String decodedValue = URLDecoder.decode(value, StandardCharsets.UTF_8);
 			// then we need to split by the infix
 			String[] fromToSplit = decodedValue.split(rangeValueInfix);
+
+			// at this point, with a range infix, determine whether we have a min
+			// /max value replacement
 			if (fromToSplit.length != 2) {
 				return (null);
 			} else {
@@ -501,10 +510,11 @@ public class PanlRangeFacetField extends PanlFacetField {
 		}
 
 		// at this point we have two values, the from and to - although they may
-		// have a min or max value replacement
+		// have a min or max value replacement, and we need to remove the ranges
 
 
 		if (hasRangeInfix) {
+			// test the range min value replacement
 			if (null != rangeMinValueReplacement) {
 				if (fromString.equals(rangeMinValueReplacement)) {
 					fromString = getMinRange();
