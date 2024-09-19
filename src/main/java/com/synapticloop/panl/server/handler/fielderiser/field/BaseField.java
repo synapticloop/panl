@@ -758,7 +758,7 @@ public abstract class BaseField {
 			if (baseField.getLpseCode().equals(additionLpseCode)) {
 
 				additionObject.put(JSON_KEY_BEFORE, lpseUri.toString() + baseField.getResetUriPath(panlTokenMap, collectionProperties));
-//				additionObject.put(JSON_KEY_BEFORE, baseField.getResetUriPath(panlTokenMap, collectionProperties));
+
 				lpseUri.setLength(0);
 				lpseCode.append(baseField.getResetLpseCode(panlTokenMap, collectionProperties));
 				lpseCode.append(baseField.getLpseCode());
