@@ -391,7 +391,7 @@ public class PanlRangeFacetField extends PanlFacetField {
 					// depends on whether there is an infix
 					// at this point we want to also do the min value replacement, if it
 					// exists
-					if (null != rangeMaxValueReplacement) {
+					if (null != rangeMinValueReplacement) {
 						additionObject.put(JSON_KEY_BEFORE_MIN_VALUE, lpseUri.toString() + URLEncoder.encode(rangeMinValueReplacement, StandardCharsets.UTF_8));
 					}
 
@@ -425,22 +425,26 @@ public class PanlRangeFacetField extends PanlFacetField {
 				lpseUri.setLength(0);
 				lpseCodeUri.append(baseField.getLpseCode());
 
-					if (hasRangeInfix) {
-						lpseUri.append(URLEncoder.encode(getRangeSuffix(), StandardCharsets.UTF_8));
-					} else {
-						lpseUri.append(URLEncoder.encode(getValueSuffix(), StandardCharsets.UTF_8));
-					}
+				if (hasRangeInfix) {
+					lpseUri.append(URLEncoder.encode(getRangeSuffix(), StandardCharsets.UTF_8));
+				} else {
+					lpseUri.append(URLEncoder.encode(getValueSuffix(), StandardCharsets.UTF_8));
+				}
 
-					if (null != rangeMaxValueReplacement) {
-						lpseUriAfterMax.append(URLEncoder.encode(rangeMaxValueReplacement, StandardCharsets.UTF_8))
-								.append(FORWARD_SLASH);
-					}
+				if (null != rangeMaxValueReplacement) {
+					lpseUriAfterMax.append(URLEncoder.encode(rangeMaxValueReplacement, StandardCharsets.UTF_8))
+							.append(FORWARD_SLASH);
+				}
+
 				lpseUri.append(FORWARD_SLASH);
 			}
 		}
 
 		additionObject.put(JSON_KEY_AFTER, lpseUri.toString() + lpseCodeUri.toString() + FORWARD_SLASH);
-		additionObject.put(JSON_KEY_AFTER_MAX_VALUE, lpseUriAfterMax.toString() + lpseCodeUri.toString() + FORWARD_SLASH);
+
+		if (null != rangeMaxValueReplacement) {
+			additionObject.put(JSON_KEY_AFTER_MAX_VALUE, lpseUriAfterMax.toString() + lpseCodeUri.toString() + FORWARD_SLASH);
+		}
 		return (additionObject);
 	}
 

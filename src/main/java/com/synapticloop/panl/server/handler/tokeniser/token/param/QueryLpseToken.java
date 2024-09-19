@@ -29,6 +29,7 @@ import com.synapticloop.panl.server.handler.tokeniser.token.LpseToken;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.utils.URLEncodedUtils;
 
+import java.net.URLDecoder;
 import java.nio.charset.StandardCharsets;
 import java.util.*;
 
@@ -50,13 +51,16 @@ public class QueryLpseToken extends LpseToken {
 		super(lpseCode, collectionProperties);
 
 		if (null != valueTokeniser && valueTokeniser.hasMoreTokens()) {
-			this.value = valueTokeniser.nextToken();
+			this.value = URLDecoder.decode(
+					valueTokeniser.nextToken(),
+					StandardCharsets.UTF_8);
 		}
 
 		for (NameValuePair nameValuePair : URLEncodedUtils.parse(queryFromUri, StandardCharsets.UTF_8)) {
 			if (nameValuePair.getName().equals(collectionProperties.getFormQueryRespondTo())) {
-				this.value = nameValuePair.getValue();
-
+				this.value = URLDecoder.decode(
+						nameValuePair.getValue(),
+						StandardCharsets.UTF_8);
 				isOverride = true;
 				break;
 			}
