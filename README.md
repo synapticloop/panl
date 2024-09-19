@@ -379,7 +379,15 @@ with the release files named `solr-panl-9-x.x.x`
 
 # Version History
 
-## 1.1.0 - the better update (codename `broad-firefly`) **UNDER DEVELOPEMENT**
+## 1.2.0 - more (codename `needy-phanton`) **UNDER DEVELOPEMENT**
+
+## 1.1.0 - the better update (codename `broad-firefly`) 
+
+[View the code for this release](https://github.com/synapticloop/panl/tree/1.1.0)
+
+[Download the release packages](https://github.com/synapticloop/panl/releases/tag/1.1.0)
+
+[See all releases](https://github.com/synapticloop/panl/releases/)
 
  - Added in `empty` FieldSet to return no documents
  - Added in Single Search Page functionality
@@ -394,6 +402,7 @@ with the release files named `solr-panl-9-x.x.x`
    - Fixed general spelling and grammar errors
    - Updated mechanical pencils introductory dataset explanations
    - Added in documentation for Fields
+   - Panl cookbook
 
 ## 1.0.0 - the initial release (codename `bright-wildflower`)
 
