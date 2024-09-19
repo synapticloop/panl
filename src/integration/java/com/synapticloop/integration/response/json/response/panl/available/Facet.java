@@ -33,6 +33,8 @@ public class Facet {
 	public boolean is_boolean_facet;
 	public boolean is_range_facet;
 	public boolean is_date_facet;
+	public boolean is_multivalue;
+
 	/**
 	 * <p>Return the uris.</p>
 	 *

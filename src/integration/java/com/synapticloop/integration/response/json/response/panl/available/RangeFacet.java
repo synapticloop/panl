@@ -37,4 +37,6 @@ public class RangeFacet {
 	public String range_max_value; //	"heavy+pencils"
 	public int value; //	"heavy+pencils"
 	public int value_to; //	"heavy+pencils"
+	public String dynamic_min;
+	public String dynamic_max;
 }

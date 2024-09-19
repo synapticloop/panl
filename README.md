@@ -373,7 +373,7 @@ with the release files named `solr-panl-9-x.x.x`
 
 # Version History
 
-## 1.2.0 - more (codename `needy-phanton`) **UNDER DEVELOPEMENT**
+## 1.2.0 - more like this (codename `needy-phanton`) **UNDER DEVELOPEMENT**
 
 ## 1.1.0 - the better update (codename `broad-firefly`) 
 
