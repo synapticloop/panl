@@ -4,13 +4,13 @@
 
 ---
 
-**WARNING:** This is the Solr Panl Release for integrating Solr version 7.x.x and Panl
+> **WARNING:** This is the Solr Panl Release for integrating Solr version 7.x.x and Panl
 
 ---
 
 ---
 
-**_Get up and running with a fully featured, SEO friendly, keyword searchable, faceted search engine with an in-built, example search page to test it all out._**
+> **_Get up and running with a fully featured, SEO friendly, keyword searchable, faceted search engine with an in-built, example search page to test it all out._**
 
 ---
 
@@ -32,7 +32,11 @@
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 ```
 
-`Build and test 'solr-panl-7' branch:` [![CircleCI](https://dl.circleci.com/status-badge/img/circleci/3Y1eqqe4mcvtSZuzJnQ3tJ/DyFKUm7c7AoLa1wHmRjAnf/tree/solr-panl-7.svg?style=svg)](https://dl.circleci.com/status-badge/redirect/circleci/3Y1eqqe4mcvtSZuzJnQ3tJ/DyFKUm7c7AoLa1wHmRjAnf/tree/solr-panl-7)
+`Build and test 'main' branch:` [![CircleCI](https://dl.circleci.com/status-badge/img/circleci/3Y1eqqe4mcvtSZuzJnQ3tJ/DyFKUm7c7AoLa1wHmRjAnf/tree/main.svg?style=svg)](https://dl.circleci.com/status-badge/redirect/circleci/3Y1eqqe4mcvtSZuzJnQ3tJ/DyFKUm7c7AoLa1wHmRjAnf/tree/main)
+
+`Latest release tag:` ![GitHub Tag](https://img.shields.io/github/v/tag/synapticloop/panl)
+
+`Latest release:` ![GitHub Release](https://img.shields.io/github/v/release/synapticloop/panl)
 
 ## Download the Panl Server Release:
 
@@ -43,7 +47,7 @@
 - Online book (HTML): [https://synapticloop.github.io/panl/](https://synapticloop.github.io/panl/)
 - Offline book (PDF): [Getting Started With Synapticloop Panl.pdf](https://github.com/synapticloop/panl/blob/main/src/dist/book/Getting%20Started%20With%20Synapticloop%20Panl.pdf)
 
-Both of the book links above refer to Solr Panl integration 9 with help for earlier versions of Solr.
+Both of the book links above refer to Solr Panl integration 9 with instructions for setting up and running earlier versions of Solr.
 
 ## Why?
 
@@ -371,7 +375,7 @@ I.e.
  - `./build/distributions` (*NIX), or
  - `.\build\distributions` (Windows)
 
-with the release files named `solr-panl-7-x.x.x`
+with the release files named `solr-panl-9-x.x.x`
 
 # Version History
 
