@@ -24,6 +24,7 @@
 
 package com.synapticloop.panl.editor;
 
+import com.formdev.flatlaf.FlatLaf;
 import com.formdev.flatlaf.FlatLightLaf;
 
 import javax.swing.*;
@@ -40,14 +41,44 @@ public class PanlEditor {
 
 		//1. Create the frame.
 		JFrame frame = new JFrame("Panl Configuration Editor");
-		JLabel emptyLabel = new JLabel("");
-		emptyLabel.setPreferredSize(new Dimension(400, 600));
+		frame.setPreferredSize(new Dimension(400, 600));
+		frame.setMinimumSize(new Dimension(400, 600));
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
-		frame.getContentPane().add(emptyLabel, BorderLayout.CENTER);
+//		JButton button = new JButton("Select panl.properties file");
+//		button.setPreferredSize(new Dimension(200, 40));
+//
+//		frame.setContentPane(button);
+		frame.getContentPane().add(generateSelectFile(), BorderLayout.CENTER);
+		JLabel jLabel = new JLabel("No panl.properties file found");
+		jLabel.setHorizontalAlignment(SwingConstants.CENTER);
+		jLabel.putClientProperty( "FlatLaf.styleClass", "h1" );
+
+		frame.getContentPane().add(jLabel, BorderLayout.NORTH);
 
 		frame.pack();
 
 		frame.setVisible(true);
+	}
+
+	private JPanel generateSelectFile() {
+		JPanel panel = new JPanel(new GridBagLayout());
+		GridBagConstraints gbc = new GridBagConstraints();
+		gbc.gridwidth = 3;
+		gbc.gridheight = 10;
+
+		gbc.gridx = 0;
+		gbc.gridy = 1;
+
+
+
+		JButton button = new JButton("Select panl.properties file");
+		button.setMaximumSize(new Dimension(200, 40));
+		button.setPreferredSize(new Dimension(200, 40));
+		button.setMinimumSize(new Dimension(200, 40));
+		gbc.gridx = 1;
+		gbc.gridy = 5;
+		panel.add(button, gbc);
+		return(panel);
 	}
 }
