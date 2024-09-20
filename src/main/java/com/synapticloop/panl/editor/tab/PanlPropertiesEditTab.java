@@ -45,7 +45,9 @@ public class PanlPropertiesEditTab {
 			"Include comments?",
 			"Select this to include comments in the generated panl.properties file");
 
-		addLabel(jPanel, gbc, "Server properties");
+		addLabel(jPanel, gbc, "Connection properties");
+
+		addLabel(jPanel, gbc, "Server options");
 
 		addBooleanProperty(
 			jPanel,

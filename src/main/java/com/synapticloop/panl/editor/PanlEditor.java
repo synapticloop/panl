@@ -35,6 +35,18 @@ import java.awt.*;
 import java.io.File;
 
 public class PanlEditor {
+	private static final ImageIcon ICON_APP =
+		new ImageIcon(PanlEditor.class.getResource("/webapp/static/favicon.png"));
+
+
+
+	private static final ImageIcon ICON_MOON =
+		new ImageIcon(PanlEditor.class.getResource("/images/moon.png"));
+	private static final ImageIcon ICON_SUN =
+		new ImageIcon(PanlEditor.class.getResource("/images/sun.png"));
+
+
+
 	private static final ImageIcon ICON_FILE =
 		new ImageIcon(PanlEditor.class.getResource("/images/file.png"));
 	private static final ImageIcon ICON_FILE_WHITE =
@@ -55,11 +67,6 @@ public class PanlEditor {
 	private static final ImageIcon ICON_RECENT_WHITE =
 		new ImageIcon(PanlEditor.class.getResource("/images/clock-white.png"));
 
-	private static final ImageIcon ICON_MOON =
-		new ImageIcon(PanlEditor.class.getResource("/images/moon.png"));
-	private static final ImageIcon ICON_SUN =
-		new ImageIcon(PanlEditor.class.getResource("/images/sun.png"));
-
 	private boolean isDarkUI = false;
 
 	public void show() {
@@ -72,6 +79,8 @@ public class PanlEditor {
 		}
 
 		JFrame mainWindowFrame = new JFrame("Panl Configuration Editor");
+		mainWindowFrame.setIconImage(ICON_APP.getImage());
+
 		mainWindowFrame.setPreferredSize(new Dimension(800, 600));
 		mainWindowFrame.setMinimumSize(new Dimension(800, 600));
 		mainWindowFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -79,7 +88,6 @@ public class PanlEditor {
 		mainWindowFrame.setJMenuBar(createJMenuBar(mainWindowFrame));
 
 		JTabbedPane jTabbedPane = new JTabbedPane();
-//		jTabbedPane.add("panl", PanlPropertiesNewTab.createSelectPanlProperties(mainWindowFrame));
 		jTabbedPane.add("panl", PanlPropertiesEditTab.getJPanel(null));
 		Component newCollection = NewCollectionTab.createNewCollection();
 		jTabbedPane.add("[ + ]", newCollection);
