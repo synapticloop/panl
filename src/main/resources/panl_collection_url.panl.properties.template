@@ -1,9 +1,9 @@
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
-#                                              __                             #
-#                          .-----.---.-.-----.|  |                            #
-#                          |  _  |  _  |     ||  |                            #
-#                          |   __|___._|__|__||__|                            #
-#                          |__|     ... .-..                                  #
+#                                               __                            #
+#                           .-----.---.-.-----.|  |                           #
+#                           |  _  |  _  |     ||  |                           #
+#                           |   __|___._|__|__||__|                           #
+#                           |__|     ... .-..                                 #
 #                                                                             #
 #                                ~ ~ ~ * ~ ~ ~                                #
 #                                                                             #
@@ -88,8 +88,8 @@ $        properties file)
 $
 $                                ~ ~ ~ * ~ ~ ~
 
-#                                Panl LPSE Length
-#                                ---- ---- ------
+#                               Panl LPSE Length
+#                               ---- ---- ------
 # The length (or number of characters) for each of the LPSE codes for the
 # facet and normal field.  This length does not apply to the Panl metadata
 # LPSE codes which are __ALWAYS__ of length 1 (one)
@@ -98,8 +98,8 @@ $                                ~ ~ ~ * ~ ~ ~
 
 $panl.lpse.length
 
-#                                Panl Metadata
-#                                ---- --------
+#                                 Panl Metadata
+#                                 ---- --------
 # The following are considered metadata that changes what results are returned
 # and in what format.  These are not considered facets, however they
 # __DO_NOT__ conform to the panl.lpse.length property above and are __ALWAYS__
@@ -278,6 +278,7 @@ solr.highlight=false
 #              header
 #
 #                                ~ ~ ~ * ~ ~ ~
+#
 # IMPORTANT: There are a plethora of properties that may be set, depending on
 #            the defined Solr field type and the behaviour of the field that
 #            You would like the Panl server to exhibit.  There are different
@@ -447,8 +448,8 @@ $panl.lpse.order
 
 panl.lpse.ignore=
 
-#                       Panl Results Field Configuration
-#                       ---- ------- ----- -------------
+#                        Panl Results Field Configuration
+#                        ---- ------- ----- -------------
 # Below are the fields that are configured to be returned for the query, these
 # fields are added to the query and must match the solr fields.
 #
@@ -478,8 +479,8 @@ panl.lpse.ignore=
 $panl.results.fields.default
 $panl.results.fields.firstfive
 
-#                      Panl Sort Field Configuration
-#                      ---- ---- ----- -------------
+#                         Panl Sort Field Configuration
+#                         ---- ---- ----- -------------
 # Below are the fields that are configured to be able to be sorted on, these
 # fields must either be defined as a panl.facet or a panl.field and __MUST__ be
 # the Solr field name.

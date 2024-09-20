@@ -24,61 +24,138 @@
 
 package com.synapticloop.panl.editor;
 
-import com.formdev.flatlaf.FlatLaf;
+import com.formdev.flatlaf.FlatDarkLaf;
 import com.formdev.flatlaf.FlatLightLaf;
+import com.synapticloop.panl.editor.tab.NewCollectionTab;
+import com.synapticloop.panl.editor.tab.PanlPropertiesEditTab;
+import com.synapticloop.panl.editor.tab.PanlPropertiesNewTab;
 
 import javax.swing.*;
 import java.awt.*;
+import java.io.File;
 
 public class PanlEditor {
+	private static final ImageIcon ICON_FILE =
+		new ImageIcon(PanlEditor.class.getResource("/images/file.png"));
+	private static final ImageIcon ICON_FILE_WHITE =
+		new ImageIcon(PanlEditor.class.getResource("/images/file-white.png"));
+
+	private static final ImageIcon ICON_SAVE =
+		new ImageIcon(PanlEditor.class.getResource("/images/save.png"));
+	private static final ImageIcon ICON_SAVE_WHITE =
+		new ImageIcon(PanlEditor.class.getResource("/images/save-white.png"));
+
+	private static final ImageIcon ICON_QUIT =
+		new ImageIcon(PanlEditor.class.getResource("/images/quit.png"));
+	private static final ImageIcon ICON_QUIT_WHITE =
+		new ImageIcon(PanlEditor.class.getResource("/images/quit-white.png"));
+
+	private static final ImageIcon ICON_RECENT =
+		new ImageIcon(PanlEditor.class.getResource("/images/clock.png"));
+	private static final ImageIcon ICON_RECENT_WHITE =
+		new ImageIcon(PanlEditor.class.getResource("/images/clock-white.png"));
+
+	private static final ImageIcon ICON_MOON =
+		new ImageIcon(PanlEditor.class.getResource("/images/moon.png"));
+	private static final ImageIcon ICON_SUN =
+		new ImageIcon(PanlEditor.class.getResource("/images/sun.png"));
+
+	private boolean isDarkUI = false;
+
 	public void show() {
 		FlatLightLaf.setup();
 		try {
-			UIManager.setLookAndFeel( new FlatLightLaf() );
-		} catch( Exception ex ) {
-			System.err.println( "Failed to initialize Flat Look and Feel" );
+			UIManager.setLookAndFeel(new FlatLightLaf());
+			UIManager.put("Button.arc", 10);
+		} catch (Exception ex) {
+			System.err.println("Failed to initialize Flat Look and Feel");
 		}
 
-		//1. Create the frame.
-		JFrame frame = new JFrame("Panl Configuration Editor");
-		frame.setPreferredSize(new Dimension(400, 600));
-		frame.setMinimumSize(new Dimension(400, 600));
-		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		JFrame mainWindowFrame = new JFrame("Panl Configuration Editor");
+		mainWindowFrame.setPreferredSize(new Dimension(800, 600));
+		mainWindowFrame.setMinimumSize(new Dimension(800, 600));
+		mainWindowFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
-//		JButton button = new JButton("Select panl.properties file");
-//		button.setPreferredSize(new Dimension(200, 40));
-//
-//		frame.setContentPane(button);
-		frame.getContentPane().add(generateSelectFile(), BorderLayout.CENTER);
-		JLabel jLabel = new JLabel("No panl.properties file found");
-		jLabel.setHorizontalAlignment(SwingConstants.CENTER);
-		jLabel.putClientProperty( "FlatLaf.styleClass", "h1" );
+		mainWindowFrame.setJMenuBar(createJMenuBar(mainWindowFrame));
 
-		frame.getContentPane().add(jLabel, BorderLayout.NORTH);
+		JTabbedPane jTabbedPane = new JTabbedPane();
+//		jTabbedPane.add("panl", PanlPropertiesNewTab.createSelectPanlProperties(mainWindowFrame));
+		jTabbedPane.add("panl", PanlPropertiesEditTab.getJPanel(null));
+		Component newCollection = NewCollectionTab.createNewCollection();
+		jTabbedPane.add("[ + ]", newCollection);
+		jTabbedPane.setEnabledAt(1, false);
 
-		frame.pack();
+		jTabbedPane.addChangeListener(e -> {
+			JTabbedPane selectedTab = (JTabbedPane) e.getSource();
+			System.out.println(selectedTab.getTitleAt(selectedTab.getSelectedIndex()));
+		});
 
-		frame.setVisible(true);
+		mainWindowFrame.getContentPane().add(jTabbedPane, BorderLayout.NORTH);
+
+		mainWindowFrame.pack();
+
+		mainWindowFrame.setVisible(true);
 	}
 
-	private JPanel generateSelectFile() {
-		JPanel panel = new JPanel(new GridBagLayout());
-		GridBagConstraints gbc = new GridBagConstraints();
-		gbc.gridwidth = 3;
-		gbc.gridheight = 10;
+	private JMenuBar createJMenuBar(JFrame jFrame) {
+		JMenuBar jMenuBar = new JMenuBar();
 
-		gbc.gridx = 0;
-		gbc.gridy = 1;
+		JMenu fileMenuItem = new JMenu("File");
+		fileMenuItem.setIcon(ICON_FILE);
 
+		JMenuItem recentsMenuItem = new JMenuItem("Recent files...");
+		recentsMenuItem.setIcon(ICON_RECENT);
 
+		fileMenuItem.add(recentsMenuItem);
+		fileMenuItem.addSeparator();
 
-		JButton button = new JButton("Select panl.properties file");
-		button.setMaximumSize(new Dimension(200, 40));
-		button.setPreferredSize(new Dimension(200, 40));
-		button.setMinimumSize(new Dimension(200, 40));
-		gbc.gridx = 1;
-		gbc.gridy = 5;
-		panel.add(button, gbc);
-		return(panel);
+		JMenuItem saveMenuItem = new JMenuItem("Save");
+		saveMenuItem.setIcon(ICON_SAVE);
+		fileMenuItem.add(saveMenuItem);
+
+		fileMenuItem.addSeparator();
+
+		JMenuItem exitMenuItem = new JMenuItem("Quit");
+		exitMenuItem.setIcon(ICON_QUIT);
+		fileMenuItem.add(exitMenuItem);
+
+		jMenuBar.add(fileMenuItem);
+
+		jMenuBar.add( Box.createGlue() );
+
+		jMenuBar.add(new JLabel("       "));
+		JButton uiButton = new JButton("Dark mode", ICON_MOON);
+		jMenuBar.add(uiButton);
+		uiButton.addActionListener(e -> {
+			try {
+				if (isDarkUI) {
+					UIManager.setLookAndFeel(new FlatLightLaf());
+					SwingUtilities.updateComponentTreeUI(jFrame);
+					uiButton.setText("Dark mode");
+					uiButton.setIcon(ICON_MOON);
+					fileMenuItem.setIcon(ICON_FILE);
+					saveMenuItem.setIcon(ICON_SAVE);
+					exitMenuItem.setIcon(ICON_QUIT);
+					recentsMenuItem.setIcon(ICON_RECENT);
+
+					isDarkUI = false;
+				} else {
+					UIManager.setLookAndFeel(new FlatDarkLaf());
+					SwingUtilities.updateComponentTreeUI(jFrame);
+					uiButton.setText("Light mode");
+					uiButton.setIcon(ICON_SUN);
+					fileMenuItem.setIcon(ICON_FILE_WHITE);
+					saveMenuItem.setIcon(ICON_SAVE_WHITE);
+					exitMenuItem.setIcon(ICON_QUIT_WHITE);
+					recentsMenuItem.setIcon(ICON_RECENT_WHITE);
+
+					isDarkUI = true;
+				}
+			} catch (UnsupportedLookAndFeelException ex) {
+				throw new RuntimeException(ex);
+			}
+		});
+
+		return (jMenuBar);
 	}
 }
