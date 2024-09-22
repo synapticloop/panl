@@ -70,39 +70,62 @@ public class PanlEditor {
 	private boolean isDarkUI = false;
 
 	public void show() {
-		FlatLightLaf.setup();
-		try {
-			UIManager.setLookAndFeel(new FlatLightLaf());
-			UIManager.put("Button.arc", 10);
-		} catch (Exception ex) {
-			System.err.println("Failed to initialize Flat Look and Feel");
-		}
 
-		JFrame mainWindowFrame = new JFrame("Panl Configuration Editor");
-		mainWindowFrame.setIconImage(ICON_APP.getImage());
+		// if macos
+		// enable screen menu bar
+		// (moves menu bar from JFrame window to top of screen)
+//		System.setProperty( "apple.laf.useScreenMenuBar", "true" );
+		System.setProperty("com.apple.mrj.application.apple.menu.about.name", "Panl Editor");
 
-		mainWindowFrame.setPreferredSize(new Dimension(800, 600));
-		mainWindowFrame.setMinimumSize(new Dimension(800, 600));
-		mainWindowFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		// application name used in screen menu bar
+		// (in first menu after the "apple" menu)
+		System.setProperty( "apple.awt.application.name", "Panl Editor" );
 
-		mainWindowFrame.setJMenuBar(createJMenuBar(mainWindowFrame));
+		// appearance of window title bars
+		// possible values:
+		//   - "system": use current macOS appearance (light or dark)
+		//   - "NSAppearanceNameAqua": use light appearance
+		//   - "NSAppearanceNameDarkAqua": use dark appearance
+		// (must be set on main thread and before AWT/Swing is initialized;
+		//  setting it on AWT thread does not work)
+		System.setProperty( "apple.awt.application.appearance", "system" );
 
-		JTabbedPane jTabbedPane = new JTabbedPane();
-		jTabbedPane.add("panl", PanlPropertiesEditTab.getJPanel(null));
-		Component newCollection = NewCollectionTab.createNewCollection();
-		jTabbedPane.add("[ + ]", newCollection);
-		jTabbedPane.setEnabledAt(1, false);
+		SwingUtilities.invokeLater( () -> {
+			FlatLightLaf.setup();
+			try {
+				UIManager.setLookAndFeel(new FlatLightLaf());
+				UIManager.put("Button.arc", 10);
+			} catch (Exception ex) {
+				System.err.println("Failed to initialize Flat Look and Feel");
+			}
 
-		jTabbedPane.addChangeListener(e -> {
-			JTabbedPane selectedTab = (JTabbedPane) e.getSource();
-			System.out.println(selectedTab.getTitleAt(selectedTab.getSelectedIndex()));
+			JFrame mainWindowFrame = new JFrame("Panl Configuration Editor");
+			mainWindowFrame.getRootPane().putClientProperty( "apple.awt.windowTitleVisible", false );
+			mainWindowFrame.setIconImage(ICON_APP.getImage());
+
+			mainWindowFrame.setPreferredSize(new Dimension(800, 600));
+			mainWindowFrame.setMinimumSize(new Dimension(800, 600));
+			mainWindowFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+
+			mainWindowFrame.setJMenuBar(createJMenuBar(mainWindowFrame));
+
+			JTabbedPane jTabbedPane = new JTabbedPane();
+			jTabbedPane.add("panl", PanlPropertiesEditTab.getJPanel(null));
+			Component newCollection = NewCollectionTab.createNewCollection();
+			jTabbedPane.add("[ + ]", newCollection);
+			jTabbedPane.setEnabledAt(1, false);
+
+			jTabbedPane.addChangeListener(e -> {
+				JTabbedPane selectedTab = (JTabbedPane) e.getSource();
+				System.out.println(selectedTab.getTitleAt(selectedTab.getSelectedIndex()));
+			});
+
+			mainWindowFrame.getContentPane().add(jTabbedPane, BorderLayout.NORTH);
+
+			mainWindowFrame.pack();
+
+			mainWindowFrame.setVisible(true);
 		});
-
-		mainWindowFrame.getContentPane().add(jTabbedPane, BorderLayout.NORTH);
-
-		mainWindowFrame.pack();
-
-		mainWindowFrame.setVisible(true);
 	}
 
 	private JMenuBar createJMenuBar(JFrame jFrame) {
