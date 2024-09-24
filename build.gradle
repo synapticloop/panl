@@ -91,7 +91,7 @@ application {
 
 distributions {
 	main {
-		distributionBaseName = 'solr-panl-9'
+		distributionBaseName = 'solr-panl-' + findProperty("panl.solr.version")
 	}
 
 	configurations.all {
