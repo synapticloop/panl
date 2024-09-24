@@ -192,7 +192,7 @@ public class RangeFacetLpseToken extends LpseToken {
 				"') incoming value '" +
 				this.originalValue +
 				"', parsed value '" +
-				(isRangeToken ? "RANGE(" + value +":" + toValue + ") " + (hasInfix ? "with" : "without") + " infix" : value) +
+				("RANGE(" + value + ":" + toValue + ") " + (hasInfix ? "with" : "without") + " infix" ) +
 				"'.");
 	}
 

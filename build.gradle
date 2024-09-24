@@ -46,6 +46,7 @@ dependencies {
 	// additional utilities
 	implementation 'commons-io:commons-io:2.16.1'
 	implementation 'org.json:json:20240303'
+	implementation 'net.harawata:appdirs:1.2.2'
 
 	// testing
 	testImplementation platform('org.junit:junit-bom:5.9.1')
@@ -90,7 +91,7 @@ application {
 
 distributions {
 	main {
-		distributionBaseName = 'solr-panl-7'
+		distributionBaseName = 'solr-panl-' + findProperty("panl.solr.version")
 	}
 
 	configurations.all {
