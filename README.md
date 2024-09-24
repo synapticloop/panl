@@ -33,7 +33,7 @@
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 ```
 
-`Build and test 'solr-panl-8' branch:` [![CircleCI](https://dl.circleci.com/status-badge/img/circleci/3Y1eqqe4mcvtSZuzJnQ3tJ/DyFKUm7c7AoLa1wHmRjAnf/tree/solr-panl-8.svg?style=svg)](https://dl.circleci.com/status-badge/redirect/circleci/3Y1eqqe4mcvtSZuzJnQ3tJ/DyFKUm7c7AoLa1wHmRjAnf/tree/solr-panl-8)
+`Build and test 'main' branch:` [![CircleCI](https://dl.circleci.com/status-badge/img/circleci/3Y1eqqe4mcvtSZuzJnQ3tJ/DyFKUm7c7AoLa1wHmRjAnf/tree/main.svg?style=svg)](https://dl.circleci.com/status-badge/redirect/circleci/3Y1eqqe4mcvtSZuzJnQ3tJ/DyFKUm7c7AoLa1wHmRjAnf/tree/main)
 
 `Latest release tag:` ![GitHub Tag](https://img.shields.io/github/v/tag/synapticloop/panl)
 
@@ -219,7 +219,7 @@ version
 **A Note On Running The Commands**
 
 *These are the commands for either Microsoft Windows or *NIX operating systems
-(Linux/Apple Macintosh).  Should there be any errors - see the ‘Getting Started’ section for a more in-depth explanation and approach.***
+(Linux/Apple Macintosh).  Should there be any errors - see the ‘Getting Started’ section for a more in-depth explanation and approach.**
 
 
 ```
@@ -380,7 +380,21 @@ with the release files named `solr-panl-9-x.x.x`
 
 # Version History
 
-## 1.2.0 - more (codename `needy-phanton`) **UNDER DEVELOPEMENT**
+## 1.2.0 - more like this (codename `needy-phanton`) **UNDER DEVELOPMENT**
+
+## 1.1.1 - the fly spray (codename `grizzled-pebble`)
+
+ - Bug fixes
+   - Fixed 'OR' facet `before` and `after` URL values in the JSON response where a range facet has already been selected
+ - Code cleanup
+   - Updated explanation for DATE Range and RANGE facets  
+
+[View the code for this release](https://github.com/synapticloop/panl/tree/1.1.1)
+
+[Download the release packages](https://github.com/synapticloop/panl/releases/tag/1.1.1)
+
+[See all releases](https://github.com/synapticloop/panl/releases/)
+
 
 ## 1.1.0 - the better update (codename `broad-firefly`) 
 
