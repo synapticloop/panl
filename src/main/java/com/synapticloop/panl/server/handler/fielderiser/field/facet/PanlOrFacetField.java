@@ -249,7 +249,13 @@ public class PanlOrFacetField extends PanlFacetField {
 				lpseUri.append(baseField.getURIPath(panlTokenMap, collectionProperties));
 				int numTokens = panlTokenMap.get(orderedLpseCode).size();
 				if(numTokens == 1) {
-					lpseUriCode.append(baseField.getLpseCode());
+					// if we have a range facet - we need to make sure that we are
+					// encoding it correctly there can only be one range token for the
+					// panl field (no over-lapping ranges, or distinct ranges)
+
+					// if it is not a range facet - then this won't do any harm and is a
+					// better implementation
+					lpseUriCode.append(baseField.getLpseCode(panlTokenMap.get(orderedLpseCode).get(0), collectionProperties));
 				} else {
 					lpseUriCode.append(new String(new char[numTokens]).replace("\0", baseField.getLpseCode()));
 				}

@@ -87,7 +87,6 @@ public class DateRangeFacetLpseToken extends LpseToken {
 		} else {
 			this.isValid = false;
 		}
-
 	}
 
 	@Override public String explain() {
