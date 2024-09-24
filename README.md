@@ -199,8 +199,7 @@ _**Image**: The In-Build Panl Results Viewer Web Application_
 
 ## 0. Download Solr and Panl
 
-Download the latest release of Synapticloop Panl - this example is using the 
-`solr-panl-9-1.1.1` version.
+Download the latest release of Synapticloop Panl
 
 [https://github.com/synapticloop/panl/releases](https://github.com/synapticloop/panl/releases)
 
