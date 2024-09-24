@@ -34,38 +34,9 @@ import javax.swing.*;
 import java.awt.*;
 import java.io.File;
 
+import static com.synapticloop.panl.editor.Constants.*;
+
 public class PanlEditor {
-	private static final ImageIcon ICON_APP =
-		new ImageIcon(PanlEditor.class.getResource("/webapp/static/favicon.png"));
-
-
-
-	private static final ImageIcon ICON_MOON =
-		new ImageIcon(PanlEditor.class.getResource("/images/moon.png"));
-	private static final ImageIcon ICON_SUN =
-		new ImageIcon(PanlEditor.class.getResource("/images/sun.png"));
-
-
-
-	private static final ImageIcon ICON_FILE =
-		new ImageIcon(PanlEditor.class.getResource("/images/file.png"));
-	private static final ImageIcon ICON_FILE_WHITE =
-		new ImageIcon(PanlEditor.class.getResource("/images/file-white.png"));
-
-	private static final ImageIcon ICON_SAVE =
-		new ImageIcon(PanlEditor.class.getResource("/images/save.png"));
-	private static final ImageIcon ICON_SAVE_WHITE =
-		new ImageIcon(PanlEditor.class.getResource("/images/save-white.png"));
-
-	private static final ImageIcon ICON_QUIT =
-		new ImageIcon(PanlEditor.class.getResource("/images/quit.png"));
-	private static final ImageIcon ICON_QUIT_WHITE =
-		new ImageIcon(PanlEditor.class.getResource("/images/quit-white.png"));
-
-	private static final ImageIcon ICON_RECENT =
-		new ImageIcon(PanlEditor.class.getResource("/images/clock.png"));
-	private static final ImageIcon ICON_RECENT_WHITE =
-		new ImageIcon(PanlEditor.class.getResource("/images/clock-white.png"));
 
 	private boolean isDarkUI = false;
 
@@ -77,6 +48,7 @@ public class PanlEditor {
 		} catch (Exception ex) {
 			System.err.println("Failed to initialize Flat Look and Feel");
 		}
+
 
 		JFrame mainWindowFrame = new JFrame("Panl Configuration Editor");
 		mainWindowFrame.setIconImage(ICON_APP.getImage());
