@@ -77,7 +77,7 @@ public class DefaultsTest {
 		assertEquals("/sb+/", root.panl.sorting.fields[0].set_uri_asc);
 
 		assertEquals("/sN-/", root.panl.sorting.fields[1].add_uri_desc);
-		assertEquals("Name", root.panl.sorting.fields[1].name);
+		assertEquals("Pencil Model", root.panl.sorting.fields[1].name);
 		assertEquals("name", root.panl.sorting.fields[1].facet_name);
 		assertEquals("/sN+/", root.panl.sorting.fields[1].add_uri_asc);
 		assertEquals("/sN-/", root.panl.sorting.fields[1].set_uri_desc);
