@@ -82,7 +82,11 @@ public class PanlConfigurationHandler implements HttpRequestHandler {
 		if (paths.length == 3  && validCollections.containsKey(paths[2])) {
 			try {
 				CollectionRequestHandler collectionRequestHandler = validCollections.get(paths[2]);
-				JSONObject jsonObject = new JSONObject(collectionRequestHandler.handleRequest("/" + paths[2] + "/empty/", ""));
+				JSONObject jsonObject = new JSONObject(
+					collectionRequestHandler.handleRequest(
+						"/" + paths[2] + "/empty/",
+						"",
+						context));
 
 				// now that we have the JSON object - time to remove the things we don't need
 				jsonObject.remove("responseHeader");
@@ -113,13 +117,13 @@ public class PanlConfigurationHandler implements HttpRequestHandler {
 				JSONObject availableJsonObject = panlJsonObject.getJSONObject("available");
 
 				// regular facets
-				for (Object rangeFacets : availableJsonObject.getJSONArray("facets")) {
-					JSONObject rangeFacetObject = (JSONObject) rangeFacets;
-					String panlCode = rangeFacetObject.getString("panl_code");
+				for (Object regularFacets : availableJsonObject.getJSONArray("facets")) {
+					JSONObject regularFacetObject = (JSONObject) regularFacets;
+					String panlCode = regularFacetObject.getString("panl_code");
 					if(null != panlCode) {
 						int lpseOrder = lpseLookupObject.optInt(panlCode, -1);
 						if(lpseOrder != -1) {
-							panlJsonObject.getJSONArray("lpse_order").put(lpseOrder, rangeFacetObject);
+							panlJsonObject.getJSONArray("lpse_order").put(lpseOrder, regularFacetObject);
 						}
 					}
 				}
