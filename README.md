@@ -387,10 +387,21 @@ with the release files named `solr-panl-9-x.x.x`
 
 ## 1.2.0 - more like this (codename `needy-phanton`) **UNDER DEVELOPMENT**
 
+ - Bug fixes
+   - Fixed JavScript in Single Page Search results in-built web app to take into account range facets
+
+
+ - Added functionality
+   - Retrieval of more facets functionality added: 
+     - Added in `facet_limit` JSON key for retrieving more facet results
+     - Added in handler for retrieving more facets
+
 ## 1.1.1 - the fly spray (codename `grizzled-pebble`)
 
  - Bug fixes
    - Fixed 'OR' facet `before` and `after` URL values in the JSON response where a range facet has already been selected
+
+
  - Code cleanup
    - Updated explanation for DATE Range and RANGE facets  
 
