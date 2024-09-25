@@ -40,7 +40,6 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.net.URISyntaxException;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -55,7 +54,7 @@ public class PanlMoreFacetsHandler implements HttpRequestHandler {
 	public static final String PANL_MORE_FACETS_BINDING = "/panl-more-facets/";
 
 	public static final String QUERY_PARAM_CODE = "code";
-	public static final String QUERY_PARAM_COUNT = "count";
+	public static final String QUERY_PARAM_LIMIT = "limit";
 	public static final String CONTEXT_KEY_LPSE_CODE = "lpse_code";
 	public static final String CONTEXT_KEY_FACET_LIMIT = "facet_limit";
 
@@ -94,22 +93,22 @@ public class PanlMoreFacetsHandler implements HttpRequestHandler {
 		String uri = request.getRequestLine().getUri() + "?";
 		boolean isGoodRequest = false;
 		String lpseCode = null;
-		Integer count = null;
+		Integer facetLimit = null;
 		try {
 			final List<NameValuePair> pairs = new URIBuilder(request.getRequestLine().getUri()).getQueryParams();
 			for (NameValuePair pair : pairs) {
 				if (pair.getName().equals(QUERY_PARAM_CODE)) {
 					lpseCode = pair.getValue();
-				} else if (pair.getName().equals(QUERY_PARAM_COUNT)) {
+				} else if (pair.getName().equals(QUERY_PARAM_LIMIT)) {
 					try {
-						count = Integer.parseInt(pair.getValue());
+						facetLimit = Integer.parseInt(pair.getValue());
 					} catch (NumberFormatException ignored) {
 						// do nothing
 					}
 				}
 			}
 
-			if (null != lpseCode && count != null) {
+			if (null != lpseCode && facetLimit != null) {
 				isGoodRequest = true;
 			}
 		} catch (URISyntaxException e) {
@@ -144,7 +143,7 @@ public class PanlMoreFacetsHandler implements HttpRequestHandler {
 			try {
 				CollectionRequestHandler collectionRequestHandler = validCollections.get(paths[2]);
 				context.setAttribute(CONTEXT_KEY_LPSE_CODE, lpseCode);
-				context.setAttribute(CONTEXT_KEY_FACET_LIMIT, count);
+				context.setAttribute(CONTEXT_KEY_FACET_LIMIT, facetLimit);
 				JSONObject jsonObject = new JSONObject(
 					collectionRequestHandler.handleRequest(
 						stringBuilder.toString(),
@@ -174,6 +173,7 @@ public class PanlMoreFacetsHandler implements HttpRequestHandler {
 					JSONObject regularFacetObject = (JSONObject) regularFacets;
 					String panlCode = regularFacetObject.getString("panl_code");
 					if (panlCode.equals(lpseCode)) {
+						regularFacetObject.put("facet_limit", facetLimit);
 						panlJsonObject.put("facet", regularFacetObject);
 					}
 				}
