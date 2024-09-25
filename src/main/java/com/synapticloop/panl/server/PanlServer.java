@@ -233,9 +233,13 @@ public class PanlServer {
 		bootstrap.registerHandler("/panl-single-page-search/*", new PanlSinglePageSearchHandler(collectionRequestHandlers));
 
 
-		// finally register the collection and singlepagesearch handlers
+		// register the single page search handlers
 		bootstrap.registerHandler(PanlConfigurationHandler.PANL_CONFIGURATION_BINDING + "*", new PanlConfigurationHandler(panlProperties, collectionRequestHandlers));
 
+		// register the more facets handlers
+		bootstrap.registerHandler(PanlMoreFacetsHandler.PANL_MORE_FACETS_BINDING + "*", new PanlMoreFacetsHandler(panlProperties, collectionRequestHandlers));
+
+		// finally register the collection and singlepagesearch handlers
 		for (CollectionRequestHandler collectionRequestHandler : collectionRequestHandlers) {
 			String solrCollection = collectionRequestHandler.getSolrCollection();
 			String panlCollectionUri = collectionRequestHandler.getPanlCollectionUri();

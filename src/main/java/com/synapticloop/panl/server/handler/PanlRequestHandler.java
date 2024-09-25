@@ -119,7 +119,7 @@ public class PanlRequestHandler implements HttpRequestHandler {
 			response.setStatusCode(HttpStatus.SC_OK);
 			response.setEntity(
 					new StringEntity(
-							collectionRequestHandler.handleRequest(uri, query),
+							collectionRequestHandler.handleRequest(uri, query, context),
 							ResourceHelper.CONTENT_TYPE_JSON)
 			);
 		} catch (Exception e) {
