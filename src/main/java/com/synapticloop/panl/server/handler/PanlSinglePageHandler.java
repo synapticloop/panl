@@ -41,11 +41,11 @@ import java.util.*;
 import static com.synapticloop.panl.server.handler.webapp.util.ResourceHelper.*;
 
 /**
- * <p>This is the configuration handler which will return the configuration
+ * <p>This is the single page handler which will return the configuration
  * for a specific CaFUP so that a single search page may be built.</p>
  */
-public class PanlConfigurationHandler implements HttpRequestHandler {
-	public static final String PANL_CONFIGURATION_BINDING = "/panl-configuration/";
+public class PanlSinglePageHandler implements HttpRequestHandler {
+	public static final String PANL_SINGLE_PAGE_BINDING = "/panl-single-page/";
 
 	private final PanlProperties panlProperties;
 	private final List<CollectionRequestHandler> collectionRequestHandlers;
@@ -58,11 +58,11 @@ public class PanlConfigurationHandler implements HttpRequestHandler {
 	 * @param panlProperties The panl properties
 	 * @param collectionRequestHandlers The collection request handler
 	 */
-	public PanlConfigurationHandler(PanlProperties panlProperties, List<CollectionRequestHandler> collectionRequestHandlers) {		this.panlProperties = panlProperties;
+	public PanlSinglePageHandler(PanlProperties panlProperties, List<CollectionRequestHandler> collectionRequestHandlers) {		this.panlProperties = panlProperties;
 		this.collectionRequestHandlers = collectionRequestHandlers;
 		for(CollectionRequestHandler collectionRequestHandler : collectionRequestHandlers) {
 			validCollections.put(collectionRequestHandler.getPanlCollectionUri(), collectionRequestHandler);
-			validUrls.put(PANL_CONFIGURATION_BINDING + collectionRequestHandler.getPanlCollectionUri() + "/");
+			validUrls.put(PANL_SINGLE_PAGE_BINDING + collectionRequestHandler.getPanlCollectionUri() + "/");
 		}
 	}
 

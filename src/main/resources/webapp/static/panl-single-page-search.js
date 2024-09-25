@@ -30,7 +30,7 @@ $(document).ready(function() {
 
 function panlConfiguration(collection) {
 	currentCollection = collection;
-	var panlQueryUrl = "/panl-configuration/" + collection + "/";
+	var panlQueryUrl = "/panl-single-page/" + collection + "/";
 	$.ajax({
 		url:panlQueryUrl,
 		success: function (panlJsonData) {
