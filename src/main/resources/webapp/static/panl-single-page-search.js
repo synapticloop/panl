@@ -128,9 +128,9 @@ function updateSearchLinks() {
 									} else {
 										lpseCodePath = lpseCodePath + lpseCode + '+' + lpseCode;
 									}
+								}else {
+									lpseCodePath = lpseCodePath + lpseCode;
 								}
-							}else {
-								lpseCodePath = lpseCodePath + lpseCode;
 							}
 
 							lpsePath = lpsePath + key + "/"
