@@ -57,6 +57,7 @@ public abstract class BaseField {
 	public static final String JSON_KEY_COUNT = "count";
 	public static final String JSON_KEY_ENCODED = "encoded";
 	public static final String JSON_KEY_VALUES = "values";
+	public static final String JSON_KEY_FACET_LIMIT = "facet_limit";
 	public static final String JSON_KEY_URIS = "uris";
 	public static final String JSON_KEY_IS_MULTIVALUE = "is_multivalue";
 
@@ -714,6 +715,7 @@ public abstract class BaseField {
 
 		if (shouldIncludeFacet) {
 			facetObject.put(JSON_KEY_VALUES, facetValueArrays);
+			facetObject.put(JSON_KEY_FACET_LIMIT, collectionProperties.getSolrFacetLimit());
 			if (null != lpseCode) {
 				facetObject.put(JSON_KEY_URIS,
 						getAdditionURIObject(

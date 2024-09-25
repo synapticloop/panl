@@ -190,6 +190,7 @@ public class PanlOrFacetField extends PanlFacetField {
 
 		if (!facetValueArrays.isEmpty()) {
 			facetObject.put(JSON_KEY_VALUES, facetValueArrays);
+			facetObject.put(JSON_KEY_FACET_LIMIT, collectionProperties.getSolrFacetLimit());
 			if (null != lpseCode) {
 				facetObject.put(JSON_KEY_URIS,
 						getAdditionURIObject(
