@@ -24,6 +24,7 @@ package com.synapticloop.panl.server.handler;
  * IN THE SOFTWARE.
  */
 
+import com.synapticloop.panl.exception.PanlNotFoundException;
 import com.synapticloop.panl.exception.PanlServerException;
 import com.synapticloop.panl.server.client.PanlClient;
 import com.synapticloop.panl.server.handler.fielderiser.field.facet.PanlFacetField;
@@ -154,9 +155,16 @@ public class CollectionRequestHandler {
 	 * @throws PanlServerException If there was an error parsing or connecting to
 	 * 		the Solr server.
 	 */
-	public String handleRequest(String uri, String query, HttpContext context) throws PanlServerException {
+	public String handleRequest(String uri, String query, HttpContext context) throws PanlServerException, PanlNotFoundException {
 		long startNanos = System.nanoTime();
-
+		String contextKeyLpseCode = PanlMoreFacetsHandler.CONTEXT_KEY_LPSE_CODE;
+		if(null != context.getAttribute(contextKeyLpseCode)) {
+			String solrFieldName = collectionProperties.getSolrFieldNameFromLpseCode(
+				(String) context.getAttribute(contextKeyLpseCode));
+			if(null == solrFieldName) {
+				throw new PanlNotFoundException("Unknown LPSE code of " + contextKeyLpseCode);
+			}
+		}
 		String[] searchQuery = uri.split("/");
 		String resultFields = searchQuery[2];
 
@@ -234,8 +242,8 @@ public class CollectionRequestHandler {
 			// one
 
 
-			if(null != context.getAttribute(PanlMoreFacetsHandler.CONTEXT_KEY_LPSE_CODE)) {
-				solrQuery.addFacetField(collectionProperties.getSolrFieldNameFromLpseCode((String)context.getAttribute(PanlMoreFacetsHandler.CONTEXT_KEY_LPSE_CODE)));
+			if(null != context.getAttribute(contextKeyLpseCode)) {
+				solrQuery.addFacetField(collectionProperties.getSolrFieldNameFromLpseCode((String)context.getAttribute(contextKeyLpseCode)));
 				isMoreFacets = true;
 			} else {
 				// no we need to go through all tokens and only return the ones that we

@@ -24,6 +24,7 @@ package com.synapticloop.panl.server.handler;
  * IN THE SOFTWARE.
  */
 
+import com.synapticloop.panl.exception.PanlNotFoundException;
 import com.synapticloop.panl.server.handler.properties.CollectionProperties;
 import com.synapticloop.panl.server.handler.properties.PanlProperties;
 import com.synapticloop.panl.server.handler.webapp.util.ResourceHelper;
@@ -66,12 +67,13 @@ public class PanlMoreFacetsHandler implements HttpRequestHandler {
 	/**
 	 * <p>Instantiate the Panl more facets handle.</p>
 	 *
-	 * @param panlProperties The panl properties
+	 * @param panlProperties            The panl properties
 	 * @param collectionRequestHandlers The collection request handler
 	 */
-	public PanlMoreFacetsHandler(PanlProperties panlProperties, List<CollectionRequestHandler> collectionRequestHandlers) {		this.panlProperties = panlProperties;
+	public PanlMoreFacetsHandler(PanlProperties panlProperties, List<CollectionRequestHandler> collectionRequestHandlers) {
+		this.panlProperties = panlProperties;
 		this.collectionRequestHandlers = collectionRequestHandlers;
-		for(CollectionRequestHandler collectionRequestHandler : collectionRequestHandlers) {
+		for (CollectionRequestHandler collectionRequestHandler : collectionRequestHandlers) {
 			validCollections.put(collectionRequestHandler.getPanlCollectionUri(), collectionRequestHandler);
 			validUrls.put(PANL_MORE_FACETS_BINDING + collectionRequestHandler.getPanlCollectionUri() + "/");
 		}
@@ -80,11 +82,12 @@ public class PanlMoreFacetsHandler implements HttpRequestHandler {
 	/**
 	 * <p>Return the JSON object that contains just the facet that is required.</p>
 	 *
-	 * @param request the HTTP request.
+	 * @param request  the HTTP request.
 	 * @param response the HTTP response.
-	 * @param context the HTTP execution context.
+	 * @param context  the HTTP execution context.
 	 */
-	@Override public void handle(HttpRequest request, HttpResponse response, HttpContext context) {
+	@Override
+	public void handle(HttpRequest request, HttpResponse response, HttpContext context) {
 
 		// the first thing that we are going to do is to ensure that we have a
 		// valid uri with the correct parameters
@@ -94,19 +97,19 @@ public class PanlMoreFacetsHandler implements HttpRequestHandler {
 		Integer count = null;
 		try {
 			final List<NameValuePair> pairs = new URIBuilder(request.getRequestLine().getUri()).getQueryParams();
-			for(NameValuePair pair : pairs) {
-				if(pair.getName().equals(QUERY_PARAM_CODE)) {
+			for (NameValuePair pair : pairs) {
+				if (pair.getName().equals(QUERY_PARAM_CODE)) {
 					lpseCode = pair.getValue();
-				} else if(pair.getName().equals(QUERY_PARAM_COUNT)) {
+				} else if (pair.getName().equals(QUERY_PARAM_COUNT)) {
 					try {
 						count = Integer.parseInt(pair.getValue());
-					} catch(NumberFormatException ignored) {
+					} catch (NumberFormatException ignored) {
 						// do nothing
 					}
 				}
 			}
 
-			if(null != lpseCode && count != null) {
+			if (null != lpseCode && count != null) {
 				isGoodRequest = true;
 			}
 		} catch (URISyntaxException e) {
@@ -116,12 +119,12 @@ public class PanlMoreFacetsHandler implements HttpRequestHandler {
 		uri = uri.substring(0, uri.indexOf('?'));
 
 		String[] paths = uri.split("/");
-		if (!isGoodRequest || (paths.length > 3  && validCollections.containsKey(paths[2]))) {
+		if (!isGoodRequest || (paths.length > 3 && validCollections.containsKey(paths[2]))) {
 			StringBuilder stringBuilder = new StringBuilder("/");
 
 			// rebuild the
 			int i = 0;
-			for(String path : paths) {
+			for (String path : paths) {
 				switch (i) {
 					case 0:
 					case 1:
@@ -148,7 +151,6 @@ public class PanlMoreFacetsHandler implements HttpRequestHandler {
 						"",
 						context));
 
-
 				// now that we have the JSON object - time to remove the things we don't need
 				jsonObject.remove("responseHeader");
 				jsonObject.remove("response");
@@ -171,7 +173,7 @@ public class PanlMoreFacetsHandler implements HttpRequestHandler {
 				for (Object regularFacets : availableJsonObject.getJSONArray("facets")) {
 					JSONObject regularFacetObject = (JSONObject) regularFacets;
 					String panlCode = regularFacetObject.getString("panl_code");
-					if(panlCode.equals(lpseCode)) {
+					if (panlCode.equals(lpseCode)) {
 						panlJsonObject.put("facet", regularFacetObject);
 					}
 				}
@@ -184,10 +186,12 @@ public class PanlMoreFacetsHandler implements HttpRequestHandler {
 
 				response.setStatusCode(HttpStatus.SC_OK);
 				response.setEntity(
-						new StringEntity(
-								jsonObject.toString(),
-								ResourceHelper.CONTENT_TYPE_JSON)
+					new StringEntity(
+						jsonObject.toString(),
+						ResourceHelper.CONTENT_TYPE_JSON)
 				);
+			} catch (PanlNotFoundException e) {
+				return404Message(response);
 			} catch (Exception e) {
 				response.setStatusCode(HttpStatus.SC_INTERNAL_SERVER_ERROR);
 				JSONObject jsonObject = new JSONObject();
@@ -195,9 +199,9 @@ public class PanlMoreFacetsHandler implements HttpRequestHandler {
 				jsonObject.put(JSON_KEY_STATUS, HttpStatus.SC_INTERNAL_SERVER_ERROR);
 				if (panlProperties.getUseVerbose500Messages()) {
 					jsonObject.put(JSON_KEY_MESSAGE,
-							String.format("Class: %s, message: %s.",
-									e.getClass().getCanonicalName(),
-									e.getMessage()));
+						String.format("Class: %s, message: %s.",
+							e.getClass().getCanonicalName(),
+							e.getMessage()));
 
 					response.setEntity(new StringEntity(jsonObject.toString(), ResourceHelper.CONTENT_TYPE_JSON));
 				} else {
@@ -205,21 +209,25 @@ public class PanlMoreFacetsHandler implements HttpRequestHandler {
 				}
 			}
 		} else {
-
-			JSONObject jsonObject = new JSONObject();
-
-			jsonObject.put(JSON_KEY_ERROR, true);
-			jsonObject.put(JSON_KEY_STATUS, HttpStatus.SC_NOT_FOUND);
-			if (panlProperties.getUseVerbose404Messages()) {
-				jsonObject.put(JSON_KEY_MESSAGE, PanlDefaultHandler.JSON_VALUE_MESSAGE);
-				jsonObject.put(JSON_KEY_VALID_URLS, validUrls);
-			} else {
-				jsonObject.put(JSON_KEY_MESSAGE, JSON_VALUE_MESSAGE_404);
-			}
-
-			response.setEntity(
-					new StringEntity(jsonObject.toString(),
-							ResourceHelper.CONTENT_TYPE_JSON));
+			return404Message(response);
 		}
+	}
+
+	private void return404Message(HttpResponse response) {
+
+		JSONObject jsonObject = new JSONObject();
+
+		jsonObject.put(JSON_KEY_ERROR, true);
+		jsonObject.put(JSON_KEY_STATUS, HttpStatus.SC_NOT_FOUND);
+		if (panlProperties.getUseVerbose404Messages()) {
+			jsonObject.put(JSON_KEY_MESSAGE, PanlDefaultHandler.JSON_VALUE_MESSAGE);
+			jsonObject.put(JSON_KEY_VALID_URLS, validUrls);
+		} else {
+			jsonObject.put(JSON_KEY_MESSAGE, JSON_VALUE_MESSAGE_404);
+		}
+
+		response.setEntity(
+			new StringEntity(jsonObject.toString(),
+				ResourceHelper.CONTENT_TYPE_JSON));
 	}
 }
