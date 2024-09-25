@@ -24,6 +24,7 @@ package com.synapticloop.panl.server.handler;
  * IN THE SOFTWARE.
  */
 
+import com.synapticloop.panl.server.handler.properties.CollectionProperties;
 import com.synapticloop.panl.server.handler.properties.PanlProperties;
 import com.synapticloop.panl.server.handler.webapp.util.ResourceHelper;
 import org.apache.http.HttpRequest;
@@ -51,6 +52,9 @@ import static com.synapticloop.panl.server.handler.webapp.util.ResourceHelper.*;
  */
 public class PanlMoreFacetsHandler implements HttpRequestHandler {
 	public static final String PANL_MORE_FACETS_BINDING = "/panl-more-facets/";
+
+	public static final String QUERY_PARAM_CODE = "code";
+	public static final String QUERY_PARAM_COUNT = "count";
 
 	private final PanlProperties panlProperties;
 	private final List<CollectionRequestHandler> collectionRequestHandlers;
@@ -81,6 +85,7 @@ public class PanlMoreFacetsHandler implements HttpRequestHandler {
 	@Override public void handle(HttpRequest request, HttpResponse response, HttpContext context) {
 
 		// the first thing that we are going to do is to ensure that we have a
+		// valid uri with the correct parameters
 		String uri = request.getRequestLine().getUri() + "?";
 		boolean isGoodRequest = false;
 		String lpseCode = null;
@@ -88,9 +93,9 @@ public class PanlMoreFacetsHandler implements HttpRequestHandler {
 		try {
 			final List<NameValuePair> pairs = new URIBuilder(request.getRequestLine().getUri()).getQueryParams();
 			for(NameValuePair pair : pairs) {
-				if(pair.getName().equals("lpseCode")) {
+				if(pair.getName().equals(QUERY_PARAM_CODE)) {
 					lpseCode = pair.getValue();
-				} else if(pair.getName().equals("count")) {
+				} else if(pair.getName().equals(QUERY_PARAM_COUNT)) {
 					try {
 						count = Integer.parseInt(pair.getValue());
 					} catch(NumberFormatException ignored) {
@@ -121,7 +126,7 @@ public class PanlMoreFacetsHandler implements HttpRequestHandler {
 						i++;
 						continue;
 					case 3:
-						stringBuilder.append("empty");
+						stringBuilder.append(CollectionProperties.FIELDSETS_EMPTY);
 						break;
 					default:
 						stringBuilder.append(path);

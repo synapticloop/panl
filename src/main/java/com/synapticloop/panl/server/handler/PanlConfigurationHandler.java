@@ -24,6 +24,7 @@ package com.synapticloop.panl.server.handler;
  * IN THE SOFTWARE.
  */
 
+import com.synapticloop.panl.server.handler.properties.CollectionProperties;
 import com.synapticloop.panl.server.handler.properties.PanlProperties;
 import com.synapticloop.panl.server.handler.webapp.util.ResourceHelper;
 import org.apache.http.HttpRequest;
@@ -84,7 +85,7 @@ public class PanlConfigurationHandler implements HttpRequestHandler {
 				CollectionRequestHandler collectionRequestHandler = validCollections.get(paths[2]);
 				JSONObject jsonObject = new JSONObject(
 					collectionRequestHandler.handleRequest(
-						"/" + paths[2] + "/empty/",
+						"/" + paths[2] + "/" + CollectionProperties.FIELDSETS_EMPTY + "/",
 						"",
 						context));
 
