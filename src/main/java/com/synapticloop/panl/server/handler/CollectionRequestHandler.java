@@ -195,6 +195,8 @@ public class CollectionRequestHandler {
 			}
 		}
 
+		boolean isMoreFacets = false;
+
 		try (SolrClient solrClient = panlClient.getClient()) {
 			// we set the default query - to be overridden later if one exists
 			SolrQuery solrQuery = panlClient.getQuery(query);
@@ -202,8 +204,9 @@ public class CollectionRequestHandler {
 			solrQuery.setParam(SOLR_PARAM_Q_OP, collectionProperties.getSolrDefaultQueryOperand());
 
 			// if we have something in the context - set it to this value
-			if(null != context.getAttribute("facet_limit")) {
-				solrQuery.setFacetLimit((Integer)context.getAttribute("facet_limit"));
+			if(null != context.getAttribute(PanlMoreFacetsHandler.CONTEXT_KEY_FACET_LIMIT)) {
+				solrQuery.setFacetLimit((Integer)context.getAttribute(PanlMoreFacetsHandler.CONTEXT_KEY_FACET_LIMIT));
+				isMoreFacets = true;
 			} else {
 				solrQuery.setFacetLimit(collectionProperties.getSolrFacetLimit());
 			}
@@ -230,8 +233,10 @@ public class CollectionRequestHandler {
 			// have a when point, or we are just looking for more facets for a single
 			// one
 
-			if(null != context.getAttribute("lpse_code")) {
-				solrQuery.addFacetField(collectionProperties.getSolrFieldNameFromLpseCode((String)context.getAttribute("lpse_code")));
+
+			if(null != context.getAttribute(PanlMoreFacetsHandler.CONTEXT_KEY_LPSE_CODE)) {
+				solrQuery.addFacetField(collectionProperties.getSolrFieldNameFromLpseCode((String)context.getAttribute(PanlMoreFacetsHandler.CONTEXT_KEY_LPSE_CODE)));
+				isMoreFacets = true;
 			} else {
 				// no we need to go through all tokens and only return the ones that we
 				// need to be displayed
@@ -244,11 +249,13 @@ public class CollectionRequestHandler {
 			boolean hasStats = false;
 			for (BaseField lpseField : collectionProperties.getLpseFields()) {
 				lpseField.applyToQuery(solrQuery, panlTokenMap);
-				if(lpseField instanceof PanlRangeFacetField) {
-					solrQuery.add("stats.field", lpseField.getSolrFieldName());
-					if(!hasStats) {
-						solrQuery.add("stats", "true");
-						hasStats = true;
+				if(!isMoreFacets) {
+					if (lpseField instanceof PanlRangeFacetField) {
+						solrQuery.add("stats.field", lpseField.getSolrFieldName());
+						if (!hasStats) {
+							solrQuery.add("stats", "true");
+							hasStats = true;
+						}
 					}
 				}
 			}

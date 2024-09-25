@@ -394,7 +394,10 @@ with the release files named `solr-panl-9-x.x.x`
  - Added functionality
    - Retrieval of more facets functionality added: 
      - Added in `facet_limit` JSON key for retrieving more facet results
-     - Added in handler for retrieving more facets
+     - Added in handler for retrieving more facets for a specific search field
+
+ - Breaking Changes
+   - Changed the single page search URL binding from `/panl-configuration/` to `/panl-single-page/` as it makes more sense
 
 ## 1.1.1 - the fly spray (codename `grizzled-pebble`)
 

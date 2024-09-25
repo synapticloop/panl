@@ -55,6 +55,8 @@ public class PanlMoreFacetsHandler implements HttpRequestHandler {
 
 	public static final String QUERY_PARAM_CODE = "code";
 	public static final String QUERY_PARAM_COUNT = "count";
+	public static final String CONTEXT_KEY_LPSE_CODE = "lpse_code";
+	public static final String CONTEXT_KEY_FACET_LIMIT = "facet_limit";
 
 	private final PanlProperties panlProperties;
 	private final List<CollectionRequestHandler> collectionRequestHandlers;
@@ -138,8 +140,8 @@ public class PanlMoreFacetsHandler implements HttpRequestHandler {
 
 			try {
 				CollectionRequestHandler collectionRequestHandler = validCollections.get(paths[2]);
-				context.setAttribute("lpse_code", lpseCode);
-				context.setAttribute("facet_limit", count);
+				context.setAttribute(CONTEXT_KEY_LPSE_CODE, lpseCode);
+				context.setAttribute(CONTEXT_KEY_FACET_LIMIT, count);
 				JSONObject jsonObject = new JSONObject(
 					collectionRequestHandler.handleRequest(
 						stringBuilder.toString(),
