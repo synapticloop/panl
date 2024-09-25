@@ -26,7 +26,7 @@
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 ```
 
-`Build and test 'main' branch:` [![CircleCI](https://dl.circleci.com/status-badge/img/circleci/3Y1eqqe4mcvtSZuzJnQ3tJ/DyFKUm7c7AoLa1wHmRjAnf/tree/main.svg?style=svg)](https://dl.circleci.com/status-badge/redirect/circleci/3Y1eqqe4mcvtSZuzJnQ3tJ/DyFKUm7c7AoLa1wHmRjAnf/tree/main)
+`Build and test 'main' branch:` [![CircleCI](https://dl.circleci.com/status-badge/img/circleci/3Y1eqqe4mcvtSZuzJnQ3tJ/DyFKUm7c7AoLa1wHmRjAnf/tree/main.svg?style=svg)](https://dl.circleci.com/status-badge/redirect/circleci/3Y1eqqe4mcvtSZuzJnQ3tJ/DyFKUm7c7AoLa1wHmRjAnf/tree/main) (courtesy of Circle-CI)
 
 `Latest release tag:` ![GitHub Tag](https://img.shields.io/github/v/tag/synapticloop/panl)
 
@@ -199,8 +199,7 @@ _**Image**: The In-Build Panl Results Viewer Web Application_
 
 ## 0. Download Solr and Panl
 
-Download the latest release of Synapticloop Panl - this example is using the 
-`solr-panl-9-1.1.0` version.
+Download the latest release of Synapticloop Panl
 
 [https://github.com/synapticloop/panl/releases](https://github.com/synapticloop/panl/releases)
 
@@ -212,8 +211,16 @@ version
 **A Note On Running The Commands**
 
 *These are the commands for either Microsoft Windows or *NIX operating systems
-(Linux/Apple Macintosh).  Should there be any errors - see the ‘Getting Started’ section for a more in-depth explanation and approach.***
+(Linux/Apple Macintosh).  Should there be any errors - see the ‘Getting Started’ section for a more in-depth explanation and approach.**
 
+---
+
+> **WARNING:** The Solr Release version `9.7.0` has changed the options for creating a new example cloud.
+> The command line option has changed from `-noprompt` to `--no-prompt`
+
+> All other commands remain the same
+
+---
 
 ```
 **IMPORTANT**: You will need to replace the
@@ -331,6 +338,11 @@ Choose a collection/fieldset and search, facet, sort, paginate and view the resu
 
 ## Starting up the example cloud
 
+> **WARNING:** The Solr Release version `9.7.0` has changed the options for starting a new example cloud.
+> The command line option has changed from `-cloud` to `--cloud`
+
+> All other commands remain the same - For versions greater than `9.7.0` they have re-added the `-cloud` option 
+
 If you have stopped the example Solr server, starting it up:
 
 ### _Windows_
@@ -373,7 +385,21 @@ with the release files named `solr-panl-9-x.x.x`
 
 # Version History
 
-## 1.2.0 - more like this (codename `needy-phanton`) **UNDER DEVELOPEMENT**
+## 1.2.0 - more like this (codename `needy-phanton`) **UNDER DEVELOPMENT**
+
+## 1.1.1 - the fly spray (codename `grizzled-pebble`)
+
+ - Bug fixes
+   - Fixed 'OR' facet `before` and `after` URL values in the JSON response where a range facet has already been selected
+ - Code cleanup
+   - Updated explanation for DATE Range and RANGE facets  
+
+[View the code for this release](https://github.com/synapticloop/panl/tree/1.1.1)
+
+[Download the release packages](https://github.com/synapticloop/panl/releases/tag/1.1.1)
+
+[See all releases](https://github.com/synapticloop/panl/releases/)
+
 
 ## 1.1.0 - the better update (codename `broad-firefly`) 
 

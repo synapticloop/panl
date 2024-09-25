@@ -87,7 +87,6 @@ public class DateRangeFacetLpseToken extends LpseToken {
 		} else {
 			this.isValid = false;
 		}
-
 	}
 
 	@Override public String explain() {
@@ -98,7 +97,7 @@ public class DateRangeFacetLpseToken extends LpseToken {
 				"' (solr field '" +
 				this.solrField +
 				"') with parsed value '" +
-				this.previousNext +
+				this.previousNext.trim() +
 				" " +
 				value +
 				" " +
