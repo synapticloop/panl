@@ -239,16 +239,16 @@ public class CollectionRequestHandler {
 				for (PanlFacetField facetIndexSortField : collectionProperties.getFacetIndexSortFields()) {
 					solrQuery.add("f." + facetIndexSortField.getSolrFieldName() + ".facet.sort", "index");
 				}
+			}
 
-				boolean hasStats = false;
-				for (BaseField lpseField : collectionProperties.getLpseFields()) {
-					lpseField.applyToQuery(solrQuery, panlTokenMap);
-					if(lpseField instanceof PanlRangeFacetField) {
-						solrQuery.add("stats.field", lpseField.getSolrFieldName());
-						if(!hasStats) {
-							solrQuery.add("stats", "true");
-							hasStats = true;
-						}
+			boolean hasStats = false;
+			for (BaseField lpseField : collectionProperties.getLpseFields()) {
+				lpseField.applyToQuery(solrQuery, panlTokenMap);
+				if(lpseField instanceof PanlRangeFacetField) {
+					solrQuery.add("stats.field", lpseField.getSolrFieldName());
+					if(!hasStats) {
+						solrQuery.add("stats", "true");
+						hasStats = true;
 					}
 				}
 			}
