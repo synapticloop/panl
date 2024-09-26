@@ -612,7 +612,7 @@ function generateFacetHTML(facet) {
 		value.encoded +
 		facet.uris.after +
 		"\">[add]</a>&nbsp;" +
-		value.value;
+		decodePanl(value.encoded);
 
 		if(!facet.is_or_facet) {
 			innerUl += "&nbsp;(" + value.count + ")";
