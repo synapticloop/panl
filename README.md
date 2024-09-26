@@ -60,14 +60,15 @@ Working with a Solr schema, the Panl configuration files translate unwieldy URI 
 
 Panl allows
 
-- **MULTIPLE ways to 'SLICE and DICE'** the underlying Solr collection and present them with different URLs
-- **PREFIXES, INFIXES, and SUFFIXES** for all facets (an infix are only available on RANGE facets)
-- **BOOLEAN Value replacements** for Boolean data types
-- **FIELD VALUE validation** to help catch common Solr errors
-- **HIERARCHICAL facets**, only showing specific facets if another facet has already been selected
+- **MULTIPLE ways to 'SLICE and DICE'** the underlying Solr collection and present them with different URLs.
+- **PREFIXES, INFIXES, and SUFFIXES** for all facets (an infix are only available on RANGE facets).
+- **BOOLEAN Value replacements** for Boolean data types.
+- **FIELD VALUE validation** to help catch common Solr errors.
+- **HIERARCHICAL facets**, only showing specific facets if another facet has already been selected.
 - **SORTED facets** by either count (the default) or value.
-- **RESULTS SORTING options** by any of the fields or facets
-- **PAGINATION** - in built and ready to go
+- **MORE facets** - Request more facets where the number of facets return does not contain the full set.
+- **RESULTS SORTING options** by any of the fields or facets.
+- **PAGINATION** - in built and ready to go.
 - **STATIC SITE GENERATION** - for small datasets with few options.  Alternatively they can be seen as easily cacheable and canonical sources for the returned results.
 - **STATELESS** - Quick startup, with no state.
 - **TEXT CONFIGURATION** - All configuration for Panl is based on text files (Java `.properties`) files so they can be stored in a source code management system.
