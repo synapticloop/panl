@@ -157,14 +157,16 @@ public class CollectionRequestHandler {
 	 */
 	public String handleRequest(String uri, String query, HttpContext context) throws PanlServerException, PanlNotFoundException {
 		long startNanos = System.nanoTime();
-		String contextKeyLpseCode = PanlMoreFacetsHandler.CONTEXT_KEY_LPSE_CODE;
-		if(null != context.getAttribute(contextKeyLpseCode)) {
-			String solrFieldName = collectionProperties.getSolrFieldNameFromLpseCode(
-				(String) context.getAttribute(contextKeyLpseCode));
+
+		// check to ensure that the more facets LPSE code is correct
+		String contextLpseCode = (String)context.getAttribute(PanlMoreFacetsHandler.CONTEXT_KEY_LPSE_CODE);
+		if(null != contextLpseCode) {
+			String solrFieldName = collectionProperties.getSolrFieldNameFromLpseCode(contextLpseCode);
 			if(null == solrFieldName) {
-				throw new PanlNotFoundException("Unknown LPSE code of " + contextKeyLpseCode);
+				throw new PanlNotFoundException("Unknown LPSE code of " + contextLpseCode);
 			}
 		}
+
 		String[] searchQuery = uri.split("/");
 		String resultFields = searchQuery[2];
 
@@ -242,8 +244,15 @@ public class CollectionRequestHandler {
 			// one
 
 
-			if(null != context.getAttribute(contextKeyLpseCode)) {
-				solrQuery.addFacetField(collectionProperties.getSolrFieldNameFromLpseCode((String)context.getAttribute(contextKeyLpseCode)));
+			if(null != contextLpseCode) {
+				solrQuery.addFacetField(collectionProperties.getSolrFieldNameFromLpseCode(contextLpseCode));
+				// now we also want to order them as well - as by default Solr will
+				// order them by index rather than count - which may not be what the
+				// user wants
+				BaseField lpseField = collectionProperties.getLpseField(contextLpseCode);
+				if(!lpseField.getIsFacetSortByIndex()) {
+					solrQuery.add("f." + lpseField.getSolrFieldName() + ".facet.sort", "count");
+				}
 				isMoreFacets = true;
 			} else {
 				// no we need to go through all tokens and only return the ones that we

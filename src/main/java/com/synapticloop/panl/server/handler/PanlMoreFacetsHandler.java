@@ -55,6 +55,7 @@ public class PanlMoreFacetsHandler implements HttpRequestHandler {
 
 	public static final String QUERY_PARAM_CODE = "code";
 	public static final String QUERY_PARAM_LIMIT = "limit";
+
 	public static final String CONTEXT_KEY_LPSE_CODE = "lpse_code";
 	public static final String CONTEXT_KEY_FACET_LIMIT = "facet_limit";
 
@@ -175,6 +176,7 @@ public class PanlMoreFacetsHandler implements HttpRequestHandler {
 					if (panlCode.equals(lpseCode)) {
 						regularFacetObject.put("facet_limit", facetLimit);
 						panlJsonObject.put("facet", regularFacetObject);
+						break;
 					}
 				}
 
