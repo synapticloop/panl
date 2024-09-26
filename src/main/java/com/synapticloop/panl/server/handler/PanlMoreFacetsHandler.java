@@ -119,7 +119,7 @@ public class PanlMoreFacetsHandler implements HttpRequestHandler {
 		uri = uri.substring(0, uri.indexOf('?'));
 
 		String[] paths = uri.split("/");
-		if (!isGoodRequest || (paths.length > 3 && validCollections.containsKey(paths[2]))) {
+		if (isGoodRequest && (paths.length > 3 && validCollections.containsKey(paths[2]))) {
 			StringBuilder stringBuilder = new StringBuilder("/");
 
 			// rebuild the
