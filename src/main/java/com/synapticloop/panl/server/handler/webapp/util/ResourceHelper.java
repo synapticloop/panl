@@ -94,17 +94,14 @@ public class ResourceHelper {
 			return;
 		}
 
-		InputStreamReader reader = null;
 		try (InputStream resourceAsStream = PanlResultsStaticHandler.class.getResourceAsStream(resourcePath)) {
 			if (null != resourceAsStream) {
-				URL resourceURL = PanlResultsStaticHandler.class.getResource(resourcePath);
-				reader = new InputStreamReader(resourceAsStream);
+				byte[] content = resourceAsStream.readAllBytes();
 				ContentType contentType = getContentType(resourcePath);
-				byte[] content = Files.readAllBytes(Path.of(Objects.requireNonNull(resourceURL).toURI()));
+
 				CONTENT_CACHE.put(resourcePath, content);
 				CONTENT_TYPE_CACHE.put(resourcePath, contentType);
 				CONTENT_RESPONSE_CODE_CACHE.put(resourcePath, HttpStatus.SC_OK);
-				reader.close();
 			} else {
 				JSONObject jsonObject = new JSONObject();
 				jsonObject.put(JSON_KEY_ERROR, true);
@@ -113,20 +110,13 @@ public class ResourceHelper {
 				CONTENT_TYPE_CACHE.put(resourcePath, CONTENT_TYPE_JSON);
 				CONTENT_RESPONSE_CODE_CACHE.put(resourcePath, HttpStatus.SC_NOT_FOUND);
 			}
-		} catch (IOException | URISyntaxException ignored) {
+		} catch (IOException ioex) {
 			JSONObject jsonObject = new JSONObject();
 			jsonObject.put(JSON_KEY_ERROR, true);
 			jsonObject.put(JSON_KEY_MESSAGE, "Could not serve the resourcePath '" + resourcePath + "'");
 			CONTENT_CACHE.put(resourcePath, jsonObject.toString().getBytes());
 			CONTENT_TYPE_CACHE.put(resourcePath, CONTENT_TYPE_JSON);
 			CONTENT_RESPONSE_CODE_CACHE.put(resourcePath, HttpStatus.SC_INTERNAL_SERVER_ERROR);
-		} finally {
-			if(null != reader) {
-				try {
-					reader.close();
-				} catch (IOException ignored) {
-				}
-			}
 		}
 
 		response.setStatusCode(CONTENT_RESPONSE_CODE_CACHE.get(resourcePath));
