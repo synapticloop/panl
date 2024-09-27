@@ -220,17 +220,26 @@ public class PanlServer {
 		// register the panl results viewer - if it enabled
 
 		if (panlProperties.getHasPanlResultsTestingUrls()) {
+			LOGGER.info("Panl testing URLs are active, binding the following:");
 			bootstrap.registerHandler("/webapp/static/*", new PanlResultsStaticHandler());
+			LOGGER.info("Binding testing URL: /webapp/static/*");
 
 			// the simple search and querying webappp
 			bootstrap.registerHandler("/panl-results-viewer/*", new PanlResultsViewerHandler(collectionRequestHandlers));
+			LOGGER.info("Binding testing URL: /panl-results-viewer/*");
 			bootstrap.registerHandler("/panl-results-viewer/script/", new PanlResultsViewerScriptHandler(collectionRequestHandlers));
+			LOGGER.info("Binding testing URL: /panl-results-viewer/script/");
 
 			bootstrap.registerHandler("/panl-results-explainer/*", new PanlResultsExplainerHandler(collectionPropertiesList, collectionRequestHandlers));
+			LOGGER.info("Binding testing URL: /panl-results-explainer/*");
 			bootstrap.registerHandler("/panl-results-explainer/explain/*", new PanlResultsExplainerExplainHandler(collectionPropertiesList, collectionRequestHandlers));
+			LOGGER.info("Binding testing URL: /panl-results-explainer/explain/*");
+
+			bootstrap.registerHandler("/panl-single-page-search/*", new PanlSinglePageSearchHandler(collectionRequestHandlers));
+			LOGGER.info("Binding testing URL: /panl-single-page-search/*");
+
 		}
 
-		bootstrap.registerHandler("/panl-single-page-search/*", new PanlSinglePageSearchHandler(collectionRequestHandlers));
 
 
 		// register the single page search handlers
