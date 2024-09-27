@@ -393,15 +393,19 @@ with the release files named `solr-panl-9-x.x.x`
 
  - Bug fixes
    - Fixed JavScript in Single Page Search results in-built web app to take into account range facets
+   - Fixed serving in-built panl testing URLs when run from teh script
 
 
- - Added functionality
+ - Code changes
    - Retrieval of more facets functionality added: 
      - Added in `facet_limit` JSON key for retrieving more facet results
      - Added in handler for retrieving more facets for a specific search field
+   - Better output for testing URLs
+
 
  - Breaking Changes - _(which is OK as nobody is using it at the moment :) )_
    - Changed the single page search URL binding from `/panl-configuration/` to `/panl-single-page/` as it makes more sense
+
 
  - Documentation update
    - General spelling and grammatical mistake updates 
