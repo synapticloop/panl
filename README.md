@@ -385,7 +385,7 @@ I.e.
  - `./build/distributions` (*NIX), or
  - `.\build\distributions` (Windows)
 
-with the release files named `solr-panl-9-x.x.x`
+with the release files named `solr-panl-9-x.x.x` where `x.x.x` is the version number.
 
 # Version History
 
@@ -393,7 +393,7 @@ with the release files named `solr-panl-9-x.x.x`
 
  - Bug fixes
    - Fixed JavScript in Single Page Search results in-built web app to take into account range facets
-   - Fixed serving in-built panl testing URLs when run from teh script
+   - Fixed serving in-built panl testing URLs when run from the script
 
 
  - Code changes
@@ -401,6 +401,7 @@ with the release files named `solr-panl-9-x.x.x`
      - Added in `facet_limit` JSON key for retrieving more facet results
      - Added in handler for retrieving more facets for a specific search field
    - Better output for testing URLs
+   - Added Always on OR facets and `panl.or.always.<lpse_code>` property
 
 
  - Breaking Changes - _(which is OK as nobody is using it at the moment :) )_

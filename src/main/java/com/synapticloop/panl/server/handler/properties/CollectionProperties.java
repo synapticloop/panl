@@ -150,6 +150,7 @@ public class CollectionProperties {
 	private final Map<String, String> SOLR_NAME_TO_LPSE_CODE_MAP = new HashMap<>();
 
 	private final Set<String> PANL_CODE_OR_FIELDS = new HashSet<>();
+	private final Set<String> PANL_CODE_OR_ALWAYS_FIELDS = new HashSet<>();
 	private final Set<String> PANL_CODE_RANGE_FIELDS = new HashSet<>();
 
 
@@ -210,15 +211,14 @@ public class CollectionProperties {
 	 * <p>Instantiate the Collection properties which maps to one Panl collection
 	 * URI path and multiple fieldsets.</p>
 	 *
-	 * @param solrCollection The Solr collection to connect to - this is used for
-	 * 		debugging and logging purposes
+	 * @param solrCollection    The Solr collection to connect to - this is used for
+	 *                          debugging and logging purposes
 	 * @param panlCollectionUri The Panl collection URI that this collection is
-	 * 		registered to - this is used for debugging and logging purposes
-	 * @param properties The panl_collection_uri.properties object to generate
-	 * 		the configuration from
-	 *
+	 *                          registered to - this is used for debugging and logging purposes
+	 * @param properties        The panl_collection_uri.properties object to generate
+	 *                          the configuration from
 	 * @throws PanlServerException If there was an error in parsing, there are
-	 * 		missing, or there was an invalid property.
+	 *                             missing, or there was an invalid property.
 	 */
 	public CollectionProperties(String solrCollection, String panlCollectionUri, Properties properties) throws PanlServerException {
 		this.solrCollection = solrCollection;
@@ -283,11 +283,11 @@ public class CollectionProperties {
 				LOGGER.info("[ Solr/Panl '{}/{}' ] Sort Fields - adding Panl LPSE code '{}' for Solr field name '{}'.", solrCollection, panlCollectionUri, lpseCode, sortField);
 				lpseCodeSortFields.add(lpseCode);
 				PanlSortField panlSortField = new PanlSortField(
-						lpseCode,
-						PROPERTY_KEY_PANL_SORT_FIELDS,
-						properties,
-						solrCollection,
-						panlCollectionUri);
+					lpseCode,
+					PROPERTY_KEY_PANL_SORT_FIELDS,
+					properties,
+					solrCollection,
+					panlCollectionUri);
 
 				LPSE_CODE_TO_SORT_FIELD_MAP.put(lpseCode, panlSortField);
 				SOLR_NAME_TO_SORT_FIELD_MAP.put(sortField, panlSortField);
@@ -310,7 +310,7 @@ public class CollectionProperties {
 	 * </ul>
 	 *
 	 * @throws PanlServerException If a mandatory property was not found, or
-	 * 		could not be adequately parsed
+	 *                             could not be adequately parsed
 	 */
 	private void parseDefaultProperties() throws PanlServerException {
 		this.panlIncludeSingleFacets = properties.getProperty(PROPERTY_KEY_PANL_INCLUDE_SINGLE_FACETS, "false").equals("true");
@@ -374,11 +374,9 @@ public class CollectionProperties {
 	 * <p>Finally, if the property is found it will be added to the metadatMap.</p>
 	 *
 	 * @param propertyName The property name to look up
-	 * @param isMandatory Whether this is a mandatory property - if it is, and
-	 * 		it doesn't exist, then this will throw a PanlServerException
-	 *
+	 * @param isMandatory  Whether this is a mandatory property - if it is, and
+	 *                     it doesn't exist, then this will throw a PanlServerException
 	 * @return the initialised property, or null if it doesn't exist
-	 *
 	 * @throws PanlServerException If a mandatory property was not found
 	 */
 	private String initialiseStringProperty(String propertyName, boolean isMandatory) throws PanlServerException {
@@ -386,11 +384,11 @@ public class CollectionProperties {
 		if (null == panlPropertyValue) {
 			if (isMandatory) {
 				throw new PanlServerException(
-						"MANDATORY PROPERTY MISSING: Could not find the '" +
-								propertyName +
-								"' property in the '" +
-								this.solrCollection +
-								"' Panl properties file.'");
+					"MANDATORY PROPERTY MISSING: Could not find the '" +
+						propertyName +
+						"' property in the '" +
+						this.solrCollection +
+						"' Panl properties file.'");
 			} else {
 				return (null);
 			}
@@ -411,7 +409,7 @@ public class CollectionProperties {
 	 * static String for the panl prefix property</p>
 	 *
 	 * @throws PanlServerException If there was an error looking up the properties,
-	 * 		or with the found property and its associated values
+	 *                             or with the found property and its associated values
 	 */
 	private void parseFacetFields() throws PanlServerException {
 		for (String panlFieldKey : PropertyHelper.getPropertiesByPrefix(properties, PROPERTY_KEY_PANL_FACET)) {
@@ -431,6 +429,9 @@ public class CollectionProperties {
 			} else if (isOrFacet) {
 				facetField = new PanlOrFacetField(lpseCode, panlFieldKey, properties, solrCollection, panlCollectionUri, lpseLength);
 				PANL_CODE_OR_FIELDS.add(lpseCode);
+				if (((PanlOrFacetField) facetField).getIsAlwaysOr()) {
+					PANL_CODE_OR_ALWAYS_FIELDS.add(lpseCode);
+				}
 			} else if (isRangeFacet) {
 				facetField = new PanlRangeFacetField(lpseCode, panlFieldKey, properties, solrCollection, panlCollectionUri, lpseLength);
 				LPSE_CODE_RANGE_FACET_MAP.put(lpseCode, (PanlRangeFacetField) facetField);
@@ -518,8 +519,8 @@ public class CollectionProperties {
 			panlLpseOrderList.add(lpseCode);
 
 			if (!LPSE_FACET_FIELDS.contains(lpseCode) &&
-					!LPSE_FIELDS.contains(lpseCode) &&
-					!LPSE_METADATA.contains(lpseCode)) {
+				!LPSE_FIELDS.contains(lpseCode) &&
+				!LPSE_METADATA.contains(lpseCode)) {
 				LOGGER.warn("Found a panl code of '{}' in the " + PROPERTY_KEY_PANL_LPSE_ORDER + " property, yet it is not a defined field.  This will be ignored...", lpseCode);
 			}
 
@@ -530,9 +531,9 @@ public class CollectionProperties {
 		// we also need to ensure that the default parameters are in the lpse order
 		for (String key : MANDATORY_LPSE_ORDER_FIELDS.keySet()) {
 			LOGGER.error("__MUST__ have key of '{}' in property '{}', this is set by the property '{}'.",
-					key,
-					PROPERTY_KEY_PANL_LPSE_ORDER,
-					MANDATORY_LPSE_ORDER_FIELDS.get(key));
+				key,
+				PROPERTY_KEY_PANL_LPSE_ORDER,
+				MANDATORY_LPSE_ORDER_FIELDS.get(key));
 			missingMandatoryLpseCode = true;
 		}
 
@@ -671,44 +672,36 @@ public class CollectionProperties {
 	 * If there is a LPSE code passed through then set value the value to the
 	 * variable facetMinCount (which comes from the properties file.</p>
 	 *
-	 * @param solrQuery The Solr query object to set the facet mincounts on
+	 * @param solrQuery    The Solr query object to set the facet mincounts on
 	 * @param panlTokenMap The passed in tokens
 	 */
 	public void setFacetMinCounts(SolrQuery solrQuery, Map<String, List<LpseToken>> panlTokenMap) {
 		// always set the facet min count to the property
 
 		solrQuery.setFacetMinCount(facetMinCount);
-		if (panlTokenMap.isEmpty() ||
-				PANL_CODE_OR_FIELDS.isEmpty()) {
 
-			// facet mincount is set for all fields, now run through and set the OR
-			// facets to be '0'
-			for (String panlCodeOrField : PANL_CODE_OR_FIELDS) {
-				solrQuery.add(
-						String.format(
-								"f.%s.facet.mincount",
-								LPSE_CODE_TO_FACET_FIELD_MAP.get(panlCodeOrField).getSolrFieldName()),
-						"0");
-			}
-
+		if (panlTokenMap.isEmpty() || PANL_CODE_OR_FIELDS.isEmpty()) {
+			// if we haven't done any queries or we don't have any or facets
 			return;
 		}
 
-		// At this point we have some tokens in the panlTokenMap, we need to go through
-		// the OR fields and set specific facet mincounts.  
+		// At this point we have some tokens in the panlTokenMap, we need to go
+		// through the OR fields and set specific facet mincounts.
 		//
 		// If and ONLY IF the OR facet exists in the panlToken map, then continue 
 		// and there are no other facets selected, then set this OR facet to 0  
 
 		for (String panlCodeOrField : PANL_CODE_OR_FIELDS) {
 			// if there is
-			if (panlTokenMap.containsKey(panlCodeOrField) && panlTokenMap.size() == 1) {
+			if (
+					(panlTokenMap.containsKey(panlCodeOrField) && panlTokenMap.size() == 1) ||
+					(PANL_CODE_OR_ALWAYS_FIELDS.contains(panlCodeOrField) && panlTokenMap.containsKey(panlCodeOrField))) {
 				// we are faceting on this 
 				solrQuery.add(
-						String.format(
-								"f.%s.facet.mincount",
-								LPSE_CODE_TO_FACET_FIELD_MAP.get(panlCodeOrField).getSolrFieldName()),
-						"0");
+					String.format(
+						"f.%s.facet.mincount",
+						LPSE_CODE_TO_FACET_FIELD_MAP.get(panlCodeOrField).getSolrFieldName()),
+					"0");
 			}
 		}
 	}
@@ -730,7 +723,6 @@ public class CollectionProperties {
 	 * be retrieved.</p>
 	 *
 	 * @param lpseTokens The current active LPSE tokens
-	 *
 	 * @return The array of solr fields to facet on
 	 */
 	public String[] getWhenSolrFacetFields(List<LpseToken> lpseTokens) {
@@ -772,7 +764,6 @@ public class CollectionProperties {
 	 * <p>Return whether this is a valid sort field.</p>
 	 *
 	 * @param lpseCode The lpse code to look up
-	 *
 	 * @return whether this is a valid sort code
 	 */
 	public boolean hasSortField(String lpseCode) {
@@ -807,7 +798,6 @@ public class CollectionProperties {
 	 * the facets and fields.</p>
 	 *
 	 * @param solrFieldName The Solr field name to lookup
-	 *
 	 * @return The Panl name that matches the Solr field
 	 */
 	public String getPanlNameFromSolrFieldName(String solrFieldName) {
@@ -905,7 +895,6 @@ public class CollectionProperties {
 	 * available facets.</p>
 	 *
 	 * @param lpseCode The LPSE code to lookup
-	 *
 	 * @return Whether this LPSE code should be ignored
 	 */
 	public boolean getIsIgnoredLpseCode(String lpseCode) {
@@ -933,12 +922,12 @@ public class CollectionProperties {
 	}
 
 	public boolean getIsSuppressedRangeFacet(String lpseCode) {
-		if(LPSE_CODE_RANGE_FACET_MAP.containsKey(lpseCode)) {
-			return(LPSE_CODE_RANGE_FACET_MAP.get(lpseCode).getRangeSuppress());
+		if (LPSE_CODE_RANGE_FACET_MAP.containsKey(lpseCode)) {
+			return (LPSE_CODE_RANGE_FACET_MAP.get(lpseCode).getRangeSuppress());
 		}
-		return(false);
+		return (false);
 	}
-	
+
 	public Set<String> getLpseWhenCode(String lpseCode) {
 		return (LPSE_CODE_WHEN_MAP.get(lpseCode));
 	}

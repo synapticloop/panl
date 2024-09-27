@@ -66,6 +66,7 @@ public abstract class BaseField {
 	public static final String PROPERTY_KEY_PANL_NAME = "panl.name.";
 	public static final String PROPERTY_KEY_PANL_FACET = "panl.facet.";
 	public static final String PROPERTY_KEY_PANL_OR_FACET = "panl.or.facet.";
+	public static final String PROPERTY_KEY_PANL_OR_ALWAYS = "panl.or.always.";
 	public static final String PROPERTY_KEY_PANL_FACETSORT = "panl.facetsort.";
 	public static final String PROPERTY_KEY_PANL_TYPE = "panl.type.";
 	public static final String PROPERTY_KEY_PANL_PREFIX = "panl.prefix.";
