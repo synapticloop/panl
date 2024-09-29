@@ -1,3 +1,5 @@
+package com.synapticloop.panl.editor;
+
 /*
  * Copyright (c) 2008-2024 synapticloop.
  *
@@ -21,8 +23,6 @@
  * FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
  * IN THE SOFTWARE.
  */
-
-package com.synapticloop.panl.editor;
 
 import com.formdev.flatlaf.FlatDarkLaf;
 import com.formdev.flatlaf.FlatLightLaf;
