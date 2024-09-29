@@ -127,12 +127,16 @@ public class Main {
 		}
 
 		// now parse the rest of the commands
-		if (command.equals(CMD_VALUE_SERVER)) {
-			parseAndExecuteServerCommands();
-		} else if(command.equals(CMD_VALUE_GENERATE)){
-			parseAndExecuteGenerateCommands();
-		} else if(command.equals(CMD_VALUE_EDITOR)) {
-			new PanlEditor().show();
+		switch (command) {
+			case CMD_VALUE_SERVER:
+				parseAndExecuteServerCommands();
+				break;
+			case CMD_VALUE_GENERATE:
+				parseAndExecuteGenerateCommands();
+				break;
+			case CMD_VALUE_EDITOR:
+				new PanlEditor().show();
+				break;
 		}
 	}
 
@@ -243,14 +247,8 @@ public class Main {
 	 * parsing the options then it will print out an error message and exit.</p>
 	 *
 	 * @param args The arguments to parse
-	 *
-	 * @throws PanlServerException If there was an error starting the server
-	 * @throws CommandLineOptionException If the command line options could not
-	 * 		be parsed
-	 * @throws PanlGenerateException If there was an error with the generation
-	 * 		of the properties
 	 */
-	public static void main(String[] args) throws PanlServerException, CommandLineOptionException, PanlGenerateException {
+	public static void main(String[] args) {
 		Main main = new Main(args);
 
 		LOGGER.info("                           __ ");
@@ -262,6 +260,10 @@ public class Main {
 		LOGGER.info("            ~ ~ ~ * ~ ~ ~");
 		LOGGER.info("");
 
-		main.parseAndExecuteCommandLine();
+		try {
+			main.parseAndExecuteCommandLine();
+		} catch (PanlServerException | CommandLineOptionException | PanlGenerateException e) {
+			LOGGER.error("FAILURE to start, message was: {}", e.getMessage());
+		}
 	}
 }
