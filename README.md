@@ -402,6 +402,7 @@ with the release files named `solr-panl-9-x.x.x` where `x.x.x` is the version nu
      - Added in handler for retrieving more facets for a specific search field
    - Better output for testing URLs
    - Added Always on OR facets and `panl.or.always.<lpse_code>` property
+   - Moved log4j out of the jar file so that user's con configure their own logging
 
 
  - Breaking Changes - _(which is OK as nobody is using it at the moment :) )_
