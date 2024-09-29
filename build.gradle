@@ -106,6 +106,13 @@ distributions {
 	}
 }
 
+//
+// Exclude the Log4J configuration
+//
+jar {
+	exclude('log4j2.xml')
+}
+
 
 test {
 	useJUnitPlatform()
