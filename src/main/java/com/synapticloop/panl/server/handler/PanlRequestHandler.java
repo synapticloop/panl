@@ -76,8 +76,8 @@ public class PanlRequestHandler implements HttpRequestHandler {
 	 * there is no registered <code>CollectionRequestHandler</code> registered for
 	 * the URL.</p>
 	 *
-	 * @param request  the HTTP request.
-	 * @param response the HTTP response.
+	 * @param request  the HTTP request - the incoming request
+	 * @param response the HTTP response - the outgoing response
 	 * @param context  the HTTP execution context. (which is ignored by this processor)
 	 *
 	 * @see CollectionRequestHandler
@@ -105,36 +105,47 @@ public class PanlRequestHandler implements HttpRequestHandler {
 		}
 
 		try {
-			response.setStatusCode(HttpStatus.SC_OK);
 			response.setEntity(
 				new StringEntity(
 					collectionRequestHandler.handleRequest(uri, query, context),
 					ResourceHelper.CONTENT_TYPE_JSON)
 			);
+
+			response.setStatusCode(HttpStatus.SC_OK);
 		} catch (PanlNotFoundException e) {
 			return404Message(response);
 		} catch (Exception e) {
-			response.setStatusCode(HttpStatus.SC_INTERNAL_SERVER_ERROR);
-			JSONObject jsonObject = new JSONObject();
-			jsonObject.put(JSON_KEY_ERROR, true);
-			jsonObject.put(JSON_KEY_STATUS, HttpStatus.SC_INTERNAL_SERVER_ERROR);
-			if (panlProperties.getUseVerbose500Messages()) {
-				jsonObject.put(JSON_KEY_MESSAGE,
-					String.format("Class: %s, message: %s.",
-						e.getClass().getCanonicalName(),
-						e.getMessage()));
-
-				LOGGER.error("Could not handle the request.", e);
-				response.setEntity(new StringEntity(jsonObject.toString(), ResourceHelper.CONTENT_TYPE_JSON));
-			} else {
-				jsonObject.put(JSON_KEY_MESSAGE, JSON_VALUE_MESSAGE_500);
-			}
+			return500Message(response, e);
 		}
 	}
 
-	private void return404Message(HttpResponse response) {
-		JSONObject jsonObject = new JSONObject(collectionRequestHandler.getValidUrlsJSONArrayString());
+	private void return500Message(HttpResponse response, Exception e) {
+		response.setStatusCode(HttpStatus.SC_INTERNAL_SERVER_ERROR);
 
+		JSONObject jsonObject = new JSONObject();
+		jsonObject.put(JSON_KEY_ERROR, true);
+		jsonObject.put(JSON_KEY_STATUS, HttpStatus.SC_INTERNAL_SERVER_ERROR);
+		if (panlProperties.getUseVerbose500Messages()) {
+			jsonObject.put(JSON_KEY_MESSAGE,
+				String.format("Class: %s, message: %s.",
+					e.getClass().getCanonicalName(),
+					e.getMessage()));
+
+			LOGGER.error("Could not handle the request.", e);
+			response.setEntity(
+				new StringEntity(
+					jsonObject.toString(),
+					ResourceHelper.CONTENT_TYPE_JSON));
+		} else {
+			jsonObject.put(JSON_KEY_MESSAGE, JSON_VALUE_MESSAGE_500);
+		}
+	}
+
+
+	private void return404Message(HttpResponse response) {
+		response.setStatusCode(HttpStatus.SC_NOT_FOUND);
+
+		JSONObject jsonObject = new JSONObject(collectionRequestHandler.getValidUrlsJSONArrayString());
 		jsonObject.put(JSON_KEY_ERROR, true);
 		jsonObject.put(JSON_KEY_STATUS, HttpStatus.SC_NOT_FOUND);
 		if (panlProperties.getUseVerbose404Messages()) {
@@ -145,7 +156,8 @@ public class PanlRequestHandler implements HttpRequestHandler {
 		}
 
 		response.setEntity(
-			new StringEntity(jsonObject.toString(),
+			new StringEntity(
+				jsonObject.toString(),
 				ResourceHelper.CONTENT_TYPE_JSON));
 	}
 }

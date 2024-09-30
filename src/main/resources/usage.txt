@@ -20,20 +20,28 @@ Where:
     generate - generate an example panl.properties file from an existing Solr
                managed-schema.xml file
 
-  To start the Panl server:
+  [SERVER] To start the Panl server:
 
     java -jar panl.jar \
       server \
       [-properties properties_file_location] \
       [-port port_number]
 
-  To generate the panl.properties file for each collection
+
+               ~ ~ ~ * ~ ~ ~
+
+
+  [GENERATOR] To generate the panl.properties file for each collection
 
     java -jar panl.jar \
       generate \
-      [-properties properties_file_location] \
+      [-properties panl_properties_file_location] \
       [-overwrite true_or_false] \
       -schema solr_schema_location
+
+
+               ~ ~ ~ * ~ ~ ~
+
 
 If you choose the 'server' command, the following command line options are
 available:

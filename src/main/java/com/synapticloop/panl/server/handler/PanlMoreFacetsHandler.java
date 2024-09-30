@@ -40,6 +40,7 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.net.URISyntaxException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -195,27 +196,32 @@ public class PanlMoreFacetsHandler implements HttpRequestHandler {
 			} catch (PanlNotFoundException e) {
 				return404Message(response);
 			} catch (Exception e) {
-				response.setStatusCode(HttpStatus.SC_INTERNAL_SERVER_ERROR);
-				JSONObject jsonObject = new JSONObject();
-				jsonObject.put(JSON_KEY_ERROR, true);
-				jsonObject.put(JSON_KEY_STATUS, HttpStatus.SC_INTERNAL_SERVER_ERROR);
-				if (panlProperties.getUseVerbose500Messages()) {
-					jsonObject.put(JSON_KEY_MESSAGE,
-						String.format("Class: %s, message: %s.",
-							e.getClass().getCanonicalName(),
-							e.getMessage()));
-
-					response.setEntity(new StringEntity(jsonObject.toString(), ResourceHelper.CONTENT_TYPE_JSON));
-				} else {
-					jsonObject.put(JSON_KEY_MESSAGE, JSON_VALUE_MESSAGE_500);
-				}
+				return500Message(response, e);
 			}
 		} else {
 			return404Message(response);
 		}
 	}
 
+	private void return500Message(HttpResponse response, Exception e) {
+		response.setStatusCode(HttpStatus.SC_INTERNAL_SERVER_ERROR);
+		JSONObject jsonObject = new JSONObject();
+		jsonObject.put(JSON_KEY_ERROR, true);
+		jsonObject.put(JSON_KEY_STATUS, HttpStatus.SC_INTERNAL_SERVER_ERROR);
+		if (panlProperties.getUseVerbose500Messages()) {
+			jsonObject.put(JSON_KEY_MESSAGE,
+				String.format("Class: %s, message: %s.",
+					e.getClass().getCanonicalName(),
+					e.getMessage()));
+
+			response.setEntity(new StringEntity(jsonObject.toString(), ResourceHelper.CONTENT_TYPE_JSON));
+		} else {
+			jsonObject.put(JSON_KEY_MESSAGE, JSON_VALUE_MESSAGE_500);
+		}
+	}
+
 	private void return404Message(HttpResponse response) {
+		response.setStatusCode(HttpStatus.SC_NOT_FOUND);
 
 		JSONObject jsonObject = new JSONObject();
 
