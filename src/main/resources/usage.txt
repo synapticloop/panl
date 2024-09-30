@@ -75,7 +75,7 @@ available:
     remove those files before the generation - unless you have the
     -overwrite true command line option present
 
-  [-overwrite true_or_false] (optional - default false) - whether to oberwrite
+  [-overwrite true_or_false] (optional - default false) - whether to overwrite
     the file if it exists
 
   -schema solr_schema_location(s) (mandatory) the managed-schema.xml
