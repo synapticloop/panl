@@ -45,6 +45,8 @@ import java.util.stream.Collectors;
 
 /**
  * <p>This is the main class for the PANL server/generator.</p>
+ *
+ * @author synapticloop
  */
 public class Main {
 	private static final Logger LOGGER = LoggerFactory.getLogger(Main.class);

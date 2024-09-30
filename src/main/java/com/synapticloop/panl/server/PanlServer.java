@@ -68,6 +68,7 @@ public class PanlServer {
 	private final List<CollectionProperties> collectionPropertiesList = new ArrayList<>();
 
 	private HttpServer httpServer;
+
 	/**
 	 * <p>Instantiate a new PanlServer instance.  This will parse the
 	 * <code>properties.properties</code> and any linked
@@ -240,8 +241,6 @@ public class PanlServer {
 
 		}
 
-
-
 		// register the single page search handlers
 		bootstrap.registerHandler(PanlSinglePageHandler.PANL_SINGLE_PAGE_BINDING + "*", new PanlSinglePageHandler(panlProperties, collectionRequestHandlers));
 
@@ -275,6 +274,9 @@ public class PanlServer {
 		}
 	}
 
+	/**
+	 * <p>Stop the server.</p>
+	 */
 	public void stop() {
 		httpServer.stop();
 	}

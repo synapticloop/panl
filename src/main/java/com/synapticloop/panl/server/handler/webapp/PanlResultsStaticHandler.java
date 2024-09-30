@@ -35,15 +35,10 @@ import org.apache.http.protocol.HttpRequestHandler;
  * static resources from the classpath.</p>
  *
  * @author synapticloop
+ *
  * @see ResourceHelper
  */
 public class PanlResultsStaticHandler implements HttpRequestHandler {
-
-	/**
-	 * <p>Instantiate the PanlResultsStaticHandler and do nothing</p>
-	 */
-	public PanlResultsStaticHandler() {
-	}
 
 	/**
 	 * <p>Handle a request for a static resource loading it from the classpath.

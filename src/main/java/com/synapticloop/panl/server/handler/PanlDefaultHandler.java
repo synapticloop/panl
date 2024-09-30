@@ -53,10 +53,13 @@ import static com.synapticloop.panl.server.handler.webapp.util.ResourceHelper.*;
  *   ]
  * }
  * </pre>
+ *
+ * @author synapticloop
  */
 public class PanlDefaultHandler implements HttpRequestHandler {
 	public static final String JSON_VALUE_MESSAGE = "Could not find a PANL request url, see 'valid_urls' array.";
 
+	// this error string is cached upon instantiation.
 	private static String json404ErrorString;
 
 	/**

@@ -50,6 +50,12 @@ import static com.synapticloop.panl.server.handler.webapp.util.ResourceHelper.*;
 /**
  * <p>This is the handler which will return more facets for a specific facet
  * to then be populated.</p>
+ *
+ * <p>In effect, this will do a complete Solr query, setting the facet and
+ * limit for the request, discarding any of the un-wanted response objects, and
+ * just returning the requested facets.</p>
+ *
+ * @author Synapticloop
  */
 public class PanlMoreFacetsHandler implements HttpRequestHandler {
 	public static final String PANL_MORE_FACETS_BINDING = "/panl-more-facets/";
@@ -61,7 +67,6 @@ public class PanlMoreFacetsHandler implements HttpRequestHandler {
 	public static final String CONTEXT_KEY_FACET_LIMIT = "facet_limit";
 
 	private final PanlProperties panlProperties;
-	private final List<CollectionRequestHandler> collectionRequestHandlers;
 	private final Map<String, CollectionRequestHandler> validCollections = new HashMap<>();
 	private final JSONArray validUrls = new JSONArray();
 
@@ -73,7 +78,6 @@ public class PanlMoreFacetsHandler implements HttpRequestHandler {
 	 */
 	public PanlMoreFacetsHandler(PanlProperties panlProperties, List<CollectionRequestHandler> collectionRequestHandlers) {
 		this.panlProperties = panlProperties;
-		this.collectionRequestHandlers = collectionRequestHandlers;
 		for (CollectionRequestHandler collectionRequestHandler : collectionRequestHandlers) {
 			validCollections.put(collectionRequestHandler.getPanlCollectionUri(), collectionRequestHandler);
 			validUrls.put(PANL_MORE_FACETS_BINDING + collectionRequestHandler.getPanlCollectionUri() + "/");

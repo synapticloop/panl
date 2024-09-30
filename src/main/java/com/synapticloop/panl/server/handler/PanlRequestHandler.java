@@ -82,8 +82,7 @@ public class PanlRequestHandler implements HttpRequestHandler {
 	 *
 	 * @see CollectionRequestHandler
 	 */
-	@Override
-	public void handle(HttpRequest request, HttpResponse response, HttpContext context) {
+	@Override public void handle(HttpRequest request, HttpResponse response, HttpContext context) {
 
 		// the first thing that we are going to do is to ensure that we have a
 		// valid request

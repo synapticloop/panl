@@ -43,12 +43,13 @@ import static com.synapticloop.panl.server.handler.webapp.util.ResourceHelper.*;
 /**
  * <p>This is the single page handler which will return the configuration
  * for a specific CaFUP so that a single search page may be built.</p>
+ *
+ * @author synapticloop
  */
 public class PanlSinglePageHandler implements HttpRequestHandler {
 	public static final String PANL_SINGLE_PAGE_BINDING = "/panl-single-page/";
 
 	private final PanlProperties panlProperties;
-	private final List<CollectionRequestHandler> collectionRequestHandlers;
 	private final Map<String, CollectionRequestHandler> validCollections = new HashMap<>();
 	private final JSONArray validUrls = new JSONArray();
 
@@ -59,7 +60,6 @@ public class PanlSinglePageHandler implements HttpRequestHandler {
 	 * @param collectionRequestHandlers The collection request handler
 	 */
 	public PanlSinglePageHandler(PanlProperties panlProperties, List<CollectionRequestHandler> collectionRequestHandlers) {		this.panlProperties = panlProperties;
-		this.collectionRequestHandlers = collectionRequestHandlers;
 		for(CollectionRequestHandler collectionRequestHandler : collectionRequestHandlers) {
 			validCollections.put(collectionRequestHandler.getPanlCollectionUri(), collectionRequestHandler);
 			validUrls.put(PANL_SINGLE_PAGE_BINDING + collectionRequestHandler.getPanlCollectionUri() + "/");
