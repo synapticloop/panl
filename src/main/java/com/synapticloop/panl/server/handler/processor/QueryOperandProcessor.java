@@ -43,7 +43,7 @@ public class QueryOperandProcessor extends Processor {
 		String panlParamQueryOperand = collectionProperties.getPanlParamQueryOperand();
 
 		JSONObject jsonObject = new JSONObject();
-		StringBuilder lpseUri = new StringBuilder("/");
+		StringBuilder lpseUri = new StringBuilder(FORWARD_SLASH);
 		StringBuilder lpseCode = new StringBuilder();
 
 		for (BaseField lpseField : collectionProperties.getLpseFields()) {
@@ -56,7 +56,7 @@ public class QueryOperandProcessor extends Processor {
 			}
 		}
 
-		lpseCode.append("/");
+		lpseCode.append(FORWARD_SLASH);
 
 		String finalBefore = lpseUri + before + collectionProperties.getPanlParamQueryOperand();
 

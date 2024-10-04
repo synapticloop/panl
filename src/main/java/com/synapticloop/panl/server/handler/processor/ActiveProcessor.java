@@ -40,6 +40,12 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * <p>The active processor adds all of the current active filters that are
+ * passed through THE lpse PATH the returned panl JSON object.</p>
+ *
+ * @author synapticloop
+ */
 public class ActiveProcessor extends Processor {
 
 	public static final String JSON_KEY_SORT_FIELDS = "sort_fields";
@@ -55,7 +61,7 @@ public class ActiveProcessor extends Processor {
 		List<LpseToken> lpseTokens = new ArrayList<>();
 		for (BaseField lpseField : collectionProperties.getLpseFields()) {
 			// These codes are ignored, just carry on
-			if(collectionProperties.getIsIgnoredLpseCode(lpseField.getLpseCode())) {
+			if (collectionProperties.getIsIgnoredLpseCode(lpseField.getLpseCode())) {
 				continue;
 			}
 
@@ -112,7 +118,8 @@ public class ActiveProcessor extends Processor {
 				if (null != solrFacetField) {
 					removeObject.put(JSON_KEY_FACET_NAME, solrFacetField);
 					removeObject.put(JSON_KEY_NAME, panlNameFromSolrFieldName);
-					removeObject.put(JSON_KEY_IS_DESCENDING, sortLpseToken.getSortOrderUriKey().equals(SortLpseToken.SORT_ORDER_URI_KEY_DESCENDING));
+					removeObject.put(JSON_KEY_IS_DESCENDING, sortLpseToken.getSortOrderUriKey()
+					                                                      .equals(SortLpseToken.SORT_ORDER_URI_KEY_DESCENDING));
 					removeObject.put(JSON_KEY_ENCODED, URLEncoder.encode(panlNameFromSolrFieldName, StandardCharsets.UTF_8));
 					removeObject.put(JSON_KEY_INVERSE_URI, getSortReplaceURI(sortLpseToken, uriComponents, lpseComponents));
 					activeSortObject.put(solrFacetField, true);
@@ -121,7 +128,8 @@ public class ActiveProcessor extends Processor {
 				}
 			} else if (lpseToken instanceof BooleanFacetLpseToken) {
 				BooleanFacetLpseToken booleanFacetLpseToken = (BooleanFacetLpseToken) lpseToken;
-				removeObject.put(JSON_KEY_INVERSE_URI, getBooleanReplaceURI(booleanFacetLpseToken, uriComponents, lpseComponents));
+				removeObject.put(JSON_KEY_INVERSE_URI,
+				                 getBooleanReplaceURI(booleanFacetLpseToken, uriComponents, lpseComponents));
 				removeObject.put(JSON_KEY_FACET_NAME, collectionProperties.getSolrFieldNameFromLpseCode(lpseCode));
 				removeObject.put(JSON_KEY_NAME, collectionProperties.getPanlNameFromPanlCode(lpseCode));
 				removeObject.put(JSON_KEY_ENCODED, lpseField.getEncodedPanlValue(lpseToken));
@@ -138,11 +146,11 @@ public class ActiveProcessor extends Processor {
 			}
 			i++;
 
-			if(!activeSortObject.isEmpty()) {
+			if (!activeSortObject.isEmpty()) {
 				jsonObject.put(JSON_KEY_SORT_FIELDS, activeSortObject);
 			}
 
-			if(lpseToken.getCanHaveMultiple()) {
+			if (lpseToken.getCanHaveMultiple()) {
 				jsonObject.put(tokenType, jsonArray);
 			} else {
 				jsonObject.put(tokenType, removeObject);
@@ -164,15 +172,16 @@ public class ActiveProcessor extends Processor {
 		return returnValidURIPath(uri, lpse);
 	}
 
-	private String getSortReplaceURI(SortLpseToken sortLpseToken, List<String> uriComponents, List<String> lpseComponents) {
+	private String getSortReplaceURI(SortLpseToken sortLpseToken, List<String> uriComponents,
+	                                 List<String> lpseComponents) {
 		String sortLpseUriCode =
-				sortLpseToken.getLpseCode() +
-						sortLpseToken.getLpseSortCode() +
-						sortLpseToken.getSortOrderUriKey();
+			sortLpseToken.getLpseCode() +
+				sortLpseToken.getLpseSortCode() +
+				sortLpseToken.getSortOrderUriKey();
 		String inverseSortUriCode =
-				sortLpseToken.getLpseCode() +
-						sortLpseToken.getLpseSortCode() +
-						sortLpseToken.getInverseSortOrderUriKey();
+			sortLpseToken.getLpseCode() +
+				sortLpseToken.getLpseSortCode() +
+				sortLpseToken.getInverseSortOrderUriKey();
 
 		StringBuilder uri = new StringBuilder();
 		StringBuilder lpse = new StringBuilder();
@@ -182,7 +191,7 @@ public class ActiveProcessor extends Processor {
 			if (!found && sortLpseUriCode.equals(lpseComponents.get(i))) {
 				found = true;
 				lpse.append(inverseSortUriCode);
- 			} else {
+			} else {
 				lpse.append(lpseComponents.get(i));
 			}
 			uri.append(uriComponents.get(i));
@@ -191,7 +200,8 @@ public class ActiveProcessor extends Processor {
 		return returnValidURIPath(uri, lpse);
 	}
 
-	private String getBooleanReplaceURI(BooleanFacetLpseToken booleanFacetLpseToken, List<String> uriComponents, List<String> lpseComponents) {
+	private String getBooleanReplaceURI(BooleanFacetLpseToken booleanFacetLpseToken, List<String> uriComponents,
+	                                    List<String> lpseComponents) {
 		String booleanLpseCode = booleanFacetLpseToken.getLpseCode();
 		String inverseBooleanValue = booleanFacetLpseToken.getInverseBooleanValue(booleanFacetLpseToken);
 
@@ -204,11 +214,11 @@ public class ActiveProcessor extends Processor {
 				found = true;
 				lpse.append(booleanFacetLpseToken.getLpseCode());
 				uri.append(inverseBooleanValue)
-						.append("/");
+				   .append("/");
 			} else {
 				lpse.append(lpseComponents.get(i));
 				uri.append(uriComponents.get(i));
-				if(uri.length() > 0 && uri.charAt(uri.length() - 1) != '/') {
+				if (uri.length() > 0 && uri.charAt(uri.length() - 1) != '/') {
 					uri.append("/");
 				}
 			}
@@ -219,8 +229,7 @@ public class ActiveProcessor extends Processor {
 
 	/**
 	 * <p>Return a valid URI path, in effect this will test to see whether there
-	 * is a uri part and a LPSE path.  If there isn't then it will return a single
-	 * forward slash '<code>/</code>'</p>
+	 * is a uri part and a LPSE path.  If there isn't then it will return a single forward slash '<code>/</code>'</p>
 	 *
 	 * @param uri The URI to test
 	 * @param lpse The LPSE code to test

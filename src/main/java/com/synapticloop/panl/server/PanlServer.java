@@ -242,10 +242,10 @@ public class PanlServer {
 		}
 
 		// register the single page search handlers
-		bootstrap.registerHandler(PanlSinglePageHandler.PANL_SINGLE_PAGE_BINDING + "*", new PanlSinglePageHandler(panlProperties, collectionRequestHandlers));
+		bootstrap.registerHandler(PanlSinglePageHandler.PANL_URL_BINDING_SINGLE_PAGE + "*", new PanlSinglePageHandler(panlProperties, collectionRequestHandlers));
 
 		// register the more facets handlers
-		bootstrap.registerHandler(PanlMoreFacetsHandler.PANL_MORE_FACETS_BINDING + "*", new PanlMoreFacetsHandler(panlProperties, collectionRequestHandlers));
+		bootstrap.registerHandler(PanlMoreFacetsHandler.PANL_URL_BINDING_MORE_FACETS + "*", new PanlMoreFacetsHandler(panlProperties, collectionRequestHandlers));
 
 		// finally register the collection and singlepagesearch handlers
 		for (CollectionRequestHandler collectionRequestHandler : collectionRequestHandlers) {
@@ -257,7 +257,7 @@ public class PanlServer {
 				LOGGER.info("Results will be available on /{}/{}/*", panlCollectionUri, resultFieldsName);
 			}
 
-			LOGGER.info("Binding Solr collection of '{}' to Panl configuration URI path " + PanlSinglePageHandler.PANL_SINGLE_PAGE_BINDING + "{}/", solrCollection, panlCollectionUri);
+			LOGGER.info("Binding Solr collection of '{}' to Panl configuration URI path " + PanlSinglePageHandler.PANL_URL_BINDING_SINGLE_PAGE + "{}/", solrCollection, panlCollectionUri);
 		}
 
 		// create the server

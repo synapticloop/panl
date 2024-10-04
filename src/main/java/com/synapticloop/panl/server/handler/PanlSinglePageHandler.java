@@ -47,7 +47,7 @@ import static com.synapticloop.panl.server.handler.webapp.util.ResourceHelper.*;
  * @author synapticloop
  */
 public class PanlSinglePageHandler implements HttpRequestHandler {
-	public static final String PANL_SINGLE_PAGE_BINDING = "/panl-single-page/";
+	public static final String PANL_URL_BINDING_SINGLE_PAGE = "/panl-single-page/";
 
 	private final PanlProperties panlProperties;
 	private final Map<String, CollectionRequestHandler> validCollections = new HashMap<>();
@@ -62,7 +62,7 @@ public class PanlSinglePageHandler implements HttpRequestHandler {
 	public PanlSinglePageHandler(PanlProperties panlProperties, List<CollectionRequestHandler> collectionRequestHandlers) {		this.panlProperties = panlProperties;
 		for(CollectionRequestHandler collectionRequestHandler : collectionRequestHandlers) {
 			validCollections.put(collectionRequestHandler.getPanlCollectionUri(), collectionRequestHandler);
-			validUrls.put(PANL_SINGLE_PAGE_BINDING + collectionRequestHandler.getPanlCollectionUri() + "/");
+			validUrls.put(PANL_URL_BINDING_SINGLE_PAGE + collectionRequestHandler.getPanlCollectionUri() + "/");
 		}
 	}
 
@@ -178,7 +178,6 @@ public class PanlSinglePageHandler implements HttpRequestHandler {
 									e.getClass().getCanonicalName(),
 									e.getMessage()));
 
-//				LOGGER.error("Could not handle the request.", e);
 					response.setEntity(new StringEntity(jsonObject.toString(), ResourceHelper.CONTENT_TYPE_JSON));
 				} else {
 					jsonObject.put(JSON_KEY_MESSAGE, JSON_VALUE_MESSAGE_500);

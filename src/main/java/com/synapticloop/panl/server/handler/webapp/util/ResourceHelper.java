@@ -62,7 +62,7 @@ public class ResourceHelper {
 	public static final String JSON_KEY_VALID_URLS = "valid_urls";
 
 	public static final String JSON_VALUE_MESSAGE_404 = "Not found";
-	public static final String JSON_VALUE_MESSAGE_500 = "internal server error";
+	public static final String JSON_VALUE_MESSAGE_500 = "Internal server error";
 
 	public static final ContentType CONTENT_TYPE_JSON = ContentType.create("application/json", StandardCharsets.UTF_8);
 	public static final ContentType CONTENT_TYPE_TEXT = ContentType.create("text/plain", StandardCharsets.UTF_8);

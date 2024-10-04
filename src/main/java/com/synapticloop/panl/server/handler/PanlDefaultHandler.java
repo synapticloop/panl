@@ -40,7 +40,8 @@ import static com.synapticloop.panl.server.handler.webapp.util.ResourceHelper.*;
 
 /**
  * <p>This is the default handler for any URLs that are not bound to a
- * collection.  It returns a 404 error code with a JSON object as the response.</p>
+ * collection.  It returns a 404 error code with a JSON object as the
+ * response.</p>
  *
  * <p>The response will be of the following form:</p>
  *
@@ -102,9 +103,6 @@ public class PanlDefaultHandler implements HttpRequestHandler {
 	 */
 	@Override public void handle(HttpRequest request, HttpResponse response, HttpContext context) {
 		response.setStatusCode(HttpStatus.SC_NOT_FOUND);
-		response.setEntity(
-				new StringEntity(
-						json404ErrorString,
-						CONTENT_TYPE_JSON));
+		response.setEntity(new StringEntity(json404ErrorString, CONTENT_TYPE_JSON));
 	}
 }

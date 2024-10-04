@@ -66,7 +66,10 @@ public class Main {
 		ALLOWABLE_COMMANDS.add(CMD_VALUE_SERVER);
 		ALLOWABLE_COMMANDS.add(CMD_VALUE_GENERATE);
 		ALLOWABLE_COMMANDS.add(CMD_VALUE_EDITOR);
+
+		System.setProperty("log4j.configurationFile", "classpath:log4j2.xml");
 	}
+
 
 	public static final String DEFAULT_PANL_PROPERTIES = "panl.properties";
 	public static final String DEFAULT_PORT_NUMBER = "8181";
