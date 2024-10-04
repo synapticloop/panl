@@ -106,6 +106,13 @@ distributions {
 	}
 }
 
+startScripts.doLast {
+	def unixScriptFile = file getUnixScript()
+	unixScriptFile.text = unixScriptFile.text.replace('CLASSPATH=$APP_HOME', 'CLASSPATH=$APP_HOME/lib/log4j2.xml:$APP_HOME')
+
+	def windowsScriptFile = file getWindowsScript()
+	windowsScriptFile.text = windowsScriptFile.text.replace('set CLASSPATH=%APP_HOME%', 'set CLASSPATH=%APP_HOME%/lib/log4j2.xml;%APP_HOME%')
+}
 //
 // Exclude the Log4J configuration
 //
