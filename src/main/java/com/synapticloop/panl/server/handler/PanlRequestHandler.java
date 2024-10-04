@@ -99,7 +99,7 @@ public class PanlRequestHandler implements HttpRequestHandler {
 				paths[2].isBlank() ||
 				!collectionRequestHandler.isValidResultsFields(paths[2])) {
 
-			return404Message(response);
+			set404ResponseMessage(response);
 			return;
 		}
 
@@ -112,13 +112,15 @@ public class PanlRequestHandler implements HttpRequestHandler {
 
 			response.setStatusCode(HttpStatus.SC_OK);
 		} catch (PanlNotFoundException e) {
-			return404Message(response);
+			set404ResponseMessage(response);
 		} catch (Exception e) {
-			return500Message(response, e);
+			set500ResponseMessage(response, e);
 		}
 	}
 
-	private void return500Message(HttpResponse response, Exception e) {
+	private void set500ResponseMessage(HttpResponse response, Exception e) {
+		LOGGER.error("Internal server error, message was '{}'", e.getMessage(), e);
+
 		response.setStatusCode(HttpStatus.SC_INTERNAL_SERVER_ERROR);
 
 		JSONObject jsonObject = new JSONObject();
@@ -130,7 +132,6 @@ public class PanlRequestHandler implements HttpRequestHandler {
 					e.getClass().getCanonicalName(),
 					e.getMessage()));
 
-			LOGGER.error("Could not handle the request.", e);
 			response.setEntity(
 				new StringEntity(
 					jsonObject.toString(),
@@ -141,7 +142,7 @@ public class PanlRequestHandler implements HttpRequestHandler {
 	}
 
 
-	private void return404Message(HttpResponse response) {
+	private void set404ResponseMessage(HttpResponse response) {
 		response.setStatusCode(HttpStatus.SC_NOT_FOUND);
 
 		JSONObject jsonObject = new JSONObject(collectionRequestHandler.getValidUrlsJSONArrayString());

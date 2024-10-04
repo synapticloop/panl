@@ -294,7 +294,7 @@ public class CollectionRequestHandler {
 				solrQuery.setRows(0);
 			}
 
-			LOGGER.info(solrQuery.toString());
+			LOGGER.debug(solrQuery.toString());
 
 			long buildRequestNanos = System.nanoTime() - startNanos;
 			startNanos = System.nanoTime();
@@ -521,7 +521,7 @@ public class CollectionRequestHandler {
 		}
 
 		for (LpseToken lpseToken : lpseTokens) {
-			LOGGER.info(lpseToken.explain());
+			LOGGER.debug(lpseToken.explain());
 		}
 
 		return (lpseTokens);

@@ -38,6 +38,8 @@ import org.apache.http.protocol.HttpContext;
 import org.apache.http.protocol.HttpRequestHandler;
 import org.json.JSONArray;
 import org.json.JSONObject;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.net.URISyntaxException;
 import java.util.HashMap;
@@ -57,6 +59,8 @@ import static com.synapticloop.panl.server.handler.webapp.util.ResourceHelper.*;
  * @author Synapticloop
  */
 public class PanlMoreFacetsHandler implements HttpRequestHandler {
+	private static final Logger LOGGER = LoggerFactory.getLogger(PanlMoreFacetsHandler.class);
+
 	public static final String PANL_URL_BINDING_MORE_FACETS = "/panl-more-facets/";
 
 	public static final String QUERY_PARAM_CODE = "code";
@@ -209,6 +213,7 @@ public class PanlMoreFacetsHandler implements HttpRequestHandler {
 	}
 
 	private void set500ResponseMessage(HttpResponse response, Exception e) {
+		LOGGER.error("Internal server error, message was '{}'", e.getMessage(), e);
 		response.setStatusCode(HttpStatus.SC_INTERNAL_SERVER_ERROR);
 		JSONObject jsonObject = new JSONObject();
 		jsonObject.put(JSON_KEY_ERROR, true);

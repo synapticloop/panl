@@ -1,12 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  ~ This is the default logging configuration file for the Panl server which
+  ~ does not do too much.
+  ~
+  ~ Panl does not log too many things, just startup and the incoming requests
+  ~ and validation
+  ~
+  -->
+
 <Configuration status="WARN">
+	<Loggers>
+		<!-- This is the root logger which just -->
+		<Root level="info">
+			<AppenderRef ref="Console"/>
+		</Root>
+
+		<Logger name="com.pkg.test.logging.method" level="DEBUG"
+						additivity="false">
+			<Appender-ref ref="fileAppender" level="DEBUG" />
+		</Logger>
+
+	</Loggers>
+
 	<Appenders>
 		<Console name="Console" target="SYSTEM_OUT">
 			<PatternLayout pattern="%d{HH:mm:ss.SSS} [%t] %-5level %logger{2} - %msg%n"/>
 		</Console>
 	</Appenders>
-	<Loggers>
-		<Root level="info">
-			<AppenderRef ref="Console"/>
-		</Root>
-	</Loggers>
 </Configuration>

@@ -111,6 +111,12 @@ distributions {
 		}
 	}
 }
+task copyLoggingFile(type: Copy) {
+		from file("src/main/resources/log4j.xml")
+		into file("src/dist/lib/log4j.xml")
+}
+
+build.dependsOn(copyLoggingFile)
 
 startScripts.doLast {
 	def unixScriptFile = file getUnixScript()

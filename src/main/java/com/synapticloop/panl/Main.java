@@ -268,7 +268,7 @@ public class Main {
 		try {
 			main.parseAndExecuteCommandLine();
 		} catch (PanlServerException | CommandLineOptionException | PanlGenerateException e) {
-			LOGGER.error("FAILURE to start, message was: {}", e.getMessage());
+			LOGGER.error("FAILURE to start, message was: {}", e.getMessage(), e);
 		}
 	}
 }
