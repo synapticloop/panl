@@ -30,13 +30,15 @@ import com.synapticloop.panl.exception.PanlGenerateException;
 import com.synapticloop.panl.exception.PanlServerException;
 import com.synapticloop.panl.generator.PanlGenerator;
 import com.synapticloop.panl.server.PanlServer;
+import org.apache.logging.log4j.core.LoggerContext;
+import org.apache.logging.log4j.core.config.ConfigurationFactory;
+import org.apache.logging.log4j.core.config.ConfigurationSource;
+import org.apache.logging.log4j.core.config.Configurator;
+import org.apache.logging.log4j.core.config.xml.XmlConfigurationFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
+import java.io.*;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -66,8 +68,7 @@ public class Main {
 		ALLOWABLE_COMMANDS.add(CMD_VALUE_SERVER);
 		ALLOWABLE_COMMANDS.add(CMD_VALUE_GENERATE);
 		ALLOWABLE_COMMANDS.add(CMD_VALUE_EDITOR);
-
-		System.setProperty("log4j.configurationFile", "classpath:log4j2.xml");
+//		System.setProperty("log4j.configurationFile", "./lib/log4j2.xml");
 	}
 
 
@@ -254,6 +255,17 @@ public class Main {
 	 * @param args The arguments to parse
 	 */
 	public static void main(String[] args) {
+		// set up the log4j configuration
+		String log4jConfigFile = null;
+		try {
+			log4jConfigFile = new File(".").getCanonicalPath() + File.separator + "log4j2.xml";
+			ConfigurationSource source = new ConfigurationSource(new FileInputStream(log4jConfigFile));
+			Configurator.initialize(null, source);
+		} catch (IOException e) {
+			throw new RuntimeException(e);
+		}
+
+
 		Main main = new Main(args);
 
 		LOGGER.info("                           __ ");
