@@ -415,8 +415,6 @@ public class CollectionRequestHandler {
 
 		panlObject.getJSONObject(JSON_KEY_AVAILABLE).put(Processor.JSON_KEY_FACETS, removedRanges);
 
-
-
 		panlObject.put(JSON_KEY_ACTIVE, activeProcessor.processToObject(panlTokenMap));
 		panlObject.put(JSON_KEY_PAGINATION, paginationProcessor.processToObject(panlTokenMap, response));
 		panlObject.put(JSON_KEY_SORTING, sortingProcessor.processToObject(panlTokenMap));
@@ -581,6 +579,11 @@ public class CollectionRequestHandler {
 		return panlCollectionUri;
 	}
 
+	/**
+	 * <p>Get the defined LPSE order.</p>
+	 *
+	 * @return The List of the LPSE order
+	 */
 	public List<String> getLpseOrder() {
 		return(collectionProperties.getPanlLpseOrderList());
 	}

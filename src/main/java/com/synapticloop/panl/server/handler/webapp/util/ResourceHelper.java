@@ -44,7 +44,12 @@ import java.util.Objects;
 
 /**
  * <p>A helper class for serving up assets from the classpath.  Used by the
- * panl result viewer / explainer (and helpers) in-built handler.</p>
+ * panl result viewer / explainer / single search page (and helpers) in-built
+ * handlers.</p>
+ *
+ * <p>In effect this looks for a resource on the classpath and returns it if
+ * found.  It will also cache the contents - including not founds and internal
+ * server errors.</p>
  *
  * @author synapticloop
  */
@@ -57,7 +62,7 @@ public class ResourceHelper {
 	public static final String JSON_KEY_VALID_URLS = "valid_urls";
 
 	public static final String JSON_VALUE_MESSAGE_404 = "Not found";
-	public static final String JSON_VALUE_MESSAGE_500 = "internal server error";
+	public static final String JSON_VALUE_MESSAGE_500 = "Internal server error";
 
 	public static final ContentType CONTENT_TYPE_JSON = ContentType.create("application/json", StandardCharsets.UTF_8);
 	public static final ContentType CONTENT_TYPE_TEXT = ContentType.create("text/plain", StandardCharsets.UTF_8);
@@ -80,7 +85,8 @@ public class ResourceHelper {
 	private static final Map<String, Integer> CONTENT_RESPONSE_CODE_CACHE = new HashMap<>();
 
 	/**
-	 * <p>Serve a resourcePath from the class loader and cache the response.</p>
+	 * <p>Serve a resourcePath from the class loader and cache the response on
+	 * first access.  This will return the cached response if it exists.</p>
 	 *
 	 * <p><strong> NOTE:</strong> that this is not supposed to be performant.</p>
 	 *
@@ -97,15 +103,18 @@ public class ResourceHelper {
 		try (InputStream resourceAsStream = PanlResultsStaticHandler.class.getResourceAsStream(resourcePath)) {
 			if (null != resourceAsStream) {
 				byte[] content = resourceAsStream.readAllBytes();
+
 				ContentType contentType = getContentType(resourcePath);
 
 				CONTENT_CACHE.put(resourcePath, content);
 				CONTENT_TYPE_CACHE.put(resourcePath, contentType);
 				CONTENT_RESPONSE_CODE_CACHE.put(resourcePath, HttpStatus.SC_OK);
+
 			} else {
 				JSONObject jsonObject = new JSONObject();
 				jsonObject.put(JSON_KEY_ERROR, true);
 				jsonObject.put(JSON_KEY_MESSAGE, "Could not find the resourcePath '" + resourcePath + "'");
+
 				CONTENT_CACHE.put(resourcePath, jsonObject.toString().getBytes());
 				CONTENT_TYPE_CACHE.put(resourcePath, CONTENT_TYPE_JSON);
 				CONTENT_RESPONSE_CODE_CACHE.put(resourcePath, HttpStatus.SC_NOT_FOUND);
@@ -124,7 +133,7 @@ public class ResourceHelper {
 	}
 
 	/**
-	 * <p>Simple get the content type from the extension helper method.  Just a
+	 * <p>Simply get the content type from the extension helper method.  Just a
 	 * quick lookup on the extension of the file.</p>
 	 *
 	 * <p>There is a limited number of content types that this will work on, with

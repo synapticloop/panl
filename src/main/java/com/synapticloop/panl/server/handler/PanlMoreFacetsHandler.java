@@ -49,9 +49,15 @@ import static com.synapticloop.panl.server.handler.webapp.util.ResourceHelper.*;
 /**
  * <p>This is the handler which will return more facets for a specific facet
  * to then be populated.</p>
+ *
+ * <p>In effect, this will do a complete Solr query, setting the facet and
+ * limit for the request, discarding any of the un-wanted response objects, and
+ * just returning the requested facets.</p>
+ *
+ * @author Synapticloop
  */
 public class PanlMoreFacetsHandler implements HttpRequestHandler {
-	public static final String PANL_MORE_FACETS_BINDING = "/panl-more-facets/";
+	public static final String PANL_URL_BINDING_MORE_FACETS = "/panl-more-facets/";
 
 	public static final String QUERY_PARAM_CODE = "code";
 	public static final String QUERY_PARAM_LIMIT = "limit";
@@ -60,31 +66,29 @@ public class PanlMoreFacetsHandler implements HttpRequestHandler {
 	public static final String CONTEXT_KEY_FACET_LIMIT = "facet_limit";
 
 	private final PanlProperties panlProperties;
-	private final List<CollectionRequestHandler> collectionRequestHandlers;
 	private final Map<String, CollectionRequestHandler> validCollections = new HashMap<>();
 	private final JSONArray validUrls = new JSONArray();
 
 	/**
 	 * <p>Instantiate the Panl more facets handle.</p>
 	 *
-	 * @param panlProperties            The panl properties
+	 * @param panlProperties The panl properties
 	 * @param collectionRequestHandlers The collection request handler
 	 */
 	public PanlMoreFacetsHandler(PanlProperties panlProperties, List<CollectionRequestHandler> collectionRequestHandlers) {
 		this.panlProperties = panlProperties;
-		this.collectionRequestHandlers = collectionRequestHandlers;
 		for (CollectionRequestHandler collectionRequestHandler : collectionRequestHandlers) {
 			validCollections.put(collectionRequestHandler.getPanlCollectionUri(), collectionRequestHandler);
-			validUrls.put(PANL_MORE_FACETS_BINDING + collectionRequestHandler.getPanlCollectionUri() + "/");
+			validUrls.put(PANL_URL_BINDING_MORE_FACETS + collectionRequestHandler.getPanlCollectionUri() + "/");
 		}
 	}
 
 	/**
 	 * <p>Return the JSON object that contains just the facet that is required.</p>
 	 *
-	 * @param request  the HTTP request.
+	 * @param request the HTTP request.
 	 * @param response the HTTP response.
-	 * @param context  the HTTP execution context.
+	 * @param context the HTTP execution context.
 	 */
 	@Override
 	public void handle(HttpRequest request, HttpResponse response, HttpContext context) {
@@ -92,6 +96,7 @@ public class PanlMoreFacetsHandler implements HttpRequestHandler {
 		// the first thing that we are going to do is to ensure that we have a
 		// valid uri with the correct parameters
 		String uri = request.getRequestLine().getUri() + "?";
+
 		boolean isGoodRequest = false;
 		String lpseCode = null;
 		Integer facetLimit = null;
@@ -113,7 +118,8 @@ public class PanlMoreFacetsHandler implements HttpRequestHandler {
 				isGoodRequest = true;
 			}
 		} catch (URISyntaxException e) {
-
+			set500ResponseMessage(response, e);
+			return;
 		}
 
 		uri = uri.substring(0, uri.indexOf('?'));
@@ -193,29 +199,34 @@ public class PanlMoreFacetsHandler implements HttpRequestHandler {
 						ResourceHelper.CONTENT_TYPE_JSON)
 				);
 			} catch (PanlNotFoundException e) {
-				return404Message(response);
+				set404ResponseMessage(response);
 			} catch (Exception e) {
-				response.setStatusCode(HttpStatus.SC_INTERNAL_SERVER_ERROR);
-				JSONObject jsonObject = new JSONObject();
-				jsonObject.put(JSON_KEY_ERROR, true);
-				jsonObject.put(JSON_KEY_STATUS, HttpStatus.SC_INTERNAL_SERVER_ERROR);
-				if (panlProperties.getUseVerbose500Messages()) {
-					jsonObject.put(JSON_KEY_MESSAGE,
-						String.format("Class: %s, message: %s.",
-							e.getClass().getCanonicalName(),
-							e.getMessage()));
-
-					response.setEntity(new StringEntity(jsonObject.toString(), ResourceHelper.CONTENT_TYPE_JSON));
-				} else {
-					jsonObject.put(JSON_KEY_MESSAGE, JSON_VALUE_MESSAGE_500);
-				}
+				set500ResponseMessage(response, e);
 			}
 		} else {
-			return404Message(response);
+			set404ResponseMessage(response);
 		}
 	}
 
-	private void return404Message(HttpResponse response) {
+	private void set500ResponseMessage(HttpResponse response, Exception e) {
+		response.setStatusCode(HttpStatus.SC_INTERNAL_SERVER_ERROR);
+		JSONObject jsonObject = new JSONObject();
+		jsonObject.put(JSON_KEY_ERROR, true);
+		jsonObject.put(JSON_KEY_STATUS, HttpStatus.SC_INTERNAL_SERVER_ERROR);
+		if (panlProperties.getUseVerbose500Messages()) {
+			jsonObject.put(JSON_KEY_MESSAGE,
+				String.format("Class: %s, message: %s.",
+					e.getClass().getCanonicalName(),
+					e.getMessage()));
+
+			response.setEntity(new StringEntity(jsonObject.toString(), ResourceHelper.CONTENT_TYPE_JSON));
+		} else {
+			jsonObject.put(JSON_KEY_MESSAGE, JSON_VALUE_MESSAGE_500);
+		}
+	}
+
+	private void set404ResponseMessage(HttpResponse response) {
+		response.setStatusCode(HttpStatus.SC_NOT_FOUND);
 
 		JSONObject jsonObject = new JSONObject();
 
