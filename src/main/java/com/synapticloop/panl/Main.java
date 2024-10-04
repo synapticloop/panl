@@ -68,7 +68,6 @@ public class Main {
 		ALLOWABLE_COMMANDS.add(CMD_VALUE_SERVER);
 		ALLOWABLE_COMMANDS.add(CMD_VALUE_GENERATE);
 		ALLOWABLE_COMMANDS.add(CMD_VALUE_EDITOR);
-//		System.setProperty("log4j.configurationFile", "./lib/log4j2.xml");
 	}
 
 
@@ -255,17 +254,6 @@ public class Main {
 	 * @param args The arguments to parse
 	 */
 	public static void main(String[] args) {
-		// set up the log4j configuration
-		String log4jConfigFile = null;
-		try {
-			log4jConfigFile = new File(".").getCanonicalPath() + File.separator + "log4j2.xml";
-			ConfigurationSource source = new ConfigurationSource(new FileInputStream(log4jConfigFile));
-			Configurator.initialize(null, source);
-		} catch (IOException e) {
-			throw new RuntimeException(e);
-		}
-
-
 		Main main = new Main(args);
 
 		LOGGER.info("                           __ ");

@@ -112,6 +112,14 @@ distributions {
 	}
 }
 
+startScripts.doLast {
+	def unixScriptFile = file getUnixScript()
+	unixScriptFile.text = unixScriptFile.text.replace('DEFAULT_JVM_OPTS=""', 'DEFAULT_JVM_OPTS="-Dlog4j.configurationFile=lib/log4j2.xml"')
+
+	def windowsScriptFile = file getWindowsScript()
+	windowsScriptFile.text = windowsScriptFile.text.replace('set DEFAULT_JVM_OPTS=', 'set DEFAULT_JVM_OPTS=-Dlog4j.configurationFile=lib\\log4j2.xml')
+}
+
 //
 // Exclude the Log4J configuration
 //
