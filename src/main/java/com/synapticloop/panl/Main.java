@@ -25,6 +25,7 @@ package com.synapticloop.panl;
  */
 
 import com.synapticloop.panl.editor.PanlEditor;
+import com.synapticloop.panl.editor.PanlProjectLauncher;
 import com.synapticloop.panl.exception.CommandLineOptionException;
 import com.synapticloop.panl.exception.PanlGenerateException;
 import com.synapticloop.panl.exception.PanlServerException;
@@ -38,6 +39,7 @@ import org.apache.logging.log4j.core.config.xml.XmlConfigurationFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.swing.*;
 import java.io.*;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -140,7 +142,9 @@ public class Main {
 				parseAndExecuteGenerateCommands();
 				break;
 			case CMD_VALUE_EDITOR:
-				new PanlEditor().show();
+				SwingUtilities.invokeLater(() -> {
+					new PanlProjectLauncher().show();
+				});
 				break;
 		}
 	}
