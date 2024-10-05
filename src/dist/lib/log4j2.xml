@@ -10,20 +10,28 @@
 
 <Configuration status="WARN">
 	<Loggers>
-		<!-- This is the root logger which just -->
+		<!--
+		  ~ This is the root logger which just logs the INFO messages to the
+		  ~ console, which are the generic startup messages.
+		  -->
 		<Root level="info">
-			<AppenderRef ref="Console"/>
+			<AppenderRef ref="console"/>
 		</Root>
 
-		<Logger name="com.pkg.test.logging.method" level="DEBUG"
-						additivity="false">
-			<Appender-ref ref="fileAppender" level="DEBUG" />
+		<!--
+		  ~ The Panl request handlers log on the debug level for the incoming panl
+		  ~ token validation and the transposed Solr query that is executed.  To
+		  ~ remove this logging, comment out the following Logger, or just delete
+		  ~ it.
+		  -->
+		<Logger name="com.synapticloop.panl.server.handler" level="debug" additivity="false">
+			<Appender-ref ref="console" />
 		</Logger>
 
 	</Loggers>
 
 	<Appenders>
-		<Console name="Console" target="SYSTEM_OUT">
+		<Console name="console" target="SYSTEM_OUT">
 			<PatternLayout pattern="%d{HH:mm:ss.SSS} [%t] %-5level %logger{2} - %msg%n"/>
 		</Console>
 	</Appenders>

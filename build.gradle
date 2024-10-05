@@ -111,14 +111,15 @@ distributions {
 		}
 	}
 }
-task copyLoggingFile(type: Copy) {
-		from file("src/main/resources/log4j.xml")
-		into file("src/dist/lib/log4j.xml")
+
+task copyLoggingFile {
+	copy {
+		from file("src/main/resources/log4j2.xml")
+		into file("src/dist/lib/")
+	}
 }
 
-build.dependsOn(copyLoggingFile)
-
-startScripts.doLast {
+tasks.startScripts.doLast {
 	def unixScriptFile = file getUnixScript()
 	unixScriptFile.text = unixScriptFile.text.replace('DEFAULT_JVM_OPTS=""', 'DEFAULT_JVM_OPTS="-Dlog4j.configurationFile=lib/log4j2.xml"')
 
