@@ -27,9 +27,6 @@ package com.synapticloop.panl.editor;
 import com.formdev.flatlaf.FlatClientProperties;
 import com.formdev.flatlaf.FlatDarkLaf;
 import com.formdev.flatlaf.FlatLightLaf;
-import com.formdev.flatlaf.ui.FlatLineBorder;
-import com.synapticloop.panl.editor.tab.NewCollectionTab;
-import com.synapticloop.panl.editor.tab.PanlPropertiesEditTab;
 import com.synapticloop.panl.editor.util.Settings;
 
 import javax.swing.*;
@@ -44,6 +41,7 @@ import static com.synapticloop.panl.editor.Constants.*;
 public class PanlProjectLauncher implements ActionListener {
 	public static final EmptyBorder EMPTY_BORDER = new EmptyBorder(12, 12, 12, 12);
 	private boolean isDarkUI = false;
+	private JFrame mainWindowFrame;
 
 	public void show() {
 		Settings.loadSettings();
@@ -60,11 +58,11 @@ public class PanlProjectLauncher implements ActionListener {
 			System.err.println("Failed to initialize Flat Look and Feel");
 		}
 
-		JFrame mainWindowFrame = new JFrame("Panl Project Launcher");
+		mainWindowFrame = new JFrame("Panl Project Launcher");
 		mainWindowFrame.setIconImage(ICON_APP.getImage());
 
-		mainWindowFrame.setPreferredSize(new Dimension(800, 400));
-		mainWindowFrame.setMinimumSize(new Dimension(800, 400));
+		mainWindowFrame.setPreferredSize(new Dimension(800, 480));
+		mainWindowFrame.setMinimumSize(new Dimension(800, 480));
 		mainWindowFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
 		mainWindowFrame.setJMenuBar(createJMenuBar(mainWindowFrame));
@@ -84,6 +82,7 @@ public class PanlProjectLauncher implements ActionListener {
 
 		JMenuItem exitMenuItem = new JMenuItem("Quit");
 		exitMenuItem.setIcon(ICON_QUIT);
+		exitMenuItem.addActionListener(this);
 		fileMenuItem.add(exitMenuItem);
 
 		jMenuBar.add(fileMenuItem);
@@ -91,23 +90,23 @@ public class PanlProjectLauncher implements ActionListener {
 		jMenuBar.add(Box.createGlue());
 
 		jMenuBar.add(new JLabel("       "));
-		JButton uiButton = new JButton("Dark mode", ICON_MOON);
-		jMenuBar.add(uiButton);
-		uiButton.addActionListener(e -> {
+		JButton presentationModeButton = new JButton("Dark mode", ICON_MOON);
+		jMenuBar.add(presentationModeButton);
+		presentationModeButton.addActionListener(e -> {
 			try {
 				if (isDarkUI) {
 					UIManager.setLookAndFeel(new FlatLightLaf());
 					SwingUtilities.updateComponentTreeUI(jFrame);
-					uiButton.setText("Dark mode");
-					uiButton.setIcon(ICON_MOON);
+					presentationModeButton.setText("Dark mode");
+					presentationModeButton.setIcon(ICON_MOON);
 					exitMenuItem.setIcon(ICON_QUIT);
 
 					isDarkUI = false;
 				} else {
 					UIManager.setLookAndFeel(new FlatDarkLaf());
 					SwingUtilities.updateComponentTreeUI(jFrame);
-					uiButton.setText("Light mode");
-					uiButton.setIcon(ICON_SUN);
+					presentationModeButton.setText("Light mode");
+					presentationModeButton.setIcon(ICON_SUN);
 					exitMenuItem.setIcon(ICON_QUIT_WHITE);
 
 					isDarkUI = true;
@@ -123,24 +122,65 @@ public class PanlProjectLauncher implements ActionListener {
 	private JPanel createProjectPane() {
 		JPanel jPanel = new JPanel(new BorderLayout());
 
+
+		jPanel.add(createFileList(), BorderLayout.CENTER);
+		jPanel.add(createDropZones(), BorderLayout.EAST);
+		jPanel.add(createOpenFile(), BorderLayout.SOUTH);
+
+		return (jPanel);
+	}
+
+	private Box createOpenFile() {
+		Box vBox = Box.createHorizontalBox();
+		vBox.add(Box.createHorizontalGlue());
+		vBox.setBorder(BorderFactory.createEmptyBorder(16, 16, 16, 16));
+		JButton openFile = new JButton("Open file");
+		openFile.setEnabled(false);
+
+		vBox.add(openFile);
+		vBox.add(Box.createHorizontalGlue());
+		return(vBox);
+	}
+
+	private Box createFileList() {
+		Box scrollPaneBox = Box.createVerticalBox();
+		scrollPaneBox.setBorder(new EmptyBorder(0, 12, 12, 0));
+
+		Box vbox = Box.createHorizontalBox();
+		vbox.putClientProperty(FlatClientProperties.STYLE, "margin: 16");
+
+		JLabel jLabel = new JLabel("<html><body style=\"text-align: left; padding-right: 16; margin: 0;\"><h2>Recent" +
+			" " +
+			"files" +
+			"." +
+			".." +
+			"</h2></body></html>");
+		jLabel.putClientProperty( "FlatLaf.styleClass", "h2" );
+		jLabel.setHorizontalAlignment(SwingConstants.LEFT);
+		vbox.add(jLabel);
+		scrollPaneBox.add(vbox);
+
+		JScrollPane jScrollPane = new JScrollPane();
+
+		scrollPaneBox.add(jScrollPane);
+		return(scrollPaneBox);
+	}
+
+	private Box createDropZones() {
 		Box labelBox = Box.createVerticalBox();
-		labelBox.setBorder(EMPTY_BORDER);
+		labelBox.setBorder(new EmptyBorder(50, 12, 0, 12));
 		labelBox.putClientProperty(FlatClientProperties.STYLE, "margin: 16");
 
-
 		labelBox.add(createDropLabel("Drop panl.properties file"));
-
 		labelBox.add(Box.createRigidArea(new Dimension(10, 10)));
-
 		labelBox.add(createDropLabel("Drop Solr managed schema file"));
 
-		jPanel.add(labelBox, BorderLayout.EAST);
-		return (jPanel);
+		return(labelBox);
 	}
 
 	private JLabel createDropLabel(String text) {
 		JLabel dropPanlProperties = new JLabel(
-			"<html><body style=\"text-align: center; padding: 0px;\"><h2>" + text + "</h1></body></html>",
+			"<html><body style=\"text-align: center; padding: 0px;\"><h2>" + text + "</h2></body></html>",
 			SwingConstants.CENTER);
 		dropPanlProperties.putClientProperty( "FlatLaf.styleClass", "h1" );
 		dropPanlProperties.setPreferredSize(new Dimension(140, 140));
@@ -148,7 +188,11 @@ public class PanlProjectLauncher implements ActionListener {
 		return(dropPanlProperties);
 	}
 
-	@Override	public void actionPerformed(ActionEvent quitEvent) {
-
+	@Override	public void actionPerformed(ActionEvent actionEvent) {
+		if(actionEvent.getActionCommand().equals("Quit")) {
+			Settings.setIsDarkMode(isDarkUI);
+			Settings.saveSettings();
+			mainWindowFrame.dispatchEvent(new WindowEvent(mainWindowFrame, WindowEvent.WINDOW_CLOSING));
+		}
 	}
 }

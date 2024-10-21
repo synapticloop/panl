@@ -27,18 +27,22 @@ package com.synapticloop.panl.editor.util;
 import net.harawata.appdirs.AppDirsFactory;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
+import org.json.JSONObject;
 
 import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Properties;
 
 public class Settings {
 	public static String APP_DATA_DIRECTORY = AppDirsFactory.getInstance().getUserDataDir("Panl", null, "Synapticloop");
-	public static String APP_PROPERTIES_LOCATION = APP_DATA_DIRECTORY + File.separator + "panl.txt";
+	public static String APP_PROPERTIES_LOCATION = APP_DATA_DIRECTORY + File.separator + "panl.json";
+
+	public static final String SETTING_IS_DARK_MODE = "isDarkMode";
+
 	private static boolean isInitialised = false;
 	private static final List<String> RECENT_FILES = new ArrayList<>();
+	private static JSONObject settingsJson;
 
 	public synchronized static void loadSettings() {
 		if (isInitialised) {
@@ -47,13 +51,15 @@ public class Settings {
 
 		File file = new File(APP_PROPERTIES_LOCATION);
 		try (FileInputStream fileInputStream = new FileInputStream(file)) {
+			StringBuilder stringBuilder = new StringBuilder();
 			for (String readLine : IOUtils.readLines(fileInputStream, StandardCharsets.UTF_8)) {
 				if(!readLine.trim().isEmpty()) {
-					RECENT_FILES.add(readLine.trim());
+					stringBuilder.append(readLine.trim());
 				}
 			}
-		} catch (IOException ignored) {
-			// do nothing - on save, a new file will be created
+			settingsJson = new JSONObject(stringBuilder.toString());
+		} catch (Exception ex) {
+			settingsJson = new JSONObject();
 		}
 		isInitialised = true;
 	}
@@ -61,12 +67,20 @@ public class Settings {
 	public synchronized static void saveSettings() {
 		File file = new File(APP_PROPERTIES_LOCATION);
 		try {
-			FileUtils.writeLines(file, RECENT_FILES);
+			FileUtils.write(file, settingsJson.toString(), StandardCharsets.UTF_8);
 		} catch (IOException ignored) {
 		}
 	}
 
-	private static List<String> getRecentFiles() {
+	public static void setIsDarkMode(boolean isDarkMode) {
+		settingsJson.put(SETTING_IS_DARK_MODE, isDarkMode);
+	}
+
+	public static boolean getIsDarkMode() {
+		return(settingsJson.optBoolean(SETTING_IS_DARK_MODE, false));
+	}
+
+	public static List<String> getRecentFiles() {
 		return(RECENT_FILES);
 	}
 }
