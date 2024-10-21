@@ -34,6 +34,7 @@ import javax.swing.border.EmptyBorder;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 
 import static com.synapticloop.panl.editor.Constants.*;
@@ -42,6 +43,9 @@ public class PanlProjectLauncher implements ActionListener {
 	public static final EmptyBorder EMPTY_BORDER = new EmptyBorder(12, 12, 12, 12);
 	private boolean isDarkUI = false;
 	private JFrame mainWindowFrame;
+
+	private JButton presentationModeButton;
+	private JMenuItem exitMenuItem;
 
 	public void show() {
 		Settings.loadSettings();
@@ -65,11 +69,21 @@ public class PanlProjectLauncher implements ActionListener {
 		mainWindowFrame.setMinimumSize(new Dimension(800, 480));
 		mainWindowFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
+		mainWindowFrame.addWindowListener(new WindowAdapter() {
+			@Override public void windowClosing(WindowEvent e) {
+				actionOnWindowClosing();
+				super.windowClosing(e);
+			}
+		}) ;
+
 		mainWindowFrame.setJMenuBar(createJMenuBar(mainWindowFrame));
 
 		mainWindowFrame.getContentPane().add(createProjectPane());
 
 		mainWindowFrame.pack();
+
+		this.isDarkUI = Settings.getIsDarkMode();
+		setPresentationMode();
 
 		mainWindowFrame.setVisible(true);
 	}
@@ -80,7 +94,7 @@ public class PanlProjectLauncher implements ActionListener {
 
 		JMenu fileMenuItem = new JMenu("File");
 
-		JMenuItem exitMenuItem = new JMenuItem("Quit");
+		exitMenuItem = new JMenuItem("Quit");
 		exitMenuItem.setIcon(ICON_QUIT);
 		exitMenuItem.addActionListener(this);
 		fileMenuItem.add(exitMenuItem);
@@ -90,33 +104,35 @@ public class PanlProjectLauncher implements ActionListener {
 		jMenuBar.add(Box.createGlue());
 
 		jMenuBar.add(new JLabel("       "));
-		JButton presentationModeButton = new JButton("Dark mode", ICON_MOON);
+		presentationModeButton = new JButton("Dark mode", ICON_MOON);
 		jMenuBar.add(presentationModeButton);
 		presentationModeButton.addActionListener(e -> {
-			try {
-				if (isDarkUI) {
-					UIManager.setLookAndFeel(new FlatLightLaf());
-					SwingUtilities.updateComponentTreeUI(jFrame);
-					presentationModeButton.setText("Dark mode");
-					presentationModeButton.setIcon(ICON_MOON);
-					exitMenuItem.setIcon(ICON_QUIT);
+			isDarkUI = !isDarkUI;
+			setPresentationMode();
 
-					isDarkUI = false;
-				} else {
-					UIManager.setLookAndFeel(new FlatDarkLaf());
-					SwingUtilities.updateComponentTreeUI(jFrame);
-					presentationModeButton.setText("Light mode");
-					presentationModeButton.setIcon(ICON_SUN);
-					exitMenuItem.setIcon(ICON_QUIT_WHITE);
-
-					isDarkUI = true;
-				}
-			} catch (UnsupportedLookAndFeelException ex) {
-				throw new RuntimeException(ex);
-			}
 		});
 
 		return (jMenuBar);
+	}
+
+	private void setPresentationMode() {
+		try {
+			if (!isDarkUI) {
+				UIManager.setLookAndFeel(new FlatLightLaf());
+				SwingUtilities.updateComponentTreeUI(mainWindowFrame);
+				presentationModeButton.setText("Dark mode");
+				presentationModeButton.setIcon(ICON_MOON);
+				exitMenuItem.setIcon(ICON_QUIT);
+			} else {
+				UIManager.setLookAndFeel(new FlatDarkLaf());
+				SwingUtilities.updateComponentTreeUI(mainWindowFrame);
+				presentationModeButton.setText("Light mode");
+				presentationModeButton.setIcon(ICON_SUN);
+				exitMenuItem.setIcon(ICON_QUIT_WHITE);
+			}
+		} catch (UnsupportedLookAndFeelException ex) {
+			throw new RuntimeException(ex);
+		}
 	}
 
 	private JPanel createProjectPane() {
@@ -190,9 +206,13 @@ public class PanlProjectLauncher implements ActionListener {
 
 	@Override	public void actionPerformed(ActionEvent actionEvent) {
 		if(actionEvent.getActionCommand().equals("Quit")) {
-			Settings.setIsDarkMode(isDarkUI);
-			Settings.saveSettings();
+			actionOnWindowClosing();
 			mainWindowFrame.dispatchEvent(new WindowEvent(mainWindowFrame, WindowEvent.WINDOW_CLOSING));
 		}
+	}
+
+	private void actionOnWindowClosing() {
+		Settings.setIsDarkMode(isDarkUI);
+		Settings.saveSettings();
 	}
 }
