@@ -28,17 +28,47 @@ import com.formdev.flatlaf.FlatDarkLaf;
 import com.formdev.flatlaf.FlatLightLaf;
 import com.synapticloop.panl.editor.tab.NewCollectionTab;
 import com.synapticloop.panl.editor.tab.PanlPropertiesEditTab;
-import com.synapticloop.panl.editor.tab.PanlPropertiesNewTab;
+import com.synapticloop.panl.editor.util.DialogHelper;
+import com.synapticloop.panl.editor.util.Settings;
+import com.synapticloop.panl.server.handler.properties.PanlProperties;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.KeyEvent;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Properties;
 
 import static com.synapticloop.panl.editor.Constants.*;
 
 public class PanlEditor {
+	private JFrame mainWindowFrame;
+	private PanlProjectLauncher panlProjectLauncher;
+	private JMenu fileMenuItem;
+	private JMenuItem saveMenuItem;
+	private JMenuItem quitMenuItem;
+	private JLabel labelEdited;
 
-	private boolean isDarkUI = false;
+
+	private File file;
+	private boolean isEdited = false;
+	private List<File> collectionPropertyFiles = new ArrayList<>();
+	private PanlProperties panlProperties;
+
+	public PanlEditor(File file, PanlProjectLauncher panlProjectLauncher) throws IOException {
+		this.file = file;
+		this.panlProjectLauncher = panlProjectLauncher;
+
+		Properties properties = new Properties();
+		properties.load(new FileInputStream(file));
+		this.panlProperties = new PanlProperties(properties);
+	}
 
 	public void show() {
 		FlatLightLaf.setup();
@@ -49,18 +79,22 @@ public class PanlEditor {
 			System.err.println("Failed to initialize Flat Look and Feel");
 		}
 
-
-		JFrame mainWindowFrame = new JFrame("Panl Configuration Editor");
+		mainWindowFrame = new JFrame("Panl Configuration Editor");
 		mainWindowFrame.setIconImage(ICON_APP.getImage());
 
-		mainWindowFrame.setPreferredSize(new Dimension(800, 600));
-		mainWindowFrame.setMinimumSize(new Dimension(800, 600));
-		mainWindowFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		mainWindowFrame.setResizable(false);
+		mainWindowFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+		mainWindowFrame.addWindowListener(new WindowAdapter() {
+			@Override public void windowClosing(WindowEvent e) {
+				actionOnWindowClosing();
+				super.windowClosing(e);
+			}
+		});
 
 		mainWindowFrame.setJMenuBar(createJMenuBar(mainWindowFrame));
 
 		JTabbedPane jTabbedPane = new JTabbedPane();
-		jTabbedPane.add("panl", PanlPropertiesEditTab.getJPanel(null));
+		jTabbedPane.add("[PANL] " + file.getName(), new PanlPropertiesEditTab(this).getJPanel());
 		Component newCollection = NewCollectionTab.createNewCollection();
 		jTabbedPane.add("[ + ]", newCollection);
 		jTabbedPane.setEnabledAt(1, false);
@@ -70,7 +104,22 @@ public class PanlEditor {
 			System.out.println(selectedTab.getTitleAt(selectedTab.getSelectedIndex()));
 		});
 
-		mainWindowFrame.getContentPane().add(jTabbedPane, BorderLayout.NORTH);
+		Box fileLabelBox = Box.createHorizontalBox();
+
+		JLabel jLabel = new JLabel(file.getAbsolutePath());
+		jLabel.putClientProperty( "FlatLaf.styleClass", "h3" );
+		jLabel.setBorder(BorderFactory.createEmptyBorder(4, 4, 4, 4));
+		fileLabelBox.add(jLabel);
+		fileLabelBox.add(Box.createHorizontalGlue());
+		labelEdited = new JLabel("");
+		labelEdited.setBorder(BorderFactory.createEmptyBorder(4, 4, 4, 4));
+		fileLabelBox.add(labelEdited);
+
+
+		mainWindowFrame.add(fileLabelBox, BorderLayout.NORTH);
+
+		mainWindowFrame.getContentPane().add(jTabbedPane, BorderLayout.CENTER);
+		mainWindowFrame.setLocation(Settings.getSubPosition(file.getAbsolutePath()));
 
 		mainWindowFrame.pack();
 
@@ -80,62 +129,106 @@ public class PanlEditor {
 	private JMenuBar createJMenuBar(JFrame jFrame) {
 		JMenuBar jMenuBar = new JMenuBar();
 
-		JMenu fileMenuItem = new JMenu("File");
+		fileMenuItem = new JMenu("File");
 		fileMenuItem.setIcon(ICON_FILE);
 
-		JMenuItem recentsMenuItem = new JMenuItem("Recent files...");
-		recentsMenuItem.setIcon(ICON_RECENT);
+		saveMenuItem = new JMenuItem("Save");
+		Action saveAction = new AbstractAction("Save") {
+			@Override public void actionPerformed(ActionEvent e) {
+				// TODO - save file
+				setIsEdited(false);
+			}
+		};
 
-		fileMenuItem.add(recentsMenuItem);
-		fileMenuItem.addSeparator();
-
-		JMenuItem saveMenuItem = new JMenuItem("Save");
+		saveAction.putValue(Action.ACCELERATOR_KEY, KeyStroke.getKeyStroke(KeyEvent.VK_S, KeyEvent.CTRL_DOWN_MASK));
+		saveMenuItem.setAction(saveAction);
 		saveMenuItem.setIcon(ICON_SAVE);
+
+
 		fileMenuItem.add(saveMenuItem);
 
 		fileMenuItem.addSeparator();
 
-		JMenuItem exitMenuItem = new JMenuItem("Quit");
-		exitMenuItem.setIcon(ICON_QUIT);
-		fileMenuItem.add(exitMenuItem);
+		quitMenuItem = new JMenuItem("Quit");
+		Action quitAction = new AbstractAction("Quit") {
+			@Override public void actionPerformed(ActionEvent e) {
+				if(isEdited) {
+					// show a window
+				}
+				mainWindowFrame.dispatchEvent(new WindowEvent(mainWindowFrame, WindowEvent.WINDOW_CLOSING));
+			}
+		};
+		quitAction.putValue(Action.ACCELERATOR_KEY, KeyStroke.getKeyStroke(KeyEvent.VK_Q, KeyEvent.CTRL_DOWN_MASK));
+		quitMenuItem.setAction(quitAction);
+		quitMenuItem.setIcon(ICON_QUIT);
+
+		fileMenuItem.add(quitMenuItem);
 
 		jMenuBar.add(fileMenuItem);
 
 		jMenuBar.add( Box.createGlue() );
 
-		jMenuBar.add(new JLabel("       "));
-		JButton uiButton = new JButton("Dark mode", ICON_MOON);
-		jMenuBar.add(uiButton);
-		uiButton.addActionListener(e -> {
-			try {
-				if (isDarkUI) {
-					UIManager.setLookAndFeel(new FlatLightLaf());
-					SwingUtilities.updateComponentTreeUI(jFrame);
-					uiButton.setText("Dark mode");
-					uiButton.setIcon(ICON_MOON);
-					fileMenuItem.setIcon(ICON_FILE);
-					saveMenuItem.setIcon(ICON_SAVE);
-					exitMenuItem.setIcon(ICON_QUIT);
-					recentsMenuItem.setIcon(ICON_RECENT);
-
-					isDarkUI = false;
-				} else {
-					UIManager.setLookAndFeel(new FlatDarkLaf());
-					SwingUtilities.updateComponentTreeUI(jFrame);
-					uiButton.setText("Light mode");
-					uiButton.setIcon(ICON_SUN);
-					fileMenuItem.setIcon(ICON_FILE_WHITE);
-					saveMenuItem.setIcon(ICON_SAVE_WHITE);
-					exitMenuItem.setIcon(ICON_QUIT_WHITE);
-					recentsMenuItem.setIcon(ICON_RECENT_WHITE);
-
-					isDarkUI = true;
-				}
-			} catch (UnsupportedLookAndFeelException ex) {
-				throw new RuntimeException(ex);
-			}
-		});
-
 		return (jMenuBar);
+	}
+
+	public void moveToFront() {
+		mainWindowFrame.requestFocus();
+	}
+
+	public boolean actionOnWindowClosing() {
+		if(isEdited) {
+			// TODO show a file save window
+			int retVal = DialogHelper.showFileSaveWarning(
+				"<html><h2>The file '" + file.getName() + "' file has edits.<br>Would you like" +
+					" to save the file?</br>");
+			switch (retVal) {
+				case 0: // YES
+					// save the file(s)
+					break;
+				case 1: // NO
+					// close window
+					break;
+				case 2: // CANCEL
+					return(false);
+			}
+		}
+		panlProjectLauncher.removeActiveWindow(file.getAbsolutePath());
+
+		Settings.setSubPosition(file.getAbsolutePath(), mainWindowFrame.getX(), mainWindowFrame.getY());
+		Settings.saveSettings();
+		return(true);
+	}
+
+	public void setUIDisplayMode(boolean isDarkUI) {
+		try {
+			if (!isDarkUI) {
+				UIManager.setLookAndFeel(new FlatLightLaf());
+				SwingUtilities.updateComponentTreeUI(mainWindowFrame);
+				fileMenuItem.setIcon(ICON_FILE);
+				saveMenuItem.setIcon(ICON_SAVE);
+				quitMenuItem.setIcon(ICON_QUIT);
+			} else {
+				UIManager.setLookAndFeel(new FlatDarkLaf());
+				SwingUtilities.updateComponentTreeUI(mainWindowFrame);
+				fileMenuItem.setIcon(ICON_FILE_WHITE);
+				saveMenuItem.setIcon(ICON_SAVE_WHITE);
+				quitMenuItem.setIcon(ICON_QUIT_WHITE);
+			}
+		} catch (UnsupportedLookAndFeelException ex) {
+			throw new RuntimeException(ex);
+		}
+	}
+
+	public PanlProperties getPanlProperties() {
+		return panlProperties;
+	}
+
+	public void setIsEdited(boolean isEdited) {
+		this.isEdited = isEdited;
+		if(isEdited) {
+			labelEdited.setText("[edited]");
+		} else {
+			labelEdited.setText("");
+		}
 	}
 }

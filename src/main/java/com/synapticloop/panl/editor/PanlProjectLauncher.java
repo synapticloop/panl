@@ -27,25 +27,35 @@ package com.synapticloop.panl.editor;
 import com.formdev.flatlaf.FlatClientProperties;
 import com.formdev.flatlaf.FlatDarkLaf;
 import com.formdev.flatlaf.FlatLightLaf;
+import com.formdev.flatlaf.ui.FlatUIUtils;
+import com.synapticloop.panl.editor.handler.PanlPropertiesFileDropHandler;
+import com.synapticloop.panl.editor.handler.SolrManagedSchemeFileDropHandler;
 import com.synapticloop.panl.editor.util.Settings;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
+import java.awt.event.*;
+import java.io.File;
+import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 
 import static com.synapticloop.panl.editor.Constants.*;
 
-public class PanlProjectLauncher implements ActionListener {
-	public static final EmptyBorder EMPTY_BORDER = new EmptyBorder(12, 12, 12, 12);
-	private boolean isDarkUI = false;
+/**
+ * This is the project launcher for the Panl Editor
+ */
+public class PanlProjectLauncher {
 	private JFrame mainWindowFrame;
+	private JButton buttonPresentationMode;
+	private JMenuItem quitMenuItem;
+	private JButton buttonOpenFile;
+	private JList<String> listRecentFiles;
 
-	private JButton presentationModeButton;
-	private JMenuItem exitMenuItem;
+	private final Map<String, PanlEditor> panlEditorsMap = new HashMap<>();
+	private File currentFile;
+	private boolean isDarkUI = false;
 
 	public void show() {
 		Settings.loadSettings();
@@ -80,10 +90,12 @@ public class PanlProjectLauncher implements ActionListener {
 
 		mainWindowFrame.getContentPane().add(createProjectPane());
 
+		mainWindowFrame.setLocation(Settings.getMainPosition());
+
 		mainWindowFrame.pack();
 
 		this.isDarkUI = Settings.getIsDarkMode();
-		setPresentationMode();
+		setUIDisplayMode();
 
 		mainWindowFrame.setVisible(true);
 	}
@@ -94,50 +106,69 @@ public class PanlProjectLauncher implements ActionListener {
 
 		JMenu fileMenuItem = new JMenu("File");
 
-		exitMenuItem = new JMenuItem("Quit");
-		exitMenuItem.setIcon(ICON_QUIT);
-		exitMenuItem.addActionListener(this);
-		fileMenuItem.add(exitMenuItem);
+		quitMenuItem = new JMenuItem("Quit");
+		Action quitAction = new AbstractAction("Quit") {
+			@Override public void actionPerformed(ActionEvent e) {
+				// go through all of the windows
+				for (PanlEditor panlEditor : panlEditorsMap.values()) {
+					panlEditor.moveToFront();
+					if(!panlEditor.actionOnWindowClosing()) {
+						return;
+					}
+				}
+
+				actionOnWindowClosing();
+				mainWindowFrame.dispatchEvent(new WindowEvent(mainWindowFrame, WindowEvent.WINDOW_CLOSING));
+			}
+		};
+
+		quitAction.putValue(Action.ACCELERATOR_KEY, KeyStroke.getKeyStroke(KeyEvent.VK_Q, KeyEvent.CTRL_DOWN_MASK));
+
+		quitMenuItem.setIcon(ICON_QUIT);
+		quitMenuItem.setAction(quitAction);
+		fileMenuItem.add(quitMenuItem);
 
 		jMenuBar.add(fileMenuItem);
 
 		jMenuBar.add(Box.createGlue());
 
 		jMenuBar.add(new JLabel("       "));
-		presentationModeButton = new JButton("Dark mode", ICON_MOON);
-		jMenuBar.add(presentationModeButton);
-		presentationModeButton.addActionListener(e -> {
+		buttonPresentationMode = new JButton("Dark mode", ICON_MOON);
+		jMenuBar.add(buttonPresentationMode);
+		buttonPresentationMode.addActionListener(e -> {
 			isDarkUI = !isDarkUI;
-			setPresentationMode();
-
+			setUIDisplayMode();
 		});
 
 		return (jMenuBar);
 	}
 
-	private void setPresentationMode() {
+	private void setUIDisplayMode() {
 		try {
 			if (!isDarkUI) {
 				UIManager.setLookAndFeel(new FlatLightLaf());
 				SwingUtilities.updateComponentTreeUI(mainWindowFrame);
-				presentationModeButton.setText("Dark mode");
-				presentationModeButton.setIcon(ICON_MOON);
-				exitMenuItem.setIcon(ICON_QUIT);
+				buttonPresentationMode.setText("Dark mode");
+				buttonPresentationMode.setIcon(ICON_MOON);
+				quitMenuItem.setIcon(ICON_QUIT);
 			} else {
 				UIManager.setLookAndFeel(new FlatDarkLaf());
 				SwingUtilities.updateComponentTreeUI(mainWindowFrame);
-				presentationModeButton.setText("Light mode");
-				presentationModeButton.setIcon(ICON_SUN);
-				exitMenuItem.setIcon(ICON_QUIT_WHITE);
+				buttonPresentationMode.setText("Light mode");
+				buttonPresentationMode.setIcon(ICON_SUN);
+				quitMenuItem.setIcon(ICON_QUIT_WHITE);
 			}
 		} catch (UnsupportedLookAndFeelException ex) {
-			throw new RuntimeException(ex);
+			// do nothing
+		}
+
+		for (PanlEditor panlEditor : panlEditorsMap.values()) {
+			panlEditor.setUIDisplayMode(this.isDarkUI);
 		}
 	}
 
 	private JPanel createProjectPane() {
 		JPanel jPanel = new JPanel(new BorderLayout());
-
 
 		jPanel.add(createFileList(), BorderLayout.CENTER);
 		jPanel.add(createDropZones(), BorderLayout.EAST);
@@ -150,17 +181,47 @@ public class PanlProjectLauncher implements ActionListener {
 		Box vBox = Box.createHorizontalBox();
 		vBox.add(Box.createHorizontalGlue());
 		vBox.setBorder(BorderFactory.createEmptyBorder(16, 16, 16, 16));
-		JButton openFile = new JButton("Open file");
-		openFile.setEnabled(false);
+		buttonOpenFile = new JButton("Open file");
+		buttonOpenFile.setEnabled(false);
+		buttonOpenFile.addActionListener(e -> {
+			// add it to the list of open files
+			File tempFile = currentFile;
 
-		vBox.add(openFile);
+			refreshFileListing();
+
+			currentFile = tempFile;
+
+			String absolutePath = currentFile.getAbsolutePath();
+			if(panlEditorsMap.containsKey(absolutePath)) {
+				panlEditorsMap.get(absolutePath).moveToFront();
+			} else {
+				PanlEditor panlEditor = null;
+				try {
+					panlEditor = new PanlEditor(currentFile, this);
+					panlEditorsMap.put(absolutePath, panlEditor);
+					panlEditor.show();
+					panlEditor.setUIDisplayMode(isDarkUI);
+				} catch (IOException ex) {
+					System.out.println("oh no");
+				}
+			}
+		});
+
+		vBox.add(buttonOpenFile);
 		vBox.add(Box.createHorizontalGlue());
 		return(vBox);
 	}
 
+	private void refreshFileListing() {
+		Settings.addRecentFile(currentFile);
+		listRecentFiles.removeAll();
+		listRecentFiles.setListData(Settings.getRecentFiles());
+		listRecentFiles.repaint();
+	}
+
 	private Box createFileList() {
-		Box scrollPaneBox = Box.createVerticalBox();
-		scrollPaneBox.setBorder(new EmptyBorder(0, 12, 12, 0));
+		Box recentFilesBox = Box.createVerticalBox();
+		recentFilesBox.setBorder(new EmptyBorder(0, 12, 12, 0));
 
 		Box vbox = Box.createHorizontalBox();
 		vbox.putClientProperty(FlatClientProperties.STYLE, "margin: 16");
@@ -174,12 +235,34 @@ public class PanlProjectLauncher implements ActionListener {
 		jLabel.putClientProperty( "FlatLaf.styleClass", "h2" );
 		jLabel.setHorizontalAlignment(SwingConstants.LEFT);
 		vbox.add(jLabel);
-		scrollPaneBox.add(vbox);
+		recentFilesBox.add(vbox);
 
-		JScrollPane jScrollPane = new JScrollPane();
+		listRecentFiles = new JList<>(Settings.getRecentFiles());
 
-		scrollPaneBox.add(jScrollPane);
-		return(scrollPaneBox);
+		listRecentFiles.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+		listRecentFiles.setLayoutOrientation(JList.VERTICAL);
+		listRecentFiles.setFont(FlatUIUtils.nonUIResource(UIManager.getFont( "large.font" )));
+		ListSelectionModel selectionModel = listRecentFiles.getSelectionModel();
+		selectionModel.addListSelectionListener(e -> {
+			toggleOpenFileButtonState(selectionModel);
+		});
+
+		JScrollPane scrollPaneRecentFiles = new JScrollPane(listRecentFiles);
+		scrollPaneRecentFiles.putClientProperty("FlatLaf.style", "font: 200% $light.font");
+
+
+		recentFilesBox.add(scrollPaneRecentFiles);
+		return(recentFilesBox);
+	}
+
+	private void toggleOpenFileButtonState(ListSelectionModel selectionModel) {
+		if(selectionModel.getSelectedItemsCount() != 1) {
+			buttonOpenFile.setEnabled(false);
+			this.currentFile = null;
+			return;
+		}
+		this.currentFile = new File(listRecentFiles.getSelectedValue());
+		buttonOpenFile.setEnabled(true);
 	}
 
 	private Box createDropZones() {
@@ -187,9 +270,14 @@ public class PanlProjectLauncher implements ActionListener {
 		labelBox.setBorder(new EmptyBorder(50, 12, 0, 12));
 		labelBox.putClientProperty(FlatClientProperties.STYLE, "margin: 16");
 
-		labelBox.add(createDropLabel("Drop panl.properties file"));
+		JLabel labelPanlProperties = createDropLabel("Drop panl.properties file");
+		labelPanlProperties.setTransferHandler(new PanlPropertiesFileDropHandler(this));
+
+		labelBox.add(labelPanlProperties);
 		labelBox.add(Box.createRigidArea(new Dimension(10, 10)));
-		labelBox.add(createDropLabel("Drop Solr managed schema file"));
+		JLabel labelManagedSchema = createDropLabel("Drop Solr managed schema file");
+		labelManagedSchema.setTransferHandler(new SolrManagedSchemeFileDropHandler(this));
+		labelBox.add(labelManagedSchema);
 
 		return(labelBox);
 	}
@@ -204,15 +292,28 @@ public class PanlProjectLauncher implements ActionListener {
 		return(dropPanlProperties);
 	}
 
-	@Override	public void actionPerformed(ActionEvent actionEvent) {
-		if(actionEvent.getActionCommand().equals("Quit")) {
-			actionOnWindowClosing();
-			mainWindowFrame.dispatchEvent(new WindowEvent(mainWindowFrame, WindowEvent.WINDOW_CLOSING));
-		}
-	}
-
 	private void actionOnWindowClosing() {
+		Settings.setMainPosition(mainWindowFrame.getX(), mainWindowFrame.getY());
 		Settings.setIsDarkMode(isDarkUI);
 		Settings.saveSettings();
+	}
+
+	public void openPanlPropertiesFile(File file) {
+		Settings.addRecentFile(file);
+		listRecentFiles.removeAll();
+		listRecentFiles.setListData(Settings.getRecentFiles());
+		listRecentFiles.repaint();
+	}
+
+	/**
+	 * <p>Open a schema file, parse it and create a new panl.properties file.</p>
+	 *
+	 * @param file the SolrManagedSchema file location
+	 */
+	public void openSolrManagedSchemaFile(File file) {
+	}
+
+	public void removeActiveWindow(String filename) {
+		panlEditorsMap.remove(filename);
 	}
 }
