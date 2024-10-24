@@ -160,4 +160,10 @@ public class Settings {
 		RECENT_FILES.remove(absolutePath);
 		RECENT_FILES.put(absolutePath, position);
 	}
+
+	public static void removeRecentFile(File file) {
+		String absolutePath = file.getAbsolutePath();
+		RECENT_FILES.remove(absolutePath);
+	}
+
 }

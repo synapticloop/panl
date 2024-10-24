@@ -51,6 +51,7 @@ public class PanlProjectLauncher {
 	private JButton buttonPresentationMode;
 	private JMenuItem quitMenuItem;
 	private JButton buttonOpenFile;
+	private JButton buttonRemoveRecentFile;
 	private JList<String> listRecentFiles;
 
 	private final Map<String, PanlEditor> panlEditorsMap = new HashMap<>();
@@ -92,6 +93,8 @@ public class PanlProjectLauncher {
 
 		mainWindowFrame.setLocation(Settings.getMainPosition());
 
+		mainWindowFrame.pack();
+		buttonOpenFile.setPreferredSize(new Dimension(150, buttonOpenFile.getHeight()));
 		mainWindowFrame.pack();
 
 		this.isDarkUI = Settings.getIsDarkMode();
@@ -181,12 +184,13 @@ public class PanlProjectLauncher {
 		Box vBox = Box.createHorizontalBox();
 		vBox.add(Box.createHorizontalGlue());
 		vBox.setBorder(BorderFactory.createEmptyBorder(16, 16, 16, 16));
-		buttonOpenFile = new JButton("Open file");
-		buttonOpenFile.setEnabled(false);
+		buttonOpenFile = new JButton("Open existing file...");
+		buttonOpenFile.setEnabled(true);
 		buttonOpenFile.addActionListener(e -> {
 			// add it to the list of open files
 			File tempFile = currentFile;
 
+			Settings.addRecentFile(currentFile);
 			refreshFileListing();
 
 			currentFile = tempFile;
@@ -206,14 +210,36 @@ public class PanlProjectLauncher {
 				}
 			}
 		});
-
 		vBox.add(buttonOpenFile);
 		vBox.add(Box.createHorizontalGlue());
+
+		buttonRemoveRecentFile = new JButton("Remove selected from list");
+		buttonRemoveRecentFile.setEnabled(false);
+		buttonRemoveRecentFile.addActionListener(e -> {
+			boolean shouldRemove = true;
+			Settings.removeRecentFile(currentFile);
+			String absolutePath = currentFile.getAbsolutePath();
+			if(panlEditorsMap.containsKey(absolutePath)) {
+				PanlEditor panlEditor = panlEditorsMap.get(absolutePath);
+				panlEditor.moveToFront();
+				if(!panlEditor.closeEditor()) {
+					shouldRemove = false;
+				}
+			}
+
+			if(shouldRemove) {
+				refreshFileListing();
+			}
+		});
+
+		vBox.add(buttonRemoveRecentFile);
+
+
+
 		return(vBox);
 	}
 
 	private void refreshFileListing() {
-		Settings.addRecentFile(currentFile);
 		listRecentFiles.removeAll();
 		listRecentFiles.setListData(Settings.getRecentFiles());
 		listRecentFiles.repaint();
@@ -226,12 +252,8 @@ public class PanlProjectLauncher {
 		Box vbox = Box.createHorizontalBox();
 		vbox.putClientProperty(FlatClientProperties.STYLE, "margin: 16");
 
-		JLabel jLabel = new JLabel("<html><body style=\"text-align: left; padding-right: 16; margin: 0;\"><h2>Recent" +
-			" " +
-			"files" +
-			"." +
-			".." +
-			"</h2></body></html>");
+		JLabel jLabel = new JLabel("<html><body style=\"text-align: left; padding-right: 16; margin: 0;\">" +
+			"<h2>Recent files...</h2></body></html>");
 		jLabel.putClientProperty( "FlatLaf.styleClass", "h2" );
 		jLabel.setHorizontalAlignment(SwingConstants.LEFT);
 		vbox.add(jLabel);
@@ -257,29 +279,38 @@ public class PanlProjectLauncher {
 
 	private void toggleOpenFileButtonState(ListSelectionModel selectionModel) {
 		if(selectionModel.getSelectedItemsCount() != 1) {
-			buttonOpenFile.setEnabled(false);
+			buttonOpenFile.setText("Open existing file...");
 			this.currentFile = null;
+			buttonRemoveRecentFile.setEnabled(false);
 			return;
 		}
 		this.currentFile = new File(listRecentFiles.getSelectedValue());
-		buttonOpenFile.setEnabled(true);
+		buttonRemoveRecentFile.setEnabled(true);
+		buttonOpenFile.setText("Open selected file...");
 	}
 
 	private Box createDropZones() {
-		Box labelBox = Box.createVerticalBox();
-		labelBox.setBorder(new EmptyBorder(50, 12, 0, 12));
-		labelBox.putClientProperty(FlatClientProperties.STYLE, "margin: 16");
+		Box dropZoneBox = Box.createVerticalBox();
+		dropZoneBox.setBorder(new EmptyBorder(0, 12, 0, 12));
+		dropZoneBox.putClientProperty(FlatClientProperties.STYLE, "margin: 16");
+
+		JLabel quickOpen = new JLabel("<html><body style=\"text-align: left; padding-right: 0; margin: 0;\">" +
+			"<h2>Quick Open...</h2></body></html>");
+		quickOpen.putClientProperty( "FlatLaf.styleClass", "h2" );
+		quickOpen.setHorizontalAlignment(SwingConstants.LEFT);
+
+		dropZoneBox.add(quickOpen);
 
 		JLabel labelPanlProperties = createDropLabel("Drop panl.properties file");
 		labelPanlProperties.setTransferHandler(new PanlPropertiesFileDropHandler(this));
 
-		labelBox.add(labelPanlProperties);
-		labelBox.add(Box.createRigidArea(new Dimension(10, 10)));
+		dropZoneBox.add(labelPanlProperties);
+		dropZoneBox.add(Box.createRigidArea(new Dimension(10, 10)));
 		JLabel labelManagedSchema = createDropLabel("Drop Solr managed schema file");
 		labelManagedSchema.setTransferHandler(new SolrManagedSchemeFileDropHandler(this));
-		labelBox.add(labelManagedSchema);
+		dropZoneBox.add(labelManagedSchema);
 
-		return(labelBox);
+		return(dropZoneBox);
 	}
 
 	private JLabel createDropLabel(String text) {

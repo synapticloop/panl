@@ -175,6 +175,15 @@ public class PanlEditor {
 		mainWindowFrame.requestFocus();
 	}
 
+	public boolean closeEditor() {
+		if(actionOnWindowClosing()) {
+			mainWindowFrame.dispatchEvent(new WindowEvent(mainWindowFrame, WindowEvent.WINDOW_CLOSING));
+			return(true);
+		}
+
+		return(false);
+	}
+
 	public boolean actionOnWindowClosing() {
 		if(isEdited) {
 			// TODO show a file save window
