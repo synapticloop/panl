@@ -30,6 +30,7 @@ import com.formdev.flatlaf.FlatLightLaf;
 import com.formdev.flatlaf.ui.FlatUIUtils;
 import com.synapticloop.panl.editor.handler.PanlPropertiesFileDropHandler;
 import com.synapticloop.panl.editor.handler.SolrManagedSchemeFileDropHandler;
+import com.synapticloop.panl.editor.util.DialogHelper;
 import com.synapticloop.panl.editor.util.Settings;
 
 import javax.swing.*;
@@ -78,12 +79,10 @@ public class PanlProjectLauncher {
 
 		mainWindowFrame.setPreferredSize(new Dimension(800, 480));
 		mainWindowFrame.setMinimumSize(new Dimension(800, 480));
-		mainWindowFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
 		mainWindowFrame.addWindowListener(new WindowAdapter() {
 			@Override public void windowClosing(WindowEvent e) {
 				actionOnWindowClosing();
-				super.windowClosing(e);
 			}
 		}) ;
 
@@ -116,11 +115,13 @@ public class PanlProjectLauncher {
 				for (PanlEditor panlEditor : panlEditorsMap.values()) {
 					panlEditor.moveToFront();
 					if(!panlEditor.actionOnWindowClosing()) {
+						mainWindowFrame.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
 						return;
 					}
 				}
 
 				actionOnWindowClosing();
+				mainWindowFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 				mainWindowFrame.dispatchEvent(new WindowEvent(mainWindowFrame, WindowEvent.WINDOW_CLOSING));
 			}
 		};
@@ -205,8 +206,11 @@ public class PanlProjectLauncher {
 					panlEditorsMap.put(absolutePath, panlEditor);
 					panlEditor.show();
 					panlEditor.setUIDisplayMode(isDarkUI);
-				} catch (IOException ex) {
-					System.out.println("oh no");
+				} catch (Exception ex) {
+					DialogHelper.showError("<html><h2>Could not open the file, message was:&nbsp;</h2>" +
+						"<br>" +
+						ex.getMessage() +
+						"</html>");
 				}
 			}
 		});
@@ -330,10 +334,26 @@ public class PanlProjectLauncher {
 	}
 
 	public void openPanlPropertiesFile(File file) {
-		Settings.addRecentFile(file);
-		listRecentFiles.removeAll();
-		listRecentFiles.setListData(Settings.getRecentFiles());
-		listRecentFiles.repaint();
+		PanlEditor panlEditor = null;
+		try {
+			panlEditor = new PanlEditor(file, this);
+			panlEditorsMap.put(file.getAbsolutePath(), panlEditor);
+			panlEditor.show();
+			panlEditor.setUIDisplayMode(isDarkUI);
+
+			Settings.addRecentFile(file);
+			listRecentFiles.removeAll();
+			listRecentFiles.setListData(Settings.getRecentFiles());
+			listRecentFiles.repaint();
+
+		} catch (Exception ex) {
+			DialogHelper.showError(
+				"<html>" +
+					"<h2>Could not open the file, message was:&nbsp;</h2>" +
+					"<br>" +
+					ex.getMessage() +
+				"</html>");
+		}
 	}
 
 	/**

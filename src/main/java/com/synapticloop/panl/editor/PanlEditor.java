@@ -61,7 +61,7 @@ public class PanlEditor {
 	private List<File> collectionPropertyFiles = new ArrayList<>();
 	private PanlProperties panlProperties;
 
-	public PanlEditor(File file, PanlProjectLauncher panlProjectLauncher) throws IOException {
+	public PanlEditor(File file, PanlProjectLauncher panlProjectLauncher) throws Exception {
 		this.file = file;
 		this.panlProjectLauncher = panlProjectLauncher;
 
@@ -83,11 +83,13 @@ public class PanlEditor {
 		mainWindowFrame.setIconImage(ICON_APP.getImage());
 
 		mainWindowFrame.setResizable(false);
-		mainWindowFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		mainWindowFrame.addWindowListener(new WindowAdapter() {
 			@Override public void windowClosing(WindowEvent e) {
-				actionOnWindowClosing();
-				super.windowClosing(e);
+				if(actionOnWindowClosing()) {
+					mainWindowFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+				} else {
+					mainWindowFrame.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
+				}
 			}
 		});
 
@@ -191,16 +193,17 @@ public class PanlEditor {
 				"<html><h2>The file '" + file.getName() + "' file has edits.<br>Would you like" +
 					" to save the file?</br>");
 			switch (retVal) {
-				case 0: // YES
+				case JOptionPane.YES_OPTION:
 					// save the file(s)
 					break;
-				case 1: // NO
+				case JOptionPane.NO_OPTION:
 					// close window
 					break;
-				case 2: // CANCEL
+				case JOptionPane.CANCEL_OPTION:
 					return(false);
 			}
 		}
+
 		panlProjectLauncher.removeActiveWindow(file.getAbsolutePath());
 
 		Settings.setSubPosition(file.getAbsolutePath(), mainWindowFrame.getX(), mainWindowFrame.getY());

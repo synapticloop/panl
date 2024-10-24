@@ -25,6 +25,7 @@
 package com.synapticloop.panl.editor.util;
 
 import javax.swing.*;
+import java.awt.*;
 
 public class DialogHelper {
 	public static int showFileSaveWarning(String message) {
@@ -33,6 +34,14 @@ public class DialogHelper {
 			message,
 			"!! WARNING !!",
 			JOptionPane.YES_NO_CANCEL_OPTION));
+	}
+
+	public static void showError(String message) {
+		JOptionPane.showMessageDialog(
+			new JFrame(),
+			message,
+			"!! ERROR !!",
+			JOptionPane.ERROR_MESSAGE);
 	}
 
 }

@@ -95,7 +95,10 @@ public abstract class BaseFileDropHandler extends TransferHandler {
 					.append(file.getName())
 					.append("<br><h2>Do you wish to continue?</h2><html>");
 
-				showWarningMessage(stringBuilder.toString());
+				int returnCode = showWarningMessage(stringBuilder.toString());
+				if(returnCode == 0) {
+					panlProjectLauncher.openPanlPropertiesFile(file);
+				}
 			} else {
 				return(file);
 			}
