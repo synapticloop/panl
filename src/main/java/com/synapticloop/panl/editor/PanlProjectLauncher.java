@@ -111,18 +111,7 @@ public class PanlProjectLauncher {
 		quitMenuItem = new JMenuItem("Quit");
 		Action quitAction = new AbstractAction("Quit") {
 			@Override public void actionPerformed(ActionEvent e) {
-				// go through all of the windows
-				for (PanlEditor panlEditor : panlEditorsMap.values()) {
-					panlEditor.moveToFront();
-					if(!panlEditor.actionOnWindowClosing()) {
-						mainWindowFrame.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
-						return;
-					}
-				}
-
 				actionOnWindowClosing();
-				mainWindowFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-				mainWindowFrame.dispatchEvent(new WindowEvent(mainWindowFrame, WindowEvent.WINDOW_CLOSING));
 			}
 		};
 
@@ -331,6 +320,17 @@ public class PanlProjectLauncher {
 		Settings.setMainPosition(mainWindowFrame.getX(), mainWindowFrame.getY());
 		Settings.setIsDarkMode(isDarkUI);
 		Settings.saveSettings();
+
+		// go through all of the windows
+		for (PanlEditor panlEditor : panlEditorsMap.values()) {
+			panlEditor.moveToFront();
+			if(!panlEditor.actionOnWindowClosing()) {
+				mainWindowFrame.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
+				return;
+			}
+		}
+
+		mainWindowFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 	}
 
 	public void openPanlPropertiesFile(File file) {
