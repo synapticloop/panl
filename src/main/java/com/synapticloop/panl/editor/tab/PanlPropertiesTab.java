@@ -26,6 +26,7 @@ package com.synapticloop.panl.editor.tab;
 
 import com.formdev.flatlaf.ui.FlatUIUtils;
 import com.synapticloop.panl.editor.PanlEditor;
+import com.synapticloop.panl.editor.util.Settings;
 import com.synapticloop.panl.editor.tab.solrj.SolrJConnector;
 import com.synapticloop.panl.editor.util.DialogHelper;
 import com.synapticloop.panl.generator.PanlGenerator;
@@ -46,7 +47,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Vector;
 
-public class PanlPropertiesEditTab {
+public class PanlPropertiesTab {
 	public static final String PROPERTY_INCLUDE_COMMENTS = "include.comments";
 	private PanlEditor panlEditor;
 
@@ -64,7 +65,7 @@ public class PanlPropertiesEditTab {
 	private Map<String, Object> formValues = new HashMap<>();
 
 
-	public PanlPropertiesEditTab(PanlEditor panlEditor) {
+	public PanlPropertiesTab(PanlEditor panlEditor) {
 		this.panlEditor = panlEditor;
 	}
 
@@ -367,6 +368,9 @@ public class PanlPropertiesEditTab {
 		jCheckBox.addItemListener(e -> {
 			panlEditor.setIsEdited(true);
 			formValues.put(propertyName, jCheckBox.isSelected());
+			if(jCheckBox.getName().equals(PROPERTY_INCLUDE_COMMENTS)) {
+				Settings.setIncludeComments(panlEditor.getPanlDotPropertiesFile(), jCheckBox.isSelected());
+			}
 			generatePreview();
 		});
 		return (jCheckBox);

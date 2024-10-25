@@ -37,18 +37,20 @@ import java.nio.charset.StandardCharsets;
 import java.util.*;
 
 public class Settings {
+	public static final String APP_DATA_DIRECTORY = AppDirsFactory.getInstance().getUserDataDir("Panl", null, "Synapticloop");
+	public static final String APP_PROPERTIES_LOCATION = APP_DATA_DIRECTORY + File.separator + "panl.json";
+
 	public static final String JSON_KEY_X_POSITION = "x_position";
 	public static final String JSON_KEY_Y_POSITION = "y_position";
 	public static final String JSON_KEY_RECENT_FILES = "recent_files";
-	public static final String JSON_KEY_FILENAME = "filename";
-	public static String APP_DATA_DIRECTORY = AppDirsFactory.getInstance().getUserDataDir("Panl", null, "Synapticloop");
-	public static String APP_PROPERTIES_LOCATION = APP_DATA_DIRECTORY + File.separator + "panl.json";
+	public static final String JSON_KEY_FILEPATH = "filepath";
+	public static final String JSON_KEY_INCLUDE_COMMENTS = "include_comments";
 
 	public static final String SETTING_IS_DARK_MODE = "isDarkMode";
 
 	private static boolean isInitialised = false;
 	private static JSONObject settingsJson;
-	private static final Map<String, Point> RECENT_FILES = new LinkedHashMap<>();
+	private static final Map<String, PropertyFileSettings> RECENT_FILES = new LinkedHashMap<>();
 
 	public synchronized static void loadSettings() {
 		if (isInitialised) {
@@ -72,12 +74,10 @@ public class Settings {
 		// load up the recent files
 		for (Object recentFile : settingsJson.optJSONArray(JSON_KEY_RECENT_FILES, new JSONArray())) {
 			JSONObject recentFileObject = (JSONObject) recentFile;
-			String filename = recentFileObject.optString(JSON_KEY_FILENAME, null);
-			int x = recentFileObject.optInt(JSON_KEY_X_POSITION, 5);
-			int y = recentFileObject.optInt(JSON_KEY_Y_POSITION, 5);
+			String filename = recentFileObject.optString(JSON_KEY_FILEPATH, null);
 
 			if(null != filename) {
-				RECENT_FILES.put(filename, new Point(x, y));
+				RECENT_FILES.put(filename, new PropertyFileSettings(recentFileObject));
 			}
 		}
 
@@ -90,12 +90,7 @@ public class Settings {
 		JSONArray recentFilesArray = new JSONArray();
 		int i = 0;
 		for (String recentFile : RECENT_FILES.keySet()) {
-			JSONObject jsonObject = new JSONObject();
-			jsonObject.put(JSON_KEY_FILENAME, recentFile);
-			Point point = RECENT_FILES.get(recentFile);
-			jsonObject.put(JSON_KEY_X_POSITION, point.x);
-			jsonObject.put(JSON_KEY_Y_POSITION, point.y);
-			recentFilesArray.put(jsonObject);
+			recentFilesArray.put(RECENT_FILES.get(recentFile).toJsonObject());
 
 			i++;
 			// we are only going to keep the last 40 files
@@ -131,13 +126,15 @@ public class Settings {
 		settingsJson.put(JSON_KEY_Y_POSITION, y);
 	}
 
-	public static void setSubPosition(String filename, int x, int y) {
-		RECENT_FILES.put(filename, new Point(x, y));
+	public static void setPanlPropertiesPosition(File file, int x, int y) {
+		PropertyFileSettings propertyFileSettings = RECENT_FILES.getOrDefault(file.getAbsolutePath(), new PropertyFileSettings(file));
+		propertyFileSettings.setLocation(new Point(x, y));
 	}
 
-	public static Point getSubPosition(String filename) {
-		if(RECENT_FILES.containsKey(filename)) {
-			return(RECENT_FILES.get(filename));
+	public static Point getPanlPropertiesPosition(File file) {
+		String absolutePath = file.getAbsolutePath();
+		if(RECENT_FILES.containsKey(absolutePath)) {
+			return(RECENT_FILES.get(absolutePath).getLocation());
 		} else {
 			return(new Point(5, 5));
 		}
@@ -154,11 +151,14 @@ public class Settings {
 		String absolutePath = file.getAbsolutePath();
 		Point position = new Point(5,5);
 		if(RECENT_FILES.containsKey(absolutePath)) {
-			position = RECENT_FILES.get(absolutePath);
+			position = RECENT_FILES.get(absolutePath).getLocation();
 		}
 
 		RECENT_FILES.remove(absolutePath);
-		RECENT_FILES.put(absolutePath, position);
+
+		PropertyFileSettings propertyFileSettings = new PropertyFileSettings(file);
+		propertyFileSettings.setLocation(position);
+		RECENT_FILES.put(absolutePath, propertyFileSettings);
 	}
 
 	public static void removeRecentFile(File file) {
@@ -166,4 +166,7 @@ public class Settings {
 		RECENT_FILES.remove(absolutePath);
 	}
 
+	public static void setIncludeComments(File panlDotPropertiesFile, boolean selected) {
+
+	}
 }

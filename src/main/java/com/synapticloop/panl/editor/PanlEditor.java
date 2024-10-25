@@ -26,10 +26,9 @@ package com.synapticloop.panl.editor;
 
 import com.formdev.flatlaf.FlatDarkLaf;
 import com.formdev.flatlaf.FlatLightLaf;
-import com.formdev.flatlaf.ui.FlatUIUtils;
 import com.synapticloop.panl.editor.tab.CollectionURLTab;
 import com.synapticloop.panl.editor.tab.NewCollectionTab;
-import com.synapticloop.panl.editor.tab.PanlPropertiesEditTab;
+import com.synapticloop.panl.editor.tab.PanlPropertiesTab;
 import com.synapticloop.panl.editor.util.DialogHelper;
 import com.synapticloop.panl.editor.util.Settings;
 import com.synapticloop.panl.server.handler.properties.PanlProperties;
@@ -63,7 +62,7 @@ public class PanlEditor {
 	private boolean isEdited = false;
 	private List<File> collectionPropertyFiles = new ArrayList<>();
 	private PanlProperties panlProperties;
-	private PanlPropertiesEditTab panlPropertiesEditTab;
+	private PanlPropertiesTab panlPropertiesTab;
 	private int currentTabIndex = 1;
 
 	public PanlEditor(File panlDotPropertiesFile, PanlProjectLauncher panlProjectLauncher) throws Exception {
@@ -109,8 +108,8 @@ public class PanlEditor {
 		Component newCollection = NewCollectionTab.createNewCollection();
 		jTabbedPane.add(TAB_TITLE_ADD, newCollection);
 
-		this.panlPropertiesEditTab = new PanlPropertiesEditTab(this);
-		jTabbedPane.add("{PANL} " + panlDotPropertiesFile.getName(), panlPropertiesEditTab.getJPanel());
+		this.panlPropertiesTab = new PanlPropertiesTab(this);
+		jTabbedPane.add("{PANL} " + panlDotPropertiesFile.getName(), panlPropertiesTab.getJPanel());
 		// now add in the all of the collections
 		Map<String, List<String>> panlCollectionsMap = panlProperties.getPanlCollectionsMap();
 		for (String solrCollection : panlCollectionsMap.keySet()) {
@@ -145,7 +144,7 @@ public class PanlEditor {
 		mainWindowFrame.add(fileLabelBox, BorderLayout.NORTH);
 
 		mainWindowFrame.getContentPane().add(jTabbedPane, BorderLayout.CENTER);
-		mainWindowFrame.setLocation(Settings.getSubPosition(panlDotPropertiesFile.getAbsolutePath()));
+		mainWindowFrame.setLocation(Settings.getPanlPropertiesPosition(panlDotPropertiesFile));
 
 		mainWindowFrame.pack();
 
@@ -164,7 +163,7 @@ public class PanlEditor {
 			@Override public void actionPerformed(ActionEvent e) {
 				// TODO - save file
 				setIsEdited(false);
-				panlPropertiesEditTab.saveFile();
+				panlPropertiesTab.saveFile();
 			}
 		};
 
@@ -232,7 +231,7 @@ public class PanlEditor {
 
 		panlProjectLauncher.removeActiveWindow(panlDotPropertiesFile.getAbsolutePath());
 
-		Settings.setSubPosition(panlDotPropertiesFile.getAbsolutePath(), mainWindowFrame.getX(), mainWindowFrame.getY());
+		Settings.setPanlPropertiesPosition(panlDotPropertiesFile, mainWindowFrame.getX(), mainWindowFrame.getY());
 		Settings.saveSettings();
 		return(true);
 	}
