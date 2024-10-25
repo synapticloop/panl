@@ -46,30 +46,41 @@ public class PropertiesMerger {
 				String line;
 				while ((line = reader.readLine()) != null) {
 					if (line.startsWith("#")) {
-						if(keepComments) {
-							outputString.append(line)
-							            .append("\n");
+						if (keepComments) {
+							outputString
+								.append(line)
+								.append("\n");
 						}
 					} else if (line.startsWith("$")) {
-						String propertyKey = line.substring(1);
-						if (values.containsKey(propertyKey)) {
+						if (line.startsWith("$panl.collections")) {
 							outputString
-								.append(propertyKey)
-								.append("=")
-								.append(values.get(propertyKey).toString())
+								.append(values.get("panl.collections").toString())
 								.append("\n");
 						} else {
-							outputString
-								.append("#")
-								.append("ERROR - Expecting key of '")
-								.append(propertyKey)
-								.append("' but was not found.")
-								.append("\n");
+							String propertyKey = line.substring(1);
+							if (values.containsKey(propertyKey)) {
+								outputString
+									.append(propertyKey)
+									.append("=")
+									.append(values.get(propertyKey).toString())
+									.append("\n");
+							} else {
+								outputString
+									.append("#")
+									.append("ERROR - Expecting key of '")
+									.append(propertyKey)
+									.append("' but was not found.")
+									.append("\n");
+							}
 						}
 					} else {
-						outputString
-							.append(line)
-							.append("\n");
+						if (line.isBlank()) {
+							if (keepComments) {
+								outputString
+									.append(line)
+									.append("\n");
+							}
+						}
 					}
 				}
 
@@ -83,7 +94,7 @@ public class PropertiesMerger {
 				.append("\n\n")
 				.append("# Key/Value pairs:\n");
 
-			for(String key : values.keySet()) {
+			for (String key : values.keySet()) {
 				outputString
 					.append("#   ")
 					.append(key)
@@ -99,6 +110,6 @@ public class PropertiesMerger {
 				.append(e.getMessage());
 		}
 
-		return(outputString.toString());
+		return (outputString.toString());
 	}
 }

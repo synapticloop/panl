@@ -32,14 +32,17 @@ import com.synapticloop.panl.generator.PanlGenerator;
 import com.synapticloop.panl.generator.util.PropertiesMerger;
 import com.synapticloop.panl.server.handler.properties.PanlProperties;
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.lang3.StringUtils;
 
 import javax.swing.*;
 import javax.swing.border.CompoundBorder;
 import java.awt.*;
-import java.io.IOException;
+import java.io.*;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Vector;
 
@@ -57,8 +60,8 @@ public class PanlPropertiesEditTab {
 	private JTextArea textAreaOriginal;
 	private JTextArea textAreaGenerated;
 
-	private Vector<String> solrUrlVector = new Vector<>();
-	private Map<String, Boolean> checkBoxValues = new HashMap<>();
+	private Vector<String> solrUrlConnectionStrings = new Vector<>();
+	private Map<String, Object> formValues = new HashMap<>();
 
 
 	public PanlPropertiesEditTab(PanlEditor panlEditor) {
@@ -76,15 +79,15 @@ public class PanlPropertiesEditTab {
 
 		optionsBox.add(getLabel("Connection properties"));
 		optionsBox.add(getSeparator());
-		optionsBox.add(getSubLabel("SolrJ connector"));
+		optionsBox.add(getSubLabel("SolrJ client"));
 		comboBoxSolrJConnectors = getDropDownList(panlProperties.getSolrjClient());
 		optionsBox.add(comboBoxSolrJConnectors);
 		optionsBox.add(getSubLabel("Connection strings"));
 
 
-		solrUrlVector.addAll(Arrays.asList(panlProperties.getSolrSearchServerUrl().split(",")));
+		solrUrlConnectionStrings.addAll(Arrays.asList(panlProperties.getSolrSearchServerUrl().split(",")));
 
-		listSolrURLs = new JList<>(solrUrlVector);
+		listSolrURLs = new JList<>(solrUrlConnectionStrings);
 		listSolrURLs.setVisibleRowCount(3);
 
 		listSolrURLs.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
@@ -117,9 +120,10 @@ public class PanlPropertiesEditTab {
 			// show a confirmation dialog
 			int returnVal = DialogHelper.showWarning("Confirm removal of this connection string?");
 			if (returnVal == JOptionPane.OK_OPTION) {
-				solrUrlVector.remove(listSolrURLs.getSelectedIndex());
+				solrUrlConnectionStrings.remove(listSolrURLs.getSelectedIndex());
 				listSolrURLs.repaint();
 				panlEditor.setIsEdited(true);
+				generatePreview();
 			}
 		});
 
@@ -174,10 +178,6 @@ public class PanlPropertiesEditTab {
 
 		optionsBox.add(Box.createRigidArea(new Dimension(10, 20)));
 		optionsBox.add(Box.createVerticalGlue());
-		JButton buttonGeneratePreview = new JButton("Generate preview");
-		buttonGeneratePreview.addActionListener(e -> generatePreview());
-
-		optionsBox.add(buttonGeneratePreview);
 
 		optionsBox.add(Box.createVerticalGlue());
 
@@ -189,12 +189,27 @@ public class PanlPropertiesEditTab {
 	}
 
 	private void generatePreview() {
-		System.out.println(checkBoxValues.get(PROPERTY_INCLUDE_COMMENTS));
+		// build the panl.collections keys
+		StringBuilder panlCollectionsProperty = new StringBuilder();
+		Map<String, List<String>> panlCollectionsMap = panlEditor.getPanlProperties().getPanlCollectionsMap();
+		for (String key : panlCollectionsMap.keySet()) {
+			panlCollectionsProperty
+				.append("panl.collection.")
+				.append(key)
+				.append("=")
+				.append(StringUtils.join(panlCollectionsMap.get(key), ",\\\n    "))
+				.append("\n");
+		}
+
+		formValues.put("panl.collections", panlCollectionsProperty);
+		formValues.put("solr.search.server.url", String.join(",", solrUrlConnectionStrings));
+		formValues.put("solrj.client", comboBoxSolrJConnectors.getSelectedItem());
+
 		textAreaGenerated.setText(
 			PropertiesMerger.mergeProperties(
 				PanlGenerator.TEMPLATE_LOCATION_PANL_PROPERTIES,
-				checkBoxValues,
-				checkBoxValues.get(PROPERTY_INCLUDE_COMMENTS)));
+				formValues,
+				(Boolean) formValues.get(PROPERTY_INCLUDE_COMMENTS)));
 		textAreaGenerated.setCaretPosition(0);
 	}
 
@@ -220,11 +235,12 @@ public class PanlPropertiesEditTab {
 
 			if (willAdd) {
 				// removing and re-adding is better at repainting
-				solrUrlVector.remove(listSolrURLs.getSelectedValue());
-				solrUrlVector.add(newSolrUrl);
+				solrUrlConnectionStrings.remove(listSolrURLs.getSelectedValue());
+				solrUrlConnectionStrings.add(newSolrUrl);
 				listSolrURLs.removeAll();
-				listSolrURLs.setListData(solrUrlVector);
+				listSolrURLs.setListData(solrUrlConnectionStrings);
 				panlEditor.setIsEdited(true);
+				generatePreview();
 			}
 		}
 	}
@@ -289,7 +305,10 @@ public class PanlPropertiesEditTab {
 		comboBox.setMinimumSize(new Dimension(220, 20));
 		comboBox.setAlignmentX(-1.0f);
 		comboBox.setSelectedItem(solrjClient);
-		comboBox.addPropertyChangeListener(evt -> panlEditor.setIsEdited(true));
+		comboBox.addItemListener(evt -> {
+			panlEditor.setIsEdited(true);
+			generatePreview();
+		});
 		// we need to do this as we are adding items to the combo box which
 		// flags this as edited
 		panlEditor.setIsEdited(false);
@@ -306,7 +325,7 @@ public class PanlPropertiesEditTab {
 
 		verticalBox.add(horizontalBox);
 
-		textAreaGenerated = new JTextArea(getGeneratedPanlProperties(panlProperties), 30, 80);
+		textAreaGenerated = new JTextArea("", 30, 80);
 		textAreaGenerated.setFont(FlatUIUtils.nonUIResource(UIManager.getFont("large.font")));
 		textAreaGenerated.putClientProperty("FlatLaf.styleClass", "monospaced");
 		textAreaGenerated.setEditable(false);
@@ -319,6 +338,7 @@ public class PanlPropertiesEditTab {
 		scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
 		scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);
 		verticalBox.add(scrollPane);
+		generatePreview();
 		return (verticalBox);
 	}
 
@@ -343,166 +363,24 @@ public class PanlPropertiesEditTab {
 		jCheckBox.setName(propertyName);
 		jCheckBox.setToolTipText(tooltip);
 		jCheckBox.setSelected(selected);
-		checkBoxValues.put(propertyName, selected);
+		formValues.put(propertyName, selected);
 		jCheckBox.addItemListener(e -> {
 			panlEditor.setIsEdited(true);
-			checkBoxValues.put(propertyName, jCheckBox.isSelected());
+			formValues.put(propertyName, jCheckBox.isSelected());
+			generatePreview();
 		});
 		return (jCheckBox);
 	}
 
-	private String getGeneratedPanlProperties(PanlProperties panlProperties) {
+	public void saveFile() {
+		try (OutputStream outputStream = Files.newOutputStream(panlEditor.getPanlDotPropertiesFile().toPath());
+		     OutputStreamWriter outputStreamWriter = new OutputStreamWriter(outputStream);
+		     BufferedWriter writer = new BufferedWriter(outputStreamWriter)) {
+			writer.write(textAreaGenerated.getText());
+			writer.flush();
 
-		return ("# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #\n" +
-			"#                                              __                             #\n" +
-			"#                          .-----.---.-.-----.|  |                            #\n" +
-			"#                          |  _  |  _  |     ||  |                            #\n" +
-			"#                          |   __|___._|__|__||__|                            #\n" +
-			"#                          |__|     ... .-..                                  #\n" +
-			"#                                                                             #\n" +
-			"#                                ~ ~ ~ * ~ ~ ~                                #\n" +
-			"#                                                                             #\n" +
-			"#                PANL/SOLR SERVER CONNECTION CONFIGURATION                    #\n" +
-			"#                --------- ------ ---------- -------------                    #\n" +
-			"#                                                                             #\n" +
-			"# This is the Panl configuration file which configures the base functionality #\n" +
-			"# and defines how Panl will connect to the Solr server.                       #\n" +
-			"#                                                                             #\n" +
-			"# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #\n" +
-			"\n" +
-			"#                            Which Solr Client To Use\n" +
-			"#                            ----- ---- ------ -- ---\n" +
-			"# Choose the correct SolrJ client for the Solr installation that you require,\n" +
-			"# by default, it is the CloudSolrClient.\n" +
-			"#\n" +
-			"# NOTE: What the solr.search.server.url will be will depend on the client that\n" +
-			"#       you choose.  The SolrJ client __MUST__ be one of\n" +
-			"#\n" +
-			"#  - Http2SolrClient\n" +
-			"#  - HttpJdkSolrClient\n" +
-			"#  - LBHttp2SolrClient\n" +
-			"#  - CloudSolrClient\n" +
-			"#\n" +
-			"# By default - we will be using the CloudSolrClient as it works with the\n" +
-			"# example instructions for spinning up a test solr instance\n" +
-			"#\n" +
-			"#                                ~ ~ ~ * ~ ~ ~\n" +
-			"\n" +
-			"#solrj.client=Http2SolrClient\n" +
-			"#solrj.client=HttpJdkSolrClient\n" +
-			"#solrj.client=LBHttp2SolrClient\n" +
-			"solrj.client=CloudSolrClient\n" +
-			"\n" +
-			"#                           Which URLs To Connect To\n" +
-			"#                           ----- ---- -- ------- --\n" +
-			"# Dependant on which Solr server installation you have, and consequently the\n" +
-			"# SolrJ Client that is configured, this will either be a single url, or a comma\n" +
-			"# separated list of URLs\n" +
-			"#\n" +
-			"#     solr.search.server.url - the search server URL to connect to which must\n" +
-			"#         NOT include the core that it is connecting to - this will be taken\n" +
-			"#         care of by the Panl request mechanism.\n" +
-			"#\n" +
-			"#     NOTE: that if you are using connector that has multiple URLs, then\n" +
-			"#           they MUST be comma separated.\n" +
-			"#\n" +
-			"#     NOTE: If you are using the CloudSolrClient as a connector and you wish to\n" +
-			"#           use the zookeeper URLs, then you __MUST__ prefix the URLs with\n" +
-			"#\n" +
-			"#             zookeeper:\n" +
-			"#\n" +
-			"#           The below property would then become:\n" +
-			"#\n" +
-			"#             solr.search.server.url=zookeeper:http://localhost:9983\n" +
-			"#\n" +
-			"#                                ~ ~ ~ * ~ ~ ~\n" +
-			"\n" +
-			"solr.search.server.url=http://localhost:8983/solr,http://localhost:7574/solr\n" +
-			"\n" +
-			"#                      Whether To Enable The Testing URLs\n" +
-			"#                      ------- -- ------ --- ------- ----\n" +
-			"# The Panl results viewer / explainer URLs, this is a simple web app which will\n" +
-			"# allow you to test and explain the collections and the URLs that are\n" +
-			"# generated, including fields, faceting, querying, sorting, and results.\n" +
-			"#\n" +
-			"# If this property does not exist, or if it is set to false, then no results\n" +
-			"# viewer /explainer will be available.  You may wish to remove this property\n" +
-			"# for production (or perhaps just disallow access to it).\n" +
-			"#\n" +
-			"# The URI paths are __ALWAYS__\n" +
-			"#     /panl-results-viewer/    - for testing the queries, facets, and results\n" +
-			"#     /panl-results-explainer/ - for explaining LPSE encoded URIs and describing\n" +
-			"#                                the configuration for the Panl server.\n" +
-			"#\n" +
-			"#                                ~ ~ ~ * ~ ~ ~\n" +
-			"\n" +
-			"panl.results.testing.urls=true\n" +
-			"\n" +
-			"#                     Whether To Enable Verbose Error Messaging\n" +
-			"#                     ------- -- ------ ------- ----- ---------\n" +
-			"# Whether verbose messaging is turned on for the error (404 / 500) http status\n" +
-			"# messages.  Verbose messaging for the 404 error will provide valid URI paths\n" +
-			"# to connect to.  Verbose messaging for the 500 error will provide a\n" +
-			"# stacktrace.\n" +
-			"#\n" +
-			"# The recommendation is to set both of these properties to false to reduce the\n" +
-			"# possibility of information leakage.\n" +
-			"#\n" +
-			"#                                ~ ~ ~ * ~ ~ ~\n" +
-			"\n" +
-			"panl.status.404.verbose=true\n" +
-			"panl.status.500.verbose=true\n" +
-			"\n" +
-			"#                            Decimal Values Format\n" +
-			"#                            ------- ------ ------\n" +
-			"# Whether decimal values use a decimal point or a decimal comma.  For example\n" +
-			"# The number\n" +
-			"#\n" +
-			"#     1,234,567.89\n" +
-			"#\n" +
-			"# uses the decimal point '.' as the separator between the integer and the\n" +
-			"# fractional part, whereas the number\n" +
-			"#\n" +
-			"#     1.234.567,89\n" +
-			"#\n" +
-			"# uses the decimal comma ',' as the separator between the integer and the\n" +
-			"# fractional part.\n" +
-			"#\n" +
-			"# The default for the Panl server is to use the decimal point, should you wish\n" +
-			"# to change this, set the property below to false to use the decimal comma\n" +
-			"# character for decimal values.\n" +
-			"#\n" +
-			"#                                ~ ~ ~ * ~ ~ ~\n" +
-			"\n" +
-			"panl.decimal.point=true\n" +
-			"\n" +
-			"#                      Collection Property File Inclusion\n" +
-			"#                      ---------- -------- ---- ---------\n" +
-			"# Each property file defines a singular collection, with the associated\n" +
-			"# properties and configuration.  The format of the property is:\n" +
-			"#\n" +
-			"#     panl.collection.<solr_collection_name>=<properties_file_location>\n" +
-			"#\n" +
-			"# Where:\n" +
-			"#       <solr_collection_name> is the collection to query on the Solr server\n" +
-			"#   <properties_file_location> is the relative location __FROM__ this file\n" +
-			"#                              (i.e. the panl.properties file).  The format of\n" +
-			"#                              the filename is:\n" +
-			"#\n" +
-			"#     <panl_collection_uri>.panl.properties\n" +
-			"#\n" +
-			"# Where:\n" +
-			"#     <panl_collection_uri> is the base URI path that the Panl server will\n" +
-			"#                           respond to\n" +
-			"#\n" +
-			"#     NOTE: You may have multiple <panl_collection_uri> values for each\n" +
-			"#           <solr_collection_name> with different configurations\n" +
-			"#\n" +
-			"#                                ~ ~ ~ * ~ ~ ~\n" +
-			"\n" +
-			"panl.collection.book-store=book-store.panl.properties\n" +
-			"\n" +
-			"\n");
+		} catch (IOException e) {
+			DialogHelper.showError("Could not write out the file.");
+		}
 	}
-
 }

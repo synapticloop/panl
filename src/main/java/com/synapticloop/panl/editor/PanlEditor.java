@@ -26,6 +26,7 @@ package com.synapticloop.panl.editor;
 
 import com.formdev.flatlaf.FlatDarkLaf;
 import com.formdev.flatlaf.FlatLightLaf;
+import com.synapticloop.panl.editor.tab.CollectionURLTab;
 import com.synapticloop.panl.editor.tab.NewCollectionTab;
 import com.synapticloop.panl.editor.tab.PanlPropertiesEditTab;
 import com.synapticloop.panl.editor.util.DialogHelper;
@@ -42,6 +43,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Properties;
 
 import static com.synapticloop.panl.editor.Constants.*;
@@ -59,6 +61,8 @@ public class PanlEditor {
 	private boolean isEdited = false;
 	private List<File> collectionPropertyFiles = new ArrayList<>();
 	private PanlProperties panlProperties;
+	private PanlPropertiesEditTab panlPropertiesEditTab;
+	private int currentTabIndex = 0;
 
 	public PanlEditor(File panlDotPropertiesFile, PanlProjectLauncher panlProjectLauncher) throws Exception {
 		this.panlDotPropertiesFile = panlDotPropertiesFile;
@@ -99,13 +103,32 @@ public class PanlEditor {
 		mainWindowFrame.setJMenuBar(createJMenuBar(mainWindowFrame));
 
 		JTabbedPane jTabbedPane = new JTabbedPane();
-		jTabbedPane.add("[PANL] " + panlDotPropertiesFile.getName(), new PanlPropertiesEditTab(this).getJPanel());
+		this.panlPropertiesEditTab = new PanlPropertiesEditTab(this);
+		jTabbedPane.add("{PANL} " + panlDotPropertiesFile.getName(), panlPropertiesEditTab.getJPanel());
+		// now add in the all of the collections
+		Map<String, List<String>> panlCollectionsMap = panlProperties.getPanlCollectionsMap();
+		for (String solrCollection : panlCollectionsMap.keySet()) {
+			// TODO - figure out filename and file location
+			for (String collectionFileLocation : panlCollectionsMap.get(solrCollection)) {
+				jTabbedPane.add("[" + solrCollection + "] " + collectionFileLocation, new CollectionURLTab(this).getJPanel());
+			}
+
+		}
+
 		Component newCollection = NewCollectionTab.createNewCollection();
+
 		jTabbedPane.add("[ + ]", newCollection);
-		jTabbedPane.setEnabledAt(1, false);
 
 		jTabbedPane.addChangeListener(e -> {
-			JTabbedPane selectedTab = (JTabbedPane) e.getSource();
+//			JTabbedPane jTabbedPaneSource = (JTabbedPane) e.getSource();
+
+
+			if(jTabbedPane.getTitleAt(jTabbedPane.getSelectedIndex()).equals("[ + ]")) {
+				// TODO add new collection - show a dialog
+				jTabbedPane.setSelectedIndex(currentTabIndex);
+			} else {
+				currentTabIndex = jTabbedPane.getSelectedIndex();
+			}
 		});
 
 		Box fileLabelBox = Box.createHorizontalBox();
@@ -140,6 +163,7 @@ public class PanlEditor {
 			@Override public void actionPerformed(ActionEvent e) {
 				// TODO - save file
 				setIsEdited(false);
+				panlPropertiesEditTab.saveFile();
 			}
 		};
 

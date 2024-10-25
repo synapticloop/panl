@@ -201,6 +201,7 @@ public class PanlProjectLauncher {
 						"<br>" +
 						ex.getMessage() +
 						"</html>");
+					ex.printStackTrace();
 				}
 			}
 		});
