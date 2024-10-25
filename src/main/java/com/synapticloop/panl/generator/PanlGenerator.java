@@ -45,8 +45,9 @@ import java.util.*;
 public class PanlGenerator {
 	private static final Logger LOGGER = LoggerFactory.getLogger(PanlGenerator.class);
 
-	private static final String TEMPLATE_LOCATION_COLLECTION_PANL_PROPERTIES = "/panl_collection_url.panl.properties.template";
-	private static final String TEMPLATE_LOCATION_PANL_PROPERTIES = "/panl.properties.template";
+	public static final String TEMPLATE_LOCATION_COLLECTION_PANL_PROPERTIES = "/panl_collection_url.panl.properties" +
+		".template";
+	public static final String TEMPLATE_LOCATION_PANL_PROPERTIES = "/panl.properties.template";
 
 	private static final String PANL_PARAM_QUERY = "panl.param.query";
 	private static final String PANL_PARAM_SORT = "panl.param.sort";

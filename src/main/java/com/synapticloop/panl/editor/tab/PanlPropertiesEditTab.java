@@ -28,6 +28,8 @@ import com.formdev.flatlaf.ui.FlatUIUtils;
 import com.synapticloop.panl.editor.PanlEditor;
 import com.synapticloop.panl.editor.tab.solrj.SolrJConnector;
 import com.synapticloop.panl.editor.util.DialogHelper;
+import com.synapticloop.panl.generator.PanlGenerator;
+import com.synapticloop.panl.generator.util.PropertiesMerger;
 import com.synapticloop.panl.server.handler.properties.PanlProperties;
 import org.apache.commons.io.FileUtils;
 
@@ -42,6 +44,7 @@ import java.util.Map;
 import java.util.Vector;
 
 public class PanlPropertiesEditTab {
+	public static final String PROPERTY_INCLUDE_COMMENTS = "include.comments";
 	private PanlEditor panlEditor;
 
 	private JList<String> listSolrURLs;
@@ -51,7 +54,8 @@ public class PanlPropertiesEditTab {
 	private JButton buttonEditUrl;
 	private JButton buttonAddUrl;
 	private JComboBox<String> comboBoxSolrJConnectors;
-
+	private JTextArea textAreaOriginal;
+	private JTextArea textAreaGenerated;
 
 	private Vector<String> solrUrlVector = new Vector<>();
 	private Map<String, Boolean> checkBoxValues = new HashMap<>();
@@ -86,7 +90,7 @@ public class PanlPropertiesEditTab {
 		listSolrURLs.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 
 		listSolrURLs.setLayoutOrientation(JList.VERTICAL);
-		listSolrURLs.setFont(FlatUIUtils.nonUIResource(UIManager.getFont( "large.font" )));
+		listSolrURLs.setFont(FlatUIUtils.nonUIResource(UIManager.getFont("large.font")));
 		ListSelectionModel selectionModel = listSolrURLs.getSelectionModel();
 		selectionModel.addListSelectionListener(e -> {
 			toggleButtonStates(selectionModel);
@@ -112,7 +116,7 @@ public class PanlPropertiesEditTab {
 		buttonRemoveUrl.addActionListener(e -> {
 			// show a confirmation dialog
 			int returnVal = DialogHelper.showWarning("Confirm removal of this connection string?");
-			if(returnVal == JOptionPane.OK_OPTION) {
+			if (returnVal == JOptionPane.OK_OPTION) {
 				solrUrlVector.remove(listSolrURLs.getSelectedIndex());
 				listSolrURLs.repaint();
 				panlEditor.setIsEdited(true);
@@ -164,7 +168,7 @@ public class PanlPropertiesEditTab {
 		optionsBox.add(getLabel("Output options"));
 		optionsBox.add(getSeparator());
 		optionsBox.add(getCheckbox(
-			"include.comments",
+			PROPERTY_INCLUDE_COMMENTS,
 			"Whether to include comments in the output",
 			true));
 
@@ -181,37 +185,40 @@ public class PanlPropertiesEditTab {
 		mainPanel.add(getPanlDotPropertiesScrollPane(panlProperties), BorderLayout.CENTER);
 		mainPanel.add(getOriginalPanlDotPropertiesScrollPane(panlProperties), BorderLayout.EAST);
 
-		return(mainPanel);
+		return (mainPanel);
 	}
 
 	private void generatePreview() {
-		for (String key : checkBoxValues.keySet()) {
-			System.out.println(key + "\t" + checkBoxValues.get(key));
-		}
-
+		System.out.println(checkBoxValues.get(PROPERTY_INCLUDE_COMMENTS));
+		textAreaGenerated.setText(
+			PropertiesMerger.mergeProperties(
+				PanlGenerator.TEMPLATE_LOCATION_PANL_PROPERTIES,
+				checkBoxValues,
+				checkBoxValues.get(PROPERTY_INCLUDE_COMMENTS)));
+		textAreaGenerated.setCaretPosition(0);
 	}
 
 	/**
 	 * <p>Add (or edit) the URL if it is valid.  This will attempt to validate
-	 * the URL by checking for it starting with 'zookeepeer:http' or 'http' and
-	 * will ask for confirmation if it doesn't.</p>
+	 * the URL by checking for it starting with 'zookeepeer:http' or 'http' and will ask for confirmation if it
+	 * doesn't.</p>
 	 *
 	 * @param newSolrUrl The Solr URL to check
 	 */
 	private void addIfValidSolrURL(String newSolrUrl) {
-		if(null != newSolrUrl && !newSolrUrl.isBlank()) {
+		if (null != newSolrUrl && !newSolrUrl.isBlank()) {
 			boolean willAdd = true;
-			if(!(newSolrUrl.startsWith("zookeeper:http")
+			if (!(newSolrUrl.startsWith("zookeeper:http")
 				|| newSolrUrl.startsWith("http"))) {
 				int retVal = DialogHelper.showWarning(
 					"URL does not start with zookeeper:http or 'http', <br> would you still like to " +
 						"add it?");
-				if(retVal != JOptionPane.OK_OPTION) {
+				if (retVal != JOptionPane.OK_OPTION) {
 					willAdd = false;
 				}
 			}
 
-			if(willAdd) {
+			if (willAdd) {
 				// removing and re-adding is better at repainting
 				solrUrlVector.remove(listSolrURLs.getSelectedValue());
 				solrUrlVector.add(newSolrUrl);
@@ -232,18 +239,19 @@ public class PanlPropertiesEditTab {
 
 		verticalBox.add(horizontalBox);
 
-		String text= "Could not read the " + panlEditor.getPanlDotPropertiesFile().getAbsolutePath() + " file.";
+		String text = "Could not read the " + panlEditor.getPanlDotPropertiesFile().getAbsolutePath() + " file.";
 		try {
 			text = FileUtils.readFileToString(panlEditor.getPanlDotPropertiesFile(), StandardCharsets.UTF_8);
 		} catch (IOException ignored) {
 			// do nothing, nothing we can do.
 		}
-		JTextArea textArea = new JTextArea(text, 30, 80);
-		textArea.setFont(FlatUIUtils.nonUIResource(UIManager.getFont( "large.font" )));
-		textArea.putClientProperty("FlatLaf.styleClass", "monospaced");
-		textArea.setEditable(false);
-		textArea.setLineWrap(false);
-		JScrollPane scrollPane = new JScrollPane(textArea);
+
+		textAreaOriginal = new JTextArea(text, 30, 80);
+		textAreaOriginal.setFont(FlatUIUtils.nonUIResource(UIManager.getFont("large.font")));
+		textAreaOriginal.putClientProperty("FlatLaf.styleClass", "monospaced");
+		textAreaOriginal.setEditable(false);
+		textAreaOriginal.setLineWrap(false);
+		JScrollPane scrollPane = new JScrollPane(textAreaOriginal);
 		scrollPane.setBorder(
 			new CompoundBorder(BorderFactory.createEmptyBorder(0, 4, 40, 4),
 				BorderFactory.createEtchedBorder())
@@ -251,11 +259,11 @@ public class PanlPropertiesEditTab {
 		scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
 		scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);
 		verticalBox.add(scrollPane);
-		return(verticalBox);
+		return (verticalBox);
 	}
 
 	private void toggleButtonStates(ListSelectionModel selectionModel) {
-		if(selectionModel.getSelectedItemsCount() != 1) {
+		if (selectionModel.getSelectedItemsCount() != 1) {
 			buttonRemoveUrl.setEnabled(false);
 			buttonEditUrl.setEnabled(false);
 		} else {
@@ -269,12 +277,12 @@ public class PanlPropertiesEditTab {
 		jSeparator.setBorder(BorderFactory.createEmptyBorder(4, 4, 4, 4));
 		jSeparator.setMaximumSize(new Dimension(280, 8));
 		jSeparator.setAlignmentX(0.0f);
-		return(jSeparator);
+		return (jSeparator);
 	}
 
 	private JComboBox<String> getDropDownList(String solrjClient) {
 		JComboBox<String> comboBox = new JComboBox<>(SolrJConnector.AVAILABLE_SOLR_J_CONNECTORS);
-		comboBox.setFont(FlatUIUtils.nonUIResource(UIManager.getFont( "large.font" )));
+		comboBox.setFont(FlatUIUtils.nonUIResource(UIManager.getFont("large.font")));
 		comboBox.setPrototypeDisplayValue("default text here");
 		comboBox.setPreferredSize(new Dimension(220, 20));
 		comboBox.setMaximumSize(new Dimension(220, 20));
@@ -285,7 +293,7 @@ public class PanlPropertiesEditTab {
 		// we need to do this as we are adding items to the combo box which
 		// flags this as edited
 		panlEditor.setIsEdited(false);
-		return(comboBox);
+		return (comboBox);
 	}
 
 	private Box getPanlDotPropertiesScrollPane(PanlProperties panlProperties) {
@@ -298,38 +306,39 @@ public class PanlPropertiesEditTab {
 
 		verticalBox.add(horizontalBox);
 
-		JTextArea textArea = new JTextArea(getGeneratedPanlProperties(panlProperties), 30, 80);
-		textArea.setFont(FlatUIUtils.nonUIResource(UIManager.getFont( "large.font" )));
-		textArea.putClientProperty("FlatLaf.styleClass", "monospaced");
-		textArea.setEditable(false);
-		textArea.setLineWrap(false);
-		JScrollPane scrollPane = new JScrollPane(textArea);
+		textAreaGenerated = new JTextArea(getGeneratedPanlProperties(panlProperties), 30, 80);
+		textAreaGenerated.setFont(FlatUIUtils.nonUIResource(UIManager.getFont("large.font")));
+		textAreaGenerated.putClientProperty("FlatLaf.styleClass", "monospaced");
+		textAreaGenerated.setEditable(false);
+		textAreaGenerated.setLineWrap(false);
+		JScrollPane scrollPane = new JScrollPane(textAreaGenerated);
 		scrollPane.setBorder(
 			new CompoundBorder(BorderFactory.createEmptyBorder(0, 4, 40, 4),
 				BorderFactory.createEtchedBorder())
-			);
+		);
 		scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
 		scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);
 		verticalBox.add(scrollPane);
-		return(verticalBox);
+		return (verticalBox);
 	}
 
 	private JLabel getLabel(String text) {
 		JLabel label = new JLabel(text);
-		label.putClientProperty( "FlatLaf.styleClass", "h2" );
+		label.putClientProperty("FlatLaf.styleClass", "h2");
 		label.setBorder(BorderFactory.createEmptyBorder(12, 0, 4, 0));
-		return(label);
+		return (label);
 	}
+
 	private JLabel getSubLabel(String text) {
 		JLabel label = new JLabel(text);
-		label.putClientProperty( "FlatLaf.styleClass", "h3" );
+		label.putClientProperty("FlatLaf.styleClass", "h3");
 		label.setBorder(BorderFactory.createEmptyBorder(6, 0, 4, 0));
-		return(label);
+		return (label);
 	}
 
 	private JCheckBox getCheckbox(String propertyName, String tooltip, boolean selected) {
 		JCheckBox jCheckBox = new JCheckBox(propertyName);
-		jCheckBox.setFont(FlatUIUtils.nonUIResource(UIManager.getFont( "large.font" )));
+		jCheckBox.setFont(FlatUIUtils.nonUIResource(UIManager.getFont("large.font")));
 		jCheckBox.putClientProperty("FlatLaf.styleClass", "monospaced");
 		jCheckBox.setName(propertyName);
 		jCheckBox.setToolTipText(tooltip);
@@ -339,12 +348,12 @@ public class PanlPropertiesEditTab {
 			panlEditor.setIsEdited(true);
 			checkBoxValues.put(propertyName, jCheckBox.isSelected());
 		});
-		return(jCheckBox);
+		return (jCheckBox);
 	}
 
 	private String getGeneratedPanlProperties(PanlProperties panlProperties) {
 
-		return("# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #\n" +
+		return ("# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #\n" +
 			"#                                              __                             #\n" +
 			"#                          .-----.---.-.-----.|  |                            #\n" +
 			"#                          |  _  |  _  |     ||  |                            #\n" +

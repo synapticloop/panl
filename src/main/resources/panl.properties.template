@@ -81,7 +81,7 @@ solr.search.server.url=http://localhost:8983/solr,http://localhost:7574/solr
 #
 #                                ~ ~ ~ * ~ ~ ~
 
-panl.results.testing.urls=true
+$panl.results.testing.urls
 
 #                     Whether To Enable Verbose Error Messaging
 #                     ------- -- ------ ------- ----- ---------
@@ -95,8 +95,8 @@ panl.results.testing.urls=true
 #
 #                                ~ ~ ~ * ~ ~ ~
 
-panl.status.404.verbose=true
-panl.status.500.verbose=true
+$panl.status.404.verbose
+$panl.status.500.verbose
 
 #                            Decimal Values Format
 #                            ------- ------ ------
@@ -119,7 +119,7 @@ panl.status.500.verbose=true
 #
 #                                ~ ~ ~ * ~ ~ ~
 
-panl.decimal.point=true
+$panl.decimal.point
 
 #                      Collection Property File Inclusion
 #                      ---------- -------- ---- ---------
