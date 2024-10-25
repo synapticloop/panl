@@ -51,6 +51,7 @@ public class PanlProperties {
 	public static final String DEFAULT_FALSE = "false";
 	public static final String DEFAULT_TRUE = "true";
 	public static final String PROPERTY_KEY_PANL_COLLECTIONS = "panl.collections";
+	public static final String PROPERTY_KEY_PREFIX_PANL_COLLECTION = "panl.collection.";
 
 	private final String solrjClient;
 	private final String solrSearchServerUrl;
@@ -63,9 +64,8 @@ public class PanlProperties {
 
 	/**
 	 * <p>Instantiate the Panl properties which defines what Solr server to
-	 * connect to, the SolrJ client, whether to use verbose messaging for 404
-	 * and/or 500 error messages, and whether to serve the Panl results testing
-	 * URL handlers.</p>
+	 * connect to, the SolrJ client, whether to use verbose messaging for 404 and/or 500 error messages, and whether to
+	 * serve the Panl results testing URL handlers.</p>
 	 *
 	 * @param properties The properties file
 	 */
@@ -78,7 +78,9 @@ public class PanlProperties {
 		String solrjClientTemp;
 		solrjClientTemp = properties.getProperty(PROPERTY_KEY_SOLRJ_CLIENT, null);
 		if (solrjClientTemp == null) {
-			LOGGER.warn("Property '{}' could not be found, defaulting to '{}'", PROPERTY_KEY_SOLRJ_CLIENT,
+			LOGGER.warn(
+				"Property '{}' could not be found, defaulting to '{}'",
+				PROPERTY_KEY_SOLRJ_CLIENT,
 				DEFAULT_CLOUD_SOLR_CLIENT);
 			solrjClientTemp = DEFAULT_CLOUD_SOLR_CLIENT;
 		}
@@ -94,19 +96,23 @@ public class PanlProperties {
 		}
 
 		this.solrSearchServerUrl = solrSearchServerUrlTemp;
-		this.panlStatus404Verbose = properties.getProperty(PROPERTY_KEY_PANL_STATUS_404_VERBOSE, DEFAULT_FALSE)
-		                                      .equals(DEFAULT_TRUE);
-		this.panlStatus500Verbose = properties.getProperty(PROPERTY_KEY_PANL_STATUS_500_VERBOSE, DEFAULT_FALSE)
-		                                      .equals(DEFAULT_TRUE);
+
+		this.panlStatus404Verbose = properties
+			.getProperty(PROPERTY_KEY_PANL_STATUS_404_VERBOSE, DEFAULT_FALSE)
+			.equals(DEFAULT_TRUE);
+		this.panlStatus500Verbose = properties
+			.getProperty(PROPERTY_KEY_PANL_STATUS_500_VERBOSE, DEFAULT_FALSE)
+			.equals(DEFAULT_TRUE);
+
 		for (String stringPropertyName : properties.stringPropertyNames()) {
-			if (stringPropertyName.startsWith("panl.collection.")) {
-				String panlCollection = stringPropertyName.substring("panl.collection.".length());
+			if (stringPropertyName.startsWith(PROPERTY_KEY_PREFIX_PANL_COLLECTION)) {
+				String panlCollection = stringPropertyName.substring(PROPERTY_KEY_PREFIX_PANL_COLLECTION.length());
 				String collectionPropertyFiles = properties.getProperty(stringPropertyName);
 				List<String> tempList = StringUtils.split(collectionPropertyFiles, ',');
 				List<String> finalList = new ArrayList<>();
 				for (String propertyFile : tempList) {
 					String propertyFileValue = propertyFile.trim();
-					if(!propertyFileValue.isBlank()) {
+					if (!propertyFileValue.isBlank()) {
 						finalList.add(propertyFile);
 					}
 				}
@@ -117,8 +123,8 @@ public class PanlProperties {
 
 	/**
 	 * <p>Return whether the Panl results testing URLs are available to service
-	 * requests.  This should probably not be set 'true' for production
-	 * deployments, or at the very least, not allowed to be accessed externally.</p>
+	 * requests.  This should probably not be set 'true' for production deployments, or at the very least, not allowed to
+	 * be accessed externally.</p>
 	 *
 	 * @return Whether the Panl results testing URL(s) are available
 	 */
@@ -131,7 +137,9 @@ public class PanlProperties {
 	 *
 	 * @return The SolrJ client to use
 	 */
-	public String getSolrjClient() { return (solrjClient); }
+	public String getSolrjClient() {
+		return (solrjClient);
+	}
 
 	/**
 	 * <p>Return the Solr server URL(s).  If there is more than one URL, this

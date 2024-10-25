@@ -27,6 +27,7 @@ package com.synapticloop.panl.generator;
 import com.synapticloop.panl.exception.PanlGenerateException;
 import com.synapticloop.panl.generator.bean.PanlCollection;
 import com.synapticloop.panl.generator.util.PropertiesMerger;
+import com.synapticloop.panl.server.handler.properties.PanlProperties;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -289,7 +290,8 @@ public class PanlGenerator {
 			mergeProperties.put("panl.collections", panlCollection.getPanlProperty("$panl.collections"));
 
 			LOGGER.info("Writing out file {}.panl.properties", panlCollection.getCollectionName());
-			writer.write(PropertiesMerger.mergeProperties(TEMPLATE_LOCATION_COLLECTION_PANL_PROPERTIES, mergeProperties, true));
+			writer.write(
+				PropertiesMerger.mergeProperties(TEMPLATE_LOCATION_COLLECTION_PANL_PROPERTIES, mergeProperties, true));
 			writer.flush();
 			LOGGER.info("Done writing out file {}.panl.properties", panlCollection.getCollectionName());
 
@@ -307,11 +309,12 @@ public class PanlGenerator {
 		StringBuilder collectionPropertyFiles = new StringBuilder();
 		for (PanlCollection panlCollection : panlCollections) {
 			String niceCollectionName = panlCollection.getCollectionName().toLowerCase().replaceAll("[^a-z0-9]", "-");
-			collectionPropertyFiles.append("panl.collection.")
-			                       .append(niceCollectionName)
-			                       .append("=")
-			                       .append(niceCollectionName)
-			                       .append(".panl.properties\n");
+			collectionPropertyFiles
+				.append(PanlProperties.PROPERTY_KEY_PREFIX_PANL_COLLECTION)
+				.append(niceCollectionName)
+				.append("=")
+				.append(niceCollectionName)
+				.append(".panl.properties\n");
 		}
 
 		try (InputStream inputStream = PanlGenerator.class.getResourceAsStream(TEMPLATE_LOCATION_PANL_PROPERTIES)) {

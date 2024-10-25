@@ -194,7 +194,7 @@ public class PanlPropertiesEditTab {
 		Map<String, List<String>> panlCollectionsMap = panlEditor.getPanlProperties().getPanlCollectionsMap();
 		for (String key : panlCollectionsMap.keySet()) {
 			panlCollectionsProperty
-				.append("panl.collection.")
+				.append(PanlProperties.PROPERTY_KEY_PREFIX_PANL_COLLECTION)
 				.append(key)
 				.append("=")
 				.append(StringUtils.join(panlCollectionsMap.get(key), ",\\\n    "))
