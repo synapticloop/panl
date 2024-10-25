@@ -35,10 +35,7 @@ import org.slf4j.LoggerFactory;
 
 import javax.swing.*;
 import java.io.*;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -262,6 +259,22 @@ public class Main {
 		LOGGER.info("");
 		LOGGER.info("            ~ ~ ~ * ~ ~ ~");
 		LOGGER.info("");
+
+		Properties gradleProperties = new Properties();
+		try {
+			gradleProperties.load(Main.class.getResourceAsStream("/gradle.properties"));
+			LOGGER.info(
+				"Panl version: {}",
+				gradleProperties.getProperty("panl.version", "Unknown - ¯\\_(ツ)_/¯"));
+			LOGGER.info(
+				"Designed for integration with Solr version: {}",
+				gradleProperties.getProperty("panl.solr.version", "Unknown - ¯\\_(ツ)_/¯"));
+			LOGGER.info("");
+			LOGGER.info("            ~ ~ ~ * ~ ~ ~");
+			LOGGER.info("");
+		} catch (IOException ignored) {
+			ignored.printStackTrace();
+		}
 
 		try {
 			main.parseAndExecuteCommandLine();

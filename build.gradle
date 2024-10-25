@@ -4,7 +4,9 @@ plugins {
 	id 'jacoco'
 }
 
-version = findProperty("panl.version")
+def properties = new Properties()
+file("src/main/resources/gradle.properties").withInputStream { properties.load(it) }
+version = properties.getProperty("panl.version")
 group = 'com.synapticloop'
 
 repositories {
@@ -98,7 +100,7 @@ application {
 
 distributions {
 	main {
-		distributionBaseName = 'solr-panl-' + findProperty("panl.solr.version")
+		distributionBaseName = 'solr-panl-' + properties.getProperty("panl.solr.version")
 	}
 
 	configurations.all {
