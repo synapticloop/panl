@@ -186,6 +186,20 @@ public class PanlProjectLauncher {
 		buttonOpenFile = new JButton("Open existing file...");
 		buttonOpenFile.setEnabled(true);
 		buttonOpenFile.addActionListener(e -> {
+			if(currentFile == null) {
+				// we are going to open a file
+				JFileChooser fileChooser = new JFileChooser();
+				fileChooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
+				fileChooser.setMultiSelectionEnabled(false);
+				fileChooser.setDialogTitle("Open existing file");
+				fileChooser.setDialogType(JFileChooser.OPEN_DIALOG);
+				fileChooser.setAcceptAllFileFilterUsed(false);
+				int retVal = fileChooser.showOpenDialog(mainWindowFrame);
+				if(retVal == JFileChooser.APPROVE_OPTION) {
+					currentFile = fileChooser.getSelectedFile();
+				}
+			}
+
 			// add it to the list of open files
 			File tempFile = currentFile;
 
