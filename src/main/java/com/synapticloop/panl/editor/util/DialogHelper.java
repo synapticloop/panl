@@ -53,13 +53,22 @@ public class DialogHelper {
 			"!! WARNING !!",
 			JOptionPane.OK_CANCEL_OPTION));
 	}
-
 	public static String showTextEntryDialog(String message) {
-		return(JOptionPane.showInputDialog(new JFrame(),
+		return(showTextEntryDialog(message, null));
+	}
+
+	public static String showTextEntryDialog(String message, String defaultValue) {
+		if(defaultValue == null) {
+			defaultValue = "";
+		}
+		return (String) JOptionPane.showInputDialog(new JFrame(),
 			"<html><h2 style=\"margin-top: -4px;\">" +
 				message +
 				"</h2></html>",
 			"Solr URL",
-			JOptionPane.PLAIN_MESSAGE));
+			JOptionPane.PLAIN_MESSAGE,
+			null,
+			null,
+			defaultValue);
 	}
 }

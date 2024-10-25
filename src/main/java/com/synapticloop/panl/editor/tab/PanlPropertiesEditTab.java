@@ -34,11 +34,11 @@ import org.apache.commons.io.FileUtils;
 import javax.swing.*;
 import javax.swing.border.CompoundBorder;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Vector;
 
 public class PanlPropertiesEditTab {
@@ -46,11 +46,15 @@ public class PanlPropertiesEditTab {
 
 	private JList<String> listSolrURLs;
 	private JScrollPane scrollPaneSolrURLs;
+
 	private JButton buttonRemoveUrl;
 	private JButton buttonEditUrl;
 	private JButton buttonAddUrl;
+	private JComboBox<String> comboBoxSolrJConnectors;
+
 
 	private Vector<String> solrUrlVector = new Vector<>();
+	private Map<String, Boolean> checkBoxValues = new HashMap<>();
 
 
 	public PanlPropertiesEditTab(PanlEditor panlEditor) {
@@ -69,7 +73,8 @@ public class PanlPropertiesEditTab {
 		optionsBox.add(getLabel("Connection properties"));
 		optionsBox.add(getSeparator());
 		optionsBox.add(getSubLabel("SolrJ connector"));
-		optionsBox.add(getDropDownList(panlProperties.getSolrjClient()));
+		comboBoxSolrJConnectors = getDropDownList(panlProperties.getSolrjClient());
+		optionsBox.add(comboBoxSolrJConnectors);
 		optionsBox.add(getSubLabel("Connection strings"));
 
 
@@ -118,35 +123,21 @@ public class PanlPropertiesEditTab {
 		solrUrlsBox.add(Box.createRigidArea(new Dimension(20, 40)));
 		buttonEditUrl = new JButton("Edit");
 		solrUrlsBox.add(buttonEditUrl);
+		buttonEditUrl.setEnabled(false);
+		buttonEditUrl.addActionListener(e -> {
+			String newSolrUrl = DialogHelper.showTextEntryDialog("Enter Solr URL", listSolrURLs.getSelectedValue());
+			addIfValidSolrURL(newSolrUrl);
+		});
+
 		buttonAddUrl = new JButton("Add");
 		buttonAddUrl.addActionListener(e -> {
 			String newSolrUrl = DialogHelper.showTextEntryDialog("Enter Solr URL");
-			if(null != newSolrUrl && !newSolrUrl.isBlank()) {
-				boolean willAdd = true;
-				if(!newSolrUrl.startsWith("zookeekeeper:http")
-					|| !newSolrUrl.startsWith("http")) {
-					int retVal = DialogHelper.showWarning(
-						"URL does not start with zookeeper:http or 'http', <br> would you still like to " +
-							"add it?");
-					if(retVal != JOptionPane.OK_OPTION) {
-						willAdd = false;
-					}
-				}
-
-				if(willAdd) {
-					// removing and re-adding is better at repainting
-					solrUrlVector.add(newSolrUrl);
-					listSolrURLs.removeAll();
-					listSolrURLs.setListData(solrUrlVector);
-					panlEditor.setIsEdited(true);
-				}
-			}
+			addIfValidSolrURL(newSolrUrl);
 		});
 
 		solrUrlsBox.add(buttonAddUrl);
 
 		buttonRemoveUrl.setEnabled(false);
-		buttonEditUrl.setEnabled(false);
 
 		optionsBox.add(solrUrlsBox);
 
@@ -179,7 +170,11 @@ public class PanlPropertiesEditTab {
 
 		optionsBox.add(Box.createRigidArea(new Dimension(10, 20)));
 		optionsBox.add(Box.createVerticalGlue());
-		optionsBox.add(new JButton("Generate preview"));
+		JButton buttonGeneratePreview = new JButton("Generate preview");
+		buttonGeneratePreview.addActionListener(e -> generatePreview());
+
+		optionsBox.add(buttonGeneratePreview);
+
 		optionsBox.add(Box.createVerticalGlue());
 
 		mainPanel.add(optionsBox, BorderLayout.WEST);
@@ -187,6 +182,44 @@ public class PanlPropertiesEditTab {
 		mainPanel.add(getOriginalPanlDotPropertiesScrollPane(panlProperties), BorderLayout.EAST);
 
 		return(mainPanel);
+	}
+
+	private void generatePreview() {
+		for (String key : checkBoxValues.keySet()) {
+			System.out.println(key + "\t" + checkBoxValues.get(key));
+		}
+
+	}
+
+	/**
+	 * <p>Add (or edit) the URL if it is valid.  This will attempt to validate
+	 * the URL by checking for it starting with 'zookeepeer:http' or 'http' and
+	 * will ask for confirmation if it doesn't.</p>
+	 *
+	 * @param newSolrUrl The Solr URL to check
+	 */
+	private void addIfValidSolrURL(String newSolrUrl) {
+		if(null != newSolrUrl && !newSolrUrl.isBlank()) {
+			boolean willAdd = true;
+			if(!(newSolrUrl.startsWith("zookeeper:http")
+				|| newSolrUrl.startsWith("http"))) {
+				int retVal = DialogHelper.showWarning(
+					"URL does not start with zookeeper:http or 'http', <br> would you still like to " +
+						"add it?");
+				if(retVal != JOptionPane.OK_OPTION) {
+					willAdd = false;
+				}
+			}
+
+			if(willAdd) {
+				// removing and re-adding is better at repainting
+				solrUrlVector.remove(listSolrURLs.getSelectedValue());
+				solrUrlVector.add(newSolrUrl);
+				listSolrURLs.removeAll();
+				listSolrURLs.setListData(solrUrlVector);
+				panlEditor.setIsEdited(true);
+			}
+		}
 	}
 
 	private Box getOriginalPanlDotPropertiesScrollPane(PanlProperties panlProperties) {
@@ -301,7 +334,11 @@ public class PanlPropertiesEditTab {
 		jCheckBox.setName(propertyName);
 		jCheckBox.setToolTipText(tooltip);
 		jCheckBox.setSelected(selected);
-		jCheckBox.addItemListener(e -> panlEditor.setIsEdited(true));
+		checkBoxValues.put(propertyName, selected);
+		jCheckBox.addItemListener(e -> {
+			panlEditor.setIsEdited(true);
+			checkBoxValues.put(propertyName, jCheckBox.isSelected());
+		});
 		return(jCheckBox);
 	}
 
