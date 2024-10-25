@@ -26,6 +26,7 @@ package com.synapticloop.panl.editor;
 
 import com.formdev.flatlaf.FlatDarkLaf;
 import com.formdev.flatlaf.FlatLightLaf;
+import com.formdev.flatlaf.ui.FlatUIUtils;
 import com.synapticloop.panl.editor.tab.CollectionURLTab;
 import com.synapticloop.panl.editor.tab.NewCollectionTab;
 import com.synapticloop.panl.editor.tab.PanlPropertiesEditTab;
@@ -62,7 +63,7 @@ public class PanlEditor {
 	private List<File> collectionPropertyFiles = new ArrayList<>();
 	private PanlProperties panlProperties;
 	private PanlPropertiesEditTab panlPropertiesEditTab;
-	private int currentTabIndex = 0;
+	private int currentTabIndex = 1;
 
 	public PanlEditor(File panlDotPropertiesFile, PanlProjectLauncher panlProjectLauncher) throws Exception {
 		this.panlDotPropertiesFile = panlDotPropertiesFile;
@@ -103,6 +104,10 @@ public class PanlEditor {
 		mainWindowFrame.setJMenuBar(createJMenuBar(mainWindowFrame));
 
 		JTabbedPane jTabbedPane = new JTabbedPane();
+		jTabbedPane.putClientProperty( "FlatLaf.style", "font: bold $large.font" );
+		Component newCollection = NewCollectionTab.createNewCollection();
+		jTabbedPane.add("[ + ]", newCollection);
+
 		this.panlPropertiesEditTab = new PanlPropertiesEditTab(this);
 		jTabbedPane.add("{PANL} " + panlDotPropertiesFile.getName(), panlPropertiesEditTab.getJPanel());
 		// now add in the all of the collections
@@ -112,17 +117,9 @@ public class PanlEditor {
 			for (String collectionFileLocation : panlCollectionsMap.get(solrCollection)) {
 				jTabbedPane.add("[" + solrCollection + "] " + collectionFileLocation, new CollectionURLTab(this).getJPanel());
 			}
-
 		}
 
-		Component newCollection = NewCollectionTab.createNewCollection();
-
-		jTabbedPane.add("[ + ]", newCollection);
-
 		jTabbedPane.addChangeListener(e -> {
-//			JTabbedPane jTabbedPaneSource = (JTabbedPane) e.getSource();
-
-
 			if(jTabbedPane.getTitleAt(jTabbedPane.getSelectedIndex()).equals("[ + ]")) {
 				// TODO add new collection - show a dialog
 				jTabbedPane.setSelectedIndex(currentTabIndex);
@@ -130,6 +127,8 @@ public class PanlEditor {
 				currentTabIndex = jTabbedPane.getSelectedIndex();
 			}
 		});
+
+		jTabbedPane.setSelectedIndex(1);
 
 		Box fileLabelBox = Box.createHorizontalBox();
 
