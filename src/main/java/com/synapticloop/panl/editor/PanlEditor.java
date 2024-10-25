@@ -40,7 +40,6 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
@@ -56,17 +55,17 @@ public class PanlEditor {
 	private JLabel labelEdited;
 
 
-	private File file;
+	private File panlDotPropertiesFile;
 	private boolean isEdited = false;
 	private List<File> collectionPropertyFiles = new ArrayList<>();
 	private PanlProperties panlProperties;
 
-	public PanlEditor(File file, PanlProjectLauncher panlProjectLauncher) throws Exception {
-		this.file = file;
+	public PanlEditor(File panlDotPropertiesFile, PanlProjectLauncher panlProjectLauncher) throws Exception {
+		this.panlDotPropertiesFile = panlDotPropertiesFile;
 		this.panlProjectLauncher = panlProjectLauncher;
 
 		Properties properties = new Properties();
-		properties.load(new FileInputStream(file));
+		properties.load(new FileInputStream(panlDotPropertiesFile));
 		this.panlProperties = new PanlProperties(properties);
 
 		labelEdited = new JLabel("");
@@ -100,7 +99,7 @@ public class PanlEditor {
 		mainWindowFrame.setJMenuBar(createJMenuBar(mainWindowFrame));
 
 		JTabbedPane jTabbedPane = new JTabbedPane();
-		jTabbedPane.add("[PANL] " + file.getName(), new PanlPropertiesEditTab(this).getJPanel());
+		jTabbedPane.add("[PANL] " + panlDotPropertiesFile.getName(), new PanlPropertiesEditTab(this).getJPanel());
 		Component newCollection = NewCollectionTab.createNewCollection();
 		jTabbedPane.add("[ + ]", newCollection);
 		jTabbedPane.setEnabledAt(1, false);
@@ -111,7 +110,7 @@ public class PanlEditor {
 
 		Box fileLabelBox = Box.createHorizontalBox();
 
-		JLabel jLabel = new JLabel(file.getAbsolutePath());
+		JLabel jLabel = new JLabel(panlDotPropertiesFile.getAbsolutePath());
 		jLabel.putClientProperty( "FlatLaf.styleClass", "h3" );
 		jLabel.setBorder(BorderFactory.createEmptyBorder(4, 4, 4, 4));
 		fileLabelBox.add(jLabel);
@@ -122,7 +121,7 @@ public class PanlEditor {
 		mainWindowFrame.add(fileLabelBox, BorderLayout.NORTH);
 
 		mainWindowFrame.getContentPane().add(jTabbedPane, BorderLayout.CENTER);
-		mainWindowFrame.setLocation(Settings.getSubPosition(file.getAbsolutePath()));
+		mainWindowFrame.setLocation(Settings.getSubPosition(panlDotPropertiesFile.getAbsolutePath()));
 
 		mainWindowFrame.pack();
 
@@ -192,7 +191,7 @@ public class PanlEditor {
 		if(isEdited) {
 			// TODO show a file save window
 			int retVal = DialogHelper.showFileSaveWarning(
-				"<html><h2>The file '" + file.getName() + "' file has edits.<br>Would you like" +
+				"<html><h2>The file '" + panlDotPropertiesFile.getName() + "' file has edits.<br>Would you like" +
 					" to save the file?</br>");
 			switch (retVal) {
 				case JOptionPane.YES_OPTION:
@@ -206,9 +205,9 @@ public class PanlEditor {
 			}
 		}
 
-		panlProjectLauncher.removeActiveWindow(file.getAbsolutePath());
+		panlProjectLauncher.removeActiveWindow(panlDotPropertiesFile.getAbsolutePath());
 
-		Settings.setSubPosition(file.getAbsolutePath(), mainWindowFrame.getX(), mainWindowFrame.getY());
+		Settings.setSubPosition(panlDotPropertiesFile.getAbsolutePath(), mainWindowFrame.getX(), mainWindowFrame.getY());
 		Settings.saveSettings();
 		return(true);
 	}
@@ -244,5 +243,9 @@ public class PanlEditor {
 		} else {
 			labelEdited.setText("");
 		}
+	}
+
+	public File getPanlDotPropertiesFile() {
+		return panlDotPropertiesFile;
 	}
 }

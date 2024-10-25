@@ -29,12 +29,15 @@ import com.synapticloop.panl.editor.PanlEditor;
 import com.synapticloop.panl.editor.tab.solrj.SolrJConnector;
 import com.synapticloop.panl.editor.util.DialogHelper;
 import com.synapticloop.panl.server.handler.properties.PanlProperties;
+import org.apache.commons.io.FileUtils;
 
 import javax.swing.*;
 import javax.swing.border.CompoundBorder;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 import java.util.Vector;
 
@@ -167,9 +170,6 @@ public class PanlPropertiesEditTab {
 			"Select this to use the decimal point as a separator between the integer and fractional part",
 			PanlProperties.getIsDecimalPoint()));
 
-		optionsBox.add(getLabel("Panl collections"));
-		optionsBox.add(getSeparator());
-
 		optionsBox.add(getLabel("Output options"));
 		optionsBox.add(getSeparator());
 		optionsBox.add(getCheckbox(
@@ -177,15 +177,14 @@ public class PanlPropertiesEditTab {
 			"Whether to include comments in the output",
 			true));
 
+		optionsBox.add(Box.createRigidArea(new Dimension(10, 20)));
 		optionsBox.add(Box.createVerticalGlue());
-
-//		JScrollPane generatedScrollPane = getPanlDotPropertiesScrollPane(panlProperties);
-//		JScrollPane originalScrollPane = getOriginalPanlDotPropertiesScrollPane(panlProperties);
+		optionsBox.add(new JButton("Generate preview"));
+		optionsBox.add(Box.createVerticalGlue());
 
 		mainPanel.add(optionsBox, BorderLayout.WEST);
 		mainPanel.add(getPanlDotPropertiesScrollPane(panlProperties), BorderLayout.CENTER);
 		mainPanel.add(getOriginalPanlDotPropertiesScrollPane(panlProperties), BorderLayout.EAST);
-		mainPanel.add(new JButton("hello"), BorderLayout.SOUTH);
 
 		return(mainPanel);
 	}
@@ -200,7 +199,13 @@ public class PanlPropertiesEditTab {
 
 		verticalBox.add(horizontalBox);
 
-		JTextArea textArea = new JTextArea(getGeneratedPanlProperties(panlProperties), 30, 80);
+		String text= "Could not read the " + panlEditor.getPanlDotPropertiesFile().getAbsolutePath() + " file.";
+		try {
+			text = FileUtils.readFileToString(panlEditor.getPanlDotPropertiesFile(), StandardCharsets.UTF_8);
+		} catch (IOException ignored) {
+			// do nothing, nothing we can do.
+		}
+		JTextArea textArea = new JTextArea(text, 30, 80);
 		textArea.setFont(FlatUIUtils.nonUIResource(UIManager.getFont( "large.font" )));
 		textArea.putClientProperty("FlatLaf.styleClass", "monospaced");
 		textArea.setEditable(false);
