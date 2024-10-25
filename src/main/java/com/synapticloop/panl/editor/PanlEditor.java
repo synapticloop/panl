@@ -50,6 +50,7 @@ import java.util.Properties;
 import static com.synapticloop.panl.editor.Constants.*;
 
 public class PanlEditor {
+	public static final String TAB_TITLE_ADD = "[ + ]";
 	private JFrame mainWindowFrame;
 	private PanlProjectLauncher panlProjectLauncher;
 	private JMenu fileMenuItem;
@@ -106,7 +107,7 @@ public class PanlEditor {
 		JTabbedPane jTabbedPane = new JTabbedPane();
 		jTabbedPane.putClientProperty( "FlatLaf.style", "font: bold $large.font" );
 		Component newCollection = NewCollectionTab.createNewCollection();
-		jTabbedPane.add("[ + ]", newCollection);
+		jTabbedPane.add(TAB_TITLE_ADD, newCollection);
 
 		this.panlPropertiesEditTab = new PanlPropertiesEditTab(this);
 		jTabbedPane.add("{PANL} " + panlDotPropertiesFile.getName(), panlPropertiesEditTab.getJPanel());
@@ -120,9 +121,10 @@ public class PanlEditor {
 		}
 
 		jTabbedPane.addChangeListener(e -> {
-			if(jTabbedPane.getTitleAt(jTabbedPane.getSelectedIndex()).equals("[ + ]")) {
+			if(jTabbedPane.getTitleAt(jTabbedPane.getSelectedIndex()).equals(TAB_TITLE_ADD)) {
 				// TODO add new collection - show a dialog
 				jTabbedPane.setSelectedIndex(currentTabIndex);
+				DialogHelper.showWarning("creating a new Collection mapping");
 			} else {
 				currentTabIndex = jTabbedPane.getSelectedIndex();
 			}
