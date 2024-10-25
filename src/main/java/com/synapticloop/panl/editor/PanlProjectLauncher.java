@@ -28,6 +28,7 @@ import com.formdev.flatlaf.FlatClientProperties;
 import com.formdev.flatlaf.FlatDarkLaf;
 import com.formdev.flatlaf.FlatLightLaf;
 import com.formdev.flatlaf.ui.FlatUIUtils;
+import com.synapticloop.panl.Main;
 import com.synapticloop.panl.editor.handler.PanlPropertiesFileDropHandler;
 import com.synapticloop.panl.editor.handler.SolrManagedSchemeFileDropHandler;
 import com.synapticloop.panl.editor.util.DialogHelper;
@@ -38,7 +39,6 @@ import javax.swing.border.EmptyBorder;
 import java.awt.*;
 import java.awt.event.*;
 import java.io.File;
-import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -84,7 +84,7 @@ public class PanlProjectLauncher {
 			@Override public void windowClosing(WindowEvent e) {
 				actionOnWindowClosing();
 			}
-		}) ;
+		});
 
 		mainWindowFrame.setJMenuBar(createJMenuBar(mainWindowFrame));
 
@@ -165,13 +165,22 @@ public class PanlProjectLauncher {
 
 		jPanel.add(createFileList(), BorderLayout.CENTER);
 		jPanel.add(createDropZones(), BorderLayout.EAST);
-		jPanel.add(createOpenFile(), BorderLayout.SOUTH);
+		jPanel.add(createFileButtons(), BorderLayout.SOUTH);
 
 		return (jPanel);
 	}
 
-	private Box createOpenFile() {
+	private Box createFileButtons() {
 		Box vBox = Box.createHorizontalBox();
+		JLabel versionInfo = new JLabel(
+			String.format(
+				"<html><B>Panl version: %s<br>Solr integration version: %s</B></html>",
+				Main.panlVersion,
+				Main.solrVersion));
+		versionInfo.setMaximumSize(new Dimension(200, 30));
+		versionInfo.setMinimumSize(new Dimension(200, 30));
+		vBox.add(versionInfo);
+
 		vBox.add(Box.createHorizontalGlue());
 		vBox.setBorder(BorderFactory.createEmptyBorder(16, 16, 16, 16));
 		buttonOpenFile = new JButton("Open existing file...");
@@ -186,7 +195,7 @@ public class PanlProjectLauncher {
 			currentFile = tempFile;
 
 			String absolutePath = currentFile.getAbsolutePath();
-			if(panlEditorsMap.containsKey(absolutePath)) {
+			if (panlEditorsMap.containsKey(absolutePath)) {
 				panlEditorsMap.get(absolutePath).moveToFront();
 			} else {
 				PanlEditor panlEditor = null;
@@ -214,15 +223,15 @@ public class PanlProjectLauncher {
 			boolean shouldRemove = true;
 			Settings.removeRecentFile(currentFile);
 			String absolutePath = currentFile.getAbsolutePath();
-			if(panlEditorsMap.containsKey(absolutePath)) {
+			if (panlEditorsMap.containsKey(absolutePath)) {
 				PanlEditor panlEditor = panlEditorsMap.get(absolutePath);
 				panlEditor.moveToFront();
-				if(!panlEditor.closeEditor()) {
+				if (!panlEditor.closeEditor()) {
 					shouldRemove = false;
 				}
 			}
 
-			if(shouldRemove) {
+			if (shouldRemove) {
 				refreshFileListing();
 			}
 		});
@@ -230,8 +239,7 @@ public class PanlProjectLauncher {
 		vBox.add(buttonRemoveRecentFile);
 
 
-
-		return(vBox);
+		return (vBox);
 	}
 
 	private void refreshFileListing() {
@@ -249,7 +257,7 @@ public class PanlProjectLauncher {
 
 		JLabel jLabel = new JLabel("<html><body style=\"text-align: left; padding-right: 16; margin: 0;\">" +
 			"<h2>Recent files...</h2></body></html>");
-		jLabel.putClientProperty( "FlatLaf.styleClass", "h2" );
+		jLabel.putClientProperty("FlatLaf.styleClass", "h2");
 		jLabel.setHorizontalAlignment(SwingConstants.LEFT);
 		vbox.add(jLabel);
 		recentFilesBox.add(vbox);
@@ -258,7 +266,7 @@ public class PanlProjectLauncher {
 
 		listRecentFiles.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		listRecentFiles.setLayoutOrientation(JList.VERTICAL);
-		listRecentFiles.setFont(FlatUIUtils.nonUIResource(UIManager.getFont( "large.font" )));
+		listRecentFiles.setFont(FlatUIUtils.nonUIResource(UIManager.getFont("large.font")));
 		ListSelectionModel selectionModel = listRecentFiles.getSelectionModel();
 		selectionModel.addListSelectionListener(e -> {
 			toggleOpenFileButtonState(selectionModel);
@@ -269,11 +277,11 @@ public class PanlProjectLauncher {
 
 
 		recentFilesBox.add(scrollPaneRecentFiles);
-		return(recentFilesBox);
+		return (recentFilesBox);
 	}
 
 	private void toggleOpenFileButtonState(ListSelectionModel selectionModel) {
-		if(selectionModel.getSelectedItemsCount() != 1) {
+		if (selectionModel.getSelectedItemsCount() != 1) {
 			buttonOpenFile.setText("Open existing file...");
 			this.currentFile = null;
 			buttonRemoveRecentFile.setEnabled(false);
@@ -291,7 +299,7 @@ public class PanlProjectLauncher {
 
 		JLabel quickOpen = new JLabel("<html><body style=\"text-align: left; padding-right: 0; margin: 0;\">" +
 			"<h2>Quick Open...</h2></body></html>");
-		quickOpen.putClientProperty( "FlatLaf.styleClass", "h2" );
+		quickOpen.putClientProperty("FlatLaf.styleClass", "h2");
 		quickOpen.setHorizontalAlignment(SwingConstants.LEFT);
 
 		dropZoneBox.add(quickOpen);
@@ -305,17 +313,17 @@ public class PanlProjectLauncher {
 		labelManagedSchema.setTransferHandler(new SolrManagedSchemeFileDropHandler(this));
 		dropZoneBox.add(labelManagedSchema);
 
-		return(dropZoneBox);
+		return (dropZoneBox);
 	}
 
 	private JLabel createDropLabel(String text) {
 		JLabel dropPanlProperties = new JLabel(
 			"<html><body style=\"text-align: center; padding: 0px;\"><h2>" + text + "</h2></body></html>",
 			SwingConstants.CENTER);
-		dropPanlProperties.putClientProperty( "FlatLaf.styleClass", "h1" );
+		dropPanlProperties.putClientProperty("FlatLaf.styleClass", "h1");
 		dropPanlProperties.setPreferredSize(new Dimension(140, 140));
 		dropPanlProperties.putClientProperty(FlatClientProperties.STYLE_CLASS, "dragAndDropPanel");
-		return(dropPanlProperties);
+		return (dropPanlProperties);
 	}
 
 	private void actionOnWindowClosing() {
@@ -326,7 +334,7 @@ public class PanlProjectLauncher {
 		// go through all of the windows
 		for (PanlEditor panlEditor : panlEditorsMap.values()) {
 			panlEditor.moveToFront();
-			if(!panlEditor.actionOnWindowClosing()) {
+			if (!panlEditor.actionOnWindowClosing()) {
 				mainWindowFrame.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
 				return;
 			}
@@ -354,7 +362,7 @@ public class PanlProjectLauncher {
 					"<h2>Could not open the file, message was:&nbsp;</h2>" +
 					"<br>" +
 					ex.getMessage() +
-				"</html>");
+					"</html>");
 		}
 	}
 

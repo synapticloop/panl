@@ -88,3 +88,5 @@ available:
                                  ~ ~ ~ * ~ ~ ~
 
 If you choose the 'editor' command, there are no command line options.
+
+                                 ~ ~ ~ * ~ ~ ~

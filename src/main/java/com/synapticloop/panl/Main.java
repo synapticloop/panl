@@ -63,6 +63,9 @@ public class Main {
 		ALLOWABLE_COMMANDS.add(CMD_VALUE_EDITOR);
 	}
 
+	public static String panlVersion = "Unknown - ¯\\_(ツ)_/¯";
+	public static String solrVersion = "Unknown - ¯\\_(ツ)_/¯";
+
 
 	public static final String DEFAULT_PANL_PROPERTIES = "panl.properties";
 	public static final String DEFAULT_PORT_NUMBER = "8181";
@@ -104,12 +107,12 @@ public class Main {
 	 */
 	private void parseAndExecuteCommandLine() throws PanlServerException, CommandLineOptionException, PanlGenerateException {
 		if (args.length < 1) {
-			usageAndException("Could not determine command, should be one of 'server' or 'generate'");
+			usageAndException("Could not determine command, should be one of 'server', 'generate', or 'editor'");
 		}
 
 		String command = args[0];
 		if (!ALLOWABLE_COMMANDS.contains(command)) {
-			usageAndException(String.format("Unknown command of '%s', expecting 'server' or 'generate'", command));
+			usageAndException(String.format("Unknown command of '%s', expecting 'server', 'generate', or 'editor'", command));
 		}
 
 		// now go through the rest of the command line arguments
@@ -251,6 +254,14 @@ public class Main {
 	public static void main(String[] args) {
 		Main main = new Main(args);
 
+		Properties gradleProperties = new Properties();
+		try {
+			gradleProperties.load(Main.class.getResourceAsStream("/gradle.properties"));
+			Main.panlVersion = gradleProperties.getProperty("panl.version", "Unknown - ¯\\_(ツ)_/¯");
+			Main.solrVersion = gradleProperties.getProperty("panl.solr.version", "Unknown - ¯\\_(ツ)_/¯");
+		} catch (IOException ignored) {
+		}
+
 		LOGGER.info("            ~ ~ ~ * ~ ~ ~");
 		LOGGER.info("");
 		LOGGER.info("                           __ ");
@@ -262,20 +273,13 @@ public class Main {
 		LOGGER.info("            ~ ~ ~ * ~ ~ ~");
 		LOGGER.info("");
 
-		Properties gradleProperties = new Properties();
-		try {
-			gradleProperties.load(Main.class.getResourceAsStream("/gradle.properties"));
-			LOGGER.info(
-				"Panl version: {}",
-				gradleProperties.getProperty("panl.version", "Unknown - ¯\\_(ツ)_/¯"));
-			LOGGER.info(
-				"Designed for integration with Solr version: {}",
-				gradleProperties.getProperty("panl.solr.version", "Unknown - ¯\\_(ツ)_/¯"));
+			LOGGER.info("         Panl version: {}", Main.panlVersion);
+			LOGGER.info("");
+			LOGGER.info("    Designed for integration with");
+			LOGGER.info("           Solr version: {}", Main.solrVersion);
 			LOGGER.info("");
 			LOGGER.info("            ~ ~ ~ * ~ ~ ~");
 			LOGGER.info("");
-		} catch (IOException ignored) {
-		}
 
 		try {
 			main.parseAndExecuteCommandLine();
