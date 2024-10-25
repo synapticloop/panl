@@ -21,6 +21,9 @@ Where:
       server - start the server, or
     generate - generate an example panl.properties file from an existing Solr
                managed-schema.xml file
+      editor - launch the Panl Project editor
+
+                                 ~ ~ ~ * ~ ~ ~
 
   [SERVER] To start the Panl server:
 
@@ -29,9 +32,7 @@ Where:
       [-properties panl_properties_file_location] \
       [-port port_number]
 
-
                                  ~ ~ ~ * ~ ~ ~
-
 
   [GENERATOR] To generate the panl.properties file for each collection
 
@@ -41,9 +42,14 @@ Where:
       [-overwrite true_or_false] \
       -schema solr_schema_location
 
-
                                  ~ ~ ~ * ~ ~ ~
 
+  [EDITOR] To launch the Panl Project Launcher GUI
+
+    java -jar panl.jar \
+      editor
+
+                                 ~ ~ ~ * ~ ~ ~
 
 If you choose the 'server' command, the following command line options are
 available:
@@ -56,9 +62,7 @@ available:
   [-port port_number] (optional) the port number to start the server on.  The
     default port number is 8181
 
-
                                  ~ ~ ~ * ~ ~ ~
-
 
 If you choose the 'generate' command, the following command line options are
 available:
@@ -80,3 +84,7 @@ available:
 
   -schema solr_schema_location(s) (mandatory) the managed-schema.xml
     configuration file(s) to read and generate the panl.properties file from.
+
+                                 ~ ~ ~ * ~ ~ ~
+
+If you choose the 'editor' command, there are no command line options.
