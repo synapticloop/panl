@@ -179,13 +179,41 @@ public class PanlPropertiesEditTab {
 
 		optionsBox.add(Box.createVerticalGlue());
 
-		JScrollPane scrollPane = getPanlDotPropertiesScrollPane(panlProperties);
+//		JScrollPane generatedScrollPane = getPanlDotPropertiesScrollPane(panlProperties);
+//		JScrollPane originalScrollPane = getOriginalPanlDotPropertiesScrollPane(panlProperties);
 
 		mainPanel.add(optionsBox, BorderLayout.WEST);
-		mainPanel.add(scrollPane, BorderLayout.CENTER);
+		mainPanel.add(getPanlDotPropertiesScrollPane(panlProperties), BorderLayout.CENTER);
+		mainPanel.add(getOriginalPanlDotPropertiesScrollPane(panlProperties), BorderLayout.EAST);
 		mainPanel.add(new JButton("hello"), BorderLayout.SOUTH);
 
 		return(mainPanel);
+	}
+
+	private Box getOriginalPanlDotPropertiesScrollPane(PanlProperties panlProperties) {
+		Box verticalBox = Box.createVerticalBox();
+		verticalBox.setAlignmentX(1.0f);
+
+		JLabel generatedFileLabel = getLabel("<html><p style=\"padding: 0 4 0 4;\">Original file</p></html>");
+		Box horizontalBox = Box.createHorizontalBox();
+		horizontalBox.add(generatedFileLabel);
+
+		verticalBox.add(horizontalBox);
+
+		JTextArea textArea = new JTextArea(getGeneratedPanlProperties(panlProperties), 30, 80);
+		textArea.setFont(FlatUIUtils.nonUIResource(UIManager.getFont( "large.font" )));
+		textArea.putClientProperty("FlatLaf.styleClass", "monospaced");
+		textArea.setEditable(false);
+		textArea.setLineWrap(false);
+		JScrollPane scrollPane = new JScrollPane(textArea);
+		scrollPane.setBorder(
+			new CompoundBorder(BorderFactory.createEmptyBorder(0, 4, 40, 4),
+				BorderFactory.createEtchedBorder())
+		);
+		scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
+		scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);
+		verticalBox.add(scrollPane);
+		return(verticalBox);
 	}
 
 	private void toggleButtonStates(ListSelectionModel selectionModel) {
@@ -222,7 +250,16 @@ public class PanlPropertiesEditTab {
 		return(comboBox);
 	}
 
-	private JScrollPane getPanlDotPropertiesScrollPane(PanlProperties panlProperties) {
+	private Box getPanlDotPropertiesScrollPane(PanlProperties panlProperties) {
+		Box verticalBox = Box.createVerticalBox();
+		verticalBox.setAlignmentX(1.0f);
+
+		JLabel generatedFileLabel = getLabel("<html><p style=\"padding: 0 4 0 4;\">Generated file</p></html>");
+		Box horizontalBox = Box.createHorizontalBox();
+		horizontalBox.add(generatedFileLabel);
+
+		verticalBox.add(horizontalBox);
+
 		JTextArea textArea = new JTextArea(getGeneratedPanlProperties(panlProperties), 30, 80);
 		textArea.setFont(FlatUIUtils.nonUIResource(UIManager.getFont( "large.font" )));
 		textArea.putClientProperty("FlatLaf.styleClass", "monospaced");
@@ -235,7 +272,8 @@ public class PanlPropertiesEditTab {
 			);
 		scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
 		scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);
-		return scrollPane;
+		verticalBox.add(scrollPane);
+		return(verticalBox);
 	}
 
 	private JLabel getLabel(String text) {
