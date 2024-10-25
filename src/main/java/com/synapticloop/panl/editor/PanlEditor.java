@@ -68,6 +68,10 @@ public class PanlEditor {
 		Properties properties = new Properties();
 		properties.load(new FileInputStream(file));
 		this.panlProperties = new PanlProperties(properties);
+
+		labelEdited = new JLabel("");
+		labelEdited.setBorder(BorderFactory.createEmptyBorder(4, 4, 4, 4));
+
 	}
 
 	public void show() {
@@ -103,7 +107,6 @@ public class PanlEditor {
 
 		jTabbedPane.addChangeListener(e -> {
 			JTabbedPane selectedTab = (JTabbedPane) e.getSource();
-			System.out.println(selectedTab.getTitleAt(selectedTab.getSelectedIndex()));
 		});
 
 		Box fileLabelBox = Box.createHorizontalBox();
@@ -113,8 +116,6 @@ public class PanlEditor {
 		jLabel.setBorder(BorderFactory.createEmptyBorder(4, 4, 4, 4));
 		fileLabelBox.add(jLabel);
 		fileLabelBox.add(Box.createHorizontalGlue());
-		labelEdited = new JLabel("");
-		labelEdited.setBorder(BorderFactory.createEmptyBorder(4, 4, 4, 4));
 		fileLabelBox.add(labelEdited);
 
 
@@ -126,6 +127,7 @@ public class PanlEditor {
 		mainWindowFrame.pack();
 
 		mainWindowFrame.setVisible(true);
+
 	}
 
 	private JMenuBar createJMenuBar(JFrame jFrame) {

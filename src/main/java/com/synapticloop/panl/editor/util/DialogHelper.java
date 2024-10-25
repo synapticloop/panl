@@ -44,4 +44,22 @@ public class DialogHelper {
 			JOptionPane.ERROR_MESSAGE);
 	}
 
+	public static int showWarning(String message) {
+		return(JOptionPane.showConfirmDialog(
+			new JFrame(),
+			"<html><h2 style=\"margin-top: -4px;\">" +
+				message +
+			"</h2></html>",
+			"!! WARNING !!",
+			JOptionPane.OK_CANCEL_OPTION));
+	}
+
+	public static String showTextEntryDialog(String message) {
+		return(JOptionPane.showInputDialog(new JFrame(),
+			"<html><h2 style=\"margin-top: -4px;\">" +
+				message +
+				"</h2></html>",
+			"Solr URL",
+			JOptionPane.PLAIN_MESSAGE));
+	}
 }

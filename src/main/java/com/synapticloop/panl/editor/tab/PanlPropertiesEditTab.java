@@ -24,9 +24,10 @@
 
 package com.synapticloop.panl.editor.tab;
 
+import com.formdev.flatlaf.ui.FlatUIUtils;
 import com.synapticloop.panl.editor.PanlEditor;
-import com.synapticloop.panl.generator.PanlGenerator;
-import com.synapticloop.panl.generator.bean.PanlCollection;
+import com.synapticloop.panl.editor.tab.solrj.SolrJConnector;
+import com.synapticloop.panl.editor.util.DialogHelper;
 import com.synapticloop.panl.server.handler.properties.PanlProperties;
 
 import javax.swing.*;
@@ -34,12 +35,20 @@ import javax.swing.border.CompoundBorder;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.*;
-import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
+import java.util.Arrays;
+import java.util.Vector;
 
 public class PanlPropertiesEditTab {
 	private PanlEditor panlEditor;
+
+	private JList<String> listSolrURLs;
+	private JScrollPane scrollPaneSolrURLs;
+	private JButton buttonRemoveUrl;
+	private JButton buttonEditUrl;
+	private JButton buttonAddUrl;
+
+	private Vector<String> solrUrlVector = new Vector<>();
+
 
 	public PanlPropertiesEditTab(PanlEditor panlEditor) {
 		this.panlEditor = panlEditor;
@@ -52,11 +61,95 @@ public class PanlPropertiesEditTab {
 		Box optionsBox = Box.createVerticalBox();
 		optionsBox.setBorder(BorderFactory.createEmptyBorder(0, 4, 4, 4));
 
-		optionsBox.add(getLabel("Connection properties"));
-
 		PanlProperties panlProperties = panlEditor.getPanlProperties();
 
+		optionsBox.add(getLabel("Connection properties"));
+		optionsBox.add(getSeparator());
+		optionsBox.add(getSubLabel("SolrJ connector"));
+		optionsBox.add(getDropDownList(panlProperties.getSolrjClient()));
+		optionsBox.add(getSubLabel("Connection strings"));
+
+
+		solrUrlVector.addAll(Arrays.asList(panlProperties.getSolrSearchServerUrl().split(",")));
+
+		listSolrURLs = new JList<>(solrUrlVector);
+		listSolrURLs.setVisibleRowCount(3);
+
+		listSolrURLs.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+
+		listSolrURLs.setLayoutOrientation(JList.VERTICAL);
+		listSolrURLs.setFont(FlatUIUtils.nonUIResource(UIManager.getFont( "large.font" )));
+		ListSelectionModel selectionModel = listSolrURLs.getSelectionModel();
+		selectionModel.addListSelectionListener(e -> {
+			toggleButtonStates(selectionModel);
+		});
+
+		listSolrURLs.setAlignmentX(-1.0f);
+
+		scrollPaneSolrURLs = new JScrollPane(listSolrURLs);
+		scrollPaneSolrURLs.setPreferredSize(new Dimension(240, 60));
+		scrollPaneSolrURLs.setMaximumSize(new Dimension(240, 120));
+		scrollPaneSolrURLs.setMinimumSize(new Dimension(240, 120));
+		scrollPaneSolrURLs.setAlignmentX(-1.0f);
+		scrollPaneSolrURLs.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+		scrollPaneSolrURLs.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
+
+		optionsBox.add(scrollPaneSolrURLs);
+
+		// now for the buttons - delete / edit / add
+		Box solrUrlsBox = Box.createHorizontalBox();
+		solrUrlsBox.setAlignmentX(Box.LEFT_ALIGNMENT);
+
+		buttonRemoveUrl = new JButton("Remove");
+		buttonRemoveUrl.addActionListener(e -> {
+			// show a confirmation dialog
+			int returnVal = DialogHelper.showWarning("Confirm removal of this connection string?");
+			if(returnVal == JOptionPane.OK_OPTION) {
+				solrUrlVector.remove(listSolrURLs.getSelectedIndex());
+				listSolrURLs.repaint();
+				panlEditor.setIsEdited(true);
+			}
+		});
+
+		solrUrlsBox.add(buttonRemoveUrl);
+		solrUrlsBox.add(Box.createRigidArea(new Dimension(20, 40)));
+		buttonEditUrl = new JButton("Edit");
+		solrUrlsBox.add(buttonEditUrl);
+		buttonAddUrl = new JButton("Add");
+		buttonAddUrl.addActionListener(e -> {
+			String newSolrUrl = DialogHelper.showTextEntryDialog("Enter Solr URL");
+			if(null != newSolrUrl && !newSolrUrl.isBlank()) {
+				boolean willAdd = true;
+				if(!newSolrUrl.startsWith("zookeekeeper:http")
+					|| !newSolrUrl.startsWith("http")) {
+					int retVal = DialogHelper.showWarning(
+						"URL does not start with zookeeper:http or 'http', <br> would you still like to " +
+							"add it?");
+					if(retVal != JOptionPane.OK_OPTION) {
+						willAdd = false;
+					}
+				}
+
+				if(willAdd) {
+					// removing and re-adding is better at repainting
+					solrUrlVector.add(newSolrUrl);
+					listSolrURLs.removeAll();
+					listSolrURLs.setListData(solrUrlVector);
+					panlEditor.setIsEdited(true);
+				}
+			}
+		});
+
+		solrUrlsBox.add(buttonAddUrl);
+
+		buttonRemoveUrl.setEnabled(false);
+		buttonEditUrl.setEnabled(false);
+
+		optionsBox.add(solrUrlsBox);
+
+
 		optionsBox.add(getLabel("Server options"));
+		optionsBox.add(getSeparator());
 		optionsBox.add(getCheckbox(
 			"panl.results.testing.urls",
 			"Select this to enable the in-built testing URLs",
@@ -73,11 +166,65 @@ public class PanlPropertiesEditTab {
 			"panl.decimal.point",
 			"Select this to use the decimal point as a separator between the integer and fractional part",
 			PanlProperties.getIsDecimalPoint()));
+
 		optionsBox.add(getLabel("Panl collections"));
+		optionsBox.add(getSeparator());
+
+		optionsBox.add(getLabel("Output options"));
+		optionsBox.add(getSeparator());
+		optionsBox.add(getCheckbox(
+			"include.comments",
+			"Whether to include comments in the output",
+			true));
 
 		optionsBox.add(Box.createVerticalGlue());
 
+		JScrollPane scrollPane = getPanlDotPropertiesScrollPane(panlProperties);
+
+		mainPanel.add(optionsBox, BorderLayout.WEST);
+		mainPanel.add(scrollPane, BorderLayout.CENTER);
+		mainPanel.add(new JButton("hello"), BorderLayout.SOUTH);
+
+		return(mainPanel);
+	}
+
+	private void toggleButtonStates(ListSelectionModel selectionModel) {
+		if(selectionModel.getSelectedItemsCount() != 1) {
+			buttonRemoveUrl.setEnabled(false);
+			buttonEditUrl.setEnabled(false);
+		} else {
+			buttonRemoveUrl.setEnabled(true);
+			buttonEditUrl.setEnabled(true);
+		}
+	}
+
+	private static JSeparator getSeparator() {
+		JSeparator jSeparator = new JSeparator(JSeparator.HORIZONTAL);
+		jSeparator.setBorder(BorderFactory.createEmptyBorder(4, 4, 4, 4));
+		jSeparator.setMaximumSize(new Dimension(280, 8));
+		jSeparator.setAlignmentX(0.0f);
+		return(jSeparator);
+	}
+
+	private JComboBox<String> getDropDownList(String solrjClient) {
+		JComboBox<String> comboBox = new JComboBox<>(SolrJConnector.AVAILABLE_SOLR_J_CONNECTORS);
+		comboBox.setFont(FlatUIUtils.nonUIResource(UIManager.getFont( "large.font" )));
+		comboBox.setPrototypeDisplayValue("default text here");
+		comboBox.setPreferredSize(new Dimension(220, 20));
+		comboBox.setMaximumSize(new Dimension(220, 20));
+		comboBox.setMinimumSize(new Dimension(220, 20));
+		comboBox.setAlignmentX(-1.0f);
+		comboBox.setSelectedItem(solrjClient);
+		comboBox.addPropertyChangeListener(evt -> panlEditor.setIsEdited(true));
+		// we need to do this as we are adding items to the combo box which
+		// flags this as edited
+		panlEditor.setIsEdited(false);
+		return(comboBox);
+	}
+
+	private JScrollPane getPanlDotPropertiesScrollPane(PanlProperties panlProperties) {
 		JTextArea textArea = new JTextArea(getGeneratedPanlProperties(panlProperties), 30, 80);
+		textArea.setFont(FlatUIUtils.nonUIResource(UIManager.getFont( "large.font" )));
 		textArea.putClientProperty("FlatLaf.styleClass", "monospaced");
 		textArea.setEditable(false);
 		textArea.setLineWrap(false);
@@ -88,33 +235,35 @@ public class PanlPropertiesEditTab {
 			);
 		scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
 		scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);
-
-		mainPanel.add(optionsBox, BorderLayout.WEST);
-		mainPanel.add(scrollPane, BorderLayout.CENTER);
-		mainPanel.add(new JButton("hello"), BorderLayout.SOUTH);
-
-		return(mainPanel);
+		return scrollPane;
 	}
 
 	private JLabel getLabel(String text) {
 		JLabel label = new JLabel(text);
 		label.putClientProperty( "FlatLaf.styleClass", "h2" );
+		label.setBorder(BorderFactory.createEmptyBorder(12, 0, 4, 0));
+		return(label);
+	}
+	private JLabel getSubLabel(String text) {
+		JLabel label = new JLabel(text);
+		label.putClientProperty( "FlatLaf.styleClass", "h3" );
+		label.setBorder(BorderFactory.createEmptyBorder(6, 0, 4, 0));
 		return(label);
 	}
 
 	private JCheckBox getCheckbox(String propertyName, String tooltip, boolean selected) {
 		JCheckBox jCheckBox = new JCheckBox(propertyName);
+		jCheckBox.setFont(FlatUIUtils.nonUIResource(UIManager.getFont( "large.font" )));
 		jCheckBox.putClientProperty("FlatLaf.styleClass", "monospaced");
 		jCheckBox.setName(propertyName);
 		jCheckBox.setToolTipText(tooltip);
 		jCheckBox.setSelected(selected);
-		jCheckBox.addItemListener(e -> {
-			panlEditor.setIsEdited(true);
-		});
+		jCheckBox.addItemListener(e -> panlEditor.setIsEdited(true));
 		return(jCheckBox);
 	}
 
 	private String getGeneratedPanlProperties(PanlProperties panlProperties) {
+
 		return("# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #\n" +
 			"#                                              __                             #\n" +
 			"#                          .-----.---.-.-----.|  |                            #\n" +

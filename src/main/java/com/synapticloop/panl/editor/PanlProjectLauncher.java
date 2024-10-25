@@ -195,6 +195,7 @@ public class PanlProjectLauncher {
 					panlEditorsMap.put(absolutePath, panlEditor);
 					panlEditor.show();
 					panlEditor.setUIDisplayMode(isDarkUI);
+					panlEditor.setIsEdited(false);
 				} catch (Exception ex) {
 					DialogHelper.showError("<html><h2>Could not open the file, message was:&nbsp;</h2>" +
 						"<br>" +
