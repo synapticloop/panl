@@ -251,6 +251,8 @@ public class Main {
 	public static void main(String[] args) {
 		Main main = new Main(args);
 
+		LOGGER.info("            ~ ~ ~ * ~ ~ ~");
+		LOGGER.info("");
 		LOGGER.info("                           __ ");
 		LOGGER.info("       .-----.---.-.-----.|  |");
 		LOGGER.info("       |  _  |  _  |     ||  |");
@@ -273,7 +275,6 @@ public class Main {
 			LOGGER.info("            ~ ~ ~ * ~ ~ ~");
 			LOGGER.info("");
 		} catch (IOException ignored) {
-			ignored.printStackTrace();
 		}
 
 		try {
