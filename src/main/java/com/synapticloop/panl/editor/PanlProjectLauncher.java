@@ -188,7 +188,7 @@ public class PanlProjectLauncher {
 		buttonOpenFile.addActionListener(e -> {
 			if(currentFile == null) {
 				// we are going to open a file
-				JFileChooser fileChooser = new JFileChooser();
+				JFileChooser fileChooser = new JFileChooser(Settings.getLastDirectory());
 				fileChooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
 				fileChooser.setMultiSelectionEnabled(false);
 				fileChooser.setDialogTitle("Open existing file");
@@ -197,6 +197,9 @@ public class PanlProjectLauncher {
 				int retVal = fileChooser.showOpenDialog(mainWindowFrame);
 				if(retVal == JFileChooser.APPROVE_OPTION) {
 					currentFile = fileChooser.getSelectedFile();
+					Settings.setLastDirectory(currentFile.getParentFile());
+				} else {
+					return;
 				}
 			}
 
@@ -227,6 +230,8 @@ public class PanlProjectLauncher {
 					ex.printStackTrace();
 				}
 			}
+
+			currentFile = null;
 		});
 		vBox.add(buttonOpenFile);
 		vBox.add(Box.createHorizontalGlue());

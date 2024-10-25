@@ -38,19 +38,21 @@ import java.util.*;
 
 public class Settings {
 	public static final String APP_DATA_DIRECTORY = AppDirsFactory.getInstance().getUserDataDir("Panl", null, "Synapticloop");
-	public static final String APP_PROPERTIES_LOCATION = APP_DATA_DIRECTORY + File.separator + "panl.json";
+	public static final String APP_PROPERTIES_LOCATION = APP_DATA_DIRECTORY + File.separator + "panl-settings.json";
 
 	public static final String JSON_KEY_X_POSITION = "x_position";
 	public static final String JSON_KEY_Y_POSITION = "y_position";
 	public static final String JSON_KEY_RECENT_FILES = "recent_files";
 	public static final String JSON_KEY_FILEPATH = "filepath";
 	public static final String JSON_KEY_INCLUDE_COMMENTS = "include_comments";
+	public static final String JSON_KEY_LAST_DIRECTORY = "last_directory";
 
 	public static final String SETTING_IS_DARK_MODE = "isDarkMode";
 
 	private static boolean isInitialised = false;
 	private static JSONObject settingsJson;
 	private static final Map<String, PropertyFileSettings> RECENT_FILES = new LinkedHashMap<>();
+	private static File lastDirectory;
 
 	public synchronized static void loadSettings() {
 		if (isInitialised) {
@@ -58,6 +60,8 @@ public class Settings {
 		}
 
 		File file = new File(APP_PROPERTIES_LOCATION);
+		System.out.println("Loading settings from " + file.getAbsolutePath());
+
 		try (FileInputStream fileInputStream = new FileInputStream(file)) {
 			StringBuilder stringBuilder = new StringBuilder();
 			for (String readLine : IOUtils.readLines(fileInputStream, StandardCharsets.UTF_8)) {
@@ -69,7 +73,6 @@ public class Settings {
 		} catch (Exception ex) {
 			settingsJson = new JSONObject();
 		}
-		isInitialised = true;
 
 		// load up the recent files
 		for (Object recentFile : settingsJson.optJSONArray(JSON_KEY_RECENT_FILES, new JSONArray())) {
@@ -81,7 +84,9 @@ public class Settings {
 			}
 		}
 
+		lastDirectory = new File(settingsJson.optString(JSON_KEY_LAST_DIRECTORY, new File(".").getAbsolutePath()));
 
+		isInitialised = true;
 	}
 
 	public synchronized static void saveSettings() {
@@ -100,6 +105,7 @@ public class Settings {
 		}
 
 		settingsJson.put(JSON_KEY_RECENT_FILES, recentFilesArray);
+		settingsJson.put(JSON_KEY_LAST_DIRECTORY, lastDirectory.getAbsolutePath());
 
 		try {
 			FileUtils.write(file, settingsJson.toString(2), StandardCharsets.UTF_8);
@@ -168,5 +174,13 @@ public class Settings {
 
 	public static void setIncludeComments(File panlDotPropertiesFile, boolean selected) {
 
+	}
+
+	public static File getLastDirectory() {
+		return lastDirectory;
+	}
+
+	public static void setLastDirectory(File lastDirectory) {
+		Settings.lastDirectory = lastDirectory;
 	}
 }
