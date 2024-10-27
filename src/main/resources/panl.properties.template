@@ -40,7 +40,7 @@ $solrj.client
 
 #                           Which URLs To Connect To
 #                           ----- ---- -- ------- --
-# Dependant on which Solr server installation you have, and consequently the
+# Dependent on which Solr server installation you have, and consequently the
 # SolrJ Client that is configured, this will either be a single url, or a comma
 # separated list of URLs
 #
