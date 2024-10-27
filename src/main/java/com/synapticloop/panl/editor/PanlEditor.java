@@ -104,7 +104,7 @@ public class PanlEditor {
 		mainWindowFrame.setJMenuBar(createJMenuBar(mainWindowFrame));
 
 		JTabbedPane jTabbedPane = new JTabbedPane();
-		jTabbedPane.putClientProperty( "FlatLaf.style", "font: bold $large.font" );
+		jTabbedPane.putClientProperty( "FlatLaf.style", "font: bold" );
 		Component newCollection = NewCollectionTab.createNewCollection();
 		jTabbedPane.add(TAB_TITLE_ADD, newCollection);
 

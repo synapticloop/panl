@@ -49,7 +49,7 @@ import java.util.Vector;
 
 public class PanlPropertiesTab {
 	public static final String PROPERTY_INCLUDE_COMMENTS = "include.comments";
-	private PanlEditor panlEditor;
+	private final PanlEditor panlEditor;
 
 	private JList<String> listSolrURLs;
 	private JScrollPane scrollPaneSolrURLs;
@@ -61,8 +61,8 @@ public class PanlPropertiesTab {
 	private JTextArea textAreaOriginal;
 	private JTextArea textAreaGenerated;
 
-	private Vector<String> solrUrlConnectionStrings = new Vector<>();
-	private Map<String, Object> formValues = new HashMap<>();
+	private final Vector<String> solrUrlConnectionStrings = new Vector<>();
+	private final Map<String, Object> formValues = new HashMap<>();
 
 
 	public PanlPropertiesTab(PanlEditor panlEditor) {
@@ -124,7 +124,7 @@ public class PanlPropertiesTab {
 				solrUrlConnectionStrings.remove(listSolrURLs.getSelectedIndex());
 				listSolrURLs.repaint();
 				panlEditor.setIsEdited(true);
-				generatePreview();
+				generatePanlPropertiesPreview();
 			}
 		});
 
@@ -183,13 +183,17 @@ public class PanlPropertiesTab {
 		optionsBox.add(Box.createVerticalGlue());
 
 		mainPanel.add(optionsBox, BorderLayout.WEST);
-		mainPanel.add(getPanlDotPropertiesScrollPane(panlProperties), BorderLayout.CENTER);
-		mainPanel.add(getOriginalPanlDotPropertiesScrollPane(panlProperties), BorderLayout.EAST);
+
+		JTabbedPane fileDisplayPane = new JTabbedPane(JTabbedPane.TOP);
+		fileDisplayPane.putClientProperty( "FlatLaf.style", "font: bold" );
+		fileDisplayPane.add("Generated file", getPanlDotPropertiesScrollPane(panlProperties));
+		fileDisplayPane.add("Original file", getOriginalPanlDotPropertiesScrollPane(panlProperties));
+		mainPanel.add(fileDisplayPane, BorderLayout.CENTER);
 
 		return (mainPanel);
 	}
 
-	private void generatePreview() {
+	private void generatePanlPropertiesPreview() {
 		// build the panl.collections keys
 		StringBuilder panlCollectionsProperty = new StringBuilder();
 		Map<String, List<String>> panlCollectionsMap = panlEditor.getPanlProperties().getPanlCollectionsMap();
@@ -241,7 +245,7 @@ public class PanlPropertiesTab {
 				listSolrURLs.removeAll();
 				listSolrURLs.setListData(solrUrlConnectionStrings);
 				panlEditor.setIsEdited(true);
-				generatePreview();
+				generatePanlPropertiesPreview();
 			}
 		}
 	}
@@ -263,7 +267,7 @@ public class PanlPropertiesTab {
 			// do nothing, nothing we can do.
 		}
 
-		textAreaOriginal = new JTextArea(text, 30, 80);
+		textAreaOriginal = new JTextArea(text, 30, 84);
 		textAreaOriginal.setFont(FlatUIUtils.nonUIResource(UIManager.getFont("large.font")));
 		textAreaOriginal.putClientProperty("FlatLaf.styleClass", "monospaced");
 		textAreaOriginal.setEditable(false);
@@ -308,7 +312,7 @@ public class PanlPropertiesTab {
 		comboBox.setSelectedItem(solrjClient);
 		comboBox.addItemListener(evt -> {
 			panlEditor.setIsEdited(true);
-			generatePreview();
+			generatePanlPropertiesPreview();
 		});
 		// we need to do this as we are adding items to the combo box which
 		// flags this as edited
@@ -326,7 +330,7 @@ public class PanlPropertiesTab {
 
 		verticalBox.add(horizontalBox);
 
-		textAreaGenerated = new JTextArea("", 30, 80);
+		textAreaGenerated = new JTextArea("", 30, 84);
 		textAreaGenerated.setFont(FlatUIUtils.nonUIResource(UIManager.getFont("large.font")));
 		textAreaGenerated.putClientProperty("FlatLaf.styleClass", "monospaced");
 		textAreaGenerated.setEditable(false);
@@ -339,7 +343,7 @@ public class PanlPropertiesTab {
 		scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
 		scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);
 		verticalBox.add(scrollPane);
-		generatePreview();
+		generatePanlPropertiesPreview();
 		return (verticalBox);
 	}
 
@@ -371,7 +375,7 @@ public class PanlPropertiesTab {
 			if(jCheckBox.getName().equals(PROPERTY_INCLUDE_COMMENTS)) {
 				Settings.setIncludeComments(panlEditor.getPanlDotPropertiesFile(), jCheckBox.isSelected());
 			}
-			generatePreview();
+			generatePanlPropertiesPreview();
 		});
 		return (jCheckBox);
 	}
