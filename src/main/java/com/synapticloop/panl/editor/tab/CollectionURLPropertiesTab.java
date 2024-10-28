@@ -25,6 +25,7 @@
 package com.synapticloop.panl.editor.tab;
 
 import com.synapticloop.panl.editor.PanlEditor;
+import com.synapticloop.panl.editor.tab.collection.PanlFieldPanel;
 
 import javax.swing.*;
 import java.awt.*;
@@ -48,6 +49,19 @@ public class CollectionURLPropertiesTab extends PropertiesTab {
 		JPanel mainPanel = new JPanel(new BorderLayout());
 		mainPanel.setBorder(BorderFactory.createEmptyBorder(8, 8, 8, 8));
 
+		mainPanel.add(getOptionBox(), BorderLayout.WEST);
+		mainPanel.add(getScrollPane(), BorderLayout.CENTER);
+
+		return(mainPanel);
+	}
+
+	private JScrollPane getScrollPane() {
+		JList<PanlFieldPanel> configurations = new JList<>();
+		configurations.add(new PanlFieldPanel());
+		JScrollPane collectionProperties = new JScrollPane(configurations);
+		return(collectionProperties);
+	}
+	private Box getOptionBox() {
 		Box optionsBox = Box.createVerticalBox();
 		optionsBox.setBorder(BorderFactory.createEmptyBorder(0, 4, 4, 4));
 
@@ -160,10 +174,7 @@ public class CollectionURLPropertiesTab extends PropertiesTab {
 			PROPERTY_INCLUDE_COMMENTS,
 			"Whether to include comments in the output",
 			true));
-
-		mainPanel.add(optionsBox, BorderLayout.WEST);
-
-		return(mainPanel);
+		return optionsBox;
 	}
 
 	@Override protected void generatePreview() {
