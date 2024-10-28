@@ -10,11 +10,13 @@
 
 ```
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
-#                                              __                             #
-#                          .-----.---.-.-----.|  |                            #
-#                          |  _  |  _  |     ||  |                            #
-#                          |   __|___._|__|__||__|                            #
-#                          |__|     ... .-..                                  #
+#                                        __                                   #
+#                          .-----.-----.|  |.----.                            #
+#                          |__ --|  _  ||  ||   _|                            #
+#                          |_.-----.-----.--.--|  |                           #
+#                            |  _  |  _  |     |  |                           #
+#                            |   __|___._|__|__|__|                           #
+#                            |__|     ... .-..                                #
 #                                                                             #
 #                                ~ ~ ~ * ~ ~ ~                                #
 #                                                                             #
@@ -180,7 +182,7 @@ _The image is a screenshot of the in-built Panl Results Explainer Web App availa
 
 <img src="src/docs/panl-single-page-search.png" alt="The Panl Example Single Search Page interface" />
 
-_**Image**: The In-Build Panl Single Page Search Web Application_
+_**Image**: The In-Built Panl Single Page Search Web Application_
 
 Panl also ships with a URL that will provide a separate JSON response, allowing you to build a single page search interface, giving your users all the options at a glance.
 
@@ -188,7 +190,17 @@ Panl also ships with a URL that will provide a separate JSON response, allowing 
 1. The generated Panl LPSE path from the selections. 
 1. All the facets and the facet values that can be selected.
 1. The generated Panl LPSE path from the selections.
-1. A search button that will take you the in-build Panl Results Viewer web app so that you can view the results instantly.
+1. A search button that will take you the in-built Panl Results Viewer web app so that you can view the results instantly.
+
+# The Panl In-Built Editor
+
+<img src="src/docs/panl-editor.png" alt="The in-built Panl editor" />
+
+_**Image**: The In-Built Panl Editor_
+
+<img src="src/docs/panl.properties-editor.png" alt="The Panl Properties Editor" />
+
+_**Image**: The In-Built Panl Properties Editor_
 
 
 # Quick Start - The 5 Steps
@@ -199,7 +211,7 @@ http://localhost:8181/panl-results-viewer/
 
 <img src="src/docs/panl-results-viewer.png" alt="The Panl In-Built Simple Results Viewer" />
 
-_**Image**: The In-Build Panl Results Viewer Web Application_
+_**Image**: The In-Built Panl Results Viewer Web Application_
 
 ## 0. Download Solr and Panl
 
