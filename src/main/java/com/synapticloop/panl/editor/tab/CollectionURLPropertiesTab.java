@@ -54,7 +54,7 @@ public class CollectionURLPropertiesTab extends PropertiesTab {
 		optionsBox.add(getLabel("Collection metadata"));
 		optionsBox.add(getHorizontalSeparator());
 		optionsBox.add(getSubLabel("Panl LPSE length"));
-		JSlider jSlider = new JSlider(1, 4, 1);
+		JSlider jSlider = new JSlider(1, 2, 1);
 		jSlider.setPaintLabels(true);
 		jSlider.setPaintTicks(true);
 		jSlider.setMajorTickSpacing(1);

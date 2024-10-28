@@ -35,9 +35,9 @@ import java.util.Map;
 import java.util.Vector;
 
 public abstract class PropertiesTab {
-	public static final Dimension DEFAULT_DIMENSIONS = new Dimension(200, 40);
-	public static final Dimension MEDIUM_DIMENSIONS = new Dimension(90, 20);
-	public static final Dimension SMALL_DIMENSIONS = new Dimension(45, 20);
+	public static final Dimension DEFAULT_DIMENSIONS = new Dimension(200, 26);
+	public static final Dimension MEDIUM_DIMENSIONS = new Dimension(90, 26);
+	public static final Dimension SMALL_DIMENSIONS = new Dimension(45, 26);
 	public static final String PROPERTY_INCLUDE_COMMENTS = "include.comments";
 	public static final String FLAT_LAF_STYLE_CLASS = "FlatLaf.styleClass";
 
@@ -79,6 +79,8 @@ public abstract class PropertiesTab {
 
 	protected static JSeparator getVerticalSeparator() {
 		JSeparator jSeparator = new JSeparator(JSeparator.VERTICAL);
+		jSeparator.setBackground(Color.BLACK);
+		jSeparator.setForeground(Color.BLACK);
 		jSeparator.setBorder(BorderFactory.createEmptyBorder(4, 4, 4, 4));
 		jSeparator.setMaximumSize(new Dimension(12, 60));
 		jSeparator.setAlignmentX(0.0f);
@@ -124,23 +126,6 @@ public abstract class PropertiesTab {
 		return (comboBox);
 	}
 
-	protected Box getTextArea(String parameter, String currentValue, String text) {
-		return(getTextArea(parameter, currentValue, text, 10));
-	}
-
-	protected Box getTextArea(String parameter, String currentValue, String text, int numColumns) {
-		Box horizontalBox = Box.createHorizontalBox();
-		TextField textField = new TextField(currentValue, numColumns);
-		textField.setMaximumSize(MEDIUM_DIMENSIONS);
-		textField.setMinimumSize(MEDIUM_DIMENSIONS);
-		horizontalBox.add(textField);
-		horizontalBox.add(Box.createRigidArea(new Dimension(10, 10)));
-		horizontalBox.add(getSubLabelMono(text));
-		horizontalBox.add(Box.createHorizontalGlue());
-		horizontalBox.setAlignmentX(-1.0f);
-		return(horizontalBox);
-	}
-
 	protected Box getDropDownList(String parameter, String currentValue, Vector<String> values) {
 		Box horizontalBox = Box.createHorizontalBox();
 		JComboBox<String> comboBox = new JComboBox<>(values);
@@ -164,6 +149,24 @@ public abstract class PropertiesTab {
 		horizontalBox.setAlignmentX(-1.0f);
 		return (horizontalBox);
 	}
+
+	protected Box getTextArea(String parameter, String currentValue, String text) {
+		return(getTextArea(parameter, currentValue, text, 10));
+	}
+
+	protected Box getTextArea(String parameter, String currentValue, String text, int numColumns) {
+		Box horizontalBox = Box.createHorizontalBox();
+		TextField textField = new TextField(currentValue, numColumns);
+		textField.setMaximumSize(MEDIUM_DIMENSIONS);
+		textField.setMinimumSize(MEDIUM_DIMENSIONS);
+		horizontalBox.add(textField);
+		horizontalBox.add(Box.createRigidArea(new Dimension(10, 10)));
+		horizontalBox.add(getSubLabelMono(text));
+		horizontalBox.add(Box.createHorizontalGlue());
+		horizontalBox.setAlignmentX(-1.0f);
+		return(horizontalBox);
+	}
+
 
 	protected abstract void generatePreview();
 }
