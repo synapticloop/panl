@@ -192,17 +192,6 @@ Panl also ships with a URL that will provide a separate JSON response, allowing 
 1. The generated Panl LPSE path from the selections.
 1. A search button that will take you the in-built Panl Results Viewer web app so that you can view the results instantly.
 
-# The Panl In-Built Editor
-
-<img src="src/docs/panl-editor.png" alt="The in-built Panl editor" />
-
-_**Image**: The In-Built Panl Editor_
-
-<img src="src/docs/panl.properties-editor.png" alt="The Panl Properties Editor" />
-
-_**Image**: The In-Built Panl Properties Editor_
-
-
 # Quick Start - The 5 Steps
 
 At the end of this chapter, you will have a web page up and running with the mechanical-pencils collection indexed and ready to sort and facet on the URL:

@@ -107,12 +107,14 @@ public class Main {
 	 */
 	private void parseAndExecuteCommandLine() throws PanlServerException, CommandLineOptionException, PanlGenerateException {
 		if (args.length < 1) {
-			usageAndException("Could not determine command, should be one of 'server', 'generate', or 'editor'");
+//			usageAndException("Could not determine command, should be one of 'server', 'generate', or 'editor'");
+			usageAndException("Could not determine command, should be one of 'server' or 'generate'");
 		}
 
 		String command = args[0];
 		if (!ALLOWABLE_COMMANDS.contains(command)) {
-			usageAndException(String.format("Unknown command of '%s', expecting 'server', 'generate', or 'editor'", command));
+			usageAndException(String.format("Unknown command of '%s', expecting 'server' or 'generate'", command));
+//			usageAndException(String.format("Unknown command of '%s', expecting 'server', 'generate', or 'editor'", command));
 		}
 
 		// now go through the rest of the command line arguments
@@ -136,6 +138,8 @@ public class Main {
 				parseAndExecuteGenerateCommands();
 				break;
 			case CMD_VALUE_EDITOR:
+				LOGGER.warn("THE EDITOR FUNCTIONALITY IS __NOT COMPLETE__...");
+				LOGGER.warn("This can be considered an exercise in futility...");
 				SwingUtilities.invokeLater(() -> {
 					new PanlProjectLauncher().show();
 				});
@@ -273,13 +277,13 @@ public class Main {
 		LOGGER.info("            ~ ~ ~ * ~ ~ ~");
 		LOGGER.info("");
 
-			LOGGER.info("         Panl version: {}", Main.panlVersion);
-			LOGGER.info("");
-			LOGGER.info("    Designed for integration with");
-			LOGGER.info("           Solr version: {}", Main.solrVersion);
-			LOGGER.info("");
-			LOGGER.info("            ~ ~ ~ * ~ ~ ~");
-			LOGGER.info("");
+		LOGGER.info("         Panl version: {}", Main.panlVersion);
+		LOGGER.info("");
+		LOGGER.info("    Designed for integration with");
+		LOGGER.info("           Solr version: {}", Main.solrVersion);
+		LOGGER.info("");
+		LOGGER.info("            ~ ~ ~ * ~ ~ ~");
+		LOGGER.info("");
 
 		try {
 			main.parseAndExecuteCommandLine();

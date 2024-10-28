@@ -21,6 +21,7 @@ Where:
       server - start the server, or
     generate - generate an example panl.properties file from an existing Solr
                managed-schema.xml file
+      editor - launch the Panl Project editor
 
                                  ~ ~ ~ * ~ ~ ~
 
@@ -40,6 +41,13 @@ Where:
       [-properties panl_properties_file_location] \
       [-overwrite true_or_false] \
       -schema solr_schema_location
+
+                                 ~ ~ ~ * ~ ~ ~
+
+  [EDITOR] To launch the Panl Project Launcher GUI
+
+    java -jar panl.jar \
+      editor
 
                                  ~ ~ ~ * ~ ~ ~
 
@@ -76,5 +84,9 @@ available:
 
   -schema solr_schema_location(s) (mandatory) the managed-schema.xml
     configuration file(s) to read and generate the panl.properties file from.
+
+                                 ~ ~ ~ * ~ ~ ~
+
+If you choose the 'editor' command, there are no command line options.
 
                                  ~ ~ ~ * ~ ~ ~

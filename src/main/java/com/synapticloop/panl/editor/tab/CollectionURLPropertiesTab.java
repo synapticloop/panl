@@ -25,24 +25,26 @@
 package com.synapticloop.panl.editor.tab;
 
 import com.synapticloop.panl.editor.PanlEditor;
-import com.synapticloop.panl.editor.tab.collection.PanlFieldPanel;
+import com.synapticloop.panl.editor.tab.collection.CollectionTableModel;
+import com.synapticloop.panl.editor.tab.collection.PanlField;
+import com.synapticloop.panl.editor.tab.collection.PanlFieldRenderer;
 
 import javax.swing.*;
 import java.awt.*;
 import java.io.File;
 import java.util.Arrays;
+import java.util.Properties;
 import java.util.Vector;
 
 public class CollectionURLPropertiesTab extends PropertiesTab {
 	private final File collectionUrlPropertiesFile;
 	private final Vector<String> alphaProperties = new Vector<>(
 		Arrays.asList("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789".split("(?<=\\G.{1})")));
-	private final Vector<String> plusMinus = new Vector<>(Arrays.asList(new String[] { "+", "-"}));
+	private final Vector<String> plusMinus = new Vector<>(Arrays.asList(new String[]{"+", "-"}));
 
 	public CollectionURLPropertiesTab(PanlEditor panlEditor, File collectionUrlPropertiesFile) {
 		super(panlEditor);
 		this.collectionUrlPropertiesFile = collectionUrlPropertiesFile;
-
 	}
 
 	public JPanel getJPanel() {
@@ -52,15 +54,37 @@ public class CollectionURLPropertiesTab extends PropertiesTab {
 		mainPanel.add(getOptionBox(), BorderLayout.WEST);
 		mainPanel.add(getScrollPane(), BorderLayout.CENTER);
 
-		return(mainPanel);
+		mainPanel.revalidate();
+		return (mainPanel);
 	}
 
 	private JScrollPane getScrollPane() {
-		JList<PanlFieldPanel> configurations = new JList<>();
-		configurations.add(new PanlFieldPanel());
-		JScrollPane collectionProperties = new JScrollPane(configurations);
-		return(collectionProperties);
+		JTable jTable = new JTable(new CollectionTableModel(new Properties()));
+		jTable.setFillsViewportHeight(true);
+		jTable.setTableHeader(null);
+		JScrollPane scrollPane = new JScrollPane(jTable);
+
+		jTable.setDefaultRenderer(PanlField.class, new PanlFieldRenderer());
+
+		jTable.setRowHeight(100);
+//		updateRowHeights(jTable);
+
+		return (scrollPane);
 	}
+
+	private void updateRowHeights(JTable table) {
+		for (int row = 0; row < table.getRowCount(); row++) {
+			int rowHeight = table.getRowHeight();
+
+			for (int column = 0; column < table.getColumnCount(); column++) {
+				Component comp = table.prepareRenderer(table.getCellRenderer(row, column), row, column);
+				rowHeight = Math.max(rowHeight, comp.getPreferredSize().height);
+			}
+
+			table.setRowHeight(row, 100);
+		}
+	}
+
 	private Box getOptionBox() {
 		Box optionsBox = Box.createVerticalBox();
 		optionsBox.setBorder(BorderFactory.createEmptyBorder(0, 4, 4, 4));
@@ -127,7 +151,7 @@ public class CollectionURLPropertiesTab extends PropertiesTab {
 		canonicalVerticalBox.add(getDropDownList("panl.param.passthrough", "a", alphaProperties));
 		canonicalVerticalBox.add(
 			getCheckbox(
-			"panl.param.passthrough.canonical",
+				"panl.param.passthrough.canonical",
 				"Whether to display the passthrough parameter in the canonical URL",
 				true
 			));

@@ -25,27 +25,30 @@
 package com.synapticloop.panl.editor.tab.collection;
 
 import javax.swing.*;
+import javax.swing.table.TableCellEditor;
+import javax.swing.table.TableCellRenderer;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
-public class PanlFieldPanel extends JPanel {
+public class PanlFieldEditor extends AbstractCellEditor
+	implements TableCellEditor,
+	ActionListener {
 
-	public static final Dimension SPACER = new Dimension(4, 4);
+	@Override public void actionPerformed(ActionEvent e) {
 
-	public PanlFieldPanel() {
-		super(new BorderLayout());
-		buildLayout();
 	}
 
-	public void buildLayout() {
-		Box optionsBox = Box.createVerticalBox();
-		optionsBox.setAlignmentX(-1.0f);
+	@Override public Component getTableCellEditorComponent(
+		JTable table,
+		Object value,
+		boolean isSelected,
+		int row,
+		int column) {
+		return null;
+	}
 
-		Box panlFieldProperty = Box.createHorizontalBox();
-		panlFieldProperty.setAlignmentX(-1.0f);
-		panlFieldProperty.add(new JLabel("panl."));
-		panlFieldProperty.add(Box.createRigidArea(SPACER));
-
-
-		this.add(optionsBox, BorderLayout.CENTER);
+	@Override public Object getCellEditorValue() {
+		return null;
 	}
 }
