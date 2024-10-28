@@ -291,6 +291,30 @@ public class PanlProjectLauncher {
 			toggleOpenFileButtonState(selectionModel);
 		});
 
+		listRecentFiles.addMouseListener(new MouseListener() {
+			@Override public void mouseClicked(MouseEvent e) {
+				if(e.getClickCount() == 2) {
+					buttonOpenFile.doClick();
+				}
+			}
+
+			@Override public void mousePressed(MouseEvent e) {
+
+			}
+
+			@Override public void mouseReleased(MouseEvent e) {
+
+			}
+
+			@Override public void mouseEntered(MouseEvent e) {
+
+			}
+
+			@Override public void mouseExited(MouseEvent e) {
+
+			}
+		});
+
 		JScrollPane scrollPaneRecentFiles = new JScrollPane(listRecentFiles);
 		scrollPaneRecentFiles.putClientProperty("FlatLaf.style", "font: 200% $light.font");
 

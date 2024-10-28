@@ -26,7 +26,7 @@ package com.synapticloop.panl.editor;
 
 import com.formdev.flatlaf.FlatDarkLaf;
 import com.formdev.flatlaf.FlatLightLaf;
-import com.synapticloop.panl.editor.tab.CollectionURLTab;
+import com.synapticloop.panl.editor.tab.CollectionURLPropertiesTab;
 import com.synapticloop.panl.editor.tab.NewCollectionTab;
 import com.synapticloop.panl.editor.tab.PanlPropertiesTab;
 import com.synapticloop.panl.editor.util.DialogHelper;
@@ -114,8 +114,12 @@ public class PanlEditor {
 		Map<String, List<String>> panlCollectionsMap = panlProperties.getPanlCollectionsMap();
 		for (String solrCollection : panlCollectionsMap.keySet()) {
 			// TODO - figure out filename and file location
+			String absolutePath = panlDotPropertiesFile.getParentFile().getAbsolutePath();
 			for (String collectionFileLocation : panlCollectionsMap.get(solrCollection)) {
-				jTabbedPane.add("[" + solrCollection + "] " + collectionFileLocation, new CollectionURLTab(this).getJPanel());
+				File file = new File(absolutePath + File.separator + collectionFileLocation);
+				jTabbedPane.add(
+					"[" + solrCollection + "] " + collectionFileLocation,
+					new CollectionURLPropertiesTab(this, file).getJPanel());
 			}
 		}
 

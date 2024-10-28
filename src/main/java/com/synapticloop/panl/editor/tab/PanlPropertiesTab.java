@@ -26,7 +26,6 @@ package com.synapticloop.panl.editor.tab;
 
 import com.formdev.flatlaf.ui.FlatUIUtils;
 import com.synapticloop.panl.editor.PanlEditor;
-import com.synapticloop.panl.editor.util.Settings;
 import com.synapticloop.panl.editor.tab.solrj.SolrJConnector;
 import com.synapticloop.panl.editor.util.DialogHelper;
 import com.synapticloop.panl.generator.PanlGenerator;
@@ -42,15 +41,11 @@ import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Vector;
 
-public class PanlPropertiesTab {
-	public static final String PROPERTY_INCLUDE_COMMENTS = "include.comments";
-	private final PanlEditor panlEditor;
-
+public class PanlPropertiesTab extends PropertiesTab {
 	private JList<String> listSolrURLs;
 	private JScrollPane scrollPaneSolrURLs;
 
@@ -62,11 +57,10 @@ public class PanlPropertiesTab {
 	private JTextArea textAreaGenerated;
 
 	private final Vector<String> solrUrlConnectionStrings = new Vector<>();
-	private final Map<String, Object> formValues = new HashMap<>();
 
 
 	public PanlPropertiesTab(PanlEditor panlEditor) {
-		this.panlEditor = panlEditor;
+		super(panlEditor);
 	}
 
 	public JPanel getJPanel() {
@@ -79,9 +73,12 @@ public class PanlPropertiesTab {
 		PanlProperties panlProperties = panlEditor.getPanlProperties();
 
 		optionsBox.add(getLabel("Connection properties"));
-		optionsBox.add(getSeparator());
+		optionsBox.add(getHorizontalSeparator());
 		optionsBox.add(getSubLabel("SolrJ client"));
-		comboBoxSolrJConnectors = getDropDownList(panlProperties.getSolrjClient());
+		comboBoxSolrJConnectors = getDropDownList(
+			panlProperties.getSolrjClient(),
+			SolrJConnector.AVAILABLE_SOLR_J_CONNECTORS);
+
 		optionsBox.add(comboBoxSolrJConnectors);
 		optionsBox.add(getSubLabel("Connection strings"));
 
@@ -124,7 +121,7 @@ public class PanlPropertiesTab {
 				solrUrlConnectionStrings.remove(listSolrURLs.getSelectedIndex());
 				listSolrURLs.repaint();
 				panlEditor.setIsEdited(true);
-				generatePanlPropertiesPreview();
+				generatePreview();
 			}
 		});
 
@@ -152,7 +149,7 @@ public class PanlPropertiesTab {
 
 
 		optionsBox.add(getLabel("Server options"));
-		optionsBox.add(getSeparator());
+		optionsBox.add(getHorizontalSeparator());
 		optionsBox.add(getCheckbox(
 			"panl.results.testing.urls",
 			"Select this to enable the in-built testing URLs",
@@ -171,7 +168,7 @@ public class PanlPropertiesTab {
 			PanlProperties.getIsDecimalPoint()));
 
 		optionsBox.add(getLabel("Output options"));
-		optionsBox.add(getSeparator());
+		optionsBox.add(getHorizontalSeparator());
 		optionsBox.add(getCheckbox(
 			PROPERTY_INCLUDE_COMMENTS,
 			"Whether to include comments in the output",
@@ -193,7 +190,7 @@ public class PanlPropertiesTab {
 		return (mainPanel);
 	}
 
-	private void generatePanlPropertiesPreview() {
+	protected void generatePreview() {
 		// build the panl.collections keys
 		StringBuilder panlCollectionsProperty = new StringBuilder();
 		Map<String, List<String>> panlCollectionsMap = panlEditor.getPanlProperties().getPanlCollectionsMap();
@@ -245,7 +242,7 @@ public class PanlPropertiesTab {
 				listSolrURLs.removeAll();
 				listSolrURLs.setListData(solrUrlConnectionStrings);
 				panlEditor.setIsEdited(true);
-				generatePanlPropertiesPreview();
+				generatePreview();
 			}
 		}
 	}
@@ -293,32 +290,6 @@ public class PanlPropertiesTab {
 		}
 	}
 
-	private static JSeparator getSeparator() {
-		JSeparator jSeparator = new JSeparator(JSeparator.HORIZONTAL);
-		jSeparator.setBorder(BorderFactory.createEmptyBorder(4, 4, 4, 4));
-		jSeparator.setMaximumSize(new Dimension(280, 8));
-		jSeparator.setAlignmentX(0.0f);
-		return (jSeparator);
-	}
-
-	private JComboBox<String> getDropDownList(String solrjClient) {
-		JComboBox<String> comboBox = new JComboBox<>(SolrJConnector.AVAILABLE_SOLR_J_CONNECTORS);
-		comboBox.setFont(FlatUIUtils.nonUIResource(UIManager.getFont("large.font")));
-		comboBox.setPrototypeDisplayValue("default text here");
-		comboBox.setPreferredSize(new Dimension(220, 20));
-		comboBox.setMaximumSize(new Dimension(220, 20));
-		comboBox.setMinimumSize(new Dimension(220, 20));
-		comboBox.setAlignmentX(-1.0f);
-		comboBox.setSelectedItem(solrjClient);
-		comboBox.addItemListener(evt -> {
-			panlEditor.setIsEdited(true);
-			generatePanlPropertiesPreview();
-		});
-		// we need to do this as we are adding items to the combo box which
-		// flags this as edited
-		panlEditor.setIsEdited(false);
-		return (comboBox);
-	}
 
 	private Box getPanlDotPropertiesScrollPane(PanlProperties panlProperties) {
 		Box verticalBox = Box.createVerticalBox();
@@ -343,42 +314,11 @@ public class PanlPropertiesTab {
 		scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
 		scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);
 		verticalBox.add(scrollPane);
-		generatePanlPropertiesPreview();
+		generatePreview();
 		return (verticalBox);
 	}
 
-	private JLabel getLabel(String text) {
-		JLabel label = new JLabel(text);
-		label.putClientProperty("FlatLaf.styleClass", "h2");
-		label.setBorder(BorderFactory.createEmptyBorder(12, 0, 4, 0));
-		return (label);
-	}
 
-	private JLabel getSubLabel(String text) {
-		JLabel label = new JLabel(text);
-		label.putClientProperty("FlatLaf.styleClass", "h3");
-		label.setBorder(BorderFactory.createEmptyBorder(6, 0, 4, 0));
-		return (label);
-	}
-
-	private JCheckBox getCheckbox(String propertyName, String tooltip, boolean selected) {
-		JCheckBox jCheckBox = new JCheckBox(propertyName);
-		jCheckBox.setFont(FlatUIUtils.nonUIResource(UIManager.getFont("large.font")));
-		jCheckBox.putClientProperty("FlatLaf.styleClass", "monospaced");
-		jCheckBox.setName(propertyName);
-		jCheckBox.setToolTipText(tooltip);
-		jCheckBox.setSelected(selected);
-		formValues.put(propertyName, selected);
-		jCheckBox.addItemListener(e -> {
-			panlEditor.setIsEdited(true);
-			formValues.put(propertyName, jCheckBox.isSelected());
-			if(jCheckBox.getName().equals(PROPERTY_INCLUDE_COMMENTS)) {
-				Settings.setIncludeComments(panlEditor.getPanlDotPropertiesFile(), jCheckBox.isSelected());
-			}
-			generatePanlPropertiesPreview();
-		});
-		return (jCheckBox);
-	}
 
 	public void saveFile() {
 		try (OutputStream outputStream = Files.newOutputStream(panlEditor.getPanlDotPropertiesFile().toPath());
