@@ -28,7 +28,7 @@
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 ```
 
-`Build and test 'billowing-feather' branch:` [![CircleCI](https://dl.circleci.com/status-badge/img/circleci/3Y1eqqe4mcvtSZuzJnQ3tJ/DyFKUm7c7AoLa1wHmRjAnf/tree/billowing-feather.svg?style=svg)](https://dl.circleci.com/status-badge/redirect/circleci/3Y1eqqe4mcvtSZuzJnQ3tJ/DyFKUm7c7AoLa1wHmRjAnf/tree/billowing-feather) (courtesy of Circle-CI)
+`Build and test 'needy-phantom' branch:` [![CircleCI](https://dl.circleci.com/status-badge/img/circleci/3Y1eqqe4mcvtSZuzJnQ3tJ/DyFKUm7c7AoLa1wHmRjAnf/tree/needy-phanton.svg?style=svg)](https://dl.circleci.com/status-badge/redirect/circleci/3Y1eqqe4mcvtSZuzJnQ3tJ/DyFKUm7c7AoLa1wHmRjAnf/tree/needy-phanton) (courtesy of Circle-CI)
 
 `Latest release tag:` ![GitHub Tag](https://img.shields.io/github/v/tag/synapticloop/panl)
 
@@ -36,7 +36,16 @@
 
 ## Download the Panl Server Release:
 
-[https://github.com/synapticloop/panl/releases](https://github.com/synapticloop/panl/releases)
+1. [https://github.com/synapticloop/panl/releases](https://github.com/synapticloop/panl/releases)
+2. Read the [5-Step Quick Start section](https://github.com/synapticloop/panl/tree/main?tab=readme-ov-file#quick-start---the-5-steps)
+3. Done.
+
+## Upgrading the Panl Server Release:
+
+Panl is designed to be a drop in replacement for your current version.  Keep note of any breaking release, although backwards compatibility is always high on the list of features.
+
+Your existing configuration files should just work with the downloaded release package.
+
 
 ## Read the Documentation
 
@@ -390,10 +399,9 @@ with the release files named `solr-panl-9-x.x.x` where `x.x.x` is the version nu
 
 # Version History
 
-## 1.3.0 - Fluffy stuff (codename `billowing-feather`)  **UNDER DEVELOPMENT**
+## 1.3.0 - Fluffy stuff (codename `billowing-feather`) **UNDER DEVELOPMENT**
 
-
-## 1.2.0 - more like this (codename `needy-phanton`)
+## 1.2.0 - more like this (codename `needy-phanton`) 
 
  - Bug fixes
    - Fixed JavScript in Single Page Search results in-built web app to take into account range facets
@@ -418,7 +426,13 @@ with the release files named `solr-panl-9-x.x.x` where `x.x.x` is the version nu
    - Update to new functionality and configuration properties
    - Added in the `pagination` returned JSON Object implementation details
    - Added in URLs bound by the Panl server in the Appendices
- 
+
+[View the code for this release](https://github.com/synapticloop/panl/tree/1.2.0)
+
+[Download the release packages](https://github.com/synapticloop/panl/releases/tag/1.2.0)
+
+[See all releases](https://github.com/synapticloop/panl/releases/)
+
 
 ## 1.1.1 - the fly spray (codename `grizzled-pebble`)
 
@@ -438,12 +452,6 @@ with the release files named `solr-panl-9-x.x.x` where `x.x.x` is the version nu
 
 ## 1.1.0 - the better update (codename `broad-firefly`) 
 
-[View the code for this release](https://github.com/synapticloop/panl/tree/1.1.0)
-
-[Download the release packages](https://github.com/synapticloop/panl/releases/tag/1.1.0)
-
-[See all releases](https://github.com/synapticloop/panl/releases/)
-
  - Added in `empty` FieldSet to return no documents
  - Added in Single Search Page functionality
  - Update Mechanical Pencils 
@@ -459,10 +467,18 @@ with the release files named `solr-panl-9-x.x.x` where `x.x.x` is the version nu
    - Added in documentation for Fields
    - Panl cookbook
 
+[View the code for this release](https://github.com/synapticloop/panl/tree/1.1.0)
+
+[Download the release packages](https://github.com/synapticloop/panl/releases/tag/1.1.0)
+
+[See all releases](https://github.com/synapticloop/panl/releases/)
+
 ## 1.0.0 - the initial release (codename `bright-wildflower`)
+
+- Initial release with base functionality
 
 [View the code for this release](https://github.com/synapticloop/panl/tree/1.0.0)
 
 [Download the release packages](https://github.com/synapticloop/panl/releases/tag/1.0.0)
 
-- Initial release with base functionality
+[See all releases](https://github.com/synapticloop/panl/releases/)
