@@ -28,7 +28,7 @@
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 ```
 
-`Build and test 'needy-phantom' branch:` [![CircleCI](https://dl.circleci.com/status-badge/img/circleci/3Y1eqqe4mcvtSZuzJnQ3tJ/DyFKUm7c7AoLa1wHmRjAnf/tree/needy-phanton.svg?style=svg)](https://dl.circleci.com/status-badge/redirect/circleci/3Y1eqqe4mcvtSZuzJnQ3tJ/DyFKUm7c7AoLa1wHmRjAnf/tree/needy-phanton) (courtesy of Circle-CI)
+`Build and test 'billowing-feather' branch:` [![CircleCI](https://dl.circleci.com/status-badge/img/circleci/3Y1eqqe4mcvtSZuzJnQ3tJ/DyFKUm7c7AoLa1wHmRjAnf/tree/billowing-feather.svg?style=svg)](https://dl.circleci.com/status-badge/redirect/circleci/3Y1eqqe4mcvtSZuzJnQ3tJ/DyFKUm7c7AoLa1wHmRjAnf/tree/billowing-feather) (courtesy of Circle-CI)
 
 `Latest release tag:` ![GitHub Tag](https://img.shields.io/github/v/tag/synapticloop/panl)
 
@@ -390,7 +390,10 @@ with the release files named `solr-panl-9-x.x.x` where `x.x.x` is the version nu
 
 # Version History
 
-## 1.2.0 - more like this (codename `needy-phanton`) **UNDER DEVELOPMENT**
+## 1.3.0 - Fluffy stuff (codename `billowing-feather`)  **UNDER DEVELOPMENT**
+
+
+## 1.2.0 - more like this (codename `needy-phanton`)
 
  - Bug fixes
    - Fixed JavScript in Single Page Search results in-built web app to take into account range facets
