@@ -10,24 +10,26 @@
 
 ---
 
-> **_Get up and running with a fully featured, SEO friendly, keyword searchable, faceted search engine with an in-built, example search page to test it all out._**
+> **_Rapidly get up and running with a fully featured, SEO friendly, keyword searchable, faceted search engine with an in-built, example search page to test it all out._**
 
 ---
 
 ```
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
-#                                              __                             #
-#                          .-----.---.-.-----.|  |                            #
-#                          |  _  |  _  |     ||  |                            #
-#                          |   __|___._|__|__||__|                            #
-#                          |__|     ... .-..                                  #
+#                                        __                                   #
+#                          .-----.-----.|  |.----.                            #
+#                          |__ --|  _  ||  ||   _|                            #
+#                          |_.-----.-----.--.--|  |                           #
+#                            |  _  |  _  |     |  |                           #
+#                            |   __|___._|__|__|__|                           #
+#                            |__|     ... .-..                                #
 #                                                                             #
 #                                ~ ~ ~ * ~ ~ ~                                #
 #                                                                             #
 #                                                                             #
 #                                  SOLR/PANL                                  #
 #                                                                             #
-#                                 ----------                                  #
+#                                  ---------                                  #
 #                                                                             #
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 ```
@@ -60,23 +62,50 @@ looks A LOT nicer than
 `q=*:*&facet.mincount=1&rows=10&facet.field=lead_size_indicator&facet.field=grip_material&facet.field=colours&facet.field=nib_shape&facet.field=diameter&facet.field=cap_shape&facet.field=brand&facet.field=mechanism_type&facet.field=length&facet.field=hardness_indicator&facet.field=grip_type&facet.field=cap_material&facet.field=lead_grade_indicator&facet.field=tubing_material&facet.field=in_built_sharpener&facet.field=disassemble&facet.field=category&facet.field=body_shape&facet.field=clip_material&facet.field=mechanism_material&facet.field=lead_length&facet.field=body_material&facet.field=in_built_eraser&facet.field=grip_shape&facet.field=relative_weight&facet.field=name&facet.field=nib_material&facet.field=weight&facet.field=variants&facet=true&fq=brand:"Caran+d'Ache"&fq=disassemble:"true"&fq=colours:"Black"&q.op=AND`
 
 # Why Synapticloop Panl?
-Panl was designed to convert rather long and unfriendly (both in human readable and SEO terms) to shorter, nicer, and friendlier URI paths.
 
-Working with a Solr schema, the Panl configuration files translate unwieldy URI parameters into concise and precise URI paths.
+Panl was designed to convert rather long and unfriendly (both in human readable and SEO terms) to shorter, nicer, and friendlier URL paths throughout the entire search journey.
 
-Panl allows
+Working with a Solr schema, the Panl configuration files translate unwieldy URL parameters into concise and precise URL paths.
 
-- **MULTIPLE ways to 'SLICE and DICE'** the underlying Solr collection and present them with different URLs
-- **PREFIXES, INFIXES, and SUFFIXES** for all facets (an infix are only available on RANGE facets)
-- **BOOLEAN Value replacements** for Boolean data types
-- **FIELD VALUE validation** to help catch common Solr errors
-- **HIERARCHICAL facets**, only showing specific facets if another facet has already been selected
-- **SORTED facets** by either count (the default) or value.
-- **RESULTS SORTING options** by any of the fields or facets
-- **PAGINATION** - in built and ready to go
-- **STATIC SITE GENERATION** - for small datasets with few options.  Alternatively they can be seen as easily cacheable and canonical sources for the returned results.
-- **STATELESS** - Quick startup, with no state.
-- **TEXT CONFIGURATION** - All configuration for Panl is based on text files (Java `.properties`) files so they can be stored in a source code management system.
+ - **Have SEO friendlier URL paths with much shorter URLs than traditional query parameters** - This was the primary driver and the base functionality.
+
+ - **Abstract away the complexities of the Solr query string** - Being able to have a simple interface through the URL which could generate complex queries.   Not having to fully understand how Solr works in the back-end abstracts away the complexity of a front-end integrator and reduces the need to have the back-end and front-end understand each-other.
+
+ - **Be quick to start up and easy to configure** - During development of a solution, being able to iterate over a solution, or change the way that Panl is configured is a must have.  Additionally, being able to upgrade the Panl server and have the configuration files be automatically picked up and work without any changes is a plus.
+
+ - **Protect Solr from errant queries** - Hiding the Solr implementation details from the end user and parsing, decoding, and validating the URL before passing the query through to Solr.  Additionally, Solr has a tendency to return an internal server error when the query string is not as it expected, and this should not disturb the return of the results.
+
+ - **Be able to present the same Solr collection in multiple different ways** - A single Solr collection should be able to serve up different fields and facets from the result documents without any back-end logic.
+
+ - **Have a configuration file drive the generation of the UI as much as possible** - Rather than hard-coding facets and then determining how to display them, being able to have a returned JSON response which can be interrogated to determine how the facets should be displayed.
+
+
+## Additional Panl Niceties
+
+1. **MULTIPLE ways to 'SLICE and DICE'** - From one Solr collection, the Panl server can present the results and facets in multiple different ways, providing individual use cases for specific needs.
+
+1. **PREFIXES and SUFFIXES** - Panl can also add prefixes and suffixes to the URI path to increase readability, for example, with configuration.  For the example LPSE URI path of `/Caran+d'Ache/true/Black/bDW/` could also have the brand Solr field prefixed with ‘Manufactured By ’ and suffixed by ‘ Company’ to produce the URI path
+   `/Manufactured+By+The+Caran+d'Ache+Company/true/Black/bDW/`
+
+1. **BOOLEAN value translations**, for any Solr field that is defined as a `solr.BoolField`, then an additional translation can be performed.  ‘True’ and ‘false’ values can be replaced with arbitrary text, which will be transparently converted between Panl and Solr.  For the LPSE URI path of `/Caran+d'Ache/true/Black/bDW/` the true value (which is defined as whether the mechanical pencil can be disassembled could be changed to ‘Able to be disassembled’ for true values, and ‘Cannot be disassembled’ for false values.  The above URI path would then become
+   `/Caran+d'Ache/Able+to+be+disassembled/Black/bDW/`
+
+1. **FIELD VALUE validation** - By default, Solr can error when an invalid value is passed through - for example, if Solr is expecting a numeric value and it could not be parsed.  Panl can protect against this, by attempting to parse the value as best it can, and silently dropping the parameter if it cannot be sensibly parsed.
+
+1. **HIERARCHICAL facets** - Only show facets if a parent facet is currently selected, allowing you to narrow down the facet results and lead users through the search journey.
+
+1. **SORTED facets** - Each individual facet can be sorted by either the facet count (which is the default), or the facet value (e.g. alphabetic/numeric)
+
+1. **MORE facets** - Request more facets where the number of facets return does not contain the full set.
+
+1. **RESULTS SORTING options** - Sort by any of the Solr fields, either ascending, or descending and with multiple sub-sorting available - e.g. sorting by a brand name, than the model number
+
+1. **PAGINATION** - All the data to easily generate pagination URL paths giving you options and control over your own implementation.
+
+1. **STATIC SITE GENERATION** - With the exception of a query parameter, all available links for every conceivable URI path can be statically generated ahead of time, with canonical URLs.
+
+1. **STATELESS** - No state is stored in the Panl server, all of the state is from the URL path part that is passed through.  No sessions, no memory, nothing to backup, easy to update and quick to start and restart.
+
 
 # Getting up to Speed... Fast!
 
@@ -159,7 +188,7 @@ _The image is a screenshot of the in-built Panl Results Explainer Web App availa
 
 <img src="src/docs/panl-single-page-search.png" alt="The Panl Example Single Search Page interface" />
 
-_**Image**: The In-Build Panl Single Page Search Web Application_
+_**Image**: The In-Built Panl Single Page Search Web Application_
 
 Panl also ships with a URL that will provide a separate JSON response, allowing you to build a single page search interface, giving your users all the options at a glance.
 
@@ -167,31 +196,7 @@ Panl also ships with a URL that will provide a separate JSON response, allowing 
 1. The generated Panl LPSE path from the selections. 
 1. All the facets and the facet values that can be selected.
 1. The generated Panl LPSE path from the selections.
-1. A search button that will take you the in-build Panl Results Viewer web app so that you can view the results instantly.
-
-## Additional Panl Niceties In More Detail
-
-1. **MULTIPLE ways to 'SLICE and DICE'** - From one Solr collection, the Panl server can present the results and facets in multiple different ways, providing individual use cases for specific needs.
-
-1. **PREFIXES and SUFFIXES** - Panl can also add prefixes and suffixes to the URI path to increase readability, for example, with configuration.  For the example LPSE URI path of `/Caran+d'Ache/true/Black/bDW/` could also have the brand Solr field prefixed with ‘Manufactured By ’ and suffixed by ‘ Company’ to produce the URI path
-`/Manufactured+By+The+Caran+d'Ache+Company/true/Black/bDW/`
-
-1. **BOOLEAN value translations**, for any Solr field that is defined as a `solr.BoolField`, then an additional translation can be performed.  ‘True’ and ‘false’ values can be replaced with arbitrary text, which will be transparently converted between Panl and Solr.  For the LPSE URI path of `/Caran+d'Ache/true/Black/bDW/` the true value (which is defined as whether the mechanical pencil can be disassembled could be changed to ‘Able to be disassembled’ for true values, and ‘Cannot be disassembled’ for false values.  The above URI path would then become
-`/Caran+d'Ache/Able+to+be+disassembled/Black/bDW/`
-
-1. **FIELD VALUE validation** - By default, Solr can error when an invalid value is passed through - for example, if Solr is expecting a numeric value and it could not be parsed.  Panl can protect against this, by attempting to parse the value as best it can, and silently dropping the parameter if it cannot be sensibly parsed.
-
-1. **HIERARCHICAL facets** - Only show facets if a parent facet is currently selected, allowing you to narrow down the facet results and lead users through the search journey. 
-
-1. **SORTED facets** - Each individual facet can be sorted by either the facet count (which is the default), or the facet value (e.g. alphabetic/numeric)
-
-1. **RESULTS SORTING options** - Sort by any of the Solr fields, either ascending, or descending and with multiple sub-sorting available - e.g. sorting by a brand name, than the model number
-
-1. **PAGINATION** - All the data to easily generate pagination URL paths giving you options and control over your own implementation.
-
-1. **STATIC SITE GENERATION** - With the exception of a query parameter, all available links for every conceivable URI path can be statically generated ahead of time, with canonical URLs.
-
-1. **STATELESS** - No state is stored in the Panl server, all of the state is from the URL path part that is passed through.  No sessions, no memory, nothing to backup, easy to update and quick to start and restart.
+1. A search button that will take you the in-built Panl Results Viewer web app so that you can view the results instantly.
 
 # Quick Start - The 5 Steps
 
@@ -201,12 +206,11 @@ http://localhost:8181/panl-results-viewer/
 
 <img src="src/docs/panl-results-viewer.png" alt="The Panl In-Built Simple Results Viewer" />
 
-_**Image**: The In-Build Panl Results Viewer Web Application_
+_**Image**: The In-Built Panl Results Viewer Web Application_
 
 ## 0. Download Solr and Panl
 
-Download the latest release of Synapticloop Panl - this example is using the 
-`solr-panl-9-1.1.1` version.
+Download the latest release of Synapticloop Panl
 
 [https://github.com/synapticloop/panl/releases](https://github.com/synapticloop/panl/releases)
 
@@ -220,6 +224,14 @@ version
 *These are the commands for either Microsoft Windows or *NIX operating systems
 (Linux/Apple Macintosh).  Should there be any errors - see the ‘Getting Started’ section for a more in-depth explanation and approach.**
 
+---
+
+> **WARNING:** The Solr Release version `9.7.0` has changed the options for creating a new example cloud.
+> The command line option has changed from `-noprompt` to `--no-prompt`
+
+> All other commands remain the same
+
+---
 
 ```
 **IMPORTANT**: You will need to replace the
@@ -263,7 +275,7 @@ Command(s)
 
 ```shell
 cd SOLR_INSTALL_DIRECTORY
-bin\solr post -c mechanical-pencils PANL_INSTALL_DIRECTORY\sample\data\mechanical-mechanical-pencils.json
+bin\solr post -c mechanical-pencils PANL_INSTALL_DIRECTORY\sample\data\mechanical-pencils.json
 ```
 
 ## 4. Start the Panl Server
@@ -313,7 +325,7 @@ Index all of the data into the Solr instance
 Command(s)
 ```shell
 cd SOLR_INSTALL_DIRECTORY
-bin/solr post -c mechanical-pencils PANL_INSTALL_DIRECTORY/sample/data/mechanical-mechanical-pencils.json
+bin/solr post -c mechanical-pencils PANL_INSTALL_DIRECTORY/sample/data/mechanical-pencils.json
 ```
 
 ## 4. Start the Panl Server
@@ -336,6 +348,11 @@ Choose a collection/fieldset and search, facet, sort, paginate and view the resu
 # Quick Info
 
 ## Starting up the example cloud
+
+> **WARNING:** The Solr Release version `9.7.0` has changed the options for starting a new example cloud.
+> The command line option has changed from `-cloud` to `--cloud`
+
+> All other commands remain the same - For versions greater than `9.7.0` they have re-added the `-cloud` option 
 
 If you have stopped the example Solr server, starting it up:
 
@@ -375,16 +392,43 @@ I.e.
  - `./build/distributions` (*NIX), or
  - `.\build\distributions` (Windows)
 
-with the release files named `solr-panl-9-x.x.x`
+with the release files named `solr-panl-9-x.x.x` where `x.x.x` is the version number.
 
 # Version History
 
 ## 1.2.0 - more like this (codename `needy-phanton`) **UNDER DEVELOPMENT**
 
+ - Bug fixes
+   - Fixed JavScript in Single Page Search results in-built web app to take into account range facets
+   - Fixed serving in-built panl testing URLs when run from the script
+
+
+ - Code changes
+   - Retrieval of more facets functionality added: 
+     - Added in `facet_limit` JSON key for retrieving more facet results
+     - Added in handler for retrieving more facets for a specific search field
+   - Better output for testing URLs
+   - Added Always on OR facets and `panl.or.always.<lpse_code>` property
+   - Moved log4j out of the jar file so that user's con configure their own logging
+
+
+ - Breaking Changes - _(which is OK as nobody is using it at the moment :) )_
+   - Changed the single page search URL binding from `/panl-configuration/` to `/panl-single-page/` as it makes more sense
+
+
+ - Documentation update
+   - General spelling and grammatical mistake updates 
+   - Update to new functionality and configuration properties
+   - Added in the `pagination` returned JSON Object implementation details
+   - Added in URLs bound by the Panl server in the Appendices
+ 
+
 ## 1.1.1 - the fly spray (codename `grizzled-pebble`)
 
  - Bug fixes
    - Fixed 'OR' facet `before` and `after` URL values in the JSON response where a range facet has already been selected
+
+
  - Code cleanup
    - Updated explanation for DATE Range and RANGE facets  
 

@@ -24,6 +24,7 @@ package com.synapticloop.panl.server.handler;
  * IN THE SOFTWARE.
  */
 
+import com.synapticloop.panl.exception.PanlNotFoundException;
 import com.synapticloop.panl.exception.PanlServerException;
 import com.synapticloop.panl.server.client.PanlClient;
 import com.synapticloop.panl.server.handler.fielderiser.field.facet.PanlFacetField;
@@ -39,6 +40,7 @@ import com.synapticloop.panl.server.handler.tokeniser.token.LpseToken;
 import com.synapticloop.panl.server.handler.tokeniser.token.param.NumRowsLpseToken;
 import com.synapticloop.panl.server.handler.tokeniser.token.param.PageNumLpseToken;
 import com.synapticloop.panl.server.handler.tokeniser.token.param.QueryLpseToken;
+import org.apache.http.protocol.HttpContext;
 import org.apache.solr.client.solrj.SolrClient;
 import org.apache.solr.client.solrj.SolrQuery;
 import org.apache.solr.client.solrj.response.QueryResponse;
@@ -97,6 +99,7 @@ public class CollectionRequestHandler {
 	private final FieldsProcessor fieldsProcessor;
 	private final AvailableProcessor availableProcessor;
 	private final CanonicalURIProcessor canonicalURIProcessor;
+
 	private final String panlCollectionUri;
 
 	/**
@@ -145,14 +148,24 @@ public class CollectionRequestHandler {
 	 *
 	 * @param uri The URI of the request
 	 * @param query The query parameter
+	 * @param context The passed in HttpContext for this request
 	 *
 	 * @return The string body of the request
 	 *
 	 * @throws PanlServerException If there was an error parsing or connecting to
 	 * 		the Solr server.
 	 */
-	public String handleRequest(String uri, String query) throws PanlServerException {
+	public String handleRequest(String uri, String query, HttpContext context) throws PanlServerException, PanlNotFoundException {
 		long startNanos = System.nanoTime();
+
+		// check to ensure that the more facets LPSE code is correct
+		String contextLpseCode = (String)context.getAttribute(PanlMoreFacetsHandler.CONTEXT_KEY_LPSE_CODE);
+		if(null != contextLpseCode) {
+			String solrFieldName = collectionProperties.getSolrFieldNameFromLpseCode(contextLpseCode);
+			if(null == solrFieldName) {
+				throw new PanlNotFoundException("Unknown LPSE code of " + contextLpseCode);
+			}
+		}
 
 		String[] searchQuery = uri.split("/");
 		String resultFields = searchQuery[2];
@@ -192,12 +205,21 @@ public class CollectionRequestHandler {
 			}
 		}
 
+		boolean isMoreFacets = false;
+
 		try (SolrClient solrClient = panlClient.getClient()) {
 			// we set the default query - to be overridden later if one exists
 			SolrQuery solrQuery = panlClient.getQuery(query);
 			// set the operand - to be over-ridden later if it is in the URI path
 			solrQuery.setParam(SOLR_PARAM_Q_OP, collectionProperties.getSolrDefaultQueryOperand());
-			solrQuery.setFacetLimit(collectionProperties.getSolrFacetLimit());
+
+			// if we have something in the context - set it to this value
+			if(null != context.getAttribute(PanlMoreFacetsHandler.CONTEXT_KEY_FACET_LIMIT)) {
+				solrQuery.setFacetLimit((Integer)context.getAttribute(PanlMoreFacetsHandler.CONTEXT_KEY_FACET_LIMIT));
+				isMoreFacets = true;
+			} else {
+				solrQuery.setFacetLimit(collectionProperties.getSolrFacetLimit());
+			}
 
 			// we are checking for the empty fieldsets
 			List<String> resultFieldsForName = collectionProperties.getResultFieldsForName(resultFields);
@@ -217,27 +239,43 @@ public class CollectionRequestHandler {
 			// this may be overridden by the lpse status
 			solrQuery.setRows(collectionProperties.getNumResultsPerPage());
 
-			// no we need to go through all tokens and only return the ones that we
-			// need to be displayed
-			solrQuery.addFacetField(collectionProperties.getWhenSolrFacetFields(lpseTokens));
-			for (PanlFacetField facetIndexSortField : collectionProperties.getFacetIndexSortFields()) {
-				solrQuery.add("f." + facetIndexSortField.getSolrFieldName() + ".facet.sort", "index");
+			// At this point we are either going to get all of the facet fields that
+			// have a when point, or we are just looking for more facets for a single
+			// one
+
+
+			if(null != contextLpseCode) {
+				solrQuery.addFacetField(collectionProperties.getSolrFieldNameFromLpseCode(contextLpseCode));
+				// now we also want to order them as well - as by default Solr will
+				// order them by index rather than count - which may not be what the
+				// user wants
+				BaseField lpseField = collectionProperties.getLpseField(contextLpseCode);
+				if(!lpseField.getIsFacetSortByIndex()) {
+					solrQuery.add("f." + lpseField.getSolrFieldName() + ".facet.sort", "count");
+				}
+				isMoreFacets = true;
+			} else {
+				// no we need to go through all tokens and only return the ones that we
+				// need to be displayed
+				solrQuery.addFacetField(collectionProperties.getWhenSolrFacetFields(lpseTokens));
+				for (PanlFacetField facetIndexSortField : collectionProperties.getFacetIndexSortFields()) {
+					solrQuery.add("f." + facetIndexSortField.getSolrFieldName() + ".facet.sort", "index");
+				}
 			}
-
-
 
 			boolean hasStats = false;
 			for (BaseField lpseField : collectionProperties.getLpseFields()) {
 				lpseField.applyToQuery(solrQuery, panlTokenMap);
-				if(lpseField instanceof PanlRangeFacetField) {
-					solrQuery.add("stats.field", lpseField.getSolrFieldName());
-					if(!hasStats) {
-						solrQuery.add("stats", "true");
-						hasStats = true;
+				if(!isMoreFacets) {
+					if (lpseField instanceof PanlRangeFacetField) {
+						solrQuery.add("stats.field", lpseField.getSolrFieldName());
+						if (!hasStats) {
+							solrQuery.add("stats", "true");
+							hasStats = true;
+						}
 					}
 				}
 			}
-
 
 			// we may not have a numrows start
 			if (numRows == 0) {
@@ -256,7 +294,7 @@ public class CollectionRequestHandler {
 				solrQuery.setRows(0);
 			}
 
-			LOGGER.info(solrQuery.toString());
+			LOGGER.debug(solrQuery.toString());
 
 			long buildRequestNanos = System.nanoTime() - startNanos;
 			startNanos = System.nanoTime();
@@ -377,8 +415,6 @@ public class CollectionRequestHandler {
 
 		panlObject.getJSONObject(JSON_KEY_AVAILABLE).put(Processor.JSON_KEY_FACETS, removedRanges);
 
-
-
 		panlObject.put(JSON_KEY_ACTIVE, activeProcessor.processToObject(panlTokenMap));
 		panlObject.put(JSON_KEY_PAGINATION, paginationProcessor.processToObject(panlTokenMap, response));
 		panlObject.put(JSON_KEY_SORTING, sortingProcessor.processToObject(panlTokenMap));
@@ -485,7 +521,7 @@ public class CollectionRequestHandler {
 		}
 
 		for (LpseToken lpseToken : lpseTokens) {
-			LOGGER.info(lpseToken.explain());
+			LOGGER.debug(lpseToken.explain());
 		}
 
 		return (lpseTokens);
@@ -543,6 +579,11 @@ public class CollectionRequestHandler {
 		return panlCollectionUri;
 	}
 
+	/**
+	 * <p>Get the defined LPSE order.</p>
+	 *
+	 * @return The List of the LPSE order
+	 */
 	public List<String> getLpseOrder() {
 		return(collectionProperties.getPanlLpseOrderList());
 	}

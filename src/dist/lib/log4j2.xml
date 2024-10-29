@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  ~ This is the default logging configuration file for the Panl server which
+  ~ does not do too much.
+  ~
+  ~ Panl does not log too many things, just startup and the incoming requests
+  ~ and validation
+  ~
+  -->
+
+<Configuration status="WARN">
+	<Loggers>
+		<!--
+		  ~ This is the root logger which just logs the INFO messages to the
+		  ~ console, which are the generic startup messages.
+		  -->
+		<Root level="info">
+			<AppenderRef ref="console"/>
+		</Root>
+
+		<!--
+		  ~ The Panl request handlers log on the debug level for the incoming panl
+		  ~ token validation and the transposed Solr query that is executed.  To
+		  ~ remove this logging, comment out the following Logger, or just delete
+		  ~ it.
+		  -->
+		<Logger name="com.synapticloop.panl.server.handler" level="debug" additivity="false">
+			<Appender-ref ref="console" />
+		</Logger>
+	</Loggers>
+
+	<Appenders>
+		<Console name="console" target="SYSTEM_OUT">
+			<PatternLayout pattern="%d{HH:mm:ss.SSS} [%t] %-5level %logger{2} - %msg%n"/>
+		</Console>
+	</Appenders>
+</Configuration>
