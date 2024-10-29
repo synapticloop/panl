@@ -38,6 +38,14 @@
 
 [https://github.com/synapticloop/panl/releases](https://github.com/synapticloop/panl/releases)
 
+
+## Upgrading the Panl Server Release:
+
+Panl is designed to be a drop in replacement for your current version.  Keep note of any breaking release, although backwards compatibility is always high on the list of features.
+
+Your existing configuration files should just work with the downloaded release package.
+
+
 ## Read the Documentation
 
 - Online book (HTML): [https://synapticloop.github.io/panl/](https://synapticloop.github.io/panl/)
@@ -466,8 +474,10 @@ with the release files named `solr-panl-9-x.x.x` where `x.x.x` is the version nu
 
 ## 1.0.0 - the initial release (codename `bright-wildflower`)
 
+- Initial release with base functionality
+
 [View the code for this release](https://github.com/synapticloop/panl/tree/1.0.0)
 
 [Download the release packages](https://github.com/synapticloop/panl/releases/tag/1.0.0)
 
-- Initial release with base functionality
+[See all releases](https://github.com/synapticloop/panl/releases/)
