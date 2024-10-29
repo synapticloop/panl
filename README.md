@@ -1,6 +1,12 @@
 # Synapticloop PANL
 
-<img src="src/docs/synapticloop-logo.png" alt="The Synapticloop logo" />
+<p style="text-align: center">
+   <img src="src/docs/synapticloop-logo.png" alt="The Synapticloop logo" />
+</p>
+
+<p style="text-align: center">
+   <img src="src/main/resources/webapp/static/favicon.png" alt="The Synapticloop Panl Favicon" />
+</p>
 
 ---
 
