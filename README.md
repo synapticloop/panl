@@ -50,7 +50,7 @@ Your existing configuration files should just work with the downloaded release p
 ## Read the Documentation
 
 - Online book (HTML): [https://synapticloop.github.io/panl/](https://synapticloop.github.io/panl/)
-- Offline book (PDF): [Getting Started With Synapticloop Panl.pdf](https://github.com/synapticloop/panl/blob/main/src/dist/book/Getting%20Started%20With%20Synapticloop%20Panl.pdf)
+- Offline book (PDF): [Getting Started With Synapticloop Panl.pdf](https://github.com/synapticloop/panl/blob/main/src/dist/book/Getting%20Started%20With%20Synapticloop%20Panl.pdf) _(over 300 pages of documentation, written with you, the integrator, in mind)_
 
 Both of the book links above refer to Solr Panl integration 9 with instructions for setting up and running earlier versions of Solr.
 
@@ -109,6 +109,7 @@ Working with a Solr schema, the Panl configuration files translate unwieldy URL 
 
 1. **STATELESS** - No state is stored in the Panl server, all of the state is from the URL path part that is passed through.  No sessions, no memory, nothing to backup, easy to update and quick to start and restart.
 
+1. **TEXT CONFIGURATION** - All configuration for Panl is based on text files (Java .properties) files so they can be stored in a source code management system.  Additionally, upgrades to the Panl server are easy and with quick startup times, any configuration changes will be seen instantly.
 
 # Getting up to Speed... Fast!
 
