@@ -4,11 +4,19 @@ plugins {
 	id 'jacoco'
 }
 
-version = findProperty("panl.version")
+def properties = new Properties()
+file("src/main/resources/gradle.properties").withInputStream { properties.load(it) }
+version = properties.getProperty("panl.version")
 group = 'com.synapticloop'
 
 repositories {
 	mavenCentral()
+}
+
+java {
+		toolchain {
+				languageVersion = JavaLanguageVersion.of(11)
+		}
 }
 
 sourceSets {
@@ -55,9 +63,9 @@ dependencies {
 	testImplementation 'org.mockito:mockito-core:5.12.0'
 	testImplementation 'com.fasterxml.jackson.core:jackson-databind:2.17.1'
 
-
-
+	// for the panl editor
 	implementation "com.formdev:flatlaf:3.5.1"
+	implementation 'org.apache.commons:commons-lang3:3.17.0'
 
 
 	// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -92,7 +100,7 @@ application {
 
 distributions {
 	main {
-		distributionBaseName = 'solr-panl-' + findProperty("panl.solr.version")
+		distributionBaseName = 'solr-panl-' + properties.getProperty("panl.solr.version")
 	}
 
 	configurations.all {
@@ -104,6 +112,28 @@ distributions {
 					"com.fasterxml.jackson.core:jackson-annotations:2.17.1"
 		}
 	}
+}
+
+task copyLoggingFile {
+	copy {
+		from file("src/main/resources/log4j2.xml")
+		into file("src/dist/lib/")
+	}
+}
+
+tasks.startScripts.doLast {
+	def unixScriptFile = file getUnixScript()
+	unixScriptFile.text = unixScriptFile.text.replace('DEFAULT_JVM_OPTS=""', 'DEFAULT_JVM_OPTS="-Dlog4j2.configurationFile=lib/log4j2.xml"')
+
+	def windowsScriptFile = file getWindowsScript()
+	windowsScriptFile.text = windowsScriptFile.text.replace('set DEFAULT_JVM_OPTS=', 'set DEFAULT_JVM_OPTS=-Dlog4j2.configurationFile=lib\\log4j2.xml')
+}
+
+//
+// Exclude the Log4J configuration
+//
+jar {
+	exclude('log4j2.xml')
 }
 
 

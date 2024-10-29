@@ -57,6 +57,7 @@ public abstract class BaseField {
 	public static final String JSON_KEY_COUNT = "count";
 	public static final String JSON_KEY_ENCODED = "encoded";
 	public static final String JSON_KEY_VALUES = "values";
+	public static final String JSON_KEY_FACET_LIMIT = "facet_limit";
 	public static final String JSON_KEY_URIS = "uris";
 	public static final String JSON_KEY_IS_MULTIVALUE = "is_multivalue";
 
@@ -65,6 +66,8 @@ public abstract class BaseField {
 	public static final String PROPERTY_KEY_PANL_NAME = "panl.name.";
 	public static final String PROPERTY_KEY_PANL_FACET = "panl.facet.";
 	public static final String PROPERTY_KEY_PANL_OR_FACET = "panl.or.facet.";
+	public static final String PROPERTY_KEY_PANL_OR_ALWAYS = "panl.or.always.";
+	public static final String PROPERTY_KEY_PANL_OR_SEPARATOR = "panl.or.separator.";
 	public static final String PROPERTY_KEY_PANL_FACETSORT = "panl.facetsort.";
 	public static final String PROPERTY_KEY_PANL_TYPE = "panl.type.";
 	public static final String PROPERTY_KEY_PANL_PREFIX = "panl.prefix.";
@@ -714,6 +717,7 @@ public abstract class BaseField {
 
 		if (shouldIncludeFacet) {
 			facetObject.put(JSON_KEY_VALUES, facetValueArrays);
+			facetObject.put(JSON_KEY_FACET_LIMIT, collectionProperties.getSolrFacetLimit());
 			if (null != lpseCode) {
 				facetObject.put(JSON_KEY_URIS,
 						getAdditionURIObject(

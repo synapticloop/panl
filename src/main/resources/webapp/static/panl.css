@@ -45,6 +45,7 @@ dd { padding-bottom: 3px; }
 
 div.padding { padding-bottom: 14px;}
 .range-link { text-align: center; position: relative; z-index: 1000; }
+.more-facets { padding: 8px 8px 8px 10px; background-color: #efefef; margin-bottom: 16px; border-left: 4px double black; }
 
 /* footer */
 div#footer { border-top: 1px solid #afafaf; margin: 84px auto 0 auto; padding: 6px 0; background-color: #efefef; clear: both; position: relative; height: 80px; margin-top: -80px; width: 1024px; }

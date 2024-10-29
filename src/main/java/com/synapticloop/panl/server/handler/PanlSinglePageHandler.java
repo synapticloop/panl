@@ -24,6 +24,7 @@ package com.synapticloop.panl.server.handler;
  * IN THE SOFTWARE.
  */
 
+import com.synapticloop.panl.server.handler.properties.CollectionProperties;
 import com.synapticloop.panl.server.handler.properties.PanlProperties;
 import com.synapticloop.panl.server.handler.webapp.util.ResourceHelper;
 import org.apache.http.HttpRequest;
@@ -40,14 +41,15 @@ import java.util.*;
 import static com.synapticloop.panl.server.handler.webapp.util.ResourceHelper.*;
 
 /**
- * <p>This is the configuration handler which will return the configuration
+ * <p>This is the single page handler which will return the configuration
  * for a specific CaFUP so that a single search page may be built.</p>
+ *
+ * @author synapticloop
  */
-public class PanlConfigurationHandler implements HttpRequestHandler {
-	public static final String PANL_CONFIGURATION_BINDING = "/panl-configuration/";
+public class PanlSinglePageHandler implements HttpRequestHandler {
+	public static final String PANL_URL_BINDING_SINGLE_PAGE = "/panl-single-page/";
 
 	private final PanlProperties panlProperties;
-	private final List<CollectionRequestHandler> collectionRequestHandlers;
 	private final Map<String, CollectionRequestHandler> validCollections = new HashMap<>();
 	private final JSONArray validUrls = new JSONArray();
 
@@ -57,11 +59,10 @@ public class PanlConfigurationHandler implements HttpRequestHandler {
 	 * @param panlProperties The panl properties
 	 * @param collectionRequestHandlers The collection request handler
 	 */
-	public PanlConfigurationHandler(PanlProperties panlProperties, List<CollectionRequestHandler> collectionRequestHandlers) {		this.panlProperties = panlProperties;
-		this.collectionRequestHandlers = collectionRequestHandlers;
+	public PanlSinglePageHandler(PanlProperties panlProperties, List<CollectionRequestHandler> collectionRequestHandlers) {		this.panlProperties = panlProperties;
 		for(CollectionRequestHandler collectionRequestHandler : collectionRequestHandlers) {
 			validCollections.put(collectionRequestHandler.getPanlCollectionUri(), collectionRequestHandler);
-			validUrls.put(PANL_CONFIGURATION_BINDING + collectionRequestHandler.getPanlCollectionUri() + "/");
+			validUrls.put(PANL_URL_BINDING_SINGLE_PAGE + collectionRequestHandler.getPanlCollectionUri() + "/");
 		}
 	}
 
@@ -82,7 +83,11 @@ public class PanlConfigurationHandler implements HttpRequestHandler {
 		if (paths.length == 3  && validCollections.containsKey(paths[2])) {
 			try {
 				CollectionRequestHandler collectionRequestHandler = validCollections.get(paths[2]);
-				JSONObject jsonObject = new JSONObject(collectionRequestHandler.handleRequest("/" + paths[2] + "/empty/", ""));
+				JSONObject jsonObject = new JSONObject(
+					collectionRequestHandler.handleRequest(
+						"/" + paths[2] + "/" + CollectionProperties.FIELDSETS_EMPTY + "/",
+						"",
+						context));
 
 				// now that we have the JSON object - time to remove the things we don't need
 				jsonObject.remove("responseHeader");
@@ -113,13 +118,13 @@ public class PanlConfigurationHandler implements HttpRequestHandler {
 				JSONObject availableJsonObject = panlJsonObject.getJSONObject("available");
 
 				// regular facets
-				for (Object rangeFacets : availableJsonObject.getJSONArray("facets")) {
-					JSONObject rangeFacetObject = (JSONObject) rangeFacets;
-					String panlCode = rangeFacetObject.getString("panl_code");
+				for (Object regularFacets : availableJsonObject.getJSONArray("facets")) {
+					JSONObject regularFacetObject = (JSONObject) regularFacets;
+					String panlCode = regularFacetObject.getString("panl_code");
 					if(null != panlCode) {
 						int lpseOrder = lpseLookupObject.optInt(panlCode, -1);
 						if(lpseOrder != -1) {
-							panlJsonObject.getJSONArray("lpse_order").put(lpseOrder, rangeFacetObject);
+							panlJsonObject.getJSONArray("lpse_order").put(lpseOrder, regularFacetObject);
 						}
 					}
 				}
@@ -173,7 +178,6 @@ public class PanlConfigurationHandler implements HttpRequestHandler {
 									e.getClass().getCanonicalName(),
 									e.getMessage()));
 
-//				LOGGER.error("Could not handle the request.", e);
 					response.setEntity(new StringEntity(jsonObject.toString(), ResourceHelper.CONTENT_TYPE_JSON));
 				} else {
 					jsonObject.put(JSON_KEY_MESSAGE, JSON_VALUE_MESSAGE_500);

@@ -1,3 +1,5 @@
+package com.synapticloop.panl.exception;
+
 /*
  * Copyright (c) 2008-2024 synapticloop.
  *
@@ -22,7 +24,23 @@
  * IN THE SOFTWARE.
  */
 
-package com.synapticloop.panl.editor;
+public class PanlNotFoundException extends Exception {
+	/**
+	 * <p>Instantiate the exception</p>
+	 *
+	 * @param message The exception message
+	 */
+	public PanlNotFoundException(String message) {
+		super(message);
+	}
 
-public class NewProject {
+	/**
+	 * <p>Instantiate the exception</p>
+	 *
+	 * @param message The exception message
+	 * @param cause   The base cause for the exception
+	 */
+	public PanlNotFoundException(String message, Throwable cause) {
+		super(message, cause);
+	}
 }

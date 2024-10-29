@@ -136,7 +136,7 @@ public abstract class Processor {
 	 *
 	 * @param panlTokenMap The panl token map to interrogate
 	 *
-	 * @return Always returns an empty string
+	 * @return Always returns an empty string unless overridden
 	 */
 	public String processToString(Map<String, List<LpseToken>> panlTokenMap) {
 		return ("");

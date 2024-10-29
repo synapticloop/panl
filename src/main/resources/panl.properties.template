@@ -36,11 +36,11 @@
 #solrj.client=Http2SolrClient
 #solrj.client=HttpJdkSolrClient
 #solrj.client=LBHttp2SolrClient
-solrj.client=CloudSolrClient
+$solrj.client
 
 #                           Which URLs To Connect To
 #                           ----- ---- -- ------- --
-# Dependant on which Solr server installation you have, and consequently the
+# Dependent on which Solr server installation you have, and consequently the
 # SolrJ Client that is configured, this will either be a single url, or a comma
 # separated list of URLs
 #
@@ -62,7 +62,7 @@ solrj.client=CloudSolrClient
 #
 #                                ~ ~ ~ * ~ ~ ~
 
-solr.search.server.url=http://localhost:8983/solr,http://localhost:7574/solr
+$solr.search.server.url
 
 #                      Whether To Enable The Testing URLs
 #                      ------- -- ------ --- ------- ----
@@ -81,7 +81,7 @@ solr.search.server.url=http://localhost:8983/solr,http://localhost:7574/solr
 #
 #                                ~ ~ ~ * ~ ~ ~
 
-panl.results.testing.urls=true
+$panl.results.testing.urls
 
 #                     Whether To Enable Verbose Error Messaging
 #                     ------- -- ------ ------- ----- ---------
@@ -95,8 +95,8 @@ panl.results.testing.urls=true
 #
 #                                ~ ~ ~ * ~ ~ ~
 
-panl.status.404.verbose=true
-panl.status.500.verbose=true
+$panl.status.404.verbose
+$panl.status.500.verbose
 
 #                            Decimal Values Format
 #                            ------- ------ ------
@@ -119,7 +119,7 @@ panl.status.500.verbose=true
 #
 #                                ~ ~ ~ * ~ ~ ~
 
-panl.decimal.point=true
+$panl.decimal.point
 
 #                      Collection Property File Inclusion
 #                      ---------- -------- ---- ---------
@@ -138,10 +138,11 @@ panl.decimal.point=true
 #
 # Where:
 #     <panl_collection_uri> is the base URI path that the Panl server will
-#                           respond to
+#                           respond to, i.e. it will be bound to the Panl URL
+#                           of http://localhost:port/<panl_collection_uri>
 #
 #     NOTE: You may have multiple <panl_collection_uri> values for each
-#           <solr_collection_name> with different configurations
+#           <solr_collection_name> with different fieldset configurations
 #
 #                                ~ ~ ~ * ~ ~ ~
 
