@@ -49,11 +49,13 @@ public class PanlOrFacetField extends PanlFacetField {
 	//                            OR Facet properties                          //
 	// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - //
 	protected boolean isAlwaysOr = false;
+	protected String orSeparator = null;
 
 	public PanlOrFacetField(String lpseCode, String propertyKey, Properties properties, String solrCollection, String panlCollectionUri, int lpseLength) throws PanlServerException {
 		super(lpseCode, propertyKey, properties, solrCollection, panlCollectionUri, lpseLength);
 
 		this.isAlwaysOr = properties.getProperty(PROPERTY_KEY_PANL_OR_ALWAYS + lpseCode, "false").equalsIgnoreCase("true");
+		this.orSeparator = properties.getProperty(PROPERTY_KEY_PANL_OR_SEPARATOR + lpseCode, null);
 	}
 
 	@Override public List<String> explainAdditional() {
@@ -266,5 +268,15 @@ public class PanlOrFacetField extends PanlFacetField {
 
 	public boolean getIsAlwaysOr() {
 		return isAlwaysOr;
+	}
+
+	/**
+	 * <p>Return the OR separator for OR field values.  This will return null if
+	 * no OR separator is configured.</p>
+	 *
+	 * @return the string for the OR separator, or null if not set
+	 */
+	public String getOrSeparator() {
+		return orSeparator;
 	}
 }
