@@ -417,7 +417,13 @@ with the release files named `solr-panl-9-x.x.x` where `x.x.x` is the version nu
    - Update to new functionality and configuration properties
    - Added in the `pagination` returned JSON Object implementation details
    - Added in URLs bound by the Panl server in the Appendices
- 
+
+[View the code for this release](https://github.com/synapticloop/panl/tree/1.2.0)
+
+[Download the release packages](https://github.com/synapticloop/panl/releases/tag/1.2.0)
+
+[See all releases](https://github.com/synapticloop/panl/releases/)
+
 
 ## 1.1.1 - the fly spray (codename `grizzled-pebble`)
 
