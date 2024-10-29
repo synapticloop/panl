@@ -390,7 +390,9 @@ with the release files named `solr-panl-9-x.x.x` where `x.x.x` is the version nu
 
 # Version History
 
-## 1.2.0 - more like this (codename `needy-phanton`) **UNDER DEVELOPMENT**
+## 1.3.0 - Fluffy stuff (codename `billowing-feather`) **UNDER DEVELOPMENT**
+
+## 1.2.0 - more like this (codename `needy-phanton`) 
 
  - Bug fixes
    - Fixed JavScript in Single Page Search results in-built web app to take into account range facets
