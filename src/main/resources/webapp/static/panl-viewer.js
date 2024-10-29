@@ -392,27 +392,8 @@ function addAvailableFilters(availableObject, activeObject) {
 	console.log(availableObject);
 
 	// first up the facets
-	const available = $("#available");
-	for(const facet of availableObject.facets) {
-		var innerUl = "<ul>";
-		for(const value of facet.values) {
-			innerUl += "<li>" +
-			"<a href=\"" +
-			panlResultsViewerUrl +
-			$("#collection").text() +
-			facet.uris.before +
-			value.encoded +
-			facet.uris.after +
-			"\">[add]</a>&nbsp;" +
-			decodePanl(value.encoded);
-
-			if(!facet.is_or_facet) {
-				innerUl += "&nbsp;(" + value.count + ")";
-			}
-			innerUl += "</li>";
-		}
-		innerUl += "</ul>"
-		available.append("<li><strong>" + facet.name + " <em>(" + facet.panl_code + ")</em></strong>" + innerUl + "</li>");
+for(const facet of availableObject.facets) {
+		generateFacet(facet);
 	}
 
 	const ranges = $("#ranges");
@@ -584,8 +565,66 @@ function addAvailableFilters(availableObject, activeObject) {
 	}
 }
 
+function generateFacet(facet) {
+	const available = $("#available");
+	available.append(generateFacetHTML(facet));
+
+	if(facet.facet_limit !== -1 && facet.facet_limit <= facet.values.length) {
+		// bind the update
+		$("#facet-link-" + facet.facet_name).on("click", { "facet": facet }, function(event) {
+			event.preventDefault();
+			replaceFacetHTML(event.data.facet);
+		});
+	}
+}
+
+function replaceFacetHTML(facet) {
+	// go off and get the more facets
+	var moreFacetsUrl = "/panl-more-facets" +
+			$("#collection").text() +
+			$("#canonical_uri").text() +
+			"?code=" + facet.panl_code +
+			"&limit=-1";
+
+	$.ajax({
+    url: moreFacetsUrl,
+    success: function (panlJsonData) {
+      $("#facet-" + facet.facet_name).replaceWith(generateFacetHTML(panlJsonData.panl.facet));
+    }
+  });
+}
+
+function generateFacetHTML(facet) {
+	var innerUl = "<ul>";
+	for(const value of facet.values) {
+		innerUl += "<li>" +
+		"<a href=\"" +
+		panlResultsViewerUrl +
+		$("#collection").text() +
+		facet.uris.before +
+		value.encoded +
+		facet.uris.after +
+		"\">[add]</a>&nbsp;" +
+		decodePanl(value.encoded);
+
+		if(!facet.is_or_facet) {
+			innerUl += "&nbsp;(" + value.count + ")";
+		}
+		innerUl += "</li>";
+	}
+
+	// check for more facets...
+	if(facet.facet_limit !== -1 && facet.facet_limit <= facet.values.length) {
+		innerUl += "<li class=\"more-facets\"><a id=\"facet-link-" + facet.facet_name + "\" href=\"#\">See all...</a></li>";
+	}
+
+	innerUl += "</ul>"
+
+	return("<li  id=\"facet-" + facet.facet_name + "\"><strong>" + facet.name + " <em>(" + facet.panl_code + ")</em></strong>" + innerUl + "</li>");
+}
+
 function updateDateRangeLink(facet) {
-var facetName = facet.facet_name;
+ var facetName = facet.facet_name;
 
 	var rangeLink = $("#anchor-date-range-" + facetName);
 

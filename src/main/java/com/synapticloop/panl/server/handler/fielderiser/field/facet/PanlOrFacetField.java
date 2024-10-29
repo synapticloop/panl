@@ -48,26 +48,14 @@ public class PanlOrFacetField extends PanlFacetField {
 	// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - //
 	//                            OR Facet properties                          //
 	// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - //
-	protected boolean isOrFacet = false;
+	protected boolean isAlwaysOr = false;
+	protected String orSeparator = null;
 
 	public PanlOrFacetField(String lpseCode, String propertyKey, Properties properties, String solrCollection, String panlCollectionUri, int lpseLength) throws PanlServerException {
 		super(lpseCode, propertyKey, properties, solrCollection, panlCollectionUri, lpseLength);
 
-		this.isOrFacet = properties.getProperty(PROPERTY_KEY_PANL_OR_FACET + lpseCode, "false").equalsIgnoreCase("true");
-		if (this.isOrFacet) {
-			String propertyFacetMinCount = properties.getProperty(PROPERTY_KEY_SOLR_FACET_MIN_COUNT, null);
-			if (null != propertyFacetMinCount) {
-				try {
-					int minCount = Integer.parseInt(propertyFacetMinCount);
-					if (minCount != 0) {
-						getLogger().warn("Property '{}' __MUST__ be set to zero for '{}{}' to be enabled.", PROPERTY_KEY_SOLR_FACET_MIN_COUNT, PROPERTY_KEY_PANL_OR_FACET, lpseCode);
-					}
-				} catch (NumberFormatException e) {
-					getLogger().error("Property '{}' __MUST__ be set.", PROPERTY_KEY_SOLR_FACET_MIN_COUNT);
-					throw new PanlServerException("Property " + PROPERTY_KEY_SOLR_FACET_MIN_COUNT + " was not set.");
-				}
-			}
-		}
+		this.isAlwaysOr = properties.getProperty(PROPERTY_KEY_PANL_OR_ALWAYS + lpseCode, "false").equalsIgnoreCase("true");
+		this.orSeparator = properties.getProperty(PROPERTY_KEY_PANL_OR_SEPARATOR + lpseCode, null);
 	}
 
 	@Override public List<String> explainAdditional() {
@@ -190,6 +178,7 @@ public class PanlOrFacetField extends PanlFacetField {
 
 		if (!facetValueArrays.isEmpty()) {
 			facetObject.put(JSON_KEY_VALUES, facetValueArrays);
+			facetObject.put(JSON_KEY_FACET_LIMIT, collectionProperties.getSolrFacetLimit());
 			if (null != lpseCode) {
 				facetObject.put(JSON_KEY_URIS,
 						getAdditionURIObject(
@@ -275,5 +264,19 @@ public class PanlOrFacetField extends PanlFacetField {
 
 	@Override public void addToRemoveObject(JSONObject removeObject, LpseToken lpseToken) {
 		removeObject.put(JSON_KEY_IS_OR_FACET, true);
+	}
+
+	public boolean getIsAlwaysOr() {
+		return isAlwaysOr;
+	}
+
+	/**
+	 * <p>Return the OR separator for OR field values.  This will return null if
+	 * no OR separator is configured.</p>
+	 *
+	 * @return the string for the OR separator, or null if not set
+	 */
+	public String getOrSeparator() {
+		return orSeparator;
 	}
 }

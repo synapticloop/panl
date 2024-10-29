@@ -24,7 +24,7 @@ package com.synapticloop.panl;
  * IN THE SOFTWARE.
  */
 
-import com.synapticloop.panl.editor.PanlEditor;
+import com.synapticloop.panl.editor.PanlProjectLauncher;
 import com.synapticloop.panl.exception.CommandLineOptionException;
 import com.synapticloop.panl.exception.PanlGenerateException;
 import com.synapticloop.panl.exception.PanlServerException;
@@ -33,18 +33,15 @@ import com.synapticloop.panl.server.PanlServer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
+import javax.swing.*;
+import java.io.*;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
  * <p>This is the main class for the PANL server/generator.</p>
+ *
+ * @author synapticloop
  */
 public class Main {
 	private static final Logger LOGGER = LoggerFactory.getLogger(Main.class);
@@ -65,6 +62,10 @@ public class Main {
 		ALLOWABLE_COMMANDS.add(CMD_VALUE_GENERATE);
 		ALLOWABLE_COMMANDS.add(CMD_VALUE_EDITOR);
 	}
+
+	public static String panlVersion = "Unknown - ¯\\_(ツ)_/¯";
+	public static String solrVersion = "Unknown - ¯\\_(ツ)_/¯";
+
 
 	public static final String DEFAULT_PANL_PROPERTIES = "panl.properties";
 	public static final String DEFAULT_PORT_NUMBER = "8181";
@@ -106,12 +107,14 @@ public class Main {
 	 */
 	private void parseAndExecuteCommandLine() throws PanlServerException, CommandLineOptionException, PanlGenerateException {
 		if (args.length < 1) {
+//			usageAndException("Could not determine command, should be one of 'server', 'generate', or 'editor'");
 			usageAndException("Could not determine command, should be one of 'server' or 'generate'");
 		}
 
 		String command = args[0];
 		if (!ALLOWABLE_COMMANDS.contains(command)) {
 			usageAndException(String.format("Unknown command of '%s', expecting 'server' or 'generate'", command));
+//			usageAndException(String.format("Unknown command of '%s', expecting 'server', 'generate', or 'editor'", command));
 		}
 
 		// now go through the rest of the command line arguments
@@ -127,12 +130,20 @@ public class Main {
 		}
 
 		// now parse the rest of the commands
-		if (command.equals(CMD_VALUE_SERVER)) {
-			parseAndExecuteServerCommands();
-		} else if(command.equals(CMD_VALUE_GENERATE)){
-			parseAndExecuteGenerateCommands();
-		} else if(command.equals(CMD_VALUE_EDITOR)) {
-			new PanlEditor().show();
+		switch (command) {
+			case CMD_VALUE_SERVER:
+				parseAndExecuteServerCommands();
+				break;
+			case CMD_VALUE_GENERATE:
+				parseAndExecuteGenerateCommands();
+				break;
+			case CMD_VALUE_EDITOR:
+				LOGGER.warn("THE EDITOR FUNCTIONALITY IS __NOT COMPLETE__...");
+				LOGGER.warn("This can be considered an exercise in futility...");
+				SwingUtilities.invokeLater(() -> {
+					new PanlProjectLauncher().show();
+				});
+				break;
 		}
 	}
 
@@ -243,16 +254,20 @@ public class Main {
 	 * parsing the options then it will print out an error message and exit.</p>
 	 *
 	 * @param args The arguments to parse
-	 *
-	 * @throws PanlServerException If there was an error starting the server
-	 * @throws CommandLineOptionException If the command line options could not
-	 * 		be parsed
-	 * @throws PanlGenerateException If there was an error with the generation
-	 * 		of the properties
 	 */
-	public static void main(String[] args) throws PanlServerException, CommandLineOptionException, PanlGenerateException {
+	public static void main(String[] args) {
 		Main main = new Main(args);
 
+		Properties gradleProperties = new Properties();
+		try {
+			gradleProperties.load(Main.class.getResourceAsStream("/gradle.properties"));
+			Main.panlVersion = gradleProperties.getProperty("panl.version", "Unknown - ¯\\_(ツ)_/¯");
+			Main.solrVersion = gradleProperties.getProperty("panl.solr.version", "Unknown - ¯\\_(ツ)_/¯");
+		} catch (IOException ignored) {
+		}
+
+		LOGGER.info("            ~ ~ ~ * ~ ~ ~");
+		LOGGER.info("");
 		LOGGER.info("                           __ ");
 		LOGGER.info("       .-----.---.-.-----.|  |");
 		LOGGER.info("       |  _  |  _  |     ||  |");
@@ -262,6 +277,18 @@ public class Main {
 		LOGGER.info("            ~ ~ ~ * ~ ~ ~");
 		LOGGER.info("");
 
-		main.parseAndExecuteCommandLine();
+		LOGGER.info("         Panl version: {}", Main.panlVersion);
+		LOGGER.info("");
+		LOGGER.info("    Designed for integration with");
+		LOGGER.info("           Solr version: {}", Main.solrVersion);
+		LOGGER.info("");
+		LOGGER.info("            ~ ~ ~ * ~ ~ ~");
+		LOGGER.info("");
+
+		try {
+			main.parseAndExecuteCommandLine();
+		} catch (PanlServerException | CommandLineOptionException | PanlGenerateException e) {
+			LOGGER.error("FAILURE to start, message was: {}", e.getMessage(), e);
+		}
 	}
 }

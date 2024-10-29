@@ -30,7 +30,7 @@ $(document).ready(function() {
 
 function panlConfiguration(collection) {
 	currentCollection = collection;
-	var panlQueryUrl = "/panl-configuration/" + collection + "/";
+	var panlQueryUrl = "/panl-single-page/" + collection + "/";
 	$.ajax({
 		url:panlQueryUrl,
 		success: function (panlJsonData) {
@@ -111,14 +111,28 @@ function updateSearchLinks() {
 	var lpseCodePath = "";
 
 	// no go through the new value and then regen the lpse path
-	for(const panlPathValue of panlLpsePath) {
+	for(const [i, panlPathValue] of panlLpsePath.entries()) {
 		if(panlPathValue !== undefined && panlPathValue !== null) {
 			if(Object.keys(panlPathValue).length > 1) {
 				var lpseCode = panlPathValue["lpseCode"];
 				for (var key in panlPathValue) {
 					if (panlPathValue.hasOwnProperty(key)) {
 						if(key !== "lpseCode") {
-							lpseCodePath = lpseCodePath + lpseCode;
+							// at this point we need to work out ranges
+							if(panlObject.lpse_order[i]) {
+								var isRangeFacet = panlObject.lpse_order[i].is_range_facet;
+								if(isRangeFacet) {
+									var hasInfix = panlObject.lpse_order[i].uris.has_infix;
+									if(hasInfix) {
+										lpseCodePath = lpseCodePath + lpseCode + '-' + lpseCode;
+									} else {
+										lpseCodePath = lpseCodePath + lpseCode + '+' + lpseCode;
+									}
+								}else {
+									lpseCodePath = lpseCodePath + lpseCode;
+								}
+							}
+
 							lpsePath = lpsePath + key + "/"
 						}
 					}
