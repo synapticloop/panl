@@ -36,8 +36,9 @@
 
 ## Download the Panl Server Release:
 
-[https://github.com/synapticloop/panl/releases](https://github.com/synapticloop/panl/releases)
-
+1. [https://github.com/synapticloop/panl/releases](https://github.com/synapticloop/panl/releases)
+2. Read the [5-Step Quick Start section](https://github.com/synapticloop/panl/tree/main?tab=readme-ov-file#quick-start---the-5-steps)
+3. Done.
 
 ## Upgrading the Panl Server Release:
 
