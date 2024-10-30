@@ -139,15 +139,15 @@ public class CanonicalURIProcessorRangeTest {
 	private void assertCanonicalNoInfix(String propertiesLocation, String uriPath) {
 		TestHelper.assertCanonicalURI(
 				propertiesLocation,
-				"/test/default/" + uriPath + "/w+w/",
-				"/" + uriPath + "/1/10/w+wpn/");
+				"/test/default/" + uriPath + "/w+/",
+				"/" + uriPath + "/1/10/w+pn/");
 	}
 
 	private void assertCanonicalWithInfix(String propertiesLocation, String URIpath) {
 		TestHelper.assertCanonicalURI(
 				propertiesLocation,
-				"/test/default/" + URIpath + "/w-w/",
-				"/" + URIpath + "/1/10/w-wpn/");
+				"/test/default/" + URIpath + "/w-/",
+				"/" + URIpath + "/1/10/w-pn/");
 	}
 
 }

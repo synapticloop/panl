@@ -97,9 +97,9 @@ public class DefaultsTest {
 		assertEquals("/weighing+from+", root.panl.available.range_facets[0].uris.before);
 		assertEquals("/from+light", root.panl.available.range_facets[0].uris.before_min_value);
 		assertTrue(root.panl.available.range_facets[0].uris.has_infix);
-		assertEquals("heavy+pencils/w-w/", root.panl.available.range_facets[0].uris.after_max_value);
+		assertEquals("heavy+pencils/w-/", root.panl.available.range_facets[0].uris.after_max_value);
 		assertEquals("+to+", root.panl.available.range_facets[0].uris.during);
-		assertEquals("+grams/w-w/", root.panl.available.range_facets[0].uris.after);
+		assertEquals("+grams/w-/", root.panl.available.range_facets[0].uris.after);
 
 	}
 }

@@ -408,6 +408,10 @@ with the release files named `solr-panl-9-x.x.x` where `x.x.x` is the version nu
 
 ## 1.3.0 - Fluffy stuff (codename `billowing-feather`) **UNDER DEVELOPMENT**
 
+- Code Changes
+  - **[BREAKING CHANGE]** Changed range facets LPSE codes from `w-w` to `w-` (i.e. removed the additional LPSE code)
+
+
 ## 1.2.0 - more like this (codename `needy-phanton`) 
 
  - Bug fixes

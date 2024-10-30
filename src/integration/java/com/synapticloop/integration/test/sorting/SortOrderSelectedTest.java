@@ -55,12 +55,12 @@ public class SortOrderSelectedTest {
 
 	@Test public void testRangeFacetSelected() throws IOException {
 		ObjectMapper mapper = new ObjectMapper();
-		Root root = mapper.readValue(new URL("http://localhost:8282/mechanical-pencils/brandandname/weighing+from+17+grams+to+39+grams/w-w/"), Root.class);
+		Root root = mapper.readValue(new URL("http://localhost:8282/mechanical-pencils/brandandname/weighing+from+17+grams+to+39+grams/w-/"), Root.class);
 		assertFalse(root.error);
-		assertEquals("/weighing+from+17+grams+to+39+grams/w-wsb+/", root.panl.sorting.fields[0].add_uri_asc);
-		assertEquals("/weighing+from+17+grams+to+39+grams/w-wsb-/", root.panl.sorting.fields[0].add_uri_desc);
-		assertEquals("/weighing+from+17+grams+to+39+grams/w-wsb+/", root.panl.sorting.fields[0].set_uri_asc);
-		assertEquals("/weighing+from+17+grams+to+39+grams/w-wsb-/", root.panl.sorting.fields[0].set_uri_desc);
+		assertEquals("/weighing+from+17+grams+to+39+grams/w-sb+/", root.panl.sorting.fields[0].add_uri_asc);
+		assertEquals("/weighing+from+17+grams+to+39+grams/w-sb-/", root.panl.sorting.fields[0].add_uri_desc);
+		assertEquals("/weighing+from+17+grams+to+39+grams/w-sb+/", root.panl.sorting.fields[0].set_uri_asc);
+		assertEquals("/weighing+from+17+grams+to+39+grams/w-sb-/", root.panl.sorting.fields[0].set_uri_desc);
 	}
 
 	@Test public void testRegularFacetSelected() throws IOException {

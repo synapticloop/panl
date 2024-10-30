@@ -588,7 +588,6 @@ public class PanlRangeFacetField extends PanlFacetField {
 				if (rangeFacetLpseToken.getIsRangeToken() && !hasRange) {
 					sb.append(lpseCode);
 					sb.append((rangeFacetLpseToken.getHasInfix() ? "-" : "+"));
-					sb.append(lpseCode);
 
 					// there may be only one range
 					hasRange = true;
