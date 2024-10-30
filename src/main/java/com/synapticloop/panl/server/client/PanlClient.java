@@ -60,6 +60,7 @@ public abstract class PanlClient {
 		this.solrCollection = solrCollection;
 		this.panlProperties = panlProperties;
 		this.collectionProperties = collectionProperties;
+		this.queryParameter = collectionProperties.getFormQueryRespondTo();
 	}
 
 	/**
