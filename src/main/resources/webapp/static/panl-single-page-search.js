@@ -124,9 +124,9 @@ function updateSearchLinks() {
 								if(isRangeFacet) {
 									var hasInfix = panlObject.lpse_order[i].uris.has_infix;
 									if(hasInfix) {
-										lpseCodePath = lpseCodePath + lpseCode + '-' + lpseCode;
+										lpseCodePath = lpseCodePath + lpseCode + '-';
 									} else {
-										lpseCodePath = lpseCodePath + lpseCode + '+' + lpseCode;
+										lpseCodePath = lpseCodePath + lpseCode + '+';
 									}
 								}else {
 									lpseCodePath = lpseCodePath + lpseCode;
