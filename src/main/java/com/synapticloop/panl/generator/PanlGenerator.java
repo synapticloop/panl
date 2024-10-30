@@ -287,6 +287,7 @@ public class PanlGenerator {
 			mergeProperties.put("panl.status.404.verbose", "true");
 			mergeProperties.put("panl.status.500.verbose", "true");
 			mergeProperties.put("panl.decimal.point", "true");
+			mergeProperties.put("panl.param.passthrough.canonical", "false");
 			mergeProperties.put("panl.collections", panlCollection.getPanlProperty("$panl.collections"));
 
 			LOGGER.info("Writing out file {}.panl.properties", panlCollection.getCollectionName());

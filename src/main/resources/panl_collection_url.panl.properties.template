@@ -138,7 +138,7 @@ $panl.param.page
 $panl.param.numrows
 $panl.param.query.operand
 $panl.param.passthrough
-panl.param.passthrough.canonical=false
+$panl.param.passthrough.canonical
 
 #                         The Form Query To Respond To
 #                         --- ---- ----- -- ------- --
