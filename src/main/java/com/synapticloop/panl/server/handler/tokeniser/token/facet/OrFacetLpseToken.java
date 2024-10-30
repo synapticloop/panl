@@ -30,6 +30,8 @@ import com.synapticloop.panl.server.handler.properties.CollectionProperties;
 import com.synapticloop.panl.server.handler.tokeniser.LpseTokeniser;
 import com.synapticloop.panl.server.handler.tokeniser.token.LpseToken;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.StringTokenizer;
 
 public class OrFacetLpseToken extends LpseToken {
@@ -77,7 +79,28 @@ public class OrFacetLpseToken extends LpseToken {
 		} else {
 			this.isValid = false;
 		}
+	}
 
+	public OrFacetLpseToken(OrFacetLpseToken originalOrFacetToken, String value) {
+		// we are not going to need the collection properties
+		super(originalOrFacetToken.lpseCode, null);
+		this.originalValue = originalOrFacetToken.originalValue;
+		this.solrField = originalOrFacetToken.solrField;
+		this.value = value;
+		this.isValid = originalOrFacetToken.isValid;
+	}
+
+	public static List<LpseToken> getSeparatedLpseTokens(String orSeparator, CollectionProperties collectionProperties, String lpseCode, LpseTokeniser lpseTokeniser, StringTokenizer valueTokeniser) {
+		OrFacetLpseToken orFacetLpseToken = new OrFacetLpseToken(collectionProperties, lpseCode, lpseTokeniser, valueTokeniser);
+		String values = orFacetLpseToken.getValue();
+		// the value will have the separator value
+		List<LpseToken> lpseTokens = new ArrayList<>();
+		if(null != values) {
+			for (String value : values.split(orSeparator)) {
+				lpseTokens.add(new OrFacetLpseToken(orFacetLpseToken, value));
+			}
+		}
+		return(lpseTokens);
 	}
 
 	@Override public String explain() {

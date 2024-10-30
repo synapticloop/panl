@@ -37,6 +37,8 @@ import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.util.*;
 
 import static com.synapticloop.panl.server.handler.processor.Processor.*;
@@ -44,6 +46,9 @@ import static com.synapticloop.panl.server.handler.processor.Processor.FORWARD_S
 
 public class PanlOrFacetField extends PanlFacetField {
 	private static final Logger LOGGER = LoggerFactory.getLogger(PanlOrFacetField.class);
+
+	public static final String JSON_KEY_IS_OR_FACET = "is_or_facet";
+	public static final String JSON_KEY_OR_SEPARATOR = "or_separator";
 
 	// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - //
 	//                            OR Facet properties                          //
@@ -107,10 +112,11 @@ public class PanlOrFacetField extends PanlFacetField {
 		solrQuery.addFilterQuery(stringBuilder.toString());
 	}
 
-	public static final String JSON_KEY_IS_OR_FACET = "is_or_facet";
-
 	@Override public void appendToAvailableObjectInternal(JSONObject jsonObject) {
 		jsonObject.put(JSON_KEY_IS_OR_FACET, true);
+		if(null != orSeparator) {
+			jsonObject.put(JSON_KEY_OR_SEPARATOR, orSeparator);
+		}
 	}
 
 	/**
@@ -191,6 +197,51 @@ public class PanlOrFacetField extends PanlFacetField {
 
 		return (false);
 	}
+	/**
+	 * <p>Get the Start of the OR URI path for this field</p>
+	 *
+	 * @param panlTokenMap The token map with the LPSe codes and values
+	 *
+	 * @return The URI path
+	 */
+	private String getOrURIPathStart(Map<String, List<LpseToken>> panlTokenMap) {
+		StringBuilder sb = new StringBuilder();
+		if (panlTokenMap.containsKey(lpseCode)) {
+			if(orSeparator != null) {
+				List<String> validValues = new ArrayList<>();
+
+				for (LpseToken lpseToken : panlTokenMap.get(lpseCode)) {
+					if (lpseToken.getIsValid() && lpseToken.getValue() != null) {
+						validValues.add(lpseToken.getValue());
+					}
+				}
+
+				if(!validValues.isEmpty()) {
+					boolean isFirst = true;
+
+					for(String validValue: validValues) {
+						if (isFirst && hasValuePrefix) {
+							sb.append(valuePrefix);
+						}
+
+						isFirst = false;
+						sb.append(validValue);
+						sb.append(orSeparator);
+					}
+
+					return(URLEncoder.encode(sb.toString(), StandardCharsets.UTF_8));
+				}
+			} else {
+				for (LpseToken lpseToken : panlTokenMap.get(lpseCode)) {
+					if (lpseToken.getIsValid()) {
+						sb.append(getEncodedPanlValue(lpseToken));
+						sb.append("/");
+					}
+				}
+			}
+		}
+		return (sb.toString());
+	}
 
 	/**
 	 * <p>This is an OR facet, so we can additional </p>
@@ -214,6 +265,7 @@ public class PanlOrFacetField extends PanlFacetField {
 		StringBuilder lpseUriBefore = new StringBuilder();
 		StringBuilder lpseUriCode = new StringBuilder();
 
+		boolean hasFirstOrSeparator = false;
 		for (BaseField baseField : collectionProperties.getLpseFields()) {
 			// we need to add in any other token values in the correct order
 			String orderedLpseCode = baseField.getLpseCode();
@@ -222,12 +274,17 @@ public class PanlOrFacetField extends PanlFacetField {
 				// we have found the current LPSE code, so reset the URI and add it to
 				// the after
 
-				lpseUri.append(baseField.getURIPath(panlTokenMap, collectionProperties));
+				if(orSeparator != null) {
+					lpseUri.append(getOrURIPathStart(panlTokenMap));
+				} else {
+					lpseUri.append(baseField.getURIPath(panlTokenMap, collectionProperties));
+				}
+
 				lpseUriBefore.append(lpseUri);
 				lpseUri.setLength(0);
+
 				lpseUriCode.append(baseField.getLpseCode(panlTokenMap, collectionProperties));
 				lpseUriCode.append(this.lpseCode);
-
 			} else {
 				// if we don't have a current token, just carry on
 				if (!panlTokenMap.containsKey(orderedLpseCode)) {
@@ -259,7 +316,12 @@ public class PanlOrFacetField extends PanlFacetField {
 
 	@Override
 	public List<LpseToken> instantiateTokens(CollectionProperties collectionProperties, String lpseCode, String query, StringTokenizer valueTokeniser, LpseTokeniser lpseTokeniser) {
-		return (List.of(new OrFacetLpseToken(collectionProperties, this.lpseCode, lpseTokeniser, valueTokeniser)));
+		if(this.orSeparator != null) {
+			// we have an or separator
+			return(OrFacetLpseToken.getSeparatedLpseTokens(orSeparator, collectionProperties, this.lpseCode, lpseTokeniser, valueTokeniser));
+		} else {
+			return (List.of(new OrFacetLpseToken(collectionProperties, this.lpseCode, lpseTokeniser, valueTokeniser)));
+		}
 	}
 
 	@Override public void addToRemoveObject(JSONObject removeObject, LpseToken lpseToken) {
