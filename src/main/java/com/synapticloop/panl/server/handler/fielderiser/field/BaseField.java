@@ -789,7 +789,7 @@ public abstract class BaseField {
 	 *
 	 * @return The correct LPSE token for this lpseCode
 	 */
-	public abstract LpseToken instantiateToken(
+	public abstract List<LpseToken> instantiateTokens(
 			CollectionProperties collectionProperties,
 			String lpseCode,
 			String query,

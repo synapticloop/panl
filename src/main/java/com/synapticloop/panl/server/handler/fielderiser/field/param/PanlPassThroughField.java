@@ -104,8 +104,8 @@ public class PanlPassThroughField extends BaseField {
 
 	}
 
-	@Override public LpseToken instantiateToken(CollectionProperties collectionProperties, String lpseCode, String query, StringTokenizer valueTokeniser, LpseTokeniser lpseTokeniser) {
-		return(new PassThroughLpseToken(collectionProperties, this.lpseCode, valueTokeniser));
+	@Override public List<LpseToken> instantiateTokens(CollectionProperties collectionProperties, String lpseCode, String query, StringTokenizer valueTokeniser, LpseTokeniser lpseTokeniser) {
+		return(List.of(new PassThroughLpseToken(collectionProperties, this.lpseCode, valueTokeniser)));
 	}
 
 	@Override protected void logDetails() {

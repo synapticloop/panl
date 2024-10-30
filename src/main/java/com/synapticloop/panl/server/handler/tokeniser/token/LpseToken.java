@@ -29,6 +29,9 @@ import com.synapticloop.panl.server.handler.properties.CollectionProperties;
 import com.synapticloop.panl.server.handler.tokeniser.LpseTokeniser;
 import com.synapticloop.panl.server.handler.tokeniser.token.facet.*;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import java.util.StringTokenizer;
 
 /**
@@ -102,9 +105,9 @@ public abstract class LpseToken {
 	 * @param valueTokeniser The LPSE URI tokeniser
 	 * @param lpseTokeniser The LPSE code tokeniser
 	 *
-	 * @return The LpseToken for this LPSE code.
+	 * @return The list of LpseTokens for this LPSE code.
 	 */
-	public static LpseToken getLpseToken(
+	public static List<LpseToken> getLpseTokens(
 			CollectionProperties collectionProperties,
 			String lpseCode,
 			String query,
@@ -129,16 +132,16 @@ public abstract class LpseToken {
 			lpseField = collectionProperties.getLpseField(lpseCodeBuilder.toString());
 			if (null == lpseField) {
 				// still null
-				return (new FacetLpseToken(
+				return(List.of(new FacetLpseToken(
 						collectionProperties,
 						lpseCodeBuilder.toString(),
 						lpseTokeniser,
-						valueTokeniser));
+						valueTokeniser)));
 
 			}
 		}
 
-		return (lpseField.instantiateToken(collectionProperties, lpseCode, query, valueTokeniser, lpseTokeniser));
+		return (lpseField.instantiateTokens(collectionProperties, lpseCode, query, valueTokeniser, lpseTokeniser));
 	}
 
 	/**

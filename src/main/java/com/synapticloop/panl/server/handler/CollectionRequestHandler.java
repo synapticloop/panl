@@ -501,17 +501,21 @@ public class CollectionRequestHandler {
 
 			while (lpseTokeniser.hasMoreTokens()) {
 				String token = lpseTokeniser.nextToken();
-				LpseToken lpseToken = LpseToken.getLpseToken(collectionProperties, token, query, valueTokeniser, lpseTokeniser);
-				if (lpseToken instanceof QueryLpseToken) {
-					hasQuery = true;
-				}
 
-				lpseTokens.add(lpseToken);
-				String equivalenceValue = lpseToken.getEquivalenceValue();
-				if (existingTokens.contains(equivalenceValue)) {
-					lpseToken.setIsValid(false);
-				} else {
-					existingTokens.add(equivalenceValue);
+				List<LpseToken> parsedLpseTokens = LpseToken.getLpseTokens(collectionProperties, token, query, valueTokeniser, lpseTokeniser);
+
+				for(LpseToken lpseToken: parsedLpseTokens) {
+					if (lpseToken instanceof QueryLpseToken) {
+						hasQuery = true;
+					}
+
+					lpseTokens.add(lpseToken);
+					String equivalenceValue = lpseToken.getEquivalenceValue();
+					if (existingTokens.contains(equivalenceValue)) {
+						lpseToken.setIsValid(false);
+					} else {
+						existingTokens.add(equivalenceValue);
+					}
 				}
 			}
 		}

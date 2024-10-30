@@ -95,8 +95,8 @@ public class PanlNumRowsField extends BasePrefixSuffixField {
 		// do nothing - this relies on other data and is set by the handler
 	}
 
-	@Override public LpseToken instantiateToken(CollectionProperties collectionProperties, String lpseCode, String query, StringTokenizer valueTokeniser, LpseTokeniser lpseTokeniser) {
-		return(new NumRowsLpseToken(collectionProperties, this.lpseCode, valueTokeniser));
+	@Override public List<LpseToken> instantiateTokens(CollectionProperties collectionProperties, String lpseCode, String query, StringTokenizer valueTokeniser, LpseTokeniser lpseTokeniser) {
+		return(List.of(new NumRowsLpseToken(collectionProperties, this.lpseCode, valueTokeniser)));
 	}
 
 	@Override protected void logDetails() {

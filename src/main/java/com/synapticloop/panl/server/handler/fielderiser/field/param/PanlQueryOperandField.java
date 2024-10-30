@@ -131,8 +131,8 @@ public class PanlQueryOperandField extends BaseField {
 	@Override public void appendToAvailableObjectInternal(JSONObject jsonObject) {
 
 	}
-	@Override public LpseToken instantiateToken(CollectionProperties collectionProperties, String lpseCode, String query, StringTokenizer valueTokeniser, LpseTokeniser lpseTokeniser) {
-		return(new QueryOperandLpseToken(collectionProperties, this.lpseCode, lpseTokeniser));
+	@Override public List<LpseToken> instantiateTokens(CollectionProperties collectionProperties, String lpseCode, String query, StringTokenizer valueTokeniser, LpseTokeniser lpseTokeniser) {
+		return(List.of(new QueryOperandLpseToken(collectionProperties, this.lpseCode, lpseTokeniser)));
 	}
 
 	@Override protected void logDetails() {

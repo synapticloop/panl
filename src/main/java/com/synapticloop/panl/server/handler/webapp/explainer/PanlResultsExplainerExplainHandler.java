@@ -287,8 +287,7 @@ public class PanlResultsExplainerExplainHandler implements HttpRequestHandler {
 
 			while (lpseTokeniser.hasMoreTokens()) {
 				String token = lpseTokeniser.nextToken();
-				LpseToken lpseToken = LpseToken.getLpseToken(collectionProperties, token, query, valueTokeniser, lpseTokeniser);
-				lpseTokens.add(lpseToken);
+				lpseTokens.addAll(LpseToken.getLpseTokens(collectionProperties, token, query, valueTokeniser, lpseTokeniser));
 			}
 		}
 

@@ -235,8 +235,8 @@ public class PanlPageNumField extends BasePrefixSuffixField {
 	 *
 	 * @see PageNumLpseToken
 	 */
-	@Override public LpseToken instantiateToken(CollectionProperties collectionProperties, String lpseCode, String query, StringTokenizer valueTokeniser, LpseTokeniser lpseTokeniser) {
-		return(new PageNumLpseToken(collectionProperties, this.lpseCode, valueTokeniser));
+	@Override public List<LpseToken> instantiateTokens(CollectionProperties collectionProperties, String lpseCode, String query, StringTokenizer valueTokeniser, LpseTokeniser lpseTokeniser) {
+		return(List.of(new PageNumLpseToken(collectionProperties, this.lpseCode, valueTokeniser)));
 	}
 
 	/**
