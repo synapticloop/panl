@@ -392,7 +392,7 @@ function addAvailableFilters(availableObject, activeObject) {
 	console.log(availableObject);
 
 	// first up the facets
-for(const facet of availableObject.facets) {
+	for(const facet of availableObject.facets) {
 		generateFacet(facet);
 	}
 

@@ -221,9 +221,7 @@ public class PanlRangeFacetField extends PanlFacetField {
 
 	@Override public String getLpseCode(LpseToken token, CollectionProperties collectionProperties) {
 		RangeFacetLpseToken rangeFacetLpseToken = (RangeFacetLpseToken) token;
-		return (rangeFacetLpseToken.getLpseCode() +
-				(this.hasRangeInfix ? "-" : "+") +
-				this.lpseCode);
+		return (rangeFacetLpseToken.getLpseCode() + (this.hasRangeInfix ? "-" : "+"));
 	}
 
 	@Override public void appendToAvailableObjectInternal(JSONObject jsonObject) {
@@ -423,7 +421,6 @@ public class PanlRangeFacetField extends PanlFacetField {
 
 				additionObject.put(JSON_KEY_BEFORE, lpseUri.toString());
 				lpseUri.setLength(0);
-				lpseCodeUri.append(baseField.getLpseCode());
 
 				if (hasRangeInfix) {
 					lpseUri.append(URLEncoder.encode(getRangeSuffix(), StandardCharsets.UTF_8));
