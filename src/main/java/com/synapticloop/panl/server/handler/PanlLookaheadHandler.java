@@ -58,32 +58,26 @@ import static com.synapticloop.panl.server.handler.webapp.util.ResourceHelper.*;
  *
  * @author Synapticloop
  */
-public class PanlMoreFacetsHandler implements HttpRequestHandler {
-	private static final Logger LOGGER = LoggerFactory.getLogger(PanlMoreFacetsHandler.class);
+public class PanlLookaheadHandler implements HttpRequestHandler {
+	private static final Logger LOGGER = LoggerFactory.getLogger(PanlLookaheadHandler.class);
 
-	public static final String PANL_URL_BINDING_MORE_FACETS = "/panl-more-facets/";
-
-	public static final String QUERY_PARAM_CODE = "code";
-	public static final String QUERY_PARAM_LIMIT = "limit";
-
-	public static final String CONTEXT_KEY_LPSE_CODE = "lpse_code";
-	public static final String CONTEXT_KEY_FACET_LIMIT = "facet_limit";
+	public static final String PANL_URL_BINDING_LOOKAHEAD = "/panl-lookahead/";
 
 	private final PanlProperties panlProperties;
 	private final Map<String, CollectionRequestHandler> validCollections = new HashMap<>();
 	private final JSONArray validUrls = new JSONArray();
 
 	/**
-	 * <p>Instantiate the Panl more facets handler.</p>
+	 * <p>Instantiate the Panl lookahead handler.</p>
 	 *
 	 * @param panlProperties The panl properties
 	 * @param collectionRequestHandlers The collection request handler
 	 */
-	public PanlMoreFacetsHandler(PanlProperties panlProperties, List<CollectionRequestHandler> collectionRequestHandlers) {
+	public PanlLookaheadHandler(PanlProperties panlProperties, List<CollectionRequestHandler> collectionRequestHandlers) {
 		this.panlProperties = panlProperties;
 		for (CollectionRequestHandler collectionRequestHandler : collectionRequestHandlers) {
 			validCollections.put(collectionRequestHandler.getPanlCollectionUri(), collectionRequestHandler);
-			validUrls.put(PANL_URL_BINDING_MORE_FACETS + collectionRequestHandler.getPanlCollectionUri() + "/");
+			validUrls.put(PANL_URL_BINDING_LOOKAHEAD + collectionRequestHandler.getPanlCollectionUri() + "/");
 		}
 	}
 
@@ -107,14 +101,14 @@ public class PanlMoreFacetsHandler implements HttpRequestHandler {
 		try {
 			final List<NameValuePair> pairs = new URIBuilder(request.getRequestLine().getUri()).getQueryParams();
 			for (NameValuePair pair : pairs) {
-				if (pair.getName().equals(QUERY_PARAM_CODE)) {
+				if (pair.getName().equals("q")) {
 					lpseCode = pair.getValue();
-				} else if (pair.getName().equals(QUERY_PARAM_LIMIT)) {
-					try {
-						facetLimit = Integer.parseInt(pair.getValue());
-					} catch (NumberFormatException ignored) {
-						// do nothing
-					}
+//				} else if (pair.getName().equals(QUERY_PARAM_LIMIT)) {
+//					try {
+//						facetLimit = Integer.parseInt(pair.getValue());
+//					} catch (NumberFormatException ignored) {
+//						// do nothing
+//					}
 				}
 			}
 
@@ -153,8 +147,8 @@ public class PanlMoreFacetsHandler implements HttpRequestHandler {
 
 			try {
 				CollectionRequestHandler collectionRequestHandler = validCollections.get(paths[2]);
-				context.setAttribute(CONTEXT_KEY_LPSE_CODE, lpseCode);
-				context.setAttribute(CONTEXT_KEY_FACET_LIMIT, facetLimit);
+//				context.setAttribute(CONTEXT_KEY_LPSE_CODE, lpseCode);
+//				context.setAttribute(CONTEXT_KEY_FACET_LIMIT, facetLimit);
 				JSONObject jsonObject = new JSONObject(
 					collectionRequestHandler.handleRequest(
 						stringBuilder.toString(),
