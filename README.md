@@ -409,7 +409,7 @@ with the release files named `solr-panl-9-x.x.x` where `x.x.x` is the version nu
 ## 1.3.0 - Fluffy stuff (codename `billowing-feather`) **UNDER DEVELOPMENT**
 
 - New Features
-  - Added in lookahead query handler for Solr 
+  - Added in lookahead query handler for Solr panl including panl results viewer lookahead 
 
 
 

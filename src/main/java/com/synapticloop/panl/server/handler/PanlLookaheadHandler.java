@@ -161,7 +161,7 @@ public class PanlLookaheadHandler implements HttpRequestHandler {
 			long parseRequestNanos) {
 
 		CollectionProperties collectionProperties = collectionRequestHandler.getCollectionProperties();
-		int numRows = collectionProperties.getNumResultsPerPage();
+		int numRows = collectionProperties.getNumResultsLookahead();
 
 		PanlClient panlClient = collectionRequestHandler.getPanlClient();
 		try (SolrClient solrClient = panlClient.getClient()) {

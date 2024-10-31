@@ -80,6 +80,7 @@ public class CollectionProperties {
 	public static final String PROPERTY_KEY_SOLR_FACET_LIMIT = "solr.facet.limit";
 	public static final String PROPERTY_KEY_SOLR_FACET_MIN_COUNT = "solr.facet.min.count";
 	public static final String PROPERTY_KEY_SOLR_NUMROWS_DEFAULT = "solr.numrows.default";
+	public static final String PROPERTY_KEY_SOLR_NUMROWS_LOOKAHEAD = "solr.numrows.lookahead";
 
 	public static final String FIELDSETS_DEFAULT = "default";
 	public static final String FIELDSETS_EMPTY = "empty";
@@ -113,6 +114,11 @@ public class CollectionProperties {
 	 * <p>The number of results returned per search/page</p>
 	 */
 	private int numResultsPerPage;
+
+	/**
+	 * <p>The number of results returned per search/page</p>
+	 */
+	private int numResultsLookahead;
 
 	/**
 	 * <p>The number of characters that make up the LPSE code </p>
@@ -321,6 +327,7 @@ public class CollectionProperties {
 		this.facetMinCount = PropertyHelper.getIntProperty(properties, PROPERTY_KEY_SOLR_FACET_MIN_COUNT, 1);
 		this.highlight = properties.getProperty(PROPERTY_KEY_SOLR_HIGHLIGHT, "false").equals("true");
 		this.numResultsPerPage = PropertyHelper.getIntProperty(properties, PROPERTY_KEY_SOLR_NUMROWS_DEFAULT, 10);
+		this.numResultsLookahead = PropertyHelper.getIntProperty(properties, PROPERTY_KEY_SOLR_NUMROWS_LOOKAHEAD, 5);
 		this.solrFacetLimit = PropertyHelper.getIntProperty(properties, PROPERTY_KEY_SOLR_FACET_LIMIT, 100);
 
 
@@ -715,6 +722,10 @@ public class CollectionProperties {
 
 	public int getNumResultsPerPage() {
 		return numResultsPerPage;
+	}
+
+	public int getNumResultsLookahead() {
+		return numResultsLookahead;
 	}
 
 	/**
