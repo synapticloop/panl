@@ -25,6 +25,7 @@ package com.synapticloop.panl.server.handler;
  */
 
 import com.synapticloop.panl.exception.PanlNotFoundException;
+import com.synapticloop.panl.server.client.PanlClient;
 import com.synapticloop.panl.server.handler.properties.CollectionProperties;
 import com.synapticloop.panl.server.handler.properties.PanlProperties;
 import com.synapticloop.panl.server.handler.webapp.util.ResourceHelper;
@@ -36,16 +37,22 @@ import org.apache.http.client.utils.URIBuilder;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.protocol.HttpContext;
 import org.apache.http.protocol.HttpRequestHandler;
+import org.apache.solr.client.solrj.SolrClient;
+import org.apache.solr.client.solrj.SolrQuery;
+import org.apache.solr.client.solrj.response.QueryResponse;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.net.URISyntaxException;
+import java.net.URLDecoder;
+import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static com.synapticloop.panl.server.handler.CollectionRequestHandler.JSON_KEY_QUERY_RESPOND_TO;
 import static com.synapticloop.panl.server.handler.webapp.util.ResourceHelper.*;
 
 /**
@@ -64,7 +71,9 @@ public class PanlLookaheadHandler implements HttpRequestHandler {
 	public static final String PANL_URL_BINDING_LOOKAHEAD = "/panl-lookahead/";
 
 	private final PanlProperties panlProperties;
-	private final Map<String, CollectionRequestHandler> validCollections = new HashMap<>();
+	private final Map<String, CollectionRequestHandler> validCollectionsMap = new HashMap<>();
+
+	private final Map<String, String> queryRespondToMap = new HashMap<>();
 	private final JSONArray validUrls = new JSONArray();
 
 	/**
@@ -75,8 +84,10 @@ public class PanlLookaheadHandler implements HttpRequestHandler {
 	 */
 	public PanlLookaheadHandler(PanlProperties panlProperties, List<CollectionRequestHandler> collectionRequestHandlers) {
 		this.panlProperties = panlProperties;
+
 		for (CollectionRequestHandler collectionRequestHandler : collectionRequestHandlers) {
-			validCollections.put(collectionRequestHandler.getPanlCollectionUri(), collectionRequestHandler);
+			queryRespondToMap.put(collectionRequestHandler.getPanlCollectionUri(), collectionRequestHandler.getFormQueryRespondTo());
+			validCollectionsMap.put(collectionRequestHandler.getPanlCollectionUri(), collectionRequestHandler);
 			validUrls.put(PANL_URL_BINDING_LOOKAHEAD + collectionRequestHandler.getPanlCollectionUri() + "/");
 		}
 	}
@@ -91,119 +102,89 @@ public class PanlLookaheadHandler implements HttpRequestHandler {
 	@Override
 	public void handle(HttpRequest request, HttpResponse response, HttpContext context) {
 
-		// the first thing that we are going to do is to ensure that we have a
-		// valid uri with the correct parameters
-		String uri = request.getRequestLine().getUri() + "?";
+		String uri = request.getRequestLine().getUri();
+		// do we have a query string?
+		int indexOfQuestionMark = uri.indexOf('?');
+		if(indexOfQuestionMark == -1) {
+			set404ResponseMessage(response);
+			return;
+		}
 
+		// if we do - get the query string and reset the uri
+
+		String queryPath = uri.substring(indexOfQuestionMark + 1);
+		uri = uri.substring(0, indexOfQuestionMark);
+
+		// now check the CaFUP
+		String[] paths = uri.split("/");
+		CollectionRequestHandler collectionRequestHandler = validCollectionsMap.get(paths[2]);
+		if(paths.length < 4 || null == collectionRequestHandler) {
+			set404ResponseMessage(response);
+			return;
+		}
+
+		String collection = paths[2];
+		String fieldSet = paths[3];
+
+		// at this point we need to check the query param that it matches the collection
+		String queryRepondTo = queryRespondToMap.get(collection);
+		String query = null;
 		boolean isGoodRequest = false;
-		String lpseCode = null;
-		Integer facetLimit = null;
 		try {
 			final List<NameValuePair> pairs = new URIBuilder(request.getRequestLine().getUri()).getQueryParams();
 			for (NameValuePair pair : pairs) {
-				if (pair.getName().equals("q")) {
-					lpseCode = pair.getValue();
-//				} else if (pair.getName().equals(QUERY_PARAM_LIMIT)) {
-//					try {
-//						facetLimit = Integer.parseInt(pair.getValue());
-//					} catch (NumberFormatException ignored) {
-//						// do nothing
-//					}
+				if(pair.getName().equals(queryRepondTo)) {
+					isGoodRequest = true;
+					query = URLDecoder.decode(pair.getValue(), StandardCharsets.UTF_8);
+					break;
 				}
-			}
-
-			if (null != lpseCode && facetLimit != null) {
-				isGoodRequest = true;
 			}
 		} catch (URISyntaxException e) {
 			set500ResponseMessage(response, e);
 			return;
 		}
 
-		uri = uri.substring(0, uri.indexOf('?'));
-
-		String[] paths = uri.split("/");
-		if (isGoodRequest && (paths.length > 3 && validCollections.containsKey(paths[2]))) {
-			StringBuilder stringBuilder = new StringBuilder("/");
-
-			// rebuild the
-			int i = 0;
-			for (String path : paths) {
-				switch (i) {
-					case 0:
-					case 1:
-						i++;
-						continue;
-					case 3:
-						stringBuilder.append(CollectionProperties.FIELDSETS_EMPTY);
-						break;
-					default:
-						stringBuilder.append(path);
-				}
-				i++;
-				stringBuilder.append("/");
-			}
-
-
-			try {
-				CollectionRequestHandler collectionRequestHandler = validCollections.get(paths[2]);
-//				context.setAttribute(CONTEXT_KEY_LPSE_CODE, lpseCode);
-//				context.setAttribute(CONTEXT_KEY_FACET_LIMIT, facetLimit);
-				JSONObject jsonObject = new JSONObject(
-					collectionRequestHandler.handleRequest(
-						stringBuilder.toString(),
-						"",
-						context));
-
-				// now that we have the JSON object - time to remove the things we don't need
-				jsonObject.remove("responseHeader");
-				jsonObject.remove("response");
-				jsonObject.remove("facet_counts");
-
-				JSONObject panlJsonObject = jsonObject.getJSONObject("panl");
-
-				panlJsonObject.remove("pagination");
-				panlJsonObject.remove("active");
-				panlJsonObject.remove("query_operand");
-				panlJsonObject.remove("timings");
-				panlJsonObject.remove("canonical_uri");
-
-				// now go through and get the facet that we want
-
-				// now go through the available facets and place them in the correct place
-				JSONObject availableJsonObject = panlJsonObject.getJSONObject("available");
-
-				// regular facets
-				for (Object regularFacets : availableJsonObject.getJSONArray("facets")) {
-					JSONObject regularFacetObject = (JSONObject) regularFacets;
-					String panlCode = regularFacetObject.getString("panl_code");
-					if (panlCode.equals(lpseCode)) {
-						regularFacetObject.put("facet_limit", facetLimit);
-						panlJsonObject.put("facet", regularFacetObject);
-						break;
-					}
-				}
-
-				// lastly remove the facets
-				panlJsonObject.remove("query_respond_to");
-				panlJsonObject.remove("sorting");
-				panlJsonObject.remove("available");
-				panlJsonObject.remove("fields");
-
-				response.setStatusCode(HttpStatus.SC_OK);
-				response.setEntity(
-					new StringEntity(
-						jsonObject.toString(),
-						ResourceHelper.CONTENT_TYPE_JSON)
-				);
-			} catch (PanlNotFoundException e) {
-				set404ResponseMessage(response);
-			} catch (Exception e) {
-				set500ResponseMessage(response, e);
-			}
-		} else {
+		if(!isGoodRequest) {
 			set404ResponseMessage(response);
+			return;
 		}
+
+		// now we need to do the request - but with no facets
+		doRequest(collectionRequestHandler, response, query, fieldSet);
+	}
+
+	private void doRequest(
+			CollectionRequestHandler collectionRequestHandler,
+			HttpResponse response,
+			String query,
+			String fieldSet) {
+
+		long startNanos = System.nanoTime();
+		CollectionProperties collectionProperties = collectionRequestHandler.getCollectionProperties();
+		int numRows = collectionProperties.getNumResultsPerPage();
+		int pageNum = 0;
+
+		PanlClient panlClient = collectionRequestHandler.getPanlClient();
+		try (SolrClient solrClient = panlClient.getClient()) {
+			SolrQuery solrQuery = panlClient.getQuery(query);
+			List<String> resultFieldsForName = collectionProperties.getResultFieldsForName(fieldSet);
+			if(null != resultFieldsForName) {
+				for (String fieldName : resultFieldsForName) {
+					solrQuery.addField(fieldName);
+				}
+			}
+			solrQuery.setRows(numRows);
+			solrQuery.setStart(0);
+			final QueryResponse solrQueryResponse = solrClient.query(collectionRequestHandler.getSolrCollection(), solrQuery);
+			JSONObject solrJsonObject = new JSONObject(solrQueryResponse.jsonStr());
+			response.setEntity(new StringEntity(solrJsonObject.toString(), ResourceHelper.CONTENT_TYPE_JSON));
+
+			response.setStatusCode(HttpStatus.SC_OK);
+		} catch(Exception e) {
+			set500ResponseMessage(response, e);
+			return;
+		}
+
 	}
 
 	private void set500ResponseMessage(HttpResponse response, Exception e) {

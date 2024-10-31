@@ -47,7 +47,7 @@ public abstract class PanlClient {
 	protected final String solrCollection;
 	protected final PanlProperties panlProperties;
 	protected final CollectionProperties collectionProperties;
-	protected String queryParameter = "q";
+	protected final String queryParameter;
 
 	/**
 	 * <p>Instantiate a new Panl Client which will return the </p>

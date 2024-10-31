@@ -408,8 +408,18 @@ with the release files named `solr-panl-9-x.x.x` where `x.x.x` is the version nu
 
 ## 1.3.0 - Fluffy stuff (codename `billowing-feather`) **UNDER DEVELOPMENT**
 
+- New Features
+  - Added in lookahead query handler for Solr 
+
+
+
+- Bug fixes
+  - Bug where Panl client will always look for the '`q`' parameter for the query, changed to ensure that the correct configured `panl.form.query.respondto` is used instead
+
+
+
 - Code Changes
-  - **[BREAKING CHANGE]** Changed range facets LPSE codes from `w-w` to `w-` (i.e. removed the additional LPSE code)
+  - **[BREAKING CHANGE]** Changed range facets LPSE codes from `w-w` to `w-` and `w+w` to `w+` (i.e. removed the additional LPSE code)
 
 
 ## 1.2.0 - more like this (codename `needy-phanton`) 

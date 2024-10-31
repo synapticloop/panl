@@ -46,6 +46,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static com.synapticloop.panl.server.handler.CollectionRequestHandler.*;
 import static com.synapticloop.panl.server.handler.webapp.util.ResourceHelper.*;
 
 /**
@@ -166,18 +167,18 @@ public class PanlMoreFacetsHandler implements HttpRequestHandler {
 				jsonObject.remove("response");
 				jsonObject.remove("facet_counts");
 
-				JSONObject panlJsonObject = jsonObject.getJSONObject("panl");
+				JSONObject panlJsonObject = jsonObject.getJSONObject(JSON_KEY_PANL);
 
-				panlJsonObject.remove("pagination");
-				panlJsonObject.remove("active");
-				panlJsonObject.remove("query_operand");
-				panlJsonObject.remove("timings");
-				panlJsonObject.remove("canonical_uri");
+				panlJsonObject.remove(JSON_KEY_PAGINATION);
+				panlJsonObject.remove(JSON_KEY_ACTIVE);
+				panlJsonObject.remove(JSON_KEY_QUERY_OPERAND);
+				panlJsonObject.remove(JSON_KEY_TIMINGS);
+				panlJsonObject.remove(JSON_KEY_CANONICAL_URI);
 
 				// now go through and get the facet that we want
 
 				// now go through the available facets and place them in the correct place
-				JSONObject availableJsonObject = panlJsonObject.getJSONObject("available");
+				JSONObject availableJsonObject = panlJsonObject.getJSONObject(JSON_KEY_AVAILABLE);
 
 				// regular facets
 				for (Object regularFacets : availableJsonObject.getJSONArray("facets")) {
@@ -191,10 +192,10 @@ public class PanlMoreFacetsHandler implements HttpRequestHandler {
 				}
 
 				// lastly remove the facets
-				panlJsonObject.remove("query_respond_to");
-				panlJsonObject.remove("sorting");
-				panlJsonObject.remove("available");
-				panlJsonObject.remove("fields");
+				panlJsonObject.remove(JSON_KEY_QUERY_RESPOND_TO);
+				panlJsonObject.remove(JSON_KEY_SORTING);
+				panlJsonObject.remove(JSON_KEY_AVAILABLE);
+				panlJsonObject.remove(JSON_KEY_FIELDS);
 
 				response.setStatusCode(HttpStatus.SC_OK);
 				response.setEntity(

@@ -274,7 +274,11 @@ public class PanlServer {
 				LOGGER.info("Results will be available on /{}/{}/*", panlCollectionUri, resultFieldsName);
 			}
 
-			LOGGER.info("Binding Solr collection of '{}' to Panl Single Page configuration URI path " + PanlSinglePageHandler.PANL_URL_BINDING_SINGLE_PAGE + "{}/", solrCollection, panlCollectionUri);
+			LOGGER.info(
+				"Binding Solr collection of '{}' to Panl Single Page configuration URI path {}{}/*",
+				solrCollection,
+				PanlSinglePageHandler.PANL_URL_BINDING_SINGLE_PAGE,
+				panlCollectionUri);
 		}
 
 		// create the server

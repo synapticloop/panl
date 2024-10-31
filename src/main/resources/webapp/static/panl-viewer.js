@@ -26,6 +26,24 @@ $(document).ready(function() {
 			$("#searchbutton").removeAttr("disabled");
 			$("#collection").append("/" + collection + "/" + fieldset);
 			panlSearch();
+
+			// finally get the lookahead functionality for the search box
+			$("#searchfield").autocomplete({
+				source: function(request, response) {
+				$.ajax({
+						url: "/panl-lookahead/" + collection + "/" + fieldset,
+						dataType: "jsonp",
+						data: {
+							q: request.term
+						},
+						success: function(data) {
+							console.log("yup");
+							response(data);
+						}
+					});
+				},
+				minLength: 3
+			});
 		}
 	}
 });
