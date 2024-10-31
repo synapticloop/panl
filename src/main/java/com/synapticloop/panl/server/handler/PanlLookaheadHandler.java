@@ -24,7 +24,6 @@ package com.synapticloop.panl.server.handler;
  * IN THE SOFTWARE.
  */
 
-import com.synapticloop.panl.exception.PanlNotFoundException;
 import com.synapticloop.panl.server.client.PanlClient;
 import com.synapticloop.panl.server.handler.properties.CollectionProperties;
 import com.synapticloop.panl.server.handler.properties.PanlProperties;
@@ -51,8 +50,9 @@ import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
-import static com.synapticloop.panl.server.handler.CollectionRequestHandler.JSON_KEY_QUERY_RESPOND_TO;
+import static com.synapticloop.panl.server.handler.CollectionRequestHandler.*;
 import static com.synapticloop.panl.server.handler.webapp.util.ResourceHelper.*;
 
 /**
@@ -101,6 +101,7 @@ public class PanlLookaheadHandler implements HttpRequestHandler {
 	 */
 	@Override
 	public void handle(HttpRequest request, HttpResponse response, HttpContext context) {
+		long startNanos = System.nanoTime();
 
 		String uri = request.getRequestLine().getUri();
 		// do we have a query string?
@@ -111,8 +112,6 @@ public class PanlLookaheadHandler implements HttpRequestHandler {
 		}
 
 		// if we do - get the query string and reset the uri
-
-		String queryPath = uri.substring(indexOfQuestionMark + 1);
 		uri = uri.substring(0, indexOfQuestionMark);
 
 		// now check the CaFUP
@@ -135,7 +134,7 @@ public class PanlLookaheadHandler implements HttpRequestHandler {
 			for (NameValuePair pair : pairs) {
 				if(pair.getName().equals(queryRepondTo)) {
 					isGoodRequest = true;
-					query = URLDecoder.decode(pair.getValue(), StandardCharsets.UTF_8);
+					query = queryRepondTo + "=" + URLDecoder.decode(pair.getValue(), StandardCharsets.UTF_8);
 					break;
 				}
 			}
@@ -150,24 +149,23 @@ public class PanlLookaheadHandler implements HttpRequestHandler {
 		}
 
 		// now we need to do the request - but with no facets
-		doRequest(collectionRequestHandler, response, query, fieldSet);
+		doRequest(collectionRequestHandler, response, query, fieldSet, startNanos, (System.nanoTime() - startNanos));
 	}
 
 	private void doRequest(
 			CollectionRequestHandler collectionRequestHandler,
 			HttpResponse response,
 			String query,
-			String fieldSet) {
+			String fieldSet,
+			long startNanos,
+			long parseRequestNanos) {
 
-		long startNanos = System.nanoTime();
 		CollectionProperties collectionProperties = collectionRequestHandler.getCollectionProperties();
 		int numRows = collectionProperties.getNumResultsPerPage();
-		int pageNum = 0;
 
 		PanlClient panlClient = collectionRequestHandler.getPanlClient();
 		try (SolrClient solrClient = panlClient.getClient()) {
 			SolrQuery solrQuery = panlClient.getQuery(query);
-			solrQuery.setQuery("\"" + query + "\"");
 			List<String> resultFieldsForName = collectionProperties.getResultFieldsForName(fieldSet);
 			if(null != resultFieldsForName) {
 				for (String fieldName : resultFieldsForName) {
@@ -176,9 +174,35 @@ public class PanlLookaheadHandler implements HttpRequestHandler {
 			}
 			solrQuery.setRows(numRows);
 			solrQuery.setStart(0);
+
 			LOGGER.debug(solrQuery.toString());
+
+			long buildRequestNanos = System.nanoTime() - startNanos - parseRequestNanos;
 			final QueryResponse solrQueryResponse = solrClient.query(collectionRequestHandler.getSolrCollection(), solrQuery);
 			JSONObject solrJsonObject = new JSONObject(solrQueryResponse.jsonStr());
+			JSONObject panlObject = new JSONObject();
+			JSONObject timingsObject = new JSONObject();
+
+			long sendAndReceiveNanos = System.nanoTime() - startNanos - parseRequestNanos - buildRequestNanos;
+
+			long buildResponseTime = System.nanoTime() - startNanos;
+
+			// add in some statistics
+			timingsObject.put(JSON_KEY_PANL_PARSE_REQUEST_TIME, TimeUnit.NANOSECONDS.toMillis(parseRequestNanos));
+			timingsObject.put(JSON_KEY_PANL_BUILD_REQUEST_TIME, TimeUnit.NANOSECONDS.toMillis(buildRequestNanos));
+			timingsObject.put(JSON_KEY_PANL_SEND_REQUEST_TIME, TimeUnit.NANOSECONDS.toMillis(sendAndReceiveNanos));
+
+			timingsObject.put(JSON_KEY_PANL_BUILD_RESPONSE_TIME, TimeUnit.NANOSECONDS.toMillis(buildResponseTime));
+			timingsObject.put(JSON_KEY_PANL_TOTAL_TIME, TimeUnit.NANOSECONDS.toMillis(
+				parseRequestNanos +
+					buildRequestNanos +
+					sendAndReceiveNanos +
+					buildResponseTime
+			));
+
+			panlObject.put(JSON_KEY_TIMINGS, timingsObject);
+			solrJsonObject.put(JSON_KEY_PANL, panlObject);
+
 			response.setEntity(new StringEntity(solrJsonObject.toString(), ResourceHelper.CONTENT_TYPE_JSON));
 
 			response.setStatusCode(HttpStatus.SC_OK);
