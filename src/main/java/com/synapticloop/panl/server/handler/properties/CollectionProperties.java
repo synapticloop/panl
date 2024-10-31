@@ -160,7 +160,7 @@ public class CollectionProperties {
 	private final Set<String> PANL_CODE_RANGE_FIELDS = new HashSet<>();
 
 
-	private final String validUrlsJSONArrayString;
+	private final JSONArray validUrls;
 
 	private String panlParamQuery;
 	private String panlParamSort;
@@ -248,9 +248,7 @@ public class CollectionProperties {
 			jsonArray.put("/" + solrCollection + "/" + resultFieldsName + "/");
 		}
 
-		JSONObject temp = new JSONObject();
-		temp.put(JSON_KEY_VALID_URLS, jsonArray);
-		this.validUrlsJSONArrayString = temp.toString();
+		this.validUrls = jsonArray;
 
 		// now for the solr field to panl name lookup
 		for (PanlFacetField facetField : FACET_FIELDS) {
@@ -664,12 +662,12 @@ public class CollectionProperties {
 	}
 
 	/**
-	 * <p>Return the valid URLs JSON array as a string.</p>
+	 * <p>Get the valid URLs as a JSON array.</p>
 	 *
-	 * @return The valid URls JSON array as a string
+	 * @return The valid URLs as a JSON array
 	 */
-	public String getValidUrlsJSONArrayString() {
-		return (this.validUrlsJSONArrayString);
+	public JSONArray getValidUrls() {
+		return(validUrls);
 	}
 
 	/**

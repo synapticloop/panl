@@ -33,6 +33,7 @@ import org.apache.http.HttpStatus;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.protocol.HttpContext;
 import org.apache.http.protocol.HttpRequestHandler;
+import org.json.JSONArray;
 import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -45,10 +46,9 @@ import static com.synapticloop.panl.server.handler.webapp.util.ResourceHelper.*;
  *
  * @author synapticloop
  */
-public class PanlRequestHandler implements HttpRequestHandler {
+public class PanlRequestHandler extends BaseResponseHandler implements HttpRequestHandler {
 	private final static Logger LOGGER = LoggerFactory.getLogger(PanlRequestHandler.class);
 
-	private final PanlProperties panlProperties;
 	private final CollectionRequestHandler collectionRequestHandler;
 
 	/**
@@ -60,8 +60,8 @@ public class PanlRequestHandler implements HttpRequestHandler {
 	 *                                 handle this request
 	 */
 	public PanlRequestHandler(PanlProperties panlProperties, CollectionRequestHandler collectionRequestHandler) {
-		super();
-		this.panlProperties = panlProperties;
+		super(panlProperties);
+		this.validUrls = collectionRequestHandler.getValidUrls();
 		this.collectionRequestHandler = collectionRequestHandler;
 	}
 
@@ -118,46 +118,50 @@ public class PanlRequestHandler implements HttpRequestHandler {
 		}
 	}
 
-	private void set500ResponseMessage(HttpResponse response, Exception e) {
-		LOGGER.error("Internal server error, message was '{}'", e.getMessage(), e);
-
-		response.setStatusCode(HttpStatus.SC_INTERNAL_SERVER_ERROR);
-
-		JSONObject jsonObject = new JSONObject();
-		jsonObject.put(JSON_KEY_ERROR, true);
-		jsonObject.put(JSON_KEY_STATUS, HttpStatus.SC_INTERNAL_SERVER_ERROR);
-		if (panlProperties.getUseVerbose500Messages()) {
-			jsonObject.put(JSON_KEY_MESSAGE,
-				String.format("Class: %s, message: %s.",
-					e.getClass().getCanonicalName(),
-					e.getMessage()));
-
-			response.setEntity(
-				new StringEntity(
-					jsonObject.toString(),
-					ResourceHelper.CONTENT_TYPE_JSON));
-		} else {
-			jsonObject.put(JSON_KEY_MESSAGE, JSON_VALUE_MESSAGE_500);
-		}
+	@Override protected Logger getLogger() {
+		return(LOGGER);
 	}
 
-
-	private void set404ResponseMessage(HttpResponse response) {
-		response.setStatusCode(HttpStatus.SC_NOT_FOUND);
-
-		JSONObject jsonObject = new JSONObject(collectionRequestHandler.getValidUrlsJSONArrayString());
-		jsonObject.put(JSON_KEY_ERROR, true);
-		jsonObject.put(JSON_KEY_STATUS, HttpStatus.SC_NOT_FOUND);
-		if (panlProperties.getUseVerbose404Messages()) {
-			jsonObject.put(JSON_KEY_MESSAGE, PanlDefaultHandler.JSON_VALUE_MESSAGE);
-		} else {
-			jsonObject.put(JSON_KEY_MESSAGE, JSON_VALUE_MESSAGE_404);
-			jsonObject.remove(JSON_KEY_VALID_URLS);
-		}
-
-		response.setEntity(
-			new StringEntity(
-				jsonObject.toString(),
-				ResourceHelper.CONTENT_TYPE_JSON));
-	}
+	//	private void set500ResponseMessage(HttpResponse response, Exception e) {
+//		LOGGER.error("Internal server error, message was '{}'", e.getMessage(), e);
+//
+//		response.setStatusCode(HttpStatus.SC_INTERNAL_SERVER_ERROR);
+//
+//		JSONObject jsonObject = new JSONObject();
+//		jsonObject.put(JSON_KEY_ERROR, true);
+//		jsonObject.put(JSON_KEY_STATUS, HttpStatus.SC_INTERNAL_SERVER_ERROR);
+//		if (panlProperties.getUseVerbose500Messages()) {
+//			jsonObject.put(JSON_KEY_MESSAGE,
+//				String.format("Class: %s, message: %s.",
+//					e.getClass().getCanonicalName(),
+//					e.getMessage()));
+//
+//			response.setEntity(
+//				new StringEntity(
+//					jsonObject.toString(),
+//					ResourceHelper.CONTENT_TYPE_JSON));
+//		} else {
+//			jsonObject.put(JSON_KEY_MESSAGE, JSON_VALUE_MESSAGE_500);
+//		}
+//	}
+//
+//
+//	private void set404ResponseMessage(HttpResponse response) {
+//		response.setStatusCode(HttpStatus.SC_NOT_FOUND);
+//
+//		JSONObject jsonObject = new JSONObject(collectionRequestHandler.getValidUrlsJSONArrayString());
+//		jsonObject.put(JSON_KEY_ERROR, true);
+//		jsonObject.put(JSON_KEY_STATUS, HttpStatus.SC_NOT_FOUND);
+//		if (panlProperties.getUseVerbose404Messages()) {
+//			jsonObject.put(JSON_KEY_MESSAGE, PanlDefaultHandler.JSON_VALUE_MESSAGE);
+//		} else {
+//			jsonObject.put(JSON_KEY_MESSAGE, JSON_VALUE_MESSAGE_404);
+//			jsonObject.remove(JSON_KEY_VALID_URLS);
+//		}
+//
+//		response.setEntity(
+//			new StringEntity(
+//				jsonObject.toString(),
+//				ResourceHelper.CONTENT_TYPE_JSON));
+//	}
 }

@@ -533,12 +533,12 @@ public class CollectionRequestHandler {
 	}
 
 	/**
-	 * <p>Get the valid URLs as a JSON array string.</p>
+	 * <p>Get the valid URLs as a JSON array.</p>
 	 *
-	 * @return The valid URLs as a JSON array string
+	 * @return The valid URLs as a JSON array
 	 */
-	public String getValidUrlsJSONArrayString() {
-		return (collectionProperties.getValidUrlsJSONArrayString());
+	public JSONArray getValidUrls() {
+		return(collectionProperties.getValidUrls());
 	}
 
 	/**

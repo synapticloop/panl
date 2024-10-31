@@ -56,25 +56,21 @@ import static com.synapticloop.panl.server.handler.CollectionRequestHandler.*;
 import static com.synapticloop.panl.server.handler.webapp.util.ResourceHelper.*;
 
 /**
- * <p>This is the handler which will return more facets for a specific facet
- * to then be populated.</p>
+ * <p>This is the handler which will return the lookahead documents for a the
+ * specific search query.</p>
  *
- * <p>In effect, this will do a complete Solr query, setting the facet and
- * limit for the request, discarding any of the un-wanted response objects, and
- * just returning the requested facets.</p>
+ * <p>In effect, this will do a Solr query, without requesting any facets.</p>
  *
  * @author Synapticloop
  */
-public class PanlLookaheadHandler implements HttpRequestHandler {
+public class PanlLookaheadHandler extends BaseResponseHandler implements HttpRequestHandler {
 	private static final Logger LOGGER = LoggerFactory.getLogger(PanlLookaheadHandler.class);
 
 	public static final String PANL_URL_BINDING_LOOKAHEAD = "/panl-lookahead/";
 
-	private final PanlProperties panlProperties;
 	private final Map<String, CollectionRequestHandler> validCollectionsMap = new HashMap<>();
 
 	private final Map<String, String> queryRespondToMap = new HashMap<>();
-	private final JSONArray validUrls = new JSONArray();
 
 	/**
 	 * <p>Instantiate the Panl lookahead handler.</p>
@@ -83,7 +79,7 @@ public class PanlLookaheadHandler implements HttpRequestHandler {
 	 * @param collectionRequestHandlers The collection request handler
 	 */
 	public PanlLookaheadHandler(PanlProperties panlProperties, List<CollectionRequestHandler> collectionRequestHandlers) {
-		this.panlProperties = panlProperties;
+		super(panlProperties);
 
 		for (CollectionRequestHandler collectionRequestHandler : collectionRequestHandlers) {
 			queryRespondToMap.put(collectionRequestHandler.getPanlCollectionUri(), collectionRequestHandler.getFormQueryRespondTo());
@@ -152,6 +148,20 @@ public class PanlLookaheadHandler implements HttpRequestHandler {
 		doRequest(collectionRequestHandler, response, query, fieldSet, startNanos, (System.nanoTime() - startNanos));
 	}
 
+	/**
+	 * <p>Do the Solr request with the query parameter, requesting no facets and
+	 * requesting the number of rows as set by the <code>solr.numrows.lookahead</code>
+	 * parameter.</p>
+	 *
+	 * @param collectionRequestHandler The collection request handler that this
+	 *        handler is bound to.
+	 * @param response The response object
+	 * @param query The query parameter in the for of <code>&lt;query.respond.to&gt;=some+value</code>
+	 * @param fieldSet The fieldset that is requested
+	 * @param startNanos The time in nanos that this request was started
+	 * @param parseRequestNanos The number of nanos that this request took to
+	 *        parse
+	 */
 	private void doRequest(
 			CollectionRequestHandler collectionRequestHandler,
 			HttpResponse response,
@@ -208,45 +218,13 @@ public class PanlLookaheadHandler implements HttpRequestHandler {
 			response.setStatusCode(HttpStatus.SC_OK);
 		} catch(Exception e) {
 			set500ResponseMessage(response, e);
+			// left the return statement here in case we want to do more after the
+			// non-excepted method completes.
 			return;
 		}
-
 	}
 
-	private void set500ResponseMessage(HttpResponse response, Exception e) {
-		LOGGER.error("Internal server error, message was '{}'", e.getMessage(), e);
-		response.setStatusCode(HttpStatus.SC_INTERNAL_SERVER_ERROR);
-		JSONObject jsonObject = new JSONObject();
-		jsonObject.put(JSON_KEY_ERROR, true);
-		jsonObject.put(JSON_KEY_STATUS, HttpStatus.SC_INTERNAL_SERVER_ERROR);
-		if (panlProperties.getUseVerbose500Messages()) {
-			jsonObject.put(JSON_KEY_MESSAGE,
-				String.format("Class: %s, message: %s.",
-					e.getClass().getCanonicalName(),
-					e.getMessage()));
-
-			response.setEntity(new StringEntity(jsonObject.toString(), ResourceHelper.CONTENT_TYPE_JSON));
-		} else {
-			jsonObject.put(JSON_KEY_MESSAGE, JSON_VALUE_MESSAGE_500);
-		}
-	}
-
-	private void set404ResponseMessage(HttpResponse response) {
-		response.setStatusCode(HttpStatus.SC_NOT_FOUND);
-
-		JSONObject jsonObject = new JSONObject();
-
-		jsonObject.put(JSON_KEY_ERROR, true);
-		jsonObject.put(JSON_KEY_STATUS, HttpStatus.SC_NOT_FOUND);
-		if (panlProperties.getUseVerbose404Messages()) {
-			jsonObject.put(JSON_KEY_MESSAGE, PanlDefaultHandler.JSON_VALUE_MESSAGE);
-			jsonObject.put(JSON_KEY_VALID_URLS, validUrls);
-		} else {
-			jsonObject.put(JSON_KEY_MESSAGE, JSON_VALUE_MESSAGE_404);
-		}
-
-		response.setEntity(
-			new StringEntity(jsonObject.toString(),
-				ResourceHelper.CONTENT_TYPE_JSON));
+	@Override protected Logger getLogger() {
+		return(LOGGER);
 	}
 }
