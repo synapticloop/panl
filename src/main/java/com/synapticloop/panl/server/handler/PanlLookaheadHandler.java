@@ -167,6 +167,7 @@ public class PanlLookaheadHandler implements HttpRequestHandler {
 		PanlClient panlClient = collectionRequestHandler.getPanlClient();
 		try (SolrClient solrClient = panlClient.getClient()) {
 			SolrQuery solrQuery = panlClient.getQuery(query);
+			solrQuery.setQuery("\"" + query + "\"");
 			List<String> resultFieldsForName = collectionProperties.getResultFieldsForName(fieldSet);
 			if(null != resultFieldsForName) {
 				for (String fieldName : resultFieldsForName) {
@@ -175,6 +176,7 @@ public class PanlLookaheadHandler implements HttpRequestHandler {
 			}
 			solrQuery.setRows(numRows);
 			solrQuery.setStart(0);
+			LOGGER.debug(solrQuery.toString());
 			final QueryResponse solrQueryResponse = solrClient.query(collectionRequestHandler.getSolrCollection(), solrQuery);
 			JSONObject solrJsonObject = new JSONObject(solrQueryResponse.jsonStr());
 			response.setEntity(new StringEntity(solrJsonObject.toString(), ResourceHelper.CONTENT_TYPE_JSON));

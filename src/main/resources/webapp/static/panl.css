@@ -44,7 +44,7 @@ dd { padding-bottom: 3px; }
 #documents p { text-justify: none }
 
 div.padding { padding-bottom: 14px;}
-.range-link { text-align: center; position: relative; z-index: 1000; }
+.range-link { text-align: center; position: relative; z-index: 1; }
 .more-facets { padding: 8px 8px 8px 10px; background-color: #efefef; margin-bottom: 16px; border-left: 4px double black; }
 
 /* footer */
@@ -67,3 +67,6 @@ input.date_number { width: 10%; margin: 0 8px; text-align: right; }
 .noUi-horizontal .noUi-handle { border-radius: 100%; width: 22px; background: white; border: 4px solid black; height: 22px; margin-top: -2px; margin-right: 5px; }
 .noUi-handle::after, .noUi-handle::before { background: none; }
 .noUi-connect { background: #afafaf;}
+
+/* autocomplete */
+.ui-autocomplete, .ui-menu-item-wrapper, .ui-menu-item { z-index: 10; }

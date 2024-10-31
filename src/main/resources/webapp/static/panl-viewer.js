@@ -30,23 +30,37 @@ $(document).ready(function() {
 			// finally get the lookahead functionality for the search box
 			$("#searchfield").autocomplete({
 				source: function(request, response) {
-				$.ajax({
-						url: "/panl-lookahead/" + collection + "/" + fieldset,
-						dataType: "jsonp",
-						data: {
-							q: request.term
-						},
-						success: function(data) {
-							console.log("yup");
-							response(data);
-						}
-					});
+
+					$.ajax({
+							url: "http://localhost:8181/panl-lookahead/" + collection + "/" + fieldset,
+							data: {
+								q: request.term
+							},
+
+							success: function(data) {
+								// the data that we receive we shall need to do some re-work
+								var responseDocs = data.response.docs;
+								var autocompleteDocs = [];
+								for( const doc of responseDocs ) {
+									autocompleteDocs.push(doc.brand + " " + doc.name);
+								}
+								response(autocompleteDocs);
+							},
+
+							error: function(data) {
+								response([]);
+							}
+						});
 				},
 				minLength: 3
 			});
 		}
 	}
 });
+
+function lookahead(request, response) {
+
+}
 
 function isValidUrl(collection, fieldset) {
 	var fullUrl = "/" + collection + "/" + fieldset;
