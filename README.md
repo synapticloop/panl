@@ -72,7 +72,7 @@ looks A LOT nicer than
 
 # Why Synapticloop Panl?
 
-Panl was designed to convert rather long and unfriendly (both in human readable and SEO terms) to shorter, nicer, and friendlier URL paths throughout the entire search journey.
+Panl was designed to convert rather long and unfriendly (both in human-readable and SEO terms) to shorter, nicer, and friendlier URL paths throughout the entire search journey.
 
 Working with a Solr schema, the Panl configuration files translate unwieldy URL parameters into concise and precise URL paths.
 

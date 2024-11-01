@@ -63,6 +63,7 @@ public class PanlSinglePageHandler extends BaseResponseHandler implements HttpRe
 	 */
 	public PanlSinglePageHandler(PanlProperties panlProperties, List<CollectionRequestHandler> collectionRequestHandlers) {
 		super(panlProperties);
+
 		for(CollectionRequestHandler collectionRequestHandler : collectionRequestHandlers) {
 			validCollections.put(collectionRequestHandler.getPanlCollectionUri(), collectionRequestHandler);
 			validUrls.put(PANL_URL_BINDING_SINGLE_PAGE + collectionRequestHandler.getPanlCollectionUri() + "/");
