@@ -224,7 +224,7 @@ public class PanlGenerator {
 		}
 		System.out.printf("Enter the 1 character property value for '%s' (%s), default [%s]: ", panlParamProperty,
 			description, defaultValue);
-		Scanner in = new Scanner(System.in);
+		Scanner in = getSystemInput();
 		String temp = in.nextLine();
 		if (temp.isBlank()) {
 			System.out.printf("Property '%s' set to default value of '%s'\n", panlParamProperty, defaultValue);
@@ -350,5 +350,9 @@ public class PanlGenerator {
 		} catch (IOException e) {
 			LOGGER.error("IOException with writing panl.properties file", e);
 		}
+	}
+
+	public Scanner getSystemInput() {
+		return(new Scanner(System.in));
 	}
 }
