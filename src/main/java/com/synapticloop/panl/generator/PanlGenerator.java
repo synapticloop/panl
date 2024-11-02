@@ -103,6 +103,14 @@ public class PanlGenerator {
 		File file = new File(propertiesFileLocation);
 		this.collectionPropertiesOutputDirectory = file.getParentFile().getAbsolutePath();
 		checkSchemaFileLocations();
+
+		panlReplacementPropertyMap.put("$solrj.client", "CloudSolrClient");
+		panlReplacementPropertyMap.put("$solr.search.server.url", "http://localhost:8983/solr,http://localhost:7574/solr");
+		panlReplacementPropertyMap.put("$panl.results.testing.urls", "true");
+		panlReplacementPropertyMap.put("$panl.status.404.verbose", "true");
+		panlReplacementPropertyMap.put("$panl.status.500.verbose", "true");
+		panlReplacementPropertyMap.put("$panl.decimal.point", "true");
+		panlReplacementPropertyMap.put("$panl.param.passthrough.canonical", "false");
 	}
 
 	/**
@@ -268,8 +276,6 @@ public class PanlGenerator {
 	 * @param panlCollection The panl collection object to generate the file with
 	 */
 	private void generateCollectionDotPanlDotProperties(PanlCollection panlCollection) {
-		StringBuilder outputString = new StringBuilder();
-
 		try (
 			OutputStream outputStream = Files.newOutputStream(new File(
 				this.collectionPropertiesOutputDirectory +
@@ -291,8 +297,13 @@ public class PanlGenerator {
 			mergeProperties.put("panl.collections", panlCollection.getPanlProperty("$panl.collections"));
 
 			LOGGER.info("Writing out file {}.panl.properties", panlCollection.getCollectionName());
+
 			writer.write(
-				PropertiesMerger.mergeProperties(TEMPLATE_LOCATION_COLLECTION_PANL_PROPERTIES, mergeProperties, true));
+				PropertiesMerger.mergeProperties(
+					TEMPLATE_LOCATION_COLLECTION_PANL_PROPERTIES,
+					mergeProperties,
+					true));
+
 			writer.flush();
 			LOGGER.info("Done writing out file {}.panl.properties", panlCollection.getCollectionName());
 
@@ -334,6 +345,17 @@ public class PanlGenerator {
 					if (line.startsWith("$panl.collection")) {
 						outputString.append(collectionPropertyFiles)
 						            .append("\n");
+					} else if(line.startsWith("$")) {
+						if(panlReplacementPropertyMap.containsKey(line)) {
+							outputString.append(line.substring(1))
+							            .append("=")
+							            .append(panlReplacementPropertyMap.get(line))
+							            .append("\n");
+						} else {
+							outputString.append("# ERROR - could not find the replacement for property key: ")
+								.append(line)
+								.append("\n");
+						}
 					} else {
 						outputString.append(line)
 						            .append("\n");
