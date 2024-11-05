@@ -51,11 +51,11 @@ public class PanlGenerator {
 		".template";
 	public static final String TEMPLATE_LOCATION_PANL_PROPERTIES = "/panl.properties.template";
 
-	private static final String PANL_PARAM_QUERY = "panl.param.query";
-	private static final String PANL_PARAM_SORT = "panl.param.sort";
-	private static final String PANL_PARAM_PAGE = "panl.param.page";
-	private static final String PANL_PARAM_NUMROWS = "panl.param.numrows";
-	private static final String PANL_PARAM_QUERY_OPERAND = "panl.param.query.operand";
+	public static final String PANL_PARAM_QUERY = "panl.param.query";
+	public static final String PANL_PARAM_SORT = "panl.param.sort";
+	public static final String PANL_PARAM_PAGE = "panl.param.page";
+	public static final String PANL_PARAM_NUMROWS = "panl.param.numrows";
+	public static final String PANL_PARAM_QUERY_OPERAND = "panl.param.query.operand";
 	public static final String PANL_PARAM_PASSTHROUGH = "panl.param.passthrough";
 
 	private final String propertiesFileLocation;
@@ -104,13 +104,14 @@ public class PanlGenerator {
 		this.collectionPropertiesOutputDirectory = file.getParentFile().getAbsolutePath();
 		checkSchemaFileLocations();
 
-		panlReplacementPropertyMap.put("$solrj.client", "CloudSolrClient");
-		panlReplacementPropertyMap.put("$solr.search.server.url", "http://localhost:8983/solr,http://localhost:7574/solr");
-		panlReplacementPropertyMap.put("$panl.results.testing.urls", "true");
-		panlReplacementPropertyMap.put("$panl.status.404.verbose", "true");
-		panlReplacementPropertyMap.put("$panl.status.500.verbose", "true");
-		panlReplacementPropertyMap.put("$panl.decimal.point", "true");
-		panlReplacementPropertyMap.put("$panl.param.passthrough.canonical", "false");
+		panlReplacementPropertyMap.put("solrj.client", "CloudSolrClient");
+		panlReplacementPropertyMap.put("solr.search.server.url", "http://localhost:8983/solr,http://localhost:7574/solr");
+		panlReplacementPropertyMap.put("panl.results.testing.urls", "true");
+		panlReplacementPropertyMap.put("panl.status.404.verbose", "true");
+		panlReplacementPropertyMap.put("panl.status.500.verbose", "true");
+		panlReplacementPropertyMap.put("panl.decimal.point", "true");
+		panlReplacementPropertyMap.put("panl.param.passthrough.canonical", "false");
+
 	}
 
 	/**
@@ -122,7 +123,8 @@ public class PanlGenerator {
 		for (String schemaFileLocation : this.schemaFileLocations.split(",")) {
 			File schemaFile = new File(schemaFileLocation);
 			if (!schemaFile.exists() & !schemaFile.canRead()) {
-				throw new PanlGenerateException("Could not find or read the '" +
+				throw new PanlGenerateException(
+					"Could not find or read the '" +
 					schemaFile.getAbsolutePath() +
 					"' file, exiting...");
 			} else {
@@ -140,7 +142,8 @@ public class PanlGenerator {
 	private void checkPropertiesFileLocation() throws PanlGenerateException {
 		File propertiesFile = new File(propertiesFileLocation);
 		if (propertiesFile.exists()) {
-			throw new PanlGenerateException("Properties file '" +
+			throw new PanlGenerateException(
+				"Properties file '" +
 				this.propertiesFileLocation +
 				"' exists, and we are not overwriting.  " +
 				"Use the '-overwrite true' command line option to overwrite this file.");
@@ -230,14 +233,18 @@ public class PanlGenerator {
 		if (null != errorPrompt) {
 			System.out.printf("Invalid value. %s Please try again.\n", errorPrompt);
 		}
-		System.out.printf("Enter the 1 character property value for '%s' (%s), default [%s]: ", panlParamProperty,
-			description, defaultValue);
+		System.out.printf(
+			"Enter the 1 character property value for '%s' (%s), default [%s]: ",
+			panlParamProperty,
+			description,
+			defaultValue);
+
 		Scanner in = getSystemInput();
 		String temp = in.nextLine();
 		if (temp.isBlank()) {
 			System.out.printf("Property '%s' set to default value of '%s'\n", panlParamProperty, defaultValue);
 			panlParamMap.put(defaultValue, panlParamProperty);
-			panlReplacementPropertyMap.put("$" + panlParamProperty, defaultValue);
+			panlReplacementPropertyMap.put(panlParamProperty, defaultValue);
 			return (defaultValue);
 		}
 
@@ -265,50 +272,8 @@ public class PanlGenerator {
 			}
 			System.out.printf("Property '%s' set to value '%s'.\n", panlParamProperty, temp);
 			panlParamMap.put(temp, panlParamProperty);
-			panlReplacementPropertyMap.put("$" + panlParamProperty, temp);
+			panlReplacementPropertyMap.put(panlParamProperty, temp);
 			return (temp);
-		}
-	}
-
-	/**
-	 * <p>Generate the collection_uri.panl.properties file.</p>
-	 *
-	 * @param panlCollection The panl collection object to generate the file with
-	 */
-	private void generateCollectionDotPanlDotProperties(PanlCollection panlCollection) {
-		try (
-			OutputStream outputStream = Files.newOutputStream(new File(
-				this.collectionPropertiesOutputDirectory +
-					FileSystems
-						.getDefault()
-						.getSeparator() + panlCollection.getCollectionName() + ".panl.properties").toPath());
-
-			OutputStreamWriter outputStreamWriter = new OutputStreamWriter(outputStream);
-			BufferedWriter writer = new BufferedWriter(outputStreamWriter)) {
-
-			Map<String, String> mergeProperties = new HashMap<>();
-			mergeProperties.put("solrj.client", "CloudSolrClient");
-			mergeProperties.put("solr.search.server.url", "http://localhost:8983/solr,http://localhost:7574/solr");
-			mergeProperties.put("panl.results.testing.urls", "true");
-			mergeProperties.put("panl.status.404.verbose", "true");
-			mergeProperties.put("panl.status.500.verbose", "true");
-			mergeProperties.put("panl.decimal.point", "true");
-			mergeProperties.put("panl.param.passthrough.canonical", "false");
-			mergeProperties.put("panl.collections", panlCollection.getPanlProperty("$panl.collections"));
-
-			LOGGER.info("Writing out file {}.panl.properties", panlCollection.getCollectionName());
-
-			writer.write(
-				PropertiesMerger.mergeProperties(
-					TEMPLATE_LOCATION_COLLECTION_PANL_PROPERTIES,
-					mergeProperties,
-					true));
-
-			writer.flush();
-			LOGGER.info("Done writing out file {}.panl.properties", panlCollection.getCollectionName());
-
-		} catch (IOException e) {
-			LOGGER.error("IOException with writing <panlCollection>.panl.properties file", e);
 		}
 	}
 
@@ -340,37 +305,61 @@ public class PanlGenerator {
 			     OutputStreamWriter outputStreamWriter = new OutputStreamWriter(outputStream);
 			     BufferedWriter writer = new BufferedWriter(outputStreamWriter)) {
 
-				String line;
-				while ((line = reader.readLine()) != null) {
-					if (line.startsWith("$panl.collection")) {
-						outputString.append(collectionPropertyFiles)
-						            .append("\n");
-					} else if(line.startsWith("$")) {
-						if(panlReplacementPropertyMap.containsKey(line)) {
-							outputString.append(line.substring(1))
-							            .append("=")
-							            .append(panlReplacementPropertyMap.get(line))
-							            .append("\n");
-						} else {
-							outputString.append("# ERROR - could not find the replacement for property key: ")
-								.append(line)
-								.append("\n");
-						}
-					} else {
-						outputString.append(line)
-						            .append("\n");
-
-					}
-				}
-
 				LOGGER.info("Writing out file panl.properties");
-				writer.write(outputString.toString());
+
+				panlReplacementPropertyMap.put("panl.collections", collectionPropertyFiles.toString());
+
+				writer.write(
+					PropertiesMerger.mergeProperties(
+						TEMPLATE_LOCATION_PANL_PROPERTIES,
+						panlReplacementPropertyMap,
+						true));
+
 				writer.flush();
+
 				LOGGER.info("Done writing out file panl.properties");
 
 			}
 		} catch (IOException e) {
 			LOGGER.error("IOException with writing panl.properties file", e);
+		}
+	}
+	/**
+	 * <p>Generate the collection_uri.panl.properties file.</p>
+	 *
+	 * @param panlCollection The panl collection object to generate the file with
+	 */
+	private void generateCollectionDotPanlDotProperties(PanlCollection panlCollection) {
+		try (
+			OutputStream outputStream = Files.newOutputStream(new File(
+				this.collectionPropertiesOutputDirectory +
+					FileSystems
+						.getDefault()
+						.getSeparator() + panlCollection.getCollectionName() + ".panl.properties").toPath());
+
+			OutputStreamWriter outputStreamWriter = new OutputStreamWriter(outputStream);
+			BufferedWriter writer = new BufferedWriter(outputStreamWriter)) {
+
+			panlReplacementPropertyMap.put("panl.lpse.length", panlCollection.getLpseLength() + "");
+			panlReplacementPropertyMap.put("panl.lpse.fields", panlCollection.getPanlProperty("panl.lpse.fields"));
+			panlReplacementPropertyMap.put("panl.lpse.order", panlCollection.getPanlProperty("panl.lpse.order"));
+			panlReplacementPropertyMap.put("panl.results.fields.default", panlCollection.getPanlProperty("panl.results.fields.default"));
+			panlReplacementPropertyMap.put("panl.results.fields.firstfive", panlCollection.getPanlProperty("panl.results.fields.firstfive"));
+			panlReplacementPropertyMap.put("panl.collections", panlCollection.getPanlProperty("panl.collections"));
+
+			LOGGER.info("Writing out file {}.panl.properties", panlCollection.getCollectionName());
+
+			writer.write(
+				PropertiesMerger.mergeProperties(
+					TEMPLATE_LOCATION_COLLECTION_PANL_PROPERTIES,
+					panlReplacementPropertyMap,
+					true));
+
+			writer.flush();
+			LOGGER.info("Done writing out file {}.panl.properties", panlCollection.getCollectionName());
+
+		} catch (IOException e) {
+			LOGGER.error("IOException with writing <panlCollection>.panl.properties file", e);
 		}
 	}
 

@@ -51,6 +51,9 @@ public class PropertiesMerger {
 								.append(line)
 								.append("\n");
 						}
+					} else if(line.startsWith("$ ") || line.trim().equals("$")) {
+						// ignore this line - don't output it - these are just notes in the
+						// file explaining the '$' character and what it is used for
 					} else if (line.startsWith("$")) {
 						if (line.startsWith("$panl.collections")) {
 							outputString
@@ -80,6 +83,10 @@ public class PropertiesMerger {
 									.append(line)
 									.append("\n");
 							}
+						} else {
+							outputString
+								.append(line)
+								.append("\n");
 						}
 					}
 				}

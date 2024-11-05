@@ -25,27 +25,13 @@ package com.synapticloop.panl.generator.bean;
  */
 
 public class PanlProperty {
-	private final String panlPropertyName;
 	private final String panlPropertyValue;
-	private final boolean hideProperty;
 
-	public PanlProperty(String panlPropertyName, String panlPropertyValue) {
-		this.panlPropertyName = panlPropertyName;
+	public PanlProperty(String panlPropertyValue) {
 		this.panlPropertyValue = panlPropertyValue;
-		this.hideProperty = false;
-	}
-
-	public PanlProperty(String panlPropertyName, String panlPropertyValue, boolean hideProperty) {
-		this.panlPropertyName = panlPropertyName;
-		this.panlPropertyValue = panlPropertyValue;
-		this.hideProperty = hideProperty;
 	}
 
 	public String toProperties() {
-		if(hideProperty) {
-			return(panlPropertyValue);
-		} else {
-			return (panlPropertyName + "=" + panlPropertyValue);
-		}
+		return(panlPropertyValue);
 	}
 }
