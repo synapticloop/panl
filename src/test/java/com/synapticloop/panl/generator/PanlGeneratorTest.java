@@ -26,7 +26,6 @@ package com.synapticloop.panl.generator;
 
 
 import com.synapticloop.panl.exception.PanlGenerateException;
-import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.io.FileUtils;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
@@ -59,15 +58,34 @@ public class PanlGeneratorTest {
 
 		// now check the two files - simple sha256 should do the trick
 
-		assertTrue(doesSha256Match(ORIGINAL_PANL_PROPERTIES, GENERATED_PANL_PROPERTIES));
-		assertTrue(doesSha256Match(ORIGINAL_COLLECTION_PANL_PROPERTIES, GENERATED_COLLECTION_PANL_PROPERTIES));
+		assertFilesSame(ORIGINAL_PANL_PROPERTIES, GENERATED_PANL_PROPERTIES);
+		assertFilesSame(ORIGINAL_COLLECTION_PANL_PROPERTIES, GENERATED_COLLECTION_PANL_PROPERTIES);
 
 	}
 
-	private boolean doesSha256Match(String original, String generated) throws IOException {
-		String originalSha256 = DigestUtils.sha256Hex(FileUtils.readFileToString(new File(original), StandardCharsets.UTF_8));
-		String generatedSha256 = DigestUtils.sha256Hex(FileUtils.readFileToString(new File(generated), StandardCharsets.UTF_8));
+	/**
+	 * <p>This ignores line endings</p>
+	 *
+	 * @param original
+	 * @param generated
+	 * @return
+	 * @throws IOException
+	 */
+	private void assertFilesSame(String original, String generated) throws IOException {
+		String originalFileData = FileUtils.readFileToString(new File(original), StandardCharsets.UTF_8)
+		                                   .replaceAll("(\r\n)", "\n");
+		String generatedFileData = FileUtils.readFileToString(new File(generated), StandardCharsets.UTF_8)
+		                                    .replaceAll("(\r\n)", "\n");
+		String[] originalSplit = originalFileData.split("\n");
+		String[] generatedSplit = generatedFileData.split("\n");
+		if(originalSplit.length != generatedSplit.length) {
+			fail();
+		}
 
-		return(generatedSha256.equals(originalSha256));
+		int i = 0;
+		for(String line: originalSplit) {
+			assertEquals(line.trim(), generatedSplit[i].trim());
+			i++;
+		}
 	}
 }
