@@ -33,7 +33,6 @@ import org.mockito.Mockito;
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.IOException;
-import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 import java.util.Scanner;
 
@@ -51,7 +50,7 @@ public class PanlGeneratorTest {
 			GENERATED_PANL_PROPERTIES,
 			"./src/test/resources/sample/managed-schema.xml",
 			true));
-		InputStream stdin = System.in;
+
 		// mock the input from the command line
 		Mockito.when(spy.getSystemInput()).thenReturn(new Scanner(new ByteArrayInputStream("\n\n\n\n\n\n".getBytes())));
 		spy.generate();
@@ -66,10 +65,10 @@ public class PanlGeneratorTest {
 	/**
 	 * <p>This ignores line endings</p>
 	 *
-	 * @param original
-	 * @param generated
-	 * @return
-	 * @throws IOException
+	 * @param original The original file location
+	 * @param generated the generated file location
+	 *
+	 * @throws IOException If there was an error reading the file
 	 */
 	private void assertFilesSame(String original, String generated) throws IOException {
 		String originalFileData = FileUtils.readFileToString(new File(original), StandardCharsets.UTF_8)
