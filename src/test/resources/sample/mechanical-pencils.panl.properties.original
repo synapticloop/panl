@@ -743,7 +743,6 @@ panl.multivalue.t=true
 #panl.facetsort.t=index
 
 
-
 #                        Panl LPSE Order Configuration
 #                        ---- ---- ----- -------------
 # This is the order in which the URL will be generated, the default order
@@ -794,7 +793,6 @@ p,\
 n,\
 s,\
 o
-
 
 #                       Panl LPSE Ignore Configuration
 #                       ---- ---- ------ -------------
@@ -860,13 +858,11 @@ in_built_eraser,\
 variants,\
 text
 
-
 panl.results.fields.firstfive=id,\
 brand,\
 name,\
 mechanism_type,\
 body_shape
-
 
 #                        Panl Sort Field Configuration
 #                        ---- ---- ----- -------------

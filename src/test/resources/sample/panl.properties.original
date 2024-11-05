@@ -37,6 +37,7 @@
 #solrj.client=Http2SolrClient
 #solrj.client=HttpJdkSolrClient
 #solrj.client=LBHttp2SolrClient
+#solrj.client=CloudSolrClient
 solrj.client=CloudSolrClient
 
 #                        Which Solr URLs To Connect To

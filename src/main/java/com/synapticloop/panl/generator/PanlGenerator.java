@@ -32,7 +32,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.*;
-import java.nio.charset.StandardCharsets;
 import java.nio.file.FileSystems;
 import java.nio.file.Files;
 import java.util.*;
@@ -125,8 +124,8 @@ public class PanlGenerator {
 			if (!schemaFile.exists() & !schemaFile.canRead()) {
 				throw new PanlGenerateException(
 					"Could not find or read the '" +
-					schemaFile.getAbsolutePath() +
-					"' file, exiting...");
+						schemaFile.getAbsolutePath() +
+						"' file, exiting...");
 			} else {
 				schemasToParse.add(schemaFile);
 			}
@@ -144,9 +143,9 @@ public class PanlGenerator {
 		if (propertiesFile.exists()) {
 			throw new PanlGenerateException(
 				"Properties file '" +
-				this.propertiesFileLocation +
-				"' exists, and we are not overwriting.  " +
-				"Use the '-overwrite true' command line option to overwrite this file.");
+					this.propertiesFileLocation +
+					"' exists, and we are not overwriting.  " +
+					"Use the '-overwrite true' command line option to overwrite this file.");
 		}
 	}
 
@@ -249,7 +248,10 @@ public class PanlGenerator {
 		}
 
 		if (temp.length() != 1) {
-			return (getAndValidateParameterInput(panlParamProperty, description, defaultValue,
+			return (getAndValidateParameterInput(
+				panlParamProperty,
+				description,
+				defaultValue,
 				"Value must be exactly 1 character."));
 		} else {
 			// the value must be one of the available codes
@@ -281,7 +283,6 @@ public class PanlGenerator {
 	 * <p>Generate the panl.properties file.</p>
 	 */
 	private void generatePanlDotProperties() {
-		StringBuilder outputString = new StringBuilder();
 
 		StringBuilder collectionPropertyFiles = new StringBuilder();
 		for (PanlCollection panlCollection : panlCollections) {
@@ -294,36 +295,31 @@ public class PanlGenerator {
 				.append(".panl.properties\n");
 		}
 
-		try (InputStream inputStream = PanlGenerator.class.getResourceAsStream(TEMPLATE_LOCATION_PANL_PROPERTIES)) {
-			assert inputStream != null;
+		// determine the output directory for the panl.properties and the
+		// associated directory
+		try (OutputStream outputStream = Files.newOutputStream(new File(this.propertiesFileLocation).toPath());
+		     OutputStreamWriter outputStreamWriter = new OutputStreamWriter(outputStream);
+		     BufferedWriter writer = new BufferedWriter(outputStreamWriter)) {
 
-			// determine the output directory for the panl.properties and the
-			// associated directory
-			try (InputStreamReader streamReader = new InputStreamReader(inputStream, StandardCharsets.UTF_8);
-			     BufferedReader reader = new BufferedReader(streamReader);
-			     OutputStream outputStream = Files.newOutputStream(new File(this.propertiesFileLocation).toPath());
-			     OutputStreamWriter outputStreamWriter = new OutputStreamWriter(outputStream);
-			     BufferedWriter writer = new BufferedWriter(outputStreamWriter)) {
+			LOGGER.info("Writing out file panl.properties");
 
-				LOGGER.info("Writing out file panl.properties");
+			panlReplacementPropertyMap.put("panl.collections", collectionPropertyFiles.toString());
 
-				panlReplacementPropertyMap.put("panl.collections", collectionPropertyFiles.toString());
+			writer.write(
+				PropertiesMerger.mergeProperties(
+					TEMPLATE_LOCATION_PANL_PROPERTIES,
+					panlReplacementPropertyMap,
+					true));
 
-				writer.write(
-					PropertiesMerger.mergeProperties(
-						TEMPLATE_LOCATION_PANL_PROPERTIES,
-						panlReplacementPropertyMap,
-						true));
+			writer.flush();
 
-				writer.flush();
+			LOGGER.info("Done writing out file panl.properties");
 
-				LOGGER.info("Done writing out file panl.properties");
-
-			}
 		} catch (IOException e) {
 			LOGGER.error("IOException with writing panl.properties file", e);
 		}
 	}
+
 	/**
 	 * <p>Generate the collection_uri.panl.properties file.</p>
 	 *
@@ -364,6 +360,6 @@ public class PanlGenerator {
 	}
 
 	public Scanner getSystemInput() {
-		return(new Scanner(System.in));
+		return (new Scanner(System.in));
 	}
 }

@@ -53,13 +53,12 @@ public class PanlCollection {
 	private final List<SolrField> solrFields = new ArrayList<>();
 	private final List<String> resultFieldNames = new ArrayList<>();
 	private final List<PanlField> panlFields = new ArrayList<>();
-	private final List<SolrField> unassignedSolrFields = new ArrayList<>();
 	private final Map<String, String> fieldXmlMap = new HashMap<>();
 	private int lpseLength = 1;
 	public static String CODES = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz01234567890";
 
 	private static final Set<String> CODES_AVAILABLE = new HashSet<>();
-	private static final Map<String, PanlProperty> PANL_PROPERTIES = new HashMap<>();
+	private static final Map<String, String> PANL_PROPERTIES = new HashMap<>();
 	private static final Map<String, String> SOLR_FIELD_TYPE_NAME_TO_SOLR_CLASS = new HashMap<>();
 	private static final Map<String, String> SOLR_FIELD_NAME_TO_SOLR_FIELD_TYPE = new HashMap<>();
 
@@ -125,15 +124,14 @@ public class PanlCollection {
 
 		generateAvailableCodesForFields();
 
-		PanlProperty lpseLength = new PanlProperty("" + this.lpseLength);
-		PANL_PROPERTIES.put("panl.lpse.length", lpseLength);
+		PANL_PROPERTIES.put("panl.lpse.length", "" + this.lpseLength);
 
 		for (String property : panlReplacementPropertyMap.keySet()) {
-			PanlProperty temp = new PanlProperty(panlReplacementPropertyMap.get(property));
-			PANL_PROPERTIES.put(property, temp);
+			PANL_PROPERTIES.put(property, panlReplacementPropertyMap.get(property));
 		}
 
 		// now go through to panlFields and assign a code which is close to what they want...
+		List<SolrField> unassignedSolrFields = new ArrayList<>();
 		for (SolrField solrField : solrFields) {
 			if (!solrField.getIsSupported()) {
 				continue;
@@ -231,8 +229,8 @@ public class PanlCollection {
 		// put the passthrough back
 		panlReplacementPropertyMap.put(PanlGenerator.PANL_PARAM_PASSTHROUGH, panlParamPassthrough);
 
-		PANL_PROPERTIES.put("panl.lpse.order", new PanlProperty(panlLpseOrder.toString()));
-		PANL_PROPERTIES.put("panl.lpse.fields", new PanlProperty(panlLpseFields.toString()));
+		PANL_PROPERTIES.put("panl.lpse.order", panlLpseOrder.toString());
+		PANL_PROPERTIES.put("panl.lpse.fields", panlLpseFields.toString());
 
 		StringBuilder panlResultsFieldsDefault = new StringBuilder();
 		StringBuilder panlResultsFieldsFirstFive = new StringBuilder();
@@ -252,8 +250,8 @@ public class PanlCollection {
 		}
 		panlResultsFieldsDefault.append("\n");
 
-		PANL_PROPERTIES.put("panl.results.fields.default", new PanlProperty(panlResultsFieldsDefault.toString()));
-		PANL_PROPERTIES.put("panl.results.fields.firstfive", new PanlProperty(panlResultsFieldsFirstFive.toString()));
+		PANL_PROPERTIES.put("panl.results.fields.default", panlResultsFieldsDefault.toString());
+		PANL_PROPERTIES.put("panl.results.fields.firstfive", panlResultsFieldsFirstFive.toString());
 	}
 
 	private void generateAvailableCodesForFields() {
@@ -377,12 +375,7 @@ public class PanlCollection {
 	 * @return The replacement property, or an empty string if one could not be found
 	 */
 	public String getPanlProperty(String key) {
-		PanlProperty panlProperty = PANL_PROPERTIES.get(key);
-		if (null == panlProperty) {
-			return ("");
-		} else {
-			return (panlProperty.toProperties() + "\n");
-		}
+		return(PANL_PROPERTIES.getOrDefault(key, ""));
 	}
 
 	/**

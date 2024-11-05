@@ -26,27 +26,48 @@ package com.synapticloop.panl.generator;
 
 
 import com.synapticloop.panl.exception.PanlGenerateException;
-import org.junit.jupiter.api.BeforeAll;
+import org.apache.commons.codec.digest.DigestUtils;
+import org.apache.commons.io.FileUtils;
 import org.junit.jupiter.api.Test;
-import org.mockito.MockedStatic;
 import org.mockito.Mockito;
 
 import java.io.ByteArrayInputStream;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
 import java.util.Scanner;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 public class PanlGeneratorTest {
-	@Test public void testGenerate() throws PanlGenerateException {
+	public static final String GENERATED_PANL_PROPERTIES = "./src/test/resources/sample/panl.properties";
+	public static final String ORIGINAL_PANL_PROPERTIES = "./src/test/resources/sample/panl.properties.original";
+	public static final String GENERATED_COLLECTION_PANL_PROPERTIES = "./src/test/resources/sample/mechanical-pencils.panl.properties";
+	public static final String ORIGINAL_COLLECTION_PANL_PROPERTIES = "./src/test/resources/sample/mechanical-pencils.panl.properties.original";
+
+	@Test public void testGenerate() throws PanlGenerateException, IOException {
 //		PanlGenerator panlGeneratorMock = Mockito.mock(
 		PanlGenerator spy = Mockito.spy(new PanlGenerator(
-			"./src/test/resources/sample/panl.properties",
+			GENERATED_PANL_PROPERTIES,
 			"./src/test/resources/sample/managed-schema.xml",
 			true));
 		InputStream stdin = System.in;
+		// mock the input from the command line
 		Mockito.when(spy.getSystemInput()).thenReturn(new Scanner(new ByteArrayInputStream("\n\n\n\n\n\n".getBytes())));
 		spy.generate();
+
+		// now check the two files - simple sha256 should do the trick
+
+		assertTrue(doesSha256Match(ORIGINAL_PANL_PROPERTIES, GENERATED_PANL_PROPERTIES));
+		assertTrue(doesSha256Match(ORIGINAL_COLLECTION_PANL_PROPERTIES, GENERATED_COLLECTION_PANL_PROPERTIES));
+
+	}
+
+	private boolean doesSha256Match(String original, String generated) throws IOException {
+		String originalSha256 = DigestUtils.sha256Hex(FileUtils.readFileToString(new File(original), StandardCharsets.UTF_8));
+		String generatedSha256 = DigestUtils.sha256Hex(FileUtils.readFileToString(new File(generated), StandardCharsets.UTF_8));
+
+		return(generatedSha256.equals(originalSha256));
 	}
 }
