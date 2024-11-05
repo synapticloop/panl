@@ -424,6 +424,8 @@ with the release files named `solr-panl-9-x.x.x` where `x.x.x` is the version nu
 - Code Changes
   - **[BREAKING CHANGE]** Changed range facets LPSE codes from `w-w` to `w-` and `w+w` to `w+` (i.e. removed the additional LPSE code)
   - General code cleanup and refactorings
+  - Added in Testing for the Panl Generator and refactored how it is being done.
+  - Refactored PanlFields for the generator to output better comments and helpful information rather than more comments than necessary
 
 
 ## 1.2.0 - more like this (codename `needy-phanton`) 
