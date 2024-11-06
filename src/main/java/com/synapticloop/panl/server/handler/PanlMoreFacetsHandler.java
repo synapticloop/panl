@@ -46,6 +46,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static com.synapticloop.panl.server.handler.CollectionRequestHandler.*;
 import static com.synapticloop.panl.server.handler.webapp.util.ResourceHelper.*;
 
 /**
@@ -58,7 +59,7 @@ import static com.synapticloop.panl.server.handler.webapp.util.ResourceHelper.*;
  *
  * @author Synapticloop
  */
-public class PanlMoreFacetsHandler implements HttpRequestHandler {
+public class PanlMoreFacetsHandler extends BaseResponseHandler implements HttpRequestHandler {
 	private static final Logger LOGGER = LoggerFactory.getLogger(PanlMoreFacetsHandler.class);
 
 	public static final String PANL_URL_BINDING_MORE_FACETS = "/panl-more-facets/";
@@ -69,18 +70,17 @@ public class PanlMoreFacetsHandler implements HttpRequestHandler {
 	public static final String CONTEXT_KEY_LPSE_CODE = "lpse_code";
 	public static final String CONTEXT_KEY_FACET_LIMIT = "facet_limit";
 
-	private final PanlProperties panlProperties;
 	private final Map<String, CollectionRequestHandler> validCollections = new HashMap<>();
-	private final JSONArray validUrls = new JSONArray();
 
 	/**
-	 * <p>Instantiate the Panl more facets handle.</p>
+	 * <p>Instantiate the Panl more facets handler.</p>
 	 *
 	 * @param panlProperties The panl properties
 	 * @param collectionRequestHandlers The collection request handler
 	 */
 	public PanlMoreFacetsHandler(PanlProperties panlProperties, List<CollectionRequestHandler> collectionRequestHandlers) {
-		this.panlProperties = panlProperties;
+		super(panlProperties);
+
 		for (CollectionRequestHandler collectionRequestHandler : collectionRequestHandlers) {
 			validCollections.put(collectionRequestHandler.getPanlCollectionUri(), collectionRequestHandler);
 			validUrls.put(PANL_URL_BINDING_MORE_FACETS + collectionRequestHandler.getPanlCollectionUri() + "/");
@@ -166,18 +166,18 @@ public class PanlMoreFacetsHandler implements HttpRequestHandler {
 				jsonObject.remove("response");
 				jsonObject.remove("facet_counts");
 
-				JSONObject panlJsonObject = jsonObject.getJSONObject("panl");
+				JSONObject panlJsonObject = jsonObject.getJSONObject(JSON_KEY_PANL);
 
-				panlJsonObject.remove("pagination");
-				panlJsonObject.remove("active");
-				panlJsonObject.remove("query_operand");
-				panlJsonObject.remove("timings");
-				panlJsonObject.remove("canonical_uri");
+				panlJsonObject.remove(JSON_KEY_PAGINATION);
+				panlJsonObject.remove(JSON_KEY_ACTIVE);
+				panlJsonObject.remove(JSON_KEY_QUERY_OPERAND);
+				panlJsonObject.remove(JSON_KEY_TIMINGS);
+				panlJsonObject.remove(JSON_KEY_CANONICAL_URI);
 
 				// now go through and get the facet that we want
 
 				// now go through the available facets and place them in the correct place
-				JSONObject availableJsonObject = panlJsonObject.getJSONObject("available");
+				JSONObject availableJsonObject = panlJsonObject.getJSONObject(JSON_KEY_AVAILABLE);
 
 				// regular facets
 				for (Object regularFacets : availableJsonObject.getJSONArray("facets")) {
@@ -191,10 +191,10 @@ public class PanlMoreFacetsHandler implements HttpRequestHandler {
 				}
 
 				// lastly remove the facets
-				panlJsonObject.remove("query_respond_to");
-				panlJsonObject.remove("sorting");
-				panlJsonObject.remove("available");
-				panlJsonObject.remove("fields");
+				panlJsonObject.remove(JSON_KEY_QUERY_RESPOND_TO);
+				panlJsonObject.remove(JSON_KEY_SORTING);
+				panlJsonObject.remove(JSON_KEY_AVAILABLE);
+				panlJsonObject.remove(JSON_KEY_FIELDS);
 
 				response.setStatusCode(HttpStatus.SC_OK);
 				response.setEntity(
@@ -212,40 +212,7 @@ public class PanlMoreFacetsHandler implements HttpRequestHandler {
 		}
 	}
 
-	private void set500ResponseMessage(HttpResponse response, Exception e) {
-		LOGGER.error("Internal server error, message was '{}'", e.getMessage(), e);
-		response.setStatusCode(HttpStatus.SC_INTERNAL_SERVER_ERROR);
-		JSONObject jsonObject = new JSONObject();
-		jsonObject.put(JSON_KEY_ERROR, true);
-		jsonObject.put(JSON_KEY_STATUS, HttpStatus.SC_INTERNAL_SERVER_ERROR);
-		if (panlProperties.getUseVerbose500Messages()) {
-			jsonObject.put(JSON_KEY_MESSAGE,
-				String.format("Class: %s, message: %s.",
-					e.getClass().getCanonicalName(),
-					e.getMessage()));
-
-			response.setEntity(new StringEntity(jsonObject.toString(), ResourceHelper.CONTENT_TYPE_JSON));
-		} else {
-			jsonObject.put(JSON_KEY_MESSAGE, JSON_VALUE_MESSAGE_500);
-		}
-	}
-
-	private void set404ResponseMessage(HttpResponse response) {
-		response.setStatusCode(HttpStatus.SC_NOT_FOUND);
-
-		JSONObject jsonObject = new JSONObject();
-
-		jsonObject.put(JSON_KEY_ERROR, true);
-		jsonObject.put(JSON_KEY_STATUS, HttpStatus.SC_NOT_FOUND);
-		if (panlProperties.getUseVerbose404Messages()) {
-			jsonObject.put(JSON_KEY_MESSAGE, PanlDefaultHandler.JSON_VALUE_MESSAGE);
-			jsonObject.put(JSON_KEY_VALID_URLS, validUrls);
-		} else {
-			jsonObject.put(JSON_KEY_MESSAGE, JSON_VALUE_MESSAGE_404);
-		}
-
-		response.setEntity(
-			new StringEntity(jsonObject.toString(),
-				ResourceHelper.CONTENT_TYPE_JSON));
+	@Override protected Logger getLogger() {
+		return(LOGGER);
 	}
 }

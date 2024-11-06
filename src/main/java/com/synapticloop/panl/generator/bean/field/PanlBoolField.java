@@ -22,40 +22,26 @@
  * IN THE SOFTWARE.
  */
 
-package com.synapticloop.panl.generator.bean;
+package com.synapticloop.panl.generator.bean.field;
 
-public class SolrField {
-	private final String name;
-	private final boolean isFacetable;
-	private boolean isSupported = false;
-	private boolean isMultiValued = false;
+public class PanlBoolField extends BasePanlField {
+	protected PanlBoolField(String lpseCode,
+		String solrFieldName,
+		String solrFieldType,
+		String schemaXmlLine,
+		boolean isFacet,
+		boolean isMultiValued) {
 
-	public SolrField(String name, boolean isFacetable) {
-		this.name = name;
-		this.isFacetable = isFacetable;
+		super(lpseCode, solrFieldName, solrFieldType, schemaXmlLine, isFacet, isMultiValued);
 	}
 
-	public String getName() {
-		return name;
-	}
-
-	public boolean getIsFacetable() {
-		return isFacetable;
-	}
-
-	public boolean getIsSupported() {
-		return isSupported;
-	}
-
-	public void setIsSupported(boolean supported) {
-		isSupported = supported;
-	}
-
-	public boolean getIsMultiValued() {
-		return isMultiValued;
-	}
-
-	public void setIsMultiValued(boolean multiValued) {
-		isMultiValued = multiValued;
+	@Override public String getAdditionalProperties() {
+		StringBuilder stringBuilder = new StringBuilder(getPrefixSuffix());
+		stringBuilder.append("# Because this is a Boolean field, you can use a boolean value replacement for\n")
+		             .append("# either the true value, the false value, or neither.  This makes a more human-\n")
+		             .append("# readable URL\n")
+		             .append(String.format("#panl.bool.%s.true=is-%s\n", lpseCode, solrFieldName))
+		             .append(String.format("#panl.bool.%s.false=is-not-%s\n", lpseCode, solrFieldName));
+		return (stringBuilder.toString());
 	}
 }

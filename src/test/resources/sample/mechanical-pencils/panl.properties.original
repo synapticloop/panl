@@ -15,14 +15,6 @@
 #                                                                             #
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 
-$                                ~ ~ ~ * ~ ~ ~
-$
-$  NOTE: Any line in this file that starts with a dollar sign (and at least one
-$        whitespace character) is used by the panl generator for in-line
-$        replacement, and are __NOT__ replacement properties that can be set.
-$        (These lines will not appear in the output properties file.)
-$
-$                                ~ ~ ~ * ~ ~ ~
 
 #                           Which Solr Client To Use
 #                           ----- ---- ------ -- ---
@@ -46,7 +38,7 @@ $                                ~ ~ ~ * ~ ~ ~
 #solrj.client=HttpJdkSolrClient
 #solrj.client=LBHttp2SolrClient
 #solrj.client=CloudSolrClient
-$solrj.client
+solrj.client=CloudSolrClient
 
 #                        Which Solr URLs To Connect To
 #                        ----- ---- ---- -- ------- --
@@ -72,7 +64,7 @@ $solrj.client
 #
 #                                ~ ~ ~ * ~ ~ ~
 
-$solr.search.server.url
+solr.search.server.url=http://localhost:8983/solr,http://localhost:7574/solr
 
 #                     Whether To Enable The Testing URLs
 #                     ------- -- ------ --- ------- ----
@@ -91,7 +83,7 @@ $solr.search.server.url
 #
 #                                ~ ~ ~ * ~ ~ ~
 
-$panl.results.testing.urls
+panl.results.testing.urls=true
 
 #                  Whether To Enable Verbose Error Messaging
 #                  ------- -- ------ ------- ----- ---------
@@ -105,8 +97,8 @@ $panl.results.testing.urls
 #
 #                                ~ ~ ~ * ~ ~ ~
 
-$panl.status.404.verbose
-$panl.status.500.verbose
+panl.status.404.verbose=true
+panl.status.500.verbose=true
 
 #                            Decimal Values Format
 #                            ------- ------ ------
@@ -129,7 +121,7 @@ $panl.status.500.verbose
 #
 #                                ~ ~ ~ * ~ ~ ~
 
-$panl.decimal.point
+panl.decimal.point=true
 
 #                     Collection Property File Inclusion
 #                     ---------- -------- ---- ---------
@@ -156,5 +148,6 @@ $panl.decimal.point
 #
 #                                ~ ~ ~ * ~ ~ ~
 
-$panl.collections
+panl.collection.mechanical-pencils=mechanical-pencils.panl.properties
+
 

@@ -79,14 +79,6 @@
 #                                                                             #
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 
-$                                ~ ~ ~ * ~ ~ ~
-$
-$  NOTE: Any line in this file that starts with a dollar sign (and at least one
-$        whitespace character) is used by the panl generator for in-line
-$        replacement, and are __NOT__ replacement properties that can be set.
-$        (These lines will not appear in the output properties file.)
-$
-$                                ~ ~ ~ * ~ ~ ~
 
 #                              Panl LPSE Length
 #                              ---- ---- ------
@@ -96,7 +88,7 @@ $                                ~ ~ ~ * ~ ~ ~
 #
 #                                ~ ~ ~ * ~ ~ ~
 
-$panl.lpse.length
+panl.lpse.length=1
 
 #                                Panl Metadata
 #                                ---- --------
@@ -132,13 +124,13 @@ $panl.lpse.length
 #
 #                                ~ ~ ~ * ~ ~ ~
 
-$panl.param.query
-$panl.param.sort
-$panl.param.page
-$panl.param.numrows
-$panl.param.query.operand
-$panl.param.passthrough
-$panl.param.passthrough.canonical
+panl.param.query=q
+panl.param.sort=s
+panl.param.page=p
+panl.param.numrows=n
+panl.param.query.operand=o
+panl.param.passthrough=z
+panl.param.passthrough.canonical=false
 
 #                        The Form Query To Respond To
 #                        --- ---- ----- -- ------- --
@@ -415,7 +407,453 @@ solr.highlight=false
 #
 #                                ~ ~ ~ * ~ ~ ~
 
-$panl.lpse.fields
+panl.lpse.fields=
+# <field "stored"="true" "name"="id" "type"="string" "multiValued"="false" "required"="true" />
+# This configuration can __ONLY__ ever be a field as it is not indexed in Solr
+panl.field.i=id
+panl.name.i=Id
+panl.type.i=solr.StrField
+
+# <field "indexed"="true" "stored"="true" "name"="brand" "type"="string" "multiValued"="false" />
+# This configuration can be either a field or a facet as it is indexed in Solr
+panl.facet.b=brand
+panl.name.b=Brand
+panl.type.b=solr.StrField
+# This field is a candidate for an OR facet, you may wish to configure the
+# following properties
+#panl.or.facet.b=true
+#panl.or.always.b=true
+# The following two properties are optional and may be set to any value
+#panl.prefix.b=prefix
+#panl.suffix.b=suffix
+# By default Solr will always return facet ordered by count descending (i.e.
+# The largest counts first) - uncomment the below line to return it in value
+# order (e.g. alphabetical/numerical)
+#panl.facetsort.b=index
+# If you want this facet to only appear if another facet has already been
+# passed through then add the LPSE code(s) in a comma separated list below
+#panl.when.b=
+
+# <field "indexed"="true" "stored"="true" "name"="name" "type"="string" "multiValued"="false" />
+# This configuration can be either a field or a facet as it is indexed in Solr
+panl.facet.N=name
+panl.name.N=Name
+panl.type.N=solr.StrField
+# This field is a candidate for an OR facet, you may wish to configure the
+# following properties
+#panl.or.facet.N=true
+#panl.or.always.N=true
+# The following two properties are optional and may be set to any value
+#panl.prefix.N=prefix
+#panl.suffix.N=suffix
+# By default Solr will always return facet ordered by count descending (i.e.
+# The largest counts first) - uncomment the below line to return it in value
+# order (e.g. alphabetical/numerical)
+#panl.facetsort.N=index
+# If you want this facet to only appear if another facet has already been
+# passed through then add the LPSE code(s) in a comma separated list below
+#panl.when.N=
+
+# <field "indexed"="true" "stored"="true" "name"="mechanism_type" "type"="string" "multiValued"="false" />
+# This configuration can be either a field or a facet as it is indexed in Solr
+panl.facet.m=mechanism_type
+panl.name.m=Mechanism Type
+panl.type.m=solr.StrField
+# This field is a candidate for an OR facet, you may wish to configure the
+# following properties
+#panl.or.facet.m=true
+#panl.or.always.m=true
+# The following two properties are optional and may be set to any value
+#panl.prefix.m=prefix
+#panl.suffix.m=suffix
+# By default Solr will always return facet ordered by count descending (i.e.
+# The largest counts first) - uncomment the below line to return it in value
+# order (e.g. alphabetical/numerical)
+#panl.facetsort.m=index
+# If you want this facet to only appear if another facet has already been
+# passed through then add the LPSE code(s) in a comma separated list below
+#panl.when.m=
+
+# <field "indexed"="true" "stored"="true" "name"="body_shape" "type"="string" "multiValued"="false" />
+# This configuration can be either a field or a facet as it is indexed in Solr
+panl.facet.B=body_shape
+panl.name.B=Body Shape
+panl.type.B=solr.StrField
+# This field is a candidate for an OR facet, you may wish to configure the
+# following properties
+#panl.or.facet.B=true
+#panl.or.always.B=true
+# The following two properties are optional and may be set to any value
+#panl.prefix.B=prefix
+#panl.suffix.B=suffix
+# By default Solr will always return facet ordered by count descending (i.e.
+# The largest counts first) - uncomment the below line to return it in value
+# order (e.g. alphabetical/numerical)
+#panl.facetsort.B=index
+# If you want this facet to only appear if another facet has already been
+# passed through then add the LPSE code(s) in a comma separated list below
+#panl.when.B=
+
+# <field "indexed"="true" "stored"="true" "name"="grip_type" "type"="string" "multiValued"="false" />
+# This configuration can be either a field or a facet as it is indexed in Solr
+panl.facet.g=grip_type
+panl.name.g=Grip Type
+panl.type.g=solr.StrField
+# This field is a candidate for an OR facet, you may wish to configure the
+# following properties
+#panl.or.facet.g=true
+#panl.or.always.g=true
+# The following two properties are optional and may be set to any value
+#panl.prefix.g=prefix
+#panl.suffix.g=suffix
+# By default Solr will always return facet ordered by count descending (i.e.
+# The largest counts first) - uncomment the below line to return it in value
+# order (e.g. alphabetical/numerical)
+#panl.facetsort.g=index
+# If you want this facet to only appear if another facet has already been
+# passed through then add the LPSE code(s) in a comma separated list below
+#panl.when.g=
+
+# <field "indexed"="true" "stored"="true" "name"="grip_shape" "type"="string" "multiValued"="false" />
+# This configuration can be either a field or a facet as it is indexed in Solr
+panl.facet.G=grip_shape
+panl.name.G=Grip Shape
+panl.type.G=solr.StrField
+# This field is a candidate for an OR facet, you may wish to configure the
+# following properties
+#panl.or.facet.G=true
+#panl.or.always.G=true
+# The following two properties are optional and may be set to any value
+#panl.prefix.G=prefix
+#panl.suffix.G=suffix
+# By default Solr will always return facet ordered by count descending (i.e.
+# The largest counts first) - uncomment the below line to return it in value
+# order (e.g. alphabetical/numerical)
+#panl.facetsort.G=index
+# If you want this facet to only appear if another facet has already been
+# passed through then add the LPSE code(s) in a comma separated list below
+#panl.when.G=
+
+# <field "indexed"="true" "stored"="true" "name"="cap_shape" "type"="string" "multiValued"="false" />
+# This configuration can be either a field or a facet as it is indexed in Solr
+panl.facet.c=cap_shape
+panl.name.c=Cap Shape
+panl.type.c=solr.StrField
+# This field is a candidate for an OR facet, you may wish to configure the
+# following properties
+#panl.or.facet.c=true
+#panl.or.always.c=true
+# The following two properties are optional and may be set to any value
+#panl.prefix.c=prefix
+#panl.suffix.c=suffix
+# By default Solr will always return facet ordered by count descending (i.e.
+# The largest counts first) - uncomment the below line to return it in value
+# order (e.g. alphabetical/numerical)
+#panl.facetsort.c=index
+# If you want this facet to only appear if another facet has already been
+# passed through then add the LPSE code(s) in a comma separated list below
+#panl.when.c=
+
+# <field "indexed"="true" "stored"="true" "name"="category" "type"="string" "multiValued"="false" />
+# This configuration can be either a field or a facet as it is indexed in Solr
+panl.facet.C=category
+panl.name.C=Category
+panl.type.C=solr.StrField
+# This field is a candidate for an OR facet, you may wish to configure the
+# following properties
+#panl.or.facet.C=true
+#panl.or.always.C=true
+# The following two properties are optional and may be set to any value
+#panl.prefix.C=prefix
+#panl.suffix.C=suffix
+# By default Solr will always return facet ordered by count descending (i.e.
+# The largest counts first) - uncomment the below line to return it in value
+# order (e.g. alphabetical/numerical)
+#panl.facetsort.C=index
+# If you want this facet to only appear if another facet has already been
+# passed through then add the LPSE code(s) in a comma separated list below
+#panl.when.C=
+
+# <field "indexed"="true" "stored"="true" "name"="length" "type"="pint" "multiValued"="false" />
+# This configuration can be either a field or a facet as it is indexed in Solr
+panl.facet.l=length
+panl.name.l=Length
+panl.type.l=solr.IntPointField
+# This field is a candidate for an OR facet, you may wish to configure the
+# following properties
+#panl.or.facet.l=true
+#panl.or.always.l=true
+# The following two properties are optional and may be set to any value
+#panl.prefix.l=prefix
+#panl.suffix.l=suffix
+# This field can be configured as a range facet by setting the following
+# properties
+#panl.range.facet.w=true
+#panl.range.min.w=0
+#panl.range.max.w=100
+#panl.range.prefix.w=range_prefix
+#panl.range.infix.w=range_infix
+#panl.range.suffix.w=range_suffix
+#panl.range.min.value.w=min_value
+#panl.range.max.value.w=max_value
+#panl.range.min.wildcard.w=true
+#panl.range.max.wildcard.w=true
+# By default Solr will always return facet ordered by count descending (i.e.
+# The largest counts first) - uncomment the below line to return it in value
+# order (e.g. alphabetical/numerical)
+#panl.facetsort.l=index
+# If you want this facet to only appear if another facet has already been
+# passed through then add the LPSE code(s) in a comma separated list below
+#panl.when.l=
+
+# <field "indexed"="true" "stored"="true" "name"="relative_length" "type"="pint" "multiValued"="false" />
+# This configuration can be either a field or a facet as it is indexed in Solr
+panl.facet.r=relative_length
+panl.name.r=Relative Length
+panl.type.r=solr.IntPointField
+# This field is a candidate for an OR facet, you may wish to configure the
+# following properties
+#panl.or.facet.r=true
+#panl.or.always.r=true
+# The following two properties are optional and may be set to any value
+#panl.prefix.r=prefix
+#panl.suffix.r=suffix
+# This field can be configured as a range facet by setting the following
+# properties
+#panl.range.facet.w=true
+#panl.range.min.w=0
+#panl.range.max.w=100
+#panl.range.prefix.w=range_prefix
+#panl.range.infix.w=range_infix
+#panl.range.suffix.w=range_suffix
+#panl.range.min.value.w=min_value
+#panl.range.max.value.w=max_value
+#panl.range.min.wildcard.w=true
+#panl.range.max.wildcard.w=true
+# By default Solr will always return facet ordered by count descending (i.e.
+# The largest counts first) - uncomment the below line to return it in value
+# order (e.g. alphabetical/numerical)
+#panl.facetsort.r=index
+# If you want this facet to only appear if another facet has already been
+# passed through then add the LPSE code(s) in a comma separated list below
+#panl.when.r=
+
+# <field "indexed"="true" "stored"="true" "name"="diameter" "type"="pint" "multiValued"="false" />
+# This configuration can be either a field or a facet as it is indexed in Solr
+panl.facet.d=diameter
+panl.name.d=Diameter
+panl.type.d=solr.IntPointField
+# This field is a candidate for an OR facet, you may wish to configure the
+# following properties
+#panl.or.facet.d=true
+#panl.or.always.d=true
+# The following two properties are optional and may be set to any value
+#panl.prefix.d=prefix
+#panl.suffix.d=suffix
+# This field can be configured as a range facet by setting the following
+# properties
+#panl.range.facet.w=true
+#panl.range.min.w=0
+#panl.range.max.w=100
+#panl.range.prefix.w=range_prefix
+#panl.range.infix.w=range_infix
+#panl.range.suffix.w=range_suffix
+#panl.range.min.value.w=min_value
+#panl.range.max.value.w=max_value
+#panl.range.min.wildcard.w=true
+#panl.range.max.wildcard.w=true
+# By default Solr will always return facet ordered by count descending (i.e.
+# The largest counts first) - uncomment the below line to return it in value
+# order (e.g. alphabetical/numerical)
+#panl.facetsort.d=index
+# If you want this facet to only appear if another facet has already been
+# passed through then add the LPSE code(s) in a comma separated list below
+#panl.when.d=
+
+# <field "indexed"="true" "stored"="true" "name"="weight" "type"="pint" "multiValued"="false" />
+# This configuration can be either a field or a facet as it is indexed in Solr
+panl.facet.w=weight
+panl.name.w=Weight
+panl.type.w=solr.IntPointField
+# This field is a candidate for an OR facet, you may wish to configure the
+# following properties
+#panl.or.facet.w=true
+#panl.or.always.w=true
+# The following two properties are optional and may be set to any value
+#panl.prefix.w=prefix
+#panl.suffix.w=suffix
+# This field can be configured as a range facet by setting the following
+# properties
+#panl.range.facet.w=true
+#panl.range.min.w=0
+#panl.range.max.w=100
+#panl.range.prefix.w=range_prefix
+#panl.range.infix.w=range_infix
+#panl.range.suffix.w=range_suffix
+#panl.range.min.value.w=min_value
+#panl.range.max.value.w=max_value
+#panl.range.min.wildcard.w=true
+#panl.range.max.wildcard.w=true
+# By default Solr will always return facet ordered by count descending (i.e.
+# The largest counts first) - uncomment the below line to return it in value
+# order (e.g. alphabetical/numerical)
+#panl.facetsort.w=index
+# If you want this facet to only appear if another facet has already been
+# passed through then add the LPSE code(s) in a comma separated list below
+#panl.when.w=
+
+# <field "indexed"="true" "stored"="true" "name"="relative_weight" "type"="pint" "multiValued"="false" />
+# This configuration can be either a field or a facet as it is indexed in Solr
+panl.facet.R=relative_weight
+panl.name.R=Relative Weight
+panl.type.R=solr.IntPointField
+# This field is a candidate for an OR facet, you may wish to configure the
+# following properties
+#panl.or.facet.R=true
+#panl.or.always.R=true
+# The following two properties are optional and may be set to any value
+#panl.prefix.R=prefix
+#panl.suffix.R=suffix
+# This field can be configured as a range facet by setting the following
+# properties
+#panl.range.facet.w=true
+#panl.range.min.w=0
+#panl.range.max.w=100
+#panl.range.prefix.w=range_prefix
+#panl.range.infix.w=range_infix
+#panl.range.suffix.w=range_suffix
+#panl.range.min.value.w=min_value
+#panl.range.max.value.w=max_value
+#panl.range.min.wildcard.w=true
+#panl.range.max.wildcard.w=true
+# By default Solr will always return facet ordered by count descending (i.e.
+# The largest counts first) - uncomment the below line to return it in value
+# order (e.g. alphabetical/numerical)
+#panl.facetsort.R=index
+# If you want this facet to only appear if another facet has already been
+# passed through then add the LPSE code(s) in a comma separated list below
+#panl.when.R=
+
+# <field "indexed"="true" "stored"="true" "name"="lead_length" "type"="pint" "multiValued"="false" />
+# This configuration can be either a field or a facet as it is indexed in Solr
+panl.facet.L=lead_length
+panl.name.L=Lead Length
+panl.type.L=solr.IntPointField
+# This field is a candidate for an OR facet, you may wish to configure the
+# following properties
+#panl.or.facet.L=true
+#panl.or.always.L=true
+# The following two properties are optional and may be set to any value
+#panl.prefix.L=prefix
+#panl.suffix.L=suffix
+# This field can be configured as a range facet by setting the following
+# properties
+#panl.range.facet.w=true
+#panl.range.min.w=0
+#panl.range.max.w=100
+#panl.range.prefix.w=range_prefix
+#panl.range.infix.w=range_infix
+#panl.range.suffix.w=range_suffix
+#panl.range.min.value.w=min_value
+#panl.range.max.value.w=max_value
+#panl.range.min.wildcard.w=true
+#panl.range.max.wildcard.w=true
+# By default Solr will always return facet ordered by count descending (i.e.
+# The largest counts first) - uncomment the below line to return it in value
+# order (e.g. alphabetical/numerical)
+#panl.facetsort.L=index
+# If you want this facet to only appear if another facet has already been
+# passed through then add the LPSE code(s) in a comma separated list below
+#panl.when.L=
+
+# <field "indexed"="true" "stored"="true" "name"="disassemble" "type"="boolean" "multiValued"="false" />
+# This configuration can be either a field or a facet as it is indexed in Solr
+panl.facet.D=disassemble
+panl.name.D=Disassemble
+panl.type.D=solr.BoolField
+# This field is a candidate for an OR facet, you may wish to configure the
+# following properties
+#panl.or.facet.D=true
+#panl.or.always.D=true
+# The following two properties are optional and may be set to any value
+#panl.prefix.D=prefix
+#panl.suffix.D=suffix
+# Because this is a Boolean field, you can use a boolean value replacement for
+# either the true value, the false value, or neither.  This makes a more human-
+# readable URL
+#panl.bool.D.true=is-disassemble
+#panl.bool.D.false=is-not-disassemble
+# If you want this facet to only appear if another facet has already been
+# passed through then add the LPSE code(s) in a comma separated list below
+#panl.when.D=
+
+# <field "indexed"="true" "stored"="true" "name"="hardness_indicator" "type"="string" "multiValued"="false" />
+# This configuration can be either a field or a facet as it is indexed in Solr
+panl.facet.h=hardness_indicator
+panl.name.h=Hardness Indicator
+panl.type.h=solr.StrField
+# This field is a candidate for an OR facet, you may wish to configure the
+# following properties
+#panl.or.facet.h=true
+#panl.or.always.h=true
+# The following two properties are optional and may be set to any value
+#panl.prefix.h=prefix
+#panl.suffix.h=suffix
+# By default Solr will always return facet ordered by count descending (i.e.
+# The largest counts first) - uncomment the below line to return it in value
+# order (e.g. alphabetical/numerical)
+#panl.facetsort.h=index
+# If you want this facet to only appear if another facet has already been
+# passed through then add the LPSE code(s) in a comma separated list below
+#panl.when.h=
+
+# <field "indexed"="true" "stored"="false" "name"="in_built_eraser" "type"="boolean" "multiValued"="false" />
+# This configuration can be either a field or a facet as it is indexed in Solr
+panl.facet.I=in_built_eraser
+panl.name.I=In Built Eraser
+panl.type.I=solr.BoolField
+# This field is a candidate for an OR facet, you may wish to configure the
+# following properties
+#panl.or.facet.I=true
+#panl.or.always.I=true
+# The following two properties are optional and may be set to any value
+#panl.prefix.I=prefix
+#panl.suffix.I=suffix
+# Because this is a Boolean field, you can use a boolean value replacement for
+# either the true value, the false value, or neither.  This makes a more human-
+# readable URL
+#panl.bool.I.true=is-in_built_eraser
+#panl.bool.I.false=is-not-in_built_eraser
+# If you want this facet to only appear if another facet has already been
+# passed through then add the LPSE code(s) in a comma separated list below
+#panl.when.I=
+
+# <field "stored"="true" "name"="variants" "type"="string" "multiValued"="true" />
+# This configuration can __ONLY__ ever be a field as it is not indexed in Solr
+panl.field.v=variants
+panl.name.v=Variants
+panl.type.v=solr.StrField
+
+# <field "indexed"="true" "stored"="true" "name"="text" "type"="text_general" "multiValued"="true" />
+# This configuration can be either a field or a facet as it is indexed in Solr
+panl.facet.t=text
+panl.name.t=Text
+panl.type.t=solr.TextField
+# This Solr field is configured as multiValued, and is added as a property for the
+# so that single page search can be generated properly.  You __SHOULD_NOT___
+# change this unless the underlying Solr schema changes
+panl.multivalue.t=true
+# The following two properties are optional and may be set to any value
+#panl.prefix.t=prefix
+#panl.suffix.t=suffix
+# By default Solr will always return facet ordered by count descending (i.e.
+# The largest counts first) - uncomment the below line to return it in value
+# order (e.g. alphabetical/numerical)
+#panl.facetsort.t=index
+# If you want this facet to only appear if another facet has already been
+# passed through then add the LPSE code(s) in a comma separated list below
+#panl.when.t=
+
 
 #                        Panl LPSE Order Configuration
 #                        ---- ---- ----- -------------
@@ -441,7 +879,32 @@ $panl.lpse.fields
 #
 #                                ~ ~ ~ * ~ ~ ~
 
-$panl.lpse.order
+panl.lpse.order=z,\
+i,\
+b,\
+N,\
+m,\
+B,\
+g,\
+G,\
+c,\
+C,\
+l,\
+r,\
+d,\
+w,\
+R,\
+L,\
+D,\
+h,\
+I,\
+v,\
+t,\
+q,\
+p,\
+n,\
+s,\
+o
 
 #                       Panl LPSE Ignore Configuration
 #                       ---- ---- ------ -------------
@@ -486,8 +949,32 @@ panl.lpse.ignore=
 #
 #                                ~ ~ ~ * ~ ~ ~
 
-$panl.results.fields.default
-$panl.results.fields.firstfive
+panl.results.fields.default=id,\
+brand,\
+name,\
+mechanism_type,\
+body_shape,\
+grip_type,\
+grip_shape,\
+cap_shape,\
+category,\
+length,\
+relative_length,\
+diameter,\
+weight,\
+relative_weight,\
+lead_length,\
+disassemble,\
+hardness_indicator,\
+in_built_eraser,\
+variants,\
+text
+
+panl.results.fields.firstfive=id,\
+brand,\
+name,\
+mechanism_type,\
+body_shape
 
 #                        Panl Sort Field Configuration
 #                        ---- ---- ----- -------------

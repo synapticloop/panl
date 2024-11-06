@@ -79,14 +79,6 @@
 #                                                                             #
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 
-$                                ~ ~ ~ * ~ ~ ~
-$
-$  NOTE: Any line in this file that starts with a dollar sign (and at least one
-$        whitespace character) is used by the panl generator for in-line
-$        replacement, and are __NOT__ replacement properties that can be set.
-$        (These lines will not appear in the output properties file.)
-$
-$                                ~ ~ ~ * ~ ~ ~
 
 #                              Panl LPSE Length
 #                              ---- ---- ------
@@ -96,7 +88,7 @@ $                                ~ ~ ~ * ~ ~ ~
 #
 #                                ~ ~ ~ * ~ ~ ~
 
-$panl.lpse.length
+panl.lpse.length=1
 
 #                                Panl Metadata
 #                                ---- --------
@@ -132,13 +124,13 @@ $panl.lpse.length
 #
 #                                ~ ~ ~ * ~ ~ ~
 
-$panl.param.query
-$panl.param.sort
-$panl.param.page
-$panl.param.numrows
-$panl.param.query.operand
-$panl.param.passthrough
-$panl.param.passthrough.canonical
+panl.param.query=q
+panl.param.sort=s
+panl.param.page=p
+panl.param.numrows=n
+panl.param.query.operand=o
+panl.param.passthrough=z
+panl.param.passthrough.canonical=false
 
 #                        The Form Query To Respond To
 #                        --- ---- ----- -- ------- --
@@ -415,7 +407,207 @@ solr.highlight=false
 #
 #                                ~ ~ ~ * ~ ~ ~
 
-$panl.lpse.fields
+panl.lpse.fields=
+# <field "stored"="true" "name"="id" "type"="string" "multiValued"="false" "required"="true" />
+# This configuration can __ONLY__ ever be a field as it is not indexed in Solr
+panl.field.i=id
+panl.name.i=Id
+panl.type.i=solr.StrField
+
+# <field "indexed"="true" "stored"="true" "name"="solr_date" "type"="pdate" "multiValued"="false" />
+# This configuration can be either a field or a facet as it is indexed in Solr
+panl.facet.S=solr_date
+panl.name.S=Solr Date
+panl.type.S=solr.DatePointField
+# Because this is a Date field, there are special queries that can be applied
+# for a date range. You can query for results up to NOW, or from NOW onwards.
+# Either, or both of these properties may be set
+#panl.date.S.previous=previous
+#panl.date.S.next=next
+#panl.date.S.years=\ years
+#panl.date.S.months=\ months
+#panl.date.S.days=\ days
+#panl.date.S.hours=\ hours
+# If you want this facet to only appear if another facet has already been
+# passed through then add the LPSE code(s) in a comma separated list below
+#panl.when.S=
+
+# <field "indexed"="true" "stored"="true" "name"="text_date" "type"="string" "multiValued"="false" />
+# This configuration can be either a field or a facet as it is indexed in Solr
+panl.facet.t=text_date
+panl.name.t=Text Date
+panl.type.t=solr.StrField
+# This field is a candidate for an OR facet, you may wish to configure the
+# following properties
+#panl.or.facet.t=true
+#panl.or.always.t=true
+# The following two properties are optional and may be set to any value
+#panl.prefix.t=prefix
+#panl.suffix.t=suffix
+# By default Solr will always return facet ordered by count descending (i.e.
+# The largest counts first) - uncomment the below line to return it in value
+# order (e.g. alphabetical/numerical)
+#panl.facetsort.t=index
+# If you want this facet to only appear if another facet has already been
+# passed through then add the LPSE code(s) in a comma separated list below
+#panl.when.t=
+
+# <field "indexed"="true" "stored"="true" "name"="year" "type"="pint" "multiValued"="false" />
+# This configuration can be either a field or a facet as it is indexed in Solr
+panl.facet.y=year
+panl.name.y=Year
+panl.type.y=solr.IntPointField
+# This field is a candidate for an OR facet, you may wish to configure the
+# following properties
+#panl.or.facet.y=true
+#panl.or.always.y=true
+# The following two properties are optional and may be set to any value
+#panl.prefix.y=prefix
+#panl.suffix.y=suffix
+# This field can be configured as a range facet by setting the following
+# properties
+#panl.range.facet.w=true
+#panl.range.min.w=0
+#panl.range.max.w=100
+#panl.range.prefix.w=range_prefix
+#panl.range.infix.w=range_infix
+#panl.range.suffix.w=range_suffix
+#panl.range.min.value.w=min_value
+#panl.range.max.value.w=max_value
+#panl.range.min.wildcard.w=true
+#panl.range.max.wildcard.w=true
+# By default Solr will always return facet ordered by count descending (i.e.
+# The largest counts first) - uncomment the below line to return it in value
+# order (e.g. alphabetical/numerical)
+#panl.facetsort.y=index
+# If you want this facet to only appear if another facet has already been
+# passed through then add the LPSE code(s) in a comma separated list below
+#panl.when.y=
+
+# <field "indexed"="true" "stored"="true" "name"="decade" "type"="pint" "multiValued"="false" />
+# This configuration can be either a field or a facet as it is indexed in Solr
+panl.facet.d=decade
+panl.name.d=Decade
+panl.type.d=solr.IntPointField
+# This field is a candidate for an OR facet, you may wish to configure the
+# following properties
+#panl.or.facet.d=true
+#panl.or.always.d=true
+# The following two properties are optional and may be set to any value
+#panl.prefix.d=prefix
+#panl.suffix.d=suffix
+# This field can be configured as a range facet by setting the following
+# properties
+#panl.range.facet.w=true
+#panl.range.min.w=0
+#panl.range.max.w=100
+#panl.range.prefix.w=range_prefix
+#panl.range.infix.w=range_infix
+#panl.range.suffix.w=range_suffix
+#panl.range.min.value.w=min_value
+#panl.range.max.value.w=max_value
+#panl.range.min.wildcard.w=true
+#panl.range.max.wildcard.w=true
+# By default Solr will always return facet ordered by count descending (i.e.
+# The largest counts first) - uncomment the below line to return it in value
+# order (e.g. alphabetical/numerical)
+#panl.facetsort.d=index
+# If you want this facet to only appear if another facet has already been
+# passed through then add the LPSE code(s) in a comma separated list below
+#panl.when.d=
+
+# <field "indexed"="true" "stored"="true" "name"="month" "type"="string" "multiValued"="false" />
+# This configuration can be either a field or a facet as it is indexed in Solr
+panl.facet.m=month
+panl.name.m=Month
+panl.type.m=solr.StrField
+# This field is a candidate for an OR facet, you may wish to configure the
+# following properties
+#panl.or.facet.m=true
+#panl.or.always.m=true
+# The following two properties are optional and may be set to any value
+#panl.prefix.m=prefix
+#panl.suffix.m=suffix
+# By default Solr will always return facet ordered by count descending (i.e.
+# The largest counts first) - uncomment the below line to return it in value
+# order (e.g. alphabetical/numerical)
+#panl.facetsort.m=index
+# If you want this facet to only appear if another facet has already been
+# passed through then add the LPSE code(s) in a comma separated list below
+#panl.when.m=
+
+# <field "indexed"="true" "stored"="true" "name"="day" "type"="pint" "multiValued"="false" />
+# This configuration can be either a field or a facet as it is indexed in Solr
+panl.facet.D=day
+panl.name.D=Day
+panl.type.D=solr.IntPointField
+# This field is a candidate for an OR facet, you may wish to configure the
+# following properties
+#panl.or.facet.D=true
+#panl.or.always.D=true
+# The following two properties are optional and may be set to any value
+#panl.prefix.D=prefix
+#panl.suffix.D=suffix
+# This field can be configured as a range facet by setting the following
+# properties
+#panl.range.facet.w=true
+#panl.range.min.w=0
+#panl.range.max.w=100
+#panl.range.prefix.w=range_prefix
+#panl.range.infix.w=range_infix
+#panl.range.suffix.w=range_suffix
+#panl.range.min.value.w=min_value
+#panl.range.max.value.w=max_value
+#panl.range.min.wildcard.w=true
+#panl.range.max.wildcard.w=true
+# By default Solr will always return facet ordered by count descending (i.e.
+# The largest counts first) - uncomment the below line to return it in value
+# order (e.g. alphabetical/numerical)
+#panl.facetsort.D=index
+# If you want this facet to only appear if another facet has already been
+# passed through then add the LPSE code(s) in a comma separated list below
+#panl.when.D=
+
+# <field "indexed"="true" "stored"="true" "name"="week_day" "type"="string" "multiValued"="false" />
+# This configuration can be either a field or a facet as it is indexed in Solr
+panl.facet.w=week_day
+panl.name.w=Week Day
+panl.type.w=solr.StrField
+# This field is a candidate for an OR facet, you may wish to configure the
+# following properties
+#panl.or.facet.w=true
+#panl.or.always.w=true
+# The following two properties are optional and may be set to any value
+#panl.prefix.w=prefix
+#panl.suffix.w=suffix
+# By default Solr will always return facet ordered by count descending (i.e.
+# The largest counts first) - uncomment the below line to return it in value
+# order (e.g. alphabetical/numerical)
+#panl.facetsort.w=index
+# If you want this facet to only appear if another facet has already been
+# passed through then add the LPSE code(s) in a comma separated list below
+#panl.when.w=
+
+# <field "indexed"="true" "stored"="true" "name"="text" "type"="text_general" "multiValued"="true" />
+# This configuration can be either a field or a facet as it is indexed in Solr
+panl.facet.T=text
+panl.name.T=Text
+panl.type.T=solr.TextField
+# This Solr field is configured as multiValued, and is added as a property for the
+# so that single page search can be generated properly.  You __SHOULD_NOT___
+# change this unless the underlying Solr schema changes
+panl.multivalue.T=true
+# The following two properties are optional and may be set to any value
+#panl.prefix.T=prefix
+#panl.suffix.T=suffix
+# By default Solr will always return facet ordered by count descending (i.e.
+# The largest counts first) - uncomment the below line to return it in value
+# order (e.g. alphabetical/numerical)
+#panl.facetsort.T=index
+# If you want this facet to only appear if another facet has already been
+# passed through then add the LPSE code(s) in a comma separated list below
+#panl.when.T=
+
 
 #                        Panl LPSE Order Configuration
 #                        ---- ---- ----- -------------
@@ -441,7 +633,21 @@ $panl.lpse.fields
 #
 #                                ~ ~ ~ * ~ ~ ~
 
-$panl.lpse.order
+panl.lpse.order=z,\
+i,\
+S,\
+t,\
+y,\
+d,\
+m,\
+D,\
+w,\
+T,\
+q,\
+p,\
+n,\
+s,\
+o
 
 #                       Panl LPSE Ignore Configuration
 #                       ---- ---- ------ -------------
@@ -486,8 +692,21 @@ panl.lpse.ignore=
 #
 #                                ~ ~ ~ * ~ ~ ~
 
-$panl.results.fields.default
-$panl.results.fields.firstfive
+panl.results.fields.default=id,\
+solr_date,\
+text_date,\
+year,\
+decade,\
+month,\
+day,\
+week_day,\
+text
+
+panl.results.fields.firstfive=id,\
+solr_date,\
+text_date,\
+year,\
+decade
 
 #                        Panl Sort Field Configuration
 #                        ---- ---- ----- -------------

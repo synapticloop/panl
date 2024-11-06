@@ -1,5 +1,3 @@
-package com.synapticloop.panl.generator.bean;
-
 /*
  * Copyright (c) 2008-2024 synapticloop.
  *
@@ -24,28 +22,21 @@ package com.synapticloop.panl.generator.bean;
  * IN THE SOFTWARE.
  */
 
-public class PanlProperty {
-	private final String panlPropertyName;
-	private final String panlPropertyValue;
-	private final boolean hideProperty;
+package com.synapticloop.panl.generator.bean.field;
 
-	public PanlProperty(String panlPropertyName, String panlPropertyValue) {
-		this.panlPropertyName = panlPropertyName;
-		this.panlPropertyValue = panlPropertyValue;
-		this.hideProperty = false;
+public class PanlUnsupportedField extends BasePanlField {
+	protected PanlUnsupportedField(String lpseCode,
+		String solrFieldName,
+		String solrFieldType,
+		String schemaXmlLine,
+		boolean isFacet,
+		boolean isMultiValued) {
+
+		super(lpseCode, solrFieldName, solrFieldType, schemaXmlLine, isFacet, isMultiValued);
 	}
 
-	public PanlProperty(String panlPropertyName, String panlPropertyValue, boolean hideProperty) {
-		this.panlPropertyName = panlPropertyName;
-		this.panlPropertyValue = panlPropertyValue;
-		this.hideProperty = hideProperty;
+	@Override public String getAdditionalProperties() {
+		return "";
 	}
 
-	public String toProperties() {
-		if(hideProperty) {
-			return(panlPropertyValue);
-		} else {
-			return (panlPropertyName + "=" + panlPropertyValue);
-		}
-	}
 }

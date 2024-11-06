@@ -22,40 +22,23 @@
  * IN THE SOFTWARE.
  */
 
-package com.synapticloop.panl.generator.bean;
+package com.synapticloop.panl.generator.bean.field;
 
-public class SolrField {
-	private final String name;
-	private final boolean isFacetable;
-	private boolean isSupported = false;
-	private boolean isMultiValued = false;
+public class PanlTextField extends BasePanlField {
+	protected PanlTextField(String lpseCode,
+		String solrFieldName,
+		String solrFieldType,
+		String schemaXmlLine,
+		boolean isFacet,
+		boolean isMultiValued) {
 
-	public SolrField(String name, boolean isFacetable) {
-		this.name = name;
-		this.isFacetable = isFacetable;
+		super(lpseCode, solrFieldName, solrFieldType, schemaXmlLine, isFacet, isMultiValued);
 	}
 
-	public String getName() {
-		return name;
+	@Override public String getAdditionalProperties() {
+		StringBuilder stringBuilder = new StringBuilder(getPrefixSuffix());
+		stringBuilder.append(getSortOrder());
+		return(stringBuilder.toString());
 	}
 
-	public boolean getIsFacetable() {
-		return isFacetable;
-	}
-
-	public boolean getIsSupported() {
-		return isSupported;
-	}
-
-	public void setIsSupported(boolean supported) {
-		isSupported = supported;
-	}
-
-	public boolean getIsMultiValued() {
-		return isMultiValued;
-	}
-
-	public void setIsMultiValued(boolean multiValued) {
-		isMultiValued = multiValued;
-	}
 }

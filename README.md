@@ -1,12 +1,9 @@
 # Synapticloop PANL
 
-<p style="text-align: center">
-   <img src="src/docs/synapticloop-logo.png" alt="The Synapticloop logo" />
-</p>
+<img src="src/docs/synapticloop-logo.png" alt="The Synapticloop logo" />
 
-<p style="text-align: center">
-   <img src="src/main/resources/webapp/static/favicon.png" alt="The Synapticloop Panl Favicon" />
-</p>
+---
+<img src="src/main/resources/webapp/static/favicon.png" alt="The Synapticloop Panl Favicon" />&nbsp;anl&nbsp;Server
 
 ---
 
@@ -33,8 +30,8 @@
 #                                                                             #
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 ```
-
-`Build and test 'needy-phantom' branch:` [![CircleCI](https://dl.circleci.com/status-badge/img/circleci/3Y1eqqe4mcvtSZuzJnQ3tJ/DyFKUm7c7AoLa1wHmRjAnf/tree/needy-phanton.svg?style=svg)](https://dl.circleci.com/status-badge/redirect/circleci/3Y1eqqe4mcvtSZuzJnQ3tJ/DyFKUm7c7AoLa1wHmRjAnf/tree/needy-phanton) (courtesy of Circle-CI)
+****
+`Build and test 'billowing-deather' branch:` [![CircleCI](https://dl.circleci.com/status-badge/img/circleci/3Y1eqqe4mcvtSZuzJnQ3tJ/DyFKUm7c7AoLa1wHmRjAnf/tree/needy-phanton.svg?style=svg)](https://dl.circleci.com/status-badge/redirect/circleci/3Y1eqqe4mcvtSZuzJnQ3tJ/DyFKUm7c7AoLa1wHmRjAnf/tree/billowing-feather) (courtesy of Circle-CI)
 
 `Latest release tag:` ![GitHub Tag](https://img.shields.io/github/v/tag/synapticloop/panl)
 
@@ -72,7 +69,7 @@ looks A LOT nicer than
 
 # Why Synapticloop Panl?
 
-Panl was designed to convert rather long and unfriendly (both in human readable and SEO terms) to shorter, nicer, and friendlier URL paths throughout the entire search journey.
+Panl was designed to convert rather long and unfriendly (both in human-readable and SEO terms) to shorter, nicer, and friendlier URL paths throughout the entire search journey.
 
 Working with a Solr schema, the Panl configuration files translate unwieldy URL parameters into concise and precise URL paths.
 
@@ -159,6 +156,8 @@ _The image is a screenshot of the in-built Panl Results Viewer Web App available
 
 1. **Sorting options** - Whether to sort by relevance (the default) or by other configured sorting options with ascending and descending options available.  Any Solr field can be configured to be used as a sorting option.  And multi-sort orders are available, allowing sorting on more than one field.
 
+1. **Integrated Typeahead/Lookahead** - Retrieve results suggestions as you type in the query search box.
+
 1. **Pagination options** - the Panl server returns all information needed to build a pagination system, number of results, number of results shown per page and the current page number.
 
 1. **Number of results per page**. Note: The values 3,5,10 are just examples - this can be set to any positive integer number.
@@ -166,6 +165,7 @@ _The image is a screenshot of the in-built Panl Results Viewer Web App available
 1. **Timing information** about how long the Panl server took to build and return the results (including how much time the Solr server took to find and return the results).
 
 1. **The results** -  the fields that are returned with the documents and are shown in the results sections which are configured by the CaFUPs. Multiple field sets can be configured for the collection.
+
 
 ## The Panl Results Explainer Web App
 
@@ -408,8 +408,21 @@ with the release files named `solr-panl-9-x.x.x` where `x.x.x` is the version nu
 
 ## 1.3.0 - Fluffy stuff (codename `billowing-feather`) **UNDER DEVELOPMENT**
 
+- New Features
+  - Added in lookahead query handler for Solr panl including panl results viewer lookahead 
+
+
+
+- Bug fixes
+  - Bug where Panl client will always look for the '`q`' parameter for the query, changed to ensure that the correct configured `panl.form.query.respondto` is used instead
+
+
+
 - Code Changes
-  - **[BREAKING CHANGE]** Changed range facets LPSE codes from `w-w` to `w-` (i.e. removed the additional LPSE code)
+  - **[BREAKING CHANGE]** Changed range facets LPSE codes from `w-w` to `w-` and `w+w` to `w+` (i.e. removed the additional LPSE code)
+  - General code cleanup and refactorings
+  - Added in Testing for the Panl Generator and refactored how it is being done.
+  - Refactored PanlFields for the generator to output better comments and helpful information rather than more comments than necessary
 
 
 ## 1.2.0 - more like this (codename `needy-phanton`) 

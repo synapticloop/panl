@@ -26,6 +26,7 @@ package com.synapticloop.panl.generator.bean;
 
 import com.synapticloop.panl.exception.PanlGenerateException;
 import com.synapticloop.panl.generator.PanlGenerator;
+import com.synapticloop.panl.generator.bean.field.BasePanlField;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -52,18 +53,26 @@ public class PanlCollection {
 	private String collectionName;
 	private final List<SolrField> solrFields = new ArrayList<>();
 	private final List<String> resultFieldNames = new ArrayList<>();
-	private final List<PanlField> panlFields = new ArrayList<>();
-	private final List<SolrField> unassignedSolrFields = new ArrayList<>();
+	private final List<BasePanlField> basePanlFields = new ArrayList<>();
 	private final Map<String, String> fieldXmlMap = new HashMap<>();
 	private int lpseLength = 1;
 	public static String CODES = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz01234567890";
 
 	private static final Set<String> CODES_AVAILABLE = new HashSet<>();
-	private static final Map<String, PanlProperty> PANL_PROPERTIES = new HashMap<>();
+	private static final Map<String, String> PANL_PROPERTIES = new HashMap<>();
 	private static final Map<String, String> SOLR_FIELD_TYPE_NAME_TO_SOLR_CLASS = new HashMap<>();
 	private static final Map<String, String> SOLR_FIELD_NAME_TO_SOLR_FIELD_TYPE = new HashMap<>();
 
 	private static final Set<String> SUPPORTED_SOLR_FIELD_TYPES = new HashSet<>();
+
+	private static final String[] LPSE_ORDER_PARAMS = {
+		PanlGenerator.PANL_PARAM_QUERY,
+		PanlGenerator.PANL_PARAM_PAGE,
+		PanlGenerator.PANL_PARAM_NUMROWS,
+		PanlGenerator.PANL_PARAM_SORT,
+		PanlGenerator.PANL_PARAM_QUERY_OPERAND
+	};
+
 	static {
 		SUPPORTED_SOLR_FIELD_TYPES.add("solr.BoolField");
 		SUPPORTED_SOLR_FIELD_TYPES.add("solr.StrField");
@@ -79,13 +88,13 @@ public class PanlCollection {
 	public PanlCollection(File schema, Map<String, String> panlReplacementPropertyMap) throws PanlGenerateException {
 		parseSchemaFile(schema);
 
-		 int numSupported = 0;
+		int numSupported = 0;
 		// now that we have parsed the Solr fields, go through and mark the fields
 		// as either supported or not supported
-		for(SolrField solrField : solrFields) {
+		for (SolrField solrField : solrFields) {
 			String fieldName = solrField.getName();
 			String solrClass = SOLR_FIELD_TYPE_NAME_TO_SOLR_CLASS.get(SOLR_FIELD_NAME_TO_SOLR_FIELD_TYPE.get(fieldName));
-			if(SUPPORTED_SOLR_FIELD_TYPES.contains(solrClass)) {
+			if (SUPPORTED_SOLR_FIELD_TYPES.contains(solrClass)) {
 				solrField.setIsSupported(true);
 				numSupported++;
 			} else {
@@ -116,17 +125,16 @@ public class PanlCollection {
 
 		generateAvailableCodesForFields();
 
-		PanlProperty lpseLength = new PanlProperty("panl.lpse.length", "" + this.lpseLength);
-		PANL_PROPERTIES.put("$panl.lpse.length", lpseLength);
+		PANL_PROPERTIES.put("panl.lpse.length", "" + this.lpseLength);
 
 		for (String property : panlReplacementPropertyMap.keySet()) {
-			PanlProperty temp = new PanlProperty(property.substring(1), panlReplacementPropertyMap.get(property));
-			PANL_PROPERTIES.put(property, temp);
+			PANL_PROPERTIES.put(property, panlReplacementPropertyMap.get(property));
 		}
 
 		// now go through to panlFields and assign a code which is close to what they want...
+		List<SolrField> unassignedSolrFields = new ArrayList<>();
 		for (SolrField solrField : solrFields) {
-			if(!solrField.getIsSupported()) {
+			if (!solrField.getIsSupported()) {
 				continue;
 			}
 
@@ -134,28 +142,32 @@ public class PanlCollection {
 			String cleanedName = fieldName.replaceAll("[^A-Za-z0-9]", "");
 			String possibleCode = cleanedName.substring(0, this.lpseLength);
 			if (CODES_AVAILABLE.contains(possibleCode)) {
-				panlFields.add(new PanlField(
-						possibleCode,
-						fieldName,
-						SOLR_FIELD_TYPE_NAME_TO_SOLR_CLASS.get(SOLR_FIELD_NAME_TO_SOLR_FIELD_TYPE.get(fieldName)),
-						fieldXmlMap.get(fieldName),
-						solrField.getIsFacet(),
-						solrField.getIsMultiValued()));
+
+				basePanlFields.add(BasePanlField.getPanlField(
+					possibleCode,
+					fieldName,
+					SOLR_FIELD_TYPE_NAME_TO_SOLR_CLASS.get(SOLR_FIELD_NAME_TO_SOLR_FIELD_TYPE.get(fieldName)),
+					fieldXmlMap.get(fieldName),
+					solrField.getIsFacetable(),
+					solrField.getIsMultiValued()));
+
 				LOGGER.info("Assigned field '{}' to panl code '{}'", fieldName, possibleCode);
+
 				CODES_AVAILABLE.remove(possibleCode);
 			} else if (CODES_AVAILABLE.contains(possibleCode.toUpperCase())) {
 				String nextPossibleCode = possibleCode.toUpperCase();
-				panlFields.add(new PanlField(
-						nextPossibleCode,
-						fieldName,
-						SOLR_FIELD_TYPE_NAME_TO_SOLR_CLASS.get(SOLR_FIELD_NAME_TO_SOLR_FIELD_TYPE.get(fieldName)),
-						fieldXmlMap.get(fieldName),
-						solrField.getIsFacet(),
-						solrField.getIsMultiValued()));
+				basePanlFields.add(BasePanlField.getPanlField(
+					nextPossibleCode,
+					fieldName,
+					SOLR_FIELD_TYPE_NAME_TO_SOLR_CLASS.get(SOLR_FIELD_NAME_TO_SOLR_FIELD_TYPE.get(fieldName)),
+					fieldXmlMap.get(fieldName),
+					solrField.getIsFacetable(),
+					solrField.getIsMultiValued()));
 				LOGGER.info("Assigned field '{}' to panl code '{}'", fieldName, nextPossibleCode);
 				CODES_AVAILABLE.remove(nextPossibleCode);
 			} else {
-				LOGGER.warn("No nice panl code for field '{}', '{}' and '{}' already taken", fieldName, possibleCode, possibleCode.toUpperCase());
+				LOGGER.warn("No nice panl code for field '{}', '{}' and '{}' already taken", fieldName, possibleCode,
+					possibleCode.toUpperCase());
 				unassignedSolrFields.add(solrField);
 			}
 		}
@@ -172,13 +184,13 @@ public class PanlCollection {
 					assignedCode = code;
 
 					String fieldName = solrField.getName();
-					panlFields.add(new PanlField(
-							assignedCode,
-							fieldName,
-							SOLR_FIELD_TYPE_NAME_TO_SOLR_CLASS.get(SOLR_FIELD_NAME_TO_SOLR_FIELD_TYPE.get(fieldName)),
-							fieldXmlMap.get(fieldName),
-							solrField.getIsFacet(),
-							solrField.getIsMultiValued()));
+					basePanlFields.add(BasePanlField.getPanlField(
+						assignedCode,
+						fieldName,
+						SOLR_FIELD_TYPE_NAME_TO_SOLR_CLASS.get(SOLR_FIELD_NAME_TO_SOLR_FIELD_TYPE.get(fieldName)),
+						fieldXmlMap.get(fieldName),
+						solrField.getIsFacetable(),
+						solrField.getIsMultiValued()));
 
 					LOGGER.info("Assigned field '{}' to RANDOM panl code '{}'", fieldName, assignedCode);
 					break;
@@ -191,32 +203,36 @@ public class PanlCollection {
 
 		StringBuilder panlLpseOrder = new StringBuilder();
 		// we are going to put the passthrough parameter first
-		panlLpseOrder.append(panlReplacementPropertyMap.get("$" + PanlGenerator.PANL_PARAM_PASSTHROUGH))
-				.append(",\\\n");
+		String panlParamPassthrough = panlReplacementPropertyMap.get(PanlGenerator.PANL_PARAM_PASSTHROUGH);
+		panlLpseOrder.append(
+			             panlParamPassthrough)
+		             .append(",\\\n");
 
-		panlReplacementPropertyMap.remove("$" + PanlGenerator.PANL_PARAM_PASSTHROUGH);
+		panlReplacementPropertyMap.remove(PanlGenerator.PANL_PARAM_PASSTHROUGH);
 
 		// last but not least, we need to put the lpse order
 		StringBuilder panlLpseFields = new StringBuilder();
-		for (PanlField panlField : panlFields) {
-			panlLpseOrder.append(panlField.getLpseCode());
+		for (BasePanlField basePanlField : basePanlFields) {
+			panlLpseOrder.append(basePanlField.getLpseCode());
 			panlLpseOrder.append(",\\\n");
-			panlLpseFields.append(panlField.toProperties());
+			panlLpseFields.append(basePanlField.toProperties());
 		}
 
 		// put in the other parameters (query etc)
-		// we are doing this as it is a linked hashmap on the order in which it was inserted
-		for (String key : panlReplacementPropertyMap.keySet()) {
+
+		for(String key: LPSE_ORDER_PARAMS) {
 			panlLpseOrder.append(panlReplacementPropertyMap.get(key))
-					.append(",\\\n");
+			             .append(",\\\n");
 		}
 
 		// remove the trailing comma
 		panlLpseOrder.setLength(panlLpseOrder.length() - 3);
 
+		// put the passthrough back
+		panlReplacementPropertyMap.put(PanlGenerator.PANL_PARAM_PASSTHROUGH, panlParamPassthrough);
 
-		PANL_PROPERTIES.put("$panl.lpse.order", new PanlProperty("panl.lpse.order", panlLpseOrder.toString()));
-		PANL_PROPERTIES.put("$panl.lpse.fields", new PanlProperty("panl.lpse.fields", panlLpseFields.toString(), true));
+		PANL_PROPERTIES.put("panl.lpse.order", panlLpseOrder.toString());
+		PANL_PROPERTIES.put("panl.lpse.fields", panlLpseFields.toString());
 
 		StringBuilder panlResultsFieldsDefault = new StringBuilder();
 		StringBuilder panlResultsFieldsFirstFive = new StringBuilder();
@@ -236,8 +252,8 @@ public class PanlCollection {
 		}
 		panlResultsFieldsDefault.append("\n");
 
-		PANL_PROPERTIES.put("$panl.results.fields.default", new PanlProperty("panl.results.fields.default", panlResultsFieldsDefault.toString()));
-		PANL_PROPERTIES.put("$panl.results.fields.firstfive", new PanlProperty("panl.results.fields.firstfive", panlResultsFieldsFirstFive.toString()));
+		PANL_PROPERTIES.put("panl.results.fields.default", panlResultsFieldsDefault.toString());
+		PANL_PROPERTIES.put("panl.results.fields.firstfive", panlResultsFieldsFirstFive.toString());
 	}
 
 	private void generateAvailableCodesForFields() {
@@ -274,7 +290,7 @@ public class PanlCollection {
 						case "schema":
 							this.collectionName = startElement.getAttributeByName(new QName("name")).getValue();
 							LOGGER.info("Found collection name of {}", this.collectionName);
-							if(this.collectionName.startsWith("panl-")) {
+							if (this.collectionName.startsWith("panl-")) {
 								throw new PanlGenerateException("You CANNOT have a collection that starts with 'panl-'");
 							}
 							break;
@@ -311,10 +327,10 @@ public class PanlCollection {
 								String attributeName = attribute.getName().toString();
 								String attributeValue = attribute.getValue();
 								sb.append("\"")
-										.append(attributeName)
-										.append("\"=\"")
-										.append(attributeValue)
-										.append("\" ");
+								  .append(attributeName)
+								  .append("\"=\"")
+								  .append(attributeValue)
+								  .append("\" ");
 							}
 							sb.append("/>");
 							fieldXmlMap.put(name, sb.toString());
@@ -347,7 +363,8 @@ public class PanlCollection {
 				}
 			}
 		} catch (XMLStreamException | FileNotFoundException e) {
-			throw new PanlGenerateException("Could not adequately parse the '" + schema.getAbsolutePath() + "' solr schema file.");
+			throw new PanlGenerateException(
+				"Could not adequately parse the '" + schema.getAbsolutePath() + "' solr schema file.");
 		}
 	}
 
@@ -357,16 +374,10 @@ public class PanlCollection {
 	 *
 	 * @param key The key to look for
 	 *
-	 * @return The replacement property, or an empty string if one could not be
-	 * 		found
+	 * @return The replacement property, or an empty string if one could not be found
 	 */
 	public String getPanlProperty(String key) {
-		PanlProperty panlProperty = PANL_PROPERTIES.get(key);
-		if (null == panlProperty) {
-			return ("");
-		} else {
-			return (panlProperty.toProperties() + "\n");
-		}
+		return(PANL_PROPERTIES.getOrDefault(key, ""));
 	}
 
 	/**
@@ -378,7 +389,11 @@ public class PanlCollection {
 		return (collectionName);
 	}
 
-	public List<PanlField> getFields() {
-		return (panlFields);
+	public List<BasePanlField> getFields() {
+		return (basePanlFields);
+	}
+
+	public int getLpseLength() {
+		return lpseLength;
 	}
 }

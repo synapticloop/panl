@@ -120,16 +120,21 @@ public class CollectionRequestHandler {
 	 * @throws PanlServerException If there was an error with the request
 	 */
 	public CollectionRequestHandler(String solrCollection,
-	                                String panlCollectionUri,
-	                                PanlProperties panlProperties,
-	                                CollectionProperties collectionProperties) throws PanlServerException {
+			String panlCollectionUri,
+			PanlProperties panlProperties,
+			CollectionProperties collectionProperties) throws PanlServerException {
+
 		LOGGER.info("[ Solr collection '{}' ] Initialising Panl collection URI {}", solrCollection, panlCollectionUri);
 
 		this.solrCollection = solrCollection;
 		this.panlCollectionUri = panlCollectionUri;
 		this.collectionProperties = collectionProperties;
 
-		panlClient = CollectionHelper.getPanlClient(panlProperties.getSolrjClient(), solrCollection, panlProperties, collectionProperties);
+		this.panlClient = CollectionHelper.getPanlClient(
+			panlProperties.getSolrjClient(),
+			solrCollection,
+			panlProperties,
+			collectionProperties);
 
 		this.activeProcessor = new ActiveProcessor(collectionProperties);
 		this.paginationProcessor = new PaginationProcessor(collectionProperties);
@@ -298,12 +303,12 @@ public class CollectionRequestHandler {
 
 			long buildRequestNanos = System.nanoTime() - startNanos;
 			startNanos = System.nanoTime();
-			final QueryResponse response = solrClient.query(this.solrCollection, solrQuery);
+			final QueryResponse solrQueryResponse = solrClient.query(this.solrCollection, solrQuery);
 
 			long sendAnReceiveNanos = System.nanoTime() - startNanos;
 			return (parseResponse(
 					lpseTokens,
-					response,
+					solrQueryResponse,
 					parseRequestNanos,
 					buildRequestNanos,
 					sendAnReceiveNanos));
@@ -317,7 +322,7 @@ public class CollectionRequestHandler {
 	 * <p>Parse the solrj response and add the panl information to it</p>
 	 *
 	 * @param lpseTokens The parsed URI and panl tokens
-	 * @param response The Solrj response to be parsed
+	 * @param solrQueryResponse The Solrj response to be parsed
 	 * @param parseRequestNanos The start time for this query in nanoseconds
 	 * @param buildRequestNanos The number of nanos it took to build the request
 	 * @param sendAndReceiveNanos The number of nanos it took to send the request
@@ -326,13 +331,13 @@ public class CollectionRequestHandler {
 	 */
 	private String parseResponse(
 			List<LpseToken> lpseTokens,
-			QueryResponse response,
+			QueryResponse solrQueryResponse,
 			long parseRequestNanos,
 			long buildRequestNanos,
 			long sendAndReceiveNanos) {
 
 		// set up the JSON response object
-		JSONObject solrJsonObject = new JSONObject(response.jsonStr());
+		JSONObject solrJsonObject = new JSONObject(solrQueryResponse.jsonStr());
 		JSONObject panlObject = new JSONObject();
 
 
@@ -375,7 +380,7 @@ public class CollectionRequestHandler {
 			}
 		}
 
-		panlObject.put(JSON_KEY_AVAILABLE, availableProcessor.processToObject(panlTokenMap, response));
+		panlObject.put(JSON_KEY_AVAILABLE, availableProcessor.processToObject(panlTokenMap, solrQueryResponse));
 
 		// now we are going to add the dynamic range if they exist
 		JSONObject statsObject = solrJsonObject.optJSONObject("stats");
@@ -416,7 +421,7 @@ public class CollectionRequestHandler {
 		panlObject.getJSONObject(JSON_KEY_AVAILABLE).put(Processor.JSON_KEY_FACETS, removedRanges);
 
 		panlObject.put(JSON_KEY_ACTIVE, activeProcessor.processToObject(panlTokenMap));
-		panlObject.put(JSON_KEY_PAGINATION, paginationProcessor.processToObject(panlTokenMap, response));
+		panlObject.put(JSON_KEY_PAGINATION, paginationProcessor.processToObject(panlTokenMap, solrQueryResponse));
 		panlObject.put(JSON_KEY_SORTING, sortingProcessor.processToObject(panlTokenMap));
 		panlObject.put(JSON_KEY_QUERY_OPERAND, queryOperandProcessor.processToObject(panlTokenMap));
 		panlObject.put(JSON_KEY_FIELDS, fieldsProcessor.processToObject(panlTokenMap));
@@ -532,12 +537,12 @@ public class CollectionRequestHandler {
 	}
 
 	/**
-	 * <p>Get the valid URLs as a JSON array string.</p>
+	 * <p>Get the valid URLs as a JSON array.</p>
 	 *
-	 * @return The valid URLs as a JSON array string
+	 * @return The valid URLs as a JSON array
 	 */
-	public String getValidUrlsJSONArrayString() {
-		return (collectionProperties.getValidUrlsJSONArrayString());
+	public JSONArray getValidUrls() {
+		return(collectionProperties.getValidUrls());
 	}
 
 	/**
@@ -590,5 +595,17 @@ public class CollectionRequestHandler {
 	 */
 	public List<String> getLpseOrder() {
 		return(collectionProperties.getPanlLpseOrderList());
+	}
+
+	public String getFormQueryRespondTo() {
+		return(collectionProperties.getFormQueryRespondTo());
+	}
+
+	public CollectionProperties getCollectionProperties() {
+		return collectionProperties;
+	}
+
+	public PanlClient getPanlClient() {
+		return panlClient;
 	}
 }
