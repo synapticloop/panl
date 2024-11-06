@@ -146,7 +146,7 @@ public class PanlCollection {
 					fieldName,
 					SOLR_FIELD_TYPE_NAME_TO_SOLR_CLASS.get(SOLR_FIELD_NAME_TO_SOLR_FIELD_TYPE.get(fieldName)),
 					fieldXmlMap.get(fieldName),
-					solrField.getIsFacet(),
+					solrField.getIsFacetable(),
 					solrField.getIsMultiValued()));
 
 				LOGGER.info("Assigned field '{}' to panl code '{}'", fieldName, possibleCode);
@@ -159,7 +159,7 @@ public class PanlCollection {
 					fieldName,
 					SOLR_FIELD_TYPE_NAME_TO_SOLR_CLASS.get(SOLR_FIELD_NAME_TO_SOLR_FIELD_TYPE.get(fieldName)),
 					fieldXmlMap.get(fieldName),
-					solrField.getIsFacet(),
+					solrField.getIsFacetable(),
 					solrField.getIsMultiValued()));
 				LOGGER.info("Assigned field '{}' to panl code '{}'", fieldName, nextPossibleCode);
 				CODES_AVAILABLE.remove(nextPossibleCode);
@@ -187,7 +187,7 @@ public class PanlCollection {
 						fieldName,
 						SOLR_FIELD_TYPE_NAME_TO_SOLR_CLASS.get(SOLR_FIELD_NAME_TO_SOLR_FIELD_TYPE.get(fieldName)),
 						fieldXmlMap.get(fieldName),
-						solrField.getIsFacet(),
+						solrField.getIsFacetable(),
 						solrField.getIsMultiValued()));
 
 					LOGGER.info("Assigned field '{}' to RANDOM panl code '{}'", fieldName, assignedCode);

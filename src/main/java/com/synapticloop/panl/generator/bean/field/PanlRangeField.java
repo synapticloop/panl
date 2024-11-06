@@ -24,8 +24,8 @@
 
 package com.synapticloop.panl.generator.bean.field;
 
-public class PanlUnsupportedField extends BasePanlField {
-	protected PanlUnsupportedField(String lpseCode,
+public class PanlRangeField extends BasePanlField {
+	protected PanlRangeField(String lpseCode,
 		String solrFieldName,
 		String solrFieldType,
 		String schemaXmlLine,
@@ -38,5 +38,4 @@ public class PanlUnsupportedField extends BasePanlField {
 	@Override public String getAdditionalProperties() {
 		return "";
 	}
-
 }

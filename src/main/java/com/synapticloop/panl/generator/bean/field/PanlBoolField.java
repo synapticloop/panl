@@ -34,4 +34,9 @@ public class PanlBoolField extends BasePanlField {
 
 		super(lpseCode, solrFieldName, solrFieldType, schemaXmlLine, isFacet, isMultiValued);
 	}
+
+	@Override public String getAdditionalProperties() {
+//		StringBuilder
+		return "";
+	}
 }

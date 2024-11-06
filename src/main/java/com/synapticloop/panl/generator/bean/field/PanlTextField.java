@@ -24,8 +24,8 @@
 
 package com.synapticloop.panl.generator.bean.field;
 
-public class PanlUnsupportedField extends BasePanlField {
-	protected PanlUnsupportedField(String lpseCode,
+public class PanlTextField extends BasePanlField {
+	protected PanlTextField(String lpseCode,
 		String solrFieldName,
 		String solrFieldType,
 		String schemaXmlLine,
