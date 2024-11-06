@@ -36,7 +36,9 @@ public class PanlTextField extends BasePanlField {
 	}
 
 	@Override public String getAdditionalProperties() {
-		return "";
+		StringBuilder stringBuilder = new StringBuilder(getPrefixSuffix());
+		stringBuilder.append(getSortOrder());
+		return(stringBuilder.toString());
 	}
 
 }

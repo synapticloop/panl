@@ -38,17 +38,16 @@ import java.util.Scanner;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-public class PanlGeneratorTest {
-	public static final String GENERATED_PANL_PROPERTIES = "./src/test/resources/sample/panl.properties";
-	public static final String ORIGINAL_PANL_PROPERTIES = "./src/test/resources/sample/panl.properties.original";
-	public static final String GENERATED_COLLECTION_PANL_PROPERTIES = "./src/test/resources/sample/mechanical-pencils.panl.properties";
-	public static final String ORIGINAL_COLLECTION_PANL_PROPERTIES = "./src/test/resources/sample/mechanical-pencils.panl.properties.original";
+public class PanlGeneratorMechanicalPencilTest {
+	public static final String GENERATED_PANL_PROPERTIES = "./src/test/resources/sample/mechanical-pencils/panl.properties";
+	public static final String ORIGINAL_PANL_PROPERTIES = "./src/test/resources/sample/mechanical-pencils/panl.properties.original";
+	public static final String GENERATED_COLLECTION_PANL_PROPERTIES = "./src/test/resources/sample/mechanical-pencils/mechanical-pencils.panl.properties";
+	public static final String ORIGINAL_COLLECTION_PANL_PROPERTIES = "./src/test/resources/sample/mechanical-pencils/mechanical-pencils.panl.properties.original";
 
 	@Test public void testGenerate() throws PanlGenerateException, IOException {
-//		PanlGenerator panlGeneratorMock = Mockito.mock(
 		PanlGenerator spy = Mockito.spy(new PanlGenerator(
 			GENERATED_PANL_PROPERTIES,
-			"./src/test/resources/sample/managed-schema.xml",
+			"./src/test/resources/sample/mechanical-pencils/managed-schema.xml",
 			true));
 
 		// mock the input from the command line
@@ -59,7 +58,6 @@ public class PanlGeneratorTest {
 
 		assertFilesSame(ORIGINAL_PANL_PROPERTIES, GENERATED_PANL_PROPERTIES);
 		assertFilesSame(ORIGINAL_COLLECTION_PANL_PROPERTIES, GENERATED_COLLECTION_PANL_PROPERTIES);
-
 	}
 
 	/**
@@ -83,6 +81,8 @@ public class PanlGeneratorTest {
 
 		int i = 0;
 		for(String line: originalSplit) {
+			// we do the line trim as EOL encoding may be different depending on the
+			// operating system
 			assertEquals(line.trim(), generatedSplit[i].trim());
 			i++;
 		}

@@ -36,6 +36,21 @@ public class PanlRangeField extends BasePanlField {
 	}
 
 	@Override public String getAdditionalProperties() {
-		return "";
+		StringBuilder stringBuilder = new StringBuilder(getPrefixSuffix());
+		stringBuilder.append("# This field can be configured as a range facet by setting the following\n")
+		             .append("# properties\n")
+		             .append("#panl.range.facet.w=true\n")
+		             .append("#panl.range.min.w=0\n")
+		             .append("#panl.range.max.w=100\n")
+		             .append("#panl.range.prefix.w=range_prefix\n")
+		             .append("#panl.range.infix.w=range_infix\n")
+		             .append("#panl.range.suffix.w=range_suffix\n")
+		             .append("#panl.range.min.value.w=min_value\n")
+		             .append("#panl.range.max.value.w=max_value\n")
+		             .append("#panl.range.min.wildcard.w=true\n")
+		             .append("#panl.range.max.wildcard.w=true\n");
+
+		stringBuilder.append(getSortOrder());
+		return (stringBuilder.toString());
 	}
 }

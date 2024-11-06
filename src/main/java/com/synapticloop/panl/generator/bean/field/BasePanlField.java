@@ -25,12 +25,12 @@
 package com.synapticloop.panl.generator.bean.field;
 
 public abstract class BasePanlField {
-	private final String lpseCode;
-	private final String solrFieldName;
-	private final String schemaXmlLine;
-	private final String solrFieldType;
-	private final boolean isFacetable;
-	private final boolean isMultiValued;
+	protected final String lpseCode;
+	protected final String solrFieldName;
+	protected final String schemaXmlLine;
+	protected final String solrFieldType;
+	protected final boolean isFacetable;
+	protected final boolean isMultiValued;
 
 	public static BasePanlField getPanlField(
 		String lpseCode,
@@ -53,10 +53,12 @@ public abstract class BasePanlField {
 			case "solr.DoublePointField":
 				return (new PanlRangeField(lpseCode, solrFieldName, solrFieldType, schemaXmlLine, isFacetable, isMultiValued));
 			case "solr.DatePointField":
-				return (new PanlDateRangeField(lpseCode, solrFieldName, solrFieldType, schemaXmlLine, isFacetable, isMultiValued));
+				return (new PanlDateRangeField(lpseCode, solrFieldName, solrFieldType, schemaXmlLine, isFacetable,
+					isMultiValued));
 		}
 
-		return (new PanlUnsupportedField(lpseCode, solrFieldName, solrFieldType, schemaXmlLine, isFacetable, isMultiValued));
+		return (new PanlUnsupportedField(lpseCode, solrFieldName, solrFieldType, schemaXmlLine, isFacetable,
+			isMultiValued));
 	}
 
 	protected BasePanlField(String lpseCode,
@@ -110,17 +112,27 @@ public abstract class BasePanlField {
 
 		if (isFacetable) {
 			if (isMultiValued) {
-				stringBuilder.append(
-					"# This Solr field is configured as multiValued, and is added as a property for the single page search\n")
-					.append(String.format("panl.multivalue.%s=true\n", lpseCode));
+				stringBuilder.append("# This Solr field is configured as multiValued, and is added as a property for the\n")
+				             .append("# so that single page search can be generated properly.  You __SHOULD_NOT___\n")
+				             .append("# change this unless the underlying Solr schema changes\n")
+				             .append(String.format("panl.multivalue.%s=%b\n", lpseCode, isMultiValued));
+			} else {
+				// this is a good candidate for an OR facet - but not a date
+				if(!(this instanceof PanlDateRangeField)) {
+					stringBuilder.append("# This field is a candidate for an OR facet, you may wish to configure the\n")
+					             .append("# following properties\n")
+					             .append(String.format("#panl.or.facet.%s=true\n", lpseCode))
+					             .append(String.format("#panl.or.always.%s=true\n", lpseCode));
+				}
 			}
+
+			stringBuilder.append(getAdditionalProperties());
+
+			stringBuilder.append("# If you want this facet to only appear if another facet has already been \n")
+			             .append("# passed through then add the LPSE code(s) in a comma separated list below\n")
+			             .append(String.format("#panl.when.%s=\n", lpseCode));
 		}
 
-		stringBuilder.append(getAdditionalProperties());
-
-		stringBuilder.append("# If you want this facet to only appear if another facet has already been \n")
-		             .append("# passed through then add the LPSE code(s) in a comma separated list below\n")
-		             .append(String.format("#panl.when.%s=\n", lpseCode));
 
 		return (stringBuilder.toString());
 	}
@@ -138,5 +150,14 @@ public abstract class BasePanlField {
 			String.format("#panl.facetsort.%s=index\n", lpseCode));
 	}
 
+	/**
+	 * <p>Get any additional properties for this particular BasePanlField type</p>
+	 *
+	 * @return The formatted property string for additional properties
+	 */
 	protected abstract String getAdditionalProperties();
+
+	public String getLpseCode() {
+		return lpseCode;
+	}
 }

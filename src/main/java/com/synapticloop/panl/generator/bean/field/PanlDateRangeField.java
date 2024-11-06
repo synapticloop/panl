@@ -36,6 +36,16 @@ public class PanlDateRangeField extends BasePanlField {
 	}
 
 	@Override public String getAdditionalProperties() {
-		return "";
+		StringBuilder stringBuilder = new StringBuilder();
+		stringBuilder.append("# Because this is a Date field, there are special queries that can be applied\n")
+		             .append("# for a date range. You can query for results up to NOW, or from NOW onwards.\n")
+		             .append("# Either, or both of these properties may be set\n")
+		             .append(String.format("#panl.date.%s.previous=previous \n", lpseCode))
+		             .append(String.format("#panl.date.%s.next=next \n", lpseCode))
+		             .append(String.format("#panl.date.%s.years=\\ years\n", lpseCode))
+		             .append(String.format("#panl.date.%s.months=\\ months\n", lpseCode))
+		             .append(String.format("#panl.date.%s.days=\\ days\n", lpseCode))
+		             .append(String.format("#panl.date.%s.hours=\\ hours\n", lpseCode));
+		return(stringBuilder.toString());
 	}
 }

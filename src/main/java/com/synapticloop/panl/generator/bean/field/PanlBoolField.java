@@ -36,7 +36,12 @@ public class PanlBoolField extends BasePanlField {
 	}
 
 	@Override public String getAdditionalProperties() {
-//		StringBuilder
-		return "";
+		StringBuilder stringBuilder = new StringBuilder(getPrefixSuffix());
+		stringBuilder.append("# Because this is a Boolean field, you can use a boolean value replacement for\n")
+		             .append("# either the true value, the false value, or neither.  This makes a more human-\n")
+		             .append("# readable URL\n")
+		             .append(String.format("#panl.bool.%s.true=is-%s\n", lpseCode, solrFieldName))
+		             .append(String.format("#panl.bool.%s.false=is-not-%s\n", lpseCode, solrFieldName));
+		return (stringBuilder.toString());
 	}
 }

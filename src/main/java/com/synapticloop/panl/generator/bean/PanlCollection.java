@@ -26,6 +26,7 @@ package com.synapticloop.panl.generator.bean;
 
 import com.synapticloop.panl.exception.PanlGenerateException;
 import com.synapticloop.panl.generator.PanlGenerator;
+import com.synapticloop.panl.generator.bean.field.BasePanlField;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -52,7 +53,7 @@ public class PanlCollection {
 	private String collectionName;
 	private final List<SolrField> solrFields = new ArrayList<>();
 	private final List<String> resultFieldNames = new ArrayList<>();
-	private final List<PanlField> panlFields = new ArrayList<>();
+	private final List<BasePanlField> basePanlFields = new ArrayList<>();
 	private final Map<String, String> fieldXmlMap = new HashMap<>();
 	private int lpseLength = 1;
 	public static String CODES = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz01234567890";
@@ -141,7 +142,8 @@ public class PanlCollection {
 			String cleanedName = fieldName.replaceAll("[^A-Za-z0-9]", "");
 			String possibleCode = cleanedName.substring(0, this.lpseLength);
 			if (CODES_AVAILABLE.contains(possibleCode)) {
-				panlFields.add(new PanlField(
+
+				basePanlFields.add(BasePanlField.getPanlField(
 					possibleCode,
 					fieldName,
 					SOLR_FIELD_TYPE_NAME_TO_SOLR_CLASS.get(SOLR_FIELD_NAME_TO_SOLR_FIELD_TYPE.get(fieldName)),
@@ -154,7 +156,7 @@ public class PanlCollection {
 				CODES_AVAILABLE.remove(possibleCode);
 			} else if (CODES_AVAILABLE.contains(possibleCode.toUpperCase())) {
 				String nextPossibleCode = possibleCode.toUpperCase();
-				panlFields.add(new PanlField(
+				basePanlFields.add(BasePanlField.getPanlField(
 					nextPossibleCode,
 					fieldName,
 					SOLR_FIELD_TYPE_NAME_TO_SOLR_CLASS.get(SOLR_FIELD_NAME_TO_SOLR_FIELD_TYPE.get(fieldName)),
@@ -182,7 +184,7 @@ public class PanlCollection {
 					assignedCode = code;
 
 					String fieldName = solrField.getName();
-					panlFields.add(new PanlField(
+					basePanlFields.add(BasePanlField.getPanlField(
 						assignedCode,
 						fieldName,
 						SOLR_FIELD_TYPE_NAME_TO_SOLR_CLASS.get(SOLR_FIELD_NAME_TO_SOLR_FIELD_TYPE.get(fieldName)),
@@ -210,10 +212,10 @@ public class PanlCollection {
 
 		// last but not least, we need to put the lpse order
 		StringBuilder panlLpseFields = new StringBuilder();
-		for (PanlField panlField : panlFields) {
-			panlLpseOrder.append(panlField.getLpseCode());
+		for (BasePanlField basePanlField : basePanlFields) {
+			panlLpseOrder.append(basePanlField.getLpseCode());
 			panlLpseOrder.append(",\\\n");
-			panlLpseFields.append(panlField.toProperties());
+			panlLpseFields.append(basePanlField.toProperties());
 		}
 
 		// put in the other parameters (query etc)
@@ -387,8 +389,8 @@ public class PanlCollection {
 		return (collectionName);
 	}
 
-	public List<PanlField> getFields() {
-		return (panlFields);
+	public List<BasePanlField> getFields() {
+		return (basePanlFields);
 	}
 
 	public int getLpseLength() {

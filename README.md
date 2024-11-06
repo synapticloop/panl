@@ -1,12 +1,9 @@
 # Synapticloop PANL
 
-<p style="text-align: center">
-   <img src="src/docs/synapticloop-logo.png" alt="The Synapticloop logo" />
-</p>
+<img src="src/docs/synapticloop-logo.png" alt="The Synapticloop logo" />
 
-<p style="text-align: center">
-   <img src="src/main/resources/webapp/static/favicon.png" alt="The Synapticloop Panl Favicon" />
-</p>
+---
+<img src="src/main/resources/webapp/static/favicon.png" alt="The Synapticloop Panl Favicon" />&nbsp;anl&nbsp;Server
 
 ---
 
@@ -33,8 +30,8 @@
 #                                                                             #
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 ```
-
-`Build and test 'needy-phantom' branch:` [![CircleCI](https://dl.circleci.com/status-badge/img/circleci/3Y1eqqe4mcvtSZuzJnQ3tJ/DyFKUm7c7AoLa1wHmRjAnf/tree/needy-phanton.svg?style=svg)](https://dl.circleci.com/status-badge/redirect/circleci/3Y1eqqe4mcvtSZuzJnQ3tJ/DyFKUm7c7AoLa1wHmRjAnf/tree/needy-phanton) (courtesy of Circle-CI)
+****
+`Build and test 'billowing-deather' branch:` [![CircleCI](https://dl.circleci.com/status-badge/img/circleci/3Y1eqqe4mcvtSZuzJnQ3tJ/DyFKUm7c7AoLa1wHmRjAnf/tree/needy-phanton.svg?style=svg)](https://dl.circleci.com/status-badge/redirect/circleci/3Y1eqqe4mcvtSZuzJnQ3tJ/DyFKUm7c7AoLa1wHmRjAnf/tree/billowing-feather) (courtesy of Circle-CI)
 
 `Latest release tag:` ![GitHub Tag](https://img.shields.io/github/v/tag/synapticloop/panl)
 
