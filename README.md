@@ -39,6 +39,11 @@
 
 `Latest release:` ![GitHub Release](https://img.shields.io/github/v/release/synapticloop/panl)
 
+
+
+> We _always_ recommend that you use the most recently available release which contains bug fixes and new functionality and is generally backwards compatible.
+
+
 ## Download the Panl Server Release:
 
 1. [https://github.com/synapticloop/panl/releases](https://github.com/synapticloop/panl/releases)
@@ -423,15 +428,18 @@ with the release files named `solr-panl-9-x.x.x` where `x.x.x` is the version nu
 
 - Code Changes
   - **[BREAKING CHANGE]** Changed range facets LPSE codes from `w-w` to `w-` and `w+w` to `w+` (i.e. removed the additional LPSE code)
-  - General code cleanup and refactorings
+  - Fixed the over-riding query respond to parameter
   - Added in Testing for the Panl Generator and refactored how it is being done.
   - Refactored PanlFields for the generator to output better comments and helpful information rather than more comments than necessary
+  - General code cleanup and refactorings
 
 
 - Documentation update
-  - Added in keyword search integration and 'search within results' integration notes 
+  - Added in keyword search integration and 'search within results' integration notes
+  - Changed the `panl.form.query.respondto` documentation to point to `search` rather than the previously defined `q` to reduce confusion
   - General spelling and grammatical mistake updates
-  - Update to new functionality and configuration properties
+  - Addition of new functionality and configuration properties
+
 
 ## 1.2.0 - more like this (codename `needy-phanton`) 
 

@@ -40,6 +40,8 @@ import com.synapticloop.panl.server.handler.tokeniser.token.LpseToken;
 import com.synapticloop.panl.server.handler.tokeniser.token.param.NumRowsLpseToken;
 import com.synapticloop.panl.server.handler.tokeniser.token.param.PageNumLpseToken;
 import com.synapticloop.panl.server.handler.tokeniser.token.param.QueryLpseToken;
+import org.apache.http.NameValuePair;
+import org.apache.http.client.utils.URLEncodedUtils;
 import org.apache.http.protocol.HttpContext;
 import org.apache.solr.client.solrj.SolrClient;
 import org.apache.solr.client.solrj.SolrQuery;
@@ -49,6 +51,8 @@ import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.net.URLDecoder;
+import java.nio.charset.StandardCharsets;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
 
@@ -491,6 +495,15 @@ public class CollectionRequestHandler {
 		String[] lpseUriPath = uri.split("/");
 
 		boolean hasQuery = false;
+		String queryParam = "";
+
+		for (NameValuePair nameValuePair : URLEncodedUtils.parse(query, StandardCharsets.UTF_8)) {
+			if (nameValuePair.getName().equals(collectionProperties.getFormQueryRespondTo())) {
+				hasQuery = true;
+				queryParam = nameValuePair.getValue();
+				break;
+			}
+		}
 
 		if (lpseUriPath.length > 3) {
 			String lpseEncoding = lpseUriPath[lpseUriPath.length - 1];
@@ -506,7 +519,11 @@ public class CollectionRequestHandler {
 			while (lpseTokeniser.hasMoreTokens()) {
 				String token = lpseTokeniser.nextToken();
 
-				List<LpseToken> parsedLpseTokens = LpseToken.getLpseTokens(collectionProperties, token, query, valueTokeniser,
+				List<LpseToken> parsedLpseTokens = LpseToken.getLpseTokens(
+					collectionProperties,
+					token,
+					query,
+					valueTokeniser,
 					lpseTokeniser);
 
 				for (LpseToken lpseToken : parsedLpseTokens) {
@@ -525,7 +542,7 @@ public class CollectionRequestHandler {
 			}
 		}
 
-		if (!hasQuery && !query.isBlank()) {
+		if (!hasQuery && !queryParam.isBlank()) {
 			lpseTokens.add(new QueryLpseToken(collectionProperties, query, collectionProperties.getPanlParamQuery()));
 		}
 
