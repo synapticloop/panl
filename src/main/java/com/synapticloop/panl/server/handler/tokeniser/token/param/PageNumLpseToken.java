@@ -86,6 +86,10 @@ public class PageNumLpseToken extends LpseToken {
 		return (this.pageNum);
 	}
 
+	public void setPageNum(int pageNum) {
+		this.pageNum = pageNum;
+	}
+
 	/**
 	 * <p>Return the equivalence value for this token, which will always be
 	 * <code>&lt;lpse_code&gt;/</code> as you may ony ever have one page number

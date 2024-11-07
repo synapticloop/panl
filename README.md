@@ -30,7 +30,9 @@
 #                                                                             #
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 ```
-****
+
+---
+
 `Build and test 'billowing-deather' branch:` [![CircleCI](https://dl.circleci.com/status-badge/img/circleci/3Y1eqqe4mcvtSZuzJnQ3tJ/DyFKUm7c7AoLa1wHmRjAnf/tree/needy-phanton.svg?style=svg)](https://dl.circleci.com/status-badge/redirect/circleci/3Y1eqqe4mcvtSZuzJnQ3tJ/DyFKUm7c7AoLa1wHmRjAnf/tree/billowing-feather) (courtesy of Circle-CI)
 
 `Latest release tag:` ![GitHub Tag](https://img.shields.io/github/v/tag/synapticloop/panl)
@@ -415,6 +417,7 @@ with the release files named `solr-panl-9-x.x.x` where `x.x.x` is the version nu
 
 - Bug fixes
   - Bug where Panl client will always look for the '`q`' parameter for the query, changed to ensure that the correct configured `panl.form.query.respondto` is used instead
+  - Always reset the page to 1 if there is a `panl.form.query.respondto` URL parameter
 
 
 
@@ -425,10 +428,15 @@ with the release files named `solr-panl-9-x.x.x` where `x.x.x` is the version nu
   - Refactored PanlFields for the generator to output better comments and helpful information rather than more comments than necessary
 
 
+- Documentation update
+  - Added in keyword search integration and 'search within results' integration notes 
+  - General spelling and grammatical mistake updates
+  - Update to new functionality and configuration properties
+
 ## 1.2.0 - more like this (codename `needy-phanton`) 
 
  - Bug fixes
-   - Fixed JavScript in Single Page Search results in-built web app to take into account range facets
+   - Fixed JavaScript in Single Page Search results in-built web app to take into account range facets
    - Fixed serving in-built panl testing URLs when run from the script
 
 
