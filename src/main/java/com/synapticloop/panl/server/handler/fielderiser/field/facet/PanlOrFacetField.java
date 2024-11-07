@@ -176,6 +176,8 @@ public class PanlOrFacetField extends PanlFacetField {
 				facetValueObject.put(JSON_KEY_VALUE, valueName);
 				facetValueObject.put(JSON_KEY_COUNT, value.getCount());
 				facetValueObject.put(JSON_KEY_ENCODED, getEncodedPanlValue(valueName));
+				// the OR encoding has no prefix or suffix
+				facetValueObject.put(JSON_KEY_ENCODED_OR, URLEncoder.encode(valueName, StandardCharsets.UTF_8));
 				facetValueArrays.put(facetValueObject);
 			}
 		}
@@ -206,8 +208,16 @@ public class PanlOrFacetField extends PanlFacetField {
 	 */
 	private String getOrURIPathStart(Map<String, List<LpseToken>> panlTokenMap) {
 		StringBuilder sb = new StringBuilder();
+
+		if(orSeparator != null) {
+			if (hasValuePrefix) {
+				sb.append(URLEncoder.encode(valuePrefix, StandardCharsets.UTF_8));
+			}
+		}
+
 		if (panlTokenMap.containsKey(lpseCode)) {
 			if(orSeparator != null) {
+
 				List<String> validValues = new ArrayList<>();
 
 				for (LpseToken lpseToken : panlTokenMap.get(lpseCode)) {
@@ -217,19 +227,10 @@ public class PanlOrFacetField extends PanlFacetField {
 				}
 
 				if(!validValues.isEmpty()) {
-					boolean isFirst = true;
-
 					for(String validValue: validValues) {
-						if (isFirst && hasValuePrefix) {
-							sb.append(valuePrefix);
-						}
-
-						isFirst = false;
-						sb.append(validValue);
-						sb.append(orSeparator);
+						sb.append(URLEncoder.encode(validValue, StandardCharsets.UTF_8));
+						sb.append(URLEncoder.encode(orSeparator, StandardCharsets.UTF_8));
 					}
-
-					return(URLEncoder.encode(sb.toString(), StandardCharsets.UTF_8));
 				}
 			} else {
 				for (LpseToken lpseToken : panlTokenMap.get(lpseCode)) {
@@ -238,8 +239,16 @@ public class PanlOrFacetField extends PanlFacetField {
 						sb.append("/");
 					}
 				}
+				return(sb.toString());
 			}
 		}
+
+		if(orSeparator != null) {
+			if (hasValueSuffix) {
+				sb.append(URLEncoder.encode(valueSuffix, StandardCharsets.UTF_8));
+			}
+		}
+
 		return (sb.toString());
 	}
 
@@ -265,7 +274,8 @@ public class PanlOrFacetField extends PanlFacetField {
 		StringBuilder lpseUriBefore = new StringBuilder();
 		StringBuilder lpseUriCode = new StringBuilder();
 
-		boolean hasFirstOrSeparator = false;
+		Map<String, Boolean> lpseCodeMap = new HashMap<>();
+
 		for (BaseField baseField : collectionProperties.getLpseFields()) {
 			// we need to add in any other token values in the correct order
 			String orderedLpseCode = baseField.getLpseCode();
@@ -273,7 +283,6 @@ public class PanlOrFacetField extends PanlFacetField {
 			if (orderedLpseCode.equals(this.lpseCode)) {
 				// we have found the current LPSE code, so reset the URI and add it to
 				// the after
-
 				if(orSeparator != null) {
 					lpseUri.append(getOrURIPathStart(panlTokenMap));
 				} else {
@@ -283,8 +292,15 @@ public class PanlOrFacetField extends PanlFacetField {
 				lpseUriBefore.append(lpseUri);
 				lpseUri.setLength(0);
 
-				lpseUriCode.append(baseField.getLpseCode(panlTokenMap, collectionProperties));
-				lpseUriCode.append(this.lpseCode);
+				if(orSeparator != null) {
+					if(!lpseCodeMap.containsKey(this.lpseCode)) {
+						lpseUriCode.append(this.lpseCode);
+					}
+					lpseCodeMap.put(this.lpseCode, true);
+				} else {
+					lpseUriCode.append(baseField.getLpseCode(panlTokenMap, collectionProperties));
+					lpseUriCode.append(this.lpseCode);
+				}
 			} else {
 				// if we don't have a current token, just carry on
 				if (!panlTokenMap.containsKey(orderedLpseCode)) {

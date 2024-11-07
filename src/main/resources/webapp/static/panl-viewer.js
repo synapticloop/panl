@@ -34,7 +34,7 @@ $(document).ready(function() {
 					$.ajax({
 							url: "http://localhost:8181/panl-lookahead/" + collection + "/" + fieldset,
 							data: {
-								q: request.term
+								"search": request.term
 							},
 
 							success: function(data) {
@@ -641,7 +641,7 @@ function generateFacetHTML(facet) {
 		panlResultsViewerUrl +
 		$("#collection").text() +
 		facet.uris.before +
-		value.encoded +
+		((facet.or_separator !== undefined) ? value.encoded_or : value.encoded) +
 		facet.uris.after +
 		"\">[add]</a>&nbsp;" +
 		decodePanl(value.encoded);
