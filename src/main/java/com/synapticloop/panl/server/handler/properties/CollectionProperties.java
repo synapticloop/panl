@@ -754,9 +754,8 @@ public class CollectionProperties {
 				// now we need to lookup the lpseCode in the WHEN map
 				if (LPSE_CODE_WHEN_MAP.containsKey(lpseCode)) {
 					// do we have the 'when' code in the token map?
-					Iterator<String> iterator = LPSE_CODE_WHEN_MAP.get(lpseCode).iterator();
-					while (iterator.hasNext()) {
-						if (activeLpseCodes.contains(iterator.next())) {
+					for (String s : LPSE_CODE_WHEN_MAP.get(lpseCode)) {
+						if (activeLpseCodes.contains(s)) {
 							returnedFacetFields.add(solrFacetFieldName);
 							break;
 						}

@@ -150,7 +150,7 @@ panl.param.passthrough.canonical=false
 #
 #                                ~ ~ ~ * ~ ~ ~
 
-panl.form.query.respondto=q
+panl.form.query.respondto=search
 
 
 #                      Whether To Include Single Facets

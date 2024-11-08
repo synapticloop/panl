@@ -124,7 +124,7 @@ public class PanlOrFacetField extends PanlFacetField {
 	 * facet and more</p>
 	 *
 	 * @param facetObject The facet object to append to
-	 * @param collectionProperties The colleciton properties
+	 * @param collectionProperties The collection properties
 	 * @param panlTokenMap The incoming Panl tokens
 	 * @param existingLpseValues The existing LPSE values
 	 * @param facetCountValues The facet count values
@@ -326,7 +326,7 @@ public class PanlOrFacetField extends PanlFacetField {
 
 		additionObject.put(JSON_KEY_BEFORE, lpseUriBefore.toString());
 
-		additionObject.put(JSON_KEY_AFTER, FORWARD_SLASH + lpseUri.toString() + lpseUriCode.toString() + FORWARD_SLASH);
+		additionObject.put(JSON_KEY_AFTER, FORWARD_SLASH + lpseUri + lpseUriCode + FORWARD_SLASH);
 		return (additionObject);
 	}
 
@@ -345,7 +345,7 @@ public class PanlOrFacetField extends PanlFacetField {
 	}
 
 	public boolean getIsAlwaysOr() {
-		return isAlwaysOr;
+		return(isAlwaysOr);
 	}
 
 	/**

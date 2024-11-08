@@ -121,47 +121,4 @@ public class PanlRequestHandler extends BaseResponseHandler implements HttpReque
 	@Override protected Logger getLogger() {
 		return(LOGGER);
 	}
-
-	//	private void set500ResponseMessage(HttpResponse response, Exception e) {
-//		LOGGER.error("Internal server error, message was '{}'", e.getMessage(), e);
-//
-//		response.setStatusCode(HttpStatus.SC_INTERNAL_SERVER_ERROR);
-//
-//		JSONObject jsonObject = new JSONObject();
-//		jsonObject.put(JSON_KEY_ERROR, true);
-//		jsonObject.put(JSON_KEY_STATUS, HttpStatus.SC_INTERNAL_SERVER_ERROR);
-//		if (panlProperties.getUseVerbose500Messages()) {
-//			jsonObject.put(JSON_KEY_MESSAGE,
-//				String.format("Class: %s, message: %s.",
-//					e.getClass().getCanonicalName(),
-//					e.getMessage()));
-//
-//			response.setEntity(
-//				new StringEntity(
-//					jsonObject.toString(),
-//					ResourceHelper.CONTENT_TYPE_JSON));
-//		} else {
-//			jsonObject.put(JSON_KEY_MESSAGE, JSON_VALUE_MESSAGE_500);
-//		}
-//	}
-//
-//
-//	private void set404ResponseMessage(HttpResponse response) {
-//		response.setStatusCode(HttpStatus.SC_NOT_FOUND);
-//
-//		JSONObject jsonObject = new JSONObject(collectionRequestHandler.getValidUrlsJSONArrayString());
-//		jsonObject.put(JSON_KEY_ERROR, true);
-//		jsonObject.put(JSON_KEY_STATUS, HttpStatus.SC_NOT_FOUND);
-//		if (panlProperties.getUseVerbose404Messages()) {
-//			jsonObject.put(JSON_KEY_MESSAGE, PanlDefaultHandler.JSON_VALUE_MESSAGE);
-//		} else {
-//			jsonObject.put(JSON_KEY_MESSAGE, JSON_VALUE_MESSAGE_404);
-//			jsonObject.remove(JSON_KEY_VALID_URLS);
-//		}
-//
-//		response.setEntity(
-//			new StringEntity(
-//				jsonObject.toString(),
-//				ResourceHelper.CONTENT_TYPE_JSON));
-//	}
 }

@@ -113,6 +113,8 @@ Working with a Solr schema, the Panl configuration files translate unwieldy URL 
 
 1. **RESULTS SORTING options** - Sort by any of the Solr fields, either ascending, or descending and with multiple sub-sorting available - e.g. sorting by a brand name, than the model number
 
+1. **INTEGRATED TYPEAHEAD/LOOKAHEAD** - Retrieve results suggestions as you type in the query search box.
+
 1. **PAGINATION** - All the data to easily generate pagination URL paths giving you options and control over your own implementation.
 
 1. **STATIC SITE GENERATION** - With the exception of a query parameter, all available links for every conceivable URI path can be statically generated ahead of time, with canonical URLs.
@@ -162,8 +164,6 @@ _The image is a screenshot of the in-built Panl Results Viewer Web App available
 1. **Page information**, the number of pages, how many results are shown per page, and how many results are shown on this page.
 
 1. **Sorting options** - Whether to sort by relevance (the default) or by other configured sorting options with ascending and descending options available.  Any Solr field can be configured to be used as a sorting option.  And multi-sort orders are available, allowing sorting on more than one field.
-
-1. **Integrated Typeahead/Lookahead** - Retrieve results suggestions as you type in the query search box.
 
 1. **Pagination options** - the Panl server returns all information needed to build a pagination system, number of results, number of results shown per page and the current page number.
 

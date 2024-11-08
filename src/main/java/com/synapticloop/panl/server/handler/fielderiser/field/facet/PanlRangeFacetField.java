@@ -390,7 +390,7 @@ public class PanlRangeFacetField extends PanlFacetField {
 					// at this point we want to also do the min value replacement, if it
 					// exists
 					if (null != rangeMinValueReplacement) {
-						additionObject.put(JSON_KEY_BEFORE_MIN_VALUE, lpseUri.toString() + URLEncoder.encode(rangeMinValueReplacement, StandardCharsets.UTF_8));
+						additionObject.put(JSON_KEY_BEFORE_MIN_VALUE, lpseUri + URLEncoder.encode(rangeMinValueReplacement, StandardCharsets.UTF_8));
 					}
 
 					if (hasRangeInfix) {

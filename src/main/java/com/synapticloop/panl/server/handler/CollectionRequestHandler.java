@@ -497,7 +497,12 @@ public class CollectionRequestHandler {
 		boolean hasQuery = false;
 		String queryParam = "";
 
-		for (NameValuePair nameValuePair : URLEncodedUtils.parse(query, StandardCharsets.UTF_8)) {
+		List<NameValuePair> parse = URLEncodedUtils.parse(query, StandardCharsets.UTF_8);
+		System.out.println(parse.size());
+		System.out.println(collectionProperties.getFormQueryRespondTo());
+		for (NameValuePair nameValuePair : parse) {
+			System.out.println(nameValuePair.getName() + ":" + nameValuePair.getValue());
+			System.out.println(nameValuePair.getName().equals(collectionProperties.getFormQueryRespondTo()));
 			if (nameValuePair.getName().equals(collectionProperties.getFormQueryRespondTo())) {
 				hasQuery = true;
 				queryParam = nameValuePair.getValue();

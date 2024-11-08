@@ -77,6 +77,7 @@ public abstract class BaseFileDropHandler extends TransferHandler {
 			for(String ending: endsWith) {
 				if(file.getName().toLowerCase().endsWith(ending.toLowerCase())) {
 					looksGood = true;
+					break;
 				}
 			}
 

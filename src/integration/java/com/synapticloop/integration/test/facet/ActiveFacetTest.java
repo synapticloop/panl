@@ -28,13 +28,10 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.synapticloop.integration.BeforeAllExtension;
 import com.synapticloop.integration.response.json.Root;
 import com.synapticloop.integration.response.json.response.panl.active.Facet;
-import com.synapticloop.integration.test.BeforeAllTests;
-import com.synapticloop.integration.test.util.Helper;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 
 import java.io.IOException;
-import java.net.MalformedURLException;
 import java.net.URL;
 
 import static org.junit.jupiter.api.Assertions.*;
