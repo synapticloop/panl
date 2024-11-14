@@ -224,7 +224,8 @@ public class PanlRangeFacetField extends PanlFacetField {
 										":[" +
 										value +
 										" TO " +
-										toValue);
+										toValue +
+										"]");
 
 			} else {
 				solrQuery.addFilterQuery(
