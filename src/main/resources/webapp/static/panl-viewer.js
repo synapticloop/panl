@@ -694,7 +694,6 @@ function encodePanl(text) {
 }
 
 function decodePanl(text) {
-console.log(decodeURI(text));
 	return(decodeURI(text)
 		.replaceAll("+", " ")
 		.replaceAll("%2B", "+")
