@@ -694,8 +694,10 @@ function encodePanl(text) {
 }
 
 function decodePanl(text) {
+console.log(decodeURI(text));
 	return(decodeURI(text)
 		.replaceAll("+", " ")
 		.replaceAll("%2B", "+")
-		.replaceAll("%3A", ":"));
+		.replaceAll("%3A", ":")
+		.replaceAll("%2F", "/"));
 }
