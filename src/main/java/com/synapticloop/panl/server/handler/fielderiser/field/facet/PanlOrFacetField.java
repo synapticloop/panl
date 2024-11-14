@@ -330,8 +330,24 @@ public class PanlOrFacetField extends PanlFacetField {
 		return (additionObject);
 	}
 
-	@Override
-	public List<LpseToken> instantiateTokens(CollectionProperties collectionProperties, String lpseCode, String query, StringTokenizer valueTokeniser, LpseTokeniser lpseTokeniser) {
+	/**
+	 * <p>Instantiate OR facet tokens.  This works differently from other fields
+	 * in that it may have a separator character, with only one LPSE code.</p>
+	 *
+	 * @param collectionProperties The collection properties
+	 * @param lpseCode The lpseCode for this field
+	 * @param query The query parameter
+	 * @param valueTokeniser The value tokeniser
+	 * @param lpseTokeniser The lpse tokeniser
+	 *
+	 * @return The list of OR tokens
+	 */
+	@Override public List<LpseToken> instantiateTokens(
+				CollectionProperties collectionProperties, String lpseCode,
+				String query,
+				StringTokenizer valueTokeniser,
+				LpseTokeniser lpseTokeniser) {
+
 		if(this.orSeparator != null) {
 			// we have an or separator
 			return(OrFacetLpseToken.getSeparatedLpseTokens(orSeparator, collectionProperties, this.lpseCode, lpseTokeniser, valueTokeniser));

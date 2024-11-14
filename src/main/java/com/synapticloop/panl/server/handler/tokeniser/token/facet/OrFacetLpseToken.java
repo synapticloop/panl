@@ -38,18 +38,19 @@ public class OrFacetLpseToken extends LpseToken {
 	public static final String TOKEN_TYPE = "facet";
 
 	private String solrField = null;
+	private boolean hasOrSeparator = false;
 
 	public OrFacetLpseToken(
-			CollectionProperties collectionProperties,
-			String lpseCode,
-			LpseTokeniser lpseTokeniser,
-			StringTokenizer valueTokeniser) {
+				CollectionProperties collectionProperties,
+				String lpseCode,
+				LpseTokeniser lpseTokeniser,
+				StringTokenizer valueTokeniser) {
 
 		super(lpseCode, collectionProperties);
 
 		StringBuilder sb = new StringBuilder(lpseCode);
 		int i = sb.length();
-		while (i < collectionProperties.getLpseLength()) {
+		while(i < collectionProperties.getLpseLength()) {
 			if (lpseTokeniser.hasMoreTokens()) {
 				sb.append(lpseTokeniser.nextToken());
 			}
@@ -58,7 +59,7 @@ public class OrFacetLpseToken extends LpseToken {
 
 		this.lpseCode = sb.toString();
 
-		if(!valueTokeniser.hasMoreTokens()) {
+		if (!valueTokeniser.hasMoreTokens()) {
 			this.isValid = false;
 			return;
 		}
@@ -73,7 +74,7 @@ public class OrFacetLpseToken extends LpseToken {
 
 			this.value = lpseField.getDecodedValue(this.originalValue);
 
-			if(null == this.value) {
+			if (null == this.value) {
 				this.isValid = false;
 			}
 		} else {
@@ -81,40 +82,43 @@ public class OrFacetLpseToken extends LpseToken {
 		}
 	}
 
-	public OrFacetLpseToken(OrFacetLpseToken originalOrFacetToken, String value) {
+	public OrFacetLpseToken(OrFacetLpseToken originalOrFacetToken, String value, boolean hasOrSeparator) {
 		// we are not going to need the collection properties
 		super(originalOrFacetToken.lpseCode, null);
 		this.originalValue = originalOrFacetToken.originalValue;
 		this.solrField = originalOrFacetToken.solrField;
 		this.value = value;
 		this.isValid = originalOrFacetToken.isValid;
+		this.hasOrSeparator = hasOrSeparator;
 	}
 
-	public static List<LpseToken> getSeparatedLpseTokens(String orSeparator, CollectionProperties collectionProperties, String lpseCode, LpseTokeniser lpseTokeniser, StringTokenizer valueTokeniser) {
-		OrFacetLpseToken orFacetLpseToken = new OrFacetLpseToken(collectionProperties, lpseCode, lpseTokeniser, valueTokeniser);
+	public static List<LpseToken> getSeparatedLpseTokens(String orSeparator, CollectionProperties collectionProperties,
+				String lpseCode, LpseTokeniser lpseTokeniser, StringTokenizer valueTokeniser) {
+		OrFacetLpseToken orFacetLpseToken = new OrFacetLpseToken(collectionProperties, lpseCode, lpseTokeniser,
+					valueTokeniser);
 		String values = orFacetLpseToken.getValue();
 		// the value will have the separator value
 		List<LpseToken> lpseTokens = new ArrayList<>();
-		if(null != values) {
-			for (String value : values.split(orSeparator)) {
-				lpseTokens.add(new OrFacetLpseToken(orFacetLpseToken, value));
+		if (null != values) {
+			for(String value : values.split(orSeparator)) {
+				lpseTokens.add(new OrFacetLpseToken(orFacetLpseToken, value, true));
 			}
 		}
-		return(lpseTokens);
+		return (lpseTokens);
 	}
 
 	@Override public String explain() {
 		return ("PANL " +
-				(this.isValid ? "[  VALID  ]" : "[ INVALID ]") +
-				" <facet (OR)>      LPSE code '" +
-				this.lpseCode +
-				"' (solr field '" +
-				this.solrField +
-				"') with parsed value '" +
-				value +
-				"', incoming value '" +
-				this.originalValue +
-				"'.");
+						(this.isValid ? "[  VALID  ]" : "[ INVALID ]") +
+						(this.hasOrSeparator ? " <facet (OR|SEP)>  LPSE code '" : " <facet (OR)>      LPSE code '") +
+						this.lpseCode +
+						"' (solr field '" +
+						this.solrField +
+						"') with parsed value '" +
+						value +
+						"', incoming value '" +
+						this.originalValue +
+						"'.");
 	}
 
 	@Override public String getType() {

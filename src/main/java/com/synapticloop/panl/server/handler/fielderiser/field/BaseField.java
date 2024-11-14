@@ -800,7 +800,7 @@ public abstract class BaseField {
 	 * @param valueTokeniser The value tokeniser
 	 * @param lpseTokeniser The lpse tokeniser
 	 *
-	 * @return The correct LPSE token for this lpseCode
+	 * @return The list of correct LPSE tokens for this lpseCode
 	 */
 	public abstract List<LpseToken> instantiateTokens(
 				CollectionProperties collectionProperties,
