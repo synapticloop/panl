@@ -361,6 +361,37 @@ public class PanlOrFacetField extends PanlFacetField {
 		removeObject.put(JSON_KEY_IS_OR_FACET, true);
 	}
 
+	@Override public String getCanonicalUriPath(Map<String, List<LpseToken>> panlTokenMap, CollectionProperties collectionProperties) {
+		if(this.orSeparator != null) {
+			if (panlTokenMap.containsKey(lpseCode)) {
+				StringBuilder stringBuilder = new StringBuilder(getValuePrefix());
+				boolean isFirst = true;
+				for(LpseToken lpseToken : panlTokenMap.get(lpseCode)) {
+					if(!isFirst) {
+						stringBuilder.append(getOrSeparator());
+					}
+					isFirst = false;
+					stringBuilder.append(lpseToken.getValue());
+				}
+				stringBuilder.append(getValueSuffix());
+				return(URLEncoder.encode(stringBuilder.toString(), java.nio.charset.StandardCharsets.UTF_8) +"/");
+			}
+		}
+
+		return (getURIPath(panlTokenMap, collectionProperties));
+	}
+
+	@Override public String getCanonicalLpseCode(Map<String, List<LpseToken>> panlTokenMap, CollectionProperties collectionProperties) {
+		if(this.orSeparator != null) {
+			if (panlTokenMap.containsKey(lpseCode)) {
+				// for or separators, there is only ever one lpse code
+				return (lpseCode);
+			}
+		}
+
+		return (getLpseCode(panlTokenMap, collectionProperties));
+	}
+
 	/**
 	 * <p>Return whether this is an ALWAYS OR facet field</p>
 	 *
