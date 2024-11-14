@@ -52,7 +52,8 @@ public class PanlBooleanFacetField extends PanlFacetField {
 	private String booleanTrueReplacement;
 	private String booleanFalseReplacement;
 
-	public PanlBooleanFacetField(String lpseCode, String propertyKey, Properties properties, String solrCollection, String panlCollectionUri, int lpseLength) throws PanlServerException {
+	public PanlBooleanFacetField(String lpseCode, String propertyKey, Properties properties, String solrCollection,
+				String panlCollectionUri, int lpseLength) throws PanlServerException {
 		super(lpseCode, propertyKey, properties, solrCollection, panlCollectionUri, lpseLength);
 		validateProperties();
 
@@ -175,7 +176,7 @@ public class PanlBooleanFacetField extends PanlFacetField {
 			return ("");
 		}
 
-		for (LpseToken lpseToken : panlTokenMap.get(lpseCode)) {
+		for(LpseToken lpseToken : panlTokenMap.get(lpseCode)) {
 			if (!lpseToken.getIsValid()) {
 				// not a valid token - keep going
 				continue;
@@ -218,17 +219,19 @@ public class PanlBooleanFacetField extends PanlFacetField {
 
 	protected void applyToQueryInternal(SolrQuery solrQuery, List<LpseToken> lpseTokenList) {
 		// we are only going to do the first one
-		for (LpseToken lpseToken : lpseTokenList) {
+		for(LpseToken lpseToken : lpseTokenList) {
 			BooleanFacetLpseToken booleanFacetLpseToken = (BooleanFacetLpseToken) lpseToken;
-			solrQuery.addFilterQuery(String.format("%s:\"%s\"",
-					booleanFacetLpseToken.getSolrField(),
-					booleanFacetLpseToken.getValue()));
+			solrQuery.addFilterQuery(
+						booleanFacetLpseToken.getSolrField() +
+									":\"" +
+									booleanFacetLpseToken.getValue() + "\"");
 			return;
 		}
 	}
 
-	public List<LpseToken> instantiateTokens(CollectionProperties collectionProperties, String lpseCode, String query, StringTokenizer valueTokeniser, LpseTokeniser lpseTokeniser) {
-		return(List.of(new BooleanFacetLpseToken(collectionProperties, this.lpseCode, lpseTokeniser, valueTokeniser)));
+	public List<LpseToken> instantiateTokens(CollectionProperties collectionProperties, String lpseCode, String query,
+				StringTokenizer valueTokeniser, LpseTokeniser lpseTokeniser) {
+		return (List.of(new BooleanFacetLpseToken(collectionProperties, this.lpseCode, lpseTokeniser, valueTokeniser)));
 	}
 
 	@Override public void appendToAvailableObjectInternal(JSONObject jsonObject) {
@@ -237,9 +240,9 @@ public class PanlBooleanFacetField extends PanlFacetField {
 
 	@Override public void addToRemoveObject(JSONObject removeObject, LpseToken lpseToken) {
 		removeObject.put(JSON_KEY_IS_BOOLEAN_FACET, true);
-		BooleanFacetLpseToken booleanFacetLpseToken = (BooleanFacetLpseToken)lpseToken;
+		BooleanFacetLpseToken booleanFacetLpseToken = (BooleanFacetLpseToken) lpseToken;
 		// now we need to put in the inverse URI
-		if(lpseToken.getIsValid()) {
+		if (lpseToken.getIsValid()) {
 			removeObject.put(JSON_KEY_INVERSE_ENCODED, booleanFacetLpseToken.getInverseBooleanValue(lpseToken));
 		}
 	}
@@ -248,13 +251,13 @@ public class PanlBooleanFacetField extends PanlFacetField {
 		List<String> explanations = new ArrayList<>(super.explainAdditional());
 		explanations.add("Is a BOOLEAN facet which will allow a selection of either 'true' or 'false'.");
 
-		if(hasBooleanTrueReplacement) {
+		if (hasBooleanTrueReplacement) {
 			explanations.add("Will replace boolean 'true' values with '" + booleanTrueReplacement + "'.");
 		} else {
 			explanations.add("Will not replace boolean 'true' values.");
 		}
 
-		if(hasBooleanFalseReplacement) {
+		if (hasBooleanFalseReplacement) {
 			explanations.add("Will replace boolean 'false' values with '" + booleanFalseReplacement + "'.");
 		} else {
 			explanations.add("Will not replace boolean 'false' values.");

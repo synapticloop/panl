@@ -79,9 +79,10 @@ public class PanlOrFacetField extends PanlFacetField {
 			OrFacetLpseToken facetLpseToken = (OrFacetLpseToken) lpseTokenList.get(0);
 
 			solrQuery.addFilterQuery(
-					String.format("%s:\"%s\"",
-							facetLpseToken.getSolrField(),
-							facetLpseToken.getValue()));
+						facetLpseToken.getSolrField() +
+									":\"" +
+									facetLpseToken.getValue() +
+									"\"");
 			return;
 		}
 

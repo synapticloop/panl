@@ -89,9 +89,11 @@ public class PanlFacetField extends BasePrefixSuffixField {
 		// At this point, we just have regular facets.
 		for (LpseToken lpseToken : lpseTokenList) {
 			FacetLpseToken facetLpseToken = (FacetLpseToken) lpseToken;
-			solrQuery.addFilterQuery(String.format("%s:\"%s\"",
-					facetLpseToken.getSolrField(),
-					facetLpseToken.getValue()));
+			solrQuery.addFilterQuery(
+						facetLpseToken.getSolrField() +
+									":\"" +
+									facetLpseToken.getValue() +
+									"\"");
 		}
 	}
 
