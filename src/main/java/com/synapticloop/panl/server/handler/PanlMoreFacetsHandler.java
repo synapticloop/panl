@@ -36,7 +36,6 @@ import org.apache.http.client.utils.URIBuilder;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.protocol.HttpContext;
 import org.apache.http.protocol.HttpRequestHandler;
-import org.json.JSONArray;
 import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -47,7 +46,6 @@ import java.util.List;
 import java.util.Map;
 
 import static com.synapticloop.panl.server.handler.CollectionRequestHandler.*;
-import static com.synapticloop.panl.server.handler.webapp.util.ResourceHelper.*;
 
 /**
  * <p>This is the handler which will return more facets for a specific facet
@@ -162,9 +160,9 @@ public class PanlMoreFacetsHandler extends BaseResponseHandler implements HttpRe
 						context));
 
 				// now that we have the JSON object - time to remove the things we don't need
-				jsonObject.remove("responseHeader");
-				jsonObject.remove("response");
-				jsonObject.remove("facet_counts");
+				jsonObject.remove(JSON_KEY_SOLR_RESPONSE_HEADER);
+				jsonObject.remove(JSON_KEY_SOLR_RESPONSE);
+				jsonObject.remove(JSON_KEY_SOLR_FACET_COUNTS);
 
 				JSONObject panlJsonObject = jsonObject.getJSONObject(JSON_KEY_PANL);
 

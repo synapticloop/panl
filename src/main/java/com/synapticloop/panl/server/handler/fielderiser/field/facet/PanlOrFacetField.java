@@ -344,6 +344,11 @@ public class PanlOrFacetField extends PanlFacetField {
 		removeObject.put(JSON_KEY_IS_OR_FACET, true);
 	}
 
+	/**
+	 * <p>Return whether this is an ALWAYS OR facet field</p>
+	 *
+	 * @return Whether this is an ALWAYS OR facet field
+	 */
 	public boolean getIsAlwaysOr() {
 		return(isAlwaysOr);
 	}

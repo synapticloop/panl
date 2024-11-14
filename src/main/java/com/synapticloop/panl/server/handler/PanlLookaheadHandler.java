@@ -193,6 +193,8 @@ public class PanlLookaheadHandler extends BaseResponseHandler implements HttpReq
 			JSONObject panlObject = new JSONObject();
 			JSONObject timingsObject = new JSONObject();
 
+			solrJsonObject.remove(JSON_KEY_SOLR_RESPONSE_HEADER);
+
 			long sendAndReceiveNanos = System.nanoTime() - startNanos - parseRequestNanos - buildRequestNanos;
 
 			long buildResponseTime = System.nanoTime() - startNanos;

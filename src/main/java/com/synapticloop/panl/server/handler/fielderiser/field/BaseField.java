@@ -62,25 +62,22 @@ public abstract class BaseField {
 	public static final String JSON_KEY_URIS = "uris";
 	public static final String JSON_KEY_IS_MULTIVALUE = "is_multivalue";
 
-
-	public static final String PROPERTY_KEY_PANL_FIELD = "panl.field.";
-	public static final String PROPERTY_KEY_PANL_NAME = "panl.name.";
+	public static final String PROPERTY_KEY_IS_MULTIVALUE = "panl.multivalue.";
 	public static final String PROPERTY_KEY_PANL_FACET = "panl.facet.";
-	public static final String PROPERTY_KEY_PANL_OR_FACET = "panl.or.facet.";
-	public static final String PROPERTY_KEY_PANL_OR_ALWAYS = "panl.or.always.";
-	public static final String PROPERTY_KEY_PANL_OR_SEPARATOR = "panl.or.separator.";
 	public static final String PROPERTY_KEY_PANL_FACETSORT = "panl.facetsort.";
-	public static final String PROPERTY_KEY_PANL_TYPE = "panl.type.";
-	public static final String PROPERTY_KEY_PANL_PREFIX = "panl.prefix.";
-	public static final String PROPERTY_KEY_PANL_SUFFIX = "panl.suffix.";
-	public static final String PROPERTY_KEY_PANL_WHEN = "panl.when.";
-
+	public static final String PROPERTY_KEY_PANL_FIELD = "panl.field.";
 	public static final String PROPERTY_KEY_PANL_INCLUDE_SAME_NUMBER_FACETS = "panl.include.same.number.facets";
 	public static final String PROPERTY_KEY_PANL_INCLUDE_SINGLE_FACETS = "panl.include.single.facets";
-	public static final String PROPERTY_KEY_IS_MULTIVALUE = "panl.multivalue.";
-
+	public static final String PROPERTY_KEY_PANL_NAME = "panl.name.";
+	public static final String PROPERTY_KEY_PANL_OR_ALWAYS = "panl.or.always.";
+	public static final String PROPERTY_KEY_PANL_OR_FACET = "panl.or.facet.";
+	public static final String PROPERTY_KEY_PANL_OR_SEPARATOR = "panl.or.separator.";
+	public static final String PROPERTY_KEY_PANL_PREFIX = "panl.prefix.";
 	public static final String PROPERTY_KEY_PANL_RANGE_FACET = "panl.range.facet.";
 	public static final String PROPERTY_KEY_PANL_RANGE_INFIX = "panl.range.infix.";
+	public static final String PROPERTY_KEY_PANL_SUFFIX = "panl.suffix.";
+	public static final String PROPERTY_KEY_PANL_TYPE = "panl.type.";
+	public static final String PROPERTY_KEY_PANL_WHEN = "panl.when.";
 
 	public static final String TYPE_SOLR_BOOL_FIELD = "solr.BoolField";
 	public static final String TYPE_SOLR_INT_POINT_FIELD = "solr.IntPointField";
@@ -116,24 +113,26 @@ public abstract class BaseField {
 	protected final List<String> WARNING_MESSAGES = new ArrayList<>();
 
 	public BaseField(
-			String lpseCode,
-			Properties properties,
-			String propertyKey,
-			String solrCollection,
-			String panlCollectionUri) throws PanlServerException {
+				String lpseCode,
+				Properties properties,
+				String propertyKey,
+				String solrCollection,
+				String panlCollectionUri) throws PanlServerException {
 		this(lpseCode, propertyKey, properties, solrCollection, panlCollectionUri, 1);
 	}
 
 	public BaseField(
-			String lpseCode,
-			String propertyKey,
-			Properties properties,
-			String solrCollection,
-			String panlCollectionUri,
-			int lpseLength) throws PanlServerException {
+				String lpseCode,
+				String propertyKey,
+				Properties properties,
+				String solrCollection,
+				String panlCollectionUri,
+				int lpseLength) throws PanlServerException {
 
-		this.panlIncludeSingleFacets = properties.getProperty(PROPERTY_KEY_PANL_INCLUDE_SINGLE_FACETS, "false").equals("true");
-		this.panlIncludeSameNumberFacets = properties.getProperty(PROPERTY_KEY_PANL_INCLUDE_SAME_NUMBER_FACETS, "false").equals("true");
+		this.panlIncludeSingleFacets = properties.getProperty(PROPERTY_KEY_PANL_INCLUDE_SINGLE_FACETS, "false")
+		                                         .equals("true");
+		this.panlIncludeSameNumberFacets = properties.getProperty(PROPERTY_KEY_PANL_INCLUDE_SAME_NUMBER_FACETS, "false")
+		                                             .equals("true");
 
 		this.lpseCode = lpseCode;
 		this.properties = properties;
@@ -141,14 +140,16 @@ public abstract class BaseField {
 		this.solrCollection = solrCollection;
 		this.panlCollectionUri = panlCollectionUri;
 		this.lpseLength = lpseLength;
-		this.facetSortByIndex = properties.getProperty(PROPERTY_KEY_PANL_FACETSORT + this.lpseCode, "count").equals("index");
-		this.isMultiValue = properties.getProperty(PROPERTY_KEY_IS_MULTIVALUE  + this.lpseCode, "false").equals("true");
+		this.facetSortByIndex = properties.getProperty(PROPERTY_KEY_PANL_FACETSORT + this.lpseCode, "count")
+		                                  .equals("index");
+		this.isMultiValue = properties.getProperty(PROPERTY_KEY_IS_MULTIVALUE + this.lpseCode, "false").equals("true");
 
 		if (!propertyKey.equals(PROPERTY_KEY_PANL_SORT_FIELDS)) {
 			// sort keys can be longer than the panlParamSort property code
 
 			if (this.lpseCode.length() != lpseLength) {
-				throw new PanlServerException(propertyKey + " LPSE code of '" + this.lpseCode + "' has invalid lpse length of " + lpseCode.length() + " is of invalid length - should be " + lpseLength);
+				throw new PanlServerException(
+							propertyKey + " LPSE code of '" + this.lpseCode + "' has invalid lpse length of " + lpseCode.length() + " is of invalid length - should be " + lpseLength);
 			}
 		}
 	}
@@ -166,10 +167,10 @@ public abstract class BaseField {
 		if (orFacet && rangeFacet) {
 			hasErrors = true;
 			getLogger().error("You __MAY_NOT__ set a facet to both OR and RANGE.  Properties: '{}{}' and '{}{}'.",
-					PROPERTY_KEY_PANL_OR_FACET,
-					this.lpseCode,
-					PROPERTY_KEY_PANL_RANGE_FACET,
-					this.lpseCode);
+						PROPERTY_KEY_PANL_OR_FACET,
+						this.lpseCode,
+						PROPERTY_KEY_PANL_RANGE_FACET,
+						this.lpseCode);
 		}
 
 		if (rangeFacet) {
@@ -178,12 +179,13 @@ public abstract class BaseField {
 				if (infix.equals("-")) {
 					hasErrors = true;
 					getLogger().error("You __MAY_NOT__ set an infix value to the minus character '-'.  Property: '{}{}'.",
-							PROPERTY_KEY_PANL_RANGE_INFIX,
-							this.lpseCode);
+								PROPERTY_KEY_PANL_RANGE_INFIX,
+								this.lpseCode);
 				} else if (infix.contains("-")) {
-					getLogger().warn("Setting an infix value that contains the minus character '-' __MAY__ cause parsing errors.  Property: '{}{}'.",
-							PROPERTY_KEY_PANL_RANGE_INFIX,
-							this.lpseCode);
+					getLogger().warn(
+								"Setting an infix value that contains the minus character '-' __MAY__ cause parsing errors.  Property: '{}{}'.",
+								PROPERTY_KEY_PANL_RANGE_INFIX,
+								this.lpseCode);
 				}
 			}
 		}
@@ -220,8 +222,7 @@ public abstract class BaseField {
 
 	/**
 	 * <p>Populate the names for both Solr and Panl. THe Solr name is the field
-	 * name.  The Panl name is either set, or will default to the Solr field
-	 * name.</p>
+	 * name.  The Panl name is either set, or will default to the Solr field name.</p>
 	 *
 	 * <p>The Panl name can be set to any string and can be little nicer than the
 	 * Solr field name.</p>
@@ -292,8 +293,7 @@ public abstract class BaseField {
 	 *
 	 * @param value the value to convert if any conversions are required
 	 *
-	 * @return The URL decoded value This will return <code>null</code> if it is
-	 * 		invalid.
+	 * @return The URL decoded value This will return <code>null</code> if it is invalid.
 	 */
 	public String getDecodedValue(String value) {
 		String decodedValue = URLDecoder.decode(value, StandardCharsets.UTF_8);
@@ -310,8 +310,7 @@ public abstract class BaseField {
 
 	/**
 	 * <p>Get the validated value.  This will ensure that an incoming token value
-	 * matches the Solr field type, and if it doesn't, then it will attempt to
-	 * clean it up.</p>
+	 * matches the Solr field type, and if it doesn't, then it will attempt to clean it up.</p>
 	 *
 	 * <p>At the moment, the only fields that are validated are:</p>
 	 *
@@ -331,17 +330,17 @@ public abstract class BaseField {
 	protected String getValidatedValue(String temp) {
 		switch (this.validationType) {
 			case VALIDATION_TYPE_NUMBER:
-				return(NumberValidator.validate(temp));
+				return (NumberValidator.validate(temp));
 			case VALIDATION_TYPE_DECIMAL:
-				return(DecimalValidator.validate(temp));
+				return (DecimalValidator.validate(temp));
 		}
 		return (temp);
 	}
 
 	/**
 	 * <p>Get the encoded value for this field - which will URL encoded.  If there
-	 * are any other transformations (i.e. prefixes, infixes, suffixes, or value
-	 * replacements, this will be done in a sub-class by the overriding method).</p>
+	 * are any other transformations (i.e. prefixes, infixes, suffixes, or value replacements, this will be done in a
+	 * sub-class by the overriding method).</p>
 	 *
 	 * @param value The value to URL encode
 	 *
@@ -353,8 +352,8 @@ public abstract class BaseField {
 
 	/**
 	 * <p>Get the encoded value for this field - which will URL encoded.  If there
-	 * are any other transformations (i.e. prefixes, infixes, suffixes, or value
-	 * replacements, this will be done in a sub-class by the overriding method).</p>
+	 * are any other transformations (i.e. prefixes, infixes, suffixes, or value replacements, this will be done in a
+	 * sub-class by the overriding method).</p>
 	 *
 	 * <p>If the value is null, then an empty string will be returned</p>
 	 *
@@ -397,7 +396,7 @@ public abstract class BaseField {
 	public String getURIPath(Map<String, List<LpseToken>> panlTokenMap, CollectionProperties collectionProperties) {
 		StringBuilder sb = new StringBuilder();
 		if (panlTokenMap.containsKey(lpseCode)) {
-			for (LpseToken lpseToken : panlTokenMap.get(lpseCode)) {
+			for(LpseToken lpseToken : panlTokenMap.get(lpseCode)) {
 				if (lpseToken.getIsValid()) {
 					sb.append(getEncodedPanlValue(lpseToken));
 					sb.append("/");
@@ -428,17 +427,15 @@ public abstract class BaseField {
 	 *   </li>
 	 * </ul>
 	 *
-	 * @param panlTokenMap The map of LPSE codes to the list of tokens for that
-	 * 		LPSE code
-	 * @param collectionProperties The collection properties for this collection
-	 * 		this is unused in this implementation
+	 * @param panlTokenMap The map of LPSE codes to the list of tokens for that LPSE code
+	 * @param collectionProperties The collection properties for this collection this is unused in this implementation
 	 *
 	 * @return The LPSE URI path for this field
 	 */
 	public String getLpseCode(Map<String, List<LpseToken>> panlTokenMap, CollectionProperties collectionProperties) {
 		StringBuilder sb = new StringBuilder();
 		if (panlTokenMap.containsKey(lpseCode)) {
-			for (LpseToken lpseToken : panlTokenMap.get(lpseCode)) {
+			for(LpseToken lpseToken : panlTokenMap.get(lpseCode)) {
 				if (lpseToken.getIsValid()) {
 					if (lpseToken instanceof FacetLpseToken) {
 						FacetLpseToken facetLpseToken = (FacetLpseToken) lpseToken;
@@ -461,18 +458,18 @@ public abstract class BaseField {
 	/**
 	 * <p>Get the canonical URI path for this field, if the field has any values.</p>
 	 *
-	 * @param panlTokenMap The token map with all fields and a list of their
-	 * 		values
+	 * @param panlTokenMap The token map with all fields and a list of their values
 	 * @param collectionProperties THe collection properties
 	 *
-	 * @return The URI path for this field, or an empty string if the field has
-	 * 		no values
+	 * @return The URI path for this field, or an empty string if the field has no values
 	 */
-	public String getCanonicalUriPath(Map<String, List<LpseToken>> panlTokenMap, CollectionProperties collectionProperties) {
+	public String getCanonicalUriPath(Map<String, List<LpseToken>> panlTokenMap,
+				CollectionProperties collectionProperties) {
 		return (getURIPath(panlTokenMap, collectionProperties));
 	}
 
-	public String getCanonicalLpseCode(Map<String, List<LpseToken>> panlTokenMap, CollectionProperties collectionProperties) {
+	public String getCanonicalLpseCode(Map<String, List<LpseToken>> panlTokenMap,
+				CollectionProperties collectionProperties) {
 		return (getLpseCode(panlTokenMap, collectionProperties));
 	}
 
@@ -488,13 +485,10 @@ public abstract class BaseField {
 	 * <p>The reset LPSE code, this will reset the LPSE code where adding a new
 	 * filter to the query will want the user to go back to page 1.</p>
 	 *
-	 * @param panlTokenMap The panlToken map to see if a list of tokens is
-	 * 		available to generate the resetLpseCode for
-	 * @param collectionProperties The collection properties to look up defaults
-	 * 		if required
+	 * @param panlTokenMap The panlToken map to see if a list of tokens is available to generate the resetLpseCode for
+	 * @param collectionProperties The collection properties to look up defaults if required
 	 *
-	 * @return The reset LPSE code, or an empty string if there are no tokens in
-	 * 		the query for this
+	 * @return The reset LPSE code, or an empty string if there are no tokens in the query for this
 	 */
 	public String getResetLpseCode(Map<String, List<LpseToken>> panlTokenMap, CollectionProperties collectionProperties) {
 		return (getLpseCode(panlTokenMap, collectionProperties));
@@ -505,24 +499,29 @@ public abstract class BaseField {
 	}
 
 	/**
-	 * <p>A human readable list of explanations for debugging purposes</p>
+	 * <p>A human readable list of explanations for debugging purposes, this will
+	 * add the base information then call the abstract method
+	 * <code>explainAdditional()</code>.</p>
+	 *
+	 * <p>See the abstract {@link BaseField#explainAdditional()} method and its
+	 * overrides for implementation details.</p>
 	 *
 	 * @return A list of human-readable strings.
 	 */
 	public List<String> explain() {
 		List<String> temp = new ArrayList<>();
 		temp.add("FIELD CONFIG - property key: '" + propertyKey +
-				"' [ " +
-				this.getClass().getSimpleName() +
-				" ] LPSE code '" +
-				lpseCode +
-				"' Solr field name '" +
-				solrFieldName +
-				"' of type '" +
-				solrFieldType +
-				"', Panl name '" +
-				panlFieldName +
-				"'.");
+					         "' [ " +
+					         this.getClass().getSimpleName() +
+					         " ] LPSE code '" +
+					         lpseCode +
+					         "' Solr field name '" +
+					         solrFieldName +
+					         "' of type '" +
+					         solrFieldType +
+					         "', Panl name '" +
+					         panlFieldName +
+					         "'.");
 
 		temp.addAll(explainAdditional());
 
@@ -531,6 +530,11 @@ public abstract class BaseField {
 		return (temp);
 	}
 
+	/**
+	 * <p>Add additional explanations to the default explanation, if available</p>
+	 *
+	 * @return The list of strings which provide additional information
+	 */
 	public abstract List<String> explainAdditional();
 
 	/**
@@ -546,20 +550,23 @@ public abstract class BaseField {
 		}
 	}
 
+	/**
+	 * <p>Log the details of this base field as an INFO message.</p>
+	 */
 	protected void logDetails() {
-		getLogger().info("[ Solr/Panl '{}/{}' ] Mapping Solr facet field name '{}' of type '{}' to panl key '{}', LPSE length {}",
-				solrCollection,
-				panlCollectionUri,
-				solrFieldName,
-				solrFieldType,
-				lpseCode,
-				lpseLength);
+		getLogger().info(
+					"[ Solr/Panl '{}/{}' ] Mapping Solr facet field name '{}' of type '{}' to panl key '{}', LPSE length {}",
+					solrCollection,
+					panlCollectionUri,
+					solrFieldName,
+					solrFieldType,
+					lpseCode,
+					lpseLength);
 	}
 
 	/**
 	 * <p>Get the value prefix.  This method will __ALWAYS__ return an empty
-	 * string and relies on being overridden for those fields that allow a prefix
-	 * to be set.</p>
+	 * string and relies on being overridden for those fields that allow a prefix to be set.</p>
 	 *
 	 * @return The prefix for this value
 	 */
@@ -569,8 +576,7 @@ public abstract class BaseField {
 
 	/**
 	 * <p>Get the value suffix.  This method will __ALWAYS__ return an empty
-	 * string and relies on being overridden for those fields that allow a suffix
-	 * to be set.</p>
+	 * string and relies on being overridden for those fields that allow a suffix to be set.</p>
 	 *
 	 * @return The suffix for this value
 	 */
@@ -607,7 +613,9 @@ public abstract class BaseField {
 	 */
 	protected void logWarnProperties(String lpseCode, String propertyKey) {
 		if (properties.containsKey(propertyKey)) {
-			String message = String.format("LPSE code '%s' has a property of '%s' which is invalid and should be removed.  (It has been ignored...)", lpseCode, propertyKey);
+			String message = String.format(
+						"LPSE code '%s' has a property of '%s' which is invalid and should be removed.  (It has been ignored...)",
+						lpseCode, propertyKey);
 			getLogger().warn(message);
 			WARNING_MESSAGES.add("[ CONFIGURATION WARNING ] " + message);
 		}
@@ -617,9 +625,8 @@ public abstract class BaseField {
 	 * <p>Append information to the available facet object.</p>
 	 *
 	 * <p>This will add the base information to the facet object, and then calls
-	 * the internal method <code>appendAvailableObjectInternal</code> which sub
-	 * classes can override and append additional information to the JSON
-	 * object.</p>
+	 * the internal method <code>appendAvailableObjectInternal</code> which sub classes can override and append additional
+	 * information to the JSON object.</p>
 	 *
 	 * @param jsonObject The JSON object to append values to
 	 */
@@ -627,7 +634,7 @@ public abstract class BaseField {
 		jsonObject.put(JSON_KEY_FACET_NAME, this.solrFieldName);
 		jsonObject.put(JSON_KEY_NAME, this.panlFieldName);
 		jsonObject.put(JSON_KEY_PANL_CODE, this.lpseCode);
-		if(this.isMultiValue) {
+		if (this.isMultiValue) {
 			jsonObject.put(JSON_KEY_IS_MULTIVALUE, this.isMultiValue);
 		}
 
@@ -635,9 +642,9 @@ public abstract class BaseField {
 	}
 
 	public boolean appendAvailableRangeValues(
-			JSONObject facetObject,
-			CollectionProperties collectionProperties,
-			Map<String, List<LpseToken>> panlTokenMap) {
+				JSONObject facetObject,
+				CollectionProperties collectionProperties,
+				Map<String, List<LpseToken>> panlTokenMap) {
 		return (false);
 	}
 
@@ -656,17 +663,17 @@ public abstract class BaseField {
 	 * @return Whether any values were appended
 	 */
 	public boolean appendAvailableValues(
-			JSONObject facetObject,
-			CollectionProperties collectionProperties,
-			Map<String, List<LpseToken>> panlTokenMap,
-			Set<String> existingLpseValues,
-			List<FacetField.Count> facetCountValues,
-			long numFound,
-			boolean numFoundExact) {
+				JSONObject facetObject,
+				CollectionProperties collectionProperties,
+				Map<String, List<LpseToken>> panlTokenMap,
+				Set<String> existingLpseValues,
+				List<FacetField.Count> facetCountValues,
+				long numFound,
+				boolean numFoundExact) {
 
 		JSONArray facetValueArrays = new JSONArray();
 
-		for (FacetField.Count value : facetCountValues) {
+		for(FacetField.Count value : facetCountValues) {
 			// at this point - we need to see whether we already have the 'value'
 			// as a facet - as there is no need to have it again
 			boolean shouldAdd = true;
@@ -688,8 +695,8 @@ public abstract class BaseField {
 			// the number of the count of the facet - then we may not need to
 			// include it
 			if (!panlIncludeSameNumberFacets &&
-					numFound == value.getCount() &&
-					numFoundExact) {
+						    numFound == value.getCount() &&
+						    numFoundExact) {
 				shouldAdd = false;
 			}
 
@@ -720,10 +727,10 @@ public abstract class BaseField {
 			facetObject.put(JSON_KEY_FACET_LIMIT, collectionProperties.getSolrFacetLimit());
 			if (null != lpseCode) {
 				facetObject.put(JSON_KEY_URIS,
-						getAdditionURIObject(
-								collectionProperties,
-								this,
-								panlTokenMap));
+							getAdditionURIObject(
+										collectionProperties,
+										this,
+										panlTokenMap));
 				return (true);
 			}
 		}
@@ -738,20 +745,20 @@ public abstract class BaseField {
 	 * @param lpseField The LPSE field that this applies to
 	 * @param panlTokenMap The inbound Panl tokens
 	 *
-	 * @return The JSON object with the URIs for adding this field to the
-	 * 		existing search URI.
+	 * @return The JSON object with the URIs for adding this field to the existing search URI.
 	 */
-	protected JSONObject getAdditionURIObject(CollectionProperties collectionProperties, BaseField lpseField, Map<String, List<LpseToken>> panlTokenMap) {
+	protected JSONObject getAdditionURIObject(CollectionProperties collectionProperties, BaseField lpseField,
+				Map<String, List<LpseToken>> panlTokenMap) {
 		String additionLpseCode = lpseField.getLpseCode();
 		JSONObject additionObject = new JSONObject();
 		StringBuilder lpseUri = new StringBuilder(FORWARD_SLASH);
 		StringBuilder lpseCode = new StringBuilder();
 
 		// go through the LPSE fields in order
-		for (BaseField baseField : collectionProperties.getLpseFields()) {
+		for(BaseField baseField : collectionProperties.getLpseFields()) {
 
 			if (panlTokenMap.containsKey(baseField.getLpseCode()) &&
-					!(baseField.getLpseCode().equals(additionLpseCode))) {
+						    !(baseField.getLpseCode().equals(additionLpseCode))) {
 
 				String resetUriPath = baseField.getResetUriPath(panlTokenMap, collectionProperties);
 				lpseUri.append(resetUriPath);
@@ -761,7 +768,8 @@ public abstract class BaseField {
 
 			if (baseField.getLpseCode().equals(additionLpseCode)) {
 
-				additionObject.put(JSON_KEY_BEFORE, lpseUri.toString() + baseField.getResetUriPath(panlTokenMap, collectionProperties));
+				additionObject.put(JSON_KEY_BEFORE,
+							lpseUri.toString() + baseField.getResetUriPath(panlTokenMap, collectionProperties));
 
 				lpseUri.setLength(0);
 				lpseCode.append(baseField.getResetLpseCode(panlTokenMap, collectionProperties));
@@ -776,6 +784,11 @@ public abstract class BaseField {
 	}
 
 
+	/**
+	 * <p>Append information to the available JSON object.</p>
+	 *
+	 * @param jsonObject The JSON object to append to.
+	 */
 	protected abstract void appendToAvailableObjectInternal(JSONObject jsonObject);
 
 	/**
@@ -790,21 +803,44 @@ public abstract class BaseField {
 	 * @return The correct LPSE token for this lpseCode
 	 */
 	public abstract List<LpseToken> instantiateTokens(
-			CollectionProperties collectionProperties,
-			String lpseCode,
-			String query,
-			StringTokenizer valueTokeniser,
-			LpseTokeniser lpseTokeniser);
+				CollectionProperties collectionProperties,
+				String lpseCode,
+				String query,
+				StringTokenizer valueTokeniser,
+				LpseTokeniser lpseTokeniser);
 
+	/**
+	 * <p>Add JSON keys and values to the remove object.  By default this does
+	 * nothing, unless overridden</p>
+	 *
+	 * @param removeObject The JSON object with the remove information
+	 * @param lpseToken The lpse token to use when computing what information is added
+	 */
 	public void addToRemoveObject(JSONObject removeObject, LpseToken lpseToken) {
-
 	}
 
-	public boolean appendAvailableDateRangeValues(JSONObject dateRangeFacetObject, CollectionProperties collectionProperties, Map<String, List<LpseToken>> panlTokenMap) {
+	/**
+	 * <p>Append available date range values to the JSON object.  This is only
+	 * called where there is a DATE Range facet object</p>
+	 *
+	 * @param dateRangeFacetObject The date range facet object
+	 * @param collectionProperties The collection properties
+	 * @param panlTokenMap The panl token map
+	 *
+	 * @return whether information has been appended to the JSON object.
+	 */
+	public boolean appendAvailableDateRangeValues(JSONObject dateRangeFacetObject,
+				CollectionProperties collectionProperties, Map<String, List<LpseToken>> panlTokenMap) {
 		return (false);
 	}
 
+	/**
+	 * <p>Return whether this facet is sorted by its index - i.e. the facet value
+	 * rather than the facet count (which is the default).</p>
+	 *
+	 * @return whether to sort this facet by its index.
+	 */
 	public boolean getIsFacetSortByIndex() {
-		return(facetSortByIndex);
+		return (facetSortByIndex);
 	}
 }

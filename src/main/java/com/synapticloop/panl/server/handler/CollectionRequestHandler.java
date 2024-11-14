@@ -51,7 +51,6 @@ import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.net.URLDecoder;
 import java.nio.charset.StandardCharsets;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
@@ -86,6 +85,10 @@ public class CollectionRequestHandler {
 	public static final String JSON_KEY_TIMINGS = "timings";
 	public static final String JSON_KEY_DYNAMIC_MIN = "dynamic_min";
 	public static final String JSON_KEY_DYNAMIC_MAX = "dynamic_max";
+
+	public static final String JSON_KEY_SOLR_RESPONSE_HEADER = "responseHeader";
+	public static final String JSON_KEY_SOLR_RESPONSE = "response";
+	public static final String JSON_KEY_SOLR_FACET_COUNTS = "facetCounts";
 
 	public static String CODES = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz01234567890";
 	public static String CODES_AND_METADATA = CODES + "[].+-";
@@ -479,12 +482,13 @@ public class CollectionRequestHandler {
 	 * </pre>
 	 *
 	 * <p><strong>NOTE:</strong> If there is an error within the lpse encoding,
-	 * or the URI (For example, if the URI is manually entered or tampered with) the parser will not throw an error,
-	 * however the results will not be as expected.</p>
+	 * or the URI (For example, if the URI is manually entered or tampered with)
+	 * the parser will not throw an error, however the results will not be as
+	 * expected.</p>
 	 *
 	 * @param uri The URI to parse
-	 * @param query the query to parse - if the query string exists, then this query will replace any existing query in
-	 * 	the lpse encoded URI
+	 * @param query the query to parse - if the query string exists, then this
+	 *  query will replace any existing query in 	the lpse encoded URI
 	 *
 	 * @return The parse URI as a List of <code>PanlToken</code>
 	 */
@@ -494,17 +498,13 @@ public class CollectionRequestHandler {
 
 		String[] lpseUriPath = uri.split("/");
 
-		boolean hasQuery = false;
+		boolean hasQueryParam = false;
 		String queryParam = "";
 
 		List<NameValuePair> parse = URLEncodedUtils.parse(query, StandardCharsets.UTF_8);
-		System.out.println(parse.size());
-		System.out.println(collectionProperties.getFormQueryRespondTo());
 		for (NameValuePair nameValuePair : parse) {
-			System.out.println(nameValuePair.getName() + ":" + nameValuePair.getValue());
-			System.out.println(nameValuePair.getName().equals(collectionProperties.getFormQueryRespondTo()));
 			if (nameValuePair.getName().equals(collectionProperties.getFormQueryRespondTo())) {
-				hasQuery = true;
+				hasQueryParam = true;
 				queryParam = nameValuePair.getValue();
 				break;
 			}
@@ -532,8 +532,11 @@ public class CollectionRequestHandler {
 					lpseTokeniser);
 
 				for (LpseToken lpseToken : parsedLpseTokens) {
-					if (lpseToken instanceof QueryLpseToken) {
-						hasQuery = true;
+					if (lpseToken instanceof QueryLpseToken && hasQueryParam) {
+						// at this point we have a query LPSE token, and a query on the URL
+						// which will override it.
+						lpseToken.setIsValid(false);
+						continue;
 					}
 
 					lpseTokens.add(lpseToken);
@@ -547,7 +550,7 @@ public class CollectionRequestHandler {
 			}
 		}
 
-		if (!hasQuery && !queryParam.isBlank()) {
+		if (hasQueryParam && !queryParam.isBlank()) {
 			lpseTokens.add(new QueryLpseToken(collectionProperties, query, collectionProperties.getPanlParamQuery()));
 		}
 
