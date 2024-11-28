@@ -323,7 +323,7 @@ function addActiveFilters(activeObject, removeUri) {
 		active.append("<li><a href=\"" + panlResultsViewerUrl +
 				$("#collection").text() +
 				activeObject.query.remove_uri +
-				"\">[remove]</a>&nbsp;" +
+				"\"><img class=\"remove\" src=\"/webapp/static/remove.png\"></a>&nbsp;" +
 				activeObject.query.value +
 				"</li><li><hr /></li>");
 	}
@@ -353,7 +353,7 @@ function addActiveFacets(facets) {
 		active.append("<li><a href=\"" + panlResultsViewerUrl +
 				$("#collection").text() +
 				facet.remove_uri +
-				"\">[remove]</a>&nbsp;" +
+				"\"><img class=\"remove\" src=\"/webapp/static/remove.png\" /></a>&nbsp;" +
 				decodePanl(facet.encoded) +
 				"</li>");
 
@@ -361,7 +361,7 @@ function addActiveFacets(facets) {
 			active.append("<li><a href=\"" + panlResultsViewerUrl +
 					$("#collection").text() +
 					facet.inverse_uri +
-					"\">[invert]</a>&nbsp;" +
+					"\"><img class=\"invert\" src=\"/webapp/static/invert.png\" /></a>&nbsp;" +
 					decodePanl(facet.inverse_encoded) +
 					"</li>");
 		}
@@ -385,23 +385,23 @@ function addActiveSorts(sorts, removeUri) {
 		active.append("<li><a href=\"" + panlResultsViewerUrl +
 				$("#collection").text() +
 				sort.remove_uri +
-				"\">[Remove sort]</a>&nbsp;" +
+				"\"><img class=\"remove\" src=\"/webapp/static/remove.png\" /></a>&nbsp;" +
 				"<a href=\"" + panlResultsViewerUrl +
 				$("#collection").text() +
 				sort.inverse_uri +
-				"\">[Change to " +
+				"\"><img class=\"invert\" src=\"/webapp/static/invert.png\" /> Change to " +
 				(sort.is_descending ? "ASC" : "DESC")+
-				"]</a>&nbsp;" +
+				"</a>&nbsp;" +
 				"</li>");
 
 	}
 
 	if(sorts.length > 0 ) {
-		active.append("<li><br /><a href=\"" +
+		active.append("<li class=\"center\"><br /><a href=\"" +
 			panlResultsViewerUrl +
 			$("#collection").text() +
 			removeUri +
-			"\">[Clear all sorting]</a></li>");
+			"\"><img class=\"remove\" src=\"/webapp/static/remove.png\" />Clear all sorting</a></li>");
 	}
 
 	active.append("<li><hr /></li>");
@@ -483,7 +483,7 @@ function addAvailableFilters(availableObject, activeObject) {
 				inboundMinValue +
 				" to " +
 				inboundMaxValue +
-				"</span></div><div class=\"center\"><a class=\"range-link\" href=\"" +
+				"</span></div><div class=\"center\"><a class=\"range-link add\" href=\"" +
 				panlResultsViewerUrl +
 				$("#collection").text() +
 				facet.uris.before +
@@ -643,7 +643,7 @@ function generateFacetHTML(facet) {
 		facet.uris.before +
 		((facet.or_separator !== undefined) ? value.encoded_or : value.encoded) +
 		facet.uris.after +
-		"\">[add]</a>&nbsp;" +
+		"\"><img class=\"add\" src=\"/webapp/static/add.png\" alt=\"Add facet\"></a>&nbsp;" +
 		decodePanl(value.encoded);
 
 		if(!facet.is_or_facet) {
@@ -659,7 +659,18 @@ function generateFacetHTML(facet) {
 
 	innerUl += "</ul>"
 
-	return("<li  id=\"facet-" + facet.facet_name + "\"><strong>" + facet.name + " <em>(" + facet.panl_code + ")</em></strong>" + innerUl + "</li>");
+	return(
+		"<li  id=\"facet-" +
+		facet.facet_name +
+		"\"><strong>" +
+		facet.name +
+		" <em>(" +
+		facet.panl_code +
+		")</em></strong> [" +
+		getFacetType(facet) +
+		"]<br />" +
+		innerUl +
+		"</li>");
 }
 
 function updateDateRangeLink(facet) {
@@ -690,7 +701,26 @@ function updateDateRangeLink(facet) {
 }
 
 function encodePanl(text) {
-	return(encodeURI(text.replaceAll(" ", "+")));
+	return(encodeURI(
+			text
+				.replaceAll(" ", "+")
+				.replaceAll("%", "%25")));
+}
+
+function getFacetType(orderedLpseFacet) {
+	if(orderedLpseFacet.is_boolean_facet) {
+		return("BOOLEAN");
+	} else if(undefined !== orderedLpseFacet.or_separator) {
+		return("OR SEP");
+	} else if(orderedLpseFacet.is_or_facet) {
+		return("OR");
+	} else if(orderedLpseFacet.is_range_facet) {
+		return("RANGE");
+	} else if(orderedLpseFacet.is_date_range_facet) {
+		return("DATE Range");
+	} else {
+		return("Regular");
+	}
 }
 
 function decodePanl(text) {
