@@ -1,6 +1,7 @@
 $(document).ready(function() {
-	var availableCollections = $("#available_collections");
-	var currentCollectionName = "";
+	let availableCollections = $("#available_collections");
+	let currentCollectionName = "";
+
 	for (const collectionUrl of collections) {
 		const lastIndex = collectionUrl.lastIndexOf("/");
 		const collectionName = collectionUrl.substring(1, lastIndex);
@@ -371,18 +372,27 @@ function addActiveFacets(facets) {
 }
 
 function addActiveSorts(sorts, removeUri) {
-	const active = $("#active");
+	let first = true;
+
+	let content = "";
 
 	for(const sort of sorts) {
-		active.append("<li>Sorted by: <strong>" +
-				sort.name +
-				" <em>(" +
-				sort.panl_code +
-				")</em> " +
-				(sort.is_descending ? "[DESC]" : "[ASC]") +
-				"</strong></li>");
+		const activesort = $("#activesort");
+		if(first) {
+			first = false;
+			activesort.html("<strong>Active Sorting</strong>");
+			content += "<ul>";
+		}
 
-		active.append("<li><a href=\"" + panlResultsViewerUrl +
+		content += "<strong>" +
+			sort.name +
+			" <em>(" +
+			sort.panl_code +
+			")</em> " +
+			(sort.is_descending ? "[DESC]" : "[ASC]") +
+			"</strong></li>";
+
+		content += "<li><a href=\"" + panlResultsViewerUrl +
 				$("#collection").text() +
 				sort.remove_uri +
 				"\"><img class=\"remove\" src=\"/webapp/static/remove.png\" /></a>&nbsp;" +
@@ -392,20 +402,19 @@ function addActiveSorts(sorts, removeUri) {
 				"\"><img class=\"invert\" src=\"/webapp/static/invert.png\" /> Change to " +
 				(sort.is_descending ? "ASC" : "DESC")+
 				"</a>&nbsp;" +
-				"</li>");
-
+				"</li>";
 	}
 
 	if(sorts.length > 0 ) {
-		active.append("<li class=\"center\"><br /><a href=\"" +
+		const activesort = $("#activesort");
+		content += "<li class=\"center\"><br /><a href=\"" +
 			panlResultsViewerUrl +
 			$("#collection").text() +
 			removeUri +
-			"\"><img class=\"remove\" src=\"/webapp/static/remove.png\" />Clear all sorting</a></li>");
+			"\"><img class=\"remove\" src=\"/webapp/static/remove.png\" />Clear all sorting</a></li></ul>";
+		activesort.after(content);
 	}
-
-	active.append("<li><hr /></li>");
-	}
+}
 
 function getActiveRangeObject(rangeFacetName, activeObject) {
 	if(activeObject.facet === undefined) {
@@ -660,7 +669,7 @@ function generateFacetHTML(facet) {
 	innerUl += "</ul>"
 
 	return(
-		"<li  id=\"facet-" +
+		"<li class=\"heading\" id=\"facet-" +
 		facet.facet_name +
 		"\"><strong>" +
 		facet.name +

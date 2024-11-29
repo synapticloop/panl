@@ -153,6 +153,8 @@ function updateSearchLinks() {
 function getFacetType(orderedLpseFacet) {
 	if(orderedLpseFacet.is_boolean_facet) {
 		return("BOOLEAN");
+	} else if(undefined !== orderedLpseFacet.or_separator) {
+		return("OR SEP");
 	} else if(orderedLpseFacet.is_or_facet) {
 		return("OR");
 	} else if(orderedLpseFacet.is_range_facet) {

@@ -119,7 +119,9 @@ Working with a Solr schema, the Panl configuration files translate unwieldy URL 
 
 1. **STATIC SITE GENERATION** - With the exception of a query parameter, all available links for every conceivable URI path can be statically generated ahead of time, with canonical URLs.
 
-1. **STATELESS** - No state is stored in the Panl server, all of the state is from the URL path part that is passed through.  No sessions, no memory, nothing to backup, easy to update and quick to start and restart.
+1. **STATELESS** - No state is stored in the Panl server, all state is from the URL path part that is passed through.  No sessions, no memory, nothing to backup, easy to update and quick to start and restart.
+
+1. **CACHEABLE** - Unless the underlying Solr search document index changes, each Solr request is able to be cached.  
 
 1. **TEXT CONFIGURATION** - All configuration for Panl is based on text files (Java .properties) files so they can be stored in a source code management system.  Additionally, upgrades to the Panl server are easy and with quick startup times, any configuration changes will be seen instantly.
 
@@ -133,7 +135,7 @@ With the in-built tool, point it at your existing Solr `managed-schema.xml` file
 
 <img src="src/docs/panl-features.png" alt="The Panl Features" />
 
-_**Image**: The features and functionality of the Panl server_
+_**Image**: The features and functionality of the Panl Simple Results Viewer Web App_
 
 _The image is a screenshot of the in-built Panl Results Viewer Web App available in the release package, and whilst not intended as a production search page, can be used to fine-tune the configuration, or just to have a quick overview of the results._
 
@@ -142,10 +144,14 @@ _The image is a screenshot of the in-built Panl Results Viewer Web App available
 1. **A textual representation of the CaFUPs** that the Panl Results Viewer web app is using.
 
 1. **The canonical URI path** (which is returned with the Panl results JSON object) - this is important as multiple Panl LPSE URI paths will return exactly the same results - this is the unique URI path for this result set and necessary for de-duplicating the search engine results.  This also includes a link to the Panl Results Explainer web app.
-
+   
 1. **The search query box**, by default, Panl responds to the same parameter name as The Solr server - i.e. 'q'.  This can be configured to be a different value should you choose.
 
-1. **Active filters** - either queries, selected facets, or sorting options that are currently limiting the results - the [Remove] link is the URI path that will remove this query, facet, or sorting option from the results. If it is an active sorting filter, the [Change to DESC] or [Change to ASC] links will invert the sorting order without affecting any further sub-ordering.
+1. **Active filters** - either queries or any of the selected facets that have been used to refine the search results.
+
+1. **Active BOOLEAN filters** - if the selected facet is a BOOLEAN facet (i.e. either true/false) then a link (`[≫]`) can be included to invert this selection (i.e. change the value from true if currently false and vice versa).
+
+1. **Active Sorting** - sorting options that are currently ordering the results - the `[-]` link is the URI path that will remove this query, facet, or sorting option from the results. If it is an active sorting filter, the `[≫] Change to DESC` or `[≫] Change to ASC` links will invert the sorting order without affecting any further sub-ordering.
 
 1. **Range filters** - for facets that are defined as ranges - allowing end-users to select a range of values - the values are inclusive (i.e. include the minimum and maximum values).
 
