@@ -422,7 +422,8 @@ with the release files named `solr-panl-9-x.x.x` where `x.x.x` is the version nu
 ## 1.3.0 - Fluffy stuff (codename `billowing-feather`) **UNDER DEVELOPMENT**
 
 - New Features
-  - Added in lookahead query handler for Solr panl including panl results viewer lookahead 
+  - Added in lookahead query handler for Solr panl including panl results viewer lookahead
+  - Added in `OR SEPARATOR` facets so that `OR` facets can be separated with a string and only have one LPSE code. 
 
 
 
@@ -431,13 +432,16 @@ with the release files named `solr-panl-9-x.x.x` where `x.x.x` is the version nu
   - Always reset the page to 1 if there is a `panl.form.query.respondto` URL parameter
 
 
+- Breaking Changes
+    - **[BREAKING CHANGE]** Changed range facets LPSE codes from `w-w` to `w-` and `w+w` to `w+` (i.e. removed the additional LPSE code)
+
 
 - Code Changes
-  - **[BREAKING CHANGE]** Changed range facets LPSE codes from `w-w` to `w-` and `w+w` to `w+` (i.e. removed the additional LPSE code)
   - Fixed the over-riding query respond to parameter
   - Added in Testing for the Panl Generator and refactored how it is being done.
   - Refactored PanlFields for the generator to output better comments and helpful information rather than more comments than necessary
   - General code cleanup and refactorings
+  - Updated the look and feel for the Panl Simple Results Viewer Web APp 
 
 
 - Documentation update

@@ -8,14 +8,8 @@ a:link, a:visited, a:hover, a:active { color: blue; }
 img.add, img.remove, img.invert { margin-bottom: -6px;}
 a.invert { color: #070a9b; text-decoration: none; background: #070a9b2e; padding: 2px 4px; border-radius: 6px; margin: 2px;}
 
-ul#active li strong {
-    margin: 15px 0 4px 0;
-    border: 1px solid lightgray;
-    border-left: 6px solid lightgray;
-    display: block;
-    padding-left: 4px;
-    background-color: #efefef80;
-}
+ul#active li strong { margin: 15px 0 4px 0; border: 1px solid lightgray; border-left: 6px solid lightgray; display: block; padding-left: 4px; background-color: #efefef80; }
+
 p { line-height: 1.8; text-align:justify; text-justify:auto; }
 p.info { line-height: 1.4; font-size: 12px; font-style: italic; }
 p.tight { margin-bottom: 2px; padding-bottom: 2px; }
