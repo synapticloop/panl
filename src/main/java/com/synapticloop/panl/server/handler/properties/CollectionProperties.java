@@ -155,7 +155,8 @@ public class CollectionProperties {
 	private final Map<String, String> SOLR_NAME_TO_LPSE_CODE_MAP = new HashMap<>();
 
 	private final Set<String> PANL_CODE_OR_FIELDS = new HashSet<>();
-	private final Set<String> PANL_CODE_OR_ALWAYS_FIELDS = new HashSet<>();
+	private final Set<String> PANL_CODE_OR_FIELDS_ALWAYS = new HashSet<>();
+	private final Set<String> PANL_CODE_OR_SEPARATOR_FIELDS = new HashSet<>();
 	private final Set<String> PANL_CODE_RANGE_FIELDS = new HashSet<>();
 
 
@@ -449,11 +450,15 @@ public class CollectionProperties {
 							lpseLength);
 				LPSE_CODE_BOOLEAN_FACET_MAP.put(lpseCode, (PanlBooleanFacetField) facetField);
 			} else if (isOrFacet) {
-				facetField = new PanlOrFacetField(lpseCode, panlFieldKey, properties, solrCollection, panlCollectionUri,
-							lpseLength);
+				facetField = new PanlOrFacetField(lpseCode, panlFieldKey, properties, solrCollection, panlCollectionUri, lpseLength);
 				PANL_CODE_OR_FIELDS.add(lpseCode);
-				if (((PanlOrFacetField) facetField).getIsAlwaysOr()) {
-					PANL_CODE_OR_ALWAYS_FIELDS.add(lpseCode);
+				PanlOrFacetField panlOrFacetField = (PanlOrFacetField) facetField;
+				if (panlOrFacetField.getIsAlwaysOr()) {
+					PANL_CODE_OR_FIELDS_ALWAYS.add(lpseCode);
+				}
+
+				if(panlOrFacetField.getOrSeparator() != null) {
+					PANL_CODE_OR_SEPARATOR_FIELDS.add(lpseCode);
 				}
 			} else if (isRangeFacet) {
 				facetField = new PanlRangeFacetField(lpseCode, panlFieldKey, properties, solrCollection, panlCollectionUri,
@@ -729,7 +734,7 @@ public class CollectionProperties {
 			// if there is
 			if (
 						(panlTokenMap.containsKey(panlCodeOrField) && panlTokenMap.size() == 1) ||
-									(PANL_CODE_OR_ALWAYS_FIELDS.contains(panlCodeOrField) && panlTokenMap.containsKey(panlCodeOrField))) {
+									(PANL_CODE_OR_FIELDS_ALWAYS.contains(panlCodeOrField) && panlTokenMap.containsKey(panlCodeOrField))) {
 				// we are faceting on this 
 				solrQuery.add(
 							"f." +
@@ -849,14 +854,45 @@ public class CollectionProperties {
 		return (null);
 	}
 
+	/**
+	 * <p>Return whether the passed in LPSE code is an OR facet field.</p>
+	 *
+	 * @param lpseCode The LPSE code to check
+	 * @return Whether the LPSE code field is an OR facet field
+	 */
 	public boolean getIsOrFacetField(String lpseCode) {
 		return (PANL_CODE_OR_FIELDS.contains(lpseCode));
 	}
 
+	/**
+	 * <p>Return whether the passed in LPSE code has an OR separator string.</p>
+	 *
+	 * @param lpseCode The LPSE code to check
+	 * @return Whether the LPSE code field has an  OR separator
+	 */
+	public boolean getIsOrSeparatorFacetField(String lpseCode) {
+		return (PANL_CODE_OR_SEPARATOR_FIELDS.contains(lpseCode));
+	}
+
+	/**
+	 * <p>Return whether the passed in LPSE code is a RANGE facet field.</p>
+	 *
+	 * @param lpseCode The LPSE code to check
+	 * @return Whether the LPSE code field is a RANGE facet field
+	 */
 	public boolean getIsRangeFacetField(String lpseCode) {
 		return (PANL_CODE_RANGE_FIELDS.contains(lpseCode));
 	}
 
+	/**
+	 * <p>Return the Panl field name (the human-readable name) from the Panl LPSE
+	 * code, else return null if the LPSE code does not exist.</p>
+	 *
+	 * @param lpseCode The LPSE code to look up
+	 *
+	 * @return The Panl human-readable name for the LPSE code, or null if it does
+	 * not exist.
+	 */
 	public String getPanlNameFromPanlCode(String lpseCode) {
 		if (LPSE_CODE_TO_FACET_FIELD_MAP.containsKey(lpseCode)) {
 			return (LPSE_CODE_TO_FACET_FIELD_MAP.get(lpseCode).getPanlFieldName());
@@ -866,10 +902,26 @@ public class CollectionProperties {
 		return (null);
 	}
 
+	/**
+	 * <p>Return the Panl LPSE codes for the fields or facets which are available
+	 * to sort the results with.</p>
+	 *
+	 * @return The list of Panl LPSE codes that are available for sorting
+	 */
 	public List<String> getSortFieldLpseCodes() {
 		return (lpseCodeSortFields);
 	}
 
+	/**
+	 * <p>Return the Solr facet limit - i.e. the maximum number of facets for a
+	 * field - this maps to the <code>solr.facet.limit</code> in the
+	 * <code>collection.panl.properties</code> file and the <code>facet.limit</code>
+	 * Solr query parameter.</p>
+	 *
+	 * <p><strong>NOTE:</strong> This defaults to 100 if not set.</p>
+	 *
+	 * @return The Solr facet limit.
+	 */
 	public int getSolrFacetLimit() {
 		return (solrFacetLimit);
 	}

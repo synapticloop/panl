@@ -477,6 +477,7 @@ public abstract class BaseField {
 		return (getURIPath(panlTokenMap, collectionProperties));
 	}
 
+	@Deprecated
 	public String getResetUriPath(LpseToken lpseToken, CollectionProperties collectionProperties) {
 		return (getURIPath(lpseToken, collectionProperties));
 	}
@@ -494,6 +495,7 @@ public abstract class BaseField {
 		return (getLpseCode(panlTokenMap, collectionProperties));
 	}
 
+	@Deprecated
 	public String getResetLpseCode(LpseToken lpseToken, CollectionProperties collectionProperties) {
 		return (getLpseCode(lpseToken, collectionProperties));
 	}
@@ -768,8 +770,11 @@ public abstract class BaseField {
 
 			if (baseField.getLpseCode().equals(additionLpseCode)) {
 
-				additionObject.put(JSON_KEY_BEFORE,
-							lpseUri.toString() + baseField.getResetUriPath(panlTokenMap, collectionProperties));
+				additionObject.put(
+							JSON_KEY_BEFORE,
+							lpseUri.toString() + baseField.getResetUriPath(
+										panlTokenMap,
+										collectionProperties));
 
 				lpseUri.setLength(0);
 				lpseCode.append(baseField.getResetLpseCode(panlTokenMap, collectionProperties));

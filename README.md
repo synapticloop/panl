@@ -117,7 +117,7 @@ Working with a Solr schema, the Panl configuration files translate unwieldy URL 
 
 1. **PAGINATION** - All the data to easily generate pagination URL paths giving you options and control over your own implementation.
 
-1. **STATIC SITE GENERATION** - With the exception of a query parameter, all available links for every conceivable URI path can be statically generated ahead of time, with canonical URLs.
+1. **STATIC SITE GENERATION** - With the exception of a query parameter, all available links for every conceivable URI path can be statically generated ahead of time, all with canonical URLs.  Additionally, for search results which do not change frequently, the Panl JSON response Object can be cached for faster lookups.
 
 1. **STATELESS** - No state is stored in the Panl server, all state is from the URL path part that is passed through.  No sessions, no memory, nothing to backup, easy to update and quick to start and restart.
 
