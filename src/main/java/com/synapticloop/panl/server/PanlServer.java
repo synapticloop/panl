@@ -49,9 +49,10 @@ import java.util.Properties;
 import java.util.concurrent.TimeUnit;
 
 /**
- * <p>This is the PANL server which parses the <code>panl.properties</code> file, loads all
- * the <code>collection.panl.properties</code> files.  If there are any errors with either
- * of the files, a PanlServerException will be thrown and the server will refuse to start.</p>
+ * <p>This is the PANL server which parses the <code>panl.properties</code> file,
+ * loads all the <code>collection.panl.properties</code> files.  If there are
+ * any errors with either of the files, a PanlServerException will be thrown and
+ * the server will refuse to start.</p>
  *
  * @author synapticloop
  */

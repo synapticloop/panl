@@ -59,10 +59,6 @@ $(document).ready(function() {
 	}
 });
 
-function lookahead(request, response) {
-
-}
-
 function isValidUrl(collection, fieldset) {
 	var fullUrl = "/" + collection + "/" + fieldset;
 	for (const collectionUrl of collections) {

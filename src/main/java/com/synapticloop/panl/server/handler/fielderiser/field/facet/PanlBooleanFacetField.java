@@ -52,6 +52,21 @@ public class PanlBooleanFacetField extends PanlFacetField {
 	private String booleanTrueReplacement;
 	private String booleanFalseReplacement;
 
+	/**
+	 * <p>Instantiate a BOOLEAN facet field</p>
+	 *
+	 * @param lpseCode The LPSE code that this is bound to
+	 * @param propertyKey The property key from the properties file
+	 * @param properties The properties to look up
+	 * @param solrCollection The Solr collection that this will connect to (this
+	 * 		is used for debugging and logging output)
+	 * @param panlCollectionUri The Panl collection URI that this is bound to
+	 * 		(this is used for debugging and logging output)
+	 * @param lpseLength The length of the LPSE code
+	 *
+	 * @throws PanlServerException If there was an error parsing/decoding the
+	 * 		token
+	 */
 	public PanlBooleanFacetField(String lpseCode, String propertyKey, Properties properties, String solrCollection,
 				String panlCollectionUri, int lpseLength) throws PanlServerException {
 		super(lpseCode, propertyKey, properties, solrCollection, panlCollectionUri, lpseLength);

@@ -33,7 +33,7 @@ Where:
 
                                  ~ ~ ~ * ~ ~ ~
 
-  [GENERATOR] To generate the panl.properties file for each collection
+  [GENERATE] To generate the panl.properties file from a Solr schema
 
     java -jar panl.jar \
       generate \
@@ -69,7 +69,10 @@ available:
 
     NOTE: If the files exist, the generation will TERMINATE, you will need to
     remove those files before the generation - unless you have the
-    -overwrite true command line option present
+
+      -overwrite true
+
+    command line option present
 
   [-overwrite true_or_false] (optional - default false) - whether to overwrite
     the file if it exists

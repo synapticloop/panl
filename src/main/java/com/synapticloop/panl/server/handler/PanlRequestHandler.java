@@ -53,11 +53,10 @@ public class PanlRequestHandler extends BaseResponseHandler implements HttpReque
 
 	/**
 	 * <p>Instantiate The Panl request handler which will bind the request URL to
-	 * the collection request handle.</p>
+	 * the collection request handler.</p>
 	 *
-	 * @param panlProperties           The panl properties file
-	 * @param collectionRequestHandler The collection request handler that will
-	 *                                 handle this request
+	 * @param panlProperties The panl properties file
+	 * @param collectionRequestHandler The collection request handler that will handle this request
 	 */
 	public PanlRequestHandler(PanlProperties panlProperties, CollectionRequestHandler collectionRequestHandler) {
 		super(panlProperties);
@@ -73,12 +72,11 @@ public class PanlRequestHandler extends BaseResponseHandler implements HttpReque
 	 * there was an error processing the request.</p>
 	 *
 	 * <p>This request handler returns a 404 internal error HTTPS status code if
-	 * there is no registered <code>CollectionRequestHandler</code> registered for
-	 * the URL.</p>
+	 * there is no registered <code>CollectionRequestHandler</code> registered for the URL.</p>
 	 *
-	 * @param request  the HTTP request - the incoming request
+	 * @param request the HTTP request - the incoming request
 	 * @param response the HTTP response - the outgoing response
-	 * @param context  the HTTP execution context. (which is ignored by this processor)
+	 * @param context the HTTP execution context. (which is ignored by this processor)
 	 *
 	 * @see CollectionRequestHandler
 	 */
@@ -96,8 +94,8 @@ public class PanlRequestHandler extends BaseResponseHandler implements HttpReque
 
 		String[] paths = uri.split("/");
 		if (paths.length < 3 ||
-				paths[2].isBlank() ||
-				!collectionRequestHandler.isValidResultsFields(paths[2])) {
+			paths[2].isBlank() ||
+			!collectionRequestHandler.isValidResultsFields(paths[2])) {
 
 			set404ResponseMessage(response);
 			return;
@@ -119,6 +117,6 @@ public class PanlRequestHandler extends BaseResponseHandler implements HttpReque
 	}
 
 	@Override protected Logger getLogger() {
-		return(LOGGER);
+		return (LOGGER);
 	}
 }

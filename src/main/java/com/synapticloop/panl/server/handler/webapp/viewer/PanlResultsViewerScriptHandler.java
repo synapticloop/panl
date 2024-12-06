@@ -36,6 +36,21 @@ import org.apache.http.protocol.HttpRequestHandler;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * <p>The Panl Results Viewer Script Handler is used by the in-built Panl web
+ * apps for generating the Panl collection URLs as JavaScript variables.  This
+ * should only be used for testing purposes.</p>
+ *
+ * <p><strong>THIS HANDLER AND REGISTERED URL(s) ARE DESIGNED FOR TESTING
+ * PURPOSES AND NOT RECOMMENDED FOR PRODUCTION USES.</strong></p>
+ *
+ * <p>It is recommended to disable this handler by setting the property
+ * <code>panl.results.testing.urls</code> to <code>false</code> in the
+ * <code>panl.properties</code> file.</p>
+ *
+ * @author synapticloop
+ */
+
 
 public class PanlResultsViewerScriptHandler implements HttpRequestHandler {
 

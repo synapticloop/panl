@@ -35,8 +35,9 @@ import java.util.Properties;
  * @author synapticloop
  */
 public class PropertyHelper {
+
 	/**
-	 * <p>Get a list of all of the properties that start with the prefix.</p>
+	 * <p>Get a list of all properties that start with the passed in prefix.</p>
 	 *
 	 * @param properties The properties file to look through
 	 * @param prefix The prefix to search for

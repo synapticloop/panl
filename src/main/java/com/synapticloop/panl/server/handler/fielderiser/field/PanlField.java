@@ -84,11 +84,7 @@ public class PanlField extends BaseField {
 		return ("");
 	}
 
-	/**
-	 * <p>Gets the logger for this class.</p>
-	 *
-	 * @return The logger for this class
-	 */
+
 	@Override public Logger getLogger() {
 		return (LOGGER);
 	}

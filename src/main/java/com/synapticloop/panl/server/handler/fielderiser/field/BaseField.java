@@ -118,6 +118,7 @@ public abstract class BaseField {
 				String propertyKey,
 				String solrCollection,
 				String panlCollectionUri) throws PanlServerException {
+
 		this(lpseCode, propertyKey, properties, solrCollection, panlCollectionUri, 1);
 	}
 
@@ -129,10 +130,12 @@ public abstract class BaseField {
 				String panlCollectionUri,
 				int lpseLength) throws PanlServerException {
 
-		this.panlIncludeSingleFacets = properties.getProperty(PROPERTY_KEY_PANL_INCLUDE_SINGLE_FACETS, "false")
-		                                         .equals("true");
-		this.panlIncludeSameNumberFacets = properties.getProperty(PROPERTY_KEY_PANL_INCLUDE_SAME_NUMBER_FACETS, "false")
-		                                             .equals("true");
+		this.panlIncludeSingleFacets = properties
+			.getProperty(PROPERTY_KEY_PANL_INCLUDE_SINGLE_FACETS, "false")
+			.equals("true");
+		this.panlIncludeSameNumberFacets = properties
+			.getProperty(PROPERTY_KEY_PANL_INCLUDE_SAME_NUMBER_FACETS, "false")
+			.equals("true");
 
 		this.lpseCode = lpseCode;
 		this.properties = properties;
@@ -140,16 +143,25 @@ public abstract class BaseField {
 		this.solrCollection = solrCollection;
 		this.panlCollectionUri = panlCollectionUri;
 		this.lpseLength = lpseLength;
-		this.facetSortByIndex = properties.getProperty(PROPERTY_KEY_PANL_FACETSORT + this.lpseCode, "count")
-		                                  .equals("index");
-		this.isMultiValue = properties.getProperty(PROPERTY_KEY_IS_MULTIVALUE + this.lpseCode, "false").equals("true");
+		this.facetSortByIndex = properties
+			.getProperty(PROPERTY_KEY_PANL_FACETSORT + this.lpseCode, "count")
+			.equals("index");
+		this.isMultiValue = properties
+			.getProperty(PROPERTY_KEY_IS_MULTIVALUE + this.lpseCode, "false")
+			.equals("true");
 
 		if (!propertyKey.equals(PROPERTY_KEY_PANL_SORT_FIELDS)) {
 			// sort keys can be longer than the panlParamSort property code
 
 			if (this.lpseCode.length() != lpseLength) {
 				throw new PanlServerException(
-							propertyKey + " LPSE code of '" + this.lpseCode + "' has invalid lpse length of " + lpseCode.length() + " is of invalid length - should be " + lpseLength);
+							propertyKey +
+								" LPSE code of '" +
+								this.lpseCode +
+								"' has invalid lpse length of " +
+								lpseCode.length() +
+								" is of invalid length - should be " +
+								lpseLength);
 			}
 		}
 	}
@@ -339,8 +351,8 @@ public abstract class BaseField {
 
 	/**
 	 * <p>Get the encoded value for this field - which will URL encoded.  If there
-	 * are any other transformations (i.e. prefixes, infixes, suffixes, or value replacements, this will be done in a
-	 * sub-class by the overriding method).</p>
+	 * are any other transformations (i.e. prefixes, infixes, suffixes, or value
+	 * replacements, this will be done in a subclass by the overriding method).</p>
 	 *
 	 * @param value The value to URL encode
 	 *
@@ -369,6 +381,14 @@ public abstract class BaseField {
 	}
 
 
+	/**
+	 * <p>Get the URI path for this field</p>
+	 *
+	 * @param token The token to interrogate
+	 * @param collectionProperties The collection properties
+	 *
+	 * @return The URI path as a String
+	 */
 	public String getURIPath(LpseToken token, CollectionProperties collectionProperties) {
 		return (getEncodedPanlValue(token) + "/");
 	}

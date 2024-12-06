@@ -317,10 +317,13 @@ public class CollectionProperties {
 	 * @throws PanlServerException If a mandatory property was not found, or could not be adequately parsed
 	 */
 	private void parseDefaultProperties() throws PanlServerException {
-		this.panlIncludeSingleFacets = properties.getProperty(PROPERTY_KEY_PANL_INCLUDE_SINGLE_FACETS, "false")
-		                                         .equals("true");
-		this.panlIncludeSameNumberFacets = properties.getProperty(PROPERTY_KEY_PANL_INCLUDE_SAME_NUMBER_FACETS, "false")
-		                                             .equals("true");
+		this.panlIncludeSingleFacets = properties
+			.getProperty(PROPERTY_KEY_PANL_INCLUDE_SINGLE_FACETS, "false")
+			.equals("true");
+
+		this.panlIncludeSameNumberFacets = properties
+			.getProperty(PROPERTY_KEY_PANL_INCLUDE_SAME_NUMBER_FACETS, "false")
+			.equals("true");
 
 		this.formQueryRespondTo = properties.getProperty(PROPERTY_KEY_PANL_FORM_QUERY_RESPONDTO, "q");
 
@@ -347,34 +350,58 @@ public class CollectionProperties {
 
 		this.panlParamQuery = initialiseStringProperty(PROPERTY_KEY_PANL_PARAM_QUERY, true);
 		lpseFieldLookup.put(this.panlParamQuery,
-					new PanlQueryField(panlParamQuery, PROPERTY_KEY_PANL_PARAM_QUERY, properties, solrCollection,
-								panlCollectionUri));
+					new PanlQueryField(
+						panlParamQuery,
+						PROPERTY_KEY_PANL_PARAM_QUERY,
+						properties,
+						solrCollection,
+						panlCollectionUri));
 
 		this.panlParamSort = initialiseStringProperty(PROPERTY_KEY_PANL_PARAM_SORT, true);
 		lpseFieldLookup.put(this.panlParamSort,
-					new PanlSortField(panlParamSort, PROPERTY_KEY_PANL_PARAM_SORT, properties, solrCollection,
-								panlCollectionUri));
+					new PanlSortField(
+						panlParamSort,
+						PROPERTY_KEY_PANL_PARAM_SORT,
+						properties,
+						solrCollection,
+						panlCollectionUri));
 
 		this.panlParamPage = initialiseStringProperty(PROPERTY_KEY_PANL_PARAM_PAGE, true);
 		lpseFieldLookup.put(this.panlParamPage,
-					new PanlPageNumField(panlParamPage, PROPERTY_KEY_PANL_PARAM_PAGE, properties, solrCollection,
-								panlCollectionUri));
+					new PanlPageNumField(
+						panlParamPage,
+						PROPERTY_KEY_PANL_PARAM_PAGE,
+						properties,
+						solrCollection,
+						panlCollectionUri));
 
 		this.panlParamNumRows = initialiseStringProperty(PROPERTY_KEY_PANL_PARAM_NUMROWS, true);
 		lpseFieldLookup.put(this.panlParamNumRows,
-					new PanlNumRowsField(panlParamNumRows, PROPERTY_KEY_PANL_PARAM_NUMROWS, properties, solrCollection,
-								panlCollectionUri));
+					new PanlNumRowsField(
+						panlParamNumRows,
+						PROPERTY_KEY_PANL_PARAM_NUMROWS,
+						properties,
+						solrCollection,
+						panlCollectionUri));
 
 		this.panlParamQueryOperand = initialiseStringProperty(PROPERTY_KEY_PANL_PARAM_QUERY_OPERAND, true);
 		lpseFieldLookup.put(this.panlParamQueryOperand,
-					new PanlQueryOperandField(panlParamQueryOperand, PROPERTY_KEY_PANL_PARAM_QUERY_OPERAND, properties,
-								solrCollection, panlCollectionUri));
+					new PanlQueryOperandField(
+						panlParamQueryOperand,
+						PROPERTY_KEY_PANL_PARAM_QUERY_OPERAND,
+						properties,
+						solrCollection,
+						panlCollectionUri));
 
 		this.panlParamPassThrough = initialiseStringProperty(PROPERTY_KEY_PANL_PARAM_PASSTHROUGH, false);
 		if (null != panlParamPassThrough) {
 			lpseFieldLookup.put(this.panlParamPassThrough,
-						new PanlPassThroughField(panlParamPassThrough, PROPERTY_KEY_PANL_PARAM_PASSTHROUGH, properties,
-									solrCollection, panlCollectionUri));
+						new PanlPassThroughField(
+							panlParamPassThrough,
+							PROPERTY_KEY_PANL_PARAM_PASSTHROUGH,
+							properties,
+							solrCollection,
+							panlCollectionUri));
 		}
 	}
 

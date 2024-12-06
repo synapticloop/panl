@@ -46,8 +46,7 @@ public class PanlNumRowsField extends BasePrefixSuffixField {
 		super(lpseCode, propertyKey, properties, solrCollection, panlCollectionUri);
 	}
 
-	@Override
-	public Logger getLogger() {
+	@Override public Logger getLogger() {
 		return (LOGGER);
 	}
 
@@ -62,8 +61,8 @@ public class PanlNumRowsField extends BasePrefixSuffixField {
 	 *
 	 * @return The URI path, never an empty string
 	 */
-	@Override
-	public String getCanonicalUriPath(Map<String, List<LpseToken>> panlTokenMap, CollectionProperties collectionProperties) {
+	@Override public String getCanonicalUriPath(Map<String, List<LpseToken>> panlTokenMap,
+		CollectionProperties collectionProperties) {
 		StringBuilder sb = new StringBuilder();
 		if (panlTokenMap.containsKey(lpseCode) && !panlTokenMap.get(lpseCode).isEmpty()) {
 
@@ -80,8 +79,8 @@ public class PanlNumRowsField extends BasePrefixSuffixField {
 		return (sb.toString());
 	}
 
-	@Override
-	public String getCanonicalLpseCode(Map<String, List<LpseToken>> panlTokenMap, CollectionProperties collectionProperties) {
+	@Override public String getCanonicalLpseCode(Map<String, List<LpseToken>> panlTokenMap,
+		CollectionProperties collectionProperties) {
 		return (lpseCode);
 	}
 

@@ -479,7 +479,9 @@ public class PanlOrFacetField extends PanlFacetField {
 	}
 
 	/**
-	 * <p>Return whether this is an ALWAYS OR facet field</p>
+	 * <p>Return whether this is an ALWAYS OR facet field, an always OR field will
+	 * return the facet values for this specific facet, even if the facet will not
+	 * increase the number of results (i.e. the facet count is zero).</p>
 	 *
 	 * @return Whether this is an ALWAYS OR facet field
 	 */

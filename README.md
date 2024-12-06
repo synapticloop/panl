@@ -366,7 +366,7 @@ View the in-built Panl Results Viewer web application
 
 Open [http://localhost:8181/panl-results-viewer/](http://localhost:8181/panl-results-viewer/) in your favourite browser.
 
-Choose a collection/fieldset and search, facet, sort, paginate and view the results
+Choose a collection/fieldset and search, facet, sort, paginate and view the results.
 
 # Quick Info
 
@@ -395,7 +395,7 @@ bin/solr start -cloud -p 8983 -s "example/cloud/node1/solr"
 bin/solr start -cloud -p 7574 -s "example/cloud/node2/solr" -z localhost:9983
 ```
 
-# Building The distribution
+# Building The Distribution
 
 ### _Windows_
 
