@@ -44,13 +44,13 @@
 > We _always_ recommend that you use the most recently available release which contains bug fixes and new functionality and is generally backwards compatible.
 
 
-## Download the Panl Server Release:
+## Download the Panl Server Release
 
 1. [https://github.com/synapticloop/panl/releases](https://github.com/synapticloop/panl/releases)
 2. Read the [5-Step Quick Start section](https://github.com/synapticloop/panl/tree/main?tab=readme-ov-file#quick-start---the-5-steps)
 3. Done.
 
-## Upgrading the Panl Server Release:
+## Upgrading the Panl Server Release
 
 Panl is designed to be a drop in replacement for your current version.  Keep note of any breaking release, although backwards compatibility is always high on the list of features.
 
@@ -151,11 +151,11 @@ _The image is a screenshot of the in-built Panl Results Viewer Web App available
 
 1. **Active BOOLEAN filters** - if the selected facet is a BOOLEAN facet (i.e. either true/false) then a link (`[≫]`) can be included to invert this selection (i.e. change the value from true if currently false and vice versa).
 
-1. **Active Sorting** - sorting options that are currently ordering the results - the `[-]` link is the URI path that will remove this query, facet, or sorting option from the results. If it is an active sorting filter, the `[≫] Change to DESC` or `[≫] Change to ASC` links will invert the sorting order without affecting any further sub-ordering.
+1. **Active sorting** - sorting options that are currently ordering the results - the `[-]` link is the URI path that will remove this query, facet, or sorting option from the results. If it is an active sorting filter, the `[≫] Change to DESC` or `[≫] Change to ASC` links will invert the sorting order without affecting any further sub-ordering.
 
-1. **Range filters** - for facets that are defined as ranges - allowing end-users to select a range of values - the values are inclusive (i.e. include the minimum and maximum values).
+1. **RANGE filters** - for facets that are defined as ranges - allowing end-users to select a range of values - the values are inclusive (i.e. include the minimum and maximum values).
 
-   **Date Range filters (not shown)** - Enabling searching on a range of dates (but not a specific date) in the form of:
+   **DATE Range filters (not shown)** - Enabling searching on a range of dates (but not a specific date) in the form of:
    next/previous <any_integer> hours/days/months/years.
     - For example:
     - Last 30 days
@@ -173,7 +173,7 @@ _The image is a screenshot of the in-built Panl Results Viewer Web App available
 
 1. **Pagination options** - the Panl server returns all information needed to build a pagination system, number of results, number of results shown per page and the current page number.
 
-1. **Number of results per page**. Note: The values 3,5,10 are just examples - this can be set to any positive integer number.
+1. **Number of results per page**. Able to dynamically set the number of results to return for the query. **Note:** In the above image, the values 3, 5, 10 are just examples - this can be set to any positive integer number.
 
 1. **Timing information** about how long the Panl server took to build and return the results (including how much time the Solr server took to find and return the results).
 
@@ -301,7 +301,7 @@ cd SOLR_INSTALL_DIRECTORY
 bin\solr post -c mechanical-pencils PANL_INSTALL_DIRECTORY\sample\data\mechanical-pencils.json
 ```
 
-## 4. Start the Panl Server
+## 4. Start the Panl server
 
 This will start the server and be ready to accept requests.
 Command(s)
@@ -351,7 +351,7 @@ cd SOLR_INSTALL_DIRECTORY
 bin/solr post -c mechanical-pencils PANL_INSTALL_DIRECTORY/sample/data/mechanical-pencils.json
 ```
 
-## 4. Start the Panl Server
+## 4. Start the Panl server
 
 Ready to go.
 Command(s)
@@ -419,7 +419,7 @@ with the release files named `solr-panl-9-x.x.x` where `x.x.x` is the version nu
 
 # Version History
 
-## 1.3.0 - Fluffy stuff (codename `billowing-feather`) **UNDER DEVELOPMENT**
+## 1.3.0 - fluffy stuff (codename `billowing-feather`) **UNDER DEVELOPMENT**
 
 - New Features
   - Added in lookahead query handler for Solr panl including panl results viewer lookahead
@@ -449,6 +449,12 @@ with the release files named `solr-panl-9-x.x.x` where `x.x.x` is the version nu
   - Changed the `panl.form.query.respondto` documentation to point to `search` rather than the previously defined `q` to reduce confusion
   - General spelling and grammatical mistake updates
   - Addition of new functionality and configuration properties
+
+[View the code for this release](https://github.com/synapticloop/panl/tree/1.3.0)
+
+[Download the release packages](https://github.com/synapticloop/panl/releases/tag/1.3.0)
+
+[See all releases](https://github.com/synapticloop/panl/releases/)
 
 
 ## 1.2.0 - more like this (codename `needy-phanton`) 
