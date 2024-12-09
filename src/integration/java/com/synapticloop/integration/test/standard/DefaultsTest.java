@@ -40,7 +40,7 @@ public class DefaultsTest {
 		Root root = mapper.readValue(new URL("http://localhost:8282/mechanical-pencils/brandandname/"), Root.class);
 		assertFalse(root.error);
 		assertEquals("/page-1/10-per-page/pn/", root.panl.canonical_uri);
-		assertEquals("q", root.panl.query_respond_to);
+		assertEquals("search", root.panl.query_respond_to);
 		assertEquals(6, root.panl.pagination.num_pages);
 		assertEquals(55, root.panl.pagination.num_results);
 		assertEquals(10, root.panl.pagination.num_per_page);
@@ -100,6 +100,5 @@ public class DefaultsTest {
 		assertEquals("heavy+pencils/w-/", root.panl.available.range_facets[0].uris.after_max_value);
 		assertEquals("+to+", root.panl.available.range_facets[0].uris.during);
 		assertEquals("+grams/w-/", root.panl.available.range_facets[0].uris.after);
-
 	}
 }

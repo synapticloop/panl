@@ -246,10 +246,17 @@ solr.facet.min.count=1
 # number of results to be returned by the lookahead handler.  It CANNOT be
 # changed through a LPSE URL parameter.
 #
+# The maximum number of results that will ever be allowed to be returned by the
+# Panl server (solr.numrows.maximum).  If a LPSE code is passed through which
+# is greater than this, then it will be set to this.  This stops arbitrary LPSE
+# code values to retrieve all documents.  It CANNOT be changed through a LPSE
+# URL parameter.
+#
 #                                ~ ~ ~ * ~ ~ ~
 
 solr.numrows.default=10
 solr.numrows.lookahead=5
+solr.numrows.maximum=10
 
 #           Whether To Return Search Results With Highlight Markup
 #           ------- -- ------ ------ ------- ---- --------- ------
