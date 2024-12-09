@@ -216,12 +216,24 @@ public class CollectionRequestHandler {
 			}
 
 			if (lpseToken instanceof NumRowsLpseToken) {
-				numRows = ((NumRowsLpseToken) lpseToken).getNumRows();
-			} else if (lpseToken instanceof PageNumLpseToken) {
-				if (!query.isBlank()) {
-					((PageNumLpseToken) lpseToken).setPageNum(1);
+				NumRowsLpseToken numRowsLpseToken = (NumRowsLpseToken) lpseToken;
+				numRows = numRowsLpseToken.getNumRows();
+
+				// if the number of rows is greater than the maximum number of rows,
+				// then set it to the maximum number of rows
+				if(numRows > collectionProperties.getMaxNumResultsPerPage()) {
+					numRows = collectionProperties.getMaxNumResultsPerPage();
+					numRowsLpseToken.setNumRows(numRows);
 				}
-				pageNum = ((PageNumLpseToken) lpseToken).getPageNum();
+
+			} else if (lpseToken instanceof PageNumLpseToken) {
+				// if we have a query string - we always reset the page number to the
+				// first page.
+				PageNumLpseToken pageNumLpseToken = (PageNumLpseToken) lpseToken;
+				if (!query.isBlank()) {
+					pageNumLpseToken.setPageNum(1);
+				}
+				pageNum = pageNumLpseToken.getPageNum();
 			}
 		}
 

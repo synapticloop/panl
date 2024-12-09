@@ -423,8 +423,8 @@ with the release files named `solr-panl-9-x.x.x` where `x.x.x` is the version nu
 
 - New Features
   - Added in lookahead query handler for Solr panl including panl results viewer lookahead
-  - Added in `OR SEPARATOR` facets so that `OR` facets can be separated with a string and only have one LPSE code. 
-
+  - Added in `OR SEPARATOR` facets so that `OR` facets can be separated with a string and only have one LPSE code.
+  - Added in `solr.numrows.maximum` property so that this will always be the limit to the number of results returned. 
 
 
 - Bug fixes
@@ -433,11 +433,11 @@ with the release files named `solr-panl-9-x.x.x` where `x.x.x` is the version nu
 
 
 - Breaking Changes
-    - **[BREAKING CHANGE]** Changed range facets LPSE codes from `w-w` to `w-` and `w+w` to `w+` (i.e. removed the additional LPSE code)
+    - **[BREAKING CHANGE]** Changed range facets LPSE codes from `w-w` to `w-` and `w+w` to `w+` (i.e. removed the trailing LPSE code)
 
 
 - Code Changes
-  - Fixed the over-riding query respond to parameter
+  - Fixed the overriding query respond to parameter
   - Added in Testing for the Panl Generator and refactored how it is being done.
   - Refactored PanlFields for the generator to output better comments and helpful information rather than more comments than necessary
   - General code cleanup and refactorings

@@ -92,6 +92,15 @@ public class NumRowsLpseToken extends LpseToken {
 	}
 
 	/**
+	 * <p>Override the value of this token with the new number of rows.</p>
+	 *
+	 * @param numRows The override number of rows for this token
+	 */
+	public void setNumRows(int numRows) {
+		this.numRows = numRows;
+	}
+
+	/**
 	 * <p>Return the equivalence value for this token, which will always be
 	 * <code>&lt;lpse_code&gt;/</code> as you may ony ever have one number of
 	 * rows per LPSE URI path part.</p>

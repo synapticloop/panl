@@ -81,6 +81,7 @@ public class CollectionProperties {
 	public static final String PROPERTY_KEY_SOLR_FACET_MIN_COUNT = "solr.facet.min.count";
 	public static final String PROPERTY_KEY_SOLR_NUMROWS_DEFAULT = "solr.numrows.default";
 	public static final String PROPERTY_KEY_SOLR_NUMROWS_LOOKAHEAD = "solr.numrows.lookahead";
+	public static final String PROPERTY_KEY_SOLR_NUMROWS_MAXIMUM = "solr.numrows.maximum";
 
 	public static final String FIELDSETS_DEFAULT = "default";
 	public static final String FIELDSETS_EMPTY = "empty";
@@ -114,6 +115,11 @@ public class CollectionProperties {
 	 * <p>The number of results returned per search/page</p>
 	 */
 	private int numResultsPerPage;
+
+	/**
+	 * <p>The maximum number of results returned per search/page</p>
+	 */
+	private int maxNumResultsPerPage;
 
 	/**
 	 * <p>The number of results returned per search/page</p>
@@ -327,14 +333,19 @@ public class CollectionProperties {
 
 		this.formQueryRespondTo = properties.getProperty(PROPERTY_KEY_PANL_FORM_QUERY_RESPONDTO, "q");
 
-		this.facetMinCount = PropertyHelper.getIntProperty(properties, PROPERTY_KEY_SOLR_FACET_MIN_COUNT, 1);
+		this.facetMinCount = PropertyHelper.getIntProperty(LOGGER, properties, PROPERTY_KEY_SOLR_FACET_MIN_COUNT, 1);
 		this.highlight = properties.getProperty(PROPERTY_KEY_SOLR_HIGHLIGHT, "false").equals("true");
-		this.numResultsPerPage = PropertyHelper.getIntProperty(properties, PROPERTY_KEY_SOLR_NUMROWS_DEFAULT, 10);
-		this.numResultsLookahead = PropertyHelper.getIntProperty(properties, PROPERTY_KEY_SOLR_NUMROWS_LOOKAHEAD, 5);
-		this.solrFacetLimit = PropertyHelper.getIntProperty(properties, PROPERTY_KEY_SOLR_FACET_LIMIT, 100);
+		this.numResultsPerPage = PropertyHelper.getIntProperty(LOGGER, properties, PROPERTY_KEY_SOLR_NUMROWS_DEFAULT, 10);
+
+		// we are setting the maximum number of results to default to the same
+		// number for the results per page if it is not set
+		this.maxNumResultsPerPage = PropertyHelper.getIntProperty(LOGGER, properties, PROPERTY_KEY_SOLR_NUMROWS_MAXIMUM, this.numResultsPerPage);
+
+		this.numResultsLookahead = PropertyHelper.getIntProperty(LOGGER, properties, PROPERTY_KEY_SOLR_NUMROWS_LOOKAHEAD, 5);
+		this.solrFacetLimit = PropertyHelper.getIntProperty(LOGGER, properties, PROPERTY_KEY_SOLR_FACET_LIMIT, 100);
 
 
-		this.lpseLength = PropertyHelper.getIntProperty(properties, PROPERTY_KEY_PANL_LPSE_LENGTH, null);
+		this.lpseLength = PropertyHelper.getIntProperty(LOGGER, properties, PROPERTY_KEY_PANL_LPSE_LENGTH, null);
 		if (null == lpseLength) {
 			throw new PanlServerException(
 						"MANDATORY PROPERTY MISSING: Could not find the 'panl.lpse.length' property in the '" + this.solrCollection + "'.panl.properties file.'");
@@ -773,15 +784,25 @@ public class CollectionProperties {
 	}
 
 	/**
+	 * <p>Get the minimum facet value for facets.</p>
+	 *
 	 * @return The minimum value for the facet count
 	 */
 	public int getFacetMinCount() {
 		return (facetMinCount);
 	}
 
+	/**
+	 * <p>Get the number of results per page to return (if not overridden by a
+	 * LPSE code)</p>
+	 *
+	 * @return The number of results to return by page
+	 */
 	public int getNumResultsPerPage() {
 		return numResultsPerPage;
 	}
+
+	public int getMaxNumResultsPerPage() { return(maxNumResultsPerPage); }
 
 	public int getNumResultsLookahead() {
 		return numResultsLookahead;

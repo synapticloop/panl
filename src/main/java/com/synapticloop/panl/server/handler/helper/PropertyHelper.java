@@ -24,6 +24,8 @@ package com.synapticloop.panl.server.handler.helper;
  * IN THE SOFTWARE.
  */
 
+import org.slf4j.Logger;
+
 import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.List;
@@ -60,6 +62,7 @@ public class PropertyHelper {
 	 * <p>Return an integer value for the property.  If the property does not
 	 * exist or cannot be parsed to an int value, then the default is returned.</p>
 	 *
+	 * @param logger the logger to warn if there was an error
 	 * @param properties The properties file to look up the key in
 	 * @param key The key to look up
 	 * @param defaultValue The default value
@@ -67,15 +70,21 @@ public class PropertyHelper {
 	 * @return The parsed property (if it exists), or the default value if it
 	 * 		does not exist, or it cannot be parsed.
 	 */
-	public static Integer getIntProperty(Properties properties, String key, Integer defaultValue) {
+	public static Integer getIntProperty(Logger logger, Properties properties, String key, Integer defaultValue) {
+		String property = null;
 		try {
-			String property = properties.getProperty(key, null);
+			property = properties.getProperty(key, null);
 			if (null == property) {
+				logger.warn("Could not find the property with key '{}', setting it to the default value of '{}'", key, defaultValue);
 				return (defaultValue);
 			}
 
 			return (Integer.parseInt(properties.getProperty(key)));
 		} catch (NumberFormatException e) {
+			logger.warn("Could not parse the property with key '{}' and value '{}', setting it to the default value of '{}'",
+				key,
+				property,
+				defaultValue);
 			return (defaultValue);
 		}
 	}
