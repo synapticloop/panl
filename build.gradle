@@ -14,9 +14,9 @@ repositories {
 }
 
 java {
-		toolchain {
-				languageVersion = JavaLanguageVersion.of(11)
-		}
+	toolchain {
+		languageVersion = JavaLanguageVersion.of(11)
+	}
 }
 
 sourceSets {
@@ -65,8 +65,12 @@ dependencies {
 	testImplementation 'com.fasterxml.jackson.core:jackson-databind:2.17.1'
 	testImplementation 'commons-codec:commons-codec:1.17.1'
 
+// filesystem parsing for a test case
+//	testImplementation 'org.apache.tika:tika-core:3.0.0'
+//	testImplementation 'org.apache.tika:tika-parsers-standard-package:3.0.0'
 
-		// for the panl editor
+
+	// for the panl editor
 	implementation "com.formdev:flatlaf:3.5.1"
 	implementation 'org.apache.commons:commons-lang3:3.17.0'
 
@@ -95,7 +99,8 @@ dependencies {
 
 	// additional utilities
 	integrationTestImplementation 'commons-io:commons-io:2.16.1'
-	integrationTestImplementation 'org.json:json:20240303'}
+	integrationTestImplementation 'org.json:json:20240303'
+}
 
 application {
 	mainClass = 'com.synapticloop.panl.Main'

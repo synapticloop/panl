@@ -24,7 +24,7 @@ package com.synapticloop.panl;
  * IN THE SOFTWARE.
  */
 
-import com.synapticloop.panl.editor.PanlProjectLauncher;
+//import com.synapticloop.panl.editor.PanlProjectLauncher;
 import com.synapticloop.panl.exception.CommandLineOptionException;
 import com.synapticloop.panl.exception.PanlGenerateException;
 import com.synapticloop.panl.exception.PanlServerException;
@@ -33,7 +33,7 @@ import com.synapticloop.panl.server.PanlServer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.swing.*;
+//import javax.swing.*;
 import java.io.*;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -53,19 +53,18 @@ public class Main {
 
 	public static final String CMD_VALUE_SERVER = "server";
 	public static final String CMD_VALUE_GENERATE = "generate";
-	public static final String CMD_VALUE_EDITOR = "editor";
+//	public static final String CMD_VALUE_EDITOR = "editor";
 
 	private static final Set<String> ALLOWABLE_COMMANDS = new HashSet<>();
 
 	static {
 		ALLOWABLE_COMMANDS.add(CMD_VALUE_SERVER);
 		ALLOWABLE_COMMANDS.add(CMD_VALUE_GENERATE);
-		ALLOWABLE_COMMANDS.add(CMD_VALUE_EDITOR);
+//		ALLOWABLE_COMMANDS.add(CMD_VALUE_EDITOR);
 	}
 
 	public static String panlVersion = "Unknown - ¯\\_(ツ)_/¯";
 	public static String solrVersion = "Unknown - ¯\\_(ツ)_/¯";
-
 
 	public static final String DEFAULT_PANL_PROPERTIES = "panl.properties";
 	public static final String DEFAULT_PORT_NUMBER = "8181";
@@ -137,13 +136,13 @@ public class Main {
 			case CMD_VALUE_GENERATE:
 				parseAndExecuteGenerateCommands();
 				break;
-			case CMD_VALUE_EDITOR:
-				LOGGER.warn("THE EDITOR FUNCTIONALITY IS __NOT COMPLETE__...");
-				LOGGER.warn("This can be considered an exercise in futility...");
-				SwingUtilities.invokeLater(() -> {
-					new PanlProjectLauncher().show();
-				});
-				break;
+//			case CMD_VALUE_EDITOR:
+//				LOGGER.warn("THE EDITOR FUNCTIONALITY IS __NOT COMPLETE__...");
+//				LOGGER.warn("This can be considered an exercise in futility...");
+//				SwingUtilities.invokeLater(() -> {
+//					new PanlProjectLauncher().show();
+//				});
+//				break;
 		}
 	}
 
