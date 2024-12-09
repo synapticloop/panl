@@ -27,6 +27,11 @@
 		<Logger name="com.synapticloop.panl.server.handler" level="debug" additivity="false">
 			<Appender-ref ref="console" />
 		</Logger>
+
+		<Logger name="com.synapticloop.panl.server.handler.properties" level="warn" additivity="false">
+			<Appender-ref ref="console" />
+		</Logger>
+
 	</Loggers>
 
 	<Appenders>
