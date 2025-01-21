@@ -30,6 +30,8 @@ import com.synapticloop.panl.exception.PanlGenerateException;
 import com.synapticloop.panl.exception.PanlServerException;
 import com.synapticloop.panl.generator.PanlGenerator;
 import com.synapticloop.panl.server.PanlServer;
+import org.apache.logging.log4j.core.config.ConfigurationSource;
+import org.apache.logging.log4j.core.config.Configurator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -44,6 +46,31 @@ import java.util.stream.Collectors;
  * @author synapticloop
  */
 public class Main {
+	// We want to find the log4j.xml file, so we are doing it first.  If it cannot
+	// be found, then we hope that it will be on the classpath
+	static {
+		String[] locations = { "./lib/log4j2.xml", "./log4j2.xml" };
+		boolean hasFoundLog4j = false;
+		for(String location : locations) {
+			File log4jFile = new File(location);
+
+			try {
+				InputStream inputStream = new FileInputStream(log4jFile);
+				ConfigurationSource source = new ConfigurationSource(inputStream);
+				Configurator.initialize(null, source);
+				System.out.println("[LOGGING SETUP] Found log4j2 configuration file '" + log4jFile.getAbsolutePath() + "'.");
+				hasFoundLog4j = true;
+			} catch (Exception ex) {
+				System.out.println("[LOGGING SETUP] Could not find the file located '" + log4jFile.getAbsolutePath() + "'.");
+				System.out.println("[LOGGING SETUP] message was: " + ex.getMessage());
+			}
+		}
+
+		if(!hasFoundLog4j) {
+			System.out.println("[LOGGING SETUP] Could not find a log4j2 configuration file.  See messages above...");
+			System.out.println("[LOGGING SETUP] If available, log4j2 will use the configuration file from the classpath.");
+		}
+	}
 	private static final Logger LOGGER = LoggerFactory.getLogger(Main.class);
 
 	public static final String CMD_OPTION_OVERWRITE = "-overwrite";
