@@ -4,6 +4,8 @@ plugins {
 	id 'jacoco'
 }
 
+// load the properties for versioning - not that this is also used by the Panl
+// server to output the version on startup.
 def properties = new Properties()
 file("src/main/resources/gradle.properties").withInputStream { properties.load(it) }
 version = properties.getProperty("panl.version")
@@ -128,7 +130,7 @@ distributions {
 	}
 }
 
-task copyLoggingFile {
+tasks.register('copyLoggingFile') {
 	copy {
 		from file("src/main/resources/log4j2.xml")
 		into file("src/dist/lib/")
