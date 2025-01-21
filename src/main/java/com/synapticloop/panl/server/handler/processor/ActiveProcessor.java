@@ -35,9 +35,7 @@ import org.json.JSONObject;
 
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * <p>The active processor adds all of the current active filters that are
@@ -77,17 +75,33 @@ public class ActiveProcessor extends Processor {
 		List<String> uriComponents = new ArrayList<>();
 		List<String> lpseComponents = new ArrayList<>();
 
+		// the following set contains whether we have added an or separator code to
+		// the LPSEComponents - if we have, then we have already added the LPSE
+		// code, which only requires one code, not multiple
+		Set<String> foundOrSeparator = new HashSet<>();
 		for (LpseToken lpseToken : lpseTokens) {
 			BaseField lpseField = collectionProperties.getLpseField(lpseToken.getLpseCode());
 			if (null != lpseField && lpseToken.getIsValid()) {
-				// TODO - this need to be updated - get
-				lpseComponents.add(lpseField.getResetLpseCode(lpseToken, collectionProperties));
+				// if it is an or separator - we only need one LPSE token
+				if(collectionProperties.getIsOrSeparatorFacetField(lpseToken.getLpseCode())) {
+					if(!foundOrSeparator.contains(lpseField.getLpseCode())) {
+						lpseComponents.add(lpseField.getResetLpseCode(panlTokenMap, collectionProperties));
+					}
+					foundOrSeparator.add(lpseField.getLpseCode());
+				} else {
+					lpseComponents.add(lpseField.getResetLpseCode(panlTokenMap, collectionProperties));
+				}
+
 				uriComponents.add(lpseField.getResetUriPath(lpseToken, collectionProperties));
 			}
 		}
 
+		// clear as this is used for the incrementor 'skipNumber' below
+		foundOrSeparator.clear();
+
 		JSONObject activeSortObject = new JSONObject();
-		int i = 0;
+		int skipNumber = 0;
+		int lpseSkipNumber = 0;
 		for (LpseToken lpseToken : lpseTokens) {
 			String tokenType = lpseToken.getType();
 			String lpseCode = lpseToken.getLpseCode();
@@ -100,7 +114,10 @@ public class ActiveProcessor extends Processor {
 
 
 			removeObject.put(JSON_KEY_VALUE, lpseToken.getValue());
-			removeObject.put(JSON_KEY_REMOVE_URI, getRemoveURIFromPath(i, uriComponents, lpseComponents));
+
+			System.out.println(getRemoveURIFromPath(skipNumber, lpseTokens, collectionProperties));
+
+			removeObject.put(JSON_KEY_REMOVE_URI, getRemoveURIFromPath(skipNumber, lpseSkipNumber, uriComponents, lpseComponents));
 			removeObject.put(JSON_KEY_PANL_CODE, lpseCode);
 
 			// add any additional keys that are required by the children of the base
@@ -143,7 +160,16 @@ public class ActiveProcessor extends Processor {
 			if (shouldAddObject && lpseToken.getCanHaveMultiple()) {
 				jsonArray.put(removeObject);
 			}
-			i++;
+
+			if(collectionProperties.getIsOrSeparatorFacetField(lpseToken.getLpseCode())) {
+				if(!foundOrSeparator.contains(lpseField.getLpseCode())) {
+					lpseSkipNumber++;
+				}
+				foundOrSeparator.add(lpseField.getLpseCode());
+			} else {
+				lpseSkipNumber++;
+			}
+			skipNumber++;
 
 			if (!activeSortObject.isEmpty()) {
 				jsonObject.put(JSON_KEY_SORT_FIELDS, activeSortObject);
@@ -158,12 +184,56 @@ public class ActiveProcessor extends Processor {
 		return (jsonObject);
 	}
 
-	private String getRemoveURIFromPath(int skipNumber, List<String> uriComponents, List<String> lpseComponents) {
+	private String getRemoveURIFromPath(int skipNumber, List<LpseToken> lpseTokens, CollectionProperties collectionProperties) {
+		Set<String> foundOrSeparator = new HashSet<>();
+		Set<String> startedOrSeparator = new HashSet<>();
+
+		StringBuilder uri = new StringBuilder();
+		StringBuilder lpse = new StringBuilder();
+		for(int i = 0; i < lpseTokens.size(); i++) {
+			LpseToken lpseToken = lpseTokens.get(i);
+			String lpseCode = lpseToken.getLpseCode();
+			if(i != skipNumber) {
+				if(collectionProperties.getIsOrSeparatorFacetField(lpseCode)) {
+					if(!foundOrSeparator.contains(lpseCode)) {
+						lpse.append(lpseCode);
+					}
+					foundOrSeparator.add(lpseCode);
+				} else {
+					lpse.append(lpseCode);
+				}
+			}
+
+			// now for the uri component
+			if(i != skipNumber) {
+				if(collectionProperties.getIsOrSeparatorFacetField(lpseCode)) {
+					BaseField lpseField = collectionProperties.getLpseField(lpseToken.getLpseCode());
+					if(!startedOrSeparator.contains(lpseCode)) {
+						uri.append(lpseField.getEncodedPanlValue(lpseToken))
+						   .append("/");
+
+					}
+					startedOrSeparator.add(lpseCode);
+				} else {
+					uri.append(lpseToken.getValue())
+						.append("/");
+				}
+			}
+		}
+		return returnValidURIPath(uri, lpse);
+	}
+
+		private String getRemoveURIFromPath(int skipNumber, int lpseSkipNumber, List<String> uriComponents, List<String> lpseComponents) {
 		StringBuilder uri = new StringBuilder();
 		StringBuilder lpse = new StringBuilder();
 		for (int i = 0; i < uriComponents.size(); i++) {
 			if (i != skipNumber) {
 				uri.append(uriComponents.get(i));
+			}
+		}
+
+		for (int i = 0; i < lpseComponents.size(); i++) {
+			if (i != lpseSkipNumber) {
 				lpse.append(lpseComponents.get(i));
 			}
 		}

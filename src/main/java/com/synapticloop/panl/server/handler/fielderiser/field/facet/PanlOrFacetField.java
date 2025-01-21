@@ -222,7 +222,6 @@ public class PanlOrFacetField extends PanlFacetField {
 
 		if (panlTokenMap.containsKey(lpseCode)) {
 			if (orSeparator != null) {
-
 				List<String> validValues = new ArrayList<>();
 
 				for(LpseToken lpseToken : panlTokenMap.get(lpseCode)) {
@@ -236,6 +235,8 @@ public class PanlOrFacetField extends PanlFacetField {
 						sb.append(URLEncoder.encode(validValue, StandardCharsets.UTF_8));
 						sb.append(URLEncoder.encode(orSeparator, StandardCharsets.UTF_8));
 					}
+
+//					sb.append(getOrURIPathEnd(panlTokenMap));
 				}
 			} else {
 				for(LpseToken lpseToken : panlTokenMap.get(lpseCode)) {
@@ -248,17 +249,21 @@ public class PanlOrFacetField extends PanlFacetField {
 			}
 		}
 
+		return (sb.toString());
+	}
+
+	private String getOrURIPathEnd() {
+		StringBuilder sb = new StringBuilder();
 		if (orSeparator != null) {
 			if (hasValueSuffix) {
 				sb.append(URLEncoder.encode(valueSuffix, StandardCharsets.UTF_8));
 			}
 		}
-
 		return (sb.toString());
 	}
 
 	/**
-	 * <p>This is an OR facet, so we can additional </p>
+	 * <p>This is an OR facet, so we can have additional codes of the same facet</p>
 	 *
 	 * @param collectionProperties The collection properties
 	 * @param lpseField The LPSE field that this applies to
@@ -295,8 +300,12 @@ public class PanlOrFacetField extends PanlFacetField {
 
 				lpseUriBefore.append(lpseUri);
 				lpseUri.setLength(0);
-
 				if (orSeparator != null) {
+					lpseUri.append(getOrURIPathEnd());
+					lpseUri.append("/");
+				}
+
+				if(collectionProperties.getIsOrSeparatorFacetField(this.lpseCode)) {
 					if (!lpseCodeMap.containsKey(this.lpseCode)) {
 						lpseUriCode.append(this.lpseCode);
 					}
@@ -305,6 +314,7 @@ public class PanlOrFacetField extends PanlFacetField {
 					lpseUriCode.append(baseField.getLpseCode(panlTokenMap, collectionProperties));
 					lpseUriCode.append(this.lpseCode);
 				}
+
 			} else {
 				// if we don't have a current token, just carry on
 				if (!panlTokenMap.containsKey(orderedLpseCode)) {
@@ -323,7 +333,14 @@ public class PanlOrFacetField extends PanlFacetField {
 					// better implementation
 					lpseUriCode.append(baseField.getLpseCode(panlTokenMap.get(orderedLpseCode).get(0), collectionProperties));
 				} else {
-					lpseUriCode.append(new String(new char[numTokens]).replace("\0", baseField.getLpseCode()));
+
+					// check for or separators...
+					if(collectionProperties.getIsOrSeparatorFacetField(baseField.getLpseCode())) {
+						lpseUriCode.append(baseField.getLpseCode());
+					} else {
+						// just replace it with the correct number of LPSE codes
+						lpseUriCode.append(new String(new char[numTokens]).replace("\0", baseField.getLpseCode()));
+					}
 				}
 			}
 		}
@@ -407,12 +424,10 @@ public class PanlOrFacetField extends PanlFacetField {
 				Map<String, List<LpseToken>> panlTokenMap,
 				CollectionProperties collectionProperties) {
 
-		System.out.println("here I am");
 		return (getURIPath(panlTokenMap, collectionProperties));
 	}
 
 	@Override public String getResetUriPath(LpseToken lpseToken, CollectionProperties collectionProperties) {
-		System.out.println("this is a mistake");
 		return (getURIPath(lpseToken, collectionProperties));
 	}
 
@@ -452,8 +467,6 @@ public class PanlOrFacetField extends PanlFacetField {
 	}
 
 	public String getLpseCode(Map<String, List<LpseToken>> panlTokenMap, CollectionProperties collectionProperties) {
-		System.out.println(this.lpseCode);
-
 		StringBuilder sb = new StringBuilder();
 		if (panlTokenMap.containsKey(lpseCode)) {
 			if (orSeparator != null) {
@@ -461,6 +474,10 @@ public class PanlOrFacetField extends PanlFacetField {
 			} else {
 				for(LpseToken lpseToken : panlTokenMap.get(lpseCode)) {
 					// we need to know whether this is an OR field
+
+					if(collectionProperties.getIsOrSeparatorFacetField(lpseCode)) {
+						return(lpseCode);
+					}
 
 					BaseField lpseField = collectionProperties.getLpseField(lpseCode);
 					if(lpseField instanceof PanlOrFacetField) {

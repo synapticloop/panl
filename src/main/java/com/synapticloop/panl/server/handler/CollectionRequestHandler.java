@@ -162,6 +162,11 @@ public class CollectionRequestHandler {
 	 * parameter) into LPSE tokens, build the SolrQuery, send it to the Solr
 	 * server and parse the response.</p>
 	 *
+	 * <p>This handler also handles the More Facets response by looking for a
+	 * context attribute of <code>PanlMoreFacetsHandler.CONTEXT_KEY_LPSE_CODE</code>,
+	 * which, if it exists, will only return the details for that specific facet
+	 * code.</p>
+	 *
 	 * @param uri The URI of the request
 	 * @param query The query parameter
 	 * @param context The passed in HttpContext for this request
@@ -346,7 +351,7 @@ public class CollectionRequestHandler {
 	}
 
 	/**
-	 * <p>Parse the solrj response and add the panl information to it</p>
+	 * <p>Parse the solrj response and add the Panl JSON information to it</p>
 	 *
 	 * @param lpseTokens The parsed URI and panl tokens
 	 * @param solrQueryResponse The Solrj response to be parsed

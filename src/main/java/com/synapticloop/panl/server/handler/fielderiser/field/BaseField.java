@@ -455,9 +455,17 @@ public abstract class BaseField {
 	public String getLpseCode(Map<String, List<LpseToken>> panlTokenMap, CollectionProperties collectionProperties) {
 		StringBuilder sb = new StringBuilder();
 		if (panlTokenMap.containsKey(lpseCode)) {
+
+			// if this is an or separator facet - then there will only every be the
+			// one facet LPSE code
+			if(collectionProperties.getIsOrSeparatorFacetField(lpseCode)) {
+				return(lpseCode);
+			}
+
 			for(LpseToken lpseToken : panlTokenMap.get(lpseCode)) {
 				if (lpseToken.getIsValid()) {
 					if (lpseToken instanceof FacetLpseToken) {
+
 						FacetLpseToken facetLpseToken = (FacetLpseToken) lpseToken;
 						if (facetLpseToken.getIsRangeToken()) {
 							sb.append(lpseToken.getLpseCode());
@@ -504,7 +512,7 @@ public abstract class BaseField {
 
 	/**
 	 * <p>The reset LPSE code, this will reset the LPSE code where adding a new
-	 * filter to the query will want the user to go back to page 1.</p>
+	 * filter to the query will force the user to go back to page 1.</p>
 	 *
 	 * @param panlTokenMap The panlToken map to see if a list of tokens is available to generate the resetLpseCode for
 	 * @param collectionProperties The collection properties to look up defaults if required
@@ -515,6 +523,7 @@ public abstract class BaseField {
 		return (getLpseCode(panlTokenMap, collectionProperties));
 	}
 
+	// get the LPSE RESET CODE
 	@Deprecated
 	public String getResetLpseCode(LpseToken lpseToken, CollectionProperties collectionProperties) {
 		return (getLpseCode(lpseToken, collectionProperties));
@@ -769,8 +778,10 @@ public abstract class BaseField {
 	 *
 	 * @return The JSON object with the URIs for adding this field to the existing search URI.
 	 */
-	protected JSONObject getAdditionURIObject(CollectionProperties collectionProperties, BaseField lpseField,
-				Map<String, List<LpseToken>> panlTokenMap) {
+	protected JSONObject getAdditionURIObject(CollectionProperties collectionProperties,
+				BaseField lpseField,
+		Map<String, List<LpseToken>> panlTokenMap) {
+
 		String additionLpseCode = lpseField.getLpseCode();
 		JSONObject additionObject = new JSONObject();
 		StringBuilder lpseUri = new StringBuilder(FORWARD_SLASH);
