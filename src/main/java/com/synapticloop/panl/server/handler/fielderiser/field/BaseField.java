@@ -1,7 +1,7 @@
 package com.synapticloop.panl.server.handler.fielderiser.field;
 
 /*
- * Copyright (c) 2008-2024 synapticloop.
+ * Copyright (c) 2008-2025 synapticloop.
  *
  * https://github.com/synapticloop/panl
  *
@@ -92,6 +92,7 @@ public abstract class BaseField {
 	private String solrFieldType;
 	private boolean facetSortByIndex = false;
 	protected boolean isMultiValue = false;
+	protected boolean hasURIComponent = true;
 
 	protected final Properties properties;
 	protected final String solrCollection;
@@ -112,6 +113,17 @@ public abstract class BaseField {
 
 	protected final List<String> WARNING_MESSAGES = new ArrayList<>();
 
+	/**
+	 * <p>Instantiate a new BaseField</p>
+	 *
+	 * @param lpseCode The LPSE code
+	 * @param properties The properties for all LPSE codes
+	 * @param propertyKey The property key for a substring
+	 * @param solrCollection The Solr Collection that this attaches to
+	 * @param panlCollectionUri The Panl collection URL that this is bound to
+	 *
+	 * @throws PanlServerException If there was an error in instantiation
+	 */
 	public BaseField(
 				String lpseCode,
 				Properties properties,
@@ -321,6 +333,37 @@ public abstract class BaseField {
 	}
 
 	/**
+	 * <p>Get the encoded value for this field - which will URL encoded.  If there
+	 * are any other transformations (i.e. prefixes, infixes, suffixes, or value
+	 * replacements, this will be done in a subclass by the overriding method).</p>
+	 *
+	 * @param value The value to URL encode
+	 *
+	 * @return The URL encoded value
+	 */
+	public String getEncodedPanlValue(String value) {
+		return (URLEncoder.encode(value, StandardCharsets.UTF_8));
+	}
+
+	/**
+	 * <p>Get the encoded value for this field - which will URL encoded.  If there
+	 * are any other transformations (i.e. prefixes, infixes, suffixes, or value
+	 * replacements, this will be done in a sub-class by the overriding method).</p>
+	 *
+	 * <p>If the value is null, then an empty string will be returned</p>
+	 *
+	 * @param token The LPSE token to encode
+	 *
+	 * @return The encoded value
+	 */
+	public String getEncodedPanlValue(LpseToken token) {
+		if (null == token.getValue()) {
+			return ("");
+		}
+		return (getEncodedPanlValue(token.getValue()));
+	}
+
+	/**
 	 * <p>Get the validated value.  This will ensure that an incoming token value
 	 * matches the Solr field type, and if it doesn't, then it will attempt to clean it up.</p>
 	 *
@@ -348,38 +391,6 @@ public abstract class BaseField {
 		}
 		return (temp);
 	}
-
-	/**
-	 * <p>Get the encoded value for this field - which will URL encoded.  If there
-	 * are any other transformations (i.e. prefixes, infixes, suffixes, or value
-	 * replacements, this will be done in a subclass by the overriding method).</p>
-	 *
-	 * @param value The value to URL encode
-	 *
-	 * @return The URL encoded value
-	 */
-	public String getEncodedPanlValue(String value) {
-		return (URLEncoder.encode(value, StandardCharsets.UTF_8));
-	}
-
-	/**
-	 * <p>Get the encoded value for this field - which will URL encoded.  If there
-	 * are any other transformations (i.e. prefixes, infixes, suffixes, or value replacements, this will be done in a
-	 * sub-class by the overriding method).</p>
-	 *
-	 * <p>If the value is null, then an empty string will be returned</p>
-	 *
-	 * @param token The LPSE token to encode
-	 *
-	 * @return The encoded value
-	 */
-	public String getEncodedPanlValue(LpseToken token) {
-		if (null == token.getValue()) {
-			return ("");
-		}
-		return (getEncodedPanlValue(token.getValue()));
-	}
-
 
 	/**
 	 * <p>Get the URI path for this field</p>
@@ -505,7 +516,6 @@ public abstract class BaseField {
 		return (getURIPath(panlTokenMap, collectionProperties));
 	}
 
-	@Deprecated
 	public String getResetUriPath(LpseToken lpseToken, CollectionProperties collectionProperties) {
 		return (getURIPath(lpseToken, collectionProperties));
 	}
@@ -524,13 +534,12 @@ public abstract class BaseField {
 	}
 
 	// get the LPSE RESET CODE
-	@Deprecated
 	public String getResetLpseCode(LpseToken lpseToken, CollectionProperties collectionProperties) {
 		return (getLpseCode(lpseToken, collectionProperties));
 	}
 
 	/**
-	 * <p>A human readable list of explanations for debugging purposes, this will
+	 * <p>A human-readable list of explanations for debugging purposes, this will
 	 * add the base information then call the abstract method
 	 * <code>explainAdditional()</code>.</p>
 	 *
@@ -672,6 +681,16 @@ public abstract class BaseField {
 		appendToAvailableObjectInternal(jsonObject);
 	}
 
+	/**
+	 * <p>Append the range values to the JSON object</p>
+	 *
+	 * @param facetObject The JSON object to apend the range values to
+	 * @param collectionProperties The collection properties
+	 * @param panlTokenMap The Panl Token map of current passed through facets
+	 *
+	 * @return Whether there were any range values appended to the object - by
+	 * default this will return false unless over-ridden.
+	 */
 	public boolean appendAvailableRangeValues(
 				JSONObject facetObject,
 				CollectionProperties collectionProperties,
@@ -680,8 +699,12 @@ public abstract class BaseField {
 	}
 
 	/**
-	 * <p>Append to the facet object any available facet values (not including
-	 * the currently selected facet value.</p>
+	 * <p>Append to the facet object any available additional facet values (not
+	 * including the currently selected facet value).</p>
+	 *
+	 * <p>This will add to the JSON object <code>facetObject</code> the values
+	 * and links to filter with this facet value in addition to the currently
+	 * selected facets and query.</p>
 	 *
 	 * @param facetObject The facet object to append to
 	 * @param collectionProperties The colleciton properties
@@ -803,7 +826,7 @@ public abstract class BaseField {
 
 				additionObject.put(
 							JSON_KEY_BEFORE,
-							lpseUri.toString() + baseField.getResetUriPath(
+							lpseUri + baseField.getResetUriPath(
 										panlTokenMap,
 										collectionProperties));
 
@@ -878,5 +901,15 @@ public abstract class BaseField {
 	 */
 	public boolean getIsFacetSortByIndex() {
 		return (facetSortByIndex);
+	}
+
+	/**
+	 * <p>Whether this has a URI component - by default this is <code>true</code>
+	 * unless it is a sort order or a query operand.</p>
+	 *
+	 * @return Whether this field has a uri component
+	 */
+	public boolean getHasURIComponent() {
+		return(this.hasURIComponent);
 	}
 }

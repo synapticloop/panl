@@ -1,7 +1,7 @@
 package com.synapticloop.panl.server.handler.processor;
 
 /*
- * Copyright (c) 2008-2024 synapticloop.
+ * Copyright (c) 2008-2025 synapticloop.
  *
  * https://github.com/synapticloop/panl
  *
@@ -24,6 +24,8 @@ package com.synapticloop.panl.server.handler.processor;
  * IN THE SOFTWARE.
  */
 
+import com.synapticloop.panl.server.handler.fielderiser.field.facet.PanlOrFacetField;
+import com.synapticloop.panl.server.handler.fielderiser.field.param.PanlSortField;
 import com.synapticloop.panl.server.handler.properties.CollectionProperties;
 import com.synapticloop.panl.server.handler.fielderiser.field.BaseField;
 import com.synapticloop.panl.server.handler.tokeniser.token.facet.BooleanFacetLpseToken;
@@ -38,8 +40,8 @@ import java.nio.charset.StandardCharsets;
 import java.util.*;
 
 /**
- * <p>The active processor adds all of the current active filters that are
- * passed through THE lpse PATH the returned panl JSON object.</p>
+ * <p>The active processor adds all current active filters that are passed through the lpse PATH the returned panl
+ * JSON object.  Additionally, this will generate the remove links for this particular facet.</p>
  *
  * @author synapticloop
  */
@@ -75,33 +77,18 @@ public class ActiveProcessor extends Processor {
 		List<String> uriComponents = new ArrayList<>();
 		List<String> lpseComponents = new ArrayList<>();
 
-		// the following set contains whether we have added an or separator code to
-		// the LPSEComponents - if we have, then we have already added the LPSE
-		// code, which only requires one code, not multiple
-		Set<String> foundOrSeparator = new HashSet<>();
 		for (LpseToken lpseToken : lpseTokens) {
 			BaseField lpseField = collectionProperties.getLpseField(lpseToken.getLpseCode());
 			if (null != lpseField && lpseToken.getIsValid()) {
-				// if it is an or separator - we only need one LPSE token
-				if(collectionProperties.getIsOrSeparatorFacetField(lpseToken.getLpseCode())) {
-					if(!foundOrSeparator.contains(lpseField.getLpseCode())) {
-						lpseComponents.add(lpseField.getResetLpseCode(panlTokenMap, collectionProperties));
-					}
-					foundOrSeparator.add(lpseField.getLpseCode());
-				} else {
-					lpseComponents.add(lpseField.getResetLpseCode(panlTokenMap, collectionProperties));
-				}
+				lpseComponents.add(lpseField.getResetLpseCode(lpseToken, collectionProperties));
+				//				lpseComponents.add(lpseField.getResetLpseCode(panlTokenMap, collectionProperties));
 
 				uriComponents.add(lpseField.getResetUriPath(lpseToken, collectionProperties));
 			}
 		}
 
-		// clear as this is used for the incrementor 'skipNumber' below
-		foundOrSeparator.clear();
-
 		JSONObject activeSortObject = new JSONObject();
 		int skipNumber = 0;
-		int lpseSkipNumber = 0;
 		for (LpseToken lpseToken : lpseTokens) {
 			String tokenType = lpseToken.getType();
 			String lpseCode = lpseToken.getLpseCode();
@@ -115,9 +102,12 @@ public class ActiveProcessor extends Processor {
 
 			removeObject.put(JSON_KEY_VALUE, lpseToken.getValue());
 
-			System.out.println(getRemoveURIFromPath(skipNumber, lpseTokens, collectionProperties));
+			removeObject.put(JSON_KEY_REMOVE_URI, getRemoveURIFromPath(
+					skipNumber,
+					lpseTokens,
+					lpseComponents,
+					collectionProperties));
 
-			removeObject.put(JSON_KEY_REMOVE_URI, getRemoveURIFromPath(skipNumber, lpseSkipNumber, uriComponents, lpseComponents));
 			removeObject.put(JSON_KEY_PANL_CODE, lpseCode);
 
 			// add any additional keys that are required by the children of the base
@@ -134,20 +124,36 @@ public class ActiveProcessor extends Processor {
 				if (null != solrFacetField) {
 					removeObject.put(JSON_KEY_FACET_NAME, solrFacetField);
 					removeObject.put(JSON_KEY_NAME, panlNameFromSolrFieldName);
-					removeObject.put(JSON_KEY_IS_DESCENDING, sortLpseToken.getSortOrderUriKey()
-					                                                      .equals(SortLpseToken.SORT_ORDER_URI_KEY_DESCENDING));
-					removeObject.put(JSON_KEY_ENCODED, URLEncoder.encode(panlNameFromSolrFieldName, StandardCharsets.UTF_8));
-					removeObject.put(JSON_KEY_INVERSE_URI, getSortReplaceURI(sortLpseToken, uriComponents, lpseComponents));
+
+					removeObject.put(JSON_KEY_IS_DESCENDING,
+							sortLpseToken.getSortOrderUriKey().equals(SortLpseToken.SORT_ORDER_URI_KEY_DESCENDING));
+
+					removeObject.put(JSON_KEY_ENCODED,
+							URLEncoder.encode(panlNameFromSolrFieldName, StandardCharsets.UTF_8));
+
+					removeObject.put(JSON_KEY_INVERSE_URI,
+							getSortInverseURI(
+									sortLpseToken,
+									lpseTokens,
+									lpseComponents,
+									collectionProperties));
+
+
 					activeSortObject.put(solrFacetField, true);
 				} else {
 					shouldAddObject = false;
 				}
 			} else if (lpseToken instanceof BooleanFacetLpseToken) {
 				BooleanFacetLpseToken booleanFacetLpseToken = (BooleanFacetLpseToken) lpseToken;
+
 				removeObject.put(JSON_KEY_INVERSE_URI,
-				                 getBooleanReplaceURI(booleanFacetLpseToken, uriComponents, lpseComponents));
+						getBooleanInverseURI(booleanFacetLpseToken, lpseTokens, lpseComponents, collectionProperties));
+
+
 				removeObject.put(JSON_KEY_FACET_NAME, collectionProperties.getSolrFieldNameFromLpseCode(lpseCode));
+
 				removeObject.put(JSON_KEY_NAME, collectionProperties.getPanlNameFromPanlCode(lpseCode));
+
 				removeObject.put(JSON_KEY_ENCODED, lpseField.getEncodedPanlValue(lpseToken));
 
 			} else {
@@ -161,14 +167,6 @@ public class ActiveProcessor extends Processor {
 				jsonArray.put(removeObject);
 			}
 
-			if(collectionProperties.getIsOrSeparatorFacetField(lpseToken.getLpseCode())) {
-				if(!foundOrSeparator.contains(lpseField.getLpseCode())) {
-					lpseSkipNumber++;
-				}
-				foundOrSeparator.add(lpseField.getLpseCode());
-			} else {
-				lpseSkipNumber++;
-			}
 			skipNumber++;
 
 			if (!activeSortObject.isEmpty()) {
@@ -184,113 +182,366 @@ public class ActiveProcessor extends Processor {
 		return (jsonObject);
 	}
 
-	private String getRemoveURIFromPath(int skipNumber, List<LpseToken> lpseTokens, CollectionProperties collectionProperties) {
-		Set<String> foundOrSeparator = new HashSet<>();
-		Set<String> startedOrSeparator = new HashSet<>();
+	/**
+	 * <p>Get the removal URI path for the current lpseTokens</p>
+	 *
+	 * @param skipNumber The LPSE token to skip (starting at index 0
+	 * @param lpseTokens The list of LPSE tokens
+	 * @param collectionProperties The collection properties
+	 *
+	 * @return The String URL that will remove this particular facet
+	 */
+	private String getRemoveURIFromPath(
+			int skipNumber,
+			List<LpseToken> lpseTokens,
+			List<String> lpseComponents,
+			CollectionProperties collectionProperties) {
+
+		// if we are currently looking at LPSE code which is an OR separator
+		boolean isOrSeparator = false;
+		String previousLpseCode = "";
+		String previousValueSuffix = "";
 
 		StringBuilder uri = new StringBuilder();
 		StringBuilder lpse = new StringBuilder();
-		for(int i = 0; i < lpseTokens.size(); i++) {
+
+		Set<String> lpseComponentsAdded = new HashSet<>();
+
+		for (int i = 0; i < lpseTokens.size(); i++) {
 			LpseToken lpseToken = lpseTokens.get(i);
 			String lpseCode = lpseToken.getLpseCode();
-			if(i != skipNumber) {
-				if(collectionProperties.getIsOrSeparatorFacetField(lpseCode)) {
-					if(!foundOrSeparator.contains(lpseCode)) {
-						lpse.append(lpseCode);
-					}
-					foundOrSeparator.add(lpseCode);
-				} else {
-					lpse.append(lpseCode);
-				}
-			}
 
-			// now for the uri component
-			if(i != skipNumber) {
-				if(collectionProperties.getIsOrSeparatorFacetField(lpseCode)) {
-					BaseField lpseField = collectionProperties.getLpseField(lpseToken.getLpseCode());
-					if(!startedOrSeparator.contains(lpseCode)) {
-						uri.append(lpseField.getEncodedPanlValue(lpseToken))
-						   .append("/");
-
-					}
-					startedOrSeparator.add(lpseCode);
-				} else {
-					uri.append(lpseToken.getValue())
-						.append("/");
-				}
-			}
-		}
-		return returnValidURIPath(uri, lpse);
-	}
-
-		private String getRemoveURIFromPath(int skipNumber, int lpseSkipNumber, List<String> uriComponents, List<String> lpseComponents) {
-		StringBuilder uri = new StringBuilder();
-		StringBuilder lpse = new StringBuilder();
-		for (int i = 0; i < uriComponents.size(); i++) {
 			if (i != skipNumber) {
-				uri.append(uriComponents.get(i));
+				BaseField lpseField = collectionProperties.getLpseField(lpseToken.getLpseCode());
+
+				String lpseComponent = lpseComponents.get(i);
+				if (lpseCode.equals(previousLpseCode)) {
+					// we just carry on
+					if (isOrSeparator) {
+						// the previous LPSE code is an or separator, we only need to add
+						// the value, with the OR SEPARATOR
+						uri.append(
+								URLEncoder.encode(((PanlOrFacetField) lpseField).getOrSeparator() + lpseToken.getValue(),
+										StandardCharsets.UTF_8));
+						previousValueSuffix = lpseField.getValueSuffix();
+					} else {
+						// not currently an or separator - get the full value
+						// if the previous lpse code was an or Separator, add the value
+						// suffix
+						if (lpseField.getHasURIComponent()) {
+							uri.append(lpseField.getEncodedPanlValue(lpseToken))
+							   .append("/");
+						} else {
+							if (!lpseComponentsAdded.contains(lpseComponent)) {
+								lpse.append(lpseComponent);
+							}
+							lpseComponentsAdded.add(lpseComponent);
+						}
+					}
+				} else {
+					// need to check for sorting/operands... which are different
+					if (lpseField.getHasURIComponent()) {
+						lpse.append(lpseCode);
+					} else {
+						if (!lpseComponentsAdded.contains(lpseComponent)) {
+							lpse.append(lpseComponent);
+						}
+						lpseComponentsAdded.add(lpseComponent);
+					}
+					// the current and previous are different
+					if (isOrSeparator) {
+						// the previous LPSE code is an or Separator - we don't know whether
+						// this one is - we will test for it, but we shall add the value
+						// suffix to it.
+						uri.append(URLEncoder.encode(previousValueSuffix, StandardCharsets.UTF_8))
+						   .append("/");
+					}
+
+					if (collectionProperties.getIsOrSeparatorFacetField(lpseCode)) {
+						isOrSeparator = true;
+						// this is the start of an OR separator
+						uri.append(URLEncoder.encode(lpseField.getValuePrefix() + lpseToken.getValue(), StandardCharsets.UTF_8));
+					} else {
+						isOrSeparator = false;
+
+						if (lpseField.getHasURIComponent()) {
+							uri.append(lpseField.getEncodedPanlValue(lpseToken))
+							   .append("/");
+						} else {
+							if (!lpseComponentsAdded.contains(lpseComponent)) {
+								lpse.append(lpseComponent);
+							}
+							lpseComponentsAdded.add(lpseComponent);
+						}
+					}
+				}
+
+				previousLpseCode = lpseCode;
+				previousValueSuffix = lpseField.getValueSuffix();
 			}
 		}
 
-		for (int i = 0; i < lpseComponents.size(); i++) {
-			if (i != lpseSkipNumber) {
-				lpse.append(lpseComponents.get(i));
-			}
+		// if we still are in an or separator and we have no more tokens to process
+		// then we have a dangling suffix that may need to be added
+		if (isOrSeparator) {
+			uri.append(
+					   URLEncoder.encode(previousValueSuffix, StandardCharsets.UTF_8))
+			   .append("/");
 		}
 
 		return returnValidURIPath(uri, lpse);
 	}
 
-	private String getSortReplaceURI(SortLpseToken sortLpseToken, List<String> uriComponents,
-	                                 List<String> lpseComponents) {
+	/**
+	 * <p>Generate the inverse for a BOOLEAN facet which only changes the 'true'
+	 * value to 'false' and vice versa.</p>
+	 *
+	 * @param sortLpseToken The facet token to work on
+	 * @param lpseTokens The list of LPSE tokens
+	 * @param lpseComponents The LPSE components
+	 * @param collectionProperties The collection properties
+	 *
+	 * @return The inverse URI
+	 */
+	private String getSortInverseURI(
+			SortLpseToken sortLpseToken,
+			List<LpseToken> lpseTokens,
+			List<String> lpseComponents,
+			CollectionProperties collectionProperties) {
+
 		String sortLpseUriCode =
-			sortLpseToken.getLpseCode() +
-				sortLpseToken.getLpseSortCode() +
-				sortLpseToken.getSortOrderUriKey();
+				sortLpseToken.getLpseCode() +
+						sortLpseToken.getLpseSortCode() +
+						sortLpseToken.getSortOrderUriKey();
 		String inverseSortUriCode =
-			sortLpseToken.getLpseCode() +
-				sortLpseToken.getLpseSortCode() +
-				sortLpseToken.getInverseSortOrderUriKey();
+				sortLpseToken.getLpseCode() +
+						sortLpseToken.getLpseSortCode() +
+						sortLpseToken.getInverseSortOrderUriKey();
+
+		// if we are currently looking at LPSE code which is an OR separator
+		boolean isOrSeparator = false;
+		String previousLpseCode = "";
+		String previousValueSuffix = "";
 
 		StringBuilder uri = new StringBuilder();
 		StringBuilder lpse = new StringBuilder();
+		Set<String> lpseComponentsAdded = new HashSet<>();
 
-		boolean found = false;
-		for (int i = 0; i < uriComponents.size(); i++) {
-			if (!found && sortLpseUriCode.equals(lpseComponents.get(i))) {
+		for (int i = 0; i < lpseTokens.size(); i++) {
+			LpseToken lpseToken = lpseTokens.get(i);
+			String lpseCode = lpseToken.getLpseCode();
+
+			BaseField lpseField = collectionProperties.getLpseField(lpseToken.getLpseCode());
+
+			boolean found = false;
+			String lpseComponent = lpseComponents.get(i);
+			if (!found && sortLpseUriCode.equals(lpseComponent)) {
+				if (isOrSeparator) {
+					uri.append(
+							   URLEncoder.encode(previousValueSuffix, StandardCharsets.UTF_8))
+					   .append("/");
+				}
+				isOrSeparator = false;
 				found = true;
 				lpse.append(inverseSortUriCode);
 			} else {
-				lpse.append(lpseComponents.get(i));
+				// we need to go through the facets
+				if (lpseCode.equals(previousLpseCode)) {
+					// we just carry on
+					if (isOrSeparator) {
+						// the previous LPSE code is an or separator, we only need to add
+						// the value, with the OR SEPARATOR
+						uri.append(
+								URLEncoder.encode(((PanlOrFacetField) lpseField).getOrSeparator() + lpseToken.getValue(),
+										StandardCharsets.UTF_8));
+						previousValueSuffix = lpseField.getValueSuffix();
+					} else {
+						// not currently an or separator - get the full value
+						// if the previous lpse code was an or Separator, add the value
+						// suffix
+						if (lpseField.getHasURIComponent()) {
+							uri.append(lpseField.getEncodedPanlValue(lpseToken))
+							   .append("/");
+						} else {
+							if (!lpseComponentsAdded.contains(lpseComponent)) {
+								lpse.append(lpseComponent);
+							}
+							lpseComponentsAdded.add(lpseComponent);
+						}
+					}
+				} else {
+					if (lpseField.getHasURIComponent()) {
+						lpse.append(lpseCode);
+					} else {
+						if (!lpseComponentsAdded.contains(lpseComponent)) {
+							lpse.append(lpseComponent);
+						}
+						lpseComponentsAdded.add(lpseComponent);
+					}
+					// the current and previous are different
+					if (isOrSeparator) {
+						// the previous LPSE code is an or Separator - we don't know whether
+						// this one is - we will test for it, but we shall add the value
+						// suffix to it.
+						uri.append(URLEncoder.encode(previousValueSuffix, StandardCharsets.UTF_8))
+						   .append("/");
+					}
+
+					if (collectionProperties.getIsOrSeparatorFacetField(lpseCode)) {
+						isOrSeparator = true;
+						// this is the start of an OR separator
+						uri.append(URLEncoder.encode(lpseField.getValuePrefix() + lpseToken.getValue(), StandardCharsets.UTF_8));
+					} else {
+						isOrSeparator = false;
+
+						// for sort fields (and operands) and anything which doesn't have a
+						// URI path - we want to skip putting in any value or forward slash
+
+						if (lpseField.getHasURIComponent()) {
+							uri.append(lpseField.getEncodedPanlValue(lpseToken))
+							   .append("/");
+						} else {
+							if (!lpseComponentsAdded.contains(lpseComponent)) {
+								lpse.append(lpseComponent);
+							}
+							lpseComponentsAdded.add(lpseComponent);
+						}
+					}
+				}
 			}
-			uri.append(uriComponents.get(i));
+
+			previousLpseCode = lpseCode;
+			previousValueSuffix = lpseField.getValueSuffix();
+
 		}
+
+		// if we still are in an or separator and we have no more tokens to process
+		// then we have a dangling suffix that may need to be added
+		if (isOrSeparator) {
+			uri.append(
+					   URLEncoder.encode(previousValueSuffix, StandardCharsets.UTF_8))
+			   .append("/");
+		}
+
 
 		return returnValidURIPath(uri, lpse);
 	}
 
-	private String getBooleanReplaceURI(BooleanFacetLpseToken booleanFacetLpseToken, List<String> uriComponents,
-	                                    List<String> lpseComponents) {
+	/**
+	 * <p>Generate the inverse for a BOOLEAN facet which only changes the 'true'
+	 * value to 'false' and vice versa.</p>
+	 *
+	 * @param booleanFacetLpseToken The facet token to work on
+	 * @param lpseTokens The list of LPSE tokens
+	 * @param collectionProperties The collection properties
+	 *
+	 * @return The inverse URI
+	 */
+	private String getBooleanInverseURI(
+			BooleanFacetLpseToken booleanFacetLpseToken,
+			List<LpseToken> lpseTokens,
+			List<String> lpseComponents,
+			CollectionProperties collectionProperties) {
+
 		String booleanLpseCode = booleanFacetLpseToken.getLpseCode();
 		String inverseBooleanValue = booleanFacetLpseToken.getInverseBooleanValue(booleanFacetLpseToken);
 
+		// if we are currently looking at LPSE code which is an OR separator
+		boolean isOrSeparator = false;
+		String previousLpseCode = "";
+		String previousValueSuffix = "";
+
 		StringBuilder uri = new StringBuilder();
 		StringBuilder lpse = new StringBuilder();
+		Set<String> lpseComponentsAdded = new HashSet<>();
 
-		boolean found = false;
-		for (int i = 0; i < uriComponents.size(); i++) {
-			if (!found && booleanLpseCode.equals(lpseComponents.get(i))) {
+		for (int i = 0; i < lpseTokens.size(); i++) {
+			LpseToken lpseToken = lpseTokens.get(i);
+			String lpseCode = lpseToken.getLpseCode();
+			String lpseComponent = lpseComponents.get(i);
+
+			BaseField lpseField = collectionProperties.getLpseField(lpseToken.getLpseCode());
+
+			boolean found = false;
+			if (!found && booleanLpseCode.equals(lpseTokens.get(i).getLpseCode())) {
+				if (isOrSeparator) {
+					uri.append(
+							   URLEncoder.encode(previousValueSuffix, StandardCharsets.UTF_8))
+					   .append("/");
+				}
+				isOrSeparator = false;
 				found = true;
 				lpse.append(booleanFacetLpseToken.getLpseCode());
 				uri.append(inverseBooleanValue)
 				   .append("/");
 			} else {
-				lpse.append(lpseComponents.get(i));
-				uri.append(uriComponents.get(i));
-				if (uri.length() > 0 && uri.charAt(uri.length() - 1) != '/') {
-					uri.append("/");
+				// we need to go through the facets
+				if (lpseCode.equals(previousLpseCode)) {
+					// we just carry on
+					if (isOrSeparator) {
+						// the previous LPSE code is an or separator, we only need to add
+						// the value, with the OR SEPARATOR
+						uri.append(
+								URLEncoder.encode(((PanlOrFacetField) lpseField).getOrSeparator() + lpseToken.getValue(),
+										StandardCharsets.UTF_8));
+						previousValueSuffix = lpseField.getValueSuffix();
+					} else {
+						// not currently an or separator - get the full value
+						// if the previous lpse code was an or Separator, add the value
+						// suffix
+						if (lpseField.getHasURIComponent()) {
+							uri.append(lpseField.getEncodedPanlValue(lpseToken))
+							   .append("/");
+						} else {
+							if(!lpseComponentsAdded.contains(lpseComponent)) {
+								lpse.append(lpseComponent);
+							}
+							lpseComponentsAdded.add(lpseComponent);
+						}
+					}
+				} else {
+					if (lpseField.getHasURIComponent()) {
+						uri.append(lpseField.getEncodedPanlValue(lpseToken))
+						   .append("/");
+					} else {
+						if(!lpseComponentsAdded.contains(lpseComponent)) {
+							lpse.append(lpseComponent);
+						}
+						lpseComponentsAdded.add(lpseComponent);
+					}
+					// the current and previous are different
+					if (isOrSeparator) {
+						// the previous LPSE code is an or Separator - we don't know whether
+						// this one is - we will test for it, but we shall add the value
+						// suffix to it.
+						uri.append(URLEncoder.encode(previousValueSuffix, StandardCharsets.UTF_8))
+						   .append("/");
+					}
+
+					if (collectionProperties.getIsOrSeparatorFacetField(lpseCode)) {
+						isOrSeparator = true;
+						// this is the start of an OR separator
+						uri.append(URLEncoder.encode(lpseField.getValuePrefix() + lpseToken.getValue(), StandardCharsets.UTF_8));
+					} else {
+						isOrSeparator = false;
+						if (lpseField.getHasURIComponent()) {
+							uri.append(lpseField.getEncodedPanlValue(lpseToken))
+							   .append("/");
+						}
+					}
 				}
 			}
+
+			previousLpseCode = lpseCode;
+			previousValueSuffix = lpseField.getValueSuffix();
+		}
+
+		// if we still are in an or separator and we have no more tokens to process
+		// then we have a dangling suffix that may need to be added
+		if (isOrSeparator) {
+			uri.append(
+					URLEncoder.encode(previousValueSuffix, StandardCharsets.UTF_8))
+			   .append("/");
 		}
 
 		return returnValidURIPath(uri, lpse);

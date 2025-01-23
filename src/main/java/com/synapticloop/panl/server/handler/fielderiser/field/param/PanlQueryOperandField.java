@@ -43,6 +43,8 @@ public class PanlQueryOperandField extends BaseField {
 
 	public PanlQueryOperandField(String lpseCode, String propertyKey, Properties properties, String solrCollection, String panlCollectionUri) throws PanlServerException {
 		super(lpseCode, properties, propertyKey, solrCollection, panlCollectionUri);
+		// TODO maybe override the constructor???  probably more confusing
+		super.hasURIComponent = false;
 	}
 
 	@Override

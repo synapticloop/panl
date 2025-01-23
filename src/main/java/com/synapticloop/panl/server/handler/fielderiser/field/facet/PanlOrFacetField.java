@@ -1,7 +1,7 @@
 package com.synapticloop.panl.server.handler.fielderiser.field.facet;
 
 /*
- * Copyright (c) 2008-2024 synapticloop.
+ * Copyright (c) 2008-2025 synapticloop.
  *
  * https://github.com/synapticloop/panl
  *
@@ -263,13 +263,15 @@ public class PanlOrFacetField extends PanlFacetField {
 	}
 
 	/**
-	 * <p>This is an OR facet, so we can have additional codes of the same facet</p>
+	 * <p>This is an OR facet, so we can have additional codes of the same facet,
+	 * and there may be an OR SEPARATOR.</p>
 	 *
 	 * @param collectionProperties The collection properties
 	 * @param lpseField The LPSE field that this applies to
 	 * @param panlTokenMap The inbound Panl tokens
 	 *
-	 * @return The JSON object with the URIs for adding this field to the existing search URI.
+	 * @return The JSON object with the URIs for adding this field to the existing
+	 * search URI.
 	 */
 	@Override
 	protected JSONObject getAdditionURIObject(
@@ -339,7 +341,11 @@ public class PanlOrFacetField extends PanlFacetField {
 						lpseUriCode.append(baseField.getLpseCode());
 					} else {
 						// just replace it with the correct number of LPSE codes
-						lpseUriCode.append(new String(new char[numTokens]).replace("\0", baseField.getLpseCode()));
+						if(!baseField.getHasURIComponent()) {
+							lpseUriCode.append(baseField.getResetLpseCode(panlTokenMap, collectionProperties));
+						} else {
+							lpseUriCode.append(new String(new char[numTokens]).replace("\0", baseField.getLpseCode()));
+						}
 					}
 				}
 			}
@@ -347,7 +353,13 @@ public class PanlOrFacetField extends PanlFacetField {
 
 		additionObject.put(JSON_KEY_BEFORE, lpseUriBefore.toString());
 
-		additionObject.put(JSON_KEY_AFTER, FORWARD_SLASH + lpseUri + lpseUriCode + FORWARD_SLASH);
+		// if we have an or separator, we have already added the forward slash
+		if (orSeparator != null) {
+			additionObject.put(JSON_KEY_AFTER, lpseUri.toString() + lpseUriCode + FORWARD_SLASH);
+		} else {
+			additionObject.put(JSON_KEY_AFTER, FORWARD_SLASH + lpseUri + lpseUriCode + FORWARD_SLASH);
+		}
+
 		return (additionObject);
 	}
 

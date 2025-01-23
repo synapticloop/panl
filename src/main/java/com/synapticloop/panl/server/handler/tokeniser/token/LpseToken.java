@@ -1,7 +1,7 @@
 package com.synapticloop.panl.server.handler.tokeniser.token;
 
 /*
- * Copyright (c) 2008-2024 synapticloop.
+ * Copyright (c) 2008-2025 synapticloop.
  *
  * https://github.com/synapticloop/panl
  *
@@ -39,7 +39,7 @@ import java.util.StringTokenizer;
  * validates whether this token is valid.</p>
  *
  * <pre>
- *   /something/else/a value/another/2/dfgtn/
+ *   /something/else/a+value/another/2/dfgtn/
  *   --------------------------------- -----
  *         This is the URI part          |
  *                                       |
@@ -56,7 +56,7 @@ import java.util.StringTokenizer;
  * <ul>
  *   <li><code>something</code> maps to <code>d</code></li>
  *   <li><code>else</code> maps to <code>f</code></li>
- *   <li><code>a value</code> maps to <code>g</code></li>
+ *   <li><code>a+value</code> maps to <code>g</code></li>
  *   <li><code>another</code> maps to <code>t</code></li>
  *   <li><code>2</code> maps to <code>n</code></li>
  * </ul>
@@ -176,7 +176,7 @@ public abstract class LpseToken {
 	}
 
 	/**
-	 * <p>Return a human readable explanation of what the URI has been parsed to
+	 * <p>Return a human-readable explanation of what the URI has been parsed to
 	 * be.</p>
 	 *
 	 * <p>

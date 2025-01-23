@@ -138,7 +138,13 @@ public class SortLpseToken extends LpseToken {
 				"' (solr field '" +
 				(this.solrFacetField == null ? " defaulting to <relevance>" : this.solrFacetField) +
 				"'), sorted " +
-				(this.sortOrder == SolrQuery.ORDER.asc ? "ASCending" : "DESCending"));
+				(this.sortOrder == SolrQuery.ORDER.asc ? "ASCending (+)" : "DESCending (-)") +
+				", incoming LPSE URL part '" +
+				this.lpseCode +
+				this.lpseSortCode +
+				(this.sortOrder == SolrQuery.ORDER.asc ? "+" : "-") +
+				"'."
+		);
 	}
 
 	@Override public String getType() {

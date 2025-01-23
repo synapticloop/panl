@@ -48,6 +48,7 @@ public class PanlSortField extends BaseField {
 
 	public PanlSortField(String lpseCode, String propertyKey, Properties properties, String solrCollection, String panlCollectionUri) throws PanlServerException {
 		super(lpseCode, properties, propertyKey, solrCollection, panlCollectionUri);
+		super.hasURIComponent = false;
 	}
 
 	@Override public String getCanonicalUriPath(Map<String, List<LpseToken>> panlTokenMap, CollectionProperties collectionProperties) {
