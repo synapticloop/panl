@@ -385,9 +385,9 @@ solr.highlight=false
 #         (Optional) If the maximum value acts as a wildcard (and therefore
 #         will also include values which are greater than this value)
 #     panl.range.suppress.<lpse_code>
-#         (Optional) By default, panl will return a range and the individual
-#         values for a facet. Setting this to true will only return the range
-#         values.
+#         (Optional) By default, panl will return a range JSON object and the
+#         individual values for a facet. Setting this to true will only return
+#         the range JSON object.
 #
 #                                ~ ~ ~ * ~ ~ ~
 #
@@ -595,16 +595,17 @@ panl.type.l=solr.IntPointField
 #panl.suffix.l=suffix
 # This field can be configured as a range facet by setting the following
 # properties
-#panl.range.facet.w=true
-#panl.range.min.w=0
-#panl.range.max.w=100
-#panl.range.prefix.w=range_prefix
-#panl.range.infix.w=range_infix
-#panl.range.suffix.w=range_suffix
-#panl.range.min.value.w=min_value
-#panl.range.max.value.w=max_value
-#panl.range.min.wildcard.w=true
-#panl.range.max.wildcard.w=true
+#panl.range.facet.l=true
+#panl.range.min.l=0
+#panl.range.max.l=100
+#panl.range.prefix.l=range_prefix
+#panl.range.infix.l=range_infix
+#panl.range.suffix.l=range_suffix
+#panl.range.min.value.l=min_value
+#panl.range.max.value.l=max_value
+#panl.range.min.wildcard.l=true
+#panl.range.max.wildcard.l=true
+#panl.range.suppress.l=false
 # By default Solr will always return facet ordered by count descending (i.e.
 # The largest counts first) - uncomment the below line to return it in value
 # order (e.g. alphabetical/numerical)
@@ -627,16 +628,17 @@ panl.type.r=solr.IntPointField
 #panl.suffix.r=suffix
 # This field can be configured as a range facet by setting the following
 # properties
-#panl.range.facet.w=true
-#panl.range.min.w=0
-#panl.range.max.w=100
-#panl.range.prefix.w=range_prefix
-#panl.range.infix.w=range_infix
-#panl.range.suffix.w=range_suffix
-#panl.range.min.value.w=min_value
-#panl.range.max.value.w=max_value
-#panl.range.min.wildcard.w=true
-#panl.range.max.wildcard.w=true
+#panl.range.facet.r=true
+#panl.range.min.r=0
+#panl.range.max.r=100
+#panl.range.prefix.r=range_prefix
+#panl.range.infix.r=range_infix
+#panl.range.suffix.r=range_suffix
+#panl.range.min.value.r=min_value
+#panl.range.max.value.r=max_value
+#panl.range.min.wildcard.r=true
+#panl.range.max.wildcard.r=true
+#panl.range.suppress.r=false
 # By default Solr will always return facet ordered by count descending (i.e.
 # The largest counts first) - uncomment the below line to return it in value
 # order (e.g. alphabetical/numerical)
@@ -659,16 +661,17 @@ panl.type.d=solr.IntPointField
 #panl.suffix.d=suffix
 # This field can be configured as a range facet by setting the following
 # properties
-#panl.range.facet.w=true
-#panl.range.min.w=0
-#panl.range.max.w=100
-#panl.range.prefix.w=range_prefix
-#panl.range.infix.w=range_infix
-#panl.range.suffix.w=range_suffix
-#panl.range.min.value.w=min_value
-#panl.range.max.value.w=max_value
-#panl.range.min.wildcard.w=true
-#panl.range.max.wildcard.w=true
+#panl.range.facet.d=true
+#panl.range.min.d=0
+#panl.range.max.d=100
+#panl.range.prefix.d=range_prefix
+#panl.range.infix.d=range_infix
+#panl.range.suffix.d=range_suffix
+#panl.range.min.value.d=min_value
+#panl.range.max.value.d=max_value
+#panl.range.min.wildcard.d=true
+#panl.range.max.wildcard.d=true
+#panl.range.suppress.d=false
 # By default Solr will always return facet ordered by count descending (i.e.
 # The largest counts first) - uncomment the below line to return it in value
 # order (e.g. alphabetical/numerical)
@@ -701,6 +704,7 @@ panl.type.w=solr.IntPointField
 #panl.range.max.value.w=max_value
 #panl.range.min.wildcard.w=true
 #panl.range.max.wildcard.w=true
+#panl.range.suppress.w=false
 # By default Solr will always return facet ordered by count descending (i.e.
 # The largest counts first) - uncomment the below line to return it in value
 # order (e.g. alphabetical/numerical)
@@ -723,16 +727,17 @@ panl.type.R=solr.IntPointField
 #panl.suffix.R=suffix
 # This field can be configured as a range facet by setting the following
 # properties
-#panl.range.facet.w=true
-#panl.range.min.w=0
-#panl.range.max.w=100
-#panl.range.prefix.w=range_prefix
-#panl.range.infix.w=range_infix
-#panl.range.suffix.w=range_suffix
-#panl.range.min.value.w=min_value
-#panl.range.max.value.w=max_value
-#panl.range.min.wildcard.w=true
-#panl.range.max.wildcard.w=true
+#panl.range.facet.R=true
+#panl.range.min.R=0
+#panl.range.max.R=100
+#panl.range.prefix.R=range_prefix
+#panl.range.infix.R=range_infix
+#panl.range.suffix.R=range_suffix
+#panl.range.min.value.R=min_value
+#panl.range.max.value.R=max_value
+#panl.range.min.wildcard.R=true
+#panl.range.max.wildcard.R=true
+#panl.range.suppress.R=false
 # By default Solr will always return facet ordered by count descending (i.e.
 # The largest counts first) - uncomment the below line to return it in value
 # order (e.g. alphabetical/numerical)
@@ -755,16 +760,17 @@ panl.type.L=solr.IntPointField
 #panl.suffix.L=suffix
 # This field can be configured as a range facet by setting the following
 # properties
-#panl.range.facet.w=true
-#panl.range.min.w=0
-#panl.range.max.w=100
-#panl.range.prefix.w=range_prefix
-#panl.range.infix.w=range_infix
-#panl.range.suffix.w=range_suffix
-#panl.range.min.value.w=min_value
-#panl.range.max.value.w=max_value
-#panl.range.min.wildcard.w=true
-#panl.range.max.wildcard.w=true
+#panl.range.facet.L=true
+#panl.range.min.L=0
+#panl.range.max.L=100
+#panl.range.prefix.L=range_prefix
+#panl.range.infix.L=range_infix
+#panl.range.suffix.L=range_suffix
+#panl.range.min.value.L=min_value
+#panl.range.max.value.L=max_value
+#panl.range.min.wildcard.L=true
+#panl.range.max.wildcard.L=true
+#panl.range.suppress.L=false
 # By default Solr will always return facet ordered by count descending (i.e.
 # The largest counts first) - uncomment the below line to return it in value
 # order (e.g. alphabetical/numerical)

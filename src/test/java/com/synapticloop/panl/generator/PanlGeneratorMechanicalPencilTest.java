@@ -69,14 +69,20 @@ public class PanlGeneratorMechanicalPencilTest {
 	 * @throws IOException If there was an error reading the file
 	 */
 	private void assertFilesSame(String original, String generated) throws IOException {
-		String originalFileData = FileUtils.readFileToString(new File(original), StandardCharsets.UTF_8)
+		File originalFile = new File(original);
+		String originalFileData = FileUtils.readFileToString(originalFile, StandardCharsets.UTF_8)
 		                                   .replaceAll("(\r\n)", "\n");
-		String generatedFileData = FileUtils.readFileToString(new File(generated), StandardCharsets.UTF_8)
+		File generatedFile = new File(generated);
+		String generatedFileData = FileUtils.readFileToString(generatedFile, StandardCharsets.UTF_8)
 		                                    .replaceAll("(\r\n)", "\n");
 		String[] originalSplit = originalFileData.split("\n");
 		String[] generatedSplit = generatedFileData.split("\n");
 		if(originalSplit.length != generatedSplit.length) {
-			fail();
+			fail("Original file '" +
+					originalFile.getAbsolutePath() +
+					"' does not have the same number of lines as the generated file '" +
+					generatedFile.getAbsolutePath() +
+					"'.");
 		}
 
 		int i = 0;
