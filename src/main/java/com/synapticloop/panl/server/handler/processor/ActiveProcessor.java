@@ -501,14 +501,23 @@ public class ActiveProcessor extends Processor {
 					}
 				} else {
 					if (lpseField.getHasURIComponent()) {
-						uri.append(lpseField.getEncodedPanlValue(lpseToken))
-						   .append("/");
+						lpse.append(lpseCode);
 					} else {
-						if(!lpseComponentsAdded.contains(lpseComponent)) {
+						if (!lpseComponentsAdded.contains(lpseComponent)) {
 							lpse.append(lpseComponent);
 						}
 						lpseComponentsAdded.add(lpseComponent);
 					}
+
+//					if (lpseField.getHasURIComponent()) {
+//						uri.append(lpseField.getEncodedPanlValue(lpseToken))
+//						   .append("/");
+//					} else {
+//						if(!lpseComponentsAdded.contains(lpseComponent)) {
+//							lpse.append(lpseComponent);
+//						}
+//						lpseComponentsAdded.add(lpseComponent);
+//					}
 					// the current and previous are different
 					if (isOrSeparator) {
 						// the previous LPSE code is an or Separator - we don't know whether
