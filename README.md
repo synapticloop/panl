@@ -2,12 +2,9 @@
 
 <img src="src/docs/synapticloop-logo.png" alt="The Synapticloop logo" />
 
----
 <img src="src/main/resources/webapp/static/favicon.png" alt="The Synapticloop Panl Favicon" />&nbsp;anl&nbsp;Server
 
----
-
-> **_Rapidly get up and running with a fully featured, SEO friendly, keyword searchable, faceted search engine with an in-built, example search page to test it all out._**
+> **_Rapidly get up and running with a fully featured, SEO friendly, keyword searchable, faceted search engine with an in-built, search page to test it all out._**
 
 ---
 
@@ -33,9 +30,11 @@
 
 ---
 
-**Major branch releases:**
+`Latest release tag:` ![GitHub Tag](https://img.shields.io/github/v/tag/synapticloop/panl)
 
-Latest branch: `or-separator`
+`Latest release:` ![GitHub Release](https://img.shields.io/github/v/release/synapticloop/panl)
+
+**Major branch release status:**
 
 | BRANCH              | STATUS                                                                                                                                                                                                                                                                            | TYPE|
 |---------------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|-|
@@ -46,12 +45,6 @@ Latest branch: `or-separator`
 | `billowing-feather` | [![CircleCI](https://dl.circleci.com/status-badge/img/circleci/3Y1eqqe4mcvtSZuzJnQ3tJ/DyFKUm7c7AoLa1wHmRjAnf/tree/billowing-feather.svg?style=shield)](https://dl.circleci.com/status-badge/redirect/circleci/3Y1eqqe4mcvtSZuzJnQ3tJ/DyFKUm7c7AoLa1wHmRjAnf/tree/billowing-feather) |  Panl base release version 1.3.0                       |
 | `or-separator`      | [![CircleCI](https://dl.circleci.com/status-badge/img/circleci/3Y1eqqe4mcvtSZuzJnQ3tJ/DyFKUm7c7AoLa1wHmRjAnf/tree/or-separator.svg?style=shield)](https://dl.circleci.com/status-badge/redirect/circleci/3Y1eqqe4mcvtSZuzJnQ3tJ/DyFKUm7c7AoLa1wHmRjAnf/tree/or-separator)         |  Panl additional functionality|
 
-
-`Latest release tag:` ![GitHub Tag](https://img.shields.io/github/v/tag/synapticloop/panl)
-
-`Latest release:` ![GitHub Release](https://img.shields.io/github/v/release/synapticloop/panl)
-
----
 
 
 > We _always_ recommend that you use the most recently available release which contains bug fixes and new functionality and is generally backwards compatible.
@@ -66,10 +59,10 @@ Latest branch: `or-separator`
 
 ## Upgrading the Panl Server Release
 
-Panl is designed to be a drop in replacement for your current version.  Keep note of any breaking release, although backwards compatibility is always high on the list of features.
+Panl is designed to be a drop in replacement for your current version.  Although backwards compatibility is always the 
+highest priority, do keep an eye out in the release notes for any breaking features.
 
 Your existing configuration files should just work with the downloaded release package.
-
 
 ## Read the Documentation
 
