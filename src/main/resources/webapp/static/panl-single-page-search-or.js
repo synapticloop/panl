@@ -1,3 +1,27 @@
+/*
+ * Copyright (c) 2008-2025 synapticloop.
+ *
+ * https://github.com/synapticloop/panl
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to
+ * deal in the Software without restriction, including without limitation the
+ * rights to use, copy, modify, merge, publish, distribute, sublicense, and/or
+ * sell copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in
+ * all copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+ * FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
+ * IN THE SOFTWARE.
+ */
+
 var panlLpsePath = [];
 var panlObject = {};
 var currentCollection = "";
@@ -90,6 +114,7 @@ function setLpseValue(value, orderedLpseFacet) {
 		panlLpsePath[lpseOffset] = null;
 	} else {
 		panlLpsePath[lpseOffset] = {"lpseCode": orderedLpseFacet.panl_code};
+		// at this point we need to know whether this is an OR Separator
 		panlLpsePath[lpseOffset][value] = value;
 	}
 
@@ -112,36 +137,58 @@ function updateLpseValue(value, checked, orderedLpseFacet) {
 	updateSearchLinks();
 }
 
+/**
+ * Update the search links from the Panl values
+ */
 function updateSearchLinks() {
 	$("#panl-lpse-path").text("");
 
 	let lpsePath = "/";
 	let lpseCodePath = "";
 
-	// no go through the new value and then regen the lpse path
+	// no go through the new value and then regenerate the lpse path
+	let addedLpseOrSeparators = {};
+
 	for (const [i, panlPathValue] of panlLpsePath.entries()) {
 		if (panlPathValue !== undefined && panlPathValue !== null) {
 			if (Object.keys(panlPathValue).length > 1) {
 				let lpseCode = panlPathValue["lpseCode"];
+
+				let foundFirstOrSeparator = false;
+				let lpseOrderElement = panlObject.lpse_order[i];
+				if(lpseOrderElement.or_separator !== undefined) {
+					lpsePath = lpsePath + lpseOrderElement.or_separator;
+				}
+
 				for (let key in panlPathValue) {
 					if (panlPathValue.hasOwnProperty(key)) {
 						if (key !== "lpseCode") {
 							// at this point we need to work out ranges
-							if (panlObject.lpse_order[i]) {
-								var isRangeFacet = panlObject.lpse_order[i].is_range_facet;
+							if (lpseOrderElement) {
+								var isRangeFacet = lpseOrderElement.is_range_facet;
 								if (isRangeFacet) {
-									var hasInfix = panlObject.lpse_order[i].uris.has_infix;
+									var hasInfix = lpseOrderElement.uris.has_infix;
 									if (hasInfix) {
 										lpseCodePath = lpseCodePath + lpseCode + '-';
 									} else {
 										lpseCodePath = lpseCodePath + lpseCode + '+';
 									}
+								} else if(lpseOrderElement.or_separator !== undefined) {
+									if(addedLpseOrSeparators[lpseOrderElement.panl_code] === undefined) {
+										lpseCodePath = lpseCodePath + lpseCode;
+									}
+									addedLpseOrSeparators[lpseOrderElement.panl_code] = lpseOrderElement.panl_code
 								} else {
 									lpseCodePath = lpseCodePath + lpseCode;
 								}
 							}
 
-							lpsePath = lpsePath + key + "/"
+							// At this point we want to check the OR separator
+							if(lpseOrderElement.or_separator !== undefined) {
+								lpsePath = lpsePath + key;
+							} else {
+								lpsePath = lpsePath + key + "/";
+							}
 						}
 					}
 				}
@@ -188,7 +235,11 @@ function appendFacet(orderedLpseFacet) {
 		// OR facet
 		var returnHTML = "";
 		for (const value of orderedLpseFacet.values) {
-			returnHTML = returnHTML + "<input type=\"checkbox\" name=\"" + orderedLpseFacet.facet_name + "\" value=\"" + value.encoded + "\">&nbsp;" + value.value + "<br />";
+			if(orderedLpseFacet.or_separator !== undefined) {
+				returnHTML = returnHTML + "<input type=\"checkbox\" name=\"" + orderedLpseFacet.facet_name + "\" value=\"" + value.encoded_or + "\">&nbsp;" + value.value + "<br />";
+			} else {
+				returnHTML = returnHTML + "<input type=\"checkbox\" name=\"" + orderedLpseFacet.facet_name + "\" value=\"" + value.encoded + "\">&nbsp;" + value.value + "<br />";
+			}
 		}
 		return (returnHTML);
 	} else if (orderedLpseFacet.is_range_facet) {
