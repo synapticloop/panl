@@ -500,22 +500,22 @@ with the release files named `solr-panl-9-x.x.x` where `x.x.x` is the version nu
 
 ## 1.3.0 - fluffy stuff (codename `billowing-feather`) **UNDER DEVELOPMENT**
 
-- New Features
+- **New Features**
   - Added in lookahead query handler for Solr panl including panl results viewer lookahead
   - Added in `OR SEPARATOR` facets so that `OR` facets can be separated with a string and only have one LPSE code.
   - Added in `solr.numrows.maximum` property so that this will always be the limit to the number of results returned. 
 
 
-- Bug fixes
+- **Bug fixes**
   - Bug where Panl client will always look for the '`q`' parameter for the query, changed to ensure that the correct configured `panl.form.query.respondto` is used instead
   - Always reset the page to 1 if there is a `panl.form.query.respondto` URL parameter
 
 
-- Breaking Changes
+- **Breaking Changes**
     - **[BREAKING CHANGE]** Changed range facets LPSE codes from `w-w` to `w-` and `w+w` to `w+` (i.e. removed the trailing LPSE code)
 
 
-- Code Changes
+- **Code Changes**
   - Fixed the overriding query respond to parameter
   - Added in Testing for the Panl Generator and refactored how it is being done.
   - Refactored PanlFields for the generator to output better comments and helpful information rather than more comments than necessary
@@ -523,7 +523,7 @@ with the release files named `solr-panl-9-x.x.x` where `x.x.x` is the version nu
   - Updated the look and feel for the Panl Simple Results Viewer Web APp 
 
 
-- Documentation update
+- **Documentation update**
   - Added in keyword search integration and 'search within results' integration notes
   - Changed the `panl.form.query.respondto` documentation to point to `search` rather than the previously defined `q` to reduce confusion
   - General spelling and grammatical mistake updates
@@ -538,12 +538,12 @@ with the release files named `solr-panl-9-x.x.x` where `x.x.x` is the version nu
 
 ## 1.2.0 - more like this (codename `needy-phanton`) 
 
- - Bug fixes
+ - **Bug fixes**
    - Fixed JavaScript in Single Page Search results in-built web app to take into account range facets
    - Fixed serving in-built panl testing URLs when run from the script
 
 
- - Code changes
+ - **Code changes**
    - Retrieval of more facets functionality added: 
      - Added in `facet_limit` JSON key for retrieving more facet results
      - Added in handler for retrieving more facets for a specific search field
@@ -552,11 +552,11 @@ with the release files named `solr-panl-9-x.x.x` where `x.x.x` is the version nu
    - Moved log4j out of the jar file so that user's con configure their own logging
 
 
- - Breaking Changes - _(which is OK as nobody is using it at the moment :) )_
+ - **Breaking Changes** - _(which is OK as nobody is using it at the moment :) )_
    - Changed the single page search URL binding from `/panl-configuration/` to `/panl-single-page/` as it makes more sense
 
 
- - Documentation update
+ - **Documentation update**
    - General spelling and grammatical mistake updates 
    - Update to new functionality and configuration properties
    - Added in the `pagination` returned JSON Object implementation details
@@ -571,11 +571,11 @@ with the release files named `solr-panl-9-x.x.x` where `x.x.x` is the version nu
 
 ## 1.1.1 - the fly spray (codename `grizzled-pebble`)
 
- - Bug fixes
+ - **Bug fixes**
    - Fixed 'OR' facet `before` and `after` URL values in the JSON response where a range facet has already been selected
 
 
- - Code cleanup
+ - **Code cleanup**
    - Updated explanation for DATE Range and RANGE facets  
 
 [View the code for this release](https://github.com/synapticloop/panl/tree/1.1.1)
@@ -595,7 +595,7 @@ with the release files named `solr-panl-9-x.x.x` where `x.x.x` is the version nu
  - Suppress facet values for ranges, so that the user may only select from the range UI, and the individual range facet values do not appear 
 
 
- - Documentation update
+ - **Documentation update**
    - New documentation for additional features and functionality
    - Fixed general spelling and grammar errors
    - Updated mechanical pencils introductory dataset explanations
