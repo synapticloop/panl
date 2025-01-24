@@ -320,7 +320,7 @@ function addActiveFilters(activeObject, removeUri) {
 		active.append("<li><a href=\"" + panlResultsViewerUrl +
 				$("#collection").text() +
 				activeObject.query.remove_uri +
-				"\"><img class=\"remove\" src=\"/webapp/static/remove.png\"></a>&nbsp;" +
+				"\"><img class=\"remove\" src=\"/webapp/static/remove.png\" title=\"Remove this facet\"></a>&nbsp;" +
 				activeObject.query.value +
 				"</li><li><hr /></li>");
 	}
@@ -350,7 +350,7 @@ function addActiveFacets(facets) {
 		active.append("<li><a href=\"" + panlResultsViewerUrl +
 				$("#collection").text() +
 				facet.remove_uri +
-				"\"><img class=\"remove\" src=\"/webapp/static/remove.png\" /></a>&nbsp;" +
+				"\"><img class=\"remove\" src=\"/webapp/static/remove.png\" title=\"Remove this facet\"/></a>&nbsp;" +
 				decodePanl(facet.encoded) +
 				"</li>");
 
@@ -358,7 +358,7 @@ function addActiveFacets(facets) {
 			active.append("<li><a href=\"" + panlResultsViewerUrl +
 					$("#collection").text() +
 					facet.inverse_uri +
-					"\"><img class=\"invert\" src=\"/webapp/static/invert.png\" /></a>&nbsp;" +
+					"\"><img class=\"invert\" src=\"/webapp/static/invert.png\" title=\"Invert this boolean facet\"/></a>&nbsp;" +
 					decodePanl(facet.inverse_encoded) +
 					"</li>");
 		}
@@ -391,11 +391,11 @@ function addActiveSorts(sorts, removeUri) {
 		content += "<li><a href=\"" + panlResultsViewerUrl +
 				$("#collection").text() +
 				sort.remove_uri +
-				"\"><img class=\"remove\" src=\"/webapp/static/remove.png\" /></a>&nbsp;" +
+				"\"><img class=\"remove\" src=\"/webapp/static/remove.png\" title=\"Remove this sort order\"/></a>&nbsp;" +
 				"<a href=\"" + panlResultsViewerUrl +
 				$("#collection").text() +
 				sort.inverse_uri +
-				"\"><img class=\"invert\" src=\"/webapp/static/invert.png\" /> Change to " +
+				"\"><img class=\"invert\" src=\"/webapp/static/invert.png\" title=\"Invert this sort order\"/> Change to " +
 				(sort.is_descending ? "ASC" : "DESC")+
 				"</a>&nbsp;" +
 				"</li>";
@@ -407,7 +407,7 @@ function addActiveSorts(sorts, removeUri) {
 			panlResultsViewerUrl +
 			$("#collection").text() +
 			removeUri +
-			"\"><img class=\"remove\" src=\"/webapp/static/remove.png\" />Clear all sorting</a></li></ul>";
+			"\"><img class=\"remove\" src=\"/webapp/static/remove.png\" title=\"Clear all sorting\"/>Clear all sorting</a></li></ul>";
 		activesort.after(content);
 	}
 }
@@ -648,7 +648,7 @@ function generateFacetHTML(facet) {
 		facet.uris.before +
 		((facet.or_separator !== undefined) ? value.encoded_or : value.encoded) +
 		facet.uris.after +
-		"\"><img class=\"add\" src=\"/webapp/static/add.png\" alt=\"Add facet\"></a>&nbsp;" +
+		"\"><img class=\"add\" src=\"/webapp/static/add.png\" title=\"Add facet\"></a>&nbsp;" +
 		decodePanl(value.encoded);
 
 		if(!facet.is_or_facet) {

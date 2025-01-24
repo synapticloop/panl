@@ -395,7 +395,79 @@ bin/solr start -cloud -p 8983 -s "example/cloud/node1/solr"
 bin/solr start -cloud -p 7574 -s "example/cloud/node2/solr" -z localhost:9983
 ```
 
-# Building The Distribution
+# Build Related Tasks
+
+## Updating the Version Number
+
+Gradle looks in the file `src/main/resources/gradle.properties` for the Panl release version number and the Solr version 
+number that Panl will integrate with.
+
+The two properties are:
+
+- `panl.version` - the release version
+- `panl.solr.version` - the Solr version for integration
+
+Both of these properties are used to generate the distributable file versions and are used within the code when 
+generating startup output.
+
+## Testing the Code
+
+There are two test suites 
+
+1. The regular Java unit tests
+2. The integration tests
+
+**Unit tests** 
+
+### _Windows_
+
+```shell
+gradlew.bat test
+```
+
+### _*NIX_
+
+```shell
+./gradlew test
+```
+
+**Integration tests**
+
+> **Note:**  A Solr server will need to be running, available, and setup with the appropriate collections indexed for 
+> this to work.
+
+### _Windows_
+
+```shell
+gradlew.bat integrationTest
+```
+
+### _*NIX_
+
+```shell
+./gradlew integrationTest
+```
+
+## Building the Code
+
+This will build, test, and assemble the distributable
+
+### _Windows_
+
+```shell
+gradlew.bat build
+```
+
+### _*NIX_
+
+```shell
+./gradlew build
+```
+
+
+## Assembling the Distributable
+
+This will assemble the distribution
 
 ### _Windows_
 
