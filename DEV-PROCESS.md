@@ -108,6 +108,8 @@ Create a new release which matches the `src/main/resources/gradle.properties` fi
 
 This is done through the github releases page: [Github Releases](https://github.com/synapticloop/panl/releases).
 
+This will also tag the release
+
 The notes should be the same as those as are in the `README.md` file.
 
 Upload the `.zip` and `.tar` files 
@@ -117,6 +119,16 @@ Upload pdf of the book
 Release
 
 ## 5. Update the documentation
+
+Remember
+
+ - Page 1 - update the Version
+ - Update the `Additional Functionality in the Pipeline` (page 320 ish)
+ - Update the table of contents (including changing the font of the table of contents to Libre Baskerville)
+
+The book can be found [Getting Started With Panl](https://docs.google.com/document/d/1r2LVM0KGUI7NWdMVm4TE0e7SOS2qF2Mk6TptLoL1BcU/edit?tab=t.0) 
+although access must be granted to individuals wishing to edit the documentation (Google Drive based document).
+
 
 1. Save the book as `Web-page/html`
 2. Checkout the `ghpages` branch
