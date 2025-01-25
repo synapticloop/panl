@@ -2,6 +2,7 @@ plugins {
 	id 'java'
 	id 'application'
 	id 'jacoco'
+	id "synapticloop.copyrightr" version "1.3.1"
 }
 
 // load the properties for versioning - not that this is also used by the Panl
@@ -153,5 +154,27 @@ tasks.register('integrationTest', Test) {
 
 jacocoTestReport {
 	dependsOn test
+}
+
+copyrightr {
+	dryRun = false
+	copyrightHolder = "synapticloop"
+	includes = [
+			"src/**/*.java",
+			"src/**/*.js"
+	]
+
+	excludes = [
+			"src/test/java/**/*.java",
+			"src/integration/java/**/*.java",
+			"**/*.class",
+			"**/package-info.java"
+	]
+
+	onlyReplaceFirst = true
+
+	yearSeparator = " - "
+
+	failOnMissing = false
 }
 

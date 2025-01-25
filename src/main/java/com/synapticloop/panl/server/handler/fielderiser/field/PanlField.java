@@ -1,7 +1,7 @@
 package com.synapticloop.panl.server.handler.fielderiser.field;
 
 /*
- * Copyright (c) 2008-2024 synapticloop.
+ * Copyright (c) 2008-2025 synapticloop.
  *
  * https://github.com/synapticloop/panl
  *
