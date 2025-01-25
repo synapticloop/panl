@@ -168,7 +168,10 @@ copyrightr {
 			"src/test/java/**/*.java",
 			"src/integration/java/**/*.java",
 			"**/*.class",
-			"**/package-info.java"
+			"**/package-info.java",
+			"**/LpseTokeniser.java",
+			"**/jquery*.*",
+			"**/nouislider.min.js"
 	]
 
 	onlyReplaceFirst = true
