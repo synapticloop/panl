@@ -23,20 +23,33 @@ java {
 }
 
 sourceSets {
-	integrationTest {
+	testIntegration {
 		java {
 			compileClasspath += main.output + test.output
 			runtimeClasspath += main.output + test.output
-			srcDir file('src/integration/java')
+			srcDir file('src/testintegration/java')
+			resources.srcDir file('src/testintegration/resources')
 		}
-		resources.srcDir file('src/integration/resources')
+	}
+
+	testIntegrationSpider {
+		java {
+			compileClasspath += main.output + test.output
+			runtimeClasspath += main.output + test.output
+			srcDir file('src/testintegrationspider/java')
+			resources.srcDir file('src/testintegrationspider/resources')
+		}
 	}
 }
 
 configurations {
-	integrationTestCompile.extendsFrom testCompile
-	integrationTestRuntime.extendsFrom testRuntime
-	integrationTestRuntime.extendsFrom runtime
+	testIntegrationCompile.extendsFrom testCompile
+	testIntegrationRuntime.extendsFrom testRuntime
+	testIntegrationRuntime.extendsFrom runtime
+
+	testIntegrationSpiderCompile.extendsFrom testCompile
+	testIntegrationSpiderRuntime.extendsFrom testRuntime
+	testIntegrationSpiderRuntime.extendsFrom runtime
 }
 
 dependencies {
@@ -68,11 +81,6 @@ dependencies {
 	testImplementation 'com.fasterxml.jackson.core:jackson-databind:2.17.1'
 	testImplementation 'commons-codec:commons-codec:1.17.1'
 
-// filesystem parsing for a test case
-//	testImplementation 'org.apache.tika:tika-core:3.0.0'
-//	testImplementation 'org.apache.tika:tika-parsers-standard-package:3.0.0'
-
-
 	// for the panl editor
 	implementation "com.formdev:flatlaf:3.5.1"
 	implementation 'org.apache.commons:commons-lang3:3.17.0'
@@ -83,26 +91,52 @@ dependencies {
 	// integration testing
 	//
 	// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-	integrationTestImplementation platform('org.junit:junit-bom:5.9.1')
-	integrationTestImplementation 'org.junit.jupiter:junit-jupiter'
-	integrationTestImplementation 'org.mockito:mockito-core:5.12.0'
-	integrationTestImplementation 'com.fasterxml.jackson.core:jackson-databind:2.17.1'
-	integrationTestImplementation 'commons-io:commons-io:2.16.1'
-	integrationTestImplementation 'org.json:json:20240303'
+	testIntegrationImplementation platform('org.junit:junit-bom:5.9.1')
+	testIntegrationImplementation 'org.junit.jupiter:junit-jupiter'
+	testIntegrationImplementation 'org.mockito:mockito-core:5.12.0'
+	testIntegrationImplementation 'com.fasterxml.jackson.core:jackson-databind:2.17.1'
+	testIntegrationImplementation 'commons-io:commons-io:2.16.1'
+	testIntegrationImplementation 'org.json:json:20240303'
 	// HTTP server
-	integrationTestImplementation 'org.eclipse.jetty.http2:http2-server:10.0.20'
-	integrationTestImplementation 'org.eclipse.jetty:jetty-servlet:10.0.20'
+	testIntegrationImplementation 'org.eclipse.jetty.http2:http2-server:10.0.20'
+	testIntegrationImplementation 'org.eclipse.jetty:jetty-servlet:10.0.20'
 
 	// logging
-	integrationTestImplementation 'org.slf4j:slf4j-api:2.0.13'
-	integrationTestImplementation 'org.apache.logging.log4j:log4j-core:2.23.1'
-	integrationTestImplementation 'org.apache.logging.log4j:log4j-api:2.23.1'
-	integrationTestImplementation 'org.apache.logging.log4j:log4j-slf4j2-impl:2.23.1'
+	testIntegrationImplementation 'org.slf4j:slf4j-api:2.0.13'
+	testIntegrationImplementation 'org.apache.logging.log4j:log4j-core:2.23.1'
+	testIntegrationImplementation 'org.apache.logging.log4j:log4j-api:2.23.1'
+	testIntegrationImplementation 'org.apache.logging.log4j:log4j-slf4j2-impl:2.23.1'
 
 
 	// additional utilities
-	integrationTestImplementation 'commons-io:commons-io:2.16.1'
-	integrationTestImplementation 'org.json:json:20240303'
+	testIntegrationImplementation 'commons-io:commons-io:2.16.1'
+	testIntegrationImplementation 'org.json:json:20240303'
+
+	// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+	//
+	// Site Spidering
+	//
+	// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+	testIntegrationSpiderImplementation platform('org.junit:junit-bom:5.9.1')
+	testIntegrationSpiderImplementation 'org.junit.jupiter:junit-jupiter'
+	testIntegrationSpiderImplementation 'org.mockito:mockito-core:5.12.0'
+	testIntegrationSpiderImplementation 'com.fasterxml.jackson.core:jackson-databind:2.17.1'
+	testIntegrationSpiderImplementation 'commons-io:commons-io:2.16.1'
+	testIntegrationSpiderImplementation 'org.json:json:20240303'
+	// HTTP server
+	testIntegrationSpiderImplementation 'org.eclipse.jetty.http2:http2-server:10.0.20'
+	testIntegrationSpiderImplementation 'org.eclipse.jetty:jetty-servlet:10.0.20'
+
+	// logging
+	testIntegrationSpiderImplementation 'org.slf4j:slf4j-api:2.0.13'
+	testIntegrationSpiderImplementation 'org.apache.logging.log4j:log4j-core:2.23.1'
+	testIntegrationSpiderImplementation 'org.apache.logging.log4j:log4j-api:2.23.1'
+	testIntegrationSpiderImplementation 'org.apache.logging.log4j:log4j-slf4j2-impl:2.23.1'
+
+
+	// additional utilities
+	testIntegrationSpiderImplementation 'commons-io:commons-io:2.16.1'
+	testIntegrationSpiderImplementation 'org.json:json:20240303'
 }
 
 application {
@@ -144,10 +178,18 @@ test {
 	finalizedBy jacocoTestReport
 }
 
-tasks.register('integrationTest', Test) {
+tasks.register('testIntegration', Test) {
 	useJUnitPlatform()
-	testClassesDirs = sourceSets.integrationTest.output.classesDirs
-	classpath = sourceSets.integrationTest.runtimeClasspath
+	testClassesDirs = sourceSets.testIntegration.output.classesDirs
+	classpath = sourceSets.testIntegration.runtimeClasspath
+	classpath += sourceSets.main.runtimeClasspath
+	outputs.upToDateWhen { false }
+}
+
+tasks.register('testIntegrationSpider', Test) {
+	useJUnitPlatform()
+	testClassesDirs = sourceSets.testIntegrationSpider.output.classesDirs
+	classpath = sourceSets.testIntegrationSpider.runtimeClasspath
 	classpath += sourceSets.main.runtimeClasspath
 	outputs.upToDateWhen { false }
 }
@@ -167,6 +209,7 @@ copyrightr {
 	excludes = [
 			"src/test/java/**/*.java",
 			"src/integration/java/**/*.java",
+			"src/testintegrationspider/java/**/*.java",
 			"**/*.class",
 			"**/package-info.java",
 			"**/LpseTokeniser.java",

@@ -23,9 +23,17 @@ See the file `src/main/resources/gradle.properties` and update the following pro
 
 ### b. Run all tests
 
-This includes both the unit tests `./gradlew test` and the integration tests `./gradlew integrationTest`
+This includes both the unit tests `./gradlew test` and the integration tests `./gradlew testIntegration`
 
-### c. Update the README file
+### c. Run the site spider integration tests
+
+This will take a bit of time as it tests a lot of live URLs
+
+```./gradlew testIntegrationSpider```
+
+This may take quite some time....
+
+### d. Update the README file
 
 The following parts need to be updated:
 
@@ -37,7 +45,7 @@ The following parts need to be updated:
 3. Update the In-built Panl web app images (see `src/main/docs` for images) and the descriptions 
 4. Add in the section for Version History with all details - use previous versions as a template
 
-### d. Don't forget the `Getting Started With Synapticloop Panl` 
+### e. Don't forget the `Getting Started With Synapticloop Panl` 
 
 Update this as you you go along.
 
