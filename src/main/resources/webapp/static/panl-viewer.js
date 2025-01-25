@@ -109,7 +109,11 @@ function panlSearch() {
 	$.ajax({
 		url: panlQueryUrl,
 		success: function (panlJsonData) {
+			$("#response_code").text("200");
 			populatePanlResults(panlJsonData);
+		},
+		error: function(request, status, errorThrown) {
+			$("#response_code").text(status + " (" + errorThrown + ")");
 		}
 	});
 }

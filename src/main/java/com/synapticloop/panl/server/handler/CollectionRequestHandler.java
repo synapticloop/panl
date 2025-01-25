@@ -338,6 +338,7 @@ public class CollectionRequestHandler {
 			final QueryResponse solrQueryResponse = solrClient.query(this.solrCollection, solrQuery);
 
 			long sendAnReceiveNanos = System.nanoTime() - startNanos;
+
 			return (parseResponse(
 				lpseTokens,
 				solrQueryResponse,
