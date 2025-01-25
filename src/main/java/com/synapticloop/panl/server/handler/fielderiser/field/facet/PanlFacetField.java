@@ -30,6 +30,7 @@ import com.synapticloop.panl.server.handler.properties.CollectionProperties;
 import com.synapticloop.panl.server.handler.tokeniser.LpseTokeniser;
 import com.synapticloop.panl.server.handler.tokeniser.token.facet.FacetLpseToken;
 import com.synapticloop.panl.server.handler.tokeniser.token.LpseToken;
+import com.synapticloop.panl.server.handler.tokeniser.token.facet.OrFacetLpseToken;
 import org.apache.solr.client.solrj.SolrQuery;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -99,6 +100,17 @@ public class PanlFacetField extends BasePrefixSuffixField {
 
 	@Override
 	public List<LpseToken> instantiateTokens(CollectionProperties collectionProperties, String lpseCode, String query, StringTokenizer valueTokeniser, LpseTokeniser lpseTokeniser) {
-		return(List.of(new FacetLpseToken(collectionProperties, this.lpseCode, lpseTokeniser, valueTokeniser)));
+		if (this.valueSeparator != null) {
+			// we have an or separator
+			return (FacetLpseToken.getSeparatedLpseTokens(
+					valueSeparator,
+					collectionProperties,
+					this.lpseCode,
+					lpseTokeniser,
+					valueTokeniser));
+
+		} else {
+			return(List.of(new FacetLpseToken(collectionProperties, this.lpseCode, lpseTokeniser, valueTokeniser)));
+		}
 	}
 }

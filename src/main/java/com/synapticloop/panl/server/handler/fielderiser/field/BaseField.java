@@ -455,15 +455,30 @@ public abstract class BaseField {
 	public String getURIPath(Map<String, List<LpseToken>> panlTokenMap, CollectionProperties collectionProperties) {
 		StringBuilder sb = new StringBuilder();
 		if (panlTokenMap.containsKey(lpseCode)) {
-			for (LpseToken lpseToken : panlTokenMap.get(lpseCode)) {
-				if (lpseToken.getIsValid()) {
-					sb.append(getEncodedPanlValue(lpseToken));
-					sb.append("/");
+			if (this.valueSeparator != null) {
+				sb.append(URLEncoder.encode(getValuePrefix(), StandardCharsets.UTF_8));
+				boolean isFirst = true;
+				for (LpseToken lpseToken : panlTokenMap.get(lpseCode)) {
+					if (!isFirst) {
+						sb.append(URLEncoder.encode(getValueSeparator(), StandardCharsets.UTF_8));
+					}
+					isFirst = false;
+					sb.append(URLEncoder.encode(lpseToken.getValue(), StandardCharsets.UTF_8));
+				}
+				sb.append(URLEncoder.encode(getValueSuffix(), StandardCharsets.UTF_8));
+				sb.append("/");
+			} else {
+				for (LpseToken lpseToken : panlTokenMap.get(lpseCode)) {
+					if (lpseToken.getIsValid()) {
+						sb.append(getEncodedPanlValue(lpseToken));
+						sb.append("/");
+					}
 				}
 			}
 		}
 		return (sb.toString());
 	}
+
 
 	/**
 	 * <p>Get the LPSE code for the LPSE URI path from the field.</p>
@@ -532,11 +547,34 @@ public abstract class BaseField {
 	 */
 	public String getCanonicalUriPath(Map<String, List<LpseToken>> panlTokenMap,
 			CollectionProperties collectionProperties) {
+		if (this.valueSeparator != null) {
+			if (panlTokenMap.containsKey(lpseCode)) {
+				StringBuilder stringBuilder = new StringBuilder(getValuePrefix());
+				boolean isFirst = true;
+				for (LpseToken lpseToken : panlTokenMap.get(lpseCode)) {
+					if (!isFirst) {
+						stringBuilder.append(getValueSeparator());
+					}
+					isFirst = false;
+					stringBuilder.append(lpseToken.getValue());
+				}
+				stringBuilder.append(getValueSuffix());
+				return (URLEncoder.encode(stringBuilder.toString(), java.nio.charset.StandardCharsets.UTF_8) + "/");
+			}
+		}
+
 		return (getURIPath(panlTokenMap, collectionProperties));
 	}
 
 	public String getCanonicalLpseCode(Map<String, List<LpseToken>> panlTokenMap,
 			CollectionProperties collectionProperties) {
+		if (this.valueSeparator != null) {
+			if (panlTokenMap.containsKey(lpseCode)) {
+				// for or separators, there is only ever one lpse code
+				return (lpseCode);
+			}
+		}
+
 		return (getLpseCode(panlTokenMap, collectionProperties));
 	}
 

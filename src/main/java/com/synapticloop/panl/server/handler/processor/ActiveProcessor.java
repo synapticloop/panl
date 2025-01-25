@@ -220,7 +220,7 @@ public class ActiveProcessor extends Processor {
 						// the previous LPSE code is an or separator, we only need to add
 						// the value, with the OR SEPARATOR
 						uri.append(
-								URLEncoder.encode(((PanlOrFacetField) lpseField).getValueSeparator() + lpseToken.getValue(),
+								URLEncoder.encode(lpseField.getValueSeparator() + lpseToken.getValue(),
 										StandardCharsets.UTF_8));
 						previousValueSuffix = lpseField.getValueSuffix();
 					} else {
@@ -351,7 +351,7 @@ public class ActiveProcessor extends Processor {
 						// the previous LPSE code has a multivalue separator, we only need
 						// to add the value, with the value SEPARATOR
 						uri.append(
-								URLEncoder.encode(((PanlOrFacetField) lpseField).getValueSeparator() + lpseToken.getValue(),
+								URLEncoder.encode(lpseField.getValueSeparator() + lpseToken.getValue(),
 										StandardCharsets.UTF_8));
 						previousValueSuffix = lpseField.getValueSuffix();
 					} else {
@@ -481,7 +481,7 @@ public class ActiveProcessor extends Processor {
 						// the previous LPSE code is an or separator, we only need to add
 						// the value, with the OR SEPARATOR
 						uri.append(
-								URLEncoder.encode(((PanlOrFacetField) lpseField).getValueSeparator() + lpseToken.getValue(),
+								URLEncoder.encode(lpseField.getValueSeparator() + lpseToken.getValue(),
 										StandardCharsets.UTF_8));
 						previousValueSuffix = lpseField.getValueSuffix();
 					} else {

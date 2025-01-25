@@ -169,7 +169,7 @@ public class RangeFacetLpseToken extends LpseToken {
 	@Override public String explain() {
 		return ("PANL " +
 				(this.isValid ? "[  VALID  ]" : "[ INVALID ]") +
-				" <facet (RANGE)>   LPSE code '" +
+				" <facet (RANGE)>    LPSE code '" +
 				this.lpseCode +
 				"' (solr field '" +
 				this.solrField +

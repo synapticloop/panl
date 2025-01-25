@@ -25,15 +25,17 @@ package com.synapticloop.panl.server.handler.fielderiser.field;
  */
 
 import com.synapticloop.panl.exception.PanlServerException;
+import com.synapticloop.panl.server.handler.properties.CollectionProperties;
 import com.synapticloop.panl.server.handler.tokeniser.token.LpseToken;
 import org.json.JSONObject;
 
 import java.net.URLDecoder;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Properties;
+import java.util.*;
+
+import static com.synapticloop.panl.server.handler.processor.Processor.*;
+import static com.synapticloop.panl.server.handler.processor.Processor.FORWARD_SLASH;
 
 /**
  * <p>The abstract <code>BasePrefixSuffixField</code> is the parent object for
@@ -290,4 +292,151 @@ public abstract class BasePrefixSuffixField extends BaseField {
 
 		return (explanations);
 	}
+
+	@Override
+	protected JSONObject getAdditionURIObject(
+			CollectionProperties collectionProperties,
+			BaseField lpseField,
+			Map<String, List<LpseToken>> panlTokenMap) {
+
+		JSONObject additionObject = new JSONObject();
+
+		StringBuilder lpseUri = new StringBuilder(FORWARD_SLASH);
+		StringBuilder lpseUriBefore = new StringBuilder();
+		StringBuilder lpseUriCode = new StringBuilder();
+
+		Map<String, Boolean> lpseCodeMap = new HashMap<>();
+
+		for(BaseField baseField : collectionProperties.getLpseFields()) {
+			// we need to add in any other token values in the correct order
+			String orderedLpseCode = baseField.getLpseCode();
+
+			if (orderedLpseCode.equals(this.lpseCode)) {
+				// we have found the current LPSE code, so reset the URI and add it to
+				// the after
+				if (valueSeparator != null) {
+					lpseUri.append(getMultivalueURIPathStart(panlTokenMap));
+				} else {
+					lpseUri.append(baseField.getURIPath(panlTokenMap, collectionProperties));
+				}
+
+				lpseUriBefore.append(lpseUri);
+				lpseUri.setLength(0);
+				if (valueSeparator != null) {
+					lpseUri.append(getMultiValueURIPathEnd());
+					lpseUri.append("/");
+				}
+
+				if(collectionProperties.getIsMultiValuedSeparatorFacetField(this.lpseCode)) {
+					if (!lpseCodeMap.containsKey(this.lpseCode)) {
+						lpseUriCode.append(this.lpseCode);
+					}
+					lpseCodeMap.put(this.lpseCode, true);
+				} else {
+					lpseUriCode.append(baseField.getLpseCode(panlTokenMap, collectionProperties));
+					lpseUriCode.append(this.lpseCode);
+				}
+
+			} else {
+				// if we don't have a current token, just carry on
+				if (!panlTokenMap.containsKey(orderedLpseCode)) {
+					continue;
+				}
+
+				// normally
+				lpseUri.append(baseField.getURIPath(panlTokenMap, collectionProperties));
+				int numTokens = panlTokenMap.get(orderedLpseCode).size();
+				if (numTokens == 1) {
+					// if we have a range facet - we need to make sure that we are
+					// encoding it correctly there can only be one range token for the
+					// panl field (no over-lapping ranges, or distinct ranges)
+
+					// if it is not a range facet - then this won't do any harm and is a
+					// better implementation
+					lpseUriCode.append(baseField.getLpseCode(panlTokenMap.get(orderedLpseCode).get(0), collectionProperties));
+				} else {
+
+					// check for or separators...
+					if(collectionProperties.getIsMultiValuedSeparatorFacetField(baseField.getLpseCode())) {
+						lpseUriCode.append(baseField.getLpseCode());
+					} else {
+						// just replace it with the correct number of LPSE codes
+						if(!baseField.getHasURIComponent()) {
+							lpseUriCode.append(baseField.getResetLpseCode(panlTokenMap, collectionProperties));
+						} else {
+							lpseUriCode.append(new String(new char[numTokens]).replace("\0", baseField.getLpseCode()));
+						}
+					}
+				}
+			}
+		}
+
+		additionObject.put(JSON_KEY_BEFORE, lpseUriBefore.toString());
+
+		// if we have an or separator, we have already added the forward slash
+		if (valueSeparator != null) {
+			additionObject.put(JSON_KEY_AFTER, lpseUri.toString() + lpseUriCode + FORWARD_SLASH);
+		} else {
+			additionObject.put(JSON_KEY_AFTER, FORWARD_SLASH + lpseUri + lpseUriCode + FORWARD_SLASH);
+		}
+
+		return (additionObject);
+	}
+
+	/**
+	 * <p>Get the Start of the OR URI path for this field</p>
+	 *
+	 * @param panlTokenMap The token map with the LPSe codes and values
+	 *
+	 * @return The URI path
+	 */
+	private String getMultivalueURIPathStart(Map<String, List<LpseToken>> panlTokenMap) {
+		StringBuilder sb = new StringBuilder();
+
+		if (valueSeparator != null) {
+			if (hasValuePrefix) {
+				sb.append(URLEncoder.encode(valuePrefix, StandardCharsets.UTF_8));
+			}
+		}
+
+		if (panlTokenMap.containsKey(lpseCode)) {
+			if (valueSeparator != null) {
+				List<String> validValues = new ArrayList<>();
+
+				for(LpseToken lpseToken : panlTokenMap.get(lpseCode)) {
+					if (lpseToken.getIsValid() && lpseToken.getValue() != null) {
+						validValues.add(lpseToken.getValue());
+					}
+				}
+
+				if (!validValues.isEmpty()) {
+					for(String validValue : validValues) {
+						sb.append(URLEncoder.encode(validValue, StandardCharsets.UTF_8));
+						sb.append(URLEncoder.encode(valueSeparator, StandardCharsets.UTF_8));
+					}
+				}
+			} else {
+				for(LpseToken lpseToken : panlTokenMap.get(lpseCode)) {
+					if (lpseToken.getIsValid()) {
+						sb.append(getEncodedPanlValue(lpseToken));
+						sb.append("/");
+					}
+				}
+				return (sb.toString());
+			}
+		}
+
+		return (sb.toString());
+	}
+
+	private String getMultiValueURIPathEnd() {
+		StringBuilder sb = new StringBuilder();
+		if (valueSeparator != null) {
+			if (hasValueSuffix) {
+				sb.append(URLEncoder.encode(valueSuffix, StandardCharsets.UTF_8));
+			}
+		}
+		return (sb.toString());
+	}
+
 }

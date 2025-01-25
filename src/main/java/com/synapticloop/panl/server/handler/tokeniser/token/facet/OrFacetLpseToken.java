@@ -24,7 +24,6 @@ package com.synapticloop.panl.server.handler.tokeniser.token.facet;
  * IN THE SOFTWARE.
  */
 
-import com.synapticloop.panl.server.handler.fielderiser.field.facet.PanlBooleanFacetField;
 import com.synapticloop.panl.server.handler.fielderiser.field.facet.PanlOrFacetField;
 import com.synapticloop.panl.server.handler.properties.CollectionProperties;
 import com.synapticloop.panl.server.handler.tokeniser.LpseTokeniser;
@@ -38,7 +37,7 @@ public class OrFacetLpseToken extends LpseToken {
 	public static final String TOKEN_TYPE = "facet";
 
 	private String solrField = null;
-	private boolean hasOrSeparator = false;
+	private boolean hasMultivalueSeparator = false;
 
 	public OrFacetLpseToken(
 				CollectionProperties collectionProperties,
@@ -82,25 +81,34 @@ public class OrFacetLpseToken extends LpseToken {
 		}
 	}
 
-	public OrFacetLpseToken(OrFacetLpseToken originalOrFacetToken, String value, boolean hasOrSeparator) {
+	public OrFacetLpseToken(OrFacetLpseToken originalOrFacetToken, String value, boolean hasMultivalueSeparator) {
 		// we are not going to need the collection properties
 		super(originalOrFacetToken.lpseCode, null);
 		this.originalValue = originalOrFacetToken.originalValue;
 		this.solrField = originalOrFacetToken.solrField;
 		this.value = value;
 		this.isValid = originalOrFacetToken.isValid;
-		this.hasOrSeparator = hasOrSeparator;
+		this.hasMultivalueSeparator = hasMultivalueSeparator;
 	}
 
-	public static List<LpseToken> getSeparatedLpseTokens(String orSeparator, CollectionProperties collectionProperties,
-				String lpseCode, LpseTokeniser lpseTokeniser, StringTokenizer valueTokeniser) {
-		OrFacetLpseToken orFacetLpseToken = new OrFacetLpseToken(collectionProperties, lpseCode, lpseTokeniser,
-					valueTokeniser);
+	public static List<LpseToken> getSeparatedLpseTokens(
+			String valueSeparator,
+			CollectionProperties collectionProperties,
+			String lpseCode,
+			LpseTokeniser lpseTokeniser,
+			StringTokenizer valueTokeniser) {
+
+		OrFacetLpseToken orFacetLpseToken = new OrFacetLpseToken(
+				collectionProperties,
+				lpseCode,
+				lpseTokeniser,
+				valueTokeniser);
+
 		String values = orFacetLpseToken.getValue();
 		// the value will have the separator value
 		List<LpseToken> lpseTokens = new ArrayList<>();
 		if (null != values) {
-			for(String value : values.split(orSeparator)) {
+			for(String value : values.split(valueSeparator)) {
 				lpseTokens.add(new OrFacetLpseToken(orFacetLpseToken, value, true));
 			}
 		}
@@ -110,7 +118,7 @@ public class OrFacetLpseToken extends LpseToken {
 	@Override public String explain() {
 		return ("PANL " +
 						(this.isValid ? "[  VALID  ]" : "[ INVALID ]") +
-						(this.hasOrSeparator ? " <facet (OR SEP)>  LPSE code '" : " <facet (OR)>      LPSE code '") +
+						(this.hasMultivalueSeparator ? " <facet (OR SEP)>   LPSE code '" : " <facet (OR)>       LPSE code '") +
 						this.lpseCode +
 						"' (solr field '" +
 						this.solrField +

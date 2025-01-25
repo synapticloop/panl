@@ -55,7 +55,7 @@ public class PanlOrFacetField extends PanlFacetField {
 	protected boolean isAlwaysOr = false;
 
 	public PanlOrFacetField(String lpseCode, String propertyKey, Properties properties, String solrCollection,
-				String panlCollectionUri, int lpseLength) throws PanlServerException {
+			String panlCollectionUri, int lpseLength) throws PanlServerException {
 		super(lpseCode, propertyKey, properties, solrCollection, panlCollectionUri, lpseLength);
 
 		this.isAlwaysOr = properties.getProperty(PROPERTY_KEY_PANL_OR_ALWAYS + lpseCode, "false").equalsIgnoreCase("true");
@@ -65,7 +65,7 @@ public class PanlOrFacetField extends PanlFacetField {
 	@Override public List<String> explainAdditional() {
 		List<String> explanations = new ArrayList<>(super.explainAdditional());
 		explanations.add(
-					"Is an OR facet which will allow multiple selections of this facet, consequently increasing the number of results.");
+				"Is an OR facet which will allow multiple selections of this facet, consequently increasing the number of results.");
 		return (explanations);
 	}
 
@@ -79,22 +79,22 @@ public class PanlOrFacetField extends PanlFacetField {
 			OrFacetLpseToken facetLpseToken = (OrFacetLpseToken) lpseTokenList.get(0);
 
 			solrQuery.addFilterQuery(
-						facetLpseToken.getSolrField() +
-									":\"" +
-									facetLpseToken.getValue() +
-									"\"");
+					facetLpseToken.getSolrField() +
+							":\"" +
+							facetLpseToken.getValue() +
+							"\"");
 			return;
 		}
 
 		StringBuilder stringBuilder = new StringBuilder();
 		boolean isFirst = true;
 		// at this point, we are going through the OR filters
-		for(LpseToken lpseToken : lpseTokenList) {
+		for (LpseToken lpseToken : lpseTokenList) {
 			OrFacetLpseToken orFacetLpseToken = (OrFacetLpseToken) lpseToken;
 			if (isFirst) {
 				stringBuilder
-							.append(orFacetLpseToken.getSolrField())
-							.append(":(");
+						.append(orFacetLpseToken.getSolrField())
+						.append(":(");
 			}
 
 			if (!isFirst) {
@@ -102,9 +102,9 @@ public class PanlOrFacetField extends PanlFacetField {
 			}
 
 			stringBuilder
-						.append("\"")
-						.append(orFacetLpseToken.getValue())
-						.append("\"");
+					.append("\"")
+					.append(orFacetLpseToken.getValue())
+					.append("\"");
 
 			isFirst = false;
 		}
@@ -135,24 +135,24 @@ public class PanlOrFacetField extends PanlFacetField {
 	 * @return Whether any values were appended
 	 */
 	@Override public boolean appendAvailableValues(
-				JSONObject facetObject,
-				CollectionProperties collectionProperties,
-				Map<String, List<LpseToken>> panlTokenMap,
-				Set<String> existingLpseValues,
-				List<FacetField.Count> facetCountValues,
-				long numFound,
-				boolean numFoundExact) {
+			JSONObject facetObject,
+			CollectionProperties collectionProperties,
+			Map<String, List<LpseToken>> panlTokenMap,
+			Set<String> existingLpseValues,
+			List<FacetField.Count> facetCountValues,
+			long numFound,
+			boolean numFoundExact) {
 
 		JSONArray facetValueArrays = new JSONArray();
 
 		// if we currently have the facet value, don't do anything
 		Set<String> currentValueSet = new HashSet<>();
-		for(LpseToken lpseToken : panlTokenMap.getOrDefault(this.lpseCode, new ArrayList<>())) {
+		for (LpseToken lpseToken : panlTokenMap.getOrDefault(this.lpseCode, new ArrayList<>())) {
 			currentValueSet.add(lpseToken.getValue());
 		}
 
 
-		for(FacetField.Count value : facetCountValues) {
+		for (FacetField.Count value : facetCountValues) {
 			boolean shouldAdd = true;
 			// at this point - we need to see whether we already have the 'value'
 			// as a facet - as there is no need to have it again
@@ -167,8 +167,8 @@ public class PanlOrFacetField extends PanlFacetField {
 			// the number of the count of the facet - then we may not need to
 			// include it
 			if (!panlIncludeSameNumberFacets &&
-						    numFound == value.getCount() &&
-						    numFoundExact) {
+					numFound == value.getCount() &&
+					numFoundExact) {
 				shouldAdd = false;
 			}
 
@@ -190,174 +190,15 @@ public class PanlOrFacetField extends PanlFacetField {
 			facetObject.put(JSON_KEY_FACET_LIMIT, collectionProperties.getSolrFacetLimit());
 			if (null != lpseCode) {
 				facetObject.put(JSON_KEY_URIS,
-							getAdditionURIObject(
-										collectionProperties,
-										this,
-										panlTokenMap));
+						getAdditionURIObject(
+								collectionProperties,
+								this,
+								panlTokenMap));
 				return (true);
 			}
 		}
 
 		return (false);
-	}
-
-	/**
-	 * <p>Get the Start of the OR URI path for this field</p>
-	 *
-	 * @param panlTokenMap The token map with the LPSe codes and values
-	 *
-	 * @return The URI path
-	 */
-	private String getOrURIPathStart(Map<String, List<LpseToken>> panlTokenMap) {
-		StringBuilder sb = new StringBuilder();
-
-		if (valueSeparator != null) {
-			if (hasValuePrefix) {
-				sb.append(URLEncoder.encode(valuePrefix, StandardCharsets.UTF_8));
-			}
-		}
-
-		if (panlTokenMap.containsKey(lpseCode)) {
-			if (valueSeparator != null) {
-				List<String> validValues = new ArrayList<>();
-
-				for(LpseToken lpseToken : panlTokenMap.get(lpseCode)) {
-					if (lpseToken.getIsValid() && lpseToken.getValue() != null) {
-						validValues.add(lpseToken.getValue());
-					}
-				}
-
-				if (!validValues.isEmpty()) {
-					for(String validValue : validValues) {
-						sb.append(URLEncoder.encode(validValue, StandardCharsets.UTF_8));
-						sb.append(URLEncoder.encode(valueSeparator, StandardCharsets.UTF_8));
-					}
-
-//					sb.append(getOrURIPathEnd(panlTokenMap));
-				}
-			} else {
-				for(LpseToken lpseToken : panlTokenMap.get(lpseCode)) {
-					if (lpseToken.getIsValid()) {
-						sb.append(getEncodedPanlValue(lpseToken));
-						sb.append("/");
-					}
-				}
-				return (sb.toString());
-			}
-		}
-
-		return (sb.toString());
-	}
-
-	private String getOrURIPathEnd() {
-		StringBuilder sb = new StringBuilder();
-		if (valueSeparator != null) {
-			if (hasValueSuffix) {
-				sb.append(URLEncoder.encode(valueSuffix, StandardCharsets.UTF_8));
-			}
-		}
-		return (sb.toString());
-	}
-
-	/**
-	 * <p>This is an OR facet, so we can have additional codes of the same facet,
-	 * and there may be an OR SEPARATOR.</p>
-	 *
-	 * @param collectionProperties The collection properties
-	 * @param lpseField The LPSE field that this applies to
-	 * @param panlTokenMap The inbound Panl tokens
-	 *
-	 * @return The JSON object with the URIs for adding this field to the existing
-	 * search URI.
-	 */
-	@Override
-	protected JSONObject getAdditionURIObject(
-				CollectionProperties collectionProperties,
-				BaseField lpseField,
-				Map<String, List<LpseToken>> panlTokenMap) {
-
-		JSONObject additionObject = new JSONObject();
-
-		StringBuilder lpseUri = new StringBuilder(FORWARD_SLASH);
-		StringBuilder lpseUriBefore = new StringBuilder();
-		StringBuilder lpseUriCode = new StringBuilder();
-
-		Map<String, Boolean> lpseCodeMap = new HashMap<>();
-
-		for(BaseField baseField : collectionProperties.getLpseFields()) {
-			// we need to add in any other token values in the correct order
-			String orderedLpseCode = baseField.getLpseCode();
-
-			if (orderedLpseCode.equals(this.lpseCode)) {
-				// we have found the current LPSE code, so reset the URI and add it to
-				// the after
-				if (valueSeparator != null) {
-					lpseUri.append(getOrURIPathStart(panlTokenMap));
-				} else {
-					lpseUri.append(baseField.getURIPath(panlTokenMap, collectionProperties));
-				}
-
-				lpseUriBefore.append(lpseUri);
-				lpseUri.setLength(0);
-				if (valueSeparator != null) {
-					lpseUri.append(getOrURIPathEnd());
-					lpseUri.append("/");
-				}
-
-				if(collectionProperties.getIsMultiValuedSeparatorFacetField(this.lpseCode)) {
-					if (!lpseCodeMap.containsKey(this.lpseCode)) {
-						lpseUriCode.append(this.lpseCode);
-					}
-					lpseCodeMap.put(this.lpseCode, true);
-				} else {
-					lpseUriCode.append(baseField.getLpseCode(panlTokenMap, collectionProperties));
-					lpseUriCode.append(this.lpseCode);
-				}
-
-			} else {
-				// if we don't have a current token, just carry on
-				if (!panlTokenMap.containsKey(orderedLpseCode)) {
-					continue;
-				}
-
-				// normally
-				lpseUri.append(baseField.getURIPath(panlTokenMap, collectionProperties));
-				int numTokens = panlTokenMap.get(orderedLpseCode).size();
-				if (numTokens == 1) {
-					// if we have a range facet - we need to make sure that we are
-					// encoding it correctly there can only be one range token for the
-					// panl field (no over-lapping ranges, or distinct ranges)
-
-					// if it is not a range facet - then this won't do any harm and is a
-					// better implementation
-					lpseUriCode.append(baseField.getLpseCode(panlTokenMap.get(orderedLpseCode).get(0), collectionProperties));
-				} else {
-
-					// check for or separators...
-					if(collectionProperties.getIsMultiValuedSeparatorFacetField(baseField.getLpseCode())) {
-						lpseUriCode.append(baseField.getLpseCode());
-					} else {
-						// just replace it with the correct number of LPSE codes
-						if(!baseField.getHasURIComponent()) {
-							lpseUriCode.append(baseField.getResetLpseCode(panlTokenMap, collectionProperties));
-						} else {
-							lpseUriCode.append(new String(new char[numTokens]).replace("\0", baseField.getLpseCode()));
-						}
-					}
-				}
-			}
-		}
-
-		additionObject.put(JSON_KEY_BEFORE, lpseUriBefore.toString());
-
-		// if we have an or separator, we have already added the forward slash
-		if (valueSeparator != null) {
-			additionObject.put(JSON_KEY_AFTER, lpseUri.toString() + lpseUriCode + FORWARD_SLASH);
-		} else {
-			additionObject.put(JSON_KEY_AFTER, FORWARD_SLASH + lpseUri + lpseUriCode + FORWARD_SLASH);
-		}
-
-		return (additionObject);
 	}
 
 	/**
@@ -373,19 +214,19 @@ public class PanlOrFacetField extends PanlFacetField {
 	 * @return The list of OR tokens
 	 */
 	@Override public List<LpseToken> instantiateTokens(
-				CollectionProperties collectionProperties, String lpseCode,
-				String query,
-				StringTokenizer valueTokeniser,
-				LpseTokeniser lpseTokeniser) {
+			CollectionProperties collectionProperties, String lpseCode,
+			String query,
+			StringTokenizer valueTokeniser,
+			LpseTokeniser lpseTokeniser) {
 
 		if (this.valueSeparator != null) {
 			// we have an or separator
 			return (OrFacetLpseToken.getSeparatedLpseTokens(
 					valueSeparator,
-						collectionProperties,
-						this.lpseCode,
-						lpseTokeniser,
-						valueTokeniser));
+					collectionProperties,
+					this.lpseCode,
+					lpseTokeniser,
+					valueTokeniser));
 
 		} else {
 			return (List.of(new OrFacetLpseToken(collectionProperties, this.lpseCode, lpseTokeniser, valueTokeniser)));
@@ -396,118 +237,10 @@ public class PanlOrFacetField extends PanlFacetField {
 		removeObject.put(JSON_KEY_IS_OR_FACET, true);
 	}
 
-	@Override public String getCanonicalUriPath(Map<String, List<LpseToken>> panlTokenMap,
-				CollectionProperties collectionProperties) {
-		if (this.valueSeparator != null) {
-			if (panlTokenMap.containsKey(lpseCode)) {
-				StringBuilder stringBuilder = new StringBuilder(getValuePrefix());
-				boolean isFirst = true;
-				for(LpseToken lpseToken : panlTokenMap.get(lpseCode)) {
-					if (!isFirst) {
-						stringBuilder.append(getValueSeparator());
-					}
-					isFirst = false;
-					stringBuilder.append(lpseToken.getValue());
-				}
-				stringBuilder.append(getValueSuffix());
-				return (URLEncoder.encode(stringBuilder.toString(), java.nio.charset.StandardCharsets.UTF_8) + "/");
-			}
-		}
-
-		return (getURIPath(panlTokenMap, collectionProperties));
-	}
-
-	@Override public String getCanonicalLpseCode(Map<String, List<LpseToken>> panlTokenMap,
-				CollectionProperties collectionProperties) {
-		if (this.valueSeparator != null) {
-			if (panlTokenMap.containsKey(lpseCode)) {
-				// for or separators, there is only ever one lpse code
-				return (lpseCode);
-			}
-		}
-
-		return (getLpseCode(panlTokenMap, collectionProperties));
-	}
-
-	@Override public String getResetUriPath(
-				Map<String, List<LpseToken>> panlTokenMap,
-				CollectionProperties collectionProperties) {
-
-		return (getURIPath(panlTokenMap, collectionProperties));
-	}
-
-	@Override public String getResetUriPath(LpseToken lpseToken, CollectionProperties collectionProperties) {
-		return (getURIPath(lpseToken, collectionProperties));
-	}
-
-	/**
-	 * <p>Get the URI path for this field</p>
-	 *
-	 * @param panlTokenMap The token map with the LPSe codes and values
-	 * @param collectionProperties The Collection Properties
-	 *
-	 * @return The URI path
-	 */
-	public String getURIPath(Map<String, List<LpseToken>> panlTokenMap, CollectionProperties collectionProperties) {
-		StringBuilder sb = new StringBuilder();
-		if (panlTokenMap.containsKey(lpseCode)) {
-			if (this.valueSeparator != null) {
-				sb.append(URLEncoder.encode(getValuePrefix(), StandardCharsets.UTF_8));
-				boolean isFirst = true;
-				for(LpseToken lpseToken : panlTokenMap.get(lpseCode)) {
-					if (!isFirst) {
-						sb.append(URLEncoder.encode(getValueSeparator(), StandardCharsets.UTF_8));
-					}
-					isFirst = false;
-					sb.append(URLEncoder.encode(lpseToken.getValue(), StandardCharsets.UTF_8));
-				}
-				sb.append(URLEncoder.encode(getValueSuffix(), StandardCharsets.UTF_8));
-				sb.append("/");
-			} else {
-				for(LpseToken lpseToken : panlTokenMap.get(lpseCode)) {
-					if (lpseToken.getIsValid()) {
-						sb.append(getEncodedPanlValue(lpseToken));
-						sb.append("/");
-					}
-				}
-			}
-		}
-		return (sb.toString());
-	}
-
-	public String getLpseCode(Map<String, List<LpseToken>> panlTokenMap, CollectionProperties collectionProperties) {
-		StringBuilder sb = new StringBuilder();
-		if (panlTokenMap.containsKey(lpseCode)) {
-			if (valueSeparator != null) {
-				return (this.lpseCode);
-			} else {
-				for(LpseToken lpseToken : panlTokenMap.get(lpseCode)) {
-					// we need to know whether this is an OR field
-
-					if(collectionProperties.getIsMultiValuedSeparatorFacetField(lpseCode)) {
-						return(lpseCode);
-					}
-
-					BaseField lpseField = collectionProperties.getLpseField(lpseCode);
-					if(lpseField instanceof PanlOrFacetField) {
-						if(((PanlOrFacetField)lpseField).getValueSeparator() != null) {
-							return(lpseCode);
-						}
-					}
-
-					if (lpseToken.getIsValid()) {
-						sb.append(lpseToken.getLpseCode());
-					}
-				}
-			}
-		}
-		return (sb.toString());
-	}
-
 	/**
 	 * <p>Return whether this is an ALWAYS OR facet field, an always OR field will
-	 * return the facet values for this specific facet, even if the facet will not
-	 * increase the number of results (i.e. the facet count is zero).</p>
+	 * return the facet values for this specific facet, even if the facet will not increase the number of results (i.e.
+	 * the facet count is zero).</p>
 	 *
 	 * @return Whether this is an ALWAYS OR facet field
 	 */

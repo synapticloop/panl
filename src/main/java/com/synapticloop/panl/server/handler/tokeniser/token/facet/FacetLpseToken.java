@@ -29,6 +29,8 @@ import com.synapticloop.panl.server.handler.fielderiser.field.BaseField;
 import com.synapticloop.panl.server.handler.tokeniser.LpseTokeniser;
 import com.synapticloop.panl.server.handler.tokeniser.token.LpseToken;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.StringTokenizer;
 
 /**
@@ -76,12 +78,14 @@ public class FacetLpseToken extends LpseToken {
 	private String toValue = null;
 	protected boolean isRangeToken = false;
 	protected boolean hasInfix = false;
+	private boolean hasMultivalueSeparator = false;
 
 	public FacetLpseToken(
 			CollectionProperties collectionProperties,
 			String lpseCode,
 			LpseTokeniser lpseTokeniser,
 			StringTokenizer valueTokeniser) {
+
 		super(lpseCode, collectionProperties);
 
 		StringBuilder sb = new StringBuilder(lpseCode);
@@ -119,11 +123,46 @@ public class FacetLpseToken extends LpseToken {
 		}
 	}
 
+	public FacetLpseToken(FacetLpseToken originalFacetToken, String value, boolean hasMultivalueSeparator) {
+		// we are not going to need the collection properties
+		super(originalFacetToken.lpseCode, null);
+		this.originalValue = originalFacetToken.originalValue;
+		this.solrField = originalFacetToken.solrField;
+		this.value = value;
+		this.isValid = originalFacetToken.isValid;
+		this.hasMultivalueSeparator = hasMultivalueSeparator;
+	}
+
+	public static List<LpseToken> getSeparatedLpseTokens(
+			String valueSeparator,
+			CollectionProperties collectionProperties,
+			String lpseCode,
+			LpseTokeniser lpseTokeniser,
+			StringTokenizer valueTokeniser) {
+
+		FacetLpseToken facetLpseToken = new FacetLpseToken(
+				collectionProperties,
+				lpseCode,
+				lpseTokeniser,
+				valueTokeniser);
+
+		String values = facetLpseToken.getValue();
+		// the value will have the separator value
+		List<LpseToken> lpseTokens = new ArrayList<>();
+		if (null != values) {
+			for(String value : values.split(valueSeparator)) {
+				lpseTokens.add(new FacetLpseToken(facetLpseToken, value, true));
+			}
+		}
+		return (lpseTokens);
+	}
+
 	// TODO - update for range facets
 	@Override public String explain() {
 		return ("PANL " +
 				(this.isValid ? "[  VALID  ]" : "[ INVALID ]") +
-				" <facet>           LPSE code '" +
+				(this.hasMultivalueSeparator ? " <facet (multi SEP)> LPSE code '" : " <facet>           LPSE code '") +
+				" <facet>            LPSE code '" +
 				this.lpseCode +
 				"' (solr field '" +
 				this.solrField +
