@@ -110,10 +110,12 @@ function panlSearch() {
 		url: panlQueryUrl,
 		success: function (panlJsonData) {
 			$("#response_code").text("200");
+			$("#response_code").attr("class", "valid");
 			populatePanlResults(panlJsonData);
 		},
 		error: function(request, status, errorThrown) {
 			$("#response_code").text(status + " (" + errorThrown + ")");
+			$("#response_code").attr("class", "invalid");
 		}
 	});
 }
