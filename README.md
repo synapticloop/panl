@@ -522,7 +522,8 @@ with the release files named `solr-panl-9-x.x.x` where `x.x.x` is the version nu
   - Added in Testing for the Panl Generator and refactored how it is being done.
   - Refactored PanlFields for the generator to output better comments and helpful information rather than more comments than necessary
   - General code cleanup and refactorings
-  - Updated the look and feel for the Panl Simple Results Viewer Web App 
+  - Updated the look and feel for the Panl Simple Results Viewer Web App (including images)
+  - Modularised the JavaScript  for common functions.
 
 
 - **Documentation update**
