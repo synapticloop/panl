@@ -420,12 +420,13 @@ generating startup output.
 
 ## Testing the Code
 
-There are two test suites 
+There are three test suites 
 
 1. The regular Java unit tests
 2. The integration tests
+3. The integration spider tess
 
-**Unit tests** 
+4. **Unit tests** 
 
 ### _Windows_
 
@@ -447,13 +448,34 @@ gradlew.bat test
 ### _Windows_
 
 ```shell
-gradlew.bat integrationTest
+gradlew.bat testIntegration
 ```
 
 ### _*NIX_
 
 ```shell
-./gradlew integrationTest
+./gradlew testIntegration
+```
+
+**Integration Spider tests**
+
+> **Note:**  A Solr server will need to be running, available, and setup with the appropriate collections indexed for
+> this to work.
+
+These tests will spider a running Panl/Solr server for the output and ensure that all links down to two levels contain
+valid tokens
+
+
+### _Windows_
+
+```shell
+gradlew.bat testIntegrationSpider
+```
+
+### _*NIX_
+
+```shell
+./gradlew testIntegrationSpider
 ```
 
 ## Building the Code
