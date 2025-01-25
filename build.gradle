@@ -208,7 +208,7 @@ copyrightr {
 
 	excludes = [
 			"src/test/java/**/*.java",
-			"src/integration/java/**/*.java",
+			"src/testintegration/java/**/*.java",
 			"src/testintegrationspider/java/**/*.java",
 			"**/*.class",
 			"**/package-info.java",
