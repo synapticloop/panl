@@ -48,6 +48,9 @@ Update this as you you go along.
 > Ensure that you run both unit and integration tests for all branches.  You will need to spin up the latest version for 
 > each of the Solr release versions (and possibly reindex the data).
 
+<img src="src/docs/panl-dev-branching-strategy.png" title="Flowchart of the branching strategy" />
+
+
 ### 1. Merge back to the `main` branch
 
 Merge all changes to the main version, there should be no conflicts....  but resolve them.
