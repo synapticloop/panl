@@ -158,6 +158,12 @@ function updateSearchLinks() {
 	$("#panl-lpse-path-searchbutton").text(fullPath);
 }
 
+/**
+ * Return a string representation of the facet type.
+ *
+ * @param orderedLpseFacet The facet to interrogate for the type
+ * @returns {string} The string representation of the facet type
+ */
 function getFacetType(orderedLpseFacet) {
 	if (orderedLpseFacet.is_boolean_facet) {
 		return ("BOOLEAN");
@@ -170,7 +176,11 @@ function getFacetType(orderedLpseFacet) {
 	} else if (orderedLpseFacet.is_date_range_facet) {
 		return ("DATE Range");
 	} else {
-		return ("Regular");
+		if(orderedLpseFacet.is_multivalue) {
+			return ("REGULAR - Multivalued");
+		} else {
+			return ("REGULAR");
+		}
 	}
 }
 
@@ -217,11 +227,17 @@ function appendFacet(orderedLpseFacet) {
 				"<div class=\"center\"><a href=\"\" class=\"range-link\" id=\"anchor-date-range-" + orderedLpseFacet.facet_name + "\"></a></div>" +
 				"<div class=\"center\"><a href=\"\" class=\"range-link\" id=\"anchor-date-range-clear-" + orderedLpseFacet.facet_name + "\">[ clear " + orderedLpseFacet.name + " date range ]</a></div>");
 	} else {
-		// regular facet
-		// go through and print all of the details
-		var returnHTML = "<input type=\"radio\" name=\"" + orderedLpseFacet.facet_name + "\" value=\"\">&nbsp;<em>[No selection]</em><br />";
-		for (const value of orderedLpseFacet.values) {
-			returnHTML = returnHTML + "<input type=\"radio\" name=\"" + orderedLpseFacet.facet_name + "\" value=\"" + value.encoded + "\">&nbsp;" + decodePanl(value.value) + "<br />";
+		// REGULAR facet - but this may be multivalued
+		if(orderedLpseFacet.is_multivalue) {
+			var returnHTML = "";
+			for (const value of orderedLpseFacet.values) {
+				returnHTML = returnHTML + "<input type=\"checkbox\" name=\"" + orderedLpseFacet.facet_name + "\" value=\"" + value.encoded + "\">&nbsp;" + value.value + "<br />";
+			}
+		} else {
+			var returnHTML = "<input type=\"radio\" name=\"" + orderedLpseFacet.facet_name + "\" value=\"\">&nbsp;<em>[No selection]</em><br />";
+			for (const value of orderedLpseFacet.values) {
+				returnHTML = returnHTML + "<input type=\"radio\" name=\"" + orderedLpseFacet.facet_name + "\" value=\"" + value.encoded + "\">&nbsp;" + decodePanl(value.value) + "<br />";
+			}
 		}
 		return (returnHTML);
 	}

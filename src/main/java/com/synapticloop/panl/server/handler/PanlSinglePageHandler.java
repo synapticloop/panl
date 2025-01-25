@@ -71,7 +71,7 @@ public class PanlSinglePageHandler extends BaseResponseHandler implements HttpRe
 	}
 
 	/**
-	 * <p>Return the JSON object that contains all of the configuration.</p>
+	 * <p>Return the JSON object that contains all configuration.</p>
 	 *
 	 * @param request the HTTP request.
 	 * @param response the HTTP response.
