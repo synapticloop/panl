@@ -156,8 +156,8 @@ function updateSearchLinks() {
 
 				let foundFirstOrSeparator = false;
 				let lpseOrderElement = panlObject.lpse_order[i];
-				if(lpseOrderElement.or_separator !== undefined) {
-					lpsePath = lpsePath + lpseOrderElement.or_separator;
+				if(lpseOrderElement.value_separator !== undefined) {
+					lpsePath = lpsePath + lpseOrderElement.value_separator;
 				}
 
 				for (let key in panlPathValue) {
@@ -173,7 +173,7 @@ function updateSearchLinks() {
 									} else {
 										lpseCodePath = lpseCodePath + lpseCode + '+';
 									}
-								} else if(lpseOrderElement.or_separator !== undefined) {
+								} else if(lpseOrderElement.value_separator !== undefined) {
 									if(addedLpseOrSeparators[lpseOrderElement.panl_code] === undefined) {
 										lpseCodePath = lpseCodePath + lpseCode;
 									}
@@ -184,7 +184,7 @@ function updateSearchLinks() {
 							}
 
 							// At this point we want to check the OR separator
-							if(lpseOrderElement.or_separator !== undefined) {
+							if(lpseOrderElement.value_separator !== undefined) {
 								lpsePath = lpsePath + key;
 							} else {
 								lpsePath = lpsePath + key + "/";
@@ -208,16 +208,22 @@ function updateSearchLinks() {
 function getFacetType(orderedLpseFacet) {
 	if (orderedLpseFacet.is_boolean_facet) {
 		return ("BOOLEAN");
-	} else if (undefined !== orderedLpseFacet.or_separator) {
-		return ("OR SEP");
 	} else if (orderedLpseFacet.is_or_facet) {
-		return ("OR");
+		if (undefined !== orderedLpseFacet.value_separator) {
+			return ("OR SEP");
+		} else {
+			return ("OR");
+		}
 	} else if (orderedLpseFacet.is_range_facet) {
 		return ("RANGE");
 	} else if (orderedLpseFacet.is_date_range_facet) {
 		return ("DATE Range");
 	} else {
-		return ("Regular");
+		if (orderedLpseFacet.is_multivalue) {
+			return ("REGULAR - Multivalued");
+		} else {
+			return ("REGULAR");
+		}
 	}
 }
 
@@ -235,8 +241,8 @@ function appendFacet(orderedLpseFacet) {
 		// OR facet
 		var returnHTML = "";
 		for (const value of orderedLpseFacet.values) {
-			if(orderedLpseFacet.or_separator !== undefined) {
-				returnHTML = returnHTML + "<input type=\"checkbox\" name=\"" + orderedLpseFacet.facet_name + "\" value=\"" + value.encoded_or + "\">&nbsp;" + value.value + "<br />";
+			if(orderedLpseFacet.value_separator !== undefined) {
+				returnHTML = returnHTML + "<input type=\"checkbox\" name=\"" + orderedLpseFacet.facet_name + "\" value=\"" + value.encoded_multi + "\">&nbsp;" + value.value + "<br />";
 			} else {
 				returnHTML = returnHTML + "<input type=\"checkbox\" name=\"" + orderedLpseFacet.facet_name + "\" value=\"" + value.encoded + "\">&nbsp;" + value.value + "<br />";
 			}

@@ -504,13 +504,13 @@ with the release files named `solr-panl-9-x.x.x` where `x.x.x` is the version nu
 - **New Features**
   - Added in lookahead query handler for Solr panl including panl results viewer lookahead
   - Added in `OR SEPARATOR` facets so that `OR` facets can be separated with a string and only have one LPSE code.
-  - Added in `solr.numrows.maximum` property so that this will always be the limit to the number of results returned. 
+  - Added in `solr.numrows.maximum` property so that this will always be the limit to the number of results returned, this will default to `solr.numrows.default`
 
 
 - **Bug fixes**
   - Bug where Panl client will always look for the '`q`' parameter for the query, changed to ensure that the correct configured `panl.form.query.respondto` is used instead
   - Always reset the page to 1 if there is a `panl.form.query.respondto` URL parameter
-  - Updated Single Page search to allow multiple selections for Facets which are multivalued (as opposed to OR Facets)
+  - (Maybe this was a feature?) Updated Single Page search to allow multiple selections for Facets which are multivalued (as opposed to OR Facets)
 
 
 - **Breaking Changes**

@@ -1,3 +1,9 @@
+import {
+	getFacetType,
+	encodePanl,
+	decodePanl
+} from "/webapp/static/panl-common-functions.js"
+
 var panlLpsePath = [];
 var panlObject = {};
 var currentCollection = "";
@@ -156,32 +162,6 @@ function updateSearchLinks() {
 	$("#panl-lpse-path").text(fullPath);
 	$("#searchbutton").attr("href", "/panl-results-viewer/" + currentCollection + "/default" + fullPath);
 	$("#panl-lpse-path-searchbutton").text(fullPath);
-}
-
-/**
- * Return a string representation of the facet type.
- *
- * @param orderedLpseFacet The facet to interrogate for the type
- * @returns {string} The string representation of the facet type
- */
-function getFacetType(orderedLpseFacet) {
-	if (orderedLpseFacet.is_boolean_facet) {
-		return ("BOOLEAN");
-	} else if (undefined !== orderedLpseFacet.or_separator) {
-		return ("OR SEP");
-	} else if (orderedLpseFacet.is_or_facet) {
-		return ("OR");
-	} else if (orderedLpseFacet.is_range_facet) {
-		return ("RANGE");
-	} else if (orderedLpseFacet.is_date_range_facet) {
-		return ("DATE Range");
-	} else {
-		if(orderedLpseFacet.is_multivalue) {
-			return ("REGULAR - Multivalued");
-		} else {
-			return ("REGULAR");
-		}
-	}
 }
 
 function appendFacet(orderedLpseFacet) {
@@ -401,16 +381,4 @@ function bindDateRange(orderedLpseFacet) {
 		updateDateRangeLink(text, e.data.facet);
 		setLpseValue(encodePanl(text), e.data.facet);
 	});
-
-}
-
-function encodePanl(text) {
-	return (encodeURI(text.replaceAll(" ", "+")));
-}
-
-function decodePanl(text) {
-	return (decodeURI(text)
-			.replaceAll("+", " ")
-			.replaceAll("%2B", "+")
-			.replaceAll("%3A", ":"));
 }

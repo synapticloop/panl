@@ -1,12 +1,18 @@
-$(document).ready(function() {
+import {
+	getFacetType,
+	encodePanl,
+	decodePanl
+} from "/webapp/static/panl-common-functions.js"
+
+$(document).ready(function () {
 	let availableCollections = $("#available_collections");
 	let currentCollectionName = "";
 
 	for (const collectionUrl of collections) {
 		const lastIndex = collectionUrl.lastIndexOf("/");
 		const collectionName = collectionUrl.substring(1, lastIndex);
-		const fieldSet = collectionUrl.substring(lastIndex +1);
-		if(currentCollectionName !== collectionName) {
+		const fieldSet = collectionUrl.substring(lastIndex + 1);
+		if (currentCollectionName !== collectionName) {
 			availableCollections.append("<br />&nbsp;<strong>" + collectionName + "</strong>")
 			currentCollectionName = collectionName;
 		}
@@ -18,40 +24,41 @@ $(document).ready(function() {
 
 	// test to see whether we are ready to invoke the panl search service
 	var uris = window.location.pathname.split("/");
-	if(uris.length >= 4) {
+	if (uris.length >= 4) {
 		// we have a collection, and field set
 		var collection = uris[2];
 		var fieldset = uris[3];
-		if(isValidUrl(collection, fieldset)) {
+		if (isValidUrl(collection, fieldset)) {
 			$("#searchfield").removeAttr("disabled");
 			$("#searchbutton").removeAttr("disabled");
 			$("#collection").append("/" + collection + "/" + fieldset);
+
 			panlSearch();
 
 			// finally get the lookahead functionality for the search box
 			$("#searchfield").autocomplete({
-				source: function(request, response) {
+				source: function (request, response) {
 
 					$.ajax({
-							url: "http://localhost:8181/panl-lookahead/" + collection + "/" + fieldset,
-							data: {
-								"search": request.term
-							},
+						url: "http://localhost:8181/panl-lookahead/" + collection + "/" + fieldset,
+						data: {
+							"search": request.term
+						},
 
-							success: function(data) {
-								// the data that we receive we shall need to do some re-work
-								var responseDocs = data.response.docs;
-								var autocompleteDocs = [];
-								for( const doc of responseDocs ) {
-									autocompleteDocs.push(doc.brand + " " + doc.name);
-								}
-								response(autocompleteDocs);
-							},
-
-							error: function(data) {
-								response([]);
+						success: function (data) {
+							// the data that we receive we shall need to do some re-work
+							var responseDocs = data.response.docs;
+							var autocompleteDocs = [];
+							for (const doc of responseDocs) {
+								autocompleteDocs.push(doc.brand + " " + doc.name);
 							}
-						});
+							response(autocompleteDocs);
+						},
+
+						error: function (data) {
+							response([]);
+						}
+					});
 				},
 				minLength: 3
 			});
@@ -62,18 +69,18 @@ $(document).ready(function() {
 function isValidUrl(collection, fieldset) {
 	var fullUrl = "/" + collection + "/" + fieldset;
 	for (const collectionUrl of collections) {
-		if(collectionUrl === fullUrl) {
-			return(true);
+		if (collectionUrl === fullUrl) {
+			return (true);
 		}
 	}
 
-	return(false);
+	return (false);
 }
 
 function panlSearch() {
 	var panlQueryUrl = window.location.pathname.substring(panlResultsViewerUrl.length) + window.location.search;
 	$.ajax({
-		url:panlQueryUrl,
+		url: panlQueryUrl,
 		success: function (panlJsonData) {
 			populatePanlResults(panlJsonData);
 		}
@@ -96,10 +103,10 @@ function populatePanlResults(panlJsonData) {
 
 	// first up the total results
 	$("#num_results")
-		.append("- Found " +
-			panlJsonData.panl.pagination.num_results +
-			" result(s) " +
-			(panlJsonData.panl.pagination.num_results_exact ? "(exact)" : "(estimated)"));
+			.append("- Found " +
+					panlJsonData.panl.pagination.num_results +
+					" result(s) " +
+					(panlJsonData.panl.pagination.num_results_exact ? "(exact)" : "(estimated)"));
 
 	console.log("[ RETURNED PANL TIMINGS JSON OBJECT ]")
 	console.log(panlJsonData.panl.timings);
@@ -108,25 +115,25 @@ function populatePanlResults(panlJsonData) {
 	const timings = panlJsonData.panl.timings;
 	$("#timings")
 			.append("<strong>Solr:</strong> query time " + panlJsonData.responseHeader.QTime +
-				"ms.<br /><strong>Panl:</strong> parse request " + timings.panl_parse_request_time +
-				"ms, build request " + timings.panl_build_request_time +
-				"ms, send and receive request " + timings.panl_send_request_time +
-				"ms, parse response " + timings.panl_build_response_time +
-				"ms. Total time " + timings.panl_total_time + "ms.");
+					"ms.<br /><strong>Panl:</strong> parse request " + timings.panl_parse_request_time +
+					"ms, build request " + timings.panl_build_request_time +
+					"ms, send and receive request " + timings.panl_send_request_time +
+					"ms, parse response " + timings.panl_build_response_time +
+					"ms. Total time " + timings.panl_total_time + "ms.");
 
 	// Solr previous to 9 has a different structure
 	var documents = [];
 	// now the number that we are showing
-	if(panlJsonData.response.docs !== undefined) {
+	if (panlJsonData.response.docs !== undefined) {
 		documents = panlJsonData.response.docs;
 	} else {
 		documents = panlJsonData.response;
 	}
 
 	// add in the results
-	for(const document of documents) {
+	for (const document of documents) {
 		var innerList = "";
-		for(const fieldName in document) {
+		for (const fieldName in document) {
 			innerList += "<dt>" + panlJsonData.panl.fields[fieldName] + " (" + fieldName + ")</dt>";
 			innerList += "<dd>" + document[fieldName] + "</dd>";
 		}
@@ -148,28 +155,28 @@ function addQueryOperand(queryOperand) {
 	console.log(queryOperand);
 
 	$("#query_operand").append(
-		"<a href=\"" +
-		panlResultsViewerUrl +
-		$("#collection").text() +
-		queryOperand.AND +
-		"\"/>AND</a>&nbsp;");
+			"<a href=\"" +
+			panlResultsViewerUrl +
+			$("#collection").text() +
+			queryOperand.AND +
+			"\"/>AND</a>&nbsp;");
 	$("#query_operand").append(
-		" || <a href=\"" +
-		panlResultsViewerUrl +
-		$("#collection").text() +
-		queryOperand.OR +
-		"\"/>OR</a>&nbsp;");
+			" || <a href=\"" +
+			panlResultsViewerUrl +
+			$("#collection").text() +
+			queryOperand.OR +
+			"\"/>OR</a>&nbsp;");
 
 }
 
 function getActiveSortingObject(sortFacetName, activeObject) {
-	if(activeObject.sort === undefined) {
-		return(undefined);
+	if (activeObject.sort === undefined) {
+		return (undefined);
 	}
 
-	for(const activeSortingObject of activeObject.sort) {
-		if(activeSortingObject.facet_name === sortFacetName) {
-			return(activeSortingObject);
+	for (const activeSortingObject of activeObject.sort) {
+		if (activeSortingObject.facet_name === sortFacetName) {
+			return (activeSortingObject);
 		}
 	}
 }
@@ -179,8 +186,8 @@ function addSortingOptions(sortingObject, activeObject) {
 	console.log(sortingObject);
 
 	var hasFirst = false;
-	for(const sortIndex in sortingObject.fields) {
-		if(hasFirst) {
+	for (const sortIndex in sortingObject.fields) {
+		if (hasFirst) {
 			$("#sorting_options").append("||&nbsp;");
 		}
 
@@ -189,34 +196,34 @@ function addSortingOptions(sortingObject, activeObject) {
 		var isAscending = false;
 		var isDescending = false;
 
-		activeSortingObject = getActiveSortingObject(sortingObject.fields[sortIndex].facet_name, activeObject);
-		if(activeSortingObject !== undefined) {
+		let activeSortingObject = getActiveSortingObject(sortingObject.fields[sortIndex].facet_name, activeObject);
+		if (activeSortingObject !== undefined) {
 			isAscending = !activeSortingObject.is_descending;
 			isDescending = activeSortingObject.is_descending;
 		}
 
 
-		if(!isAscending) {
+		if (!isAscending) {
 			$("#sorting_options").append(
-				sortingObject.fields[sortIndex].name +
-				": <a href=\"" +
-				panlResultsViewerUrl +
-				$("#collection").text() +
-				sortingObject.fields[sortIndex].set_uri_asc +
-				"\"/>ASC</a>&nbsp;");
+					sortingObject.fields[sortIndex].name +
+					": <a href=\"" +
+					panlResultsViewerUrl +
+					$("#collection").text() +
+					sortingObject.fields[sortIndex].set_uri_asc +
+					"\"/>ASC</a>&nbsp;");
 		} else {
 			$("#sorting_options").append(
-				sortingObject.fields[sortIndex].name +
-				": ASC&nbsp;");
+					sortingObject.fields[sortIndex].name +
+					": ASC&nbsp;");
 		}
 
-		if(!isDescending) {
+		if (!isDescending) {
 			$("#sorting_options").append(
-				"<a href=\"" +
-				panlResultsViewerUrl +
-				$("#collection").text() +
-				sortingObject.fields[sortIndex].set_uri_desc +
-				"\"/>DESC</a>&nbsp;");
+					"<a href=\"" +
+					panlResultsViewerUrl +
+					$("#collection").text() +
+					sortingObject.fields[sortIndex].set_uri_desc +
+					"\"/>DESC</a>&nbsp;");
 		} else {
 			$("#sorting_options").append("DESC&nbsp;");
 		}
@@ -225,20 +232,20 @@ function addSortingOptions(sortingObject, activeObject) {
 	var hasAddedThen = false;
 	// now for the additive fields
 	var numThenSorts = 0;
-	for(const sortIndex in sortingObject.fields) {
-		if(sortingObject.fields[sortIndex].add_uri_asc !== undefined) {
+	for (const sortIndex in sortingObject.fields) {
+		if (sortingObject.fields[sortIndex].add_uri_asc !== undefined) {
 			numThenSorts++;
 		}
 	}
 
-	if(numThenSorts == sortingObject.fields.length) {
+	if (numThenSorts == sortingObject.fields.length) {
 		return;
 	}
 
-	for(const sortIndex in sortingObject.fields) {
-		if(sortingObject.fields[sortIndex].add_uri_asc !== undefined) {
+	for (const sortIndex in sortingObject.fields) {
+		if (sortingObject.fields[sortIndex].add_uri_asc !== undefined) {
 
-			if(!hasAddedThen) {
+			if (!hasAddedThen) {
 				$("#sorting_options").append("<br/><strong>Then sort by </strong>");
 				hasAddedThen = true;
 			} else {
@@ -246,19 +253,19 @@ function addSortingOptions(sortingObject, activeObject) {
 			}
 
 			$("#sorting_options").append(
-				sortingObject.fields[sortIndex].name +
-				": <a href=\"" +
-				panlResultsViewerUrl +
-				$("#collection").text() +
-				sortingObject.fields[sortIndex].add_uri_asc +
-				"\"/>ASC</a>&nbsp;");
+					sortingObject.fields[sortIndex].name +
+					": <a href=\"" +
+					panlResultsViewerUrl +
+					$("#collection").text() +
+					sortingObject.fields[sortIndex].add_uri_asc +
+					"\"/>ASC</a>&nbsp;");
 
 			$("#sorting_options").append(
-				"<a href=\"" +
-				panlResultsViewerUrl +
-				$("#collection").text() +
-				sortingObject.fields[sortIndex].add_uri_desc +
-				"\"/>DESC</a>&nbsp;");
+					"<a href=\"" +
+					panlResultsViewerUrl +
+					$("#collection").text() +
+					sortingObject.fields[sortIndex].add_uri_desc +
+					"\"/>DESC</a>&nbsp;");
 		}
 	}
 }
@@ -271,24 +278,24 @@ function addPagination(paginationObject) {
 	$("#num_per_page").append(paginationObject.num_per_page);
 
 
-	if(paginationObject.page_uris.next) {
+	if (paginationObject.page_uris.next) {
 		$("#next").append(
-			"<a href=\"" +
-			panlResultsViewerUrl +
-			$("#collection").text() +
-			paginationObject.page_uris.next +
-			"\"/>NEXT</a> &raquo;");
+				"<a href=\"" +
+				panlResultsViewerUrl +
+				$("#collection").text() +
+				paginationObject.page_uris.next +
+				"\"/>NEXT</a> &raquo;");
 	} else {
 		$("#next").append("NEXT &raquo;");
 	}
 
-	if(paginationObject.page_uris.previous) {
+	if (paginationObject.page_uris.previous) {
 		$("#previous").append(
-			"&laquo; <a href=\"" +
-			panlResultsViewerUrl +
-			$("#collection").text() +
-			paginationObject.page_uris.previous +
-			"\"/>PREV</a>");
+				"&laquo; <a href=\"" +
+				panlResultsViewerUrl +
+				$("#collection").text() +
+				paginationObject.page_uris.previous +
+				"\"/>PREV</a>");
 	} else {
 		$("#previous").append("&laquo; PREV");
 	}
@@ -300,13 +307,13 @@ function addPagination(paginationObject) {
 }
 
 function addPerPage(paginationObject, number) {
-$("#num_per_page_links").append("<a href=\"" +
-	panlResultsViewerUrl +
-	$("#collection").text() +
-	paginationObject.num_per_page_uris.before +
-	number +
-	paginationObject.num_per_page_uris.after +
-	"\">" + number +"</a>&nbsp;");
+	$("#num_per_page_links").append("<a href=\"" +
+			panlResultsViewerUrl +
+			$("#collection").text() +
+			paginationObject.num_per_page_uris.before +
+			number +
+			paginationObject.num_per_page_uris.after +
+			"\">" + number + "</a>&nbsp;");
 }
 
 function addActiveFilters(activeObject, removeUri) {
@@ -315,7 +322,7 @@ function addActiveFilters(activeObject, removeUri) {
 
 	const active = $("#active");
 	// first up the query
-	if(activeObject.query !== undefined) {
+	if (activeObject.query !== undefined) {
 		active.append("<li><strong>Query <em>(" + activeObject.query.panl_code + ")</em></strong></li>");
 		active.append("<li><a href=\"" + panlResultsViewerUrl +
 				$("#collection").text() +
@@ -326,12 +333,12 @@ function addActiveFilters(activeObject, removeUri) {
 	}
 
 	// now for the facets
-	if(activeObject.facet !== undefined) {
+	if (activeObject.facet !== undefined) {
 		addActiveFacets(activeObject.facet);
 	}
 
 	// finally, the sort
-	if(activeObject.sort !== undefined) {
+	if (activeObject.sort !== undefined) {
 		addActiveSorts(activeObject.sort, removeUri);
 	}
 }
@@ -341,8 +348,8 @@ function addActiveFacets(facets) {
 	// facets first
 	var currentFacetName = "";
 
-	for(const facet of facets) {
-		if(facet.facet_name !== currentFacetName) {
+	for (const facet of facets) {
+		if (facet.facet_name !== currentFacetName) {
 			active.append("<li><strong>" + facet.name + " <em>(" + facet.panl_code + ")</em></strong></li>");
 			currentFacetName = facet.facet_name;
 		}
@@ -354,7 +361,7 @@ function addActiveFacets(facets) {
 				decodePanl(facet.encoded) +
 				"</li>");
 
-		if(facet.is_boolean_facet) {
+		if (facet.is_boolean_facet) {
 			active.append("<li><a href=\"" + panlResultsViewerUrl +
 					$("#collection").text() +
 					facet.inverse_uri +
@@ -372,21 +379,21 @@ function addActiveSorts(sorts, removeUri) {
 
 	let content = "";
 
-	for(const sort of sorts) {
+	for (const sort of sorts) {
 		const activesort = $("#activesort");
-		if(first) {
+		if (first) {
 			first = false;
 			activesort.html("<strong>Active Sorting</strong>");
 			content += "<ul>";
 		}
 
 		content += "<strong>" +
-			sort.name +
-			" <em>(" +
-			sort.panl_code +
-			")</em> " +
-			(sort.is_descending ? "[DESC]" : "[ASC]") +
-			"</strong></li>";
+				sort.name +
+				" <em>(" +
+				sort.panl_code +
+				")</em> " +
+				(sort.is_descending ? "[DESC]" : "[ASC]") +
+				"</strong></li>";
 
 		content += "<li><a href=\"" + panlResultsViewerUrl +
 				$("#collection").text() +
@@ -396,30 +403,30 @@ function addActiveSorts(sorts, removeUri) {
 				$("#collection").text() +
 				sort.inverse_uri +
 				"\"><img class=\"invert\" src=\"/webapp/static/invert.png\" title=\"Invert this sort order\"/> Change to " +
-				(sort.is_descending ? "ASC" : "DESC")+
+				(sort.is_descending ? "ASC" : "DESC") +
 				"</a>&nbsp;" +
 				"</li>";
 	}
 
-	if(sorts.length > 0 ) {
+	if (sorts.length > 0) {
 		const activesort = $("#activesort");
 		content += "<li class=\"center\"><br /><a href=\"" +
-			panlResultsViewerUrl +
-			$("#collection").text() +
-			removeUri +
-			"\"><img class=\"remove\" src=\"/webapp/static/remove.png\" title=\"Clear all sorting\"/>Clear all sorting</a></li></ul>";
+				panlResultsViewerUrl +
+				$("#collection").text() +
+				removeUri +
+				"\"><img class=\"remove\" src=\"/webapp/static/remove.png\" title=\"Clear all sorting\"/>Clear all sorting</a></li></ul>";
 		activesort.after(content);
 	}
 }
 
 function getActiveRangeObject(rangeFacetName, activeObject) {
-	if(activeObject.facet === undefined) {
-		return(undefined);
+	if (activeObject.facet === undefined) {
+		return (undefined);
 	}
 
-	for(const activeRangeFacetObject of activeObject.facet) {
-		if(activeRangeFacetObject.facet_name === rangeFacetName && activeRangeFacetObject.value_to !== undefined) {
-			return(activeRangeFacetObject);
+	for (const activeRangeFacetObject of activeObject.facet) {
+		if (activeRangeFacetObject.facet_name === rangeFacetName && activeRangeFacetObject.value_to !== undefined) {
+			return (activeRangeFacetObject);
 		}
 	}
 }
@@ -429,14 +436,14 @@ function addAvailableFilters(availableObject, activeObject) {
 	console.log(availableObject);
 
 	// first up the facets
-	for(const facet of availableObject.facets) {
+	for (const facet of availableObject.facets) {
 		generateFacet(facet);
 	}
 
 	const ranges = $("#ranges");
 	// now check for the ranges - we are adding another list item so that
 	// people can choose which implementation to use.
-	for(const facet of availableObject.range_facets) {
+	for (const facet of availableObject.range_facets) {
 		$("#ranges-marker").removeClass("hidden");
 
 		ranges.append("<p><strong>" + facet.name + " <em>(" + facet.panl_code + ") Range</em></strong></p>");
@@ -449,32 +456,32 @@ function addAvailableFilters(availableObject, activeObject) {
 		var inboundMaxValue = parseInt(facet.max);
 
 		var activeRange = getActiveRangeObject(facet.facet_name, activeObject);
-		if(activeRange !== undefined) {
+		if (activeRange !== undefined) {
 			inboundMaxValue = parseInt(activeRange.value_to);
 			inboundMinValue = parseInt(activeRange.value);
 		}
 
 		var options = {
-				start: [inboundMinValue, inboundMaxValue],
-				connect: true,
-				range: {
-						'min': parseInt(facet.min),
-						'max': parseInt(facet.max)
+			start: [inboundMinValue, inboundMaxValue],
+			connect: true,
+			range: {
+				'min': parseInt(facet.min),
+				'max': parseInt(facet.max)
+			},
+			step: 1,
+			pips: {
+				mode: 'range',
+				density: 10
+			},
+			facet: facet,
+			format: {
+				from: function (value) {
+					return (parseInt(value));
 				},
-				step: 1,
-				pips: {
-					mode: 'range',
-					density: 10
-				},
-				facet: facet,
-				format: {
-					from: function(value) {
-						return(parseInt(value));
-					},
-					to: function(value) {
-						return(parseInt(value));
-					}
+				to: function (value) {
+					return (parseInt(value));
 				}
+			}
 		};
 		noUiSlider.create(slider, options);
 
@@ -502,75 +509,75 @@ function addAvailableFilters(availableObject, activeObject) {
 
 		ranges.append("<div class=\"center\"><span><em>(Actual dynamic range: " + facet.dynamic_min + " to " + facet.dynamic_max + ")</em></span></div>")
 
-		slider.noUiSlider.on("update", function(values, handle, unencoded, tap, positions, noUiSlider) {
+		slider.noUiSlider.on("update", function (values, handle, unencoded, tap, positions, noUiSlider) {
 			var values = values;
 			var facet = noUiSlider.options.facet;
 			var rangeLink = $("#range-anchor-" + facet.facet_name);
 
 			// This is used for the min/max value replacement
 			var hasMinReplacement = facet.uris.before_min_value !== undefined &&
-							values[0] === parseInt(facet.min);
+					values[0] === parseInt(facet.min);
 			var hasMaxReplacement = facet.uris.before_max_value !== undefined
-							&& values[1] === parseInt(facet.max);
+					&& values[1] === parseInt(facet.max);
 
 			var generatedHrefBefore =
-								facet.uris.before +
-								values[0] +
-								(!facet.uris.has_infix ? "" : (facet.suffix !== undefined ? facet.suffix : ""));
+					facet.uris.before +
+					values[0] +
+					(!facet.uris.has_infix ? "" : (facet.suffix !== undefined ? facet.suffix : ""));
 
 			var generatedHrefAfter =
-								(facet.uris.has_infix ? "" : (facet.prefix !== undefined ? facet.prefix : "")) +
-								values[1] +
-								facet.uris.after;
+					(facet.uris.has_infix ? "" : (facet.prefix !== undefined ? facet.prefix : "")) +
+					values[1] +
+					facet.uris.after;
 
 			var generatedHrefDuring = facet.uris.during;
 
 			//
-			if(facet.uris.before_min_value !== undefined && values[0] === parseInt(facet.min)) {
+			if (facet.uris.before_min_value !== undefined && values[0] === parseInt(facet.min)) {
 				generatedHrefBefore = facet.uris.before_min_value;
-				if(!facet.uris.has_infix && values[0] === parseInt(facet.min)) {
+				if (!facet.uris.has_infix && values[0] === parseInt(facet.min)) {
 					generatedHrefDuring = "~";
 				}
 			}
 
-			if(facet.uris.after_max_value !== undefined && values[1] === parseInt(facet.max)) {
+			if (facet.uris.after_max_value !== undefined && values[1] === parseInt(facet.max)) {
 				generatedHrefAfter = facet.uris.after_max_value;
-				if(!facet.uris.has_infix&& values[0] === parseInt(facet.max)) {
+				if (!facet.uris.has_infix && values[0] === parseInt(facet.max)) {
 					generatedHrefDuring = "~";
 				}
 			}
 
 			rangeLink.attr("href",
 					panlResultsViewerUrl +
-						$("#collection").text() +
-						generatedHrefBefore +
-						generatedHrefDuring +
-						generatedHrefAfter
-					);
+					$("#collection").text() +
+					generatedHrefBefore +
+					generatedHrefDuring +
+					generatedHrefAfter
+			);
 
 			var text =
 					(facet.range_min_value !== undefined && values[0] === parseInt(facet.min) ? decodePanl(facet.range_min_value) :
-					(facet.prefix !== undefined ? decodePanl(facet.prefix) : "") +
-					values[0] +
-					(facet.suffix !== undefined ? decodePanl(facet.suffix) : "")
+									(facet.prefix !== undefined ? decodePanl(facet.prefix) : "") +
+									values[0] +
+									(facet.suffix !== undefined ? decodePanl(facet.suffix) : "")
 					) +
 					" to " +
 					(facet.range_max_value !== undefined && values[1] === parseInt(facet.max) ? decodePanl(facet.range_max_value) :
-					(facet.prefix !== undefined ? decodePanl(facet.prefix) : "") +
-					values[1] +
-					(facet.suffix !== undefined ? decodePanl(facet.suffix) : "")
+									(facet.prefix !== undefined ? decodePanl(facet.prefix) : "") +
+									values[1] +
+									(facet.suffix !== undefined ? decodePanl(facet.suffix) : "")
 					);
-			$("." +facet.facet_name + "-link").text(text);
+			$("." + facet.facet_name + "-link").text(text);
 		});
 	}
 
 	// now check for the date
-	for(const facet of availableObject.date_range_facets) {
+	for (const facet of availableObject.date_range_facets) {
 		$("#ranges-marker").removeClass("hidden");
 
 		ranges.append("<p><strong>" + facet.name + " <em>(" + facet.panl_code + ") Date Range</em></strong></p>");
 
-		ranges.append("<form method=\"GET\" id=\"date-range-" + facet.facet_name +"\">" +
+		ranges.append("<form method=\"GET\" id=\"date-range-" + facet.facet_name + "\">" +
 				"	<select name=\"previous_next\" id=\"previous_next" + facet.facet_name + "\">" +
 				"		<option value=\"next\"" + (facet.next === facet.previous_next ? "selected=\"selected\"" : "") + ">" + decodePanl(facet.next) + "</option>" +
 				"		<option value=\"previous\" " + (facet.previous === facet.previous_next ? "selected=\"selected\"" : "") + ">" + decodePanl(facet.previous) + "</option>" +
@@ -584,28 +591,28 @@ function addAvailableFilters(availableObject, activeObject) {
 				"	</select>" +
 				"</form>");
 
-			ranges.append("<div class=\"center\"><a href=\"\" class=\"range-link\" id=\"anchor-date-range-" + facet.facet_name + "\"></a></div>");
+		ranges.append("<div class=\"center\"><a href=\"\" class=\"range-link\" id=\"anchor-date-range-" + facet.facet_name + "\"></a></div>");
 
-			$("#date-range-" + facet.facet_name).on("keydown", function(event) {
-				return event.key != "Enter";
-			});
+		$("#date-range-" + facet.facet_name).on("keydown", function (event) {
+			return event.key != "Enter";
+		});
 
-			updateDateRangeLink(facet);
+		updateDateRangeLink(facet);
 
-			$("#previous_next" + facet.facet_name).on('change', { facet : facet }, function (e) {
-				e.preventDefault();
-				updateDateRangeLink(e.data.facet);
-			});
+		$("#previous_next" + facet.facet_name).on('change', {facet: facet}, function (e) {
+			e.preventDefault();
+			updateDateRangeLink(e.data.facet);
+		});
 
-			$("#designator" + facet.facet_name).on('change', { facet : facet }, function (e) {
-				e.preventDefault();
-				updateDateRangeLink(e.data.facet);
-			});
+		$("#designator" + facet.facet_name).on('change', {facet: facet}, function (e) {
+			e.preventDefault();
+			updateDateRangeLink(e.data.facet);
+		});
 
-			$("#date_number" + facet.facet_name).on('input', { facet : facet }, function (e) {
-				e.preventDefault();
-				updateDateRangeLink(e.data.facet);
-			});
+		$("#date_number" + facet.facet_name).on('input', {facet: facet}, function (e) {
+			e.preventDefault();
+			updateDateRangeLink(e.data.facet);
+		});
 	}
 }
 
@@ -613,9 +620,9 @@ function generateFacet(facet) {
 	const available = $("#available");
 	available.append(generateFacetHTML(facet));
 
-	if(facet.facet_limit !== -1 && facet.facet_limit <= facet.values.length) {
+	if (facet.facet_limit !== -1 && facet.facet_limit <= facet.values.length) {
 		// bind the update
-		$("#facet-link-" + facet.facet_name).on("click", { "facet": facet }, function(event) {
+		$("#facet-link-" + facet.facet_name).on("click", {"facet": facet}, function (event) {
 			event.preventDefault();
 			replaceFacetHTML(event.data.facet);
 		});
@@ -631,62 +638,62 @@ function replaceFacetHTML(facet) {
 			"&limit=-1";
 
 	$.ajax({
-    url: moreFacetsUrl,
-    success: function (panlJsonData) {
-      $("#facet-" + facet.facet_name).replaceWith(generateFacetHTML(panlJsonData.panl.facet));
-    }
-  });
+		url: moreFacetsUrl,
+		success: function (panlJsonData) {
+			$("#facet-" + facet.facet_name).replaceWith(generateFacetHTML(panlJsonData.panl.facet));
+		}
+	});
 }
 
 function generateFacetHTML(facet) {
 	var innerUl = "<ul>";
-	for(const value of facet.values) {
+	for (const value of facet.values) {
 		innerUl += "<li>" +
-		"<a href=\"" +
-		panlResultsViewerUrl +
-		$("#collection").text() +
-		facet.uris.before +
-		((facet.or_separator !== undefined) ? value.encoded_or : value.encoded) +
-		facet.uris.after +
-		"\"><img class=\"add\" src=\"/webapp/static/add.png\" title=\"Add facet\"></a>&nbsp;" +
-		decodePanl(value.encoded);
+				"<a href=\"" +
+				panlResultsViewerUrl +
+				$("#collection").text() +
+				facet.uris.before +
+				((facet.value_separator !== undefined) ? value.encoded_multi : value.encoded) +
+				facet.uris.after +
+				"\"><img class=\"add\" src=\"/webapp/static/add.png\" title=\"Add facet\"></a>&nbsp;" +
+				decodePanl(value.encoded);
 
-		if(!facet.is_or_facet) {
+		if (!facet.is_or_facet) {
 			innerUl += "&nbsp;(" + value.count + ")";
 		}
 		innerUl += "</li>";
 	}
 
 	// check for more facets...
-	if(facet.facet_limit !== -1 && facet.facet_limit <= facet.values.length) {
+	if (facet.facet_limit !== -1 && facet.facet_limit <= facet.values.length) {
 		innerUl += "<li class=\"more-facets\"><a id=\"facet-link-" + facet.facet_name + "\" href=\"#\">See all...</a></li>";
 	}
 
 	innerUl += "</ul>"
 
-	return(
-		"<li class=\"heading\" id=\"facet-" +
-		facet.facet_name +
-		"\"><strong>" +
-		facet.name +
-		" <em>(" +
-		facet.panl_code +
-		")</em></strong> [" +
-		getFacetType(facet) +
-		"]<br />" +
-		innerUl +
-		"</li>");
+	return (
+			"<li class=\"heading\" id=\"facet-" +
+			facet.facet_name +
+			"\"><strong>" +
+			facet.name +
+			" <em>(" +
+			facet.panl_code +
+			")</em></strong> [" +
+			getFacetType(facet) +
+			"]<br />" +
+			innerUl +
+			"</li>");
 }
 
 function updateDateRangeLink(facet) {
- var facetName = facet.facet_name;
+	var facetName = facet.facet_name;
 
 	var rangeLink = $("#anchor-date-range-" + facetName);
 
 	var previousNext = $("#previous_next" + facetName + " option:selected").text();
 	var dateNumber = $("#date_number" + facetName).val();
 	var designator = $("#designator" + facetName + " option:selected").text();
-	if(dateNumber === "") {
+	if (dateNumber === "") {
 		rangeLink.text("INVALID");
 		rangeLink.attr("href", "#");
 		return;
@@ -702,36 +709,4 @@ function updateDateRangeLink(facet) {
 			encodePanl(text) +
 			facet.uris.after
 	);
-
-}
-
-function encodePanl(text) {
-	return(encodeURI(
-			text
-				.replaceAll(" ", "+")
-				.replaceAll("%", "%25")));
-}
-
-function getFacetType(orderedLpseFacet) {
-	if(orderedLpseFacet.is_boolean_facet) {
-		return("BOOLEAN");
-	} else if(undefined !== orderedLpseFacet.or_separator) {
-		return("OR SEP");
-	} else if(orderedLpseFacet.is_or_facet) {
-		return("OR");
-	} else if(orderedLpseFacet.is_range_facet) {
-		return("RANGE");
-	} else if(orderedLpseFacet.is_date_range_facet) {
-		return("DATE Range");
-	} else {
-		return("Regular");
-	}
-}
-
-function decodePanl(text) {
-	return(decodeURI(text)
-		.replaceAll("+", " ")
-		.replaceAll("%2B", "+")
-		.replaceAll("%3A", ":")
-		.replaceAll("%2F", "/"));
 }
