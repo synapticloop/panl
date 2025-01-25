@@ -35,6 +35,7 @@ public class Facet {
 	public String value_to;
 	public boolean is_range_facet = false;
 	public boolean is_boolean_facet = false;
+	public boolean is_or_facet = false;
 	public boolean has_infix = false;
 	public String inverse_encoded;
 
@@ -208,6 +209,28 @@ public class Facet {
 			boolean is_range_facet) {
 		this.is_range_facet = is_range_facet;
 	}
-	
-	
+
+	public String getValue_to() {
+		return value_to;
+	}
+
+	public void setValue_to(String value_to) {
+		this.value_to = value_to;
+	}
+
+	public boolean isIs_or_facet() {
+		return is_or_facet;
+	}
+
+	public void setIs_or_facet(boolean is_or_facet) {
+		this.is_or_facet = is_or_facet;
+	}
+
+	public boolean isHas_infix() {
+		return has_infix;
+	}
+
+	public void setHas_infix(boolean has_infix) {
+		this.has_infix = has_infix;
+	}
 }

@@ -94,6 +94,7 @@ public class RangeFacetLpseToken extends LpseToken {
 			StringTokenizer valueTokeniser) {
 		super(lpseCode, collectionProperties);
 
+
 		StringBuilder sb = new StringBuilder(lpseCode);
 		int i = sb.length();
 		while (i < collectionProperties.getLpseLength()) {
@@ -169,7 +170,7 @@ public class RangeFacetLpseToken extends LpseToken {
 	@Override public String explain() {
 		return ("PANL " +
 				(this.isValid ? "[  VALID  ]" : "[ INVALID ]") +
-				" <facet (RANGE)>    LPSE code '" +
+				" <facet (RANGE)>     LPSE code '" +
 				this.lpseCode +
 				"' (solr field '" +
 				this.solrField +

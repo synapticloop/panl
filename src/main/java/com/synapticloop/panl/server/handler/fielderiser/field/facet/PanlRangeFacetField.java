@@ -239,7 +239,14 @@ public class PanlRangeFacetField extends PanlFacetField {
 
 	@Override public String getLpseCode(LpseToken token, CollectionProperties collectionProperties) {
 		RangeFacetLpseToken rangeFacetLpseToken = (RangeFacetLpseToken) token;
-		return (rangeFacetLpseToken.getLpseCode() + (this.hasRangeInfix ? "-" : "+"));
+
+		// whilst this may be a range token, it may just be a single value
+		if(null != rangeFacetLpseToken.getToValue()) {
+			return (rangeFacetLpseToken.getLpseCode() + (this.hasRangeInfix ? "-" : "+"));
+		} else {
+			return (rangeFacetLpseToken.getLpseCode());
+		}
+
 	}
 
 	@Override public void appendToAvailableObjectInternal(JSONObject jsonObject) {
@@ -607,7 +614,12 @@ public class PanlRangeFacetField extends PanlFacetField {
 				RangeFacetLpseToken rangeFacetLpseToken = (RangeFacetLpseToken) lpseToken;
 				if (rangeFacetLpseToken.getIsRangeToken() && !hasRange) {
 					sb.append(lpseCode);
-					sb.append((rangeFacetLpseToken.getHasInfix() ? "-" : "+"));
+
+					// this may not be a range facet, it may just be a single value....
+					// so check to see whether it has a toValue
+					if(null != rangeFacetLpseToken.getToValue()) {
+						sb.append((rangeFacetLpseToken.getHasInfix() ? "-" : "+"));
+					}
 
 					// there may be only one range
 					hasRange = true;

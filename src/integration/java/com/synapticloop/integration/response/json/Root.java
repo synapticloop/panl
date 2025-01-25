@@ -32,10 +32,16 @@ public class Root {
 	@JsonIgnore public Object responseHeader;
 	@JsonIgnore public Object facet_counts;
 	@JsonIgnore public Object highlighting;
+	@JsonIgnore public Object configuration;
+	@JsonIgnore public Object parameters;
+
 
 	public Response response;
 	public Panl panl;
 	public boolean error;
+
+	public String[] explanation;
+
 	/**
 	 * <p>Return the panl.</p>
 	 *

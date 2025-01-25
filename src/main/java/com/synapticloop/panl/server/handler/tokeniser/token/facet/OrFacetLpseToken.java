@@ -118,7 +118,7 @@ public class OrFacetLpseToken extends LpseToken {
 	@Override public String explain() {
 		return ("PANL " +
 						(this.isValid ? "[  VALID  ]" : "[ INVALID ]") +
-						(this.hasMultivalueSeparator ? " <facet (OR SEP)>   LPSE code '" : " <facet (OR)>       LPSE code '") +
+						(this.hasMultivalueSeparator ? " <facet (OR SEP)>    LPSE code '" : " <facet (OR)>        LPSE code '") +
 						this.lpseCode +
 						"' (solr field '" +
 						this.solrField +

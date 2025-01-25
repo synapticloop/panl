@@ -92,7 +92,7 @@ public class DateRangeFacetLpseToken extends LpseToken {
 	@Override public String explain() {
 		return ("PANL " +
 				(this.isValid ? "[  VALID  ]" : "[ INVALID ]") +
-				" <facet (DATE)>     LPSE code '" +
+				" <facet (DATE)>      LPSE code '" +
 				this.lpseCode +
 				"' (solr field '" +
 				this.solrField +

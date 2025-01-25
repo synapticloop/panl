@@ -30,9 +30,11 @@ public class Facet {
 	public String facet_name;
 	public String name;
 	public String panl_code;
+	public String value_separator;
 	public boolean is_boolean_facet;
 	public boolean is_range_facet;
 	public boolean is_date_facet;
+	public boolean is_or_facet;
 	public boolean is_multivalue;
 	public boolean facet_limit;
 
@@ -172,6 +174,36 @@ public class Facet {
 			boolean is_date_facet) {
 		this.is_date_facet = is_date_facet;
 	}
-	
-	
+
+	public boolean isIs_or_facet() {
+		return is_or_facet;
+	}
+
+	public void setIs_or_facet(boolean is_or_facet) {
+		this.is_or_facet = is_or_facet;
+	}
+
+	public boolean isIs_multivalue() {
+		return is_multivalue;
+	}
+
+	public void setIs_multivalue(boolean is_multivalue) {
+		this.is_multivalue = is_multivalue;
+	}
+
+	public boolean isFacet_limit() {
+		return facet_limit;
+	}
+
+	public void setFacet_limit(boolean facet_limit) {
+		this.facet_limit = facet_limit;
+	}
+
+	public String getValue_separator() {
+		return value_separator;
+	}
+
+	public void setValue_separator(String value_separator) {
+		this.value_separator = value_separator;
+	}
 }

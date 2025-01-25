@@ -831,7 +831,9 @@ public abstract class BaseField {
 				facetValueObject.put(JSON_KEY_COUNT, value.getCount());
 				facetValueObject.put(JSON_KEY_ENCODED, getEncodedPanlValue(valueName));
 
-				facetValueObject.put(JSON_KEY_ENCODED_MULTI, URLEncoder.encode(valueName, StandardCharsets.UTF_8));
+				if(isMultiValue) {
+					facetValueObject.put(JSON_KEY_ENCODED_MULTI, URLEncoder.encode(valueName, StandardCharsets.UTF_8));
+				}
 				facetValueArrays.put(facetValueObject);
 			}
 		}

@@ -161,8 +161,8 @@ public class FacetLpseToken extends LpseToken {
 	@Override public String explain() {
 		return ("PANL " +
 				(this.isValid ? "[  VALID  ]" : "[ INVALID ]") +
-				(this.hasMultivalueSeparator ? " <facet (multi SEP)> LPSE code '" : " <facet>           LPSE code '") +
-				" <facet>            LPSE code '" +
+				(this.hasMultivalueSeparator ? " <facet (multi SEP)> LPSE code '" : " <facet>             LPSE code '") +
+				" <facet>             LPSE code '" +
 				this.lpseCode +
 				"' (solr field '" +
 				this.solrField +

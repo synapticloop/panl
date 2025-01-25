@@ -177,8 +177,12 @@ public class PanlOrFacetField extends PanlFacetField {
 				facetValueObject.put(JSON_KEY_VALUE, valueName);
 				facetValueObject.put(JSON_KEY_COUNT, value.getCount());
 				facetValueObject.put(JSON_KEY_ENCODED, getEncodedPanlValue(valueName));
-				// the OR encoding has no prefix or suffix
-				facetValueObject.put(JSON_KEY_ENCODED_MULTI, URLEncoder.encode(valueName, StandardCharsets.UTF_8));
+
+				// the OR encoding has no prefix or suffix - but only if it has a value
+				// separator
+				if(null != valueSeparator) {
+					facetValueObject.put(JSON_KEY_ENCODED_MULTI, URLEncoder.encode(valueName, StandardCharsets.UTF_8));
+				}
 				facetValueArrays.put(facetValueObject);
 			}
 		}
