@@ -139,7 +139,7 @@ function populatePanlResults(panlJsonData) {
 
 	$("#explain-collection").attr("href", "/panl-results-explainer" + $("#collection").text() + "/?explain=" + panlJsonData.panl.canonical_uri)
 
-	$("#canonical_uri").append(panlJsonData.panl.canonical_uri);
+	$("#canonical_uri").append(decodeURIComponent(panlJsonData.panl.canonical_uri));
 
 	// first up the total results
 	$("#num_results")
