@@ -28,6 +28,8 @@ public class Value {
 	public int count;
 	public String encoded;
 	public String value;
+	public String encoded_multi;
+
 	/**
 	 * <p>Return the count.</p>
 	 *
@@ -79,6 +81,12 @@ public class Value {
 			String value) {
 		this.value = value;
 	}
-	
-	
+
+	public String getEncoded_multi() {
+		return encoded_multi;
+	}
+
+	public void setEncoded_multi(String encoded_multi) {
+		this.encoded_multi = encoded_multi;
+	}
 }
