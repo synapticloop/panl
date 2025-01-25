@@ -36,18 +36,17 @@
 
 **Major branch release status:**
 
-| BRANCH              | STATUS                                                                                                                                                                                                                                                                            | TYPE                                                          |
-|---------------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|---------------------------------------------------------------|
-| `MAIN`              | [![CircleCI](https://dl.circleci.com/status-badge/img/circleci/3Y1eqqe4mcvtSZuzJnQ3tJ/DyFKUm7c7AoLa1wHmRjAnf/tree/main.svg?style=shield)](https://dl.circleci.com/status-badge/redirect/circleci/3Y1eqqe4mcvtSZuzJnQ3tJ/DyFKUm7c7AoLa1wHmRjAnf/tree/main)                         | Trunk - integrates with the latest Solr version (currently 9) |
-| `SOLR PANL 9`       | [![CircleCI](https://dl.circleci.com/status-badge/img/circleci/3Y1eqqe4mcvtSZuzJnQ3tJ/DyFKUm7c7AoLa1wHmRjAnf/tree/solr-panl-9.svg?style=shield)](https://dl.circleci.com/status-badge/redirect/circleci/3Y1eqqe4mcvtSZuzJnQ3tJ/DyFKUm7c7AoLa1wHmRjAnf/tree/solr-panl-9)           | Panl version for integrating with Solr version 9              |
-| `SOLR PANL 8`       | [![CircleCI](https://dl.circleci.com/status-badge/img/circleci/3Y1eqqe4mcvtSZuzJnQ3tJ/DyFKUm7c7AoLa1wHmRjAnf/tree/solr-panl-8.svg?style=shield)](https://dl.circleci.com/status-badge/redirect/circleci/3Y1eqqe4mcvtSZuzJnQ3tJ/DyFKUm7c7AoLa1wHmRjAnf/tree/solr-panl-8)           | Panl version for integrating with Solr version 8              |
-| `SOLR PANL 7`       | [![CircleCI](https://dl.circleci.com/status-badge/img/circleci/3Y1eqqe4mcvtSZuzJnQ3tJ/DyFKUm7c7AoLa1wHmRjAnf/tree/solr-panl-7.svg?style=shield)](https://dl.circleci.com/status-badge/redirect/circleci/3Y1eqqe4mcvtSZuzJnQ3tJ/DyFKUm7c7AoLa1wHmRjAnf/tree/solr-panl-7)           | Panl version for integrating with Solr version 7              |
-| `billowing-feather` | [![CircleCI](https://dl.circleci.com/status-badge/img/circleci/3Y1eqqe4mcvtSZuzJnQ3tJ/DyFKUm7c7AoLa1wHmRjAnf/tree/billowing-feather.svg?style=shield)](https://dl.circleci.com/status-badge/redirect/circleci/3Y1eqqe4mcvtSZuzJnQ3tJ/DyFKUm7c7AoLa1wHmRjAnf/tree/billowing-feather) | Panl base release version 1.3.0                               |
-| `or-separator`      | [![CircleCI](https://dl.circleci.com/status-badge/img/circleci/3Y1eqqe4mcvtSZuzJnQ3tJ/DyFKUm7c7AoLa1wHmRjAnf/tree/or-separator.svg?style=shield)](https://dl.circleci.com/status-badge/redirect/circleci/3Y1eqqe4mcvtSZuzJnQ3tJ/DyFKUm7c7AoLa1wHmRjAnf/tree/or-separator)         | Panl additional functionality                                 |
+| BRANCH              | STATUS                                                                                                                                                                                                                                                                              | TYPE                                                          |
+|---------------------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|---------------------------------------------------------------|
+| `MAIN`              | [![CircleCI](https://dl.circleci.com/status-badge/img/circleci/3Y1eqqe4mcvtSZuzJnQ3tJ/DyFKUm7c7AoLa1wHmRjAnf/tree/main.svg?style=shield)](https://dl.circleci.com/status-badge/redirect/circleci/3Y1eqqe4mcvtSZuzJnQ3tJ/DyFKUm7c7AoLa1wHmRjAnf/tree/main)                           | Trunk - integrates with the latest Solr version (currently 9) |
+| `SOLR PANL 9`       | [![CircleCI](https://dl.circleci.com/status-badge/img/circleci/3Y1eqqe4mcvtSZuzJnQ3tJ/DyFKUm7c7AoLa1wHmRjAnf/tree/solr-panl-9.svg?style=shield)](https://dl.circleci.com/status-badge/redirect/circleci/3Y1eqqe4mcvtSZuzJnQ3tJ/DyFKUm7c7AoLa1wHmRjAnf/tree/solr-panl-9)             | Panl version for integrating with Solr version 9              |
+| `SOLR PANL 8`       | [![CircleCI](https://dl.circleci.com/status-badge/img/circleci/3Y1eqqe4mcvtSZuzJnQ3tJ/DyFKUm7c7AoLa1wHmRjAnf/tree/solr-panl-8.svg?style=shield)](https://dl.circleci.com/status-badge/redirect/circleci/3Y1eqqe4mcvtSZuzJnQ3tJ/DyFKUm7c7AoLa1wHmRjAnf/tree/solr-panl-8)             | Panl version for integrating with Solr version 8              |
+| `SOLR PANL 7`       | [![CircleCI](https://dl.circleci.com/status-badge/img/circleci/3Y1eqqe4mcvtSZuzJnQ3tJ/DyFKUm7c7AoLa1wHmRjAnf/tree/solr-panl-7.svg?style=shield)](https://dl.circleci.com/status-badge/redirect/circleci/3Y1eqqe4mcvtSZuzJnQ3tJ/DyFKUm7c7AoLa1wHmRjAnf/tree/solr-panl-7)             | Panl version for integrating with Solr version 7              |
+| `billowing-feather` | [![CircleCI](https://dl.circleci.com/status-badge/img/circleci/3Y1eqqe4mcvtSZuzJnQ3tJ/DyFKUm7c7AoLa1wHmRjAnf/tree/billowing-feather.svg?style=shield)](https://dl.circleci.com/status-badge/redirect/circleci/3Y1eqqe4mcvtSZuzJnQ3tJ/DyFKUm7c7AoLa1wHmRjAnf/tree/billowing-feather) | Panl development release version 1.3.0                       |
 
 
 
-> We _always_ recommend that you use the most recently available release which contains bug fixes and new functionality and is generally backwards compatible.
+> We _always_ recommend that you use the most recently available release which contains bug fixes and new functionality and is _generally_ backwards compatible.
 
 # Instructions
 
@@ -109,6 +108,8 @@ Working with a Solr schema, the Panl configuration files translate unwieldy URL 
 
 1. **BOOLEAN value translations**, for any Solr field that is defined as a `solr.BoolField`, then an additional translation can be performed.  ‘True’ and ‘false’ values can be replaced with arbitrary text, which will be transparently converted between Panl and Solr.  For the LPSE URI path of `/Caran+d'Ache/true/Black/bDW/` the true value (which is defined as whether the mechanical pencil can be disassembled could be changed to ‘Able to be disassembled’ for true values, and ‘Cannot be disassembled’ for false values.  The above URI path would then become
    `/Caran+d'Ache/Able+to+be+disassembled/Black/bDW/`
+
+1.  **CONDENSE multiple field values** - Rather than having a forward slash URL path separator for multiple values of the same facet (used in OR Facets and Multi-valued REGULAR facets), Panl can be configured to condense these values into a single path part, saving URL characters, and reducing URL length, and making the URL far more human-readable.  For example, selecting pencils manufactured by `Faber-Castell` **OR** `Koh-i-Noor` could have the URI path of `/Manufactured+by+Koh-i-Noor/Manufactured+by+Faber-Castell/bb/`, with condensed multiple field values - this becomes `/Manufactured+by+Koh-i-Noor%2C+or+Faber-Castell+Co./b/`
 
 1. **FIELD VALUE validation** - By default, Solr can error when an invalid value is passed through - for example, if Solr is expecting a numeric value and it could not be parsed.  Panl can protect against this, by attempting to parse the value as best it can, and silently dropping the parameter if it cannot be sensibly parsed.
 
@@ -520,7 +521,7 @@ with the release files named `solr-panl-9-x.x.x` where `x.x.x` is the version nu
   - Added in Testing for the Panl Generator and refactored how it is being done.
   - Refactored PanlFields for the generator to output better comments and helpful information rather than more comments than necessary
   - General code cleanup and refactorings
-  - Updated the look and feel for the Panl Simple Results Viewer Web APp 
+  - Updated the look and feel for the Panl Simple Results Viewer Web App 
 
 
 - **Documentation update**
