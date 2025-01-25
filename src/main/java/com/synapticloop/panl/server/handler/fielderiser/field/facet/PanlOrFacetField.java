@@ -29,7 +29,6 @@ import com.synapticloop.panl.server.handler.fielderiser.field.BaseField;
 import com.synapticloop.panl.server.handler.properties.CollectionProperties;
 import com.synapticloop.panl.server.handler.tokeniser.LpseTokeniser;
 import com.synapticloop.panl.server.handler.tokeniser.token.LpseToken;
-import com.synapticloop.panl.server.handler.tokeniser.token.facet.FacetLpseToken;
 import com.synapticloop.panl.server.handler.tokeniser.token.facet.OrFacetLpseToken;
 import org.apache.solr.client.solrj.SolrQuery;
 import org.apache.solr.client.solrj.response.FacetField;
@@ -49,20 +48,18 @@ public class PanlOrFacetField extends PanlFacetField {
 	private static final Logger LOGGER = LoggerFactory.getLogger(PanlOrFacetField.class);
 
 	public static final String JSON_KEY_IS_OR_FACET = "is_or_facet";
-	public static final String JSON_KEY_OR_SEPARATOR = "or_separator";
 
 	// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - //
 	//                            OR Facet properties                          //
 	// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - //
 	protected boolean isAlwaysOr = false;
-	protected String orSeparator = null;
 
 	public PanlOrFacetField(String lpseCode, String propertyKey, Properties properties, String solrCollection,
 				String panlCollectionUri, int lpseLength) throws PanlServerException {
 		super(lpseCode, propertyKey, properties, solrCollection, panlCollectionUri, lpseLength);
 
 		this.isAlwaysOr = properties.getProperty(PROPERTY_KEY_PANL_OR_ALWAYS + lpseCode, "false").equalsIgnoreCase("true");
-		this.orSeparator = properties.getProperty(PROPERTY_KEY_PANL_OR_SEPARATOR + lpseCode, null);
+		this.valueSeparator = properties.getProperty(PROPERTY_KEY_PANL_OR_SEPARATOR + lpseCode, null);
 	}
 
 	@Override public List<String> explainAdditional() {
@@ -118,8 +115,8 @@ public class PanlOrFacetField extends PanlFacetField {
 
 	@Override public void appendToAvailableObjectInternal(JSONObject jsonObject) {
 		jsonObject.put(JSON_KEY_IS_OR_FACET, true);
-		if (null != orSeparator) {
-			jsonObject.put(JSON_KEY_OR_SEPARATOR, orSeparator);
+		if (null != valueSeparator) {
+			jsonObject.put(JSON_KEY_VALUE_SEPARATOR, valueSeparator);
 		}
 	}
 
@@ -181,7 +178,7 @@ public class PanlOrFacetField extends PanlFacetField {
 				facetValueObject.put(JSON_KEY_COUNT, value.getCount());
 				facetValueObject.put(JSON_KEY_ENCODED, getEncodedPanlValue(valueName));
 				// the OR encoding has no prefix or suffix
-				facetValueObject.put(JSON_KEY_ENCODED_OR, URLEncoder.encode(valueName, StandardCharsets.UTF_8));
+				facetValueObject.put(JSON_KEY_ENCODED_MULTI, URLEncoder.encode(valueName, StandardCharsets.UTF_8));
 				facetValueArrays.put(facetValueObject);
 			}
 		}
@@ -214,14 +211,14 @@ public class PanlOrFacetField extends PanlFacetField {
 	private String getOrURIPathStart(Map<String, List<LpseToken>> panlTokenMap) {
 		StringBuilder sb = new StringBuilder();
 
-		if (orSeparator != null) {
+		if (valueSeparator != null) {
 			if (hasValuePrefix) {
 				sb.append(URLEncoder.encode(valuePrefix, StandardCharsets.UTF_8));
 			}
 		}
 
 		if (panlTokenMap.containsKey(lpseCode)) {
-			if (orSeparator != null) {
+			if (valueSeparator != null) {
 				List<String> validValues = new ArrayList<>();
 
 				for(LpseToken lpseToken : panlTokenMap.get(lpseCode)) {
@@ -233,7 +230,7 @@ public class PanlOrFacetField extends PanlFacetField {
 				if (!validValues.isEmpty()) {
 					for(String validValue : validValues) {
 						sb.append(URLEncoder.encode(validValue, StandardCharsets.UTF_8));
-						sb.append(URLEncoder.encode(orSeparator, StandardCharsets.UTF_8));
+						sb.append(URLEncoder.encode(valueSeparator, StandardCharsets.UTF_8));
 					}
 
 //					sb.append(getOrURIPathEnd(panlTokenMap));
@@ -254,7 +251,7 @@ public class PanlOrFacetField extends PanlFacetField {
 
 	private String getOrURIPathEnd() {
 		StringBuilder sb = new StringBuilder();
-		if (orSeparator != null) {
+		if (valueSeparator != null) {
 			if (hasValueSuffix) {
 				sb.append(URLEncoder.encode(valueSuffix, StandardCharsets.UTF_8));
 			}
@@ -294,7 +291,7 @@ public class PanlOrFacetField extends PanlFacetField {
 			if (orderedLpseCode.equals(this.lpseCode)) {
 				// we have found the current LPSE code, so reset the URI and add it to
 				// the after
-				if (orSeparator != null) {
+				if (valueSeparator != null) {
 					lpseUri.append(getOrURIPathStart(panlTokenMap));
 				} else {
 					lpseUri.append(baseField.getURIPath(panlTokenMap, collectionProperties));
@@ -302,7 +299,7 @@ public class PanlOrFacetField extends PanlFacetField {
 
 				lpseUriBefore.append(lpseUri);
 				lpseUri.setLength(0);
-				if (orSeparator != null) {
+				if (valueSeparator != null) {
 					lpseUri.append(getOrURIPathEnd());
 					lpseUri.append("/");
 				}
@@ -354,7 +351,7 @@ public class PanlOrFacetField extends PanlFacetField {
 		additionObject.put(JSON_KEY_BEFORE, lpseUriBefore.toString());
 
 		// if we have an or separator, we have already added the forward slash
-		if (orSeparator != null) {
+		if (valueSeparator != null) {
 			additionObject.put(JSON_KEY_AFTER, lpseUri.toString() + lpseUriCode + FORWARD_SLASH);
 		} else {
 			additionObject.put(JSON_KEY_AFTER, FORWARD_SLASH + lpseUri + lpseUriCode + FORWARD_SLASH);
@@ -381,10 +378,10 @@ public class PanlOrFacetField extends PanlFacetField {
 				StringTokenizer valueTokeniser,
 				LpseTokeniser lpseTokeniser) {
 
-		if (this.orSeparator != null) {
+		if (this.valueSeparator != null) {
 			// we have an or separator
 			return (OrFacetLpseToken.getSeparatedLpseTokens(
-						orSeparator,
+					valueSeparator,
 						collectionProperties,
 						this.lpseCode,
 						lpseTokeniser,
@@ -401,7 +398,7 @@ public class PanlOrFacetField extends PanlFacetField {
 
 	@Override public String getCanonicalUriPath(Map<String, List<LpseToken>> panlTokenMap,
 				CollectionProperties collectionProperties) {
-		if (this.orSeparator != null) {
+		if (this.valueSeparator != null) {
 			if (panlTokenMap.containsKey(lpseCode)) {
 				StringBuilder stringBuilder = new StringBuilder(getValuePrefix());
 				boolean isFirst = true;
@@ -422,7 +419,7 @@ public class PanlOrFacetField extends PanlFacetField {
 
 	@Override public String getCanonicalLpseCode(Map<String, List<LpseToken>> panlTokenMap,
 				CollectionProperties collectionProperties) {
-		if (this.orSeparator != null) {
+		if (this.valueSeparator != null) {
 			if (panlTokenMap.containsKey(lpseCode)) {
 				// for or separators, there is only ever one lpse code
 				return (lpseCode);
@@ -454,7 +451,7 @@ public class PanlOrFacetField extends PanlFacetField {
 	public String getURIPath(Map<String, List<LpseToken>> panlTokenMap, CollectionProperties collectionProperties) {
 		StringBuilder sb = new StringBuilder();
 		if (panlTokenMap.containsKey(lpseCode)) {
-			if (this.orSeparator != null) {
+			if (this.valueSeparator != null) {
 				sb.append(URLEncoder.encode(getValuePrefix(), StandardCharsets.UTF_8));
 				boolean isFirst = true;
 				for(LpseToken lpseToken : panlTokenMap.get(lpseCode)) {
@@ -481,7 +478,7 @@ public class PanlOrFacetField extends PanlFacetField {
 	public String getLpseCode(Map<String, List<LpseToken>> panlTokenMap, CollectionProperties collectionProperties) {
 		StringBuilder sb = new StringBuilder();
 		if (panlTokenMap.containsKey(lpseCode)) {
-			if (orSeparator != null) {
+			if (valueSeparator != null) {
 				return (this.lpseCode);
 			} else {
 				for(LpseToken lpseToken : panlTokenMap.get(lpseCode)) {
@@ -525,6 +522,6 @@ public class PanlOrFacetField extends PanlFacetField {
 	 * @return the string for the OR separator, or null if not set
 	 */
 	public String getOrSeparator() {
-		return orSeparator;
+		return valueSeparator;
 	}
 }

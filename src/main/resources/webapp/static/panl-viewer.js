@@ -77,6 +77,9 @@ function isValidUrl(collection, fieldset) {
 	return (false);
 }
 
+/**
+ * Perform the Panl search
+ */
 function panlSearch() {
 	var panlQueryUrl = window.location.pathname.substring(panlResultsViewerUrl.length) + window.location.search;
 	$.ajax({
@@ -87,6 +90,13 @@ function panlSearch() {
 	});
 }
 
+/**
+ * Populate the Panl Results with the JSON results from the server.  This will
+ * also console.log individual objects from the JSON response with headings
+ * for ease of debugging.
+ *
+ * @param panlJsonData The Returned Panl JSON data
+ */
 function populatePanlResults(panlJsonData) {
 	console.log("[ RETURNED JSON OBJECT ]")
 	console.log(panlJsonData);
@@ -656,7 +666,7 @@ function generateFacetHTML(facet) {
 				((facet.value_separator !== undefined) ? value.encoded_multi : value.encoded) +
 				facet.uris.after +
 				"\"><img class=\"add\" src=\"/webapp/static/add.png\" title=\"Add facet\"></a>&nbsp;" +
-				decodePanl(value.encoded);
+				(facet.is_multivalue ? decodePanl(value.encoded_multi) : decodePanl(value.encoded));
 
 		if (!facet.is_or_facet) {
 			innerUl += "&nbsp;(" + value.count + ")";

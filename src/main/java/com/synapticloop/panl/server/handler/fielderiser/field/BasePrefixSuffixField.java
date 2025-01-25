@@ -263,7 +263,9 @@ public abstract class BasePrefixSuffixField extends BaseField {
 	 * @param jsonObject The JSON object to append to
 	 */
 	@Override protected void appendToAvailableObjectInternal(JSONObject jsonObject) {
-
+		if (null != valueSeparator) {
+			jsonObject.put(JSON_KEY_VALUE_SEPARATOR, valueSeparator);
+		}
 	}
 
 	/**
