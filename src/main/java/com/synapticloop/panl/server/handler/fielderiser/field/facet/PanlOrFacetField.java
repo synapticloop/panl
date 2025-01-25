@@ -304,7 +304,7 @@ public class PanlOrFacetField extends PanlFacetField {
 					lpseUri.append("/");
 				}
 
-				if(collectionProperties.getIsOrSeparatorFacetField(this.lpseCode)) {
+				if(collectionProperties.getIsMultiValuedSeparatorFacetField(this.lpseCode)) {
 					if (!lpseCodeMap.containsKey(this.lpseCode)) {
 						lpseUriCode.append(this.lpseCode);
 					}
@@ -334,7 +334,7 @@ public class PanlOrFacetField extends PanlFacetField {
 				} else {
 
 					// check for or separators...
-					if(collectionProperties.getIsOrSeparatorFacetField(baseField.getLpseCode())) {
+					if(collectionProperties.getIsMultiValuedSeparatorFacetField(baseField.getLpseCode())) {
 						lpseUriCode.append(baseField.getLpseCode());
 					} else {
 						// just replace it with the correct number of LPSE codes
@@ -404,7 +404,7 @@ public class PanlOrFacetField extends PanlFacetField {
 				boolean isFirst = true;
 				for(LpseToken lpseToken : panlTokenMap.get(lpseCode)) {
 					if (!isFirst) {
-						stringBuilder.append(getOrSeparator());
+						stringBuilder.append(getValueSeparator());
 					}
 					isFirst = false;
 					stringBuilder.append(lpseToken.getValue());
@@ -456,7 +456,7 @@ public class PanlOrFacetField extends PanlFacetField {
 				boolean isFirst = true;
 				for(LpseToken lpseToken : panlTokenMap.get(lpseCode)) {
 					if (!isFirst) {
-						sb.append(URLEncoder.encode(getOrSeparator(), StandardCharsets.UTF_8));
+						sb.append(URLEncoder.encode(getValueSeparator(), StandardCharsets.UTF_8));
 					}
 					isFirst = false;
 					sb.append(URLEncoder.encode(lpseToken.getValue(), StandardCharsets.UTF_8));
@@ -484,13 +484,13 @@ public class PanlOrFacetField extends PanlFacetField {
 				for(LpseToken lpseToken : panlTokenMap.get(lpseCode)) {
 					// we need to know whether this is an OR field
 
-					if(collectionProperties.getIsOrSeparatorFacetField(lpseCode)) {
+					if(collectionProperties.getIsMultiValuedSeparatorFacetField(lpseCode)) {
 						return(lpseCode);
 					}
 
 					BaseField lpseField = collectionProperties.getLpseField(lpseCode);
 					if(lpseField instanceof PanlOrFacetField) {
-						if(((PanlOrFacetField)lpseField).getOrSeparator() != null) {
+						if(((PanlOrFacetField)lpseField).getValueSeparator() != null) {
 							return(lpseCode);
 						}
 					}
@@ -513,15 +513,5 @@ public class PanlOrFacetField extends PanlFacetField {
 	 */
 	public boolean getIsAlwaysOr() {
 		return (isAlwaysOr);
-	}
-
-	/**
-	 * <p>Return the OR separator for OR field values.  This will return null if
-	 * no OR separator is configured.</p>
-	 *
-	 * @return the string for the OR separator, or null if not set
-	 */
-	public String getOrSeparator() {
-		return valueSeparator;
 	}
 }

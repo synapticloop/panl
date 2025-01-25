@@ -497,7 +497,7 @@ public abstract class BaseField {
 
 			// if this is an or separator facet - then there will only every be the
 			// one facet LPSE code
-			if (collectionProperties.getIsOrSeparatorFacetField(lpseCode)) {
+			if (collectionProperties.getIsMultiValuedSeparatorFacetField(lpseCode)) {
 				return (lpseCode);
 			}
 
@@ -946,5 +946,17 @@ public abstract class BaseField {
 	 */
 	public boolean getHasURIComponent() {
 		return (this.hasURIComponent);
+	}
+
+	/**
+	 * <p>Return the value separator facet values.  This will return null if
+	 * not configured - This is only available on OR Facet fields with an OR
+	 * separator configured, and on REGULAR facets which are multivalued and
+	 * have a multivalue separator configured.</p>
+	 *
+	 * @return the string for the value separator, or null if not set
+	 */
+	public String getValueSeparator() {
+		return valueSeparator;
 	}
 }

@@ -162,7 +162,7 @@ public class CollectionProperties {
 
 	private final Set<String> PANL_CODE_OR_FIELDS = new HashSet<>();
 	private final Set<String> PANL_CODE_OR_FIELDS_ALWAYS = new HashSet<>();
-	private final Set<String> PANL_CODE_OR_SEPARATOR_FIELDS = new HashSet<>();
+	private final Set<String> PANL_CODE_MULTIVALUED_SEPARATOR_FIELDS = new HashSet<>();
 	private final Set<String> PANL_CODE_RANGE_FIELDS = new HashSet<>();
 
 
@@ -494,10 +494,6 @@ public class CollectionProperties {
 				if (panlOrFacetField.getIsAlwaysOr()) {
 					PANL_CODE_OR_FIELDS_ALWAYS.add(lpseCode);
 				}
-
-				if(panlOrFacetField.getOrSeparator() != null) {
-					PANL_CODE_OR_SEPARATOR_FIELDS.add(lpseCode);
-				}
 			} else if (isRangeFacet) {
 				facetField = new PanlRangeFacetField(lpseCode, panlFieldKey, properties, solrCollection, panlCollectionUri,
 							lpseLength);
@@ -506,6 +502,13 @@ public class CollectionProperties {
 			} else {
 				facetField = new PanlFacetField(lpseCode, panlFieldKey, properties, solrCollection, panlCollectionUri,
 							lpseLength);
+			}
+
+			// the following occurs on OR facets with a separator, and with regular
+			// facets that are configured to be multivalued and have a multivalue
+			// separator
+			if(facetField.getValueSeparator() != null) {
+				PANL_CODE_MULTIVALUED_SEPARATOR_FIELDS.add(lpseCode);
 			}
 
 			String lpseWhen = properties.getProperty(PROPERTY_KEY_PANL_WHEN + lpseCode);
@@ -918,8 +921,8 @@ public class CollectionProperties {
 	 * @param lpseCode The LPSE code to check
 	 * @return Whether the LPSE code field has an  OR separator
 	 */
-	public boolean getIsOrSeparatorFacetField(String lpseCode) {
-		return (PANL_CODE_OR_SEPARATOR_FIELDS.contains(lpseCode));
+	public boolean getIsMultiValuedSeparatorFacetField(String lpseCode) {
+		return (PANL_CODE_MULTIVALUED_SEPARATOR_FIELDS.contains(lpseCode));
 	}
 
 	/**

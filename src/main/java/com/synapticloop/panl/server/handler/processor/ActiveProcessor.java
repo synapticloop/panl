@@ -25,7 +25,6 @@ package com.synapticloop.panl.server.handler.processor;
  */
 
 import com.synapticloop.panl.server.handler.fielderiser.field.facet.PanlOrFacetField;
-import com.synapticloop.panl.server.handler.fielderiser.field.param.PanlSortField;
 import com.synapticloop.panl.server.handler.properties.CollectionProperties;
 import com.synapticloop.panl.server.handler.fielderiser.field.BaseField;
 import com.synapticloop.panl.server.handler.tokeniser.token.facet.BooleanFacetLpseToken;
@@ -198,7 +197,7 @@ public class ActiveProcessor extends Processor {
 			CollectionProperties collectionProperties) {
 
 		// if we are currently looking at LPSE code which is an OR separator
-		boolean isOrSeparator = false;
+		boolean hasMultivalueSeparator = false;
 		String previousLpseCode = "";
 		String previousValueSuffix = "";
 
@@ -217,11 +216,11 @@ public class ActiveProcessor extends Processor {
 				String lpseComponent = lpseComponents.get(i);
 				if (lpseCode.equals(previousLpseCode)) {
 					// we just carry on
-					if (isOrSeparator) {
+					if (hasMultivalueSeparator) {
 						// the previous LPSE code is an or separator, we only need to add
 						// the value, with the OR SEPARATOR
 						uri.append(
-								URLEncoder.encode(((PanlOrFacetField) lpseField).getOrSeparator() + lpseToken.getValue(),
+								URLEncoder.encode(((PanlOrFacetField) lpseField).getValueSeparator() + lpseToken.getValue(),
 										StandardCharsets.UTF_8));
 						previousValueSuffix = lpseField.getValueSuffix();
 					} else {
@@ -249,7 +248,7 @@ public class ActiveProcessor extends Processor {
 						lpseComponentsAdded.add(lpseComponent);
 					}
 					// the current and previous are different
-					if (isOrSeparator) {
+					if (hasMultivalueSeparator) {
 						// the previous LPSE code is an or Separator - we don't know whether
 						// this one is - we will test for it, but we shall add the value
 						// suffix to it.
@@ -257,12 +256,12 @@ public class ActiveProcessor extends Processor {
 						   .append("/");
 					}
 
-					if (collectionProperties.getIsOrSeparatorFacetField(lpseCode)) {
-						isOrSeparator = true;
+					if (collectionProperties.getIsMultiValuedSeparatorFacetField(lpseCode)) {
+						hasMultivalueSeparator = true;
 						// this is the start of an OR separator
 						uri.append(URLEncoder.encode(lpseField.getValuePrefix() + lpseToken.getValue(), StandardCharsets.UTF_8));
 					} else {
-						isOrSeparator = false;
+						hasMultivalueSeparator = false;
 
 						if (lpseField.getHasURIComponent()) {
 							uri.append(lpseField.getEncodedPanlValue(lpseToken))
@@ -283,7 +282,7 @@ public class ActiveProcessor extends Processor {
 
 		// if we still are in an or separator and we have no more tokens to process
 		// then we have a dangling suffix that may need to be added
-		if (isOrSeparator) {
+		if (hasMultivalueSeparator) {
 			uri.append(
 					   URLEncoder.encode(previousValueSuffix, StandardCharsets.UTF_8))
 			   .append("/");
@@ -318,8 +317,8 @@ public class ActiveProcessor extends Processor {
 						sortLpseToken.getLpseSortCode() +
 						sortLpseToken.getInverseSortOrderUriKey();
 
-		// if we are currently looking at LPSE code which is an OR separator
-		boolean isOrSeparator = false;
+		// if we are currently looking at LPSE code which has a multivalue separator
+		boolean hasMultivalueSeparator = false;
 		String previousLpseCode = "";
 		String previousValueSuffix = "";
 
@@ -336,28 +335,28 @@ public class ActiveProcessor extends Processor {
 			boolean found = false;
 			String lpseComponent = lpseComponents.get(i);
 			if (!found && sortLpseUriCode.equals(lpseComponent)) {
-				if (isOrSeparator) {
+				if (hasMultivalueSeparator) {
 					uri.append(
 							   URLEncoder.encode(previousValueSuffix, StandardCharsets.UTF_8))
 					   .append("/");
 				}
-				isOrSeparator = false;
+				hasMultivalueSeparator = false;
 				found = true;
 				lpse.append(inverseSortUriCode);
 			} else {
 				// we need to go through the facets
 				if (lpseCode.equals(previousLpseCode)) {
 					// we just carry on
-					if (isOrSeparator) {
-						// the previous LPSE code is an or separator, we only need to add
-						// the value, with the OR SEPARATOR
+					if (hasMultivalueSeparator) {
+						// the previous LPSE code has a multivalue separator, we only need
+						// to add the value, with the value SEPARATOR
 						uri.append(
-								URLEncoder.encode(((PanlOrFacetField) lpseField).getOrSeparator() + lpseToken.getValue(),
+								URLEncoder.encode(((PanlOrFacetField) lpseField).getValueSeparator() + lpseToken.getValue(),
 										StandardCharsets.UTF_8));
 						previousValueSuffix = lpseField.getValueSuffix();
 					} else {
-						// not currently an or separator - get the full value
-						// if the previous lpse code was an or Separator, add the value
+						// not currently has a multivalue separator - get the full value
+						// if the previous lpse code has a multivalue Separator, add the value
 						// suffix
 						if (lpseField.getHasURIComponent()) {
 							uri.append(lpseField.getEncodedPanlValue(lpseToken))
@@ -379,20 +378,20 @@ public class ActiveProcessor extends Processor {
 						lpseComponentsAdded.add(lpseComponent);
 					}
 					// the current and previous are different
-					if (isOrSeparator) {
-						// the previous LPSE code is an or Separator - we don't know whether
+					if (hasMultivalueSeparator) {
+						// the previous LPSE code has a multivalue Separator - we don't know whether
 						// this one is - we will test for it, but we shall add the value
 						// suffix to it.
 						uri.append(URLEncoder.encode(previousValueSuffix, StandardCharsets.UTF_8))
 						   .append("/");
 					}
 
-					if (collectionProperties.getIsOrSeparatorFacetField(lpseCode)) {
-						isOrSeparator = true;
-						// this is the start of an OR separator
+					if (collectionProperties.getIsMultiValuedSeparatorFacetField(lpseCode)) {
+						hasMultivalueSeparator = true;
+						// this is the start of a multivalue separator
 						uri.append(URLEncoder.encode(lpseField.getValuePrefix() + lpseToken.getValue(), StandardCharsets.UTF_8));
 					} else {
-						isOrSeparator = false;
+						hasMultivalueSeparator = false;
 
 						// for sort fields (and operands) and anything which doesn't have a
 						// URI path - we want to skip putting in any value or forward slash
@@ -415,9 +414,9 @@ public class ActiveProcessor extends Processor {
 
 		}
 
-		// if we still are in an or separator and we have no more tokens to process
+		// if we still are in multivalue separator and we have no more tokens to process
 		// then we have a dangling suffix that may need to be added
-		if (isOrSeparator) {
+		if (hasMultivalueSeparator) {
 			uri.append(
 					   URLEncoder.encode(previousValueSuffix, StandardCharsets.UTF_8))
 			   .append("/");
@@ -447,7 +446,7 @@ public class ActiveProcessor extends Processor {
 		String inverseBooleanValue = booleanFacetLpseToken.getInverseBooleanValue(booleanFacetLpseToken);
 
 		// if we are currently looking at LPSE code which is an OR separator
-		boolean isOrSeparator = false;
+		boolean hasMultivalueSeparator = false;
 		String previousLpseCode = "";
 		String previousValueSuffix = "";
 
@@ -464,12 +463,12 @@ public class ActiveProcessor extends Processor {
 
 			boolean found = false;
 			if (!found && booleanLpseCode.equals(lpseTokens.get(i).getLpseCode())) {
-				if (isOrSeparator) {
+				if (hasMultivalueSeparator) {
 					uri.append(
 							   URLEncoder.encode(previousValueSuffix, StandardCharsets.UTF_8))
 					   .append("/");
 				}
-				isOrSeparator = false;
+				hasMultivalueSeparator = false;
 				found = true;
 				lpse.append(booleanFacetLpseToken.getLpseCode());
 				uri.append(inverseBooleanValue)
@@ -478,11 +477,11 @@ public class ActiveProcessor extends Processor {
 				// we need to go through the facets
 				if (lpseCode.equals(previousLpseCode)) {
 					// we just carry on
-					if (isOrSeparator) {
+					if (hasMultivalueSeparator) {
 						// the previous LPSE code is an or separator, we only need to add
 						// the value, with the OR SEPARATOR
 						uri.append(
-								URLEncoder.encode(((PanlOrFacetField) lpseField).getOrSeparator() + lpseToken.getValue(),
+								URLEncoder.encode(((PanlOrFacetField) lpseField).getValueSeparator() + lpseToken.getValue(),
 										StandardCharsets.UTF_8));
 						previousValueSuffix = lpseField.getValueSuffix();
 					} else {
@@ -509,7 +508,7 @@ public class ActiveProcessor extends Processor {
 						lpseComponentsAdded.add(lpseComponent);
 					}
 					// the current and previous are different
-					if (isOrSeparator) {
+					if (hasMultivalueSeparator) {
 						// the previous LPSE code is an or Separator - we don't know whether
 						// this one is - we will test for it, but we shall add the value
 						// suffix to it.
@@ -517,12 +516,12 @@ public class ActiveProcessor extends Processor {
 						   .append("/");
 					}
 
-					if (collectionProperties.getIsOrSeparatorFacetField(lpseCode)) {
-						isOrSeparator = true;
+					if (collectionProperties.getIsMultiValuedSeparatorFacetField(lpseCode)) {
+						hasMultivalueSeparator = true;
 						// this is the start of an OR separator
 						uri.append(URLEncoder.encode(lpseField.getValuePrefix() + lpseToken.getValue(), StandardCharsets.UTF_8));
 					} else {
-						isOrSeparator = false;
+						hasMultivalueSeparator = false;
 						if (lpseField.getHasURIComponent()) {
 							uri.append(lpseField.getEncodedPanlValue(lpseToken))
 							   .append("/");
@@ -537,7 +536,7 @@ public class ActiveProcessor extends Processor {
 
 		// if we still are in an or separator and we have no more tokens to process
 		// then we have a dangling suffix that may need to be added
-		if (isOrSeparator) {
+		if (hasMultivalueSeparator) {
 			uri.append(
 					URLEncoder.encode(previousValueSuffix, StandardCharsets.UTF_8))
 			   .append("/");
