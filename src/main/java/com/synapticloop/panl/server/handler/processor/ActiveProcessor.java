@@ -240,7 +240,7 @@ public class ActiveProcessor extends Processor {
 				} else {
 					// need to check for sorting/operands... which are different
 					if (lpseField.getHasURIComponent()) {
-						lpse.append(lpseCode);
+						lpse.append(lpseComponent);
 					} else {
 						if (!lpseComponentsAdded.contains(lpseComponent)) {
 							lpse.append(lpseComponent);
@@ -370,7 +370,7 @@ public class ActiveProcessor extends Processor {
 					}
 				} else {
 					if (lpseField.getHasURIComponent()) {
-						lpse.append(lpseCode);
+						lpse.append(lpseComponent);
 					} else {
 						if (!lpseComponentsAdded.contains(lpseComponent)) {
 							lpse.append(lpseComponent);
@@ -500,7 +500,7 @@ public class ActiveProcessor extends Processor {
 					}
 				} else {
 					if (lpseField.getHasURIComponent()) {
-						lpse.append(lpseCode);
+						lpse.append(lpseComponent);
 					} else {
 						if (!lpseComponentsAdded.contains(lpseComponent)) {
 							lpse.append(lpseComponent);

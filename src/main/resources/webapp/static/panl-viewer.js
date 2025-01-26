@@ -381,9 +381,9 @@ function addActiveFacets(facets) {
 			active.append("<li><a href=\"" + panlResultsViewerUrl +
 					$("#collection").text() +
 					facet.inverse_uri +
-					"\"><img class=\"invert\" src=\"/webapp/static/invert.png\" title=\"Invert this boolean facet\"/></a>&nbsp;" +
+					"\"><img class=\"invert\" src=\"/webapp/static/invert.png\" title=\"Invert this boolean facet\"/></a>&nbsp; Invert to '" +
 					decodePanl(facet.inverse_encoded) +
-					"</li>");
+					"'</li>");
 		}
 
 	}
@@ -414,11 +414,11 @@ function addActiveSorts(sorts, removeUri) {
 		content += "<li><a href=\"" + panlResultsViewerUrl +
 				$("#collection").text() +
 				sort.remove_uri +
-				"\"><img class=\"remove\" src=\"/webapp/static/remove.png\" title=\"Remove this sort order\"/></a>&nbsp;" +
+				"\"><img class=\"remove\" src=\"/webapp/static/remove.png\" title=\"Remove this sort order\"/></a>&nbsp;Remove this sorting<br \>" +
 				"<a href=\"" + panlResultsViewerUrl +
 				$("#collection").text() +
 				sort.inverse_uri +
-				"\"><img class=\"invert\" src=\"/webapp/static/invert.png\" title=\"Invert this sort order\"/> Change to " +
+				"\"><img class=\"invert\" src=\"/webapp/static/invert.png\" title=\"Invert this sort order\"/>&nbsp;Change to " +
 				(sort.is_descending ? "ASC" : "DESC") +
 				"</a>&nbsp;" +
 				"</li>";

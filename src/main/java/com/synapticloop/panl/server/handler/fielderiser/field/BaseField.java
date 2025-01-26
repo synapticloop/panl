@@ -31,6 +31,7 @@ import com.synapticloop.panl.server.handler.properties.CollectionProperties;
 import com.synapticloop.panl.server.handler.tokeniser.LpseTokeniser;
 import com.synapticloop.panl.server.handler.tokeniser.token.facet.FacetLpseToken;
 import com.synapticloop.panl.server.handler.tokeniser.token.LpseToken;
+import com.synapticloop.panl.server.handler.tokeniser.token.facet.RangeFacetLpseToken;
 import org.apache.solr.client.solrj.SolrQuery;
 import org.apache.solr.client.solrj.response.FacetField;
 import org.json.JSONArray;
@@ -522,9 +523,14 @@ public abstract class BaseField {
 
 						FacetLpseToken facetLpseToken = (FacetLpseToken) lpseToken;
 						if (facetLpseToken.getIsRangeToken()) {
+							RangeFacetLpseToken rangeFacetLpseToken = (RangeFacetLpseToken)lpseToken;
 							sb.append(lpseToken.getLpseCode());
-							sb.append((facetLpseToken.getHasInfix() ? "-" : "+"));
-							sb.append(lpseToken.getLpseCode());
+							sb.append(facetLpseToken.getLpseCode());
+
+							// whilst this may be a range token, it may just be a single value
+							if(null != rangeFacetLpseToken.getToValue()) {
+								sb.append(rangeFacetLpseToken.getHasInfix() ? "-" : "+");
+							}
 						} else {
 							sb.append(lpseToken.getLpseCode());
 						}
@@ -546,7 +552,7 @@ public abstract class BaseField {
 	 * @return The URI path for this field, or an empty string if the field has no values
 	 */
 	public String getCanonicalUriPath(Map<String, List<LpseToken>> panlTokenMap,
-			CollectionProperties collectionProperties) {
+																		CollectionProperties collectionProperties) {
 		if (this.valueSeparator != null) {
 			if (panlTokenMap.containsKey(lpseCode)) {
 				StringBuilder stringBuilder = new StringBuilder(getValuePrefix());
@@ -567,7 +573,7 @@ public abstract class BaseField {
 	}
 
 	public String getCanonicalLpseCode(Map<String, List<LpseToken>> panlTokenMap,
-			CollectionProperties collectionProperties) {
+																		 CollectionProperties collectionProperties) {
 		if (this.valueSeparator != null) {
 			if (panlTokenMap.containsKey(lpseCode)) {
 				// for or separators, there is only ever one lpse code
@@ -877,8 +883,8 @@ public abstract class BaseField {
 	 * @return The JSON object with the URIs for adding this field to the existing search URI.
 	 */
 	protected JSONObject getAdditionURIObject(CollectionProperties collectionProperties,
-			BaseField lpseField,
-			Map<String, List<LpseToken>> panlTokenMap) {
+																						BaseField lpseField,
+																						Map<String, List<LpseToken>> panlTokenMap) {
 
 		String additionLpseCode = lpseField.getLpseCode();
 		JSONObject additionObject = new JSONObject();
@@ -964,7 +970,7 @@ public abstract class BaseField {
 	 * @return whether information has been appended to the JSON object.
 	 */
 	public boolean appendAvailableDateRangeValues(JSONObject dateRangeFacetObject,
-			CollectionProperties collectionProperties, Map<String, List<LpseToken>> panlTokenMap) {
+																								CollectionProperties collectionProperties, Map<String, List<LpseToken>> panlTokenMap) {
 		return (false);
 	}
 
