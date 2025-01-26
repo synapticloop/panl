@@ -26,6 +26,9 @@ package com.synapticloop.integration.test.orseparator;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.synapticloop.integration.BeforeAllExtension;
+import com.synapticloop.integration.interactor.InteractorException;
+import com.synapticloop.integration.interactor.PanlInteractor;
+import com.synapticloop.integration.test.util.Helper;
 import panl.Root;
 import panl.response.panl.available.Facet;
 import panl.response.panl.available.Value;
@@ -37,10 +40,19 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
+import static org.junit.jupiter.api.Assertions.*;
+
 @ExtendWith({BeforeAllExtension.class})
 public class OrSeparatorLinkTest {
 	ObjectMapper mapper = new ObjectMapper();
 	private static final String BASE_URL = "http://localhost:8282/mechanical-pencils-or-separator/brandandname";
+
+	@Test public void testAdditionOfLInks() throws IOException, InteractorException {
+		PanlInteractor panlInteractor = new PanlInteractor(BASE_URL);
+		panlInteractor.addFirstFacetValueByName("brand");
+		panlInteractor.addFirstFacetValueByName("brand");
+		panlInteractor.addFirstFacetValueByName("brand");
+	}
 
 	@Test public void testLinks() throws Exception {
 		Root root = mapper.readValue(

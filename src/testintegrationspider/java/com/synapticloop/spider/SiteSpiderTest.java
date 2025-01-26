@@ -39,7 +39,7 @@ import java.net.URL;
 import java.util.*;
 
 @ExtendWith({BeforeAllExtension.class})
-public class SiteSpiderTester {
+public class SiteSpiderTest {
 	ObjectMapper mapper = new ObjectMapper();
 	private static final String[] URLS = {
 			"http://localhost:8282/mechanical-pencils-or-separator/empty",
@@ -49,8 +49,11 @@ public class SiteSpiderTester {
 			"http://localhost:8282/mechanical-pencils-multi-separator/empty"
 	};
 
+	private static final Set<String> seenLinks = new HashSet<>();
+
 	private Map<String, String> firstLevelLinks = new HashMap<>();
 	private Map<String, String> secondLevelLinks = new HashMap<>();
+	private Map<String, String> thirdLevelLinks = new HashMap<>();
 
 	@Test public void generateLinks() throws Exception {
 		for (String url : URLS) {
@@ -58,54 +61,54 @@ public class SiteSpiderTester {
 					new URL(url),
 					Root.class);
 
-			getLinks(url, root);
+			getLinks(url, root, firstLevelLinks);
 		}
 
 		for (String firstLevelLink : firstLevelLinks.keySet()) {
-			testIndividualLink(firstLevelLink, firstLevelLinks.get(firstLevelLink), true);
+			testIndividualLink(firstLevelLink, firstLevelLinks.get(firstLevelLink), secondLevelLinks);
 		}
 
 		for (String secondLevelLink : secondLevelLinks.keySet()) {
-			testIndividualLink(secondLevelLink, secondLevelLinks.get(secondLevelLink), false);
+			testIndividualLink(secondLevelLink, secondLevelLinks.get(secondLevelLink), thirdLevelLinks);
 		}
 
 	}
 
-	private void getLinks(String url, Root root) {
+	private void getLinks(String url, Root root, Map<String, String> map) {
 		for (Facet facet : root.panl.available.facets) {
 			String before = facet.uris.before;
 			String after = facet.uris.after;
 			for (Value value : facet.values) {
 				if (null != value.getEncoded_multi()) {
-					firstLevelLinks.put(url + before + value.getEncoded_multi() + after, url);
+					map.put(url + before + value.getEncoded_multi() + after, url);
 				} else {
-					firstLevelLinks.put(url + before + value.getEncoded() + after, url);
+					map.put(url + before + value.getEncoded() + after, url);
 				}
 			}
 		}
 	}
 
-	private void getSecondLevelLinks(String parent, String url, Root root) {
+	private void getSecondLevelLinks(String parent, String url, Root root, Map<String, String> map) {
 		for (Facet facet : root.panl.available.facets) {
 			String before = facet.uris.before;
 			String after = facet.uris.after;
 			for (Value value : facet.values) {
 				if (null != value.getEncoded_multi()) {
-					secondLevelLinks.put(url + before + value.getEncoded_multi() + after, parent);
+					map.put(url + before + value.getEncoded_multi() + after, parent);
 				} else {
-					secondLevelLinks.put(url + before + value.getEncoded() + after, parent);
+					map.put(url + before + value.getEncoded() + after, parent);
 				}
 			}
 		}
 	}
 
-	private void testIndividualLink(String link, String parentLink, boolean recurse) throws IOException {
+	private void testIndividualLink(String link, String parentLink, Map<String, String> map) throws IOException {
 		Root root = mapper.readValue(
 				new URL(link),
 				Root.class);
 
-		if (recurse) {
-			getSecondLevelLinks(link, link.substring(0, link.indexOf("empty/") + 5), root);
+		if(null != map) {
+			getSecondLevelLinks(link, link.substring(0, link.indexOf("empty/") + 5), root, map);
 		}
 
 		// now test for invalid links...

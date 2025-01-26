@@ -205,7 +205,6 @@ copyrightr {
 			"src/**/*.java",
 			"src/**/*.js"
 	]
-
 	excludes = [
 			"src/test/java/**/*.java",
 			"src/testintegration/java/**/*.java",
@@ -213,14 +212,11 @@ copyrightr {
 			"**/*.class",
 			"**/package-info.java",
 			"**/LpseTokeniser.java",
-			"**/jquery*.*",
+			"**/*.*",
 			"**/nouislider.min.js"
 	]
-
 	onlyReplaceFirst = true
-
 	yearSeparator = " - "
-
 	failOnMissing = false
 }
 

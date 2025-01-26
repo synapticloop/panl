@@ -533,6 +533,7 @@ with the release files named `solr-panl-9-x.x.x` where `x.x.x` is the version nu
   - Bug where Panl client will always look for the '`q`' parameter for the query, changed to ensure that the correct configured `panl.form.query.respondto` is used instead
   - Always reset the page to 1 if there is a `panl.form.query.respondto` URL parameter
   - (Maybe this was a feature?) Updated Single Page search to allow multiple selections for Facets which are multivalued (as opposed to OR Facets)
+  - Fixed where a single value LPSE code for a RANGE facet was the first selected item, and other selections would erroneously add an infix designator.
 
 
 - **Breaking Changes**
