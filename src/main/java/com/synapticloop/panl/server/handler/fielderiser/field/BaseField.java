@@ -172,24 +172,38 @@ public abstract class BaseField {
 		// if it is multivalued, then we will see if we have a multivalued separator
 		this.valueSeparator = properties
 				.getProperty(PROPERTY_KEY_MULTIVALUE_SEPARATOR + this.lpseCode, null);
+		if(this.valueSeparator != null) {
+			if(this.valueSeparator.isEmpty()) {
+				String message = String.format(
+						"LPSE code '%s' sets a multivalued (or) separator which is of zero length, " +
+								"the property '%s%s' will be ignored.",
+						lpseCode,
+						lpseCode,
+						PROPERTY_KEY_IS_MULTIVALUE);
+				getLogger().warn(message);
+				this.valueSeparator = null;
+			} else {
+				// if this is not multivalued, then you cannot have a multivalued separator
+				if (!this.isMultiValue) {
+					String message = String.format(
+							"LPSE code '%s' sets a multivalued (or) separator but does __NOT__ define this field as being multivalued " +
+									"see property '%s%s' and '%s%s'.  The property '%s%s' will be ignored.",
+							lpseCode,
+							PROPERTY_KEY_MULTIVALUE_SEPARATOR,
+							lpseCode,
+							PROPERTY_KEY_IS_MULTIVALUE,
+							lpseCode,
+							PROPERTY_KEY_MULTIVALUE_SEPARATOR,
+							lpseCode);
 
-		// if this is not multivalued, then you cannot have a multivalued separator
-		if (!this.isMultiValue && null != this.valueSeparator) {
-			String message = String.format(
-					"LPSE code '%s' sets a multivalued (or) separator but does __NOT__ define this field as being multivalued " +
-							"see property '%s%s' and '%s%s'.  The property '%s%s' will be ignored.",
-					lpseCode,
-					PROPERTY_KEY_MULTIVALUE_SEPARATOR,
-					lpseCode,
-					PROPERTY_KEY_IS_MULTIVALUE,
-					lpseCode,
-					PROPERTY_KEY_MULTIVALUE_SEPARATOR,
-					lpseCode);
+					getLogger().warn(message);
 
-			getLogger().warn(message);
+					this.valueSeparator = null;
+				}
 
-			this.valueSeparator = null;
+			}
 		}
+
 
 		if (!propertyKey.equals(PROPERTY_KEY_PANL_SORT_FIELDS)) {
 			// sort keys can be longer than the panlParamSort property code
