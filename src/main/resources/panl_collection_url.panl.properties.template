@@ -82,9 +82,12 @@
 $                                ~ ~ ~ * ~ ~ ~
 $
 $  NOTE: Any line in this file that starts with a dollar sign (and at least one
-$        whitespace character) is used by the panl generator for in-line
-$        replacement, and are __NOT__ replacement properties that can be set.
-$        (These lines will not appear in the output properties file.)
+$        character) is used by the panl generator for in-line replacement, and
+$        are __NOT__ replacement properties that can be set.
+$
+$        Any line that starts with a dollar sign then has a whitespace
+$        character are considered comments and will not appear in the output.
+$        (i.e. These lines will not appear in the output properties file.)
 $
 $                                ~ ~ ~ * ~ ~ ~
 
