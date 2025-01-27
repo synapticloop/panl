@@ -48,6 +48,12 @@
 
 > We _always_ recommend that you use the most recently available release which contains bug fixes and new functionality and is _generally_ backwards compatible.
 
+Panl uses `major.minor.micro` versioning, the meaning of which:
+
+ - `major` - the major version will increment when there is a breaking change to the Panl LPSE URL.  Upon increment of the major version, both the minor and micro version number will be reset to 0 (zero).
+ - `minor` - the micro version will increment when there is additional functionality added to the release.  Upon increment of the minor version, the micro number will be reset to 0 (zero).
+ - `micro` - the micro version will increment for bug fixes only.
+
 # Instructions
 
 ## Download the Panl Server Release
