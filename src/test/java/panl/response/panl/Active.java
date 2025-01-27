@@ -57,7 +57,7 @@ public class Active {
 	@JsonIgnore public Object page;
 	@JsonIgnore public Object numrows;
 	@JsonIgnore public Object sort_fields;
-	@JsonIgnore public Object sort;
+	public Sort[] sort;
 
 	/**
 	 * <p>Return the facet.</p>

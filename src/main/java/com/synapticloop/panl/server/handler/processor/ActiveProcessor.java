@@ -222,7 +222,6 @@ public class ActiveProcessor extends Processor {
 						uri.append(
 								URLEncoder.encode(lpseField.getValueSeparator() + lpseToken.getValue(),
 										StandardCharsets.UTF_8));
-						previousValueSuffix = lpseField.getValueSuffix();
 					} else {
 						// not currently an or separator - get the full value
 						// if the previous lpse code was an or Separator, add the value
@@ -242,7 +241,7 @@ public class ActiveProcessor extends Processor {
 					if (lpseField.getHasURIComponent()) {
 						lpse.append(lpseComponent);
 					} else {
-						if (!lpseComponentsAdded.contains(lpseComponent)) {
+						if (hasMultivalueSeparator && !lpseComponentsAdded.contains(lpseComponent)) {
 							lpse.append(lpseComponent);
 						}
 						lpseComponentsAdded.add(lpseComponent);
@@ -266,11 +265,13 @@ public class ActiveProcessor extends Processor {
 						if (lpseField.getHasURIComponent()) {
 							uri.append(lpseField.getEncodedPanlValue(lpseToken))
 							   .append("/");
-						} else {
 							if (!lpseComponentsAdded.contains(lpseComponent)) {
 								lpse.append(lpseComponent);
 							}
 							lpseComponentsAdded.add(lpseComponent);
+						} else {
+							// we don't have a URI componet (think sorting and query operand)
+							lpse.append(lpseComponent);
 						}
 					}
 				}
@@ -332,16 +333,15 @@ public class ActiveProcessor extends Processor {
 
 			BaseField lpseField = collectionProperties.getLpseField(lpseToken.getLpseCode());
 
-			boolean found = false;
 			String lpseComponent = lpseComponents.get(i);
-			if (!found && sortLpseUriCode.equals(lpseComponent)) {
+			if (sortLpseUriCode.equals(lpseComponent)) {
 				if (hasMultivalueSeparator) {
 					uri.append(
 							   URLEncoder.encode(previousValueSuffix, StandardCharsets.UTF_8))
 					   .append("/");
 				}
 				hasMultivalueSeparator = false;
-				found = true;
+
 				lpse.append(inverseSortUriCode);
 			} else {
 				// we need to go through the facets
@@ -361,6 +361,7 @@ public class ActiveProcessor extends Processor {
 						if (lpseField.getHasURIComponent()) {
 							uri.append(lpseField.getEncodedPanlValue(lpseToken))
 							   .append("/");
+							lpse.append(lpseComponent);
 						} else {
 							if (!lpseComponentsAdded.contains(lpseComponent)) {
 								lpse.append(lpseComponent);
