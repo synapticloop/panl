@@ -1,3 +1,7 @@
 <component name="CopyrightManager">
-  <settings default="synapticloop-panl" />
+  <settings default="synapticloop-panl">
+    <LanguageOptions name="JAVA">
+      <option name="fileLocation" value="2" />
+    </LanguageOptions>
+  </settings>
 </component>
