@@ -123,6 +123,7 @@ dependencies {
 	testIntegrationSpiderImplementation 'com.fasterxml.jackson.core:jackson-databind:2.17.1'
 	testIntegrationSpiderImplementation 'commons-io:commons-io:2.16.1'
 	testIntegrationSpiderImplementation 'org.json:json:20240303'
+
 	// HTTP server
 	testIntegrationSpiderImplementation 'org.eclipse.jetty.http2:http2-server:10.0.20'
 	testIntegrationSpiderImplementation 'org.eclipse.jetty:jetty-servlet:10.0.20'
@@ -132,7 +133,6 @@ dependencies {
 	testIntegrationSpiderImplementation 'org.apache.logging.log4j:log4j-core:2.23.1'
 	testIntegrationSpiderImplementation 'org.apache.logging.log4j:log4j-api:2.23.1'
 	testIntegrationSpiderImplementation 'org.apache.logging.log4j:log4j-slf4j2-impl:2.23.1'
-
 
 	// additional utilities
 	testIntegrationSpiderImplementation 'commons-io:commons-io:2.16.1'
@@ -172,6 +172,9 @@ tasks.register('copyLoggingFile') {
 	}
 }
 
+tasks.withType(Copy).configureEach {
+	duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+}
 
 test {
 	useJUnitPlatform()
