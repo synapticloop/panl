@@ -1,3 +1,5 @@
+package com.synapticloop.integration.test.facet.bool;
+
 /*
  * Copyright (c) 2008-2025 synapticloop.
  *
@@ -21,32 +23,24 @@
  * FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
  * IN THE SOFTWARE.
  */
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.synapticloop.integration.BeforeAllExtension;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import panl.Root;
+import panl.response.panl.Sort;
+import panl.response.panl.active.Facet;
 
-package com.synapticloop.integration.test.util;
+import java.io.IOException;
+import java.net.URL;
 
-import panl.response.panl.available.Facet;
+import static org.junit.jupiter.api.Assertions.*;
 
-import static org.junit.jupiter.api.Assertions.fail;
+@ExtendWith({BeforeAllExtension.class})
+public class BooleanFacetTest {
+	ObjectMapper mapper = new ObjectMapper();
 
-public class Helper {
-	public static Facet findAvailableFacetByFieldName(Facet[] facets, String facetName) {
-		for (Facet facet: facets) {
-			if(facet.facet_name.equals(facetName)) {
-				return(facet);
-			}
-		}
-		return(null);
-	}
+	public void testDefaultOperations() throws Exception {
 
-	public static void failOnIncorrectUrlEnding(String URL, String endOfUrl) {
-		if(!URL.endsWith(endOfUrl)) {
-			fail("Expecting URL of '" + URL + "' to end with '" + endOfUrl + "'.");
-		}
-	}
-
-	public static void failOnIncorrectUrlStarting(String URL, String startOfUrl) {
-		if(!URL.startsWith(startOfUrl)) {
-			fail("Expecting URL of '" + URL + "' to start with '" + startOfUrl + "'.");
-		}
 	}
 }

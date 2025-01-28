@@ -57,6 +57,7 @@ public class Active {
 	@JsonIgnore public Object page;
 	@JsonIgnore public Object numrows;
 	@JsonIgnore public Object sort_fields;
+	public QueryOperand query_operand;
 	public Sort[] sort;
 
 	/**

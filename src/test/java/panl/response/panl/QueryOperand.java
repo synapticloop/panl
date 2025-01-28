@@ -49,6 +49,10 @@
 package panl.response.panl;
 
 public class QueryOperand {
+	public String encoded;
+	public String panl_code;
+	public String remove_uri;
+	public String value;
 	public String AND;
 	public String OR;
 }
