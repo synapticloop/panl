@@ -80,7 +80,6 @@ public class ActiveProcessor extends Processor {
 			BaseField lpseField = collectionProperties.getLpseField(lpseToken.getLpseCode());
 			if (null != lpseField && lpseToken.getIsValid()) {
 				lpseComponents.add(lpseField.getResetLpseCode(lpseToken, collectionProperties));
-				//				lpseComponents.add(lpseField.getResetLpseCode(panlTokenMap, collectionProperties));
 
 				uriComponents.add(lpseField.getResetUriPath(lpseToken, collectionProperties));
 			}
@@ -205,6 +204,7 @@ public class ActiveProcessor extends Processor {
 		boolean isPreviousValueSeparator = false;
 		BaseField lpseField = null;
 
+		String previousSuffix = "";
 		for (int i = 0; i < lpseTokens.size(); i++) {
 			LpseToken lpseToken = lpseTokens.get(i);
 			String lpseCode = lpseToken.getLpseCode();
@@ -220,8 +220,9 @@ public class ActiveProcessor extends Processor {
 				// on the value separator field
 				if(isPreviousValueSeparator && !isValueSeparator) {
 					// if the previous was a value separator, and the current is not, then
-					// we will need to put the value suffix in
-					uri.append(URLEncoder.encode(lpseField.getValueSuffix(), StandardCharsets.UTF_8));
+					// we will need to put the value previous suffix in
+					uri.append(URLEncoder.encode(previousSuffix, StandardCharsets.UTF_8));
+					uri.append("/");
 				}
 
 				if (isValueSeparator) {
@@ -253,6 +254,7 @@ public class ActiveProcessor extends Processor {
 				}
 
 				isPreviousValueSeparator = isValueSeparator;
+				previousSuffix = lpseField.getValueSuffix();
 			}
 		}
 

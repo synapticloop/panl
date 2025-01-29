@@ -26,35 +26,23 @@ package com.synapticloop.integration.test.facet;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.synapticloop.integration.BeforeAllExtension;
-import panl.Root;
-import panl.response.panl.active.Facet;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 
-import java.io.IOException;
-import java.net.URL;
-
-import static org.junit.jupiter.api.Assertions.*;
-
 @ExtendWith({BeforeAllExtension.class})
-public class ActiveFacetTest {
-	ObjectMapper mapper = new ObjectMapper();
-	@Test public void testSingleFacet() throws IOException {
-		Root root = mapper.readValue(new URL("http://localhost:8282/mechanical-pencils/brandandname/Black/W/"), Root.class);
-		assertFalse(root.error);
-		Facet[] facets = root.panl.active.facet;
-		assertEquals(1, facets.length);
-	}
+public abstract class TestBase {
+	protected ObjectMapper mapper = new ObjectMapper();
 
-	@Test public void testAvailableActiveFacets() throws IOException {
-		Root root = mapper.readValue(new URL("http://localhost:8282/mechanical-pencils/brandandname/"), Root.class);
-		assertFalse(root.error);
-		for (panl.response.panl.available.Facet facet : root.panl.available.facets) {
-			String addFacet = facet.uris.before + facet.values[0].encoded + facet.uris.after;
-			Root activeRoot = mapper.readValue(new URL("http://localhost:8282/mechanical-pencils/brandandname" + addFacet), Root.class);
-			assertFalse(root.error);
-			assertEquals(activeRoot.panl.active.facet[0].encoded, facet.values[0].encoded);
-			assertEquals(activeRoot.panl.active.facet[0].remove_uri, "/");
-		}
-	}
+	/**
+	 * <p>This is the default test that goes through the add/remove/invert etc.
+	 * regular operations.</p>
+	 *
+	 * @throws Exception If something unexpected goes wrong
+	 */
+	@Test public abstract void testDefault() throws Exception;
+
+	@Test public abstract void testSortDefault() throws Exception;
+
+	@Test public abstract void testSortHierarchy() throws Exception;
+
 }

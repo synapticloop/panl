@@ -1,5 +1,8 @@
 # Instructions for Development Process
 
+> IMPORTANT: you REALLY want to run the integration tests against a live Solr instance with indexed data.
+> See the section at the end of this document about integration tests and naming etc.
+
 ## 1. Name the new version 
 
 Find a suitable name for the new version and branch - an example site is the [Release name generator](https://codesandbox.io/p/sandbox/release-name-generator-5ow5w?file=%2Fsrc%2Findex.js) 
@@ -31,6 +34,8 @@ The Panl releases will not reflect any book updates.
 ### b. Run all tests
 
 This includes both the unit tests `./gradlew test` and the integration tests `./gradlew testIntegration`
+
+The integration tests are the best tests to run as they will ensure that specific facets will be able to be removed and added, inverted etc.
 
 ### c. Run the site spider integration tests
 
@@ -155,3 +160,42 @@ although access must be granted to individuals wishing to edit the documentation
 5. Run the `src/main/java/com/synapticloop/debookeriser/Main.java` file
 6. Commit the files
 7. Push the files
+
+
+# INTEGRATION Tests
+
+## Finding/Naming Them
+
+The source code lives in `src/testintegration/java/`
+
+All Facets and Facet type options should be tested in conjunction with all other facet types and options.
+
+The Facet Types
+
+1. REGULAR - keyed on `testRegular`
+1. REGULAR MultiValued - keyed on `testMulti`
+1. BOOLEAN - keyed on `testBoolean`
+1. RANGE - keyed on `testRange`
+1. DATE Range - keyed on `testDate`
+1. OR - keyed on `testOr`
+1. OR Separator - keyed on `testOrSep`
+
+Depending on which way you want to look at things, a test for a RANGE facet with a Regular Multi facet may be in the `RangeTest`, or the `MultiTest` class 
+
+Don't forget to test sorting (include multi sort) and query operands
+
+### The Default Test(s)
+
+All tests should have the following test method signature
+
+All Tests __should__ extend the abstract TestBase, which defines the following mandatory methods:
+
+`@Test public void testDefault() throws Exception;` - test the default add/remove/invert etc.
+
+`@Test public abstract void testSortDefault() throws Exception;` - test one sorting level
+
+`@Test public abstract void testSortHierarchy() throws Exception;` - test two sorting levels
+
+see the class `com.synapticloop.integration.test.facet.TestBase` for the full list
+
+
