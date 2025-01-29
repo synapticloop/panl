@@ -172,6 +172,9 @@ public class PanlSinglePageHandler extends BaseResponseHandler implements HttpRe
 								ResourceHelper.CONTENT_TYPE_JSON)
 				);
 			} catch (Exception e) {
+				// TODO - this can probably be refactored into the BaseResponseHandler
+				// TODO - set500ResponseMessage(HttpResponse response) method
+
 				response.setStatusCode(HttpStatus.SC_INTERNAL_SERVER_ERROR);
 				JSONObject jsonObject = new JSONObject();
 				jsonObject.put(JSON_KEY_ERROR, true);
@@ -189,6 +192,8 @@ public class PanlSinglePageHandler extends BaseResponseHandler implements HttpRe
 			}
 		} else {
 
+			// TODO - this can probably be refactored into the BaseResponseHandler
+			// TODO - set404ResponseMessage(HttpResponse response) method
 			JSONObject jsonObject = new JSONObject();
 
 			jsonObject.put(JSON_KEY_ERROR, true);

@@ -61,13 +61,36 @@ public class PanlServer {
 
 	public static final String PROPERTY_KEY_PANL_COLLECTION = "panl.collection.";
 
+	/**
+	 * <p>The location of the <code>panl.properties file</code>.
+	 * <strong>Note:</strong> that the file can be named anything, this is just
+	 * the default name if not passed in as command line parameter.</p>
+	 */
 	private final String propertiesFileLocation;
+
+	/**
+	 * <p>The port number that this server will listen on.</p>
+	 */
 	private final int portNumber;
+
+	/**
+	 * <p>The Panl properties file.</p>
+	 */
 	private PanlProperties panlProperties;
 
+	/**
+	 * <p>All the Panl collection handlers.</p>
+	 */
 	private final List<CollectionRequestHandler> collectionRequestHandlers = new ArrayList<>();
+
+	/**
+	 * <p>The list of Collection Properties.</p>
+	 */
 	private final List<CollectionProperties> collectionPropertiesList = new ArrayList<>();
 
+	/**
+	 * <p>The HTTP Server instance</p>
+	 */
 	private HttpServer httpServer;
 
 	/**

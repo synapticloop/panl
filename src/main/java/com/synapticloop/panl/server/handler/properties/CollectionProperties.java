@@ -58,7 +58,9 @@ import static com.synapticloop.panl.server.handler.fielderiser.field.BaseField.*
 public class CollectionProperties {
 	private static final Logger LOGGER = LoggerFactory.getLogger(CollectionProperties.class);
 
-	// STATIC strings
+	// STATIC strings for properties or property prefixes that are used to
+	// look up the configuration in the <panl_collection_url>.panl.properties
+	// file
 	public static final String PROPERTY_KEY_PANL_FACET = "panl.facet.";
 	public static final String PROPERTY_KEY_PANL_FIELD = "panl.field.";
 	public static final String PROPERTY_KEY_PANL_FORM_QUERY_RESPONDTO = "panl.form.query.respondto";
@@ -83,16 +85,16 @@ public class CollectionProperties {
 	public static final String PROPERTY_KEY_SOLR_NUMROWS_LOOKAHEAD = "solr.numrows.lookahead";
 	public static final String PROPERTY_KEY_SOLR_NUMROWS_MAXIMUM = "solr.numrows.maximum";
 
+	// The default fieldsets that will __ALWAYS__ be registered
 	public static final String FIELDSETS_DEFAULT = "default";
 	public static final String FIELDSETS_EMPTY = "empty";
 
+	// Solr Query operands that are passed through to the Solr server
 	public static final String SOLR_DEFAULT_QUERY_OPERAND_OR = "OR";
 	public static final String SOLR_DEFAULT_QUERY_OPERAND_AND = "AND";
-	public static final String JSON_KEY_VALID_URLS = "valid_urls";
-
 
 	/**
-	 * <p>The name of this collection</p>
+	 * <p>The name of this Solr collection</p>
 	 */
 	private final String solrCollection;
 
@@ -102,7 +104,8 @@ public class CollectionProperties {
 	private final String panlCollectionUri;
 
 	/**
-	 * <p>The collection.panl.properties that drive this collection</p>
+	 * <p>The <code>&lt;panl.collection.url&gt;.properties</code> properties that
+	 * drive this Panl collection</p>
 	 */
 	private final Properties properties;
 
@@ -136,6 +139,12 @@ public class CollectionProperties {
 	 * These fields may be used as facets.</p>
 	 */
 	private final List<PanlFacetField> FACET_FIELDS = new ArrayList<>();
+
+	/**
+	 * <p>This is the list of all facet fields that are registered with as sort
+	 * fields panl to be sorted in the index (i.e. the value), rather than the
+	 * count of the facet</p>
+	 */
 	private final List<PanlFacetField> FACET_INDEX_SORT_FIELDS = new ArrayList<>();
 
 	/**
@@ -166,25 +175,89 @@ public class CollectionProperties {
 	private final Set<String> PANL_CODE_RANGE_FIELDS = new HashSet<>();
 
 
+	/**
+	 * <p>The valid URLs for this Panl collection - this is only used for
+	 * returning within the 404 JSON response object.</p>
+	 */
 	private final JSONArray validUrls;
 
+	/**
+	 * <p>The LPSE query parameter that is used</p>
+	 */
 	private String panlParamQuery;
+
+	/**
+	 * <p>The LPSE sort parameter that is used</p>
+	 */
 	private String panlParamSort;
+
+	/**
+	 * <p>The LPSE page number parameter that is used</p>
+	 */
 	private String panlParamPage;
+
+	/**
+	 * <p>The LPSE number of rows to return parameter that is used</p>
+	 */
 	private String panlParamNumRows;
+
+	/**
+	 * <p>The LPSE parameter for the Solr query operand that is used</p>
+	 */
 	private String panlParamQueryOperand;
+
+	/**
+	 * <p>The LPSE passthrough parameter that is used</p>
+	 */
 	private String panlParamPassThrough;
 
-	private String facetSortFieldsIndex;
 
+	/**
+	 * <p>The URL Parameter key that the Panl server will use for a keyword search
+	 * on the indexed data.</p>
+	 *
+	 * <p><strong>Note:</strong> the following HTML form uses the query
+	 * parameter name of <code>search</code>.</p>
+	 *
+	 * <pre>
+	 * &lt;form method=&quot;GET&quot;&gt;
+	 *   &lt;label&gt;&lt;input type=&quot;text&quot; name=&quot;search&quot; /&gt;&lt;/label&gt;
+	 *   &lt;button type=&quot;submit&quot;&gt;Search&lt;/button&gt;
+	 * &lt;/form&gt;
+	 * </pre>
+	 */
 	private String formQueryRespondTo;
 
+	/**
+	 * <p>The default Solr query operand to be set</p>
+	 */
 	private String solrDefaultQueryOperand;
-	private int solrFacetLimit;
-	private String panlLpseOrder;
-	private List<String> panlLpseOrderList = new ArrayList<>();
 
+	/**
+	 * <p>The default limit to set for the number of returned facets.</p>
+	 */
+	private int solrFacetLimit;
+
+	/**
+	 * <p>The LPSE order set as a property - this should be a comma separated list
+	 * of the LPSE codes, in order.</p>
+	 */
+	private String panlLpseOrder;
+
+	/**
+	 * <p>The LPSE order as a List of LPSE codes.</p>
+	 */
+	private final List<String> panlLpseOrderList = new ArrayList<>();
+
+	/**
+	 * <p>A set of LPSE codes that have been found - used to ensure that there
+	 * aren't duplicate LPSE codes registered.</p>
+	 */
 	private final Set<String> LPSE_URI_CODES = new HashSet<>();
+
+	/**
+	 * <p>The set of all LPSE codes that are ignored.</p>
+	 */
 	private final Set<String> LPSE_IGNORED_URI_CODES = new HashSet<>();
 	private final List<BaseField> lpseFields = new ArrayList<>();
 	private final List<PanlRangeFacetField> rangeFields = new ArrayList<>();
@@ -194,7 +267,7 @@ public class CollectionProperties {
 
 	/**
 	 * <p>The list of all the named Solr facet fields - Note that this is not
-	 * used as a FieldSet - it is all of the Solr fields that will be faceted on.</p>
+	 * used as a FieldSet - it is all Solr fields that will be faceted on.</p>
 	 */
 	private String[] solrFacetFields;
 
@@ -273,10 +346,18 @@ public class CollectionProperties {
 		}
 	}
 
+	/**
+	 * <p>Parse and validate the sort fields, ensuring that they exist and are
+	 * able to be sorted on.</p>
+	 *
+	 * @throws PanlServerException if there was an error parsing the sort fields
+	 */
 	private void parseSortFields() throws PanlServerException {
 		String sortFieldsTemp = properties.getProperty(PROPERTY_KEY_PANL_SORT_FIELDS, "");
-		//		int sortOrder = 0;
+
 		for(String sortField : sortFieldsTemp.split(",")) {
+			// trim any empty sort fields
+			sortField = sortField.trim();
 			// A sort field can either be a field, or a facet field
 			String lpseCode = null;
 			if (SOLR_NAME_TO_FIELD_MAP.containsKey(sortField)) {

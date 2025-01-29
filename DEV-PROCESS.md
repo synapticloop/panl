@@ -18,14 +18,15 @@ Do the work, run the tests, but don't forget the following:
 
 See the file `src/main/resources/gradle.properties` and update the following properties:
 
-Panl uses `major.minor.micro` versioning, the meaning of which:
+The Synapticloop Panl project uses `major.minor.micro` versioning, the meaning of which:
 
- - `major` - the major version will increment when there is a breaking change to the Panl LPSE URL.  Upon increment of the major version, both the minor and micro version number will be reset to 0 (zero).
- - `minor` - the micro version will increment when there is additional functionality added to the release.  Upon increment of the minor version, the micro number will be reset to 0 (zero).
- - `micro` - the micro version will increment for bug fixes only.
+- `major` - the major version will increment when there is a breaking change to the Panl LPSE URL.  Upon increment of the major version, both the minor and micro version number will be reset to 0 (zero).
+- `minor` - the micro version will increment when there is additional functionality added to the release.  Upon increment of the minor version, the micro number will be reset to 0 (zero).
+- `micro` - the micro version will increment for bug fixes only.
 
- - `panl.version` - increment the major, minor, micro version - generally this will be a `minor` increment
- - `panl.solr.version` - this can be left at `9` as this is the latest Solr release, this will need to be updated if Solr releases a version `10`
+The book version matches the version of the Synapticloop Project version.  Any changes to the book without any changes to the codebase will be updated on the `main` branch and the `ghpages` based website will be updated.
+
+The Panl releases will not reflect any book updates.
 
 ### b. Run all tests
 

@@ -1,3 +1,5 @@
+package com.synapticloop.panl.server.handler;
+
 /*
  * Copyright (c) 2008-2025 synapticloop.
  *
@@ -21,8 +23,6 @@
  * FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
  * IN THE SOFTWARE.
  */
-
-package com.synapticloop.panl.server.handler;
 
 import com.synapticloop.panl.server.handler.properties.PanlProperties;
 import com.synapticloop.panl.server.handler.webapp.util.ResourceHelper;
