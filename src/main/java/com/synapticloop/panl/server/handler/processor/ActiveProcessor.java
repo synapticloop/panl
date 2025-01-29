@@ -423,14 +423,8 @@ public class ActiveProcessor extends Processor {
 		String booleanLpseCode = booleanFacetLpseToken.getLpseCode();
 		String inverseBooleanValue = booleanFacetLpseToken.getInverseBooleanValue(booleanFacetLpseToken);
 
-		// if we are currently looking at LPSE code which is an OR separator
-		boolean hasMultivalueSeparator = false;
-		String previousLpseCode = "";
-		String previousValueSuffix = "";
-
 		StringBuilder uri = new StringBuilder();
 		StringBuilder lpse = new StringBuilder();
-		Set<String> lpseComponentsAdded = new HashSet<>();
 
 		Set<String> valueSeparatorAdded = new HashSet<>();
 		boolean isPreviousValueSeparator = false;
@@ -511,118 +505,10 @@ public class ActiveProcessor extends Processor {
 		return returnValidURIPath(uri, lpse);
 	}
 
-	private String getBooleanInverseURIBackup(
-			BooleanFacetLpseToken booleanFacetLpseToken,
-			List<LpseToken> lpseTokens,
-			List<String> lpseComponents,
-			CollectionProperties collectionProperties) {
-
-		String booleanLpseCode = booleanFacetLpseToken.getLpseCode();
-		String inverseBooleanValue = booleanFacetLpseToken.getInverseBooleanValue(booleanFacetLpseToken);
-
-		// if we are currently looking at LPSE code which is an OR separator
-		boolean hasMultivalueSeparator = false;
-		String previousLpseCode = "";
-		String previousValueSuffix = "";
-
-		StringBuilder uri = new StringBuilder();
-		StringBuilder lpse = new StringBuilder();
-		Set<String> lpseComponentsAdded = new HashSet<>();
-
-		for (int i = 0; i < lpseTokens.size(); i++) {
-			LpseToken lpseToken = lpseTokens.get(i);
-			String lpseCode = lpseToken.getLpseCode();
-			String lpseComponent = lpseComponents.get(i);
-
-			BaseField lpseField = collectionProperties.getLpseField(lpseToken.getLpseCode());
-
-			boolean found = false;
-			if (!found && booleanLpseCode.equals(lpseTokens.get(i).getLpseCode())) {
-				if (hasMultivalueSeparator) {
-					uri.append(
-							   URLEncoder.encode(previousValueSuffix, StandardCharsets.UTF_8))
-					   .append("/");
-				}
-				hasMultivalueSeparator = false;
-				found = true;
-				lpse.append(booleanFacetLpseToken.getLpseCode());
-				uri.append(inverseBooleanValue)
-				   .append("/");
-			} else {
-				// we need to go through the facets
-				if (lpseCode.equals(previousLpseCode)) {
-					// we just carry on
-					if (hasMultivalueSeparator) {
-						// the previous LPSE code is an or separator, we only need to add
-						// the value, with the OR SEPARATOR
-						uri.append(
-								URLEncoder.encode(lpseField.getValueSeparator() + lpseToken.getValue(),
-										StandardCharsets.UTF_8));
-						previousValueSuffix = lpseField.getValueSuffix();
-					} else {
-						// not currently an or separator - get the full value
-						// if the previous lpse code was an or Separator, add the value
-						// suffix
-						if (lpseField.getHasURIComponent()) {
-							uri.append(lpseField.getEncodedPanlValue(lpseToken))
-							   .append("/");
-						} else {
-							if(!lpseComponentsAdded.contains(lpseComponent)) {
-								lpse.append(lpseComponent);
-							}
-							lpseComponentsAdded.add(lpseComponent);
-						}
-					}
-				} else {
-					if (lpseField.getHasURIComponent()) {
-						lpse.append(lpseComponent);
-					} else {
-						if (!lpseComponentsAdded.contains(lpseComponent)) {
-							lpse.append(lpseComponent);
-						}
-						lpseComponentsAdded.add(lpseComponent);
-					}
-					// the current and previous are different
-					if (hasMultivalueSeparator) {
-						// the previous LPSE code is an or Separator - we don't know whether
-						// this one is - we will test for it, but we shall add the value
-						// suffix to it.
-						uri.append(URLEncoder.encode(previousValueSuffix, StandardCharsets.UTF_8))
-						   .append("/");
-					}
-
-					if (collectionProperties.getIsMultiValuedSeparatorFacetField(lpseCode)) {
-						hasMultivalueSeparator = true;
-						// this is the start of an OR separator
-						uri.append(URLEncoder.encode(lpseField.getValuePrefix() + lpseToken.getValue(), StandardCharsets.UTF_8));
-					} else {
-						hasMultivalueSeparator = false;
-						if (lpseField.getHasURIComponent()) {
-							uri.append(lpseField.getEncodedPanlValue(lpseToken))
-							   .append("/");
-						}
-					}
-				}
-			}
-
-			previousLpseCode = lpseCode;
-			previousValueSuffix = lpseField.getValueSuffix();
-		}
-
-		// if we still are in an or separator and we have no more tokens to process
-		// then we have a dangling suffix that may need to be added
-		if (hasMultivalueSeparator) {
-			uri.append(
-					   URLEncoder.encode(previousValueSuffix, StandardCharsets.UTF_8))
-			   .append("/");
-		}
-
-		return returnValidURIPath(uri, lpse);
-	}
-
 	/**
 	 * <p>Return a valid URI path, in effect this will test to see whether there
-	 * is a uri part and a LPSE path.  If there isn't then it will return a single forward slash '<code>/</code>'</p>
+	 * is a uri part and a LPSE path.  If there isn't then it will return a
+	 * single forward slash '<code>/</code>'</p>
 	 *
 	 * @param uri The URI to test
 	 * @param lpse The LPSE code to test
