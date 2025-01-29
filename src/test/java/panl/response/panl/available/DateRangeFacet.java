@@ -46,67 +46,21 @@
  * IN THE SOFTWARE.
  */
 
-package panl.response.panl;
+package panl.response.panl.available;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import panl.response.panl.available.Facet;
-import panl.response.panl.available.RangeFacet;
-
-public class Available {
-	public RangeFacet[] range_facets;
-	public Facet[] facets;
-	public DateRangeFacet[] date_range_facets;
-	/**
-	 * <p>Return the range_facets.</p>
-	 *
-	 * @return the range_facets
-	 */
-	public RangeFacet[] getRange_facets() {
-		return range_facets;
-	}
-	/**
-	 * <p>Set the range_facets</p>
-	 *
-	 * @param range_facets the range_facets to set
-	 */
-	public void setRange_facets(
-			RangeFacet[] range_facets) {
-		this.range_facets = range_facets;
-	}
-	/**
-	 * <p>Return the facets.</p>
-	 *
-	 * @return the facets
-	 */
-	public Facet[] getFacets() {
-		return facets;
-	}
-	/**
-	 * <p>Set the facets</p>
-	 *
-	 * @param facets the facets to set
-	 */
-	public void setFacets(
-			Facet[] facets) {
-		this.facets = facets;
-	}
-	/**
-	 * <p>Return the date_range_facets.</p>
-	 *
-	 * @return the date_range_facets
-	 */
-	public Object[] getDate_range_facets() {
-		return date_range_facets;
-	}
-	/**
-	 * <p>Set the date_range_facets</p>
-	 *
-	 * @param date_range_facets the date_range_facets to set
-	 */
-	public void setDate_range_facets(
-			Object[] date_range_facets) {
-		this.date_range_facets = date_range_facets;
-	}
-	
-	
+public class DateRangeFacet {
+	public Uri uris;
+	public String min; //	"10"
+	public String max; //	"50"
+	public String prefix; //	""
+	public String range_min_value; //	"from+light"
+	public String facet_name; //	"weight"
+	public String name; //	"Weight"
+	public String panl_code; //	"w"
+	public String suffix; //	"+grams"
+	public String range_max_value; //	"heavy+pencils"
+	public int value; //	"heavy+pencils"
+	public int value_to; //	"heavy+pencils"
+	public String dynamic_min;
+	public String dynamic_max;
 }
