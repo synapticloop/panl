@@ -27,6 +27,7 @@ package com.synapticloop.integration.test.facet.range;
 import com.synapticloop.integration.test.facet.TestBase;
 import org.junit.jupiter.api.Test;
 import panl.Root;
+import panl.response.panl.available.DateRangeFacet;
 import panl.response.panl.available.RangeFacet;
 
 import java.net.URL;
@@ -43,90 +44,14 @@ public class DateRangeTest extends TestBase {
 		assertEquals(55L, root.response.numFound);
 
 		// now test the adding and removing - there is only one
-		Object dateRangeFacet = root.panl.available.date_range_facets[0];
-		String before = rangeFacet.uris.before;
-		String after = rangeFacet.uris.after;
-		String beforeMinValue = rangeFacet.uris.before_min_value;
-		String afterMaxValue = rangeFacet.uris.after_max_value;
-		String during = rangeFacet.uris.during;
+		DateRangeFacet dateRangeFacet = root.panl.available.date_range_facets[0];
 
-		String rangeMaxValue = rangeFacet.range_max_value;
-		String rangeMinValue = rangeFacet.range_min_value;
-		int min = Integer.parseInt(rangeFacet.min);
-		int max = Integer.parseInt(rangeFacet.max);
-
-		// first up test the min and max value replacement
-		root = mapper.readValue(new URL(BASE_URL + beforeMinValue + during + afterMaxValue), Root.class);
-		assertFalse(root.error);
-		assertEquals(55L, root.response.numFound);
-		assertEquals(1, root.panl.active.facet.length);
-
-		assertEquals("from+light+to+heavy+pencils", root.panl.active.facet[0].encoded);
-		assertEquals(min, Integer.parseInt(root.panl.active.facet[0].value));
-		assertEquals(max, Integer.parseInt(root.panl.active.facet[0].value_to));
-
-		// Now test to ensure that min and max value replacements are made
-		root = mapper.readValue(new URL(BASE_URL + before + min + during + max + after), Root.class);
-		assertFalse(root.error);
-		assertEquals(55L, root.response.numFound);
-		assertEquals(1, root.panl.active.facet.length);
-
-		assertEquals("from+light+to+heavy+pencils", root.panl.active.facet[0].encoded);
-		assertEquals(min, Integer.parseInt(root.panl.active.facet[0].value));
-		assertEquals(max, Integer.parseInt(root.panl.active.facet[0].value_to));
-
-		root = mapper.readValue(new URL(BASE_URL + before + (min + 1) + during + (max - 1) + after), Root.class);
-		assertFalse(root.error);
-		assertEquals(48L, root.response.numFound);
-		assertEquals(1, root.panl.active.facet.length);
-
-		assertEquals("weighing+from+" + (min + 1) + "+grams+to+" + (max-1) +"+grams", root.panl.active.facet[0].encoded);
-		assertEquals(min + 1, Integer.parseInt(root.panl.active.facet[0].value));
-		assertEquals(max -1, Integer.parseInt(root.panl.active.facet[0].value_to));
 	}
 
-	/**
-	 * <p>Test for a multivalued query that multiple facets selected and has a
-	 * range query, removing those multivalued separator facets does not generate
-	 * a valid URL</p>
-	 * <pre>
-	 *   http://localhost:8181/panl-results-viewer/mechanical-pencils-multi-separator/empty/
-	 *   Colours%3ABlack%2CSilver/weighing+from+15+grams+to+42+grams/Ww-/
-	 * </pre>
-	 *
-	 *
-	 * <p>The test URL:
-	 *  <a href="http://localhost:8181/panl-results-viewer/mechanical-pencils-multi-separator/empty/Colours%3ABlack%2CSilver/weighing+from+15+grams+to+42+grams/Ww-/">TEST URL</a>
-	 * </p>
-	 *
-	 * <p>Remove a colour facet - the remove URL is not correct - it adds an extra <code>+grams</code> to it.</p>
-	 *
-	 * @throws Exception if something goes wrong
-	 */
-	@Test public void testRangeMultiValueRemoval() throws Exception {
-		Root root = mapper.readValue(new URL("http://localhost:8282/mechanical-pencils-multi-separator/empty/" +
-				"Colours%3ABlack%2CSilver/weighing+from+15+grams+to+42+grams/Ww-/"), Root.class);
-		assertFalse(root.error);
-
-		assertEquals("/Colours%3ASilver/weighing+from+15+grams+to+42+grams/Ww-/", root.panl.active.facet[0].remove_uri);
-	}
 
 	@Test public void testSortDefault() throws Exception {
-		Root root = mapper.readValue(new URL("http://localhost:8282/mechanical-pencils-multi-separator/empty/" +
-				"weighing+from+15+grams+to+42+grams/w-sb+/"), Root.class);
+		Root root = mapper.readValue(new URL("http://localhost:8282/simple-date/empty/next+10+months/SsS-/"), Root.class);
 		assertFalse(root.error);
-
-		assertEquals("/weighing+from+15+grams+to+42+grams/w-/", root.panl.sorting.remove_uri);
-		assertEquals("/weighing+from+15+grams+to+42+grams/w-/", root.panl.active.sort[0].remove_uri);
-		assertEquals("/weighing+from+15+grams+to+42+grams/w-sb-/", root.panl.active.sort[0].inverse_uri);
-
-		root = mapper.readValue(new URL("http://localhost:8282/mechanical-pencils-multi-separator/empty/" +
-				"Colours%3ABlack%2CSilver/weighing+from+15+grams+to+42+grams/Ww-sb+/"), Root.class);
-		assertFalse(root.error);
-
-		assertEquals("/Colours%3ABlack%2CSilver/weighing+from+15+grams+to+42+grams/Ww-/", root.panl.sorting.remove_uri);
-		assertEquals("/Colours%3ABlack%2CSilver/weighing+from+15+grams+to+42+grams/Ww-/", root.panl.active.sort[0].remove_uri);
-		assertEquals("/Colours%3ABlack%2CSilver/weighing+from+15+grams+to+42+grams/Ww-sb-/", root.panl.active.sort[0].inverse_uri);
 	}
 
 	@Test public void testSortHierarchy() throws Exception {

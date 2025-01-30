@@ -49,6 +49,7 @@
 package panl.response.panl;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import panl.response.panl.available.DateRangeFacet;
 import panl.response.panl.available.Facet;
 import panl.response.panl.available.RangeFacet;
 

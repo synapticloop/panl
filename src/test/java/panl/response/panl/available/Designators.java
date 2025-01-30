@@ -26,31 +26,17 @@ package panl.response.panl.available;
 
 /**
  * <pre>
- *   {
- *   "next": "next+",
- *   "uris": {
- *     "before": "/",
- *     "after": "/S/"
- *   },
  *   "designators": {
  *     "hours": "+hours",
  *     "months": "+months",
  *     "days": "+days",
  *     "years": "+years"
  *   },
- *   "previous": "previous+",
- *   "facet_name": "solr_date",
- *   "name": "Solr Date",
- *   "panl_code": "S"
- * }
  * </pre>
  */
-public class DateRangeFacet {
-	public Uri uris;
-	public String next;
-	public String previous;
-	public String facet_name;
-	public String name;
-	public String panl_code;
-	public Designators designators;
+public class Designators {
+	public String hours;
+	public String months;
+	public String days;
+	public String years;
 }
