@@ -31,9 +31,9 @@ public class AvailableProcessorRangeFacetTest {
 
 		System.out.println(urisObject.toString(2));
 
-		assertEquals("/weighing+from+", urisObject.getString(Processor.JSON_KEY_BEFORE));
-		assertEquals("+to+", urisObject.getString(Processor.JSON_KEY_DURING));
-		assertEquals("+grams/w-/", urisObject.getString(Processor.JSON_KEY_AFTER));
+		assertEquals("/weighing%20from%20", urisObject.getString(Processor.JSON_KEY_BEFORE));
+		assertEquals("%20to%20", urisObject.getString(Processor.JSON_KEY_DURING));
+		assertEquals("%20grams/w-/", urisObject.getString(Processor.JSON_KEY_AFTER));
 	}
 
 	@Test void testRangeAdditionURIPrefixInfix() throws PanlServerException, IOException {
@@ -53,8 +53,8 @@ public class AvailableProcessorRangeFacetTest {
 
 		System.out.println(urisObject.toString(2));
 
-		assertEquals("/weighing+", urisObject.getString(Processor.JSON_KEY_BEFORE));
-		assertEquals("+to+", urisObject.getString(Processor.JSON_KEY_DURING));
+		assertEquals("/weighing%20", urisObject.getString(Processor.JSON_KEY_BEFORE));
+		assertEquals("%20to%20", urisObject.getString(Processor.JSON_KEY_DURING));
 		assertEquals("/w-/", urisObject.getString(Processor.JSON_KEY_AFTER));
 	}
 
@@ -73,8 +73,8 @@ public class AvailableProcessorRangeFacetTest {
 		System.out.println(urisObject.toString(2));
 		assertFalse(urisObject.toString().contains("PANL_WONT_APPEAR"));
 
-		assertEquals("/this+is+the+prefix", urisObject.getString(Processor.JSON_KEY_BEFORE));
-		assertEquals("~this+is+the+prefix", urisObject.getString(Processor.JSON_KEY_DURING));
+		assertEquals("/this%20is%20the%20prefix", urisObject.getString(Processor.JSON_KEY_BEFORE));
+		assertEquals("~this%20is%20the%20prefix", urisObject.getString(Processor.JSON_KEY_DURING));
 		assertEquals("/w+/", urisObject.getString(Processor.JSON_KEY_AFTER));
 	}
 
@@ -95,8 +95,8 @@ public class AvailableProcessorRangeFacetTest {
 		assertFalse(urisObject.toString().contains("PANL_WONT_APPEAR"));
 
 		assertEquals("/", urisObject.getString(Processor.JSON_KEY_BEFORE));
-		assertEquals("+grams~", urisObject.getString(Processor.JSON_KEY_DURING));
-		assertEquals("+grams/w+/", urisObject.getString(Processor.JSON_KEY_AFTER));
+		assertEquals("%20grams~", urisObject.getString(Processor.JSON_KEY_DURING));
+		assertEquals("%20grams/w+/", urisObject.getString(Processor.JSON_KEY_AFTER));
 	}
 
 	@Test void testRangeAdditionURIPrefixSuffix() throws PanlServerException, IOException {
@@ -116,9 +116,9 @@ public class AvailableProcessorRangeFacetTest {
 		System.out.println(urisObject.toString(2));
 		assertFalse(urisObject.toString().contains("PANL_WONT_APPEAR"));
 
-		assertEquals("/this+is+the+prefix", urisObject.getString(Processor.JSON_KEY_BEFORE));
-		assertEquals("this+is+the+suffix~this+is+the+prefix", urisObject.getString(Processor.JSON_KEY_DURING));
-		assertEquals("this+is+the+suffix/w+/", urisObject.getString(Processor.JSON_KEY_AFTER));
+		assertEquals("/this%20is%20the%20prefix", urisObject.getString(Processor.JSON_KEY_BEFORE));
+		assertEquals("this%20is%20the%20suffix~this%20is%20the%20prefix", urisObject.getString(Processor.JSON_KEY_DURING));
+		assertEquals("this%20is%20the%20suffix/w+/", urisObject.getString(Processor.JSON_KEY_AFTER));
 	}
 
 //	@Test
@@ -127,7 +127,7 @@ public class AvailableProcessorRangeFacetTest {
 		JSONObject jsonObject = TestHelper.invokeAvailableProcessor(
 				WEIGHT_FACETS,
 				"/range/prefix-infix-suffix.properties",
-				"/test/default/weighing+from+18+to+35+grams/w-/",
+				"/test/default/weighing%20from%2018%20to%2035%20grams/w-/",
 				"",
 				10,
 				true);
@@ -146,9 +146,9 @@ public class AvailableProcessorRangeFacetTest {
 		System.out.println(urisObject.toString(2));
 		assertFalse(urisObject.toString().contains("PANL_WONT_APPEAR"));
 
-		assertEquals("/weighing+from+", urisObject.getString(Processor.JSON_KEY_BEFORE));
-		assertEquals("+to+", urisObject.getString(Processor.JSON_KEY_DURING));
-		assertEquals("+grams/w-/", urisObject.getString(Processor.JSON_KEY_AFTER));
+		assertEquals("/weighing%20from%20", urisObject.getString(Processor.JSON_KEY_BEFORE));
+		assertEquals("%20to%20", urisObject.getString(Processor.JSON_KEY_DURING));
+		assertEquals("%20grams/w-/", urisObject.getString(Processor.JSON_KEY_AFTER));
 	}
 
 	@Test public void testAdditionOfFacetOnPageNumber() throws PanlServerException, IOException {
@@ -186,7 +186,7 @@ public class AvailableProcessorRangeFacetTest {
 		JSONObject jsonObject = TestHelper.invokeAvailableProcessor(
 				WEIGHT_FACETS,
 				"/range/suffix.properties",
-				"/test/default/10+grams~20+grams/w+/",
+				"/test/default/10%20grams~20%20grams/w+/",
 				"",
 				10,
 				true);
@@ -199,8 +199,8 @@ public class AvailableProcessorRangeFacetTest {
 				.getJSONObject(Processor.JSON_KEY_URIS);
 
 		assertEquals("/", urisObject.getString(Processor.JSON_KEY_BEFORE));
-		assertEquals("+grams~", urisObject.getString(Processor.JSON_KEY_DURING));
-		assertEquals("+grams/w+/", urisObject.getString(Processor.JSON_KEY_AFTER));
+		assertEquals("%20grams~", urisObject.getString(Processor.JSON_KEY_DURING));
+		assertEquals("%20grams/w+/", urisObject.getString(Processor.JSON_KEY_AFTER));
 
 	}
 

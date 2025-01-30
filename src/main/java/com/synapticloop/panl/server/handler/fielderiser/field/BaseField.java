@@ -32,6 +32,7 @@ import com.synapticloop.panl.server.handler.tokeniser.LpseTokeniser;
 import com.synapticloop.panl.server.handler.tokeniser.token.facet.FacetLpseToken;
 import com.synapticloop.panl.server.handler.tokeniser.token.LpseToken;
 import com.synapticloop.panl.server.handler.tokeniser.token.facet.RangeFacetLpseToken;
+import com.synapticloop.panl.util.URLHelper;
 import org.apache.solr.client.solrj.SolrQuery;
 import org.apache.solr.client.solrj.response.FacetField;
 import org.json.JSONArray;
@@ -385,7 +386,7 @@ public abstract class BaseField {
 	 * @return The URL encoded value
 	 */
 	public String getEncodedPanlValue(String value) {
-		return (URLEncoder.encode(value, StandardCharsets.UTF_8));
+		return (URLHelper.encodeURIPath(value));
 	}
 
 	/**
@@ -471,16 +472,16 @@ public abstract class BaseField {
 		StringBuilder sb = new StringBuilder();
 		if (panlTokenMap.containsKey(lpseCode)) {
 			if (this.valueSeparator != null) {
-				sb.append(URLEncoder.encode(getValuePrefix(), StandardCharsets.UTF_8));
+				sb.append(URLHelper.encodeURIPath(getValuePrefix()));
 				boolean isFirst = true;
 				for (LpseToken lpseToken : panlTokenMap.get(lpseCode)) {
 					if (!isFirst) {
-						sb.append(URLEncoder.encode(getValueSeparator(), StandardCharsets.UTF_8));
+						sb.append(URLHelper.encodeURIPath(getValueSeparator()));
 					}
 					isFirst = false;
-					sb.append(URLEncoder.encode(lpseToken.getValue(), StandardCharsets.UTF_8));
+					sb.append(URLHelper.encodeURIPath(lpseToken.getValue()));
 				}
-				sb.append(URLEncoder.encode(getValueSuffix(), StandardCharsets.UTF_8));
+				sb.append(URLHelper.encodeURIPath(getValueSuffix()));
 				sb.append("/");
 			} else {
 				for (LpseToken lpseToken : panlTokenMap.get(lpseCode)) {
@@ -579,7 +580,7 @@ public abstract class BaseField {
 					stringBuilder.append(lpseToken.getValue());
 				}
 				stringBuilder.append(getValueSuffix());
-				return (URLEncoder.encode(stringBuilder.toString(), java.nio.charset.StandardCharsets.UTF_8) + "/");
+				return (URLHelper.encodeURIPath(stringBuilder.toString()) + "/");
 			}
 		}
 
@@ -852,7 +853,7 @@ public abstract class BaseField {
 				facetValueObject.put(JSON_KEY_ENCODED, getEncodedPanlValue(valueName));
 
 				if(isMultiValue) {
-					facetValueObject.put(JSON_KEY_ENCODED_MULTI, URLEncoder.encode(valueName, StandardCharsets.UTF_8));
+					facetValueObject.put(JSON_KEY_ENCODED_MULTI, URLHelper.encodeURIPath(valueName));
 				}
 				facetValueArrays.put(facetValueObject);
 			}

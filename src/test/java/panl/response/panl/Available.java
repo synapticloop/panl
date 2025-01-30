@@ -49,6 +49,7 @@
 package panl.response.panl;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import panl.response.panl.available.DateRangeFacet;
 import panl.response.panl.available.Facet;
 import panl.response.panl.available.RangeFacet;
 
@@ -105,7 +106,7 @@ public class Available {
 	 */
 	public void setDate_range_facets(
 			Object[] date_range_facets) {
-		this.date_range_facets = date_range_facets;
+//		this.date_range_facets = date_range_facets;
 	}
 	
 	

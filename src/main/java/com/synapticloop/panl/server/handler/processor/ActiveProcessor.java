@@ -30,6 +30,7 @@ import com.synapticloop.panl.server.handler.fielderiser.field.BaseField;
 import com.synapticloop.panl.server.handler.tokeniser.token.facet.BooleanFacetLpseToken;
 import com.synapticloop.panl.server.handler.tokeniser.token.LpseToken;
 import com.synapticloop.panl.server.handler.tokeniser.token.param.SortLpseToken;
+import com.synapticloop.panl.util.URLHelper;
 import org.apache.solr.client.solrj.response.QueryResponse;
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -127,7 +128,7 @@ public class ActiveProcessor extends Processor {
 							sortLpseToken.getSortOrderUriKey().equals(SortLpseToken.SORT_ORDER_URI_KEY_DESCENDING));
 
 					removeObject.put(JSON_KEY_ENCODED,
-							URLEncoder.encode(panlNameFromSolrFieldName, StandardCharsets.UTF_8));
+							URLHelper.encodeURIPath(panlNameFromSolrFieldName));
 
 					removeObject.put(JSON_KEY_INVERSE_URI,
 							getSortInverseURI(
@@ -221,7 +222,7 @@ public class ActiveProcessor extends Processor {
 				if(isPreviousValueSeparator && !isValueSeparator) {
 					// if the previous was a value separator, and the current is not, then
 					// we will need to put the value previous suffix in
-					uri.append(URLEncoder.encode(previousSuffix, StandardCharsets.UTF_8));
+					uri.append(URLHelper.encodeURIPath(previousSuffix));
 					uri.append("/");
 				}
 
@@ -229,15 +230,16 @@ public class ActiveProcessor extends Processor {
 					// add the uri part and the lpse part
 					if (!valueSeparatorAdded.contains(lpseCode)) {
 						// if we haven't added the value separator LPSE code,
-						uri.append(URLEncoder.encode(lpseField.getValuePrefix() + lpseToken.getValue(), StandardCharsets.UTF_8));
+						uri.append(URLHelper.encodeURIPath(lpseField.getValuePrefix() + lpseToken.getValue()));
 						lpse.append(lpseComponent);
 						valueSeparatorAdded.add(lpseCode);
 					} else {
 						// just add the lpse and URI part - we only add the URI part if
 						// there is a uri part
 						if (lpseField.getHasURIComponent()) {
+							// TODO - this is a value separator, why the if statement
 							if(isValueSeparator) {
-								uri.append(URLEncoder.encode(lpseField.getValueSeparator() + lpseToken.getValue(), StandardCharsets.UTF_8));
+								uri.append(URLHelper.encodeURIPath(lpseField.getValueSeparator() + lpseToken.getValue()));
 							} else {
 								uri.append(lpseField.getEncodedPanlValue(lpseToken))
 								   .append("/");
@@ -262,7 +264,7 @@ public class ActiveProcessor extends Processor {
 			// if the previous was a value separator, and the current is not, then
 			// we will need to put the value suffix in
 			if(null != lpseField) {
-				uri.append(URLEncoder.encode(lpseField.getValueSuffix(), StandardCharsets.UTF_8))
+				uri.append(URLHelper.encodeURIPath(lpseField.getValueSuffix()))
 						.append("/");
 			}
 		}
@@ -316,7 +318,7 @@ public class ActiveProcessor extends Processor {
 			if (sortLpseUriCode.equals(lpseComponent)) {
 				if (hasMultivalueSeparator) {
 					uri.append(
-							   URLEncoder.encode(previousValueSuffix, StandardCharsets.UTF_8))
+							   URLHelper.encodeURIPath(previousValueSuffix))
 					   .append("/");
 				}
 				hasMultivalueSeparator = false;
@@ -330,8 +332,7 @@ public class ActiveProcessor extends Processor {
 						// the previous LPSE code has a multivalue separator, we only need
 						// to add the value, with the value SEPARATOR
 						uri.append(
-								URLEncoder.encode(lpseField.getValueSeparator() + lpseToken.getValue(),
-										StandardCharsets.UTF_8));
+								URLHelper.encodeURIPath(lpseField.getValueSeparator() + lpseToken.getValue()));
 						previousValueSuffix = lpseField.getValueSuffix();
 					} else {
 						// not currently has a multivalue separator - get the full value
@@ -362,14 +363,14 @@ public class ActiveProcessor extends Processor {
 						// the previous LPSE code has a multivalue Separator - we don't know whether
 						// this one is - we will test for it, but we shall add the value
 						// suffix to it.
-						uri.append(URLEncoder.encode(previousValueSuffix, StandardCharsets.UTF_8))
+						uri.append(URLHelper.encodeURIPath(previousValueSuffix))
 						   .append("/");
 					}
 
 					if (collectionProperties.getIsMultiValuedSeparatorFacetField(lpseCode)) {
 						hasMultivalueSeparator = true;
 						// this is the start of a multivalue separator
-						uri.append(URLEncoder.encode(lpseField.getValuePrefix() + lpseToken.getValue(), StandardCharsets.UTF_8));
+						uri.append(URLHelper.encodeURIPath(lpseField.getValuePrefix() + lpseToken.getValue()));
 					} else {
 						hasMultivalueSeparator = false;
 
@@ -398,7 +399,7 @@ public class ActiveProcessor extends Processor {
 		// then we have a dangling suffix that may need to be added
 		if (hasMultivalueSeparator) {
 			uri.append(
-					   URLEncoder.encode(previousValueSuffix, StandardCharsets.UTF_8))
+							URLHelper.encodeURIPath(previousValueSuffix))
 			   .append("/");
 		}
 
@@ -459,7 +460,7 @@ public class ActiveProcessor extends Processor {
 				if(isPreviousValueSeparator && !isValueSeparator) {
 					// if the previous was a value separator, and the current is not, then
 					// we will need to put the value suffix in
-					uri.append(URLEncoder.encode(lpseField.getValueSuffix(), StandardCharsets.UTF_8))
+					uri.append(URLHelper.encodeURIPath(lpseField.getValueSuffix()))
 							.append("/");
 				}
 
@@ -467,7 +468,7 @@ public class ActiveProcessor extends Processor {
 					// add the uri part and the lpse part
 					if (!valueSeparatorAdded.contains(lpseCode)) {
 						// if we haven't added the value separator LPSE code,
-						uri.append(URLEncoder.encode(lpseField.getValuePrefix() + lpseToken.getValue(), StandardCharsets.UTF_8));
+						uri.append(URLHelper.encodeURIPath(lpseField.getValuePrefix() + lpseToken.getValue()));
 						lpse.append(lpseComponent);
 						valueSeparatorAdded.add(lpseCode);
 					} else {
@@ -475,7 +476,8 @@ public class ActiveProcessor extends Processor {
 						// there is a uri part
 						if (lpseField.getHasURIComponent()) {
 							if(isValueSeparator) {
-								uri.append(URLEncoder.encode(lpseField.getValueSeparator() + lpseToken.getValue(), StandardCharsets.UTF_8));
+								// TODO- why is this here
+								uri.append(URLHelper.encodeURIPath(lpseField.getValueSeparator() + lpseToken.getValue()));
 							} else {
 								uri.append(lpseField.getEncodedPanlValue(lpseToken))
 								   .append("/");
@@ -499,7 +501,7 @@ public class ActiveProcessor extends Processor {
 			// if the previous was a value separator, and the current is not, then
 			// we will need to put the value suffix in
 			if(null != lpseField) {
-				uri.append(URLEncoder.encode(lpseField.getValueSuffix(), StandardCharsets.UTF_8))
+				uri.append(URLHelper.encodeURIPath(lpseField.getValueSuffix()))
 				   .append("/");
 			}
 		}

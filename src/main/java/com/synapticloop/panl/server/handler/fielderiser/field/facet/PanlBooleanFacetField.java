@@ -29,6 +29,7 @@ import com.synapticloop.panl.server.handler.properties.CollectionProperties;
 import com.synapticloop.panl.server.handler.tokeniser.LpseTokeniser;
 import com.synapticloop.panl.server.handler.tokeniser.token.LpseToken;
 import com.synapticloop.panl.server.handler.tokeniser.token.facet.BooleanFacetLpseToken;
+import com.synapticloop.panl.util.URLHelper;
 import org.apache.solr.client.solrj.SolrQuery;
 import org.json.JSONObject;
 
@@ -137,7 +138,7 @@ public class PanlBooleanFacetField extends PanlFacetField {
 			sb.append(valueSuffix);
 		}
 
-		return (URLEncoder.encode(sb.toString(), StandardCharsets.UTF_8));
+		return (URLHelper.encodeURIPath(sb.toString()));
 	}
 
 	public String getDecodedValue(String value) {
@@ -229,7 +230,7 @@ public class PanlBooleanFacetField extends PanlFacetField {
 			sb.append(valueSuffix);
 		}
 
-		return (URLEncoder.encode(sb.toString(), StandardCharsets.UTF_8) + "/");
+		return (URLHelper.encodeURIPath(sb.toString()) + "/");
 	}
 
 	protected void applyToQueryInternal(SolrQuery solrQuery, List<LpseToken> lpseTokenList) {

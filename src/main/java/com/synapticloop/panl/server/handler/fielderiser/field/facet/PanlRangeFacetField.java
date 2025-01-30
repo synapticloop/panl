@@ -32,6 +32,7 @@ import com.synapticloop.panl.server.handler.tokeniser.LpseTokeniser;
 import com.synapticloop.panl.server.handler.tokeniser.token.LpseToken;
 import com.synapticloop.panl.server.handler.tokeniser.token.facet.RangeFacetLpseToken;
 import com.synapticloop.panl.server.handler.tokeniser.token.facet.bean.FromToBean;
+import com.synapticloop.panl.util.URLHelper;
 import org.apache.solr.client.solrj.SolrQuery;
 import org.apache.solr.client.solrj.response.FacetField;
 import org.json.JSONArray;
@@ -355,18 +356,18 @@ public class PanlRangeFacetField extends PanlFacetField {
 		rangeFacetObject.put(JSON_KEY_PANL_CODE, lpseCode);
 		rangeFacetObject.put(JSON_KEY_MIN, getMinRange());
 		rangeFacetObject.put(JSON_KEY_MAX, getMaxRange());
-		rangeFacetObject.put(JSON_KEY_PREFIX, URLEncoder.encode(getValuePrefix(), StandardCharsets.UTF_8));
-		rangeFacetObject.put(JSON_KEY_SUFFIX, URLEncoder.encode(getValueSuffix(), StandardCharsets.UTF_8));
+		rangeFacetObject.put(JSON_KEY_PREFIX, URLHelper.encodeURIPath(getValuePrefix()));
+		rangeFacetObject.put(JSON_KEY_SUFFIX, URLHelper.encodeURIPath(getValueSuffix()));
 
 		// range min and max values
 		if (null != rangeMaxValueReplacement) {
 			rangeFacetObject.put(JSON_KEY_RANGE_MAX_VALUE,
-						URLEncoder.encode(rangeMaxValueReplacement, StandardCharsets.UTF_8));
+					URLHelper.encodeURIPath(rangeMaxValueReplacement));
 		}
 
 		if (null != rangeMinValueReplacement) {
 			rangeFacetObject.put(JSON_KEY_RANGE_MIN_VALUE,
-						URLEncoder.encode(rangeMinValueReplacement, StandardCharsets.UTF_8));
+					URLHelper.encodeURIPath(rangeMinValueReplacement));
 		}
 
 		// if we already have this facet selected - add in the to and from
@@ -417,15 +418,15 @@ public class PanlRangeFacetField extends PanlFacetField {
 				// exists
 				if (null != rangeMinValueReplacement) {
 					additionObject.put(JSON_KEY_BEFORE_MIN_VALUE,
-								lpseUri + URLEncoder.encode(rangeMinValueReplacement, StandardCharsets.UTF_8));
+								lpseUri + URLHelper.encodeURIPath(rangeMinValueReplacement));
 				}
 
 				if (hasRangeInfix) {
 					// we have an infix - we will be using the range value prefix/suffix
-					lpseUri.append(URLEncoder.encode(getRangePrefix(), StandardCharsets.UTF_8));
+					lpseUri.append(URLHelper.encodeURIPath(getRangePrefix()));
 				} else {
 					// we don't have an infix - we will be using the value prefix/suffix
-					lpseUri.append(URLEncoder.encode(getValuePrefix(), StandardCharsets.UTF_8));
+					lpseUri.append(URLHelper.encodeURIPath(getValuePrefix()));
 				}
 
 				lpseCodeUri.append(lpseCode);
@@ -434,15 +435,15 @@ public class PanlRangeFacetField extends PanlFacetField {
 				if (hasRangeInfix) {
 					// we have the infix
 					additionObject.put(JSON_KEY_HAS_INFIX, true);
-					additionObject.put(JSON_KEY_DURING, URLEncoder.encode(rangeValueInfix, StandardCharsets.UTF_8));
+					additionObject.put(JSON_KEY_DURING, URLHelper.encodeURIPath(rangeValueInfix));
 				} else {
 					// we shall use the value suffix and prefix;
 					additionObject.put(JSON_KEY_HAS_INFIX, false);
 					additionObject.put(
 								JSON_KEY_DURING,
-								URLEncoder.encode(getValueSuffix(), StandardCharsets.UTF_8) +
+							URLHelper.encodeURIPath(getValueSuffix()) +
 											JSON_VALUE_NO_INFIX_REPLACEMENT +
-											URLEncoder.encode(getValuePrefix(), StandardCharsets.UTF_8));
+									URLHelper.encodeURIPath(getValuePrefix()));
 				}
 
 
@@ -450,13 +451,13 @@ public class PanlRangeFacetField extends PanlFacetField {
 				lpseUri.setLength(0);
 
 				if (hasRangeInfix) {
-					lpseUri.append(URLEncoder.encode(getRangeSuffix(), StandardCharsets.UTF_8));
+					lpseUri.append(URLHelper.encodeURIPath(getRangeSuffix()));
 				} else {
-					lpseUri.append(URLEncoder.encode(getValueSuffix(), StandardCharsets.UTF_8));
+					lpseUri.append(URLHelper.encodeURIPath(getValueSuffix()));
 				}
 
 				if (null != rangeMaxValueReplacement) {
-					lpseUriAfterMax.append(URLEncoder.encode(rangeMaxValueReplacement, StandardCharsets.UTF_8))
+					lpseUriAfterMax.append(URLHelper.encodeURIPath(rangeMaxValueReplacement))
 					               .append(FORWARD_SLASH);
 				}
 
@@ -695,19 +696,19 @@ public class PanlRangeFacetField extends PanlFacetField {
 				}
 			}
 
-			return (URLEncoder.encode(sb.toString(), StandardCharsets.UTF_8));
+			return (URLHelper.encodeURIPath(sb.toString()));
 		} else {
 			// we will have a two part URI path, split by a '~' and both values need
 			// to be URLEncoded before.
 			if (rangeFacetLpseToken.getValue().equals(rangeMinValue) && null != rangeMinValueReplacement) {
-				sb.append(URLEncoder.encode(rangeMinValueReplacement, StandardCharsets.UTF_8));
+				sb.append(URLHelper.encodeURIPath(rangeMinValueReplacement));
 			} else {
 				if (hasValuePrefix) {
-					sb.append(URLEncoder.encode(valuePrefix, StandardCharsets.UTF_8));
+					sb.append(URLHelper.encodeURIPath(valuePrefix));
 				}
-				sb.append(URLEncoder.encode(rangeFacetLpseToken.getValue(), StandardCharsets.UTF_8));
+				sb.append(URLHelper.encodeURIPath(rangeFacetLpseToken.getValue()));
 				if (hasValueSuffix) {
-					sb.append(URLEncoder.encode(valueSuffix, StandardCharsets.UTF_8));
+					sb.append(URLHelper.encodeURIPath(valueSuffix));
 				}
 
 			}
@@ -715,14 +716,14 @@ public class PanlRangeFacetField extends PanlFacetField {
 			sb.append(Processor.JSON_VALUE_NO_INFIX_REPLACEMENT);
 
 			if (rangeFacetLpseToken.getToValue().equals(rangeMaxValue) && null != rangeMaxValueReplacement) {
-				sb.append(URLEncoder.encode(rangeMaxValueReplacement, StandardCharsets.UTF_8));
+				sb.append(URLHelper.encodeURIPath(rangeMaxValueReplacement));
 			} else {
 				if (hasValuePrefix) {
-					sb.append(URLEncoder.encode(valuePrefix, StandardCharsets.UTF_8));
+					sb.append(URLHelper.encodeURIPath(valuePrefix));
 				}
-				sb.append(URLEncoder.encode(rangeFacetLpseToken.getToValue(), StandardCharsets.UTF_8));
+				sb.append(URLHelper.encodeURIPath(rangeFacetLpseToken.getToValue()));
 				if (hasValueSuffix) {
-					sb.append(URLEncoder.encode(valueSuffix, StandardCharsets.UTF_8));
+					sb.append(URLHelper.encodeURIPath(valueSuffix));
 				}
 			}
 
