@@ -55,21 +55,21 @@ public class SortOrderSelectedTest {
 
 	@Test public void testRangeFacetSelected() throws IOException {
 		ObjectMapper mapper = new ObjectMapper();
-		Root root = mapper.readValue(new URL("http://localhost:8282/mechanical-pencils/brandandname/weighing+from+17+grams+to+39+grams/w-/"), Root.class);
+		Root root = mapper.readValue(new URL("http://localhost:8282/mechanical-pencils/brandandname/weighing%20from%2017%20grams%20to%2039%20grams/w-/"), Root.class);
 		assertFalse(root.error);
-		assertEquals("/weighing+from+17+grams+to+39+grams/w-sb+/", root.panl.sorting.fields[0].add_uri_asc);
-		assertEquals("/weighing+from+17+grams+to+39+grams/w-sb-/", root.panl.sorting.fields[0].add_uri_desc);
-		assertEquals("/weighing+from+17+grams+to+39+grams/w-sb+/", root.panl.sorting.fields[0].set_uri_asc);
-		assertEquals("/weighing+from+17+grams+to+39+grams/w-sb-/", root.panl.sorting.fields[0].set_uri_desc);
+		assertEquals("/weighing%20from%2017%20grams%20to%2039%20grams/w-sb+/", root.panl.sorting.fields[0].add_uri_asc);
+		assertEquals("/weighing%20from%2017%20grams%20to%2039%20grams/w-sb-/", root.panl.sorting.fields[0].add_uri_desc);
+		assertEquals("/weighing%20from%2017%20grams%20to%2039%20grams/w-sb+/", root.panl.sorting.fields[0].set_uri_asc);
+		assertEquals("/weighing%20from%2017%20grams%20to%2039%20grams/w-sb-/", root.panl.sorting.fields[0].set_uri_desc);
 	}
 
 	@Test public void testRegularFacetSelected() throws IOException {
 		ObjectMapper mapper = new ObjectMapper();
-		Root root = mapper.readValue(new URL("http://localhost:8282/mechanical-pencils/brandandname/Manufactured+by+Pacific+Arc+Company/b/"), Root.class);
+		Root root = mapper.readValue(new URL("http://localhost:8282/mechanical-pencils/brandandname/Manufactured%20by%20Pacific%20Arc%20Company/b/"), Root.class);
 		assertFalse(root.error);
-		assertEquals("/Manufactured+by+Pacific+Arc+Company/bsb+/", root.panl.sorting.fields[0].add_uri_asc);
-		assertEquals("/Manufactured+by+Pacific+Arc+Company/bsb-/", root.panl.sorting.fields[0].add_uri_desc);
-		assertEquals("/Manufactured+by+Pacific+Arc+Company/bsb+/", root.panl.sorting.fields[0].set_uri_asc);
-		assertEquals("/Manufactured+by+Pacific+Arc+Company/bsb-/", root.panl.sorting.fields[0].set_uri_desc);
+		assertEquals("/Manufactured%20by%20Pacific%20Arc%20Company/bsb+/", root.panl.sorting.fields[0].add_uri_asc);
+		assertEquals("/Manufactured%20by%20Pacific%20Arc%20Company/bsb-/", root.panl.sorting.fields[0].add_uri_desc);
+		assertEquals("/Manufactured%20by%20Pacific%20Arc%20Company/bsb+/", root.panl.sorting.fields[0].set_uri_asc);
+		assertEquals("/Manufactured%20by%20Pacific%20Arc%20Company/bsb-/", root.panl.sorting.fields[0].set_uri_desc);
 	}
 }

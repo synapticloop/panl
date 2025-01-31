@@ -101,7 +101,7 @@ for setting up and running earlier versions of Solr.
 
 Because...
 
-`/Caran+d'Ache/true/Black/bDW/`
+`/Caran d'Ache/true/Black/bDW/`
 
 looks A LOT nicer than
 
@@ -154,20 +154,20 @@ parameters into concise and precise URL paths.
 
 1. **PREFIXES and SUFFIXES** - Panl can also add prefixes and suffixes to the
    URI path to increase readability, for example, with configuration. For the
-   example LPSE URI path of `/Caran+d'Ache/true/Black/bDW/` could also have the
+   example LPSE URI path of `/Caran d'Ache/true/Black/bDW/` could also have the
    brand Solr field prefixed with ‘Manufactured By ’ and suffixed by ‘ Company’
    to produce the URI path
-   `/Manufactured+By+The+Caran+d'Ache+Company/true/Black/bDW/`
+   `/Manufactured By The Caran d'Ache Company/true/Black/bDW/`
 
 1. **BOOLEAN value translations**, for any Solr field that is defined as a
    `solr.BoolField`, then an additional translation can be performed. ‘True’ and
    ‘false’ values can be replaced with arbitrary text, which will be
    transparently converted between Panl and Solr. For the LPSE URI path of
-   `/Caran+d'Ache/true/Black/bDW/` the true value (which is defined as whether
+   `/Caran d'Ache/true/Black/bDW/` the true value (which is defined as whether
    the mechanical pencil can be disassembled could be changed to ‘Able to be
    disassembled’ for true values, and ‘Cannot be disassembled’ for false values.
    The above URI path would then become
-   `/Caran+d'Ache/Able+to+be+disassembled/Black/bDW/`
+   `/Caran d'Ache/Able to be disassembled/Black/bDW/`
 
 1. **CONDENSE multiple field values** - Rather than having a forward slash URL
    path separator for multiple values of the same facet (used in OR Facets and
@@ -175,9 +175,10 @@ parameters into concise and precise URL paths.
    into a single path part, saving URL characters, and reducing URL length, and
    making the URL far more human-readable. For example, selecting pencils
    manufactured by `Faber-Castell` **OR** `Koh-i-Noor` could have the URI path
-   of `/Manufactured+by+Koh-i-Noor/Manufactured+by+Faber-Castell/bb/`, with
-   condensed multiple field values - this becomes
-   `/Manufactured+by+Koh-i-Noor%2C+or+Faber-Castell+Co./b/`
+   of `/Manufactured by Koh-i-Noor/Manufactured by Faber-Castell/bb/`, with
+   condensed multiple field values - this could be configured to become
+   `/Manufactured by Koh-i-Noor, or Faber-Castell Co./b/` (with a value 
+   separator configured to be `, or `).
 
 1. **FIELD VALUE validation** - By default, Solr can error when an invalid value
    is passed through - for example, if Solr is expecting a numeric value and it
@@ -197,7 +198,8 @@ parameters into concise and precise URL paths.
 
 1. **RESULTS SORTING options** - Sort by any of the Solr fields, either
    ascending, or descending and with multiple sub-sorting available - e.g.
-   sorting by a brand name, than the model number
+   sorting by a brand name, than the model number.  Additionally Panl generates 
+   URLs for the inverse of the sorting without impacting any sub-sorting.
 
 1. **INTEGRATED TYPEAHEAD/LOOKAHEAD** - Retrieve results suggestions as you type
    in the query search box.
@@ -722,6 +724,7 @@ number.
     - Fixed where a single value LPSE code for a RANGE facet was the first
       selected item, and other selections would erroneously add an infix
       designator.
+    - Fixed the URL path encoding
 
 
 - **Code Changes**
@@ -931,11 +934,10 @@ number.
    - ~~Rather than having a prefix and/or suffix added to the Solr field value
        for each OR facet, being able to have a separator character (or
        characters) between the values. E.g. for the following example URL:~~
-   - ~~
-       `/Manufactured+By+The+Caran+d'Ache+Company/Manufactured+By+The+BIC+Company/bb/`~~
+   - ~~`/Manufactured By The Caran d'Ache Company/Manufactured By The BIC Company/bb/`~~
    - ~~Should be able to be configured to be displayed as (or something along
        the lines of it):~~
-   - ~~`/Manufactured+By+The+Caran+d'Ache,or+BIC+Company/b/`~~
+   - ~~`/Manufactured By The Caran d'Ache, or BIC Company/b/`~~
 1. Query text boosting (Low priority)
    - Being able to boost specific Solr fields for importance when there has
        been a keyword search on them - this ties in with the 'Specific Solr

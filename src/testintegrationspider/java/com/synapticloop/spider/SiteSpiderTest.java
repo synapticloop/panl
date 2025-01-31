@@ -79,10 +79,10 @@ public class SiteSpiderTest {
 			String before = facet.uris.before;
 			String after = facet.uris.after;
 			for (Value value : facet.values) {
-				if (null != value.getEncoded_multi()) {
-					map.put(url + before + value.getEncoded_multi() + after, url);
+				if (null != value.encoded_multi) {
+					map.put(url + before + value.encoded_multi + after, url);
 				} else {
-					map.put(url + before + value.getEncoded() + after, url);
+					map.put(url + before + value.encoded + after, url);
 				}
 			}
 		}
@@ -93,10 +93,10 @@ public class SiteSpiderTest {
 			String before = facet.uris.before;
 			String after = facet.uris.after;
 			for (Value value : facet.values) {
-				if (null != value.getEncoded_multi()) {
-					map.put(url + before + value.getEncoded_multi() + after, parent);
+				if (null != value.encoded_multi) {
+					map.put(url + before + value.encoded_multi + after, parent);
 				} else {
-					map.put(url + before + value.getEncoded() + after, parent);
+					map.put(url + before + value.encoded + after, parent);
 				}
 			}
 		}

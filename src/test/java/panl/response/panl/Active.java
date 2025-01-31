@@ -59,25 +59,4 @@ public class Active {
 	@JsonIgnore public Object sort_fields;
 	public QueryOperand query_operand;
 	public Sort[] sort;
-
-	/**
-	 * <p>Return the facet.</p>
-	 *
-	 * @return the facet
-	 */
-	public Facet[] getFacet() {
-		return facet;
-	}
-
-	/**
-	 * <p>Set the facet</p>
-	 *
-	 * @param facet the facet to set
-	 */
-	public void setFacet(
-			Facet[] facet) {
-		this.facet = facet;
-	}
-	
-	
 }

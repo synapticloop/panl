@@ -279,7 +279,7 @@ public class RegularMultiValuedTest {
 			assertFalse(root.error);
 
 			for(Facet facet: root.panl.active.facet) {
-				failOnIncorrectUrlStarting(facet.remove_uri, "/Colours%3A");
+				failOnIncorrectUrlStarting(facet.remove_uri, "/Colours:");
 				failOnIncorrectUrlEnding(facet.remove_uri, "/W/");
 			}
 		}

@@ -53,4 +53,8 @@ public class DateRangeFacet {
 	public String name;
 	public String panl_code;
 	public Designators designators;
+	public String previous_next;
+	public String designator;
+	public String solr_range_designator;
+	public String value;
 }

@@ -29,9 +29,9 @@
 		</Logger>
 
 		<!--
-	~ The following will output messages from the properties parsing.  You should
-	~ leave this as it only occurs on the Panl server startup.
-	-->
+		  ~ The following will output messages from the properties parsing.  You should
+		  ~ leave this as it only occurs on the Panl server startup.
+		  -->
 
 		<Logger name="com.synapticloop.panl.server.handler.properties" level="warn" additivity="false">
 			<Appender-ref ref="console" />

@@ -66,10 +66,10 @@ public class OrSeparatorLinkTest {
 			String before = facet.uris.before;
 			String after = facet.uris.after;
 			for (Value value : facet.values) {
-				if(null != value.getEncoded_multi() && facet.value_separator != null) {
-					urlsToTest.add(BASE_URL + before + value.getEncoded_multi() + after);
+				if(null != value.encoded_multi && facet.value_separator != null) {
+					urlsToTest.add(BASE_URL + before + value.encoded_multi + after);
 				} else {
-					urlsToTest.add(BASE_URL + before + value.getEncoded() + after);
+					urlsToTest.add(BASE_URL + before + value.encoded + after);
 				}
 			}
 		}

@@ -87,18 +87,18 @@ public class DefaultsTest {
 		assertEquals("10", root.panl.available.range_facets[0].min);
 		assertEquals("50", root.panl.available.range_facets[0].max);
 		assertEquals("", root.panl.available.range_facets[0].prefix);
-		assertEquals("from+light", root.panl.available.range_facets[0].range_min_value);
+		assertEquals("from%20light", root.panl.available.range_facets[0].range_min_value);
 		assertEquals("weight", root.panl.available.range_facets[0].facet_name);
 		assertEquals("Weight", root.panl.available.range_facets[0].name);
 		assertEquals("w", root.panl.available.range_facets[0].panl_code);
-		assertEquals("+grams", root.panl.available.range_facets[0].suffix);
-		assertEquals("heavy+pencils", root.panl.available.range_facets[0].range_max_value);
+		assertEquals("%20grams", root.panl.available.range_facets[0].suffix);
+		assertEquals("heavy%20pencils", root.panl.available.range_facets[0].range_max_value);
 
-		assertEquals("/weighing+from+", root.panl.available.range_facets[0].uris.before);
-		assertEquals("/from+light", root.panl.available.range_facets[0].uris.before_min_value);
+		assertEquals("/weighing%20from%20", root.panl.available.range_facets[0].uris.before);
+		assertEquals("/from%20light", root.panl.available.range_facets[0].uris.before_min_value);
 		assertTrue(root.panl.available.range_facets[0].uris.has_infix);
-		assertEquals("heavy+pencils/w-/", root.panl.available.range_facets[0].uris.after_max_value);
-		assertEquals("+to+", root.panl.available.range_facets[0].uris.during);
-		assertEquals("+grams/w-/", root.panl.available.range_facets[0].uris.after);
+		assertEquals("heavy%20pencils/w-/", root.panl.available.range_facets[0].uris.after_max_value);
+		assertEquals("%20to%20", root.panl.available.range_facets[0].uris.during);
+		assertEquals("%20grams/w-/", root.panl.available.range_facets[0].uris.after);
 	}
 }

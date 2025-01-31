@@ -51,40 +51,4 @@ package panl.response.panl.uris;
 public class NumPerPageUris {
 	public String before;
 	public String after;
-	/**
-	 * <p>Return the before.</p>
-	 *
-	 * @return the before
-	 */
-	public String getBefore() {
-		return before;
-	}
-	/**
-	 * <p>Set the before</p>
-	 *
-	 * @param before the before to set
-	 */
-	public void setBefore(
-			String before) {
-		this.before = before;
-	}
-	/**
-	 * <p>Return the after.</p>
-	 *
-	 * @return the after
-	 */
-	public String getAfter() {
-		return after;
-	}
-	/**
-	 * <p>Set the after</p>
-	 *
-	 * @param after the after to set
-	 */
-	public void setAfter(
-			String after) {
-		this.after = after;
-	}
-	
-	
 }

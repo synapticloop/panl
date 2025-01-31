@@ -68,7 +68,7 @@ public class RangeTest extends TestBase {
 		assertEquals(55L, root.response.numFound);
 		assertEquals(1, root.panl.active.facet.length);
 
-		assertEquals("from+light+to+heavy+pencils", root.panl.active.facet[0].encoded);
+		assertEquals("from%20light%20to%20heavy%20pencils", root.panl.active.facet[0].encoded);
 		assertEquals(min, Integer.parseInt(root.panl.active.facet[0].value));
 		assertEquals(max, Integer.parseInt(root.panl.active.facet[0].value_to));
 
@@ -78,7 +78,7 @@ public class RangeTest extends TestBase {
 		assertEquals(55L, root.response.numFound);
 		assertEquals(1, root.panl.active.facet.length);
 
-		assertEquals("from+light+to+heavy+pencils", root.panl.active.facet[0].encoded);
+		assertEquals("from%20light%20to%20heavy%20pencils", root.panl.active.facet[0].encoded);
 		assertEquals(min, Integer.parseInt(root.panl.active.facet[0].value));
 		assertEquals(max, Integer.parseInt(root.panl.active.facet[0].value_to));
 
@@ -87,7 +87,7 @@ public class RangeTest extends TestBase {
 		assertEquals(48L, root.response.numFound);
 		assertEquals(1, root.panl.active.facet.length);
 
-		assertEquals("weighing+from+" + (min + 1) + "+grams+to+" + (max-1) +"+grams", root.panl.active.facet[0].encoded);
+		assertEquals("weighing%20from%20" + (min + 1) + "%20grams%20to%20" + (max-1) +"%20grams", root.panl.active.facet[0].encoded);
 		assertEquals(min + 1, Integer.parseInt(root.panl.active.facet[0].value));
 		assertEquals(max -1, Integer.parseInt(root.panl.active.facet[0].value_to));
 	}
@@ -98,54 +98,55 @@ public class RangeTest extends TestBase {
 	 * a valid URL</p>
 	 * <pre>
 	 *   http://localhost:8181/panl-results-viewer/mechanical-pencils-multi-separator/empty/
-	 *   Colours%3ABlack%2CSilver/weighing+from+15+grams+to+42+grams/Ww-/
+	 *   Colours%3ABlack%2CSilver/weighing%20from%2015%20grams%20to%2042%20grams/Ww-/
 	 * </pre>
 	 *
 	 *
 	 * <p>The test URL:
-	 *  <a href="http://localhost:8181/panl-results-viewer/mechanical-pencils-multi-separator/empty/Colours%3ABlack%2CSilver/weighing+from+15+grams+to+42+grams/Ww-/">TEST URL</a>
+	 *  <a href="http://localhost:8181/panl-results-viewer/mechanical-pencils-multi-separator/empty/Colours%3ABlack%2CSilver/weighing%20from%2015%20grams%20to%2042%20grams/Ww-/">TEST URL</a>
 	 * </p>
 	 *
-	 * <p>Remove a colour facet - the remove URL is not correct - it adds an extra <code>+grams</code> to it.</p>
+	 * <p>Remove a colour facet - the remove URL is not correct - it adds an extra <code>%20grams</code> to it.</p>
 	 *
 	 * @throws Exception if something goes wrong
 	 */
 	@Test public void testRangeMultiValueRemoval() throws Exception {
 		Root root = mapper.readValue(new URL("http://localhost:8282/mechanical-pencils-multi-separator/empty/" +
-				"Colours%3ABlack%2CSilver/weighing+from+15+grams+to+42+grams/Ww-/"), Root.class);
+				"Colours:Black,Silver/weighing%20from%2015%20grams%20to%2042%20grams/Ww-/"), Root.class);
 		assertFalse(root.error);
 
-		assertEquals("/Colours%3ASilver/weighing+from+15+grams+to+42+grams/Ww-/", root.panl.active.facet[0].remove_uri);
+		assertEquals("/Colours:Silver/weighing%20from%2015%20grams%20to%2042%20grams/Ww-/",
+				root.panl.active.facet[0].remove_uri);
 	}
 
 	@Test public void testSortDefault() throws Exception {
 		Root root = mapper.readValue(new URL("http://localhost:8282/mechanical-pencils-multi-separator/empty/" +
-				"weighing+from+15+grams+to+42+grams/w-sb+/"), Root.class);
+				"weighing%20from%2015%20grams%20to%2042%20grams/w-sb+/"), Root.class);
 		assertFalse(root.error);
 
-		assertEquals("/weighing+from+15+grams+to+42+grams/w-/", root.panl.sorting.remove_uri);
-		assertEquals("/weighing+from+15+grams+to+42+grams/w-/", root.panl.active.sort[0].remove_uri);
-		assertEquals("/weighing+from+15+grams+to+42+grams/w-sb-/", root.panl.active.sort[0].inverse_uri);
+		assertEquals("/weighing%20from%2015%20grams%20to%2042%20grams/w-/", root.panl.sorting.remove_uri);
+		assertEquals("/weighing%20from%2015%20grams%20to%2042%20grams/w-/", root.panl.active.sort[0].remove_uri);
+		assertEquals("/weighing%20from%2015%20grams%20to%2042%20grams/w-sb-/", root.panl.active.sort[0].inverse_uri);
 
 		root = mapper.readValue(new URL("http://localhost:8282/mechanical-pencils-multi-separator/empty/" +
-				"Colours%3ABlack%2CSilver/weighing+from+15+grams+to+42+grams/Ww-sb+/"), Root.class);
+				"Colours%3ABlack%2CSilver/weighing%20from%2015%20grams%20to%2042%20grams/Ww-sb+/"), Root.class);
 		assertFalse(root.error);
 
-		assertEquals("/Colours%3ABlack%2CSilver/weighing+from+15+grams+to+42+grams/Ww-/", root.panl.sorting.remove_uri);
-		assertEquals("/Colours%3ABlack%2CSilver/weighing+from+15+grams+to+42+grams/Ww-/", root.panl.active.sort[0].remove_uri);
-		assertEquals("/Colours%3ABlack%2CSilver/weighing+from+15+grams+to+42+grams/Ww-sb-/", root.panl.active.sort[0].inverse_uri);
+		assertEquals("/Colours:Black,Silver/weighing%20from%2015%20grams%20to%2042%20grams/Ww-/", root.panl.sorting.remove_uri);
+		assertEquals("/Colours:Black,Silver/weighing%20from%2015%20grams%20to%2042%20grams/Ww-/", root.panl.active.sort[0].remove_uri);
+		assertEquals("/Colours:Black,Silver/weighing%20from%2015%20grams%20to%2042%20grams/Ww-sb-/", root.panl.active.sort[0].inverse_uri);
 	}
 
 	@Test public void testSortHierarchy() throws Exception {
 		Root root = mapper.readValue(new URL("http://localhost:8282/mechanical-pencils-multi-separator/empty/" +
-				"weighing+from+15+grams+to+42+grams/w-sb+sN+/"), Root.class);
+				"weighing%20from%2015%20grams%20to%2042%20grams/w-sb+sN+/"), Root.class);
 		assertFalse(root.error);
 
-		assertEquals("/weighing+from+15+grams+to+42+grams/w-/", root.panl.sorting.remove_uri);
-		assertEquals("/weighing+from+15+grams+to+42+grams/w-sN+/", root.panl.active.sort[0].remove_uri);
-		assertEquals("/weighing+from+15+grams+to+42+grams/w-sb-sN+/", root.panl.active.sort[0].inverse_uri);
-		assertEquals("/weighing+from+15+grams+to+42+grams/w-sb+/", root.panl.active.sort[1].remove_uri);
-		assertEquals("/weighing+from+15+grams+to+42+grams/w-sb+sN-/", root.panl.active.sort[1].inverse_uri);
+		assertEquals("/weighing%20from%2015%20grams%20to%2042%20grams/w-/", root.panl.sorting.remove_uri);
+		assertEquals("/weighing%20from%2015%20grams%20to%2042%20grams/w-sN+/", root.panl.active.sort[0].remove_uri);
+		assertEquals("/weighing%20from%2015%20grams%20to%2042%20grams/w-sb-sN+/", root.panl.active.sort[0].inverse_uri);
+		assertEquals("/weighing%20from%2015%20grams%20to%2042%20grams/w-sb+/", root.panl.active.sort[1].remove_uri);
+		assertEquals("/weighing%20from%2015%20grams%20to%2042%20grams/w-sb+sN-/", root.panl.active.sort[1].inverse_uri);
 	}
 
 }
