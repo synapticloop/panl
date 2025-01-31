@@ -56,7 +56,7 @@ of which:
 - `major` - the major version will increment when there is a **BREAKING CHANGE
   to the Panl LPSE URL**. Upon increment of the major version, both the minor
   and micro version number will be reset to 0 (zero).
-- `minor` - the micro version will increment when there is additional
+- `minor` - the minor version will increment when there is additional
   functionality added to the release. Upon increment of the minor version, the
   micro number will be reset to 0 (zero).
 - `micro` - the micro version will increment for bug fixes only.
@@ -970,6 +970,9 @@ number.
        a little more difficult, but also easier.
     - Step one would be to generate the properties files in memory from the
        JSON configuration, then completely replace them.
+    - Whilst there are some niceties with JSON files, there are also some parts 
+      which make it worse (especially around commenting).
+
 1. Cached OR Facet Values (Medium Priority)
      - Where the user wants to display an OR facet, and also wants to display 
        the original counts (which will display as zero if any of the OR facets 
