@@ -2,8 +2,7 @@
 
 <img src="src/docs/synapticloop-logo.png" alt="The Synapticloop logo" />
 
-<img src="src/main/resources/webapp/static/favicon.png" alt="The Synapticloop Panl Favicon" />
-&nbsp;anl&nbsp;Server
+<img src="src/main/resources/webapp/static/favicon.png" alt="The Synapticloop Panl Favicon" />&nbsp;anl&nbsp;Server
 
 > **_Rapidly get up and running with a fully featured, SEO friendly, keyword
 searchable, faceted search engine with an in-built, search page to test it all
