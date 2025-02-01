@@ -365,6 +365,12 @@ function addActiveFacets(facets) {
 	var currentFacetName = "";
 
 	for (const facet of facets) {
+		if(facet.checkbox_value !== undefined) {
+			// this is a boolean checkbox
+			return;
+		}
+
+		// these are not checkboxes that can be set.
 		if (facet.facet_name !== currentFacetName) {
 			active.append("<li><strong>" + facet.name + " <em>(" + facet.panl_code + ")</em></strong></li>");
 			currentFacetName = facet.facet_name;
@@ -453,7 +459,7 @@ function addAvailableFilters(availableObject, activeObject) {
 
 	// first up the facets
 	for (const facet of availableObject.facets) {
-		generateFacet(facet);
+		generateFacet(facet, activeObject);
 	}
 
 	const ranges = $("#ranges");
@@ -632,16 +638,69 @@ function addAvailableFilters(availableObject, activeObject) {
 	}
 }
 
-function generateFacet(facet) {
+function generateFacet(facet, activeFacetObject) {
 	const available = $("#available");
-	available.append(generateFacetHTML(facet));
+	if(facet.checkbox_value === undefined) {
+		available.append(generateFacetHTML(facet));
 
-	if (facet.facet_limit !== -1 && facet.facet_limit <= facet.values.length) {
-		// bind the update
-		$("#facet-link-" + facet.facet_name).on("click", {"facet": facet}, function (event) {
-			event.preventDefault();
-			replaceFacetHTML(event.data.facet);
-		});
+		if (facet.facet_limit !== -1 && facet.facet_limit <= facet.values.length) {
+			// bind the update
+			$("#facet-link-" + facet.facet_name).on("click", {"facet": facet}, function (event) {
+				event.preventDefault();
+				replaceFacetHTML(event.data.facet);
+			});
+		}
+	} else {
+		// add a boolean checkbox
+		var innerUl = "<ul>";
+
+		// if this is already selected, then we need to choose the correct icon
+		var inverseLink = "";
+		var imagePrefix = "un";
+		for (const value of facet.values) {
+			if(value.value === (!facet.checkbox_value) +"") {
+				// go through and find the active
+				if(activeFacetObject.facet === undefined) {
+					break;
+				}
+				for (const activeFacet of activeFacetObject.facet) {
+					if(activeFacet.panl_code === facet.panl_code) {
+						imagePrefix = "";
+						break;
+					}
+				}
+			} else {
+				inverseLink = facet.uris.before +
+						value.encoded +
+						facet.uris.after
+			}
+		}
+
+		for (const value of facet.values) {
+			if(value.value === (!facet.checkbox_value) +"") {
+				innerUl += "<li>" +
+						"<a href=\"" +
+						panlResultsViewerUrl +
+						$("#collection").text() +
+						inverseLink +
+						"\"><img class=\"add\" src=\"/webapp/static/" + imagePrefix + "checked.png\" title=\"Add facet\">&nbsp;" +
+						(facet.checkbox_value ? "Include '" : "Exclude '") + decodePanl(value.encoded) + "'</a>";
+			}
+		}
+		innerUl = innerUl + "</ul>";
+
+		var complete = "<li class=\"heading\" id=\"facet-" +
+			facet.facet_name +
+			"\"><strong>" +
+			facet.name +
+			" <em>(" +
+			facet.panl_code +
+			")</em></strong> [" +
+			getFacetType(facet) +
+			"]<br />" +
+			innerUl +
+			"</li>"
+		$("#boolean-checkbox").append(complete);
 	}
 }
 

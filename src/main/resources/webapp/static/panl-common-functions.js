@@ -6,7 +6,12 @@
  */
 var getFacetType = function (orderedLpseFacet) {
 	if (orderedLpseFacet.is_boolean_facet) {
-		return ("BOOLEAN");
+		if(orderedLpseFacet.checkbox_value !== undefined) {
+			return ("BOOLEAN Checkbox (" + orderedLpseFacet.checkbox_value +")");
+		} else {
+			return ("BOOLEAN");
+		}
+
 	} else if (orderedLpseFacet.is_or_facet) {
 		if (undefined !== orderedLpseFacet.value_separator) {
 			return ("OR SEP");

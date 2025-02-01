@@ -273,10 +273,16 @@ public class PanlBooleanFacetField extends PanlFacetField {
 	@Override public void addToRemoveObject(JSONObject removeObject, LpseToken lpseToken) {
 		removeObject.put(JSON_KEY_IS_BOOLEAN_FACET, true);
 		BooleanFacetLpseToken booleanFacetLpseToken = (BooleanFacetLpseToken) lpseToken;
-		// now we need to put in the inverse URI
+
 		if (lpseToken.getIsValid()) {
+			// now we need to put in the inverse URI
 			removeObject.put(JSON_KEY_INVERSE_ENCODED, booleanFacetLpseToken.getInverseBooleanValue(lpseToken));
+
+			if(this.isCheckbox) {
+				removeObject.put(JSON_KEY_CHECKBOX_VALUE, this.checkboxValue);
+			}
 		}
+
 	}
 
 	@Override public List<String> explainAdditional() {
