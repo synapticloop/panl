@@ -44,6 +44,7 @@ public class PanlBooleanFacetField extends PanlFacetField {
 	public static final String BOOLEAN_TRUE_VALUE = "true";
 	public static final String BOOLEAN_FALSE_VALUE = "false";
 	public static final String JSON_KEY_IS_BOOLEAN_FACET = "is_boolean_facet";
+	public static final String JSON_KEY_CHECKBOX_VALUE = "checkbox_value";
 
 	// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - //
 	//                         BOOLEAN Facet properties                        //
@@ -52,6 +53,9 @@ public class PanlBooleanFacetField extends PanlFacetField {
 	private boolean hasBooleanFalseReplacement;
 	private String booleanTrueReplacement;
 	private String booleanFalseReplacement;
+
+	private boolean isCheckbox = false;
+	private boolean checkboxValue = false;
 
 	/**
 	 * <p>Instantiate a BOOLEAN facet field</p>
@@ -74,6 +78,7 @@ public class PanlBooleanFacetField extends PanlFacetField {
 		validateProperties();
 
 		populateBooleanReplacements();
+		populateBooleanCheckbox();
 		populateSuffixAndPrefix();
 		populateSolrFieldTypeValidation();
 		populatePanlAndSolrFieldNames();
@@ -112,6 +117,14 @@ public class PanlBooleanFacetField extends PanlFacetField {
 		} else {
 			this.booleanTrueReplacement = null;
 			this.booleanFalseReplacement = null;
+		}
+	}
+
+	private void populateBooleanCheckbox() {
+		String checkboxProperty = properties.getProperty("panl.bool.checkbox." + this.lpseCode, null);
+		this.isCheckbox = null != checkboxProperty;
+		if(this.isCheckbox) {
+			this.checkboxValue = Boolean.parseBoolean(checkboxProperty);
 		}
 	}
 
@@ -252,6 +265,9 @@ public class PanlBooleanFacetField extends PanlFacetField {
 
 	@Override public void appendToAvailableObjectInternal(JSONObject jsonObject) {
 		jsonObject.put(JSON_KEY_IS_BOOLEAN_FACET, true);
+		if(this.isCheckbox) {
+			jsonObject.put(JSON_KEY_CHECKBOX_VALUE, this.checkboxValue);
+		}
 	}
 
 	@Override public void addToRemoveObject(JSONObject removeObject, LpseToken lpseToken) {
@@ -277,6 +293,10 @@ public class PanlBooleanFacetField extends PanlFacetField {
 			explanations.add("Will replace boolean 'false' values with '" + booleanFalseReplacement + "'.");
 		} else {
 			explanations.add("Will not replace boolean 'false' values.");
+		}
+
+		if(this.isCheckbox) {
+			explanations.add("Has a checkbox with for '" + this.checkboxValue + "' values.");
 		}
 
 		return (explanations);

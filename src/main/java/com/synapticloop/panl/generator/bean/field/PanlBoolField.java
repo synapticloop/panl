@@ -45,7 +45,7 @@ public class PanlBoolField extends BasePanlField {
 				.append(String.format("#panl.bool.%s.false=is-not-%s\n", lpseCode, solrFieldName))
 				.append("# You may also want to be able to display this as a checkbox which will pass\n")
 				.append("# through either a 'true' or 'false' value when selected\n ")
-				.append(String.format("panl.checkbox.%s=true_or_false\n", lpseCode));
+				.append(String.format("panl.bool.checkbox.%s=true_or_false\n", lpseCode));
 		return (stringBuilder.toString());
 	}
 }
