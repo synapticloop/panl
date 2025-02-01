@@ -26,22 +26,26 @@ package com.synapticloop.panl.generator.bean.field;
 
 public class PanlBoolField extends BasePanlField {
 	protected PanlBoolField(String lpseCode,
-		String solrFieldName,
-		String solrFieldType,
-		String schemaXmlLine,
-		boolean isFacet,
-		boolean isMultiValued) {
+			String solrFieldName,
+			String solrFieldType,
+			String schemaXmlLine,
+			boolean isFacet,
+			boolean isMultiValued) {
 
 		super(lpseCode, solrFieldName, solrFieldType, schemaXmlLine, isFacet, isMultiValued);
 	}
 
 	@Override public String getAdditionalProperties() {
 		StringBuilder stringBuilder = new StringBuilder(getPrefixSuffix());
-		stringBuilder.append("# Because this is a Boolean field, you can use a boolean value replacement for\n")
-		             .append("# either the true value, the false value, or neither.  This makes a more human-\n")
-		             .append("# readable URL\n")
-		             .append(String.format("#panl.bool.%s.true=is-%s\n", lpseCode, solrFieldName))
-		             .append(String.format("#panl.bool.%s.false=is-not-%s\n", lpseCode, solrFieldName));
+		stringBuilder
+				.append("# Because this is a Boolean field, you can use a boolean value replacement for\n")
+				.append("# either the true value, the false value, or neither.  This makes a more human-\n")
+				.append("# readable URL\n")
+				.append(String.format("#panl.bool.%s.true=is-%s\n", lpseCode, solrFieldName))
+				.append(String.format("#panl.bool.%s.false=is-not-%s\n", lpseCode, solrFieldName))
+				.append("# You may also want to be able to display this as a checkbox which will pass\n")
+				.append("# through either a 'true' or 'false' value when selected\n ")
+				.append(String.format("panl.checkbox.%s=true_or_false\n", lpseCode));
 		return (stringBuilder.toString());
 	}
 }
