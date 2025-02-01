@@ -24,6 +24,8 @@ package com.synapticloop.panl.generator.bean.field;
  * IN THE SOFTWARE.
  */
 
+import com.synapticloop.panl.server.handler.fielderiser.field.facet.PanlBooleanFacetField;
+
 public abstract class BasePanlField {
 	protected final String lpseCode;
 	protected final String solrFieldName;
@@ -118,7 +120,7 @@ public abstract class BasePanlField {
 				             .append(String.format("panl.multivalue.%s=%b\n", lpseCode, isMultiValued));
 			} else {
 				// this is a good candidate for an OR facet - but not a date
-				if(!(this instanceof PanlDateRangeField)) {
+				if(!(this instanceof PanlDateRangeField) && !(this instanceof PanlBoolField)) {
 					stringBuilder.append("# This field is a candidate for an OR facet, you may wish to configure the\n")
 					             .append("# following properties\n")
 					             .append(String.format("#panl.or.facet.%s=true\n", lpseCode))
