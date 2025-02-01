@@ -370,13 +370,21 @@ function addActiveFacets(facets) {
 			// this is a boolean checkbox
 			checkboxes.append("<li><strong>" + facet.name + " <em>(" + facet.panl_code + ")</em></strong></li>");
 			currentFacetName = facet.facet_name;
+			var  checkboxText = "";
+
+			if(facet.checkbox_value) {
+				checkboxText = "Only include '" + decodePanl(facet.encoded) + "'";
+			} else {
+				checkboxText = "Exclude '" + decodePanl(facet.inverse_encoded) + "'";
+			}
 			var innerUl = "<li>" +
 					"<a href=\"" +
 					panlResultsViewerUrl +
 					$("#collection").text() +
 					facet.remove_uri +
 					"\"><img class=\"add\" src=\"/webapp/static/checked.png\" title=\"Remove facet\">" +
-					(facet.checkbox_value ? "Include '" : "Exclude '") + decodePanl(facet.inverse_encoded) + "'</a>";
+					checkboxText +
+					"</a>";
 
 			var complete = "<li class=\"heading\" id=\"facet-" +
 					facet.facet_name +
@@ -679,17 +687,28 @@ function generateFacet(facet, activeFacetObject) {
 		var innerUl = "<ul>";
 
 		// if this is already selected, then we need to choose the correct icon
-		var inverseLink = "";
+		var checkboxLink = "";
+		var checkboxText = "";
+
 		for (const value of facet.values) {
-			if(value.value === (!facet.checkbox_value) +"") {
-				// go through and find the active
-				if(activeFacetObject.facet === undefined) {
-					break;
+			if(facet.checkbox_value) {
+				// we want to highlight the include 'true' value
+				if(value.value === "true") {
+					checkboxLink = facet.uris.before +
+							value.encoded +
+							facet.uris.after;
+					checkboxText = value.encoded;
 				}
 			} else {
-				inverseLink = facet.uris.before +
-						value.encoded +
-						facet.uris.after
+				// checkbox is set to false
+				// we want to exclude the negative values, so only
+				if(value.value === "false") {
+					checkboxLink = facet.uris.before +
+							value.encoded +
+							facet.uris.after;
+				} else {
+					checkboxText = value.encoded;
+				}
 			}
 		}
 
@@ -699,9 +718,9 @@ function generateFacet(facet, activeFacetObject) {
 						"<a href=\"" +
 						panlResultsViewerUrl +
 						$("#collection").text() +
-						inverseLink +
+						checkboxLink +
 						"\"><img class=\"add\" src=\"/webapp/static/unchecked.png\" title=\"Add facet\">" +
-						(facet.checkbox_value ? "Include '" : "Exclude '") + decodePanl(value.encoded) + "'</a>";
+						(facet.checkbox_value ? "Only include '" : "Exclude '") + decodePanl(checkboxText) + "'</a>";
 			}
 		}
 		innerUl = innerUl + "</ul>";
