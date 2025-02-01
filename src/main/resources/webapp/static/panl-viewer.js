@@ -361,37 +361,61 @@ function addActiveFilters(activeObject, removeUri) {
 
 function addActiveFacets(facets) {
 	const active = $("#active");
+	const checkboxes = $("#boolean-checkbox");
 	// facets first
 	var currentFacetName = "";
 
 	for (const facet of facets) {
 		if(facet.checkbox_value !== undefined) {
 			// this is a boolean checkbox
-			return;
-		}
-
-		// these are not checkboxes that can be set.
-		if (facet.facet_name !== currentFacetName) {
-			active.append("<li><strong>" + facet.name + " <em>(" + facet.panl_code + ")</em></strong></li>");
+			checkboxes.append("<li><strong>" + facet.name + " <em>(" + facet.panl_code + ")</em></strong></li>");
 			currentFacetName = facet.facet_name;
-		}
+			var innerUl = "<li>" +
+					"<a href=\"" +
+					panlResultsViewerUrl +
+					$("#collection").text() +
+					facet.remove_uri +
+					"\"><img class=\"add\" src=\"/webapp/static/checked.png\" title=\"Remove facet\">" +
+					(facet.checkbox_value ? "Include '" : "Exclude '") + decodePanl(facet.inverse_encoded) + "'</a>";
 
-		active.append("<li><a href=\"" + panlResultsViewerUrl +
-				$("#collection").text() +
-				facet.remove_uri +
-				"\"><img class=\"remove\" src=\"/webapp/static/remove.png\" title=\"Remove this facet\"/></a>&nbsp;" +
-				decodePanl(facet.encoded) +
-				"</li>");
+			var complete = "<li class=\"heading\" id=\"facet-" +
+					facet.facet_name +
+					"\"><strong>" +
+					facet.name +
+					" <em>(" +
+					facet.panl_code +
+					")</em></strong> [" +
+					getFacetType(facet) +
+					"]<br />" +
+					innerUl +
+					"</li>"
 
-		if (facet.is_boolean_facet) {
+			checkboxes.append(complete);
+
+		} else {
+
+			// these are not checkboxes that can be set.
+			if (facet.facet_name !== currentFacetName) {
+				active.append("<li><strong>" + facet.name + " <em>(" + facet.panl_code + ")</em></strong></li>");
+				currentFacetName = facet.facet_name;
+			}
+
 			active.append("<li><a href=\"" + panlResultsViewerUrl +
 					$("#collection").text() +
-					facet.inverse_uri +
-					"\"><img class=\"invert\" src=\"/webapp/static/invert.png\" title=\"Invert this boolean facet\"/></a>&nbsp; Invert to '" +
-					decodePanl(facet.inverse_encoded) +
-					"'</li>");
-		}
+					facet.remove_uri +
+					"\"><img class=\"remove\" src=\"/webapp/static/remove.png\" title=\"Remove this facet\"/>" +
+					decodePanl(facet.encoded) +
+					"</a></li>");
 
+			if (facet.is_boolean_facet) {
+				active.append("<li><a href=\"" + panlResultsViewerUrl +
+						$("#collection").text() +
+						facet.inverse_uri +
+						"\"><img class=\"invert\" src=\"/webapp/static/invert.png\" title=\"Invert this boolean facet\"/>Invert to '" +
+						decodePanl(facet.inverse_encoded) +
+						"'</a></li>");
+			}
+		}
 	}
 	active.append("<li><hr /></li>");
 }
@@ -420,13 +444,13 @@ function addActiveSorts(sorts, removeUri) {
 		content += "<li><a href=\"" + panlResultsViewerUrl +
 				$("#collection").text() +
 				sort.remove_uri +
-				"\"><img class=\"remove\" src=\"/webapp/static/remove.png\" title=\"Remove this sort order\"/></a>&nbsp;Remove this sorting<br \>" +
+				"\"><img class=\"remove\" src=\"/webapp/static/remove.png\" title=\"Remove this sort order\"/>Remove this sorting</a><br \>" +
 				"<a href=\"" + panlResultsViewerUrl +
 				$("#collection").text() +
 				sort.inverse_uri +
-				"\"><img class=\"invert\" src=\"/webapp/static/invert.png\" title=\"Invert this sort order\"/>&nbsp;Change to " +
+				"\"><img class=\"invert\" src=\"/webapp/static/invert.png\" title=\"Invert this sort order\"/>Change to " +
 				(sort.is_descending ? "ASC" : "DESC") +
-				"</a>&nbsp;" +
+				"</a>" +
 				"</li>";
 	}
 
@@ -656,18 +680,11 @@ function generateFacet(facet, activeFacetObject) {
 
 		// if this is already selected, then we need to choose the correct icon
 		var inverseLink = "";
-		var imagePrefix = "un";
 		for (const value of facet.values) {
 			if(value.value === (!facet.checkbox_value) +"") {
 				// go through and find the active
 				if(activeFacetObject.facet === undefined) {
 					break;
-				}
-				for (const activeFacet of activeFacetObject.facet) {
-					if(activeFacet.panl_code === facet.panl_code) {
-						imagePrefix = "";
-						break;
-					}
 				}
 			} else {
 				inverseLink = facet.uris.before +
@@ -683,7 +700,7 @@ function generateFacet(facet, activeFacetObject) {
 						panlResultsViewerUrl +
 						$("#collection").text() +
 						inverseLink +
-						"\"><img class=\"add\" src=\"/webapp/static/" + imagePrefix + "checked.png\" title=\"Add facet\">&nbsp;" +
+						"\"><img class=\"add\" src=\"/webapp/static/unchecked.png\" title=\"Add facet\">" +
 						(facet.checkbox_value ? "Include '" : "Exclude '") + decodePanl(value.encoded) + "'</a>";
 			}
 		}
@@ -700,6 +717,7 @@ function generateFacet(facet, activeFacetObject) {
 			"]<br />" +
 			innerUl +
 			"</li>"
+
 		$("#boolean-checkbox").append(complete);
 	}
 }
@@ -730,8 +748,8 @@ function generateFacetHTML(facet) {
 				facet.uris.before +
 				((facet.value_separator !== undefined) ? value.encoded_multi : value.encoded) +
 				facet.uris.after +
-				"\"><img class=\"add\" src=\"/webapp/static/add.png\" title=\"Add facet\"></a>&nbsp;" +
-				(facet.is_multivalue && value.encoded_multi !== undefined ? decodePanl(value.encoded_multi) : decodePanl(value.encoded));
+				"\"><img class=\"add\" src=\"/webapp/static/add.png\" title=\"Add facet\">" +
+				(facet.is_multivalue && value.encoded_multi !== undefined ? decodePanl(value.encoded_multi) : decodePanl(value.encoded)) +"</a>";
 
 		if (!facet.is_or_facet) {
 			innerUl += "&nbsp;(" + value.count + ")";

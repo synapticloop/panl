@@ -520,9 +520,13 @@ public class ActiveProcessor extends Processor {
 	 * @return The valid encoded path
 	 */
 	private static String returnValidURIPath(StringBuilder uri, StringBuilder lpse) {
-		String test = "/" + uri + lpse + "/";
+		String uriString = uri.toString();
+		String test = (uriString.startsWith("/") ? "" : "/") +
+				uri +
+				(uriString.endsWith("/") ? "" : "/") +
+				lpse + "/";
 
-		if (test.equals("//")) {
+		if (test.equals("//") || test.equals("///")) {
 			return ("/");
 		} else {
 			return test;
