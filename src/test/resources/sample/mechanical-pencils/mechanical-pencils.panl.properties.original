@@ -784,10 +784,6 @@ panl.type.L=solr.IntPointField
 panl.facet.D=disassemble
 panl.name.D=Disassemble
 panl.type.D=solr.BoolField
-# This field is a candidate for an OR facet, you may wish to configure the
-# following properties
-#panl.or.facet.D=true
-#panl.or.always.D=true
 # The following two properties are optional and may be set to any value
 #panl.prefix.D=prefix
 #panl.suffix.D=suffix
@@ -796,6 +792,9 @@ panl.type.D=solr.BoolField
 # readable URL
 #panl.bool.D.true=is-disassemble
 #panl.bool.D.false=is-not-disassemble
+# You may also want to be able to display this as a checkbox which will pass
+# through either a 'true' or 'false' value when selected
+ panl.bool.checkbox.D=true_or_false
 # If you want this facet to only appear if another facet has already been
 # passed through then add the LPSE code(s) in a comma separated list below
 #panl.when.D=
@@ -825,10 +824,6 @@ panl.type.h=solr.StrField
 panl.facet.I=in_built_eraser
 panl.name.I=In Built Eraser
 panl.type.I=solr.BoolField
-# This field is a candidate for an OR facet, you may wish to configure the
-# following properties
-#panl.or.facet.I=true
-#panl.or.always.I=true
 # The following two properties are optional and may be set to any value
 #panl.prefix.I=prefix
 #panl.suffix.I=suffix
@@ -837,6 +832,9 @@ panl.type.I=solr.BoolField
 # readable URL
 #panl.bool.I.true=is-in_built_eraser
 #panl.bool.I.false=is-not-in_built_eraser
+# You may also want to be able to display this as a checkbox which will pass
+# through either a 'true' or 'false' value when selected
+ panl.bool.checkbox.I=true_or_false
 # If you want this facet to only appear if another facet has already been
 # passed through then add the LPSE code(s) in a comma separated list below
 #panl.when.I=
