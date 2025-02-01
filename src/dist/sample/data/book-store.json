@@ -20,7 +20,8 @@
     "price": 19.99,
     "a_to_z_index": "C",
     "decade_published": 1990,
-    "book_length": "Novel"
+    "book_length": "Novel",
+    "on_backorder": false
   },
   {
     "id": 2,
@@ -43,7 +44,8 @@
     "price": 19.99,
     "a_to_z_index": "C",
     "decade_published": 1990,
-    "book_length": "Novel"
+    "book_length": "Novel",
+    "on_backorder": true
   },
   {
     "id": 3,
@@ -66,7 +68,8 @@
     "price": 19.99,
     "a_to_z_index": "C",
     "decade_published": 1990,
-    "book_length": "Novel"
+    "book_length": "Novel",
+    "on_backorder": false
   },
   {
     "id": 4,
@@ -89,7 +92,8 @@
     "price": 19.99,
     "a_to_z_index": "C",
     "decade_published": 1990,
-    "book_length": "Novel"
+    "book_length": "Novel",
+    "on_backorder": false
   },
   {
     "id": 5,
@@ -112,7 +116,8 @@
     "price": 19.99,
     "a_to_z_index": "C",
     "decade_published": 1990,
-    "book_length": "Novel"
+    "book_length": "Novel",
+    "on_backorder": false
   },
   {
     "id": 6,
@@ -135,7 +140,8 @@
     "price": 19.99,
     "a_to_z_index": "C",
     "decade_published": 1990,
-    "book_length": "Novel"
+    "book_length": "Novel",
+    "on_backorder": false
   },
   {
     "id": 7,
@@ -158,7 +164,8 @@
     "price": 19.99,
     "a_to_z_index": "C",
     "decade_published": 2000,
-    "book_length": "Novel"
+    "book_length": "Novel",
+    "on_backorder": false
   },
   {
     "id": 8,
@@ -181,7 +188,8 @@
     "price": 19.99,
     "a_to_z_index": "C",
     "decade_published": 2000,
-    "book_length": "Novel"
+    "book_length": "Novel",
+    "on_backorder": true
   },
 
 
@@ -206,7 +214,8 @@
     "price": 19.99,
     "a_to_z_index": "B",
     "decade_published": 1980,
-    "book_length": "Novel"
+    "book_length": "Novel",
+    "on_backorder": false
   },
   {
     "id": 12,
@@ -226,7 +235,8 @@
     "price": 19.99,
     "a_to_z_index": "B",
     "decade_published": 1990,
-    "book_length": "Novel"
+    "book_length": "Novel",
+    "on_backorder": false
   },
   {
     "id": 12,
@@ -246,7 +256,8 @@
     "price": 19.99,
     "a_to_z_index": "B",
     "decade_published": 2010,
-    "book_length": "Novel"
+    "book_length": "Novel",
+    "on_backorder": false
   },
 
 
@@ -273,7 +284,8 @@
     "price": 19.99,
     "a_to_z_index": "M",
     "decade_published": 2000,
-    "book_length": "Novel"
+    "book_length": "Novel",
+    "on_backorder": true
   },
   {
     "id": 22,
@@ -295,7 +307,8 @@
     "price": 19.99,
     "a_to_z_index": "M",
     "decade_published": 2000,
-    "book_length": "Novel"
+    "book_length": "Novel",
+    "on_backorder": false
   },
   {
     "id": 23,
@@ -317,7 +330,8 @@
     "price": 19.99,
     "a_to_z_index": "M",
     "decade_published": 2000,
-    "book_length": "Novel"
+    "book_length": "Novel",
+    "on_backorder": false
   },
   {
     "id": 24,
@@ -339,7 +353,8 @@
     "price": 19.99,
     "a_to_z_index": "M",
     "decade_published": 2000,
-    "book_length": "Novel"
+    "book_length": "Novel",
+    "on_backorder": true
   },
   {
     "id": 25,
@@ -361,7 +376,8 @@
     "price": 19.99,
     "a_to_z_index": "M",
     "decade_published": 2020,
-    "book_length": "Novel"
+    "book_length": "Novel",
+    "on_backorder": false
   },
   {
     "id": 26,
@@ -382,7 +398,8 @@
     "price": 19.99,
     "a_to_z_index": "M",
     "decade_published": 2010,
-    "book_length": "Novel"
+    "book_length": "Novel",
+    "on_backorder": false
   },
 
 
@@ -407,7 +424,8 @@
     "price": 19.99,
     "a_to_z_index": "D",
     "decade_published": 1980,
-    "book_length": "Novella"
+    "book_length": "Novella",
+    "on_backorder": true
   },
   {
     "id": 32,
@@ -429,7 +447,8 @@
     "price": 19.99,
     "a_to_z_index": "D",
     "decade_published": 1980,
-    "book_length": "Novella"
+    "book_length": "Novella",
+    "on_backorder": false
   },
   {
     "id": 33,
@@ -451,7 +470,8 @@
     "price": 19.99,
     "a_to_z_index": "D",
     "decade_published": 1960,
-    "book_length": "Novella"
+    "book_length": "Novella",
+    "on_backorder": true
   },
   {
     "id": 33,
@@ -473,9 +493,9 @@
     "price": 19.99,
     "a_to_z_index": "D",
     "decade_published": 1980,
-    "book_length": "Novella"
+    "book_length": "Novella",
+    "on_backorder": false
   },
-
   {
     "id": 33,
     "author": "Roald Dahl",
@@ -496,7 +516,8 @@
     "price": 19.99,
     "a_to_z_index": "D",
     "decade_published": 1980,
-    "book_length": "Novella"
+    "book_length": "Novella",
+    "on_backorder": false
   },
 
 
@@ -520,7 +541,8 @@
     "price": 19.99,
     "a_to_z_index": "C",
     "decade_published": 2000,
-    "book_length": "Novella"
+    "book_length": "Novella",
+    "on_backorder": false
   },
   {
     "id": 42,
@@ -542,7 +564,8 @@
     "price": 19.99,
     "a_to_z_index": "C",
     "decade_published": 2000,
-    "book_length": "Novella"
+    "book_length": "Novella",
+    "on_backorder": false
    },
   {
     "id": 43,
@@ -563,6 +586,7 @@
     "price": 19.99,
     "a_to_z_index": "C",
     "decade_published": 2010,
-    "book_length": "Novella"
+    "book_length": "Novella",
+    "on_backorder": false
   }
 ]
