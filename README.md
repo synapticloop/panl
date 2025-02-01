@@ -169,7 +169,13 @@ parameters into concise and precise URL paths.
    The above URI path would then become
    `/Caran d'Ache/Able to be disassembled/Black/bDW/`
 
-1. **CONDENSE multiple field values** - Rather than having a forward slash URL
+1. **BOOLEAN checkboxes** - Whilst this may seem obvious to have a checkbox for 
+   a true/false value, the checkboxes work in a subtly different way.  By 
+   selecting the checkbox, the only one of facet values will be selected 
+   when deselected, the BOOLEAN facet is in a don't care start - the facet value 
+   can be either of the values.
+
+2. **CONDENSE multiple field values** - Rather than having a forward slash URL
    path separator for multiple values of the same facet (used in OR Facets and
    Multi-valued REGULAR facets), Panl can be configured to condense these values
    into a single path part, saving URL characters, and reducing URL length, and
@@ -956,12 +962,13 @@ number.
    - ~~Should be able to be configured to be displayed as (or something along
        the lines of it):~~
    - ~~`/Colours:Black,Blue/W/`~~
-1. BOOLEAN Facet set checkbox value (Low priority)
-   - Have an additional option for whether a BOOLEAN facet should be displayed
+1. ~~BOOLEAN Facet set checkbox value (Low priority)~~
+   - **[Released in version 9-2.0.0]**
+   - ~~Have an additional option for whether a BOOLEAN facet should be displayed
        as a checkbox, the property either doesn't exist or is set to true or
-       false depending on which of the boolean values should be highlighted.
-   - Thought is required as to whether this becomes an additional key in the
-       available facets, and whether it should be permanent.
+       false depending on which of the boolean values should be highlighted.~~
+   - ~~Thought is required as to whether this becomes an additional key in the
+       available facets, and whether it should be permanent.~~
 1. Multiple lookaheads based on query fields (Low priority)
    - This has a dependency on the 'Specific Solr field search query options'
        and would allow a lookahead to work only on specific fields. Although
