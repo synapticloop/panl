@@ -717,6 +717,7 @@ number.
     - Added in `solr.numrows.maximum` property so that this will always be the
       limit to the number of results returned, this will default to
       `solr.numrows.default`
+    - Added in BOOLEAN checkbox functionality
 
 
 - **Bug fixes**
@@ -751,7 +752,8 @@ number.
     - Changed the `panl.form.query.respondto` documentation to point to `search`
       rather than the previously defined `q` to reduce confusion
     - General spelling and grammatical mistake updates
-    - Addition of new functionality and configuration properties
+    - Addition of new functionality and configuration properties pushing the 
+      book to be over 400 pages.
 
 [View the code for this release](https://github.com/synapticloop/panl/tree/2.0.0)
 

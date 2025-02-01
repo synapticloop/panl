@@ -672,7 +672,7 @@ function generateFacetHTML(facet) {
 				((facet.value_separator !== undefined) ? value.encoded_multi : value.encoded) +
 				facet.uris.after +
 				"\"><img class=\"add\" src=\"/webapp/static/add.png\" title=\"Add facet\"></a>&nbsp;" +
-				(facet.is_multivalue ? decodePanl(value.encoded_multi) : decodePanl(value.encoded));
+				(facet.is_multivalue && value.encoded_multi !== undefined ? decodePanl(value.encoded_multi) : decodePanl(value.encoded));
 
 		if (!facet.is_or_facet) {
 			innerUl += "&nbsp;(" + value.count + ")";
