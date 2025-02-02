@@ -114,10 +114,15 @@ public abstract class BasePanlField {
 
 		if (isFacetable) {
 			if (isMultiValued) {
-				stringBuilder.append("# This Solr field is configured as multiValued, and is added as a property for the\n")
-				             .append("# so that single page search can be generated properly.  You __SHOULD_NOT___\n")
-				             .append("# change this unless the underlying Solr schema changes\n")
-				             .append(String.format("panl.multivalue.%s=%b\n", lpseCode, isMultiValued));
+				stringBuilder
+						.append("# This Solr field is configured as multiValued, and is added as a property for the\n")
+				    .append("# so that single page search can be generated properly.  You __SHOULD_NOT___\n")
+				    .append("# change this unless the underlying Solr schema changes\n")
+				    .append(String.format("panl.multivalue.%s=%b\n", lpseCode, isMultiValued))
+						.append("# If you want to have a mult-value separator enabled, uncomment the following\n")
+						.append("# property and set it to any string.\n")
+						.append(String.format("#panl.multivalue.separator.%s=,\n", lpseCode))
+				;
 			} else {
 				// this is a good candidate for an OR facet - but not a date
 				if(!(this instanceof PanlDateRangeField) && !(this instanceof PanlBoolField)) {

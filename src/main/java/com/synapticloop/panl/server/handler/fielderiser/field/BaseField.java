@@ -183,6 +183,14 @@ public abstract class BaseField {
 						PROPERTY_KEY_IS_MULTIVALUE);
 				getLogger().warn(message);
 				this.valueSeparator = null;
+			} else if (this.valueSeparator.trim().equals("/")) {
+				String message = String.format(
+						"LPSE code '%s' sets a multivalued (or) separator which is equal to a forward slash, this is not allowed, " +
+								"the property '%s%s' will be ignored.",
+						lpseCode,
+						lpseCode,
+						PROPERTY_KEY_IS_MULTIVALUE);
+				getLogger().warn(message);
 			} else {
 				// if this is not multivalued, then you cannot have a multivalued separator
 				if (!this.isMultiValue) {

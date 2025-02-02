@@ -17,6 +17,7 @@
 	<field name="series" type="string" indexed="true" stored="true" multiValued="false" />
 	<field name="price" type="pfloat" indexed="true" stored="true" multiValued="false" />
 	<field name="on_backorder" type="boolean" indexed="true" stored="true" multiValued="false" />
+	<field name="speedy_delivery" type="boolean" indexed="true" stored="true" multiValued="false" />
 
 	<field name="a_to_z_index" type="string" indexed="true" stored="false" multiValued="false" />
 	<field name="decade_published" type="pint" indexed="true" stored="false" multiValued="false" />
