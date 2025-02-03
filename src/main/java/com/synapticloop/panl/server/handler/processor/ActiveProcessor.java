@@ -525,6 +525,7 @@ public class ActiveProcessor extends Processor {
 	 * @return The valid encoded path
 	 */
 	private static String returnValidURIPath(StringBuilder uri, StringBuilder lpse) {
+		// TODO - this logic needs to be cleaned up.
 		String uriString = uri.toString();
 		String test = (uriString.startsWith("/") ? "" : "/") +
 				uri +
@@ -534,7 +535,7 @@ public class ActiveProcessor extends Processor {
 		if (test.equals("//") || test.equals("///")) {
 			return ("/");
 		} else {
-			return test;
+			return test.replaceAll("//", "/");
 		}
 	}
 }
