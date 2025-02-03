@@ -25,6 +25,7 @@ package com.synapticloop.panl.server.handler.tokeniser.token.param;
  */
 
 import com.synapticloop.panl.server.handler.properties.CollectionProperties;
+import com.synapticloop.panl.server.handler.tokeniser.LpseTokeniser;
 import com.synapticloop.panl.server.handler.tokeniser.token.LpseToken;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.utils.URLEncodedUtils;
@@ -33,21 +34,27 @@ import java.net.URLDecoder;
 import java.nio.charset.StandardCharsets;
 import java.util.*;
 
+/**
+ * <p>The query operand </p>
+ */
 public class QueryLpseToken extends LpseToken {
 	private boolean isOverride;
+	private List<String> fields;
 
 	public QueryLpseToken(
 			CollectionProperties collectionProperties,
 			String queryFromUri,
 			String lpseCode) {
-		this(collectionProperties, lpseCode, queryFromUri, null);
+		this(collectionProperties, lpseCode, queryFromUri, null, null);
 	}
 
 	public QueryLpseToken(
 			CollectionProperties collectionProperties,
 			String lpseCode,
 			String queryFromUri,
-			StringTokenizer valueTokeniser) {
+			StringTokenizer valueTokeniser,
+			LpseTokeniser lpseTokeniser) {
+
 		super(lpseCode, collectionProperties);
 
 		if (null != valueTokeniser && valueTokeniser.hasMoreTokens()) {

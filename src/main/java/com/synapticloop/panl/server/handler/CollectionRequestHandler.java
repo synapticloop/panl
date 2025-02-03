@@ -96,7 +96,7 @@ public class CollectionRequestHandler {
 	public static final String SOLR_PARAM_KEY_STATS_FIELD = "stats.field";
 
 	public static String CODES = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz01234567890";
-	public static String CODES_AND_METADATA = CODES + "[].+-";
+	public static String CODES_AND_METADATA = CODES + "[].+-()";
 
 	private final String solrCollection;
 	private final CollectionProperties collectionProperties;
@@ -567,6 +567,7 @@ public class CollectionRequestHandler {
 					}
 
 					lpseTokens.add(lpseToken);
+
 					String equivalenceValue = lpseToken.getEquivalenceValue();
 					if (existingTokens.contains(equivalenceValue)) {
 						lpseToken.setIsValid(false);
@@ -577,6 +578,7 @@ public class CollectionRequestHandler {
 			}
 		}
 
+		// TODO - this needs to be updated with additional query parameters
 		if (hasQueryParam && !queryParam.isBlank()) {
 			lpseTokens.add(new QueryLpseToken(collectionProperties, query, collectionProperties.getPanlParamQuery()));
 		}

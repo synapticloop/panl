@@ -74,7 +74,7 @@ public class PanlQueryField extends BaseField {
 	}
 
 	@Override public List<LpseToken> instantiateTokens(CollectionProperties collectionProperties, String lpseCode, String query, StringTokenizer valueTokeniser, LpseTokeniser lpseTokeniser) {
-		return(List.of(new QueryLpseToken(collectionProperties, this.lpseCode, query, valueTokeniser)));
+		return(List.of(new QueryLpseToken(collectionProperties, this.lpseCode, query, valueTokeniser, lpseTokeniser)));
 	}
 
 	@Override protected void logDetails() {

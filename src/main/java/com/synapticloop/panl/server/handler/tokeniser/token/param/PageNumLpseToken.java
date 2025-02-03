@@ -32,6 +32,7 @@ import java.util.StringTokenizer;
 
 public class PageNumLpseToken extends LpseToken {
 	private int pageNum = 0;
+
 	public PageNumLpseToken(CollectionProperties collectionProperties, String lpseCode, StringTokenizer valueTokenizer) {
 		super(lpseCode, collectionProperties);
 
