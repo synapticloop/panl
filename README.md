@@ -273,14 +273,17 @@ results._
    been used to refine the search results.
 
 1. **Active BOOLEAN filters** - if the selected facet is a BOOLEAN facet (i.e.
-   either true/false) then a link (`[≫]`) can be included to invert this
+   either true/false) then a link (<img src="src/main/resources/webapp/static/invert.png" alt="invert" />) can be included to invert this
    selection (i.e. change the value from true if currently false and vice
    versa).
 
 1. **Active sorting** - sorting options that are currently ordering the
-   results - the `[-]` link is the URI path that will remove this query, facet,
+   results - the <img src="src/main/resources/webapp/static/remove.png" alt="remove" /> link 
+   is the URI path that will remove this query, facet,
    or sorting option from the results. If it is an active sorting filter, the
-   `[ ] Change to DESC` or `[ ] Change to ASC` links will invert the sorting
+   <img src="src/main/resources/webapp/static/invert.png" alt="invert" /> 
+   `Change to DESC` or <img src="src/main/resources/webapp/static/invert.png" alt="invert" /> 
+   `Change to ASC` links will invert the sorting
    order without affecting any further sub-ordering.
 
 1. **BOOLEAN Checkboxes** - any facets that have been defined as BOOLEAN 
