@@ -24,6 +24,9 @@
 	<field name="book_length" type="string" indexed="true" stored="false" multiValued="false" />
 
 	<field name="text" type="text_general" indexed="true" stored="false" multiValued="true" />
+	<field name="text_author" type="text_general" indexed="true" stored="false" multiValued="true" />
+	<field name="text_description" type="text_general" indexed="true" stored="false" multiValued="false" />
+	<field name="text_title" type="text_general" indexed="true" stored="false" multiValued="false" />
 
 	<uniqueKey>id</uniqueKey>
 
@@ -32,6 +35,10 @@
 	<copyField source="description" dest="text" />
 	<copyField source="genre" dest="text" />
 	<copyField source="series" dest="text" />
+
+	<copyField source="author" dest="text_author" />
+	<copyField source="title" dest="text_title" />
+	<copyField source="description" dest="text_description" />
 
 
 	<!-- The StrField type is not analyzed, but indexed/stored verbatim. -->
