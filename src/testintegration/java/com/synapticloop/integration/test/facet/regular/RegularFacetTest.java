@@ -55,9 +55,22 @@ public class RegularFacetTest extends TestBase {
 
 	@Test public void testPagination() throws Exception {
 		Root root = mapper.readValue(new URL("http://localhost:8282/mechanical-pencils/empty" +
-				"/Manufactured%20by%20Koh-i-Noor%20Company/page-2/bp/"), Root.class);
+				"/Manufactured%20by%20Koh-i-Noor%20Company/page-2/3-per-page/bpn/"), Root.class);
 		assertFalse(root.error);
 		// ensure that page number is reset
-		assertEquals("/bN/", root.panl.available.facets[0].uris.after);
+		assertEquals("/3-per-page/bNn/",
+				root.panl.available.facets[0].uris.after);
+
+		assertEquals("/Manufactured%20by%20Koh-i-Noor%20Company/page-3/3-per-page/bpn/",
+				root.panl.pagination.page_uris.next);
+
+		assertEquals("/Manufactured%20by%20Koh-i-Noor%20Company/page-1/3-per-page/bpn/",
+				root.panl.pagination.page_uris.previous);
+
+		assertEquals("/Manufactured%20by%20Koh-i-Noor%20Company/page-",
+				root.panl.pagination.page_uris.before);
+
+		assertEquals("/3-per-page/bpn/",
+				root.panl.pagination.page_uris.after);
 	}
 }
