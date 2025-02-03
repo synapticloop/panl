@@ -66,5 +66,6 @@ public class DateRangeTest extends TestBase {
 //		assertEquals("/next%2010%20months/S-sb+/", root.panl.active.sort[1].remove_uri);
 //		assertEquals("/next%2010%20months/S-sb+sN-/", root.panl.active.sort[1].inverse_uri);
 	}
-
+	@Test public void testPagination() throws Exception {
+	}
 }

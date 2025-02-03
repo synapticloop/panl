@@ -149,4 +149,11 @@ public class RangeTest extends TestBase {
 		assertEquals("/weighing%20from%2015%20grams%20to%2042%20grams/w-sb+sN-/", root.panl.active.sort[1].inverse_uri);
 	}
 
+	@Test public void testPagination() throws Exception {
+		Root root = mapper.readValue(new URL("http://localhost:8282/mechanical-pencils-multi-separator/empty" +
+				"/from%20light%20to%2026%20grams/page-2/w-p/"), Root.class);
+		assertFalse(root.error);
+		// ensure that page number is reset
+		assertEquals("%20grams/w-/", root.panl.available.range_facets[0].uris.after);
+	}
 }

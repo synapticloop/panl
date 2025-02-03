@@ -318,7 +318,7 @@ public abstract class BasePrefixSuffixField extends BaseField {
 				if (valueSeparator != null) {
 					lpseUri.append(getMultivalueURIPathStart(panlTokenMap));
 				} else {
-					lpseUri.append(baseField.getURIPath(panlTokenMap, collectionProperties));
+					lpseUri.append(baseField.getResetUriPath(panlTokenMap, collectionProperties));
 				}
 
 				lpseUriBefore.append(lpseUri);
@@ -334,7 +334,7 @@ public abstract class BasePrefixSuffixField extends BaseField {
 					}
 					lpseCodeMap.put(this.lpseCode, true);
 				} else {
-					lpseUriCode.append(baseField.getLpseCode(panlTokenMap, collectionProperties));
+					lpseUriCode.append(baseField.getResetLpseCode(panlTokenMap, collectionProperties));
 					lpseUriCode.append(this.lpseCode);
 				}
 
@@ -345,7 +345,7 @@ public abstract class BasePrefixSuffixField extends BaseField {
 				}
 
 				// normally
-				lpseUri.append(baseField.getURIPath(panlTokenMap, collectionProperties));
+				lpseUri.append(baseField.getResetUriPath(panlTokenMap, collectionProperties));
 				int numTokens = panlTokenMap.get(orderedLpseCode).size();
 				if (numTokens == 1) {
 					// if we have a range facet - we need to make sure that we are
@@ -354,12 +354,13 @@ public abstract class BasePrefixSuffixField extends BaseField {
 
 					// if it is not a range facet - then this won't do any harm and is a
 					// better implementation
-					lpseUriCode.append(baseField.getLpseCode(panlTokenMap.get(orderedLpseCode).get(0), collectionProperties));
+					lpseUriCode.append(baseField.getResetLpseCode(panlTokenMap.get(orderedLpseCode).get(0),
+							collectionProperties));
 				} else {
 
 					// check for or separators...
 					if(collectionProperties.getIsMultiValuedSeparatorFacetField(baseField.getLpseCode())) {
-						lpseUriCode.append(baseField.getLpseCode());
+						lpseUriCode.append(baseField.getResetLpseCode(panlTokenMap, collectionProperties));
 					} else {
 						// just replace it with the correct number of LPSE codes
 						if(!baseField.getHasURIComponent()) {

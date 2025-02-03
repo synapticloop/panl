@@ -607,6 +607,9 @@ panl.type.T=solr.TextField
 # so that single page search can be generated properly.  You __SHOULD_NOT___
 # change this unless the underlying Solr schema changes
 panl.multivalue.T=true
+# If you want to have a mult-value separator enabled, uncomment the following
+# property and set it to any string.
+#panl.multivalue.separator.T=,
 # The following two properties are optional and may be set to any value
 #panl.prefix.T=prefix
 #panl.suffix.T=suffix

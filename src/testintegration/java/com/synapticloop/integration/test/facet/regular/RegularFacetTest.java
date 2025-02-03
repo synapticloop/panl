@@ -26,6 +26,7 @@ package com.synapticloop.integration.test.facet.regular;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.synapticloop.integration.BeforeAllExtension;
+import com.synapticloop.integration.test.facet.TestBase;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import panl.Root;
@@ -38,6 +39,25 @@ import java.net.URL;
 import static org.junit.jupiter.api.Assertions.*;
 
 @ExtendWith({BeforeAllExtension.class})
-public class RegularFacetTest {
+public class RegularFacetTest extends TestBase {
 
+	@Test public void testDefault() throws Exception {
+
+	}
+
+	@Test public void testSortDefault() throws Exception {
+
+	}
+
+	@Test public void testSortHierarchy() throws Exception {
+
+	}
+
+	@Test public void testPagination() throws Exception {
+		Root root = mapper.readValue(new URL("http://localhost:8282/mechanical-pencils/empty" +
+				"/Manufactured%20by%20Koh-i-Noor%20Company/page-2/bp/"), Root.class);
+		assertFalse(root.error);
+		// ensure that page number is reset
+		assertEquals("/bN/", root.panl.available.facets[0].uris.after);
+	}
 }

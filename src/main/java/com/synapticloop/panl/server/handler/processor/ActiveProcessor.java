@@ -25,6 +25,7 @@ package com.synapticloop.panl.server.handler.processor;
  */
 
 import com.synapticloop.panl.server.handler.fielderiser.field.facet.PanlOrFacetField;
+import com.synapticloop.panl.server.handler.fielderiser.field.param.PanlPageNumField;
 import com.synapticloop.panl.server.handler.properties.CollectionProperties;
 import com.synapticloop.panl.server.handler.fielderiser.field.BaseField;
 import com.synapticloop.panl.server.handler.tokeniser.token.facet.BooleanFacetLpseToken;
@@ -249,8 +250,12 @@ public class ActiveProcessor extends Processor {
 				} else {
 					// not a value separator, just go on
 					if (lpseField.getHasURIComponent()) {
-						uri.append(lpseField.getEncodedPanlValue(lpseToken))
-						   .append("/");
+						// we need to remove the page number, but not the number of page
+						// TODO - better way to do this
+						if(!(lpseField instanceof PanlPageNumField)) {
+							uri.append(lpseField.getEncodedPanlValue(lpseToken))
+							   .append("/");
+						}
 					}
 					lpse.append(lpseComponent);
 				}

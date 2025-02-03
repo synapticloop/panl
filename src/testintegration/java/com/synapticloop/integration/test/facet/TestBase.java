@@ -45,4 +45,6 @@ public abstract class TestBase {
 
 	@Test public abstract void testSortHierarchy() throws Exception;
 
+	@Test public abstract void testPagination() throws Exception;
+
 }
