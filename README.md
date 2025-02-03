@@ -280,8 +280,12 @@ results._
 1. **Active sorting** - sorting options that are currently ordering the
    results - the `[-]` link is the URI path that will remove this query, facet,
    or sorting option from the results. If it is an active sorting filter, the
-   `[≫] Change to DESC` or `[≫] Change to ASC` links will invert the sorting
+   `[ ] Change to DESC` or `[ ] Change to ASC` links will invert the sorting
    order without affecting any further sub-ordering.
+
+1. **BOOLEAN Checkboxes** - any facets that have been defined as BOOLEAN 
+   checkboxes, which allows the integrator to highlight one of the values 
+   (either true or false).
 
 1. **RANGE filters** - for facets that are defined as ranges - allowing
    end-users to select a range of values - the values are inclusive (i.e.
