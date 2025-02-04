@@ -63,6 +63,9 @@ public class CollectionProperties {
 	// file
 	public static final String PROPERTY_KEY_PANL_FACET = "panl.facet.";
 	public static final String PROPERTY_KEY_PANL_FIELD = "panl.field.";
+	public static final String PROPERTY_KEY_PANL_SEARCH = "panl.search.";
+	public static final String PROPERTY_KEY_PANL_SEARCH_FIELDS = "panl.search.fields";
+
 	public static final String PROPERTY_KEY_PANL_FORM_QUERY_RESPONDTO = "panl.form.query.respondto";
 	public static final String PROPERTY_KEY_PANL_INCLUDE_SAME_NUMBER_FACETS = "panl.include.same.number.facets";
 	public static final String PROPERTY_KEY_PANL_INCLUDE_SINGLE_FACETS = "panl.include.single.facets";
@@ -174,6 +177,16 @@ public class CollectionProperties {
 	private final Set<String> PANL_CODE_MULTIVALUED_SEPARATOR_FIELDS = new HashSet<>();
 	private final Set<String> PANL_CODE_RANGE_FIELDS = new HashSet<>();
 
+	// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+	//
+	// QUERY/SEARCH KEYWORDS RELATED DATASTRUCTURES
+	//
+	// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+	private final Map<String, String> SEARCH_LPSE_CODE_TO_SOLR_FIELD_MAP = new HashMap<>();
+	private final Map<String, String> SEARCH_SOLR_FIELD_TO_LPSE_CODE_MAP = new HashMap<>();
+	private final Map<String, String> SEARCH_LPSE_CODE_TO_PANL_NAME_MAP = new HashMap<>();
+	private final Map<String, String> SEARCH_FIELDS_MAP = new LinkedHashMap<String, String>();
+	private final Map<String, String> SEARCH_CODES_MAP = new LinkedHashMap<String, String>();
 
 	/**
 	 * <p>The valid URLs for this Panl collection - this is only used for
@@ -312,6 +325,9 @@ public class CollectionProperties {
 
 		parseFacetFields();
 		parseFields();
+		parseSearchFields();
+
+
 		parseResultFields();
 		parseSortFields();
 		parseLpseOrder();
@@ -629,6 +645,61 @@ public class CollectionProperties {
 		}
 
 		this.solrFacetFields = temp.toArray(new String[0]);
+	}
+
+	/**
+	 * <p>Parse the properties files and extract all properties that begin with
+	 * the panl search property key.</p>
+	 *
+	 * <p>This property is used as a lookup for specific search field lookups.</p>
+	 *
+	 * <p> See the
+	 * {@link  CollectionProperties#PROPERTY_KEY_PANL_SEARCH PROPERTY_KEY_PANL_SEARCH}
+	 * static String for the panl prefix property</p>
+	 *
+	 * @throws PanlServerException If there was an error looking up the
+	 *      properties, or with the found property and its associated values
+	 */
+	private void parseSearchFields() throws PanlServerException {
+		for (String panlFieldKey : PropertyHelper.getPropertiesByPrefix(properties, PROPERTY_KEY_PANL_SEARCH)) {
+			String lpseCode = panlFieldKey.substring(panlFieldKey.lastIndexOf(".") + 1);
+			// we don't care about the type, only the name of the Solr field and if
+			// there is a nice human-readable name
+			String solrFieldName = properties.getProperty(PROPERTY_KEY_PANL_SEARCH + lpseCode);
+			String panlName = properties.getProperty(PROPERTY_KEY_PANL_NAME + lpseCode, null);
+			if(null == panlName) {
+				panlName = solrFieldName;
+			}
+
+			// now add them to the data structures
+			SEARCH_LPSE_CODE_TO_PANL_NAME_MAP.put(lpseCode, panlName);
+			SEARCH_LPSE_CODE_TO_SOLR_FIELD_MAP.put(lpseCode, solrFieldName);
+			SEARCH_SOLR_FIELD_TO_LPSE_CODE_MAP.put(solrFieldName, lpseCode);
+		}
+
+		// now we need to add the order in panl.search.fields
+		String property = properties.getProperty(PROPERTY_KEY_PANL_SEARCH_FIELDS, "");
+		for (String solrSearchField : property.split(",")) {
+			String solrSearchFieldTrim = solrSearchField.trim();
+			if(solrSearchFieldTrim.isEmpty()) {
+				break;
+			} else {
+				// look up the search field
+				if(SEARCH_SOLR_FIELD_TO_LPSE_CODE_MAP.containsKey(solrSearchFieldTrim)) {
+					// we are good to go
+					String value = SEARCH_SOLR_FIELD_TO_LPSE_CODE_MAP.get(solrSearchFieldTrim);
+					SEARCH_FIELDS_MAP.put(solrSearchFieldTrim, value);
+					SEARCH_CODES_MAP.put(value, solrSearchFieldTrim);
+				} else {
+					LOGGER.warn(
+							"Attempted to register a search field of '{}' which does not have " +
+									"a corresponding Panl property set of panl.search.<lpse_code>",
+							solrSearchFieldTrim);
+				}
+			}
+		}
+
+
 	}
 
 	/**
@@ -1176,5 +1247,40 @@ public class CollectionProperties {
 	public List<String> getPanlLpseOrderList() {
 		return (panlLpseOrderList);
 	}
+
+	/**
+	 * <p>Return the Panl name for a LPSE code that is designated as a searchable
+	 * field.</p>
+	 *
+	 * @param lpseCode The LPSE code to look up
+	 * @return The Solr field name, or null if it doesn't exist
+	 */
+	public String getPanlNameFromSearchLpseCode(String lpseCode) {
+		return(SEARCH_LPSE_CODE_TO_PANL_NAME_MAP.get(lpseCode));
+	}
+
+	/**
+	 * <p>Return the Solr field name for a LPSE code that is designated as a
+	 * searchable field.</p>
+	 *
+	 * @param lpseCode The LPSE code to look up
+	 * @return The Solr field name, or null if it doesn't exist
+	 */
+	public String getSolrFieldNameFromSearchLpseCode(String lpseCode) {
+		return(SEARCH_LPSE_CODE_TO_SOLR_FIELD_MAP.get(lpseCode));
+	}
+
+	public boolean getIsASearchField(String solrFieldName) {
+		return(SEARCH_FIELDS_MAP.containsKey(solrFieldName));
+	}
+
+	public Map<String, String> getSearchFieldsMap() {
+		return(SEARCH_FIELDS_MAP);
+	}
+
+	public Map<String, String> getSearchCodesMap() {
+		return(SEARCH_CODES_MAP);
+	}
+
 }
 

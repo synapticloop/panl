@@ -42,7 +42,6 @@ public class PageNumLpseToken extends LpseToken {
 			BaseField lpseField = collectionProperties.getLpseField(lpseCode);
 			if(null != lpseField) {
 				this.originalValue = valueTokenizer.nextToken();
-				// TODO - only deprecated in the Basefield
 				this.value = lpseField.getDecodedValue(this.originalValue);
 			} else {
 				this.isValid = false;

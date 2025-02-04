@@ -725,6 +725,7 @@ number.
       limit to the number of results returned, this will default to
       `solr.numrows.default`
     - Added in BOOLEAN checkbox functionality
+    - Ability to select specific search fields added.
 
 
 - **Bug fixes**
@@ -919,10 +920,11 @@ number.
        documents with no facet information - just the documents. In effect this
        is the opposite of the 'empty' CaFUP - where documents are returned, just
        no facets, just relying on the Solr index.~~
-1. Specific Solr field search query options (Medium priority)
-   - Add in an LPSE code to be able to search on a specific field, fields, or
+1. ~~Specific Solr field search query options (Medium priority)~~
+   - **[Released in version 9-2.0.0]**
+   - ~~Add in an LPSE code to be able to search on a specific field, fields, or
        all fields, rather than the default search field, or search for
-       individual fields.
+       individual fields.~~
 1. Panl configuration editor (Low priority)
    - A GUI to edit (and validate) the Panl configuration files making it
        easier for a developer to get the configuration correct.

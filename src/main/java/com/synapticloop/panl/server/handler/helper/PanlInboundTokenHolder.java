@@ -38,6 +38,10 @@ import java.util.Map;
 /**
  * <p>The PanlInboundTokenHolder builds data structures and contains all
  * information that is required to process the Panl response object.</p>
+ *
+ * <p>AS far as I am aware - this class is not in use, but it would like to be,
+ * hopefully it will get completed and fulfil its lifelong desire to see the
+ * bits and bytes inside a CPU.</p>
  */
 public class PanlInboundTokenHolder {
 	private Map<String, List<LpseToken>> panlTokenMap = new HashMap<>();
