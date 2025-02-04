@@ -67,13 +67,13 @@ public class QueryLpseToken extends LpseToken {
 		StringBuilder queryLpseCodes = new StringBuilder();
 		boolean foundCorrectTokens = false;
 		// now we need to see if we are going to search on specific fields
-		if(null != lpseTokeniser && lpseTokeniser.hasMoreTokens()) {
+		if (null != lpseTokeniser && lpseTokeniser.hasMoreTokens()) {
 			String lpseToken = lpseTokeniser.nextToken();
-			if(lpseToken.equals("(")) {
+			if (lpseToken.equals("(")) {
 				// consume until we get an end ")"
-				while(lpseTokeniser.hasMoreTokens()) {
+				while (lpseTokeniser.hasMoreTokens()) {
 					lpseToken = lpseTokeniser.nextToken();
-					if(lpseToken.equals(")")) {
+					if (lpseToken.equals(")")) {
 						foundCorrectTokens = true;
 					} else {
 						queryLpseCodes.append(lpseToken);
@@ -85,7 +85,7 @@ public class QueryLpseToken extends LpseToken {
 			}
 		}
 
-		if(foundCorrectTokens) {
+		if (foundCorrectTokens) {
 			// we want to split the tokens on the LPSE length
 
 			// \G is a zero-width assertion that matches the position where the previous match ended. If there was no
@@ -94,11 +94,11 @@ public class QueryLpseToken extends LpseToken {
 
 			for (String lpseSearchCode :
 					queryLpseCodes.toString()
-					              .split("(?<=\\G.{" + collectionProperties.getLpseLength() +  "})")) {
+					              .split("(?<=\\G.{" + collectionProperties.getLpseLength() + "})")) {
 				// ensure that it is a valid searchable field - else ignore
-				if(lpseSearchCode.length() == collectionProperties.getLpseLength()) {
+				if (lpseSearchCode.length() == collectionProperties.getLpseLength()) {
 					String solrSearchField = collectionProperties.getSearchCodesMap().get(lpseSearchCode);
-					if(null != solrSearchField) {
+					if (null != solrSearchField) {
 						searchableLpseFields.add(solrSearchField);
 					}
 				}
@@ -112,7 +112,7 @@ public class QueryLpseToken extends LpseToken {
 			nameValuePairMap.put(nameValuePair.getName(), nameValuePair.getValue());
 		}
 
-		if(nameValuePairMap.containsKey(formQueryRespondTo)) {
+		if (nameValuePairMap.containsKey(formQueryRespondTo)) {
 			this.value = URLDecoder.decode(
 					nameValuePairMap.get(formQueryRespondTo),
 					StandardCharsets.UTF_8);
@@ -125,9 +125,10 @@ public class QueryLpseToken extends LpseToken {
 			Map<String, String> searchFields = collectionProperties.getSearchCodesMap();
 			Iterator<String> iterator = searchFields.keySet().iterator();
 			while (iterator.hasNext()) {
-				String key = searchFields.get(formQueryRespondTo + "." + iterator.next());
-				if(nameValuePairMap.containsKey(key)) {
-					searchableLpseFields.add(nameValuePairMap.get(key));
+				String next = iterator.next();
+				String key = searchFields.get(next);
+				if (nameValuePairMap.containsKey(formQueryRespondTo + "." + next)) {
+					searchableLpseFields.add(key);
 				}
 			}
 		}
@@ -139,15 +140,30 @@ public class QueryLpseToken extends LpseToken {
 				"' with value '" +
 				value +
 				"'" +
-				(isOverride ? " (Overridden by query parameter)." : ".")
+				(isOverride ? " (Overridden by query parameter)." : ".") +
+				getExplainSearchFields()
 		);
 	}
 
-	private String getSearchFields() {
+	private String getExplainSearchFields() {
 		StringBuilder sb = new StringBuilder();
-		for(String searchableLpseField: searchableLpseFields) {
-			sb.append(searchableLpseField);
+		boolean first = true;
+		sb.append(" Searching Solr field(s) ");
+		for (String searchableLpseField : searchableLpseFields) {
+			if(!first) {
+				sb.append(", ");
+			}
+			first = false;
+			sb.append("'")
+			  .append(searchableLpseField)
+			  .append("'");
 		}
+
+		if(searchableLpseFields.isEmpty()) {
+			sb.append("'default'");
+		}
+		sb.append(".");
+
 		return sb.toString();
 	}
 
