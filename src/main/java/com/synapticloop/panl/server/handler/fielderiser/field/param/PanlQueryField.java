@@ -60,9 +60,11 @@ public class PanlQueryField extends BaseField {
 			QueryLpseToken queryLpseToken = (QueryLpseToken)lpseTokenList.get(0);
 			List<String> searchableLpseFields = queryLpseToken.getSearchableLpseFields();
 			if(searchableLpseFields.isEmpty()) {
-				// just do the default
+				// just do the default search as per usual
 				solrQuery.setQuery("\"" + queryLpseToken.getValue() + "\"");
 			} else {
+				// There have been passed through queries for specific search fields,
+				// so we add them to the query, using the default query operator
 				for (String searchableLpseField : searchableLpseFields) {
 					if(!first) {
 						stringBuilder.append(" ")
@@ -70,10 +72,11 @@ public class PanlQueryField extends BaseField {
 								.append(" ");
 					}
 					first = false;
-					stringBuilder.append(searchableLpseField)
-					             .append(":\"")
-					             .append(queryLpseToken.getValue())
-					             .append("\"");
+					stringBuilder
+							.append(searchableLpseField)
+							.append(":\"")
+							.append(queryLpseToken.getValue())
+							.append("\"");
 				}
 				solrQuery.setQuery(stringBuilder.toString());
 			}
