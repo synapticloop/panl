@@ -100,6 +100,53 @@ public class PanlQueryField extends BaseField {
 		return(List.of(new QueryLpseToken(collectionProperties, this.lpseCode, query, valueTokeniser, lpseTokeniser)));
 	}
 
+
+	@Override public String getCanonicalLpseCode(
+			Map<String, List<LpseToken>> panlTokenMap,
+			CollectionProperties collectionProperties) {
+
+		StringBuilder stringBuilder = new StringBuilder();
+
+		List<LpseToken> lpseTokens = panlTokenMap.get(collectionProperties.getPanlParamQuery());
+		if (!lpseTokens.isEmpty()) {
+			QueryLpseToken queryLpseToken = (QueryLpseToken) lpseTokens.get(0);
+			stringBuilder.append(queryLpseToken.getLpseCode());
+
+			List<String> searchableLpseFields = queryLpseToken.getSearchableLpseFields();
+			if(!searchableLpseFields.isEmpty()) {
+				stringBuilder.append("(");
+				for(String searchableLpseField : searchableLpseFields) {
+					stringBuilder.append(collectionProperties.getSearchFieldsMap().get(searchableLpseField));
+				}
+				stringBuilder.append(")");
+			}
+		}
+
+		return(stringBuilder.toString());
+	}
+
+	@Override public String getLpseCode(Map<String, List<LpseToken>> panlTokenMap,
+			CollectionProperties collectionProperties) {
+		return(getCanonicalLpseCode(panlTokenMap, collectionProperties));
+	}
+
+	@Override public String getLpseCode(LpseToken token, CollectionProperties collectionProperties) {
+		StringBuilder stringBuilder = new StringBuilder();
+		QueryLpseToken queryLpseToken = (QueryLpseToken) token;
+		stringBuilder.append(queryLpseToken.getLpseCode());
+
+		List<String> searchableLpseFields = queryLpseToken.getSearchableLpseFields();
+		if(!searchableLpseFields.isEmpty()) {
+			stringBuilder.append("(");
+			for(String searchableLpseField : searchableLpseFields) {
+				stringBuilder.append(collectionProperties.getSearchFieldsMap().get(searchableLpseField));
+			}
+			stringBuilder.append(")");
+		}
+
+		return(stringBuilder.toString());
+	}
+
 	@Override protected void logDetails() {
 		getLogger().info("[ Solr/Panl: '{}/{}' ] Query parameter mapped to '{}'.",
 				solrCollection,
