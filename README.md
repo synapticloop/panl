@@ -186,6 +186,11 @@ parameters into concise and precise URL paths.
    `/Manufactured by Koh-i-Noor, or Faber-Castell Co./b/` (with a value 
    separator configured to be `, or `).
 
+1. **SEARCH ALL OR SPECIFIC SOLR FIELDS** - Any Solr indexed field can be 
+   selected to be searched on, for example, in the Book Store Walkthrough, 
+   the user can select to search within the title, the author, the description,
+   or all of them.
+
 1. **FIELD VALUE validation** - By default, Solr can error when an invalid value
    is passed through - for example, if Solr is expecting a numeric value and it
    could not be parsed. Panl can protect against this, by attempting to parse
@@ -268,6 +273,10 @@ results._
 1. **The search query box**, by default, Panl responds to the same parameter
    name as The Solr server - i.e. 'q'. This can be configured to be a different
    value should you choose.
+
+   **Specific Search Fields (not shown)** If multiple fields are configured 
+   to be searchable, display the fields that are available to search within, and
+   allow the user to select within the field.
 
 1. **Active filters** - either queries or any of the selected facets that have
    been used to refine the search results.
