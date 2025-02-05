@@ -123,7 +123,7 @@ public class PanlSortField extends BaseField {
 		return(explanations);
 	}
 
-	public void applyToQueryInternal(SolrQuery solrQuery, List<LpseToken> lpseTokenList) {
+	public void applyToQueryInternal(SolrQuery solrQuery, List<LpseToken> lpseTokenList, CollectionProperties collectionProperties) {
 		List<SolrQuery.SortClause> sortClauses = new ArrayList<>();
 		for (LpseToken lpseToken : lpseTokenList) {
 			SortLpseToken sortLpseToken = (SortLpseToken)lpseToken;

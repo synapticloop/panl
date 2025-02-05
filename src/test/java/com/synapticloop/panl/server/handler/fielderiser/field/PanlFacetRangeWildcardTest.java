@@ -27,7 +27,7 @@ public class PanlFacetRangeWildcardTest {
 		Map<String, List<LpseToken>> panlTokenMap = TestHelper.getPanlTokenMap(lpseTokens);
 
 		for (BaseField lpseField : collectionProperties.getLpseFields()) {
-			lpseField.applyToQuery(solrQuery, panlTokenMap);
+			lpseField.applyToQuery(solrQuery, panlTokenMap, collectionProperties);
 		}
 
 		assertTrue(solrQuery.toString().contains(contains));

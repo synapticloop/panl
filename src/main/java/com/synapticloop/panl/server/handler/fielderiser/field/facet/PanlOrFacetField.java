@@ -75,7 +75,7 @@ public class PanlOrFacetField extends PanlFacetField {
 		return (LOGGER);
 	}
 
-	@Override protected void applyToQueryInternal(SolrQuery solrQuery, List<LpseToken> lpseTokenList) {
+	@Override protected void applyToQueryInternal(SolrQuery solrQuery, List<LpseToken> lpseTokenList, CollectionProperties collectionProperties) {
 		// if there is only one... no need to do anything different
 		if (lpseTokenList.size() == 1) {
 			OrFacetLpseToken facetLpseToken = (OrFacetLpseToken) lpseTokenList.get(0);

@@ -174,4 +174,14 @@ public class QueryLpseToken extends LpseToken {
 	@Override public String getValue() {
 		return super.getValue();
 	}
+
+	/**
+	 * <p>Get the list of searchable solr fields that this query string should
+	 * operate on.</p>
+	 *
+	 * @return The list of searchable fields.
+	 */
+	public List<String> getSearchableLpseFields() {
+		return(searchableLpseFields);
+	}
 }

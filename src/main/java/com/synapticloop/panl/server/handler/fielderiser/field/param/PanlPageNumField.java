@@ -218,7 +218,7 @@ public class PanlPageNumField extends BasePrefixSuffixField {
 	 * @param solrQuery The SolrQuery to apply the tokens to
 	 * @param lpseTokenList The list of tokens to apply to the Solr query
 	 */
-	public void applyToQueryInternal(SolrQuery solrQuery, List<LpseToken> lpseTokenList) {
+	public void applyToQueryInternal(SolrQuery solrQuery, List<LpseToken> lpseTokenList, CollectionProperties collectionProperties) {
 		// do nothing - this relies on other data and is set by the handler
 	}
 

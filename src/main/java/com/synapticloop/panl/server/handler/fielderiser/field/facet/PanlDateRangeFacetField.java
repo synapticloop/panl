@@ -198,7 +198,7 @@ public class PanlDateRangeFacetField extends PanlFacetField {
 		return (solrRangeDesignatorLengthLookupMap.getOrDefault(solrRangeDesignator, 0));
 	}
 
-	@Override protected void applyToQueryInternal(SolrQuery solrQuery, List<LpseToken> lpseTokenList) {
+	@Override protected void applyToQueryInternal(SolrQuery solrQuery, List<LpseToken> lpseTokenList, CollectionProperties collectionProperties) {
 		// there can be only one date next/previous
 		DateRangeFacetLpseToken lpseToken;
 		if (!lpseTokenList.isEmpty()) {

@@ -90,7 +90,7 @@ public class PanlNumRowsField extends BasePrefixSuffixField {
 		return(explanations);
 	}
 
-	@Override public void applyToQueryInternal(SolrQuery solrQuery, List<LpseToken> lpseTokenList) {
+	@Override public void applyToQueryInternal(SolrQuery solrQuery, List<LpseToken> lpseTokenList, CollectionProperties collectionProperties) {
 		// do nothing - this relies on other data and is set by the handler
 	}
 

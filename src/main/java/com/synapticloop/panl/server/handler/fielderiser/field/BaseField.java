@@ -679,11 +679,12 @@ public abstract class BaseField {
 	 *
 	 * @param solrQuery The Solr Query to apply to field to
 	 * @param panlTokenMap The token map to get the parameters from
+	 * @param collectionProperties The Collection properties for this request
 	 */
-	public void applyToQuery(SolrQuery solrQuery, Map<String, List<LpseToken>> panlTokenMap) {
+	public void applyToQuery(SolrQuery solrQuery, Map<String, List<LpseToken>> panlTokenMap, CollectionProperties collectionProperties) {
 		// no facets, no query, all is good :)
 		if (panlTokenMap.containsKey(getLpseCode())) {
-			applyToQueryInternal(solrQuery, panlTokenMap.get(getLpseCode()));
+			applyToQueryInternal(solrQuery, panlTokenMap.get(getLpseCode()), collectionProperties);
 		}
 	}
 
@@ -739,8 +740,10 @@ public abstract class BaseField {
 	 *
 	 * @param solrQuery The SolrQuery to apply the tokens to
 	 * @param lpseTokenList The list of tokens to apply to the Solr query
+	 * @param collectionProperties The collection properties for this request
 	 */
-	protected abstract void applyToQueryInternal(SolrQuery solrQuery, List<LpseToken> lpseTokenList);
+	protected abstract void applyToQueryInternal(SolrQuery solrQuery, List<LpseToken> lpseTokenList,
+			CollectionProperties collectionProperties);
 
 	/**
 	 * <p>Log a warning message for a property key.</p>

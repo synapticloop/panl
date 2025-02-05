@@ -100,7 +100,7 @@ public class PanlQueryOperandField extends BaseField {
 		return(explanations);
 	}
 
-	public void applyToQueryInternal(SolrQuery solrQuery, List<LpseToken> lpseTokenList) {
+	public void applyToQueryInternal(SolrQuery solrQuery, List<LpseToken> lpseTokenList, CollectionProperties collectionProperties) {
 		if (!lpseTokenList.isEmpty()) {
 			solrQuery.setParam(SOLR_PARAM_Q_OP, ((QueryOperandLpseToken) lpseTokenList.get(0)).getQOpValue());
 		}

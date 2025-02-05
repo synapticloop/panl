@@ -86,7 +86,7 @@ public class PanlFacetField extends BasePrefixSuffixField {
 	}
 
 
-	protected void applyToQueryInternal(SolrQuery solrQuery, List<LpseToken> lpseTokenList) {
+	protected void applyToQueryInternal(SolrQuery solrQuery, List<LpseToken> lpseTokenList, CollectionProperties collectionProperties) {
 		// At this point, we just have regular facets.
 		for (LpseToken lpseToken : lpseTokenList) {
 			FacetLpseToken facetLpseToken = (FacetLpseToken) lpseToken;

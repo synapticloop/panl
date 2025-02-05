@@ -53,9 +53,30 @@ public class PanlQueryField extends BaseField {
 	 * @param solrQuery The Solr Query to apply to
 	 * @param lpseTokenList The list of tokens
 	 */
-	public void applyToQueryInternal(SolrQuery solrQuery, List<LpseToken> lpseTokenList) {
+	public void applyToQueryInternal(SolrQuery solrQuery, List<LpseToken> lpseTokenList, CollectionProperties collectionProperties) {
 		if(!lpseTokenList.isEmpty()) {
-			solrQuery.setQuery("\"" + lpseTokenList.get(0).getValue() + "\"");
+			StringBuilder stringBuilder = new StringBuilder();
+			boolean first = true;
+			QueryLpseToken queryLpseToken = (QueryLpseToken)lpseTokenList.get(0);
+			List<String> searchableLpseFields = queryLpseToken.getSearchableLpseFields();
+			if(searchableLpseFields.isEmpty()) {
+				// just do the default
+				solrQuery.setQuery("\"" + queryLpseToken.getValue() + "\"");
+			} else {
+				for (String searchableLpseField : searchableLpseFields) {
+					if(!first) {
+						stringBuilder.append(" ")
+								.append(collectionProperties.getSolrDefaultQueryOperand())
+								.append(" ");
+					}
+					first = false;
+					stringBuilder.append(searchableLpseField)
+					             .append(":\"")
+					             .append(queryLpseToken.getValue())
+					             .append("\"");
+				}
+				solrQuery.setQuery(stringBuilder.toString());
+			}
 		}
 	}
 

@@ -95,7 +95,7 @@ public class PanlField extends BaseField {
 		return (explanations);
 	}
 
-	@Override public void applyToQueryInternal(SolrQuery solrQuery, List<LpseToken> lpseTokenList) { /* do nothing */ }
+	@Override public void applyToQueryInternal(SolrQuery solrQuery, List<LpseToken> lpseTokenList, CollectionProperties collectionProperties) { /* do nothing */ }
 
 	@Override protected void appendToAvailableObjectInternal(JSONObject jsonObject) { /* do nothing */ }
 

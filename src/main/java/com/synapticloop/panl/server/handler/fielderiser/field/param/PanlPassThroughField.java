@@ -96,7 +96,7 @@ public class PanlPassThroughField extends BaseField {
 		return(explanations);
 	}
 
-	public void applyToQueryInternal(SolrQuery solrQuery, List<LpseToken> lpseTokenList) {
+	public void applyToQueryInternal(SolrQuery solrQuery, List<LpseToken> lpseTokenList, CollectionProperties collectionProperties) {
 		// do nothing
 	}
 

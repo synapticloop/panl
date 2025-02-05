@@ -302,7 +302,7 @@ public class CollectionRequestHandler {
 
 			boolean hasStats = false;
 			for (BaseField lpseField : collectionProperties.getLpseFields()) {
-				lpseField.applyToQuery(solrQuery, panlTokenMap);
+				lpseField.applyToQuery(solrQuery, panlTokenMap, collectionProperties);
 				if (!isMoreFacets) {
 					if (lpseField instanceof PanlRangeFacetField) {
 						solrQuery.add(SOLR_PARAM_KEY_STATS_FIELD, lpseField.getSolrFieldName());

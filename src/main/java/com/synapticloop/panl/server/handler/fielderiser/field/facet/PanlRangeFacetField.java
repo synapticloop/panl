@@ -208,7 +208,7 @@ public class PanlRangeFacetField extends PanlFacetField {
 		return (LOGGER);
 	}
 
-	@Override protected void applyToQueryInternal(SolrQuery solrQuery, List<LpseToken> lpseTokens) {
+	@Override protected void applyToQueryInternal(SolrQuery solrQuery, List<LpseToken> lpseTokens, CollectionProperties collectionProperties) {
 		for(LpseToken lpseToken : lpseTokens) {
 			RangeFacetLpseToken rangeFacetLpseToken = (RangeFacetLpseToken) lpseToken;
 
