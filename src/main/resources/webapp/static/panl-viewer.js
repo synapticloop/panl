@@ -35,7 +35,7 @@ $(document).ready(function () {
 
 			panlSearch();
 
-			// finally get the lookahead functionality for the search box
+			// now we need to get the lookahead functionality for the search box
 			$("#searchfield").autocomplete({
 				source: function (request, response) {
 
@@ -159,11 +159,46 @@ function populatePanlResults(panlJsonData) {
 
 	$("#num_shown").append(documents.length);
 
+	addSearchFieldCheckboxes(panlJsonData.panl.search)
 	addQueryOperand(panlJsonData.panl.query_operand);
 	addSortingOptions(panlJsonData.panl.sorting, panlJsonData.panl.active);
 	addPagination(panlJsonData.panl.pagination);
 	addActiveFilters(panlJsonData.panl.active, panlJsonData.panl.sorting.remove_uri);
 	addAvailableFilters(panlJsonData.panl.available, panlJsonData.panl.active);
+}
+
+function addSearchFieldCheckboxes(searchJson) {
+	console.log("[ RETURNED PANL SEARCH FIELDS ]")
+	console.log(searchJson);
+
+	$("#searchfield").val(searchJson.keyword);
+
+	if(searchJson.fields !== undefined) {
+		let first = true;
+		for(const searchField of searchJson.fields) {
+
+			if(first) {
+				$("#search-checkboxes").append("<p><strong>Search in:</strong></p>");
+				first = false;
+			}
+
+			let fieldName = searchJson.query_respond_to + "." + searchField.panl_code;
+			$("#search-checkboxes").append(
+					"<input type=\"checkbox\" id=\"" +
+					fieldName +
+					"\" name=\"" +
+					fieldName +
+					"\"" +
+					(searchField.active? " checked" : "") +
+					" value=\"-\">\n" +
+					"  <label for=\"" +
+					fieldName +
+					"\">" +
+					searchField.value +
+					"</label><br>"
+			);
+		}
+	}
 }
 
 function addQueryOperand(queryOperand) {

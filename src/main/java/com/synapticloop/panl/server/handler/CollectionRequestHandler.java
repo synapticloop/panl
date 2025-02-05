@@ -71,6 +71,7 @@ public class CollectionRequestHandler {
 	public static final String SOLR_PARAM_Q_OP = "q.op";
 
 	public static final String JSON_KEY_ACTIVE = "active";
+	public static final String JSON_KEY_SEARCH = "search";
 	public static final String JSON_KEY_AVAILABLE = "available";
 	public static final String JSON_KEY_CANONICAL_URI = "canonical_uri";
 	public static final String JSON_KEY_FIELDS = "fields";
@@ -82,7 +83,6 @@ public class CollectionRequestHandler {
 	public static final String JSON_KEY_PANL_SEND_REQUEST_TIME = "panl_send_request_time";
 	public static final String JSON_KEY_PANL_TOTAL_TIME = "panl_total_time";
 	public static final String JSON_KEY_QUERY_OPERAND = "query_operand";
-	public static final String JSON_KEY_QUERY_RESPOND_TO = "query_respond_to";
 	public static final String JSON_KEY_SORTING = "sorting";
 	public static final String JSON_KEY_TIMINGS = "timings";
 	public static final String JSON_KEY_DYNAMIC_MIN = "dynamic_min";
@@ -105,6 +105,7 @@ public class CollectionRequestHandler {
 	// These are the processors, which processes the Solr response and creates
 	// the Panl response object
 	private final ActiveProcessor activeProcessor;
+	private final SearchFieldsProcessor searchFieldsProcessor;
 	private final PaginationProcessor paginationProcessor;
 	private final SortingProcessor sortingProcessor;
 	private final QueryOperandProcessor queryOperandProcessor;
@@ -148,6 +149,7 @@ public class CollectionRequestHandler {
 			collectionProperties);
 
 		this.activeProcessor = new ActiveProcessor(collectionProperties);
+		this.searchFieldsProcessor = new SearchFieldsProcessor(collectionProperties);
 		this.paginationProcessor = new PaginationProcessor(collectionProperties);
 		this.sortingProcessor = new SortingProcessor(collectionProperties);
 		this.queryOperandProcessor = new QueryOperandProcessor(collectionProperties);
@@ -455,12 +457,12 @@ public class CollectionRequestHandler {
 		panlObject.getJSONObject(JSON_KEY_AVAILABLE).put(Processor.JSON_KEY_FACETS, removedRanges);
 
 		panlObject.put(JSON_KEY_ACTIVE, activeProcessor.processToObject(panlTokenMap));
+		panlObject.put(JSON_KEY_SEARCH, searchFieldsProcessor.processToObject(panlTokenMap));
 		panlObject.put(JSON_KEY_PAGINATION, paginationProcessor.processToObject(panlTokenMap, solrQueryResponse));
 		panlObject.put(JSON_KEY_SORTING, sortingProcessor.processToObject(panlTokenMap));
 		panlObject.put(JSON_KEY_QUERY_OPERAND, queryOperandProcessor.processToObject(panlTokenMap));
 		panlObject.put(JSON_KEY_FIELDS, fieldsProcessor.processToObject(panlTokenMap));
 		panlObject.put(JSON_KEY_CANONICAL_URI, canonicalURIProcessor.processToString(panlTokenMap));
-		panlObject.put(JSON_KEY_QUERY_RESPOND_TO, collectionProperties.getFormQueryRespondTo());
 
 		// now add in the timings
 		JSONObject timingsObject = new JSONObject();

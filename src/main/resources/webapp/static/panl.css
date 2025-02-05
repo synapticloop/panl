@@ -43,6 +43,9 @@ div#navigation li.heading { border-top: 2px dotted dimgray; padding: 10px 0 10px
 div#navigation li.heading:nth-child(odd) { background-color: #fafafa; }
 .navheading { background-color: #efefef; border-left: 6px solid black; }
 
+#search-checkboxes { padding-top: 10px; }
+#search-checkboxes p { padding: 0; margin: 0; }
+
 /* document (i.e. results) list */
 #documents dl:nth-child(odd) { background-color: #efefef; }
 #documents { margin-bottom: 12px; }

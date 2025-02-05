@@ -27,6 +27,7 @@ package com.synapticloop.panl.server.handler.processor;
 import com.synapticloop.panl.server.handler.properties.CollectionProperties;
 import com.synapticloop.panl.server.handler.tokeniser.token.LpseToken;
 import org.apache.solr.client.solrj.response.QueryResponse;
+import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.util.List;
@@ -66,6 +67,7 @@ public abstract class Processor {
 	public static final String JSON_KEY_NUM_PER_PAGE_URIS = "num_per_page_uris";
 	public static final String JSON_KEY_OR = "OR";
 	public static final String JSON_KEY_PAGE_NUM = "page_num";
+	public static final String JSON_KEY_ACTIVE = "active";
 	public static final String JSON_KEY_PAGE_URIS = "page_uris";
 	public static final String JSON_KEY_PANL_CODE = "panl_code";
 	public static final String JSON_KEY_PREFIX = "prefix";

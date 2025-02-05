@@ -25,6 +25,7 @@ package com.synapticloop.panl.server.handler;
  */
 
 import com.synapticloop.panl.exception.PanlNotFoundException;
+import com.synapticloop.panl.server.handler.processor.SearchFieldsProcessor;
 import com.synapticloop.panl.server.handler.properties.CollectionProperties;
 import com.synapticloop.panl.server.handler.properties.PanlProperties;
 import com.synapticloop.panl.server.handler.webapp.util.ResourceHelper;
@@ -189,7 +190,7 @@ public class PanlMoreFacetsHandler extends BaseResponseHandler implements HttpRe
 				}
 
 				// lastly remove the facets
-				panlJsonObject.remove(JSON_KEY_QUERY_RESPOND_TO);
+				panlJsonObject.remove(SearchFieldsProcessor.JSON_KEY_QUERY_RESPOND_TO);
 				panlJsonObject.remove(JSON_KEY_SORTING);
 				panlJsonObject.remove(JSON_KEY_AVAILABLE);
 				panlJsonObject.remove(JSON_KEY_FIELDS);

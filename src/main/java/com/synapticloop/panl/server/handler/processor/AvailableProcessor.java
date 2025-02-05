@@ -120,7 +120,6 @@ public class AvailableProcessor extends Processor {
 				}
 
 				baseField.addToAdditionObject(facetObject, panlTokenMap);
-
 			}
 
 			// these range facets will always appear
@@ -138,7 +137,6 @@ public class AvailableProcessor extends Processor {
 				dateRangeFacetArray.put(dateRangeFacetObject);
 			}
 		}
-
 
 		for (BaseField lpseField : collectionProperties.getLpseFields()) {
 			if (panlFacetOrderMap.containsKey(lpseField.getLpseCode())) {

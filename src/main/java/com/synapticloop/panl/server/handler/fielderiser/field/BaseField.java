@@ -810,7 +810,7 @@ public abstract class BaseField {
 	 * and links to filter with this facet value in addition to the currently selected facets and query.</p>
 	 *
 	 * @param facetObject The facet object to append to
-	 * @param collectionProperties The colleciton properties
+	 * @param collectionProperties The collection properties
 	 * @param panlTokenMap The incoming Panl tokens
 	 * @param existingLpseValues The existing LPSE values
 	 * @param facetCountValues The facet count values
