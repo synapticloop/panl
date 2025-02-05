@@ -108,7 +108,7 @@ public class PanlQueryField extends BaseField {
 		StringBuilder stringBuilder = new StringBuilder();
 
 		List<LpseToken> lpseTokens = panlTokenMap.get(collectionProperties.getPanlParamQuery());
-		if (!lpseTokens.isEmpty()) {
+		if (null != lpseTokens && !lpseTokens.isEmpty()) {
 			QueryLpseToken queryLpseToken = (QueryLpseToken) lpseTokens.get(0);
 			stringBuilder.append(queryLpseToken.getLpseCode());
 
