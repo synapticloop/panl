@@ -40,7 +40,7 @@ public class DefaultsTest {
 		Root root = mapper.readValue(new URL("http://localhost:8282/mechanical-pencils/brandandname/"), Root.class);
 		assertFalse(root.error);
 		assertEquals("/page-1/10-per-page/pn/", root.panl.canonical_uri);
-		assertEquals("search", root.panl.query_respond_to);
+		assertEquals("search", root.panl.search.query_respond_to);
 		assertEquals(6, root.panl.pagination.num_pages);
 		assertEquals(55, root.panl.pagination.num_results);
 		assertEquals(10, root.panl.pagination.num_per_page);

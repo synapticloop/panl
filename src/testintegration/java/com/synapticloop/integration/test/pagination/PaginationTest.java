@@ -43,7 +43,7 @@ public class PaginationTest {
 		assertFalse(root.error);
 
 		assertEquals("/page-1/10-per-page/pn/", root.panl.canonical_uri);
-		assertEquals("search", root.panl.query_respond_to);
+		assertEquals("search", root.panl.search.query_respond_to);
 		assertEquals(6, root.panl.pagination.num_pages);
 		assertEquals(55, root.panl.pagination.num_results);
 		assertEquals(10, root.panl.pagination.num_per_page);
@@ -61,7 +61,7 @@ public class PaginationTest {
 		assertFalse(response.error);
 
 		assertEquals("/page-2/10-per-page/pn/", response.panl.canonical_uri);
-		assertEquals("search", response.panl.query_respond_to);
+		assertEquals("search", response.panl.search.query_respond_to);
 		assertEquals(6, response.panl.pagination.num_pages);
 		assertEquals(55, response.panl.pagination.num_results);
 		assertEquals(10, response.panl.pagination.num_per_page);
@@ -80,7 +80,7 @@ public class PaginationTest {
 		assertFalse(root.error);
 
 		assertEquals("/page-6/10-per-page/pn/", root.panl.canonical_uri);
-		assertEquals("search", root.panl.query_respond_to);
+		assertEquals("search", root.panl.search.query_respond_to);
 		assertEquals(6, root.panl.pagination.num_pages);
 		assertEquals(55, root.panl.pagination.num_results);
 		assertEquals(10, root.panl.pagination.num_per_page);
@@ -99,7 +99,7 @@ public class PaginationTest {
 		assertFalse(root.error);
 
 		assertEquals("/Clutch/page-1/10-per-page/mpn/", root.panl.canonical_uri);
-		assertEquals("search", root.panl.query_respond_to);
+		assertEquals("search", root.panl.search.query_respond_to);
 		assertEquals(3, root.panl.pagination.num_pages);
 		assertEquals(30, root.panl.pagination.num_results);
 		assertEquals(10, root.panl.pagination.num_per_page);
@@ -112,7 +112,7 @@ public class PaginationTest {
 		assertFalse(root.error);
 
 		assertEquals("/Clutch/page-1/10-per-page/mpn/", root.panl.canonical_uri);
-		assertEquals("search", root.panl.query_respond_to);
+		assertEquals("search", root.panl.search.query_respond_to);
 		assertEquals(3, root.panl.pagination.num_pages);
 		assertEquals(30, root.panl.pagination.num_results);
 		assertEquals(10, root.panl.pagination.num_per_page);

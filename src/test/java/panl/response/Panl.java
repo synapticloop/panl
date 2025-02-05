@@ -48,12 +48,9 @@
 
 package panl.response;
 
-import panl.response.panl.Sorting;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import panl.response.panl.*;
 import panl.response.panl.timings.Timings;
-import panl.response.panl.Active;
-import panl.response.panl.Available;
-import panl.response.panl.Pagination;
-import panl.response.panl.QueryOperand;
 
 import java.util.Map;
 
@@ -67,6 +64,7 @@ public class Panl {
 
 	public Available available;
 	public Map<String, String> fields;
+	public Search search;
 
 	public Active active;
 }

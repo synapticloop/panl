@@ -246,7 +246,7 @@ public class PanlBooleanFacetField extends PanlFacetField {
 		return (URLHelper.encodeURIPath(sb.toString()) + "/");
 	}
 
-	protected void applyToQueryInternal(SolrQuery solrQuery, List<LpseToken> lpseTokenList) {
+	protected void applyToQueryInternal(SolrQuery solrQuery, List<LpseToken> lpseTokenList, CollectionProperties collectionProperties) {
 		// we are only going to do the first one
 		for(LpseToken lpseToken : lpseTokenList) {
 			BooleanFacetLpseToken booleanFacetLpseToken = (BooleanFacetLpseToken) lpseToken;
