@@ -668,5 +668,35 @@
     "book_length": "Novella",
     "on_backorder": false,
     "speedy_delivery": true
+  },
+
+  {
+    "id": 100,
+    "author": "Mary Wollstonecraft Shelley",
+    "title": "Frankenstein",
+    "description": "\"Frankenstein,\" written by Mary Shelley, is a groundbreaking novel that explores the themes of creation, ambition, and the consequences of playing God. Published in 1818, it tells the haunting story of Victor Frankenstein, a young scientist who becomes obsessed with the idea of creating life. Driven by his insatiable curiosity and desire for knowledge, Victor successfully animates a creature assembled from the remains of the dead.\n\nHowever, upon bringing his creation to life, Victor is horrified by the creature's grotesque appearance and abandons it, leading to a tragic chain of events. The creature, rejected by society and yearning for companionship, grapples with feelings of loneliness and despair. As it seeks revenge on its creator for the misery of its existence, the novel delves into profound questions about humanity, responsibility, and the ethical implications of scientific exploration.\n\nSet against the backdrop of the Romantic era, \"Frankenstein\" is not only a tale of horror but also a poignant reflection on the nature of existence and the quest for acceptance. Shelley's masterful storytelling and rich character development invite readers to ponder the moral dilemmas of creation and the consequences of isolation, making \"Frankenstein\" a timeless classic that continues to resonate with audiences today.",
+    "book_image": "http://example.com/image/",
+    "buy_url": "http://example.com/buy/",
+    "genre": [
+      "Science Fiction",
+      "Adventure",
+      "Space",
+      "Thriller",
+      "Mystery",
+      "Horror",
+      "Gothic",
+      "Fantasy"
+    ],
+    "num_pages": 260,
+    "first_published_year": 1818,
+    "language": "English",
+    "is_paperback": true,
+    "price": 8.69,
+    "a_to_z_index": "S",
+    "decade_published": 1810,
+    "book_length": "Novella",
+    "on_backorder": false,
+    "speedy_delivery": true
   }
+
 ]
