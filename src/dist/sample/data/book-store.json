@@ -199,7 +199,34 @@
     "on_backorder": true,
     "speedy_delivery": true
   },
-
+  {
+    "id": 9,
+    "author": "Michael Connelly",
+    "title": "Lincoln Lawyer",
+    "description": "\"The Lincoln Lawyer,\" written by Michael Connelly and published in 2005, introduces readers to Mickey Haller, a charismatic and unconventional defense attorney who operates out of the back seat of his Lincoln Town Car. Known for his sharp wit and keen legal instincts, Haller navigates the gritty world of Los Angeles criminal defense, representing a diverse array of clients, from low-level offenders to high-profile cases.\n\nWhen Haller is hired to defend a wealthy real estate agent, Louis Roulet, accused of assaulting a woman, he believes he has landed a golden opportunity. However, as he delves deeper into the case, he uncovers a web of deceit and danger that challenges his moral compass and puts his life at risk. The more he investigates, the more he realizes that the case may be connected to a previous conviction that haunts him.\n\nConnelly masterfully weaves a gripping narrative filled with twists and turns, exploring themes of justice, ethics, and the complexities of the legal system. As Haller races against time to uncover the truth, he must confront his own demons and navigate the treacherous waters of the courtroom.\n\n\"The Lincoln Lawyer\" is a compelling legal thriller that keeps readers on the edge of their seats, showcasing Connelly's signature storytelling and deep understanding of the law. It is a captivating exploration of the lengths one man will go to seek justice, making it a standout entry in the genre.",
+    "book_image": "http://example.com/image/",
+    "buy_url": "http://example.com/buy/",
+    "genre": [
+      "Mystery",
+      "Crime",
+      "Legal",
+      "Law",
+      "Detective",
+      "Thriller",
+      "Fiction"
+    ],
+    "num_pages": 408,
+    "first_published_year": 2005,
+    "language": "English",
+    "is_paperback": true,
+    "series": "Lincoln Lawyer",
+    "price": 22.15,
+    "a_to_z_index": "C",
+    "decade_published": 2000,
+    "book_length": "Novel",
+    "on_backorder": false,
+    "speedy_delivery": true
+  },
 
 
 
@@ -249,7 +276,7 @@
     "speedy_delivery": true
   },
   {
-    "id": 12,
+    "id": 13,
     "author": "Maeve Binchy",
     "title": "\"Chestnut Street\" is a charming and evocative novel by Maeve Binchy that weaves together the lives of various characters living on a fictional street in Dublin. The book is structured as a series of interconnected stories, each focusing on different residents of Chestnut Street, allowing readers to glimpse the rich tapestry of their lives, dreams, and struggles.\n\nThe narrative introduces a diverse cast of characters, including families, singles, and couples, each with their own unique stories and backgrounds. From the elderly widow reflecting on her past to the young couple navigating the challenges of their relationship, Binchy captures the essence of human experience with warmth and empathy. The characters face a range of issues, including love, loss, ambition, and the search for belonging, all set against the backdrop of the close-knit community on Chestnut Street.\n\nAs the stories unfold, themes of friendship, resilience, and the importance of connection emerge. Binchy's keen observations and rich character development allow readers to form deep emotional connections with the inhabitants of Chestnut Street, making their joys and sorrows feel personal and relatable.\n\nThrough her signature storytelling style, Binchy highlights the significance of community and the impact of seemingly small interactions on the lives of individuals. \"Chestnut Street\" is a celebration of the everyday moments that shape our lives and the bonds that connect us, making it a heartwarming and insightful read that resonates with anyone who appreciates the beauty of human relationships.",
     "description": "No description provided",
@@ -694,6 +721,30 @@
     "price": 8.69,
     "a_to_z_index": "S",
     "decade_published": 1810,
+    "book_length": "Novella",
+    "on_backorder": false,
+    "speedy_delivery": true
+  },
+  {
+    "id": 101,
+    "author": "Frances Hodgson Burnett",
+    "title": "The Secret Garden",
+    "description": "\"The Secret Garden,\" written by Frances Hodgson Burnett and first published in 1911, is a beloved children's novel that tells the enchanting story of Mary Lennox, a spoiled and lonely girl who is sent to live with her reclusive uncle, Archibald Craven, in a vast, mysterious mansion on the Yorkshire moors after the death of her parents.\n\nUpon her arrival, Mary discovers a neglected garden that has been locked away for years, hidden behind a high wall. Intrigued and determined to uncover its secrets, she befriends a local boy named Dickon, who has a deep connection with nature, and her sickly cousin, Colin, who has been confined to his room due to his ailments. Together, they embark on a journey of healing and transformation as they tend to the garden, bringing it back to life.\n\nAs the garden flourishes, so do the children, who learn valuable lessons about friendship, resilience, and the restorative power of nature. Through their adventures, Mary, Colin, and Dickon discover not only the beauty of the garden but also the importance of love, connection, and personal growth.\n\n\"The Secret Garden\" is a timeless tale that celebrates the magic of nature and the profound impact it can have on the human spirit, making it a cherished classic for readers of all ages.",
+    "book_image": "http://example.com/image/",
+    "buy_url": "http://example.com/buy/",
+    "genre": [
+      "Young Adult",
+      "Classics",
+      "Fiction",
+      "Childrens"
+    ],
+    "num_pages": 331,
+    "first_published_year": 1911,
+    "language": "English",
+    "is_paperback": true,
+    "price": 4.49,
+    "a_to_z_index": "B",
+    "decade_published": 1910,
     "book_length": "Novella",
     "on_backorder": false,
     "speedy_delivery": true

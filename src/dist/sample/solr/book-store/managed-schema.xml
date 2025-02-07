@@ -24,7 +24,7 @@
 	<field name="book_length" type="string" indexed="true" stored="false" multiValued="false" />
 
 	<field name="text" type="text_general" indexed="true" stored="false" multiValued="true" />
-	<field name="text_author" type="text_general" indexed="true" stored="false" multiValued="true" />
+	<field name="text_author" type="text_general" indexed="true" stored="false" multiValued="false" />
 	<field name="text_description" type="text_general" indexed="true" stored="false" multiValued="false" />
 	<field name="text_title" type="text_general" indexed="true" stored="false" multiValued="false" />
 
