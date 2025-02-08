@@ -27,7 +27,6 @@ package com.synapticloop.panl.server.handler.processor;
 import com.synapticloop.panl.server.handler.properties.CollectionProperties;
 import com.synapticloop.panl.server.handler.tokeniser.token.LpseToken;
 import org.apache.solr.client.solrj.response.QueryResponse;
-import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.util.List;

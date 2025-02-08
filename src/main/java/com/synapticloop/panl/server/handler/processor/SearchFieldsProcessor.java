@@ -62,7 +62,7 @@ public class SearchFieldsProcessor extends Processor {
 		// now we are going to add the search fields - but only if they exist
 		Map<String, String> searchCodesMap = collectionProperties.getSearchCodesMap();
 		String panlParamQuery = collectionProperties.getPanlParamQuery();
-		Set<String> activeSearchCodes = new HashSet<String>();
+		Set<String> activeSearchCodes = new HashSet<>();
 		String keyword = "";
 
 		if(panlTokenMap.containsKey(panlParamQuery)) {
