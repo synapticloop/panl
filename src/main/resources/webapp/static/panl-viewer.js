@@ -149,10 +149,24 @@ function populatePanlResults(panlJsonData) {
 	// add in the results
 	for (const document of documents) {
 		var innerList = "";
+		var id = document["id"];
+
+		if(panlJsonData.highlighting !== undefined && panlJsonData.highlighting[id] !== undefined) {
+			for(const highlight in panlJsonData.highlighting[id]) {
+				innerList += "<dt><em>Highlight field: " + highlight + "</em></dt>";
+				for(const value of panlJsonData.highlighting[id][highlight]) {
+					innerList += "<dd>" + value + "</dd>";
+				}
+			}
+			innerList += "<br /><br />";
+		}
+
 		for (const fieldName in document) {
 			innerList += "<dt>" + panlJsonData.panl.fields[fieldName] + " (" + fieldName + ")</dt>";
 			innerList += "<dd>" + document[fieldName] + "</dd>";
 		}
+
+
 
 		$("#documents").append("<dl>" + innerList + "</dl>");
 	}

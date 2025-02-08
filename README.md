@@ -1012,4 +1012,10 @@ number.
    - [Released in version 9-2.0.0]
    - Being able to boost specific fields when searching on Specific Solr fields 
      this is done on a Panl collection basis.
+1. DATE Range and RANGE value replacement (Low Priority)
+   -  For both of the range facets, it would be nice to be able to configure to 
+      replace the URL with a Panl query, for example: The DATE Range Facet could
+      have a replacement of 'Coming Soon' which would be translate to 
+      'Next 3 months' and the RANGE Facet could have a replacement of 
+      'Inexpensive' to translate to 'From 5 to 10 dollars'
 
