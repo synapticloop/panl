@@ -75,7 +75,8 @@ public class PanlQueryField extends BaseField {
 							.append(searchableLpseField)
 							.append(":\"")
 							.append(queryLpseToken.getValue())
-							.append("\"");
+							.append("\"")
+							.append(collectionProperties.getSpecificSearchBoost(searchableLpseField));
 				}
 				solrQuery.setQuery(stringBuilder.toString());
 			}

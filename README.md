@@ -964,10 +964,6 @@ number.
    - ~~Should be able to be configured to be displayed as (or something along
        the lines of it):~~
    - ~~`/Manufactured By The Caran d'Ache, or BIC Company/b/`~~
-1. Query text boosting (Low priority)
-   - Being able to boost specific Solr fields for importance when there has
-       been a keyword search on them - this ties in with the 'Specific Solr
-       field search query options' .
 1. Update command line help text (Low priority)
    - Currently, the full help is displayed, which should only be done if no
        command is given. If a command is given, then only the help for that

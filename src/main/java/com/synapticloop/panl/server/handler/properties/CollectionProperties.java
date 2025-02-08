@@ -185,8 +185,9 @@ public class CollectionProperties {
 	private final Map<String, String> SEARCH_LPSE_CODE_TO_SOLR_FIELD_MAP = new HashMap<>();
 	private final Map<String, String> SEARCH_SOLR_FIELD_TO_LPSE_CODE_MAP = new HashMap<>();
 	private final Map<String, String> SEARCH_LPSE_CODE_TO_PANL_NAME_MAP = new HashMap<>();
-	private final Map<String, String> SEARCH_FIELDS_MAP = new LinkedHashMap<String, String>();
-	private final Map<String, String> SEARCH_CODES_MAP = new LinkedHashMap<String, String>();
+	private final Map<String, String> SEARCH_FIELDS_MAP = new LinkedHashMap<>();
+	private final Map<String, String> SEARCH_CODES_MAP = new LinkedHashMap<>();
+	private final Map<String, Integer> SEARCH_CODES_BOOST = new HashMap<>();
 
 	/**
 	 * <p>The valid URLs for this Panl collection - this is only used for
@@ -681,10 +682,26 @@ public class CollectionProperties {
 		String property = properties.getProperty(PROPERTY_KEY_PANL_SEARCH_FIELDS, "");
 		for (String solrSearchField : property.split(",")) {
 			String solrSearchFieldTrim = solrSearchField.trim();
+
 			if(solrSearchFieldTrim.isEmpty()) {
 				break;
 			} else {
 				// look up the search field
+
+				Integer fieldBoost = null;
+				// if we have a caret character...
+				if(solrSearchFieldTrim.contains("^")) {
+					int caretIndex = solrSearchFieldTrim.lastIndexOf("^");
+					try {
+						fieldBoost = Integer.parseInt(solrSearchFieldTrim.substring(caretIndex + 1));
+					} catch(NumberFormatException ignored) {
+						LOGGER.warn("Invalid field boost for search field string of '" + solrSearchFieldTrim + "', could not " +
+								"parse boost");
+					}
+					solrSearchFieldTrim = solrSearchFieldTrim.substring(0, caretIndex);
+					SEARCH_CODES_BOOST.put(solrSearchFieldTrim, fieldBoost);
+				}
+
 				if(SEARCH_SOLR_FIELD_TO_LPSE_CODE_MAP.containsKey(solrSearchFieldTrim)) {
 					// we are good to go
 					String value = SEARCH_SOLR_FIELD_TO_LPSE_CODE_MAP.get(solrSearchFieldTrim);
@@ -1280,6 +1297,23 @@ public class CollectionProperties {
 
 	public Map<String, String> getSearchCodesMap() {
 		return(SEARCH_CODES_MAP);
+	}
+
+	/**
+	 * <p>Return the boost for a field in the Solr form of <code>^number</code> or
+	 * an empty string</p>
+	 *
+	 * @param solrFieldName The Solr field name
+	 *
+	 * @return The Solr query boost in the correct format, or an empty string if
+	 * no boost is available.
+	 */
+	public String getSpecificSearchBoost(String solrFieldName) {
+		if(SEARCH_CODES_BOOST.containsKey(solrFieldName)) {
+			return("^" + SEARCH_CODES_BOOST.get(solrFieldName));
+		} else {
+			return("");
+		}
 	}
 
 }

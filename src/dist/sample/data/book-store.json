@@ -748,6 +748,66 @@
     "book_length": "Novella",
     "on_backorder": false,
     "speedy_delivery": true
-  }
+  },
 
+
+
+
+  {
+    "id": 201,
+    "author": "P. L. Travers",
+    "title": "Mary Poppins",
+    "description": "\"Mary Poppins,\" written by P. L. Travers and first published in 1934, is a beloved children's classic that introduces readers to the enchanting and whimsical world of the iconic nanny, Mary Poppins. With her magical abilities and no-nonsense attitude, Mary Poppins arrives at the Banks household in London, bringing a touch of wonder and adventure to the lives of the children, Jane and Michael.\n\nFrom the moment she steps into their lives, Mary Poppins transforms the mundane into the extraordinary. With her magical umbrella and carpet bag filled with surprises, she takes the children on fantastical adventures that defy the laws of reality. Whether it's jumping into a chalk drawing, having tea with a talking bird, or visiting the rooftops of London, each escapade is filled with delightful charm and life lessons.\n\nTravers's storytelling is rich with imagination and wit, capturing the essence of childhood wonder while exploring themes of family, responsibility, and the importance of joy in everyday life. Mary Poppins is not just a nanny; she is a catalyst for change, encouraging the Banks family to embrace creativity, kindness, and the magic that exists in the world around them.\n\n\"Mary Poppins\" is a timeless tale that has captivated generations of readers, celebrating the power of imagination and the joy of adventure. It remains a cherished classic that continues to inspire and delight both children and adults alike.",
+    "book_image": "http://example.com/image/",
+    "buy_url": "http://example.com/buy/",
+    "genre": [
+      "Young Adult",
+      "Magic",
+      "Adventure",
+      "Classics",
+      "Fiction",
+      "Childrens",
+      "Fantasy"
+    ],
+    "series": "Mary Poppins",
+    "num_pages": 209,
+    "first_published_year": 1934,
+    "language": "English",
+    "is_paperback": true,
+    "price": 7.54,
+    "a_to_z_index": "T",
+    "decade_published": 1930,
+    "book_length": "Novella",
+    "on_backorder": false,
+    "speedy_delivery": true
+  },
+
+  {
+    "id": 202,
+    "author": "P. L. Travers",
+    "title": "Mary Poppins Comes Back",
+    "description": "\"Mary Poppins Comes Back,\" the delightful sequel to P. L. Travers's beloved classic, continues the enchanting adventures of the magical nanny, Mary Poppins. First published in 1935, this charming tale reunites readers with the Banks family as they welcome back their extraordinary caregiver, who arrives with her signature blend of whimsy and wisdom.\n\nIn this installment, Mary Poppins returns to the Banks household just when they need her most. The children, Jane and Michael, are growing up, and the family faces new challenges and changes. With her magical umbrella and a carpet bag full of surprises, Mary Poppins brings a fresh wave of adventure and excitement into their lives. From a delightful tea party with the whimsical character of Uncle Albert to a thrilling journey through the skies, each chapter is filled with imaginative escapades that spark joy and wonder.\n\nTravers's storytelling shines as she weaves together themes of family, imagination, and the importance of embracing the magic in everyday life. Mary Poppins's unique approach to parenting encourages the children to explore their creativity and see the world through a lens of possibility.\n\n\"Mary Poppins Comes Back\" is a timeless tale that captures the essence of childhood wonder and the enduring bond between a nanny and her charges. With its enchanting narrative and memorable characters, this sequel is a delightful continuation of Mary Poppins's adventures, sure to captivate readers of all ages.",
+    "book_image": "http://example.com/image/",
+    "buy_url": "http://example.com/buy/",
+    "genre": [
+      "Young Adult",
+      "Magic",
+      "Adventure",
+      "Classics",
+      "Fiction",
+      "Childrens",
+      "Fantasy"
+    ],
+    "series": "Mary Poppins",
+    "num_pages": 312,
+    "first_published_year": 1935,
+    "language": "English",
+    "is_paperback": true,
+    "price": 7.54,
+    "a_to_z_index": "T",
+    "decade_published": 1930,
+    "book_length": "Novella",
+    "on_backorder": false,
+    "speedy_delivery": true
+  }
 ]
