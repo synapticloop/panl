@@ -994,7 +994,8 @@ number.
        a little more difficult, but also easier.
     - Step one would be to generate the properties files in memory from the
        JSON configuration, then completely replace them.
-    - Whilst there are some niceties with JSON files, there are also some parts 
+    - Whilst 
+    - there are some niceties with JSON files, there are also some parts 
       which make it worse (especially around commenting).
 1. Cached OR Facet Values (Medium Priority)
      - Where the user wants to display an OR facet, and also wants to display 
@@ -1004,4 +1005,11 @@ number.
      - For any LPSE codes which are randomly assigned by the generator, keep a 
        lookup map of the codes and attempt to keep this assignment on 
        re-generation.
+1. Update the Explainer (Low Priority)
+   - The explainer has languished and only returns simple lists of strings 
+     this should return JSON and be able to be inspected.
+1. ~~Specific Search Field Boosting (Low Priority)~~
+   - [Released in version 9-2.0.0]
+   - Being able to boost specific fields when searching on Specific Solr fields 
+     this is done on a Panl collection basis.
 
