@@ -186,10 +186,10 @@ parameters into concise and precise URL paths.
    `/Manufactured by Koh-i-Noor, or Faber-Castell Co./b/` (with a value 
    separator configured to be `, or `).
 
-1. **SEARCH ALL OR SPECIFIC SOLR FIELDS** - Any Solr indexed field can be 
-   selected to be searched on, for example, in the Book Store Walkthrough, 
+1. **SEARCH ALL OR SPECIFIC SOLR FIELDS** - Any Solr field that is analysed can
+   be selected to be searched on, for example, in the Book Store Walkthrough, 
    the user can select to search within the title, the author, the description,
-   or all of them.
+   or all of them. **Also configure the query time boost.** 
 
 1. **FIELD VALUE validation** - By default, Solr can error when an invalid value
    is passed through - for example, if Solr is expecting a numeric value and it

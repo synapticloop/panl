@@ -36,6 +36,12 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+/**
+ * <p>The search fields processor adds information to the Panl JSON response
+ * object about the search fields that are available</p>
+ *
+ * @author synapticloop
+ */
 public class SearchFieldsProcessor extends Processor {
 	public static final String JSON_KEY_QUERY_RESPOND_TO = "query_respond_to";
 
@@ -43,6 +49,13 @@ public class SearchFieldsProcessor extends Processor {
 		super(collectionProperties);
 	}
 
+	/**
+	 *
+	 * @param panlTokenMap The map of LPSE codes to the list of tokens
+	 * @param queryResponse The Solr query response
+	 *
+	 * @return The JSON object with the response object
+	 */
 	@Override public JSONObject processToObject(Map<String, List<LpseToken>> panlTokenMap, QueryResponse queryResponse) {
 		JSONObject jsonObject = new JSONObject();
 		JSONArray jsonArray = new JSONArray();
@@ -75,7 +88,7 @@ public class SearchFieldsProcessor extends Processor {
 		}
 
 		jsonObject.put(JSON_KEY_QUERY_RESPOND_TO, collectionProperties.getFormQueryRespondTo());
-		jsonObject.put("keyword", keyword);
+		jsonObject.put(JSON_KEY_KEYWORD, keyword);
 
 		return jsonObject;
 	}

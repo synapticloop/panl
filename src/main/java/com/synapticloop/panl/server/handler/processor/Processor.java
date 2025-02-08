@@ -58,6 +58,7 @@ public abstract class Processor {
 	public static final String JSON_KEY_INVERSE_URI = "inverse_uri";
 	public static final String JSON_KEY_INVERSE_ENCODED = "inverse_encoded";
 	public static final String JSON_KEY_IS_DESCENDING = "is_descending";
+	public static final String JSON_KEY_KEYWORD = "keyword";
 	public static final String JSON_KEY_MAX = "max";
 	public static final String JSON_KEY_MIN = "min";
 	public static final String JSON_KEY_NAME = "name";
