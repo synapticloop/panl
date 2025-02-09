@@ -7,11 +7,18 @@
 	<field name="stored_field" type="string" indexed="false" stored="true" multiValued="false" />
 	<field name="both_indexed_and_stored_field" type="string" indexed="true" stored="true" multiValued="false" />
 
-	<field name="analysed_indexed_field" type="string" indexed="true" stored="false" multiValued="false" />
-	<field name="analysed_stored_field" type="string" indexed="false" stored="true" multiValued="false" />
-	<field name="analysed_both_field" type="string" indexed="true" stored="true" multiValued="false" />
+	<field name="analysed_indexed_field" type="text_general" indexed="true" stored="false" multiValued="false" />
+	<field name="analysed_stored_field" type="text_general" indexed="false" stored="true" multiValued="false" />
+	<field name="analysed_both_field" type="text_general" indexed="true" stored="true" multiValued="false" />
 
 	<field name="text" type="text_general" indexed="true" stored="false" multiValued="true" />
+
+	<copyField source="indexed_field" dest="text" />
+	<copyField source="stored_field" dest="text" />
+	<copyField source="both_indexed_and_stored_field" dest="text" />
+	<copyField source="analysed_indexed_field" dest="text" />
+	<copyField source="analysed_stored_field" dest="text" />
+	<copyField source="analysed_both_field" dest="text" />
 
 	<uniqueKey>id</uniqueKey>
 
