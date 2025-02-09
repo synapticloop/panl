@@ -4,7 +4,7 @@
 
 	<field name="id" type="string" stored="true" indexed="true" required="true" multiValued="false" />
 
-	<field name="author" type="text_general" indexed="true" stored="true" multiValued="true" />
+	<field name="author" type="string" indexed="true" stored="true" multiValued="true" />
 	<field name="title" type="text_general" indexed="true" stored="true" multiValued="false" />
 	<field name="description" type="text_general" indexed="true" stored="true" multiValued="false" />
 	<field name="book_image" type="string" indexed="false" stored="true" multiValued="false" />
@@ -23,6 +23,7 @@
 	<field name="decade_published" type="pint" indexed="true" stored="false" multiValued="false" />
 	<field name="book_length" type="string" indexed="true" stored="false" multiValued="false" />
 
+	<field name="text_author" type="text_general" indexed="true" stored="true" multiValued="true" />
 	<field name="text" type="text_general" indexed="true" stored="false" multiValued="true" />
 
 	<uniqueKey>id</uniqueKey>
@@ -32,6 +33,8 @@
 	<copyField source="description" dest="text" />
 	<copyField source="genre" dest="text" />
 	<copyField source="series" dest="text" />
+
+	<copyField source="author" dest="text_author" />
 
 
 	<!-- The StrField type is not analyzed, but indexed/stored verbatim. -->
