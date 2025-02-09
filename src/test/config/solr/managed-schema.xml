@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<schema name="testing" version="1.6">
+	<field name="_version_" type="plong" indexed="false" stored="false"/>
+	<field name="id" type="string" stored="true" indexed="true" required="true" multiValued="false" />
+
+	<field name="indexed_field" type="string" indexed="true" stored="false" multiValued="false" />
+	<field name="stored_field" type="string" indexed="false" stored="true" multiValued="false" />
+	<field name="both_indexed_and_stored_field" type="string" indexed="true" stored="true" multiValued="false" />
+
+	<field name="analysed_indexed_field" type="string" indexed="true" stored="false" multiValued="false" />
+	<field name="analysed_stored_field" type="string" indexed="false" stored="true" multiValued="false" />
+	<field name="analysed_both_field" type="string" indexed="true" stored="true" multiValued="false" />
+
+	<field name="text" type="text_general" indexed="true" stored="false" multiValued="true" />
+
+	<uniqueKey>id</uniqueKey>
+
+	<fieldType name="string" class="solr.StrField" sortMissingLast="true" />
+	<fieldType name="plong" class="solr.LongPointField" docValues="true"/>
+
+	<fieldType name="text_general" class="solr.TextField" positionIncrementGap="100">
+		<analyzer type="index">
+			<tokenizer name="standard"/>
+			<filter name="stop" ignoreCase="true" words="stopwords.txt" />
+			<filter name="lowercase"/>
+		</analyzer>
+		<analyzer type="query">
+			<tokenizer name="standard"/>
+			<filter name="stop" ignoreCase="true" words="stopwords.txt" />
+			<filter name="synonymGraph" synonyms="synonyms.txt" ignoreCase="true" expand="true"/>
+			<filter name="lowercase"/>
+		</analyzer>
+	</fieldType>
+</schema>
