@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<schema name="testing" version="1.6">
+<schema name="testing" version="1.7">
 	<field name="_version_" type="plong" indexed="false" stored="false"/>
 	<field name="id" type="string" stored="true" indexed="true" required="true" multiValued="false" />
 
