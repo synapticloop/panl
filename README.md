@@ -44,7 +44,7 @@ out._**
 | `SOLR PANL 9`       | [![CircleCI](https://dl.circleci.com/status-badge/img/circleci/3Y1eqqe4mcvtSZuzJnQ3tJ/DyFKUm7c7AoLa1wHmRjAnf/tree/solr-panl-9.svg?style=shield)](https://dl.circleci.com/status-badge/redirect/circleci/3Y1eqqe4mcvtSZuzJnQ3tJ/DyFKUm7c7AoLa1wHmRjAnf/tree/solr-panl-9)             | Panl version for integrating with Solr version 9              |
 | `SOLR PANL 8`       | [![CircleCI](https://dl.circleci.com/status-badge/img/circleci/3Y1eqqe4mcvtSZuzJnQ3tJ/DyFKUm7c7AoLa1wHmRjAnf/tree/solr-panl-8.svg?style=shield)](https://dl.circleci.com/status-badge/redirect/circleci/3Y1eqqe4mcvtSZuzJnQ3tJ/DyFKUm7c7AoLa1wHmRjAnf/tree/solr-panl-8)             | Panl version for integrating with Solr version 8              |
 | `SOLR PANL 7`       | [![CircleCI](https://dl.circleci.com/status-badge/img/circleci/3Y1eqqe4mcvtSZuzJnQ3tJ/DyFKUm7c7AoLa1wHmRjAnf/tree/solr-panl-7.svg?style=shield)](https://dl.circleci.com/status-badge/redirect/circleci/3Y1eqqe4mcvtSZuzJnQ3tJ/DyFKUm7c7AoLa1wHmRjAnf/tree/solr-panl-7)             | Panl version for integrating with Solr version 7              |
-| `billowing-feather` | [![CircleCI](https://dl.circleci.com/status-badge/img/circleci/3Y1eqqe4mcvtSZuzJnQ3tJ/DyFKUm7c7AoLa1wHmRjAnf/tree/billowing-feather.svg?style=shield)](https://dl.circleci.com/status-badge/redirect/circleci/3Y1eqqe4mcvtSZuzJnQ3tJ/DyFKUm7c7AoLa1wHmRjAnf/tree/billowing-feather) | Panl development release version 2.0.0                        |
+| `billowing-feather` | [![CircleCI](https://dl.circleci.<br/>com/status-badge/img/circleci/3Y1eqqe4mcvtSZuzJnQ3tJ/DyFKUm7c7AoLa1wHmRjAnf/tree/billowing-feather.svg?style=shield)](https://dl.circleci.com/status-badge/redirect/circleci/3Y1eqqe4mcvtSZuzJnQ3tJ/DyFKUm7c7AoLa1wHmRjAnf/tree/billowing-feather) | Panl development release version 2.0.0 **(BREAKING CHANGES)** |
 
 > We _always_ recommend that you use the most recently available release which
 > contains bug fixes and new functionality and is _generally_ backwards
@@ -78,6 +78,13 @@ updates.
 3. Done.
 
 ## Upgrading the Panl Server Release
+
+> **IMPORTANT !!!** 
+> 
+> Version 2.0.0 is a breaking change with version 1.\*.\*,
+> 
+> Both the LPSE URL and the JSON response have changes.
+
 
 Panl is designed to be a drop in replacement for your current version. Although
 backwards compatibility is always the highest priority, do keep an eye out 
@@ -1018,4 +1025,8 @@ number.
       have a replacement of 'Coming Soon' which would be translate to 
       'Next 3 months' and the RANGE Facet could have a replacement of 
       'Inexpensive' to translate to 'From 5 to 10 dollars'
+1. Until property (Medium Priority)
+   - Display this facet 'until' another facet within the list of 'until' facets 
+   - is selected.  This is the opposite of the panl.when.<lpse_code>.
+
 
