@@ -135,7 +135,7 @@ public abstract class BasePanlField {
 
 			stringBuilder.append(getAdditionalProperties());
 
-			stringBuilder.append("# If you want this facet to only appear if another facet has already been \n")
+			stringBuilder.append("# If you want this facet to only appear if another facet has already been\n")
 			             .append("# passed through then add the LPSE code(s) in a comma separated list below\n")
 			             .append(String.format("#panl.when.%s=\n", lpseCode));
 		}
