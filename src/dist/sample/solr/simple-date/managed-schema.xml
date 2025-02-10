@@ -130,11 +130,6 @@
 	<copyField source="text_date" dest="text" />
 
 
-	<!-- The StrField type is not analyzed, but indexed/stored verbatim. -->
-	<fieldType name="string" class="solr.StrField" sortMissingLast="true" />
-	<fieldType name="strings" class="solr.StrField" sortMissingLast="true" multiValued="true" docValues="true" />
-
-
   <!-- field type definitions. The "name" attribute is
 		 just a label to be used by field definitions.  The "class"
 		 attribute and any other attributes determine the real
