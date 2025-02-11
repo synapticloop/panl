@@ -23,21 +23,31 @@ See the file `src/main/resources/gradle.properties` and update the following pro
 
 The Synapticloop Panl project uses `major.minor.micro` versioning, the meaning of which:
 
-- `major` - the major version will increment when there is a breaking change to the Panl LPSE URL.  Upon increment of the major version, both the minor and micro version number will be reset to 0 (zero).
-- `minor` - the micro version will increment when there is additional functionality added to the release.  Upon increment of the minor version, the micro number will be reset to 0 (zero).
+- `major` - the major version will increment when there is a breaking change 
+  to the Panl LPSE URL.  Upon increment of the major version, both the minor 
+  and micro version number will be reset to 0 (zero).
+- `minor` - the minor  version will increment when there is additional 
+  functionality added to the release.  Upon increment of the minor version, the 
+  micro number will be reset to 0 (zero).
 - `micro` - the micro version will increment for bug fixes only.
 
-The book version matches the version of the Synapticloop Project version.  Any changes to the book without any changes to the codebase will be updated on the `main` branch and the `ghpages` based website will be updated.
+The book version matches the version of the Synapticloop Project version.  Any 
+changes to the book without any changes to the codebase will be updated on 
+the `main` branch and the `ghpages` based website will be updated.
 
 The Panl releases will not reflect any book updates.
 
 ### b. Run all tests
+
+> **NOTE:** you must have the Solr server with all data indexed running
 
 This includes both the unit tests `./gradlew test` and the integration tests `./gradlew testIntegration`
 
 The integration tests are the best tests to run as they will ensure that specific facets will be able to be removed and added, inverted etc.
 
 ### c. Run the site spider integration tests
+
+> **NOTE:** you must have the Solr server with all data indexed running
 
 This will take a bit of time as it tests a lot of live URLs
 
@@ -50,8 +60,9 @@ This may take quite some time....
 The following parts need to be updated:
 
 1. The table of branch release status
-   2. remove old branches (leave `MAIN`, `SOLR PANL 9`, `SOLR PANL 8`, `SOLR PANL 7`)
-   3. add new branch `hidden-summer` and get the circle-ci badges for the build
+   1. remove old branches (leave `MAIN`, `SOLR PANL 9`, `SOLR PANL 8`, 
+      `SOLR PANL 7`)
+   2. add new branch `hidden-summer` and get the circle-ci badges for the build
 2. Ensure that the Section "_Why Synapticloop Panl?_" is up-to-date 
 2. Ensure that the Section "_Additional Panl Niceties_" is up-to-date 
 3. Update the In-built Panl web app images (see `src/main/docs` for images) and the descriptions 
@@ -59,14 +70,15 @@ The following parts need to be updated:
 
 ### e. Don't forget the `Getting Started With Synapticloop Panl` 
 
-Update this as you you go along.
+Update this as you go along.
 
 > Create a copy of the file with the previous version number - this is an archive.
 
 ## 3. Merge back the changes
 
-> Ensure that you run both unit and integration tests for all branches.  You will need to spin up the latest version for 
-> each of the Solr release versions (and possibly reindex the data).
+> Ensure that you run both unit and integration tests for all branches.  You 
+> will need to spin up the latest version for each of the Solr release 
+> versions (and possibly reindex the data).
 
 <img src="src/docs/panl-dev-branching-strategy.png" title="Flowchart of the branching strategy" />
 
