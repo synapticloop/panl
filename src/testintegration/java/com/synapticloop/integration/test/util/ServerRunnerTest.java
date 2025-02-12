@@ -28,16 +28,9 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.synapticloop.integration.BeforeAllExtension;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import panl.Root;
-
-import java.net.URL;
-
-import static org.junit.jupiter.api.Assertions.assertFalse;
 
 @ExtendWith({BeforeAllExtension.class})
 public class ServerRunnerTest {
-	private ObjectMapper mapper = new ObjectMapper();
-
 	@Test public void runServerTest() throws Exception {
 		while(true) {
 			Thread.sleep(1000000);

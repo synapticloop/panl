@@ -1,18 +1,5 @@
 package com.synapticloop.integration.test.unless;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.synapticloop.integration.BeforeAllExtension;
-import com.synapticloop.integration.test.util.Helper;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import panl.Root;
-import panl.response.panl.available.Facet;
-
-import java.io.IOException;
-import java.net.URL;
-
-import static org.junit.jupiter.api.Assertions.*;
-
 /*
  * Copyright (c) 2008-2025 synapticloop.
  *
@@ -36,6 +23,19 @@ import static org.junit.jupiter.api.Assertions.*;
  * FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
  * IN THE SOFTWARE.
  */
+
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.synapticloop.integration.BeforeAllExtension;
+import com.synapticloop.integration.test.util.Helper;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import panl.Root;
+import panl.response.panl.available.Facet;
+
+import java.io.IOException;
+import java.net.URL;
+
+import static org.junit.jupiter.api.Assertions.*;
 
 @ExtendWith({BeforeAllExtension.class})
 public class UnlessTest {
