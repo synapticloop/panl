@@ -83,7 +83,6 @@ public class Root {
 	@JsonIgnore public Object configuration;
 	@JsonIgnore public Object parameters;
 
-
 	public Response response;
 	public Panl panl;
 	public boolean error;

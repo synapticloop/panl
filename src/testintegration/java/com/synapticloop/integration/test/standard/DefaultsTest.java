@@ -1,3 +1,14 @@
+package com.synapticloop.integration.test.standard;import com.fasterxml.jackson.databind.ObjectMapper;
+import com.synapticloop.integration.BeforeAllExtension;
+import org.junit.jupiter.api.Test;
+import panl.Root;
+import org.junit.jupiter.api.extension.ExtendWith;
+
+import java.io.IOException;
+import java.net.URL;
+
+import static org.junit.jupiter.api.Assertions.*;
+
 /*
  * Copyright (c) 2008-2025 synapticloop.
  *
@@ -22,16 +33,6 @@
  * IN THE SOFTWARE.
  */
 
-package com.synapticloop.integration.test.standard;import com.fasterxml.jackson.databind.ObjectMapper;
-import com.synapticloop.integration.BeforeAllExtension;
-import org.junit.jupiter.api.Test;
-import panl.Root;
-import org.junit.jupiter.api.extension.ExtendWith;
-
-import java.io.IOException;
-import java.net.URL;
-
-import static org.junit.jupiter.api.Assertions.*;
 
 @ExtendWith({BeforeAllExtension.class})
 public class DefaultsTest {

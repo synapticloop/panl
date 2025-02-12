@@ -61,4 +61,5 @@ public class Facet {
 	public boolean is_or_facet;
 	public boolean is_multivalue;
 	public boolean facet_limit;
+	public boolean checkbox_value;
 }
