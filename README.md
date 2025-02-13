@@ -742,6 +742,7 @@ number.
       `solr.numrows.default`
     - Added in BOOLEAN checkbox functionality
     - Ability to select specific search fields added.
+    - Added `panl.unless.<lpse_code>` fields
 
 
 - **Bug fixes**

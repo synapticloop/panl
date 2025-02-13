@@ -170,6 +170,11 @@ public class CollectionProperties {
 	private final Map<String, PanlBooleanFacetField> LPSE_CODE_BOOLEAN_FACET_MAP = new HashMap<>();
 
 	private final Map<String, Set<String>> LPSE_CODE_WHEN_MAP = new HashMap<>();
+	/**
+	 * <p>This is the unless map, which is keyed on the unless LPSE code, the values
+	 * are the LPSE codes which will not appear if the unless LPSE code appears</p>
+	 */
+	private final Map<String, Set<String>> LPSE_CODE_UNLESS_MAP = new HashMap<>();
 	private final Map<String, String> SOLR_NAME_TO_LPSE_CODE_MAP = new HashMap<>();
 
 	private final Set<String> PANL_CODE_OR_FIELDS = new HashSet<>();
@@ -624,6 +629,30 @@ public class CollectionProperties {
 					}
 				}
 			}
+
+			String lpseUnless = properties.getProperty(PROPERTY_KEY_PANL_UNLESS + lpseCode);
+			if (null != lpseUnless) {
+				String[] splits = lpseUnless.split(",");
+				for(String split : splits) {
+					String trim = split.trim();
+
+					if (!trim.isEmpty()) {
+
+						if (!LPSE_CODE_UNLESS_MAP.containsKey(lpseCode)) {
+							LPSE_CODE_UNLESS_MAP.put(lpseCode, new HashSet<>());
+						}
+
+						LPSE_CODE_UNLESS_MAP.get(lpseCode).add(trim);
+
+						//						if (!LPSE_CODE_UNLESS_MAP.containsKey(trim)) {
+//							LPSE_CODE_UNLESS_MAP.put(trim, new HashSet<>());
+//						}
+//
+//						LPSE_CODE_UNLESS_MAP.get(trim).add(lpseCode);
+					}
+				}
+			}
+
 			// we need to determine whether it is an OR facet
 
 			FACET_FIELDS.add(facetField);
@@ -982,14 +1011,20 @@ public class CollectionProperties {
 
 	/**
 	 * <p>Get the facet fields that should be passed through to Solr, ensuring
-	 * that any hierarchical lpse codes filter out those that are not supposed to be retrieved.</p>
+	 * that any hierarchical (i.e. <code>panl.when.&lt;lpse_code&gt;</code>) lpse
+	 * codes are not returned, and unless lpse codes
+	 * (i.e. <code>panl.when.&lt;lpse_code&gt;</code>) are returned unless it
+	 * shouldn't be.</p>
 	 *
 	 * @param lpseTokens The current active LPSE tokens
 	 *
-	 * @return The array of solr fields to facet on
+	 * @return The array of solr fields to facet on including when codes and
+	 *   excluding unless lpse codes
 	 */
-	public String[] getWhenSolrFacetFields(List<LpseToken> lpseTokens) {
-		if (LPSE_CODE_WHEN_MAP.isEmpty()) {
+	public String[] getWhenUnlessSolrFacetFields(List<LpseToken> lpseTokens) {
+		// if there are no conditions on the retrieval of facets, then continue
+		if (LPSE_CODE_WHEN_MAP.isEmpty() && LPSE_CODE_UNLESS_MAP.isEmpty() ) {
+			// return all of the facet fields
 			return (solrFacetFields);
 		}
 
@@ -998,29 +1033,59 @@ public class CollectionProperties {
 			activeLpseCodes.add(lpseToken.getLpseCode());
 		}
 
+		// now go through the facet fields and add them all - in some cases there
+		// will be a
+		//   - when facet - so we don't add it until another facet in the when list
+		//     has been added
+		//   - unless facet - we will add it unless a previous facet has been chosen
+		//     from the unless list
 		List<String> returnedFacetFields = new ArrayList<>();
 		for(String solrFacetFieldName : solrFacetFields) {
 			String lpseCode = SOLR_NAME_TO_LPSE_CODE_MAP.get(solrFacetFieldName);
 			if (null == lpseCode) {
-				// shouldn't happen, but doesn't matter
+				// shouldn't happen, but doesn't matter - this may error on the Solr
+				// side - which is unlikely as you cannot register a field without a
+				// LPSE code
 				returnedFacetFields.add(solrFacetFieldName);
 			} else {
 				// now we need to lookup the lpseCode in the WHEN map
 				if (LPSE_CODE_WHEN_MAP.containsKey(lpseCode)) {
 					// do we have the 'when' code in the token map?
 					for(String s : LPSE_CODE_WHEN_MAP.get(lpseCode)) {
+						// TODO - union/intersection of sets is probably a better way to go
 						if (activeLpseCodes.contains(s)) {
-							returnedFacetFields.add(solrFacetFieldName);
+							// now we need to check this lpse code to ensure it isn't in an
+							// unless state
+							if(LPSE_CODE_UNLESS_MAP.containsKey(lpseCode)) {
+								// have a look to see whether this is in the active facets
+								Set<String> lookupUnless = new HashSet<>(activeLpseCodes);
+								lookupUnless.retainAll(LPSE_CODE_UNLESS_MAP.get(lpseCode));
+								if(lookupUnless.isEmpty()) {
+									returnedFacetFields.add(solrFacetFieldName);
+								}
+							} else {
+								returnedFacetFields.add(solrFacetFieldName);
+							}
 							break;
 						}
 					}
 				} else {
-					returnedFacetFields.add(solrFacetFieldName);
+					if(LPSE_CODE_UNLESS_MAP.containsKey(lpseCode)) {
+						// have a look to see whether this is in the active facets
+						Set<String> lookupUnless = new HashSet<>(activeLpseCodes);
+						lookupUnless.retainAll(LPSE_CODE_UNLESS_MAP.get(lpseCode));
+						if(lookupUnless.isEmpty()) {
+							returnedFacetFields.add(solrFacetFieldName);
+						}
+					} else {
+						returnedFacetFields.add(solrFacetFieldName);
+					}
 				}
 			}
 		}
 		return (returnedFacetFields.toArray(new String[0]));
 	}
+
 
 	/**
 	 * <p>Return whether this is a valid sort field.</p>
@@ -1154,6 +1219,14 @@ public class CollectionProperties {
 		return (lpseFields);
 	}
 
+	/**
+	 * <p>Return the BaseField for a specific LPSE code.  This will return null
+	 * if the lpseCode is not registered.</p>
+	 *
+	 * @param lpseCode The LPSE code to look up.
+	 *
+	 * @return The BaseField for the LPSE code (or null if it doesn't exist)
+	 */
 	public BaseField getLpseField(String lpseCode) {
 		return (lpseFieldLookup.get(lpseCode));
 	}
@@ -1315,6 +1388,5 @@ public class CollectionProperties {
 			return("");
 		}
 	}
-
 }
 

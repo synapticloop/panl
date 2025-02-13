@@ -171,15 +171,19 @@ public class CollectionRequestHandler {
 	 *
 	 * @param uri The URI of the request
 	 * @param query The query parameter
-	 * @param context The passed in HttpContext for this request
+	 * @param context The passed in HttpContext for this request - this will only
+	 *   be used for the more facets request
 	 *
 	 * @return The string body of the request
 	 *
 	 * @throws PanlServerException If there was an error parsing or connecting to
 	 * the Solr server.
 	 */
-	public String handleRequest(String uri, String query,
-		HttpContext context) throws PanlServerException, PanlNotFoundException {
+	public String handleRequest(
+			String uri,
+			String query,
+			HttpContext context) throws PanlServerException, PanlNotFoundException {
+
 		long startNanos = System.nanoTime();
 
 		// check to ensure that the more facets LPSE code is correct
@@ -278,13 +282,17 @@ public class CollectionRequestHandler {
 			// this may be overridden by the lpse status
 			solrQuery.setRows(collectionProperties.getNumResultsPerPage());
 
-			// At this point we are either going to get all of the facet fields that
+			// At this point we are either going to get all facet fields that
 			// have a when point, or we are just looking for more facets for a single
 			// one
 
 
 			if (null != contextLpseCode) {
+				// we are looking for 'more facets', so we only need this one
+				isMoreFacets = true;
+
 				solrQuery.addFacetField(collectionProperties.getSolrFieldNameFromLpseCode(contextLpseCode));
+
 				// now we also want to order them as well - as by default Solr will
 				// order them by index rather than count - which may not be what the
 				// user wants
@@ -292,11 +300,11 @@ public class CollectionRequestHandler {
 				if (!lpseField.getIsFacetSortByIndex()) {
 					solrQuery.add("f." + lpseField.getSolrFieldName() + ".facet.sort", "count");
 				}
-				isMoreFacets = true;
 			} else {
 				// no we need to go through all tokens and only return the ones that we
 				// need to be displayed
-				solrQuery.addFacetField(collectionProperties.getWhenSolrFacetFields(lpseTokens));
+
+				solrQuery.addFacetField(collectionProperties.getWhenUnlessSolrFacetFields(lpseTokens));
 				for (PanlFacetField facetIndexSortField : collectionProperties.getFacetIndexSortFields()) {
 					solrQuery.add("f." + facetIndexSortField.getSolrFieldName() + ".facet.sort", "index");
 				}

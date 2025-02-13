@@ -48,10 +48,11 @@
 
 package panl.response.panl;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import panl.response.panl.response.Doc;
 
 public class Response {
-	public Doc[] docs;
+	@JsonIgnore public Doc[] docs;
 	public long numFound;
 	public long start;
 	public long maxScore;

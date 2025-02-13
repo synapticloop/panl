@@ -82,6 +82,7 @@ public abstract class BaseField {
 	public static final String PROPERTY_KEY_PANL_RANGE_INFIX = "panl.range.infix.";
 	public static final String PROPERTY_KEY_PANL_SUFFIX = "panl.suffix.";
 	public static final String PROPERTY_KEY_PANL_TYPE = "panl.type.";
+	public static final String PROPERTY_KEY_PANL_UNLESS = "panl.unless.";
 	public static final String PROPERTY_KEY_PANL_WHEN = "panl.when.";
 
 	public static final String TYPE_SOLR_BOOL_FIELD = "solr.BoolField";

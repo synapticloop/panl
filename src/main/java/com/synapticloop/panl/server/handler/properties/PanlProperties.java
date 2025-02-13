@@ -50,22 +50,45 @@ public class PanlProperties {
 	public static final String DEFAULT_SOLR_URL = "http://localhost:8983/solr";
 	public static final String DEFAULT_FALSE = "false";
 	public static final String DEFAULT_TRUE = "true";
-	public static final String PROPERTY_KEY_PANL_COLLECTIONS = "panl.collections";
 	public static final String PROPERTY_KEY_PREFIX_PANL_COLLECTION = "panl.collection.";
 
+	/**
+	 * <p>The SolrJ client to use.</p>
+	 */
 	private final String solrjClient;
+	/**
+	 * <p>The Solr search server URL(s) to use, which may include a zookeeper
+	 * prfix</p>
+	 */
 	private final String solrSearchServerUrl;
 
+	/**
+	 * <p>Whether the testing URLs are enabled.</p>
+	 */
 	private final boolean hasPanlResultsTestingUrls;
+	/**
+	 * <p>Whether the testing URLs are enabled.</p>
+	 */
 	private final boolean panlStatus404Verbose;
+	/**
+	 * <p>Whether the testing URLs are enabled.</p>
+	 */
 	private final boolean panlStatus500Verbose;
+	/**
+	 * <p>Whether to use a decimal point as the delimiter between the integer and
+	 * fractional parts.  (Used for internationalisation)</p>
+	 */
 	private static boolean isDecimalPoint = true;
+	/**
+	 * <p>A map of the </p>
+	 */
 	private final Map<String, List<String>> panlCollections = new HashMap<>();
 
 	/**
 	 * <p>Instantiate the Panl properties which defines what Solr server to
-	 * connect to, the SolrJ client, whether to use verbose messaging for 404 and/or 500 error messages, and whether to
-	 * serve the Panl results testing URL handlers.</p>
+	 * connect to, the SolrJ client, whether to use verbose messaging for 404
+	 * and/or 500 error messages, and whether to serve the Panl results testing
+	 * URL handlers.</p>
 	 *
 	 * @param properties The properties file
 	 */
