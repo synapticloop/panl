@@ -99,7 +99,7 @@ package.
   HTML): [https://synapticloop.github.io/panl/](https://synapticloop.github.io/panl/)
 - Offline book (
   PDF): [Getting Started With Synapticloop Panl.pdf](https://github.com/synapticloop/panl/blob/main/src/dist/book/Getting%20Started%20With%20Synapticloop%20Panl.pdf)
-  _(over 400 pages of documentation, written with you, the integrator, in mind)_
+  _(over 500 pages of documentation, written with you, the integrator, in mind)_
 
 Both of the book links above refer to Solr Panl integration 9 with instructions
 for setting up and running earlier versions of Solr.
