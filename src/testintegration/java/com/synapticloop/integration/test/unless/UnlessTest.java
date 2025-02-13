@@ -79,6 +79,8 @@ public class UnlessTest {
 
 		// it should NOT appear
 		assertNull(genre);
+
+		// this is an or facet so it will still appear
 		assertNotNull(aToZIndex);
 		assertNull(isPaperback);
 	}
