@@ -75,6 +75,7 @@ public class QueryLpseToken extends LpseToken {
 					lpseToken = lpseTokeniser.nextToken();
 					if (lpseToken.equals(")")) {
 						foundCorrectTokens = true;
+						break;
 					} else {
 						queryLpseCodes.append(lpseToken);
 					}

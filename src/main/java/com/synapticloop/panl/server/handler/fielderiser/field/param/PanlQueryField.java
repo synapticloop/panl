@@ -52,7 +52,30 @@ public class PanlQueryField extends BaseField {
 	 * @param solrQuery The Solr Query to apply to
 	 * @param lpseTokenList The list of tokens
 	 */
-	public void applyToQueryInternal(SolrQuery solrQuery, List<LpseToken> lpseTokenList, CollectionProperties collectionProperties) {
+	@Override public void applyToQueryInternal(SolrQuery solrQuery, List<LpseToken> lpseTokenList, CollectionProperties collectionProperties) {
+		applyOperandToQuery(solrQuery, lpseTokenList, collectionProperties.getSolrDefaultQueryOperand(), collectionProperties);
+	}
+
+	@Override protected void applyToQueryInternalOperand(
+			SolrQuery solrQuery,
+			List<LpseToken> lpseTokenList,
+			List<LpseToken> queryLpseTokenList,
+			CollectionProperties collectionProperties) {
+
+		if(!queryLpseTokenList.isEmpty()) {
+			String value = queryLpseTokenList.get(0).getValue().equals("+") ? "AND" : " OR";
+			applyOperandToQuery(solrQuery, lpseTokenList, value, collectionProperties);
+		} else {
+			applyOperandToQuery(solrQuery, lpseTokenList, collectionProperties.getSolrDefaultQueryOperand(), collectionProperties);
+		}
+	}
+
+	private void applyOperandToQuery(
+			SolrQuery solrQuery,
+			List<LpseToken> lpseTokenList,
+			String queryOperand,
+			CollectionProperties collectionProperties) {
+
 		if(!lpseTokenList.isEmpty()) {
 			StringBuilder stringBuilder = new StringBuilder();
 			boolean first = true;
@@ -67,7 +90,7 @@ public class PanlQueryField extends BaseField {
 				for (String searchableLpseField : searchableLpseFields) {
 					if(!first) {
 						stringBuilder.append(" ")
-								.append(collectionProperties.getSolrDefaultQueryOperand())
+								.append(queryOperand)
 								.append(" ");
 					}
 					first = false;
