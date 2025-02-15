@@ -63,7 +63,7 @@ public class PanlQueryField extends BaseField {
 			CollectionProperties collectionProperties) {
 
 		if(!queryLpseTokenList.isEmpty()) {
-			String value = queryLpseTokenList.get(0).getValue().equals("+") ? "AND" : " OR";
+			String value = queryLpseTokenList.get(0).getValue().equals("+") ? "AND" : "OR";
 			applyOperandToQuery(solrQuery, lpseTokenList, value, collectionProperties);
 		} else {
 			applyOperandToQuery(solrQuery, lpseTokenList, collectionProperties.getSolrDefaultQueryOperand(), collectionProperties);
@@ -78,28 +78,52 @@ public class PanlQueryField extends BaseField {
 
 		if(!lpseTokenList.isEmpty()) {
 			StringBuilder stringBuilder = new StringBuilder();
-			boolean first = true;
 			QueryLpseToken queryLpseToken = (QueryLpseToken)lpseTokenList.get(0);
 			List<String> searchableLpseFields = queryLpseToken.getSearchableLpseFields();
 			if(searchableLpseFields.isEmpty()) {
-				// just do the default search as per usual
-				solrQuery.setQuery("\"" + queryLpseToken.getValue() + "\"");
+				// just do the default search as per usual - need to split on the
+				// default query operand
+				boolean isFirst = true;
+				StringBuilder querySb = new StringBuilder();
+				for (String queryValue : queryLpseToken.getValue().split(" ")) {
+					if(!isFirst) {
+						querySb.append(" ");
+					}
+
+					if(!queryValue.trim().isEmpty()) {
+						querySb.append("\"" + queryValue + "\"");
+						isFirst = false;
+					}
+				}
+
+				solrQuery.setQuery(querySb.toString());
 			} else {
+				boolean isFirst = true;
 				// There have been passed through queries for specific search fields,
 				// so we add them to the query, using the default query operator
 				for (String searchableLpseField : searchableLpseFields) {
-					if(!first) {
+					if(!isFirst) {
 						stringBuilder.append(" ")
 								.append(queryOperand)
 								.append(" ");
 					}
-					first = false;
-					stringBuilder
-							.append(searchableLpseField)
-							.append(":\"")
-							.append(queryLpseToken.getValue())
-							.append("\"")
-							.append(collectionProperties.getSpecificSearchBoost(searchableLpseField));
+					isFirst = false;
+					boolean isFirstValue = true;
+					for (String queryLpseValue : queryLpseToken.getValue().split(" ")) {
+						if(!isFirstValue) {
+							stringBuilder.append(" " + queryOperand + " ");
+						}
+						if(!queryLpseValue.trim().isEmpty()) {
+							stringBuilder
+									.append(searchableLpseField)
+									.append(":\"")
+									.append(queryLpseValue)
+									.append("\"")
+									.append(collectionProperties.getSpecificSearchBoost(searchableLpseField));
+							isFirstValue = false;
+						}
+
+					}
 				}
 				solrQuery.setQuery(stringBuilder.toString());
 			}
