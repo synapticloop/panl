@@ -743,6 +743,8 @@ number.
     - Added in BOOLEAN checkbox functionality
     - Ability to select specific search fields added.
     - Added `panl.unless.<lpse_code>` fields
+    - 'Fixed' the keyword search for multiple word so that they use the defined
+      `q.op` parameter for both default and Specific Solr Search Fields.
 
 
 - **Bug fixes**
