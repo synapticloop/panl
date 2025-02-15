@@ -134,8 +134,9 @@
   <field name="decade_published" type="pint" indexed="true" stored="false" multiValued="false" />
   <field name="book_length" type="string" indexed="true" stored="false" multiValued="false" />
 
-  <field name="text_author" type="text_general" indexed="true" stored="true" multiValued="true" />
   <field name="text" type="text_general" indexed="true" stored="false" multiValued="true" />
+
+  <field name="text_author" type="text_general" indexed="true" stored="true" multiValued="true" />
 
   <uniqueKey>id</uniqueKey>
 
