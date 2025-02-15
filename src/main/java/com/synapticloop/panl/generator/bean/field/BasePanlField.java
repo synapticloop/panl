@@ -119,7 +119,7 @@ public abstract class BasePanlField {
 				    .append("# so that single page search can be generated properly.  You __SHOULD_NOT___\n")
 				    .append("# change this unless the underlying Solr schema changes\n")
 				    .append(String.format("panl.multivalue.%s=%b\n", lpseCode, isMultiValued))
-						.append("# If you want to have a mult-value separator enabled, uncomment the following\n")
+						.append("# If you want to have a multi-value separator enabled, uncomment the following\n")
 						.append("# property and set it to any string.\n")
 						.append(String.format("#panl.multivalue.separator.%s=,\n", lpseCode))
 				;
