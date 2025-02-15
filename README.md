@@ -759,6 +759,7 @@ number.
       selected item, and other selections would erroneously add an infix
       designator.
     - Fixed the URL path encoding
+    - Fixed bug in lookahead handler with not properly encoding queries
 
 
 - **Code Changes**

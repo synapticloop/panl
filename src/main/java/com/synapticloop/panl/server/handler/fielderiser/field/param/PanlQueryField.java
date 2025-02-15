@@ -85,13 +85,15 @@ public class PanlQueryField extends BaseField {
 				// default query operand
 				boolean isFirst = true;
 				StringBuilder querySb = new StringBuilder();
-				for (String queryValue : queryLpseToken.getValue().split(" ")) {
+				for (String queryValue : parseKeywords(queryLpseToken.getValue())) {
 					if(!isFirst) {
 						querySb.append(" ");
 					}
 
 					if(!queryValue.trim().isEmpty()) {
-						querySb.append("\"" + queryValue + "\"");
+						querySb.append("\"")
+						       .append(queryValue)
+						       .append("\"");
 						isFirst = false;
 					}
 				}
@@ -109,7 +111,7 @@ public class PanlQueryField extends BaseField {
 					}
 					isFirst = false;
 					boolean isFirstValue = true;
-					for (String queryLpseValue : queryLpseToken.getValue().split(" ")) {
+					for (String queryLpseValue : parseKeywords(queryLpseToken.getValue())) {
 						if(!isFirstValue) {
 							stringBuilder.append(" " + queryOperand + " ");
 						}
@@ -128,6 +130,62 @@ public class PanlQueryField extends BaseField {
 				solrQuery.setQuery(stringBuilder.toString());
 			}
 		}
+	}
+
+	/**
+	 * <p>Get the keyword(s) from the passed in value including if there are
+	 * quotation marks.</p>
+	 *
+	 * @param queryValue The query LPSE token value
+	 *
+	 * @return The list of keywords
+	 */
+	public static List<String> parseKeywords(String queryValue) {
+		// TODO - this should be refactored somewhere else
+		List<String> keywordPhrases = new ArrayList<>();
+		StringTokenizer stringTokenizer = new StringTokenizer(queryValue, "\" ", true);
+		boolean isInQuotes = false;
+		StringBuilder keywordPhrase = new StringBuilder();
+
+		while (stringTokenizer.hasMoreTokens()) {
+			String token = stringTokenizer.nextToken();
+			switch (token) {
+				case "\"":
+					if(isInQuotes) {
+						// if we are currently in quotes, we are at the end of the quote, add
+						// the stringBuffer contents to the keywordPhrases list
+						if(!keywordPhrase.toString().trim().isEmpty()) {
+							keywordPhrases.add(keywordPhrase.toString());
+						}
+						// clear the stringbuilder
+						keywordPhrase.setLength(0);
+					}
+					isInQuotes = !isInQuotes;
+					break;
+				case " ":
+					if(isInQuotes) {
+						// add the space to the stringbuilder
+						keywordPhrase.append(" ");
+					}
+					break;
+				default:
+					if(isInQuotes) {
+						keywordPhrase.append(token);
+					} else {
+						// just add it to thew list
+						keywordPhrases.add(token);
+					}
+			}
+		}
+
+		// maybe we are still in quotes and haven't finished because the user didn't
+		// end the quotation mark...
+
+		if(keywordPhrase.length() > 0) {
+			keywordPhrases.add(keywordPhrase.toString());
+		}
+
+		return(keywordPhrases);
 	}
 
 	@Override public Logger getLogger() {

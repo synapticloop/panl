@@ -45,12 +45,18 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.ByteArrayOutputStream;
+import java.io.UnsupportedEncodingException;
 import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 
 public class URLHelper {
+
+	public static String encodeURLParameter(String parameter) {
+		return(URLEncoder.encode(parameter, StandardCharsets.UTF_8));
+	}
 
 	/**
 	 * Encode the given source into an encoded String using the rules specified

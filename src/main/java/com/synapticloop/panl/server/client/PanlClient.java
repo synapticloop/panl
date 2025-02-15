@@ -26,6 +26,7 @@ package com.synapticloop.panl.server.client;
 
 import com.synapticloop.panl.server.handler.properties.PanlProperties;
 import com.synapticloop.panl.server.handler.properties.CollectionProperties;
+import com.synapticloop.panl.util.URLHelper;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.utils.URLEncodedUtils;
 import org.apache.solr.client.solrj.SolrClient;
@@ -71,24 +72,41 @@ public abstract class PanlClient {
 	public abstract SolrClient getClient();
 
 	/**
-	 * <p>Return the solr query string from the URL - i.e. in the normal GET
-	 * method for parameters <code>q=search query</code></p>
+	 * <p>Return the solr queryParameterString string from the URL - i.e. in the normal GET
+	 * method for parameters <code>q=search queryParameterString</code></p>
 	 *
 	 * <p>The key __MUST__ always be <code>q</code></p>
 	 *
-	 * @param query The query string
+	 * @param queryParameterString The queryParameterString string
 	 *
-	 * @return The Solr query with the query set
+	 * @return The Solr queryParameterString with the queryParameterString set
 	 */
-	public SolrQuery getQuery(String query) {
+	public SolrQuery getQuery(String queryParameterString) {
 		String thisQuery = "*:*";
 
-		for (NameValuePair nameValuePair : URLEncodedUtils.parse(query, StandardCharsets.UTF_8)) {
+		boolean hasQuery = false;
+		// TODO - this should probably be using the parseKeywords utility
+		for (NameValuePair nameValuePair : URLEncodedUtils.parse(queryParameterString, StandardCharsets.UTF_8)) {
 			if(nameValuePair.getName().equals(queryParameter)) {
 				thisQuery = nameValuePair.getValue();
+				hasQuery = true;
 				break;
 			}
 		}
-		return(new SolrQuery(thisQuery));
+		if(hasQuery) {
+			return(new SolrQuery("\"" + thisQuery.replaceAll("\"", "") + "\""));
+		} else {
+			return(new SolrQuery("*:*"));
+		}
+	}
+
+	/**
+	 * <p>Return the default Solr query with no keywords set, so the query is set
+	 * to return all documents - i.e. <code>q:*.*</code></p>
+	 *
+	 * @return The SolrQuery
+	 */
+	public SolrQuery getQuery() {
+		return(new SolrQuery("*.*"));
 	}
 }

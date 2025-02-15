@@ -25,14 +25,17 @@ package com.synapticloop.panl.server.handler;
  */
 
 import com.synapticloop.panl.server.client.PanlClient;
+import com.synapticloop.panl.server.handler.fielderiser.field.param.PanlQueryField;
 import com.synapticloop.panl.server.handler.properties.CollectionProperties;
 import com.synapticloop.panl.server.handler.properties.PanlProperties;
 import com.synapticloop.panl.server.handler.webapp.util.ResourceHelper;
+import com.synapticloop.panl.util.URLHelper;
 import org.apache.http.HttpRequest;
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.utils.URIBuilder;
+import org.apache.http.client.utils.URLEncodedUtils;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.protocol.HttpContext;
 import org.apache.http.protocol.HttpRequestHandler;
@@ -175,7 +178,35 @@ public class PanlLookaheadHandler extends BaseResponseHandler implements HttpReq
 
 		PanlClient panlClient = collectionRequestHandler.getPanlClient();
 		try (SolrClient solrClient = panlClient.getClient()) {
-			SolrQuery solrQuery = panlClient.getQuery(query);
+
+			SolrQuery solrQuery = panlClient.getQuery();
+			// now parse the query
+			String thisQuery = "*:*";
+
+			for (NameValuePair nameValuePair : URLEncodedUtils.parse(query, StandardCharsets.UTF_8)) {
+				if(nameValuePair.getName().equals(collectionProperties.getFormQueryRespondTo())) {
+					StringBuilder sb = new StringBuilder();
+					boolean isFirst = true;
+					for (String parseKeyword : PanlQueryField.parseKeywords(nameValuePair.getValue())) {
+						if(!isFirst) {
+							sb.append(" ");
+						}
+
+						sb.append("\"")
+						       .append(parseKeyword)
+						       .append("\"");
+						isFirst = false;
+					}
+					thisQuery = sb.toString();
+					break;
+				}
+			}
+
+			solrQuery.setQuery(thisQuery);
+
+			// add in the default query operation
+			solrQuery.setParam(SOLR_PARAM_Q_OP, collectionProperties.getSolrDefaultQueryOperand());
+
 			List<String> resultFieldsForName = collectionProperties.getResultFieldsForName(fieldSet);
 			if(null != resultFieldsForName) {
 				for (String fieldName : resultFieldsForName) {
