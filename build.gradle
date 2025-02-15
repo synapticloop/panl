@@ -143,6 +143,10 @@ application {
 	mainClass = 'com.synapticloop.panl.Main'
 }
 
+startScripts {
+	classpath = files( '$APP_HOME/lib/*' )
+}
+
 distributions {
 	main {
 		distributionBaseName = 'solr-panl-' + properties.getProperty("panl.solr.version")

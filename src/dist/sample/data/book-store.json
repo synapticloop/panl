@@ -809,5 +809,31 @@
     "book_length": "Novella",
     "on_backorder": false,
     "speedy_delivery": true
+  },
+
+  {
+    "id": 301,
+    "author": "Mary Kennedy",
+    "title": "Mary 's Angel",
+    "description": "\"Mary's Angel\" by Mary Kennedy is a heartwarming and engaging read that beautifully weaves themes of love, loss, and redemption. The story centers around Mary, a character who navigates the complexities of her life while grappling with her past and the relationships that shape her present.\n\nKennedy's writing is both lyrical and accessible, drawing readers into Mary's world with vivid descriptions and relatable emotions. The characters are well-developed, each bringing their own struggles and triumphs to the narrative, which adds depth to the story. The interactions between Mary and the supporting characters are particularly poignant, showcasing the importance of connection and understanding in overcoming life's challenges.\n\nOne of the standout elements of \"Mary's Angel\" is its exploration of the concept of angels in our lives—both literal and metaphorical. Kennedy skillfully intertwines moments of magic and realism, prompting readers to reflect on the unseen forces that guide us through difficult times.\n\nThe pacing of the book is well-balanced, with moments of tension and introspection that keep readers engaged. Kennedy's ability to evoke emotion is commendable, making it easy to empathize with Mary's journey.\n\nOverall, \"Mary's Angel\" is a touching and inspiring read that resonates with anyone who has faced adversity and sought hope. Mary Kennedy has crafted a story that not only entertains but also encourages readers to believe in the power of love and the possibility of new beginnings. Whether you're a longtime fan of Kennedy's work or a newcomer, this book is sure to leave a lasting impression.",
+    "book_image": "http://example.com/image/",
+    "buy_url": "http://example.com/buy/",
+    "genre": [
+      "Romance",
+      "Contemporary",
+      "Military",
+      "Fiction"
+    ],
+    "series": "Reaper",
+    "num_pages": 248,
+    "first_published_year": 2017,
+    "language": "English",
+    "is_paperback": true,
+    "price": 9.23,
+    "a_to_z_index": "K",
+    "decade_published": 2010,
+    "book_length": "Novelette",
+    "on_backorder": false,
+    "speedy_delivery": true
   }
 ]
