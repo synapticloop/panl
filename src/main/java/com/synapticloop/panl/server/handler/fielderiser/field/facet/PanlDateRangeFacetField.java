@@ -31,7 +31,7 @@ import com.synapticloop.panl.server.handler.tokeniser.LpseTokeniser;
 import com.synapticloop.panl.server.handler.tokeniser.token.LpseToken;
 import com.synapticloop.panl.server.handler.tokeniser.token.facet.DateRangeFacetLpseToken;
 import com.synapticloop.panl.server.handler.tokeniser.token.facet.bean.PreviousNextValueBean;
-import com.synapticloop.panl.util.URLHelper;
+import com.synapticloop.panl.util.PanlLPSEHelper;
 import org.apache.solr.client.solrj.SolrQuery;
 import org.apache.solr.client.solrj.response.FacetField;
 import org.json.JSONObject;
@@ -39,7 +39,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.net.URLDecoder;
-import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.util.*;
 
@@ -167,7 +166,7 @@ public class PanlDateRangeFacetField extends PanlFacetField {
 	private void addToSolrLookupMap(String key, String value) {
 		if (null != key) {
 			solrRangeDesignatorLookupMap.put(key, value);
-			solrRangeDesignatorEncodedLookupMap.put(value, URLHelper.encodeURIPath(key));
+			solrRangeDesignatorEncodedLookupMap.put(value, PanlLPSEHelper.encodeURIPath(key));
 			solrRangeDesignatorLengthLookupMap.put(value, value.length());
 		}
 	}
@@ -429,8 +428,8 @@ public class PanlDateRangeFacetField extends PanlFacetField {
 		additionObject.put(JSON_KEY_NAME, this.panlFieldName);
 		additionObject.put(JSON_KEY_PANL_CODE, this.lpseCode);
 
-		additionObject.put(JSON_KEY_NEXT, URLHelper.encodeURIPath(nextIndicator));
-		additionObject.put(JSON_KEY_PREVIOUS, URLHelper.encodeURIPath(previousIndicator));
+		additionObject.put(JSON_KEY_NEXT, PanlLPSEHelper.encodeURIPath(nextIndicator));
+		additionObject.put(JSON_KEY_PREVIOUS, PanlLPSEHelper.encodeURIPath(previousIndicator));
 
 		JSONObject designatorObject = new JSONObject();
 		designatorObject.put(JSON_KEY_HOURS, solrRangeDesignatorEncodedLookupMap.get(SOLR_DESIGNATOR_HOURS));
@@ -446,11 +445,11 @@ public class PanlDateRangeFacetField extends PanlFacetField {
 				DateRangeFacetLpseToken dateRangeFacetLpseToken = (DateRangeFacetLpseToken) lpseToken;
 				additionObject.put(JSON_KEY_VALUE, dateRangeFacetLpseToken.getValue());
 				additionObject.put(PREVIOUS_NEXT,
-						URLHelper.encodeURIPath(dateRangeFacetLpseToken.getPreviousNext()));
+						PanlLPSEHelper.encodeURIPath(dateRangeFacetLpseToken.getPreviousNext()));
 				additionObject.put(JSON_KEY_SOLR_DESIGNATOR,
-						URLHelper.encodeURIPath(dateRangeFacetLpseToken.getSolrRangeDesignator()));
+						PanlLPSEHelper.encodeURIPath(dateRangeFacetLpseToken.getSolrRangeDesignator()));
 				additionObject.put(JSON_KEY_DESIGNATOR,
-						URLHelper.encodeURIPath(dateRangeFacetLpseToken.getDesignator()));
+						PanlLPSEHelper.encodeURIPath(dateRangeFacetLpseToken.getDesignator()));
 				shouldBreak = true;
 			}
 
@@ -520,7 +519,7 @@ public class PanlDateRangeFacetField extends PanlFacetField {
 		sb.append(dateRangeFacetLpseToken.getValue());
 		sb.append(dateRangeFacetLpseToken.getDesignator());
 
-		return (URLHelper.encodeURIPath(sb.toString()));
+		return (PanlLPSEHelper.encodeURIPath(sb.toString()));
 	}
 
 	@Override public List<String> explainAdditional() {

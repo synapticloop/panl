@@ -380,6 +380,10 @@ public class CollectionProperties {
 		for(String sortField : sortFieldsTemp.split(",")) {
 			// trim any empty sort fields
 			sortField = sortField.trim();
+
+			if(sortField.isEmpty()) {
+				continue;
+			}
 			// A sort field can either be a field, or a facet field
 			String lpseCode = null;
 			if (SOLR_NAME_TO_FIELD_MAP.containsKey(sortField)) {
@@ -637,18 +641,11 @@ public class CollectionProperties {
 					String trim = split.trim();
 
 					if (!trim.isEmpty()) {
-
 						if (!LPSE_CODE_UNLESS_MAP.containsKey(lpseCode)) {
 							LPSE_CODE_UNLESS_MAP.put(lpseCode, new HashSet<>());
 						}
 
 						LPSE_CODE_UNLESS_MAP.get(lpseCode).add(trim);
-
-						//						if (!LPSE_CODE_UNLESS_MAP.containsKey(trim)) {
-//							LPSE_CODE_UNLESS_MAP.put(trim, new HashSet<>());
-//						}
-//
-//						LPSE_CODE_UNLESS_MAP.get(trim).add(lpseCode);
 					}
 				}
 			}
@@ -744,8 +741,6 @@ public class CollectionProperties {
 				}
 			}
 		}
-
-
 	}
 
 	/**
@@ -757,8 +752,14 @@ public class CollectionProperties {
 	private void parseFields() throws PanlServerException {
 		for(String panlFieldKey : PropertyHelper.getPropertiesByPrefix(properties, PROPERTY_KEY_PANL_FIELD)) {
 			String lpseCode = panlFieldKey.substring(panlFieldKey.lastIndexOf(".") + 1);
-			PanlField field = new PanlField(lpseCode, panlFieldKey, properties, solrCollection, panlCollectionUri,
-						lpseLength);
+			PanlField field = new PanlField(
+					lpseCode,
+					panlFieldKey,
+					properties,
+					solrCollection,
+					panlCollectionUri,
+					lpseLength);
+
 			NON_FACET_FIELDS.add(field);
 			LPSE_FIELDS.add(field.getLpseCode());
 			lpseFieldLookup.put(lpseCode, field);

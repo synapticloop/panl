@@ -27,11 +27,10 @@ package com.synapticloop.panl.server.handler.fielderiser.field;
 import com.synapticloop.panl.exception.PanlServerException;
 import com.synapticloop.panl.server.handler.properties.CollectionProperties;
 import com.synapticloop.panl.server.handler.tokeniser.token.LpseToken;
-import com.synapticloop.panl.util.URLHelper;
+import com.synapticloop.panl.util.PanlLPSEHelper;
 import org.json.JSONObject;
 
 import java.net.URLDecoder;
-import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.util.*;
 
@@ -240,7 +239,7 @@ public abstract class BasePrefixSuffixField extends BaseField {
 			sb.append(valueSuffix);
 		}
 
-		return (URLHelper.encodeURIPath(sb.toString()));
+		return (PanlLPSEHelper.encodeURIPath(sb.toString()));
 	}
 
 	/**
@@ -397,7 +396,7 @@ public abstract class BasePrefixSuffixField extends BaseField {
 
 		if (valueSeparator != null) {
 			if (hasValuePrefix) {
-				sb.append(URLHelper.encodeURIPath(valuePrefix));
+				sb.append(PanlLPSEHelper.encodeURIPath(valuePrefix));
 			}
 		}
 
@@ -413,8 +412,8 @@ public abstract class BasePrefixSuffixField extends BaseField {
 
 				if (!validValues.isEmpty()) {
 					for(String validValue : validValues) {
-						sb.append(URLHelper.encodeURIPath(validValue));
-						sb.append(URLHelper.encodeURIPath(valueSeparator));
+						sb.append(PanlLPSEHelper.encodeURIPath(validValue));
+						sb.append(PanlLPSEHelper.encodeURIPath(valueSeparator));
 					}
 				}
 			} else {
@@ -435,7 +434,7 @@ public abstract class BasePrefixSuffixField extends BaseField {
 		StringBuilder sb = new StringBuilder();
 		if (valueSeparator != null) {
 			if (hasValueSuffix) {
-				sb.append(URLHelper.encodeURIPath(valueSuffix));
+				sb.append(PanlLPSEHelper.encodeURIPath(valueSuffix));
 			}
 		}
 		return (sb.toString());

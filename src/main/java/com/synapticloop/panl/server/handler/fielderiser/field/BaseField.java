@@ -32,7 +32,7 @@ import com.synapticloop.panl.server.handler.tokeniser.LpseTokeniser;
 import com.synapticloop.panl.server.handler.tokeniser.token.facet.FacetLpseToken;
 import com.synapticloop.panl.server.handler.tokeniser.token.LpseToken;
 import com.synapticloop.panl.server.handler.tokeniser.token.facet.RangeFacetLpseToken;
-import com.synapticloop.panl.util.URLHelper;
+import com.synapticloop.panl.util.PanlLPSEHelper;
 import org.apache.solr.client.solrj.SolrQuery;
 import org.apache.solr.client.solrj.response.FacetField;
 import org.json.JSONArray;
@@ -40,7 +40,6 @@ import org.json.JSONObject;
 import org.slf4j.Logger;
 
 import java.net.URLDecoder;
-import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.util.*;
 
@@ -395,7 +394,7 @@ public abstract class BaseField {
 	 * @return The URL encoded value
 	 */
 	public String getEncodedPanlValue(String value) {
-		return (URLHelper.encodeURIPath(value));
+		return (PanlLPSEHelper.encodeURIPath(value));
 	}
 
 	/**
@@ -481,16 +480,16 @@ public abstract class BaseField {
 		StringBuilder sb = new StringBuilder();
 		if (panlTokenMap.containsKey(lpseCode)) {
 			if (this.valueSeparator != null) {
-				sb.append(URLHelper.encodeURIPath(getValuePrefix()));
+				sb.append(PanlLPSEHelper.encodeURIPath(getValuePrefix()));
 				boolean isFirst = true;
 				for (LpseToken lpseToken : panlTokenMap.get(lpseCode)) {
 					if (!isFirst) {
-						sb.append(URLHelper.encodeURIPath(getValueSeparator()));
+						sb.append(PanlLPSEHelper.encodeURIPath(getValueSeparator()));
 					}
 					isFirst = false;
-					sb.append(URLHelper.encodeURIPath(lpseToken.getValue()));
+					sb.append(PanlLPSEHelper.encodeURIPath(lpseToken.getValue()));
 				}
-				sb.append(URLHelper.encodeURIPath(getValueSuffix()));
+				sb.append(PanlLPSEHelper.encodeURIPath(getValueSuffix()));
 				sb.append("/");
 			} else {
 				for (LpseToken lpseToken : panlTokenMap.get(lpseCode)) {
@@ -589,7 +588,7 @@ public abstract class BaseField {
 					stringBuilder.append(lpseToken.getValue());
 				}
 				stringBuilder.append(getValueSuffix());
-				return (URLHelper.encodeURIPath(stringBuilder.toString()) + "/");
+				return (PanlLPSEHelper.encodeURIPath(stringBuilder.toString()) + "/");
 			}
 		}
 
@@ -878,7 +877,7 @@ public abstract class BaseField {
 				facetValueObject.put(JSON_KEY_ENCODED, getEncodedPanlValue(valueName));
 
 				if(isMultiValue) {
-					facetValueObject.put(JSON_KEY_ENCODED_MULTI, URLHelper.encodeURIPath(valueName));
+					facetValueObject.put(JSON_KEY_ENCODED_MULTI, PanlLPSEHelper.encodeURIPath(valueName));
 				}
 				facetValueArrays.put(facetValueObject);
 			}

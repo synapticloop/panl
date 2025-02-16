@@ -26,7 +26,6 @@ package com.synapticloop.panl.server.client;
 
 import com.synapticloop.panl.server.handler.properties.PanlProperties;
 import com.synapticloop.panl.server.handler.properties.CollectionProperties;
-import com.synapticloop.panl.util.URLHelper;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.utils.URLEncodedUtils;
 import org.apache.solr.client.solrj.SolrClient;

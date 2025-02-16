@@ -32,7 +32,7 @@ import com.synapticloop.panl.server.handler.tokeniser.LpseTokeniser;
 import com.synapticloop.panl.server.handler.tokeniser.token.LpseToken;
 import com.synapticloop.panl.server.handler.tokeniser.token.facet.RangeFacetLpseToken;
 import com.synapticloop.panl.server.handler.tokeniser.token.facet.bean.FromToBean;
-import com.synapticloop.panl.util.URLHelper;
+import com.synapticloop.panl.util.PanlLPSEHelper;
 import org.apache.solr.client.solrj.SolrQuery;
 import org.apache.solr.client.solrj.response.FacetField;
 import org.json.JSONArray;
@@ -41,7 +41,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.net.URLDecoder;
-import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.util.*;
 
@@ -356,18 +355,18 @@ public class PanlRangeFacetField extends PanlFacetField {
 		rangeFacetObject.put(JSON_KEY_PANL_CODE, lpseCode);
 		rangeFacetObject.put(JSON_KEY_MIN, getMinRange());
 		rangeFacetObject.put(JSON_KEY_MAX, getMaxRange());
-		rangeFacetObject.put(JSON_KEY_PREFIX, URLHelper.encodeURIPath(getValuePrefix()));
-		rangeFacetObject.put(JSON_KEY_SUFFIX, URLHelper.encodeURIPath(getValueSuffix()));
+		rangeFacetObject.put(JSON_KEY_PREFIX, PanlLPSEHelper.encodeURIPath(getValuePrefix()));
+		rangeFacetObject.put(JSON_KEY_SUFFIX, PanlLPSEHelper.encodeURIPath(getValueSuffix()));
 
 		// range min and max values
 		if (null != rangeMaxValueReplacement) {
 			rangeFacetObject.put(JSON_KEY_RANGE_MAX_VALUE,
-					URLHelper.encodeURIPath(rangeMaxValueReplacement));
+					PanlLPSEHelper.encodeURIPath(rangeMaxValueReplacement));
 		}
 
 		if (null != rangeMinValueReplacement) {
 			rangeFacetObject.put(JSON_KEY_RANGE_MIN_VALUE,
-					URLHelper.encodeURIPath(rangeMinValueReplacement));
+					PanlLPSEHelper.encodeURIPath(rangeMinValueReplacement));
 		}
 
 		// if we already have this facet selected - add in the to and from
@@ -418,15 +417,15 @@ public class PanlRangeFacetField extends PanlFacetField {
 				// exists
 				if (null != rangeMinValueReplacement) {
 					additionObject.put(JSON_KEY_BEFORE_MIN_VALUE,
-								lpseUri + URLHelper.encodeURIPath(rangeMinValueReplacement));
+								lpseUri + PanlLPSEHelper.encodeURIPath(rangeMinValueReplacement));
 				}
 
 				if (hasRangeInfix) {
 					// we have an infix - we will be using the range value prefix/suffix
-					lpseUri.append(URLHelper.encodeURIPath(getRangePrefix()));
+					lpseUri.append(PanlLPSEHelper.encodeURIPath(getRangePrefix()));
 				} else {
 					// we don't have an infix - we will be using the value prefix/suffix
-					lpseUri.append(URLHelper.encodeURIPath(getValuePrefix()));
+					lpseUri.append(PanlLPSEHelper.encodeURIPath(getValuePrefix()));
 				}
 
 				lpseCodeUri.append(lpseCode);
@@ -435,15 +434,15 @@ public class PanlRangeFacetField extends PanlFacetField {
 				if (hasRangeInfix) {
 					// we have the infix
 					additionObject.put(JSON_KEY_HAS_INFIX, true);
-					additionObject.put(JSON_KEY_DURING, URLHelper.encodeURIPath(rangeValueInfix));
+					additionObject.put(JSON_KEY_DURING, PanlLPSEHelper.encodeURIPath(rangeValueInfix));
 				} else {
 					// we shall use the value suffix and prefix;
 					additionObject.put(JSON_KEY_HAS_INFIX, false);
 					additionObject.put(
 								JSON_KEY_DURING,
-							URLHelper.encodeURIPath(getValueSuffix()) +
+							PanlLPSEHelper.encodeURIPath(getValueSuffix()) +
 											JSON_VALUE_NO_INFIX_REPLACEMENT +
-									URLHelper.encodeURIPath(getValuePrefix()));
+									PanlLPSEHelper.encodeURIPath(getValuePrefix()));
 				}
 
 
@@ -451,13 +450,13 @@ public class PanlRangeFacetField extends PanlFacetField {
 				lpseUri.setLength(0);
 
 				if (hasRangeInfix) {
-					lpseUri.append(URLHelper.encodeURIPath(getRangeSuffix()));
+					lpseUri.append(PanlLPSEHelper.encodeURIPath(getRangeSuffix()));
 				} else {
-					lpseUri.append(URLHelper.encodeURIPath(getValueSuffix()));
+					lpseUri.append(PanlLPSEHelper.encodeURIPath(getValueSuffix()));
 				}
 
 				if (null != rangeMaxValueReplacement) {
-					lpseUriAfterMax.append(URLHelper.encodeURIPath(rangeMaxValueReplacement))
+					lpseUriAfterMax.append(PanlLPSEHelper.encodeURIPath(rangeMaxValueReplacement))
 					               .append(FORWARD_SLASH);
 				}
 
@@ -696,19 +695,19 @@ public class PanlRangeFacetField extends PanlFacetField {
 				}
 			}
 
-			return (URLHelper.encodeURIPath(sb.toString()));
+			return (PanlLPSEHelper.encodeURIPath(sb.toString()));
 		} else {
 			// we will have a two part URI path, split by a '~' and both values need
 			// to be URLEncoded before.
 			if (rangeFacetLpseToken.getValue().equals(rangeMinValue) && null != rangeMinValueReplacement) {
-				sb.append(URLHelper.encodeURIPath(rangeMinValueReplacement));
+				sb.append(PanlLPSEHelper.encodeURIPath(rangeMinValueReplacement));
 			} else {
 				if (hasValuePrefix) {
-					sb.append(URLHelper.encodeURIPath(valuePrefix));
+					sb.append(PanlLPSEHelper.encodeURIPath(valuePrefix));
 				}
-				sb.append(URLHelper.encodeURIPath(rangeFacetLpseToken.getValue()));
+				sb.append(PanlLPSEHelper.encodeURIPath(rangeFacetLpseToken.getValue()));
 				if (hasValueSuffix) {
-					sb.append(URLHelper.encodeURIPath(valueSuffix));
+					sb.append(PanlLPSEHelper.encodeURIPath(valueSuffix));
 				}
 
 			}
@@ -716,14 +715,14 @@ public class PanlRangeFacetField extends PanlFacetField {
 			sb.append(Processor.JSON_VALUE_NO_INFIX_REPLACEMENT);
 
 			if (rangeFacetLpseToken.getToValue().equals(rangeMaxValue) && null != rangeMaxValueReplacement) {
-				sb.append(URLHelper.encodeURIPath(rangeMaxValueReplacement));
+				sb.append(PanlLPSEHelper.encodeURIPath(rangeMaxValueReplacement));
 			} else {
 				if (hasValuePrefix) {
-					sb.append(URLHelper.encodeURIPath(valuePrefix));
+					sb.append(PanlLPSEHelper.encodeURIPath(valuePrefix));
 				}
-				sb.append(URLHelper.encodeURIPath(rangeFacetLpseToken.getToValue()));
+				sb.append(PanlLPSEHelper.encodeURIPath(rangeFacetLpseToken.getToValue()));
 				if (hasValueSuffix) {
-					sb.append(URLHelper.encodeURIPath(valueSuffix));
+					sb.append(PanlLPSEHelper.encodeURIPath(valueSuffix));
 				}
 			}
 

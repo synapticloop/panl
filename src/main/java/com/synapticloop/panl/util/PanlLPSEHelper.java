@@ -41,28 +41,29 @@ package com.synapticloop.panl.util;
  * IN THE SOFTWARE.
  */
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import java.io.ByteArrayOutputStream;
-import java.io.UnsupportedEncodingException;
-import java.net.MalformedURLException;
-import java.net.URI;
-import java.net.URISyntaxException;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 
-public class URLHelper {
+public class PanlLPSEHelper {
 
+	/**
+	 * <p>Encode a query Parameter</p>
+	 * @param parameter The parameter to encode
+	 *
+	 * @return The encoded parameter in UTF-8
+	 */
 	public static String encodeURLParameter(String parameter) {
 		return(URLEncoder.encode(parameter, StandardCharsets.UTF_8));
 	}
 
 	/**
-	 * Encode the given source into an encoded String using the rules specified
-	 * by the given component and with the given options.
+	 * <p>Encode the given source into an encoded String using the rules specified
+	 * by the given component and with the given options.</p>
+	 *
 	 * @param source the source String
 	 * @return the encoded URI
+	 *
 	 * @throws IllegalArgumentException when the given value is not a valid URI component
 	 */
 	public static String encodeURIPath(String source) {

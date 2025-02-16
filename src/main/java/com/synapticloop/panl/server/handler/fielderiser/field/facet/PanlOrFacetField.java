@@ -25,26 +25,19 @@ package com.synapticloop.panl.server.handler.fielderiser.field.facet;
  */
 
 import com.synapticloop.panl.exception.PanlServerException;
-import com.synapticloop.panl.server.handler.fielderiser.field.BaseField;
 import com.synapticloop.panl.server.handler.properties.CollectionProperties;
 import com.synapticloop.panl.server.handler.tokeniser.LpseTokeniser;
 import com.synapticloop.panl.server.handler.tokeniser.token.LpseToken;
 import com.synapticloop.panl.server.handler.tokeniser.token.facet.OrFacetLpseToken;
-import com.synapticloop.panl.util.URLHelper;
+import com.synapticloop.panl.util.PanlLPSEHelper;
 import org.apache.solr.client.solrj.SolrQuery;
 import org.apache.solr.client.solrj.response.FacetField;
-import org.apache.solr.common.util.URLUtil;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.net.URLEncoder;
-import java.nio.charset.StandardCharsets;
 import java.util.*;
-
-import static com.synapticloop.panl.server.handler.processor.Processor.*;
-import static com.synapticloop.panl.server.handler.processor.Processor.FORWARD_SLASH;
 
 public class PanlOrFacetField extends PanlFacetField {
 	private static final Logger LOGGER = LoggerFactory.getLogger(PanlOrFacetField.class);
@@ -183,7 +176,7 @@ public class PanlOrFacetField extends PanlFacetField {
 				// the OR encoding has no prefix or suffix - but only if it has a value
 				// separator
 				if(null != valueSeparator) {
-					facetValueObject.put(JSON_KEY_ENCODED_MULTI, URLHelper.encodeURIPath(valueName));
+					facetValueObject.put(JSON_KEY_ENCODED_MULTI, PanlLPSEHelper.encodeURIPath(valueName));
 				}
 				facetValueArrays.put(facetValueObject);
 			}

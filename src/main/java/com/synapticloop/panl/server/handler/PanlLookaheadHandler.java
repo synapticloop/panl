@@ -29,7 +29,6 @@ import com.synapticloop.panl.server.handler.fielderiser.field.param.PanlQueryFie
 import com.synapticloop.panl.server.handler.properties.CollectionProperties;
 import com.synapticloop.panl.server.handler.properties.PanlProperties;
 import com.synapticloop.panl.server.handler.webapp.util.ResourceHelper;
-import com.synapticloop.panl.util.URLHelper;
 import org.apache.http.HttpRequest;
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
@@ -42,7 +41,6 @@ import org.apache.http.protocol.HttpRequestHandler;
 import org.apache.solr.client.solrj.SolrClient;
 import org.apache.solr.client.solrj.SolrQuery;
 import org.apache.solr.client.solrj.response.QueryResponse;
-import org.json.JSONArray;
 import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -56,7 +54,6 @@ import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 import static com.synapticloop.panl.server.handler.CollectionRequestHandler.*;
-import static com.synapticloop.panl.server.handler.webapp.util.ResourceHelper.*;
 
 /**
  * <p>This is the handler which will return the lookahead documents for a the
