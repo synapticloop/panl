@@ -38,7 +38,7 @@
     catchall "text" field, and use that for searching.
 -->
 
-<schema name="book-store" version="1.7">
+<schema name="book-store" version="1.6">
   <!-- attribute "name" is the name of this schema and is only used for display purposes.
 		 version="x.y" is Solr's version number for the schema syntax and
 		 semantics.  It should not normally be changed by applications.
@@ -111,7 +111,7 @@
 			 If you don't need it, consider removing it and the corresponding copyField directive.
 	-->
 
-  <field name="_version_" type="plong" indexed="false" stored="false"/>
+  <field name="_version_" type="plong" indexed="false" stored="false" docValues="true"/>
 
   <field name="id" type="string" stored="true" indexed="true" required="true" multiValued="false" />
 
