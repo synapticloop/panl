@@ -55,7 +55,6 @@
 		 1.5: omitNorms defaults to true for primitive field types
 					(int, float, boolean, string...)
 		 1.6: useDocValuesAsStored defaults to true.
-		 1.7: docValues defaults to true, uninvertible defaults to false.
 	-->
 
   <!-- Valid attributes for fields:
@@ -154,8 +153,8 @@
 	-->
 
   <!-- The StrField type is not analyzed, but indexed/stored verbatim. -->
-  <fieldType name="string" class="solr.StrField" sortMissingLast="true" />
-  <fieldType name="strings" class="solr.StrField" sortMissingLast="true" multiValued="true" />
+  <fieldType name="string" class="solr.StrField" sortMissingLast="true" docValues="true" />
+  <fieldType name="strings" class="solr.StrField" sortMissingLast="true" multiValued="true" docValues="true" />
 
   <!-- boolean type: "true" or "false" -->
   <fieldType name="boolean" class="solr.BoolField" sortMissingLast="true"/>
@@ -163,23 +162,22 @@
 
   <!--
 		Numeric field types that index values using KD-trees.
-		Point fields don't support FieldCache, so they must have docValues enabled if needed for sorting, faceting, functions, etc.
-		This is the default, so it does not need to be set explicitly.
+		Point fields don't support FieldCache, so they must have docValues="true" if needed for sorting, faceting, functions, etc.
 	-->
-  <fieldType name="pint" class="solr.IntPointField"/>
-  <fieldType name="pfloat" class="solr.FloatPointField"/>
-  <fieldType name="plong" class="solr.LongPointField"/>
-  <fieldType name="pdouble" class="solr.DoublePointField"/>
+  <fieldType name="pint" class="solr.IntPointField" docValues="true"/>
+  <fieldType name="pfloat" class="solr.FloatPointField" docValues="true"/>
+  <fieldType name="plong" class="solr.LongPointField" docValues="true"/>
+  <fieldType name="pdouble" class="solr.DoublePointField" docValues="true"/>
 
-  <fieldType name="pints" class="solr.IntPointField" multiValued="true"/>
-  <fieldType name="pfloats" class="solr.FloatPointField" multiValued="true"/>
-  <fieldType name="plongs" class="solr.LongPointField" multiValued="true"/>
-  <fieldType name="pdoubles" class="solr.DoublePointField" multiValued="true"/>
+  <fieldType name="pints" class="solr.IntPointField" docValues="true" multiValued="true"/>
+  <fieldType name="pfloats" class="solr.FloatPointField" docValues="true" multiValued="true"/>
+  <fieldType name="plongs" class="solr.LongPointField" docValues="true" multiValued="true"/>
+  <fieldType name="pdoubles" class="solr.DoublePointField" docValues="true" multiValued="true"/>
   <fieldType name="random" class="solr.RandomSortField" indexed="true"/>
 
   <!-- since fields of this type are by default not stored or indexed,
 		 any data added to them will be ignored outright.  -->
-  <fieldType name="ignored" stored="false" indexed="false" multiValued="true" docValues="false" class="solr.StrField" />
+  <fieldType name="ignored" stored="false" indexed="false" multiValued="true" class="solr.StrField" />
 
   <!-- The format for this date field is of the form 1995-12-31T23:59:59Z, and
 			 is a more restricted form of the canonical representation of dateTime
@@ -201,8 +199,8 @@
 
 		-->
   <!-- KD-tree versions of date fields -->
-  <fieldType name="pdate" class="solr.DatePointField"/>
-  <fieldType name="pdates" class="solr.DatePointField" multiValued="true"/>
+  <fieldType name="pdate" class="solr.DatePointField" docValues="true"/>
+  <fieldType name="pdates" class="solr.DatePointField" docValues="true" multiValued="true"/>
 
   <!--Binary data type. The data should be sent/retrieved in as Base64 encoded Strings -->
   <fieldType name="binary" class="solr.BinaryField"/>
@@ -291,6 +289,51 @@
     </analyzer>
   </fieldType>
 
+  <dynamicField name="*_phon_en" type="phonetic_en"  indexed="true"  stored="true"/>
+  <fieldType name="phonetic_en" stored="false" indexed="true" class="solr.TextField" >
+    <analyzer>
+      <tokenizer name="standard"/>
+      <filter name="doubleMetaphone" inject="false"/>
+    </analyzer>
+  </fieldType>
+
+  <!-- lowercases the entire field value, keeping it as a single token.  -->
+  <dynamicField name="*_s_lower" type="lowercase"  indexed="true"  stored="true"/>
+  <fieldType name="lowercase" class="solr.TextField" positionIncrementGap="100">
+    <analyzer>
+      <tokenizer name="keyword"/>
+      <filter name="lowercase" />
+    </analyzer>
+  </fieldType>
+
+  <!--
+		Example of using PathHierarchyTokenizerFactory at index time, so
+		queries for paths match documents at that path, or in descendent paths
+	-->
+  <dynamicField name="*_descendent_path" type="descendent_path"  indexed="true"  stored="true"/>
+  <fieldType name="descendent_path" class="solr.TextField">
+    <analyzer type="index">
+      <tokenizer name="pathHierarchy" delimiter="/" />
+    </analyzer>
+    <analyzer type="query">
+      <tokenizer name="keyword" />
+    </analyzer>
+  </fieldType>
+
+  <!--
+		Example of using PathHierarchyTokenizerFactory at query time, so
+		queries for paths match documents at that path, or in ancestor paths
+	-->
+  <dynamicField name="*_ancestor_path" type="ancestor_path"  indexed="true"  stored="true"/>
+  <fieldType name="ancestor_path" class="solr.TextField">
+    <analyzer type="index">
+      <tokenizer name="keyword" />
+    </analyzer>
+    <analyzer type="query">
+      <tokenizer name="pathHierarchy" delimiter="/" />
+    </analyzer>
+  </fieldType>
+
   <!-- This point type indexes the coordinates as separate fields (subFields)
 		If subFieldType is defined, it references a type, and a dynamic field
 		definition is created matching *___<typename>.  Alternately, if
@@ -306,7 +349,7 @@
   <fieldType name="point" class="solr.PointType" dimension="2" subFieldSuffix="_d"/>
 
   <!-- A specialized field for geospatial search filters and distance sorting. -->
-  <fieldType name="location" class="solr.LatLonPointSpatialField"/>
+  <fieldType name="location" class="solr.LatLonPointSpatialField" docValues="true"/>
 
   <!-- A geospatial field type that supports multiValued and polygon shapes.
 		For more information about this and other spatial fields see:
@@ -334,4 +377,5 @@
       <filter name="delimitedPayload" encoder="identity"/>
     </analyzer>
   </fieldType>
+
 </schema>
