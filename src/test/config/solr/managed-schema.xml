@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <schema name="testing" version="1.6">
-	<field name="_version_" type="plong" indexed="false" stored="false" doValues="true" />
+	<field name="_version_" type="plong" indexed="false" stored="false" />
 	<field name="id" type="string" stored="true" indexed="true" required="true" multiValued="false" />
 
 	<field name="indexed_field" type="string" indexed="true" stored="false" multiValued="false" />
@@ -26,10 +26,10 @@
 
 	<uniqueKey>id</uniqueKey>
 
-	<fieldType name="string" class="solr.StrField" sortMissingLast="true" />
+	<fieldType name="string" class="solr.StrField" sortMissingLast="true" docValues="true" />
 	<fieldType name="plong" class="solr.LongPointField" docValues="true"/>
 
-	<fieldType name="text_general" class="solr.TextField" positionIncrementGap="100">
+	<fieldType name="text_general" class="solr.TextField" positionIncrementGap="100" multiValued="true">
 		<analyzer type="index">
 			<tokenizer name="standard"/>
 			<filter name="stop" ignoreCase="true" words="stopwords.txt" />
