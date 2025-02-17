@@ -899,8 +899,8 @@ number.
        FieldSets.
 1. ~~Dynamic range functionality~~
    - **[Released in version 9-1.1.0]**
-   - Dynamically generate the minimum and maximum value for a range for a
-       facet value.
+   - ~~Dynamically generate the minimum and maximum value for a range for a
+       facet value.~~
 1. ~~Suppress range values~~
    - **[Released in version 9-1.1.0]**
    - ~~For a RANGE facet, provide a configuration option to suppress the
@@ -915,10 +915,10 @@ number.
        possibly have pagination.~~
 1. ~~Default empty FieldSet~~
    - **[Released in version 9-1.1.0]**
-   - In addition to the 'default' FieldSet, add another FieldSet always
+   - ~~In addition to the 'default' FieldSet, add another FieldSet always
        named 'empty' which will return no fields (this links in with the '
        Returning more facets for a specific facet field' and 'Single search
-       page' items).
+       page' items).~~
 1. ~~Internationalisation~~
    - **[Released in version 9-1.1.0]**
    - ~~Floating point digits in particular suffer from using a full
@@ -1021,16 +1021,18 @@ number.
      this should return JSON and be able to be inspected.
 1. ~~Specific Search Field Boosting (Low Priority)~~
    - [Released in version 9-2.0.0]
-   - Being able to boost specific fields when searching on Specific Solr fields 
-     this is done on a Panl collection basis.
+   - ~~Being able to boost specific fields when searching on Specific Solr 
+     fields this is done on a Panl collection basis.~~
 1. DATE Range and RANGE value replacement (Low Priority)
    -  For both of the range facets, it would be nice to be able to configure to 
       replace the URL with a Panl query, for example: The DATE Range Facet could
       have a replacement of 'Coming Soon' which would be translate to 
       'Next 3 months' and the RANGE Facet could have a replacement of 
       'Inexpensive' to translate to 'From 5 to 10 dollars'
-1. Until property (Medium Priority)
-   - Display this facet 'until' another facet within the list of 'until' facets 
-   - is selected.  This is the opposite of the panl.when.<lpse_code>.
+1. ~~Unless property (Medium Priority)~~
+   - [Released in version 9-2.0.0]
+   - ~~Display this facet 'unless' another facet within the list of 'unless' 
+     facets is selected.~~
+   - ~~This is the opposite of the panl.when.<lpse_code>.~~
 
 

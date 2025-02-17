@@ -50,12 +50,18 @@ import java.util.List;
  *
  * @author synapticloop
  */
-
-
 public class PanlResultsViewerScriptHandler implements HttpRequestHandler {
-
 	private final List<String> panlCollectionUris = new ArrayList<>();
 
+	/**
+	 * <p>Instantiate the Script handler which builds the CaFUPs that are
+	 * available for this handler.</p>
+	 *
+	 * <p>In effect this builds a list of CaFUPs so that they can be served as a
+	 * JSON script.</p>
+	 *
+	 * @param collectionRequestHandlers The list of collection request handlers
+	 */
 	public PanlResultsViewerScriptHandler(List<CollectionRequestHandler> collectionRequestHandlers) {
 		for (CollectionRequestHandler collectionRequestHandler : collectionRequestHandlers) {
 			String panlCollectionUri = collectionRequestHandler.getPanlCollectionUri();

@@ -45,6 +45,15 @@ import java.io.ByteArrayOutputStream;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 
+/**
+ * <p>Utility class for LPSE path helping.</p>
+ *
+ * TODO - this can probably be quicker if it was done as a lookup on a set
+ * TODO - perhaps
+ *
+ * @author synapticloop
+ * @author original authors
+ */
 public class PanlLPSEHelper {
 
 	/**

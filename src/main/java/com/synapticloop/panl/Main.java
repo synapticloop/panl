@@ -75,6 +75,8 @@ public class Main {
 			System.out.println("[LOGGING SETUP] Could not find a log4j2 configuration file.  See messages above...");
 			System.out.println("[LOGGING SETUP] If available, log4j2 will use the configuration file from the classpath.");
 		}
+
+		System.out.println("\n");
 	}
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(Main.class);
@@ -196,11 +198,11 @@ public class Main {
 			usageAndException(String.format("Could not parse port number of '%s'", portNumberString));
 		}
 
-		LOGGER.info("Starting Panl server with properties:");
-		LOGGER.info("  -properties {}", this.propertiesFileLocation);
-		LOGGER.info("        -port {}", this.portNumber);
+		LOGGER.info("  Starting Panl server with properties:");
+		LOGGER.info("    -properties {}", this.propertiesFileLocation);
+		LOGGER.info("          -port {}", this.portNumber);
 		LOGGER.info("");
-		LOGGER.info("            ~ ~ ~ * ~ ~ ~");
+		LOGGER.info("                  ~ ~ ~ * ~ ~ ~");
 		LOGGER.info("");
 
 		// at this point we are ready to go
@@ -230,12 +232,12 @@ public class Main {
 			usageAndException("Mandatory command line option of '-schema' missing.");
 		}
 
-		LOGGER.info("Starting Panl generation with properties:");
-		LOGGER.info("  -properties {}", this.propertiesFileLocation);
-		LOGGER.info("      -schema {}", schemaFileLocations);
-		LOGGER.info("   -overwrite {}", this.shouldOverwrite);
+		LOGGER.info("  Starting Panl generation with properties:");
+		LOGGER.info("    -properties {}", this.propertiesFileLocation);
+		LOGGER.info("        -schema {}", schemaFileLocations);
+		LOGGER.info("     -overwrite {}", this.shouldOverwrite);
 		LOGGER.info("");
-		LOGGER.info("            ~ ~ ~ * ~ ~ ~");
+		LOGGER.info("             ~ ~ ~ * ~ ~ ~");
 		LOGGER.info("");
 
 		PanlGenerator panlGenerator = new PanlGenerator(
@@ -298,23 +300,23 @@ public class Main {
 		} catch (IOException ignored) {
 		}
 
-		LOGGER.info("            ~ ~ ~ * ~ ~ ~");
+		LOGGER.info("                  ~ ~ ~ * ~ ~ ~");
 		LOGGER.info("");
-		LOGGER.info("                           __ ");
-		LOGGER.info("       .-----.---.-.-----.|  |");
-		LOGGER.info("       |  _  |  _  |     ||  |");
-		LOGGER.info("       |   __|___._|__|__||__|");
-		LOGGER.info("       |__|     ... .-..      ");
+		LOGGER.info("                                 __ ");
+		LOGGER.info("             .-----.---.-.-----.|  |");
+		LOGGER.info("             |  _  |  _  |     ||  |");
+		LOGGER.info("             |   __|___._|__|__||__|");
+		LOGGER.info("             |__|     ... .-..      ");
 		LOGGER.info("");
-		LOGGER.info("            ~ ~ ~ * ~ ~ ~");
+		LOGGER.info("                  ~ ~ ~ * ~ ~ ~");
 		LOGGER.info("");
 
-		LOGGER.info("         Panl version: {}", Main.panlVersion);
+		LOGGER.info("               Panl version: {}", Main.panlVersion);
 		LOGGER.info("");
-		LOGGER.info("    Designed for integration with");
-		LOGGER.info("           Solr version: {}", Main.solrVersion);
+		LOGGER.info("          Designed for integration with");
+		LOGGER.info("                 Solr version: {}", Main.solrVersion);
 		LOGGER.info("");
-		LOGGER.info("            ~ ~ ~ * ~ ~ ~");
+		LOGGER.info("                  ~ ~ ~ * ~ ~ ~");
 		LOGGER.info("");
 
 		try {

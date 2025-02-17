@@ -88,7 +88,8 @@ public class ResourceHelper {
 	 * <p>Serve a resourcePath from the class loader and cache the response on
 	 * first access.  This will return the cached response if it exists.</p>
 	 *
-	 * <p><strong> NOTE:</strong> that this is not supposed to be performant.</p>
+	 * <p><strong> NOTE:</strong> that this is not supposed to be performant as it
+	 * serves the in-built Panl web apps.</p>
 	 *
 	 * @param resourcePath the path to the resource
 	 * @param response The response object to write to

@@ -283,9 +283,8 @@ public class CollectionRequestHandler {
 			solrQuery.setRows(collectionProperties.getNumResultsPerPage());
 
 			// At this point we are either going to get all facet fields that
-			// have a when point, or we are just looking for more facets for a single
+			// have a when set, or we are just looking for more facets for a single
 			// one
-
 
 			if (null != contextLpseCode) {
 				// we are looking for 'more facets', so we only need this one
@@ -592,7 +591,6 @@ public class CollectionRequestHandler {
 			}
 		}
 
-		// TODO - this needs to be updated with additional query parameters
 		if (hasQueryParam && !queryParam.isBlank()) {
 			lpseTokens.add(new QueryLpseToken(collectionProperties, query, collectionProperties.getPanlParamQuery()));
 		}
