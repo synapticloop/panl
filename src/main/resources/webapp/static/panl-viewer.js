@@ -17,7 +17,7 @@ $(document).ready(function () {
 			currentCollectionName = collectionName;
 		}
 
-		availableCollections.append("&nbsp;-&nbsp;<a href=\"" + panlResultsViewerUrl + collectionUrl + "\">[&nbsp;" + fieldSet + "&nbsp;]</a>");
+		availableCollections.append("&nbsp;-&nbsp;<a href=\"" + panlResultsViewerUrl + collectionUrl + "/\">[&nbsp;" + fieldSet + "&nbsp;]</a>");
 	}
 
 	availableCollections.append("<br />")
