@@ -195,8 +195,8 @@ public class CollectionRequestHandler {
 			}
 		}
 
-		String[] searchQuery = uri.split("/");
-		String resultFields = searchQuery[2];
+		String[] lpsePath = uri.split("/");
+		String fieldSet = lpsePath[2];
 
 		List<LpseToken> lpseTokens = parseLpse(uri, query);
 
@@ -265,9 +265,9 @@ public class CollectionRequestHandler {
 			}
 
 			// we are checking for the empty fieldsets
-			List<String> resultFieldsForName = collectionProperties.getResultFieldsForName(resultFields);
-			if (null != resultFieldsForName) {
-				for (String fieldName : resultFieldsForName) {
+			List<String> resultFieldsForFieldSet = collectionProperties.getResultFieldsForFieldSet(fieldSet);
+			if (null != resultFieldsForFieldSet) {
+				for (String fieldName : resultFieldsForFieldSet) {
 					solrQuery.addField(fieldName);
 				}
 			}
@@ -338,7 +338,7 @@ public class CollectionRequestHandler {
 			solrQuery.setRows(numRows);
 
 			// this is done for the empty fieldset
-			if (null == resultFieldsForName) {
+			if (null == resultFieldsForFieldSet) {
 				solrQuery.setRows(0);
 			}
 
@@ -351,6 +351,7 @@ public class CollectionRequestHandler {
 			long sendAnReceiveNanos = System.nanoTime() - startNanos;
 
 			return (parseResponse(
+					fieldSet,
 				lpseTokens,
 				solrQueryResponse,
 				parseRequestNanos,
@@ -365,6 +366,7 @@ public class CollectionRequestHandler {
 	/**
 	 * <p>Parse the solrj response and add the Panl JSON information to it</p>
 	 *
+	 * @param fieldSet The fieldSet for this query
 	 * @param lpseTokens The parsed URI and panl tokens
 	 * @param solrQueryResponse The Solrj response to be parsed
 	 * @param parseRequestNanos The start time for this query in nanoseconds
@@ -374,11 +376,12 @@ public class CollectionRequestHandler {
 	 * @return a JSON Object as a string with the appended panl response
 	 */
 	private String parseResponse(
-		List<LpseToken> lpseTokens,
-		QueryResponse solrQueryResponse,
-		long parseRequestNanos,
-		long buildRequestNanos,
-		long sendAndReceiveNanos) {
+			String fieldSet,
+			List<LpseToken> lpseTokens,
+			QueryResponse solrQueryResponse,
+			long parseRequestNanos,
+			long buildRequestNanos,
+			long sendAndReceiveNanos) {
 
 		// set up the JSON response object
 		JSONObject solrJsonObject = new JSONObject(solrQueryResponse.jsonStr());
@@ -470,7 +473,7 @@ public class CollectionRequestHandler {
 		panlObject.put(JSON_KEY_PAGINATION, paginationProcessor.processToObject(panlTokenMap, solrQueryResponse));
 		panlObject.put(JSON_KEY_SORTING, sortingProcessor.processToObject(panlTokenMap));
 		panlObject.put(JSON_KEY_QUERY_OPERAND, queryOperandProcessor.processToObject(panlTokenMap));
-		panlObject.put(JSON_KEY_FIELDS, fieldsProcessor.processToObject(panlTokenMap));
+		panlObject.put(JSON_KEY_FIELDS, fieldsProcessor.processToObject(panlTokenMap, fieldSet));
 		panlObject.put(JSON_KEY_CANONICAL_URI, canonicalURIProcessor.processToString(panlTokenMap));
 
 		// now add in the timings

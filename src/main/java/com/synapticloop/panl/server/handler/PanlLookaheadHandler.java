@@ -204,7 +204,7 @@ public class PanlLookaheadHandler extends BaseResponseHandler implements HttpReq
 			// add in the default query operation
 			solrQuery.setParam(SOLR_PARAM_Q_OP, collectionProperties.getSolrDefaultQueryOperand());
 
-			List<String> resultFieldsForName = collectionProperties.getResultFieldsForName(fieldSet);
+			List<String> resultFieldsForName = collectionProperties.getResultFieldsForFieldSet(fieldSet);
 			if(null != resultFieldsForName) {
 				for (String fieldName : resultFieldsForName) {
 					solrQuery.addField(fieldName);

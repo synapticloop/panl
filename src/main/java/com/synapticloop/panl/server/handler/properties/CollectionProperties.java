@@ -871,6 +871,7 @@ public class CollectionProperties {
 
 		LOGGER.info("[ Solr/Panl '{}/{}' ] Adding result fields with key '{}', and fields '{}'.", solrCollection,
 					panlCollectionUri, resultFieldsName, resultFields);
+
 		List<String> fields = new ArrayList<>();
 		for(String resultField : resultFields.split(",")) {
 			fields.add(resultField.trim());
@@ -928,7 +929,7 @@ public class CollectionProperties {
 		return (new ArrayList<>(resultFieldsMap.keySet()));
 	}
 
-	public List<String> getResultFieldsForName(String name) {
+	public List<String> getResultFieldsForFieldSet(String name) {
 		return (resultFieldsMap.get(name));
 	}
 

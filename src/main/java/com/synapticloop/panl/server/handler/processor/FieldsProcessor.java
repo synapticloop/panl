@@ -29,8 +29,7 @@ import com.synapticloop.panl.server.handler.tokeniser.token.LpseToken;
 import org.apache.solr.client.solrj.response.QueryResponse;
 import org.json.JSONObject;
 
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class FieldsProcessor extends Processor {
 	public FieldsProcessor(CollectionProperties collectionProperties) {
@@ -39,5 +38,16 @@ public class FieldsProcessor extends Processor {
 
 	@Override public JSONObject processToObject(Map<String, List<LpseToken>> panlTokenMap, QueryResponse queryResponse) {
 		return(collectionProperties.getSolrFieldToPanlNameLookup());
+	}
+
+	public JSONObject processToObject(Map<String, List<LpseToken>> panlTokenMap, String fieldSet) {
+		JSONObject solrFieldToPanlNameLookup = collectionProperties.getSolrFieldToPanlNameLookup();
+
+		JSONObject returnObject = new JSONObject();
+		for (String fieldName : collectionProperties.getResultFieldsForFieldSet(fieldSet)) {
+			returnObject.put(fieldName, solrFieldToPanlNameLookup.get(fieldName));
+		}
+
+		return(returnObject);
 	}
 }
