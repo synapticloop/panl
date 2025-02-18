@@ -9,6 +9,7 @@ plugins {
 // server to output the version on startup.
 def properties = new Properties()
 file("src/main/resources/gradle.properties").withInputStream { properties.load(it) }
+
 version = properties.getProperty("panl.version")
 group = 'com.synapticloop'
 

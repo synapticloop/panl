@@ -1034,5 +1034,10 @@ number.
    - ~~Display this facet 'unless' another facet within the list of 'unless' 
      facets is selected.~~
    - ~~This is the opposite of the panl.when.<lpse_code>.~~
+1. Remove unneeded Solr JSON Response keys (Low Priority)
+   - Solr returns JSON keys that are duplicated in the Panl response 
+     (think `facet_counts`) which are duplicated in the values array for Panl.
+   - Provide a property which removes the unneeded/duplicate keys - need to 
+     decide whether this is server level, or CaFUP level.
 
 

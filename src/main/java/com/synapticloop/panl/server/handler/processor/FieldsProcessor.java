@@ -45,7 +45,9 @@ public class FieldsProcessor extends Processor {
 
 		JSONObject returnObject = new JSONObject();
 		for (String fieldName : collectionProperties.getResultFieldsForFieldSet(fieldSet)) {
-			returnObject.put(fieldName, solrFieldToPanlNameLookup.get(fieldName));
+			if(null != solrFieldToPanlNameLookup.opt(fieldName)) {
+				returnObject.put(fieldName, solrFieldToPanlNameLookup.get(fieldName));
+			}
 		}
 
 		return(returnObject);

@@ -1,13 +1,25 @@
 # Instructions for Development Process
 
-> IMPORTANT: you REALLY want to run the integration tests against a live Solr instance with indexed data.
-> See the section at the end of this document about integration tests and naming etc.
+> **IMPORTANT**: you **REALLY** want to run the integration tests against a 
+> live Solr instance with indexed data.  See the section at the end of this 
+> document about integration tests and naming etc.
 
 ## 1. Name the new version 
 
-Find a suitable name for the new version and branch - an example site is the [Release name generator](https://codesandbox.io/p/sandbox/release-name-generator-5ow5w?file=%2Fsrc%2Findex.js) 
-which somehow (_sort-of_) relates to the release.  The next release may very well be called `hidden-summer` as there may 
-be some boost terms added to queries.
+Find a suitable name for the new version and branch - an example site is the 
+[Release name generator](https://codesandbox.io/p/sandbox/release-name-generator-5ow5w?file=%2Fsrc%2Findex.js) 
+which somehow (_sort-of_) relates to the release.  The next release may very 
+well be called `hidden-summer` as there may be some boost terms added to 
+queries.
+
+Other possible version names:
+
+- `bitter-shadow`
+- `raspy-pine`
+- `twilight-truth`
+- `quiet-paper`
+- `lucky-wave`
+- `young-pine`
 
 ## 2. Create a branch 
 
@@ -19,9 +31,11 @@ Do the work, run the tests, but don't forget the following:
 
 ### a. Update the version
 
-See the file `src/main/resources/gradle.properties` and update the following properties:
+See the file `src/main/resources/gradle.properties` and update the following 
+properties:
 
-The Synapticloop Panl project uses `major.minor.micro` versioning, the meaning of which:
+The Synapticloop Panl project uses `major.minor.micro` versioning, the meaning 
+of which:
 
 - `major` - the major version will increment when there is a breaking change 
   to the Panl LPSE URL.  Upon increment of the major version, both the minor 
@@ -41,9 +55,11 @@ The Panl releases will not reflect any book updates.
 
 > **NOTE:** you must have the Solr server with all data indexed running
 
-This includes both the unit tests `./gradlew test` and the integration tests `./gradlew testIntegration`
+This includes both the unit tests `./gradlew test` and the integration tests 
+`./gradlew testIntegration`
 
-The integration tests are the best tests to run as they will ensure that specific facets will be able to be removed and added, inverted etc.
+The integration tests are the best tests to run as they will ensure that 
+specific facets will be able to be removed and added, inverted etc.
 
 ### c. Run the site spider integration tests
 
@@ -65,8 +81,10 @@ The following parts need to be updated:
    2. add new branch `hidden-summer` and get the circle-ci badges for the build
 2. Ensure that the Section "_Why Synapticloop Panl?_" is up-to-date 
 2. Ensure that the Section "_Additional Panl Niceties_" is up-to-date 
-3. Update the In-built Panl web app images (see `src/main/docs` for images) and the descriptions 
-4. Add in the section for Version History with all details - use previous versions as a template
+3. Update the In-built Panl web app images (see `src/main/docs` for images) and 
+   the descriptions 
+4. Add in the section for Version History with all details - use previous 
+   versions as a template
 
 ### e. Don't forget the `Getting Started With Synapticloop Panl` 
 
@@ -85,7 +103,8 @@ Update this as you go along.
 
 ### 1. Merge back to the `main` branch
 
-Merge all changes to the main version, there should be no conflicts....  but resolve them.
+Merge all changes to the main version, there should be no conflicts....  but 
+resolve them.
 
 1. checkout `main`
 2. merge the branch `hidden-summer` on to the `main` branch
@@ -96,11 +115,12 @@ Merge all changes to the main version, there should be no conflicts....  but res
 
 ### 2. Merge into to the `solr-panl-9` branch
 
-There should be no conflicts as the `main` branch is linked to Solr version 9, this will change when Solr releases their 
-version 10.
+There should be no conflicts as the `main` branch is linked to Solr version 9, 
+this will change when Solr releases their version 10.
 
 1. checkout `solr-panl-9`
-1. merge the branch `main` on to the `solr-panl-9` branch - there should be no conflicts as the main branch and the Solr version are the same
+1. merge the branch `main` on to the `solr-panl-9` branch - there should be no 
+   conflicts as the main branch and the Solr version are the same
 1. test
 1. commit
 1. push
@@ -108,8 +128,8 @@ version 10.
 
 ### 3. Merge into to the `solr-panl-8` branch
 
-There **MOST PROBABLY WILL BE** conflicts if any of the individual files that deal with the integration points have 
-changed.
+There **MOST PROBABLY WILL BE** conflicts if any of the individual files that 
+deal with the integration points have changed.
 
 1. checkout `solr-panl-8`
 1. merge the branch `main` on to the `solr-panl-8` branch
@@ -125,8 +145,8 @@ The files most likely to conflict are:
 
 ### 3. Merge into to the `solr-panl-7` branch
 
-There **MOST PROBABLY WILL BE** conflicts if any of the individual files that deal with the integration points have
-changed.
+There **MOST PROBABLY WILL BE** conflicts if any of the individual files that 
+deal with the integration points have changed.
 
 1. checkout `solr-panl-7`
 1. merge the branch `main` on to the `solr-panl-7` branch
@@ -139,7 +159,8 @@ The files most likely to conflict are:
 
 ## 4. Get ready for release
 
-Create a new release which matches the `src/main/resources/gradle.properties` file with the `panl.version` number.
+Create a new release which matches the `src/main/resources/gradle.properties` 
+file with the `panl.version` number.
 
 This is done through the github releases page: [Github Releases](https://github.com/synapticloop/panl/releases).
 
@@ -159,10 +180,12 @@ Remember
 
  - Page 1 - update the Version
  - Update the `Additional Functionality in the Pipeline` (page 320 ish)
- - Update the table of contents (including changing the font of the table of contents to Libre Baskerville)
+ - Update the table of contents (including changing the font of the table of 
+   contents to Libre Baskerville)
 
 The book can be found [Getting Started With Panl](https://docs.google.com/document/d/1r2LVM0KGUI7NWdMVm4TE0e7SOS2qF2Mk6TptLoL1BcU/edit?tab=t.0) 
-although access must be granted to individuals wishing to edit the documentation (Google Drive based document).
+although access must be granted to individuals wishing to edit the documentation 
+(Google Drive based document).
 
 
 1. Save the book as `Web-page/html`
@@ -180,7 +203,8 @@ although access must be granted to individuals wishing to edit the documentation
 
 The source code lives in `src/testintegration/java/`
 
-All Facets and Facet type options should be tested in conjunction with all other facet types and options.
+All Facets and Facet type options should be tested in conjunction with all other
+facet types and options.
 
 The Facet Types
 
@@ -192,7 +216,8 @@ The Facet Types
 1. OR - keyed on `testOr`
 1. OR Separator - keyed on `testOrSep`
 
-Depending on which way you want to look at things, a test for a RANGE facet with a Regular Multi facet may be in the `RangeTest`, or the `MultiTest` class 
+Depending on which way you want to look at things, a test for a RANGE facet with
+a Regular Multi facet may be in the `RangeTest`, or the `MultiTest` class 
 
 Don't forget to test sorting (include multi sort) and query operands
 
@@ -200,14 +225,62 @@ Don't forget to test sorting (include multi sort) and query operands
 
 All tests should have the following test method signature
 
-All Tests __should__ extend the abstract TestBase, which defines the following mandatory methods:
+All Tests __should__ extend the abstract TestBase, which defines the following 
+mandatory methods:
 
-`@Test public void testDefault() throws Exception;` - test the default add/remove/invert etc.
+`@Test public void testDefault() throws Exception;` - test the default 
+add/remove/invert etc.
 
-`@Test public abstract void testSortDefault() throws Exception;` - test one sorting level
+`@Test public abstract void testSortDefault() throws Exception;` - test one 
+sorting level
 
-`@Test public abstract void testSortHierarchy() throws Exception;` - test two sorting levels
+`@Test public abstract void testSortHierarchy() throws Exception;` - test two 
+sorting levels
 
-see the class `com.synapticloop.integration.test.facet.TestBase` for the full list
+see the class `com.synapticloop.integration.test.facet.TestBase` for the full 
+list
 
 
+# Upgrading Solr version
+
+Everything should be smooth... :) 
+
+## Create new branch
+
+It **MUST** be named solr-panl-`<major_version_number>` (i.e. `solr-panl-10`) 
+
+## Update gradle properties
+
+In the `src/main/resources/gradle.properties` update the property 
+`panl.solr.version` to the new Solr version
+
+## Update the dependencies
+
+In the `build.gradle` file update the dependencies for:
+
+```
+	// solrj
+	implementation 'org.apache.solr:solr-solrj:9.8.0'
+	implementation 'org.apache.solr:solr-solrj-zookeeper:9.8.0'
+
+	// HTTP server
+	implementation 'org.eclipse.jetty.http2:http2-server:10.0.22'
+	implementation 'org.eclipse.jetty:jetty-servlet:10.0.22'
+```
+
+Especially the jetty server to be in line with the version that SolrJ 
+requires. (although because this serves up the Panl api, there really isn't a
+need to update this - may as well to ensure compatability with SolrJ)
+
+There **__MAY__** be new SolrJ connectors (or ones that have dropped off)
+
+---
+
+>                               ~ ~ ~ * ~ ~ ~
+> 
+> Panl will **NOT** officially support versions before Solr version 7 (it was
+> released in 2019 - that should be enough time...)
+>
+>                               ~ ~ ~ * ~ ~ ~
+
+---

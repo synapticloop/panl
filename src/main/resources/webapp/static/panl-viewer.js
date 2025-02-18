@@ -111,7 +111,7 @@ function populatePanlResults(panlJsonData) {
 	console.log(panlJsonData.panl);
 
 	console.log("[ RETURNED PANL CANONICAL URI JSON OBJECT ]")
-	console.log(panlJsonData.panl.timings);
+	console.log(panlJsonData.panl.canonical_uri);
 
 	$("#explain-collection").attr("href", "/panl-results-explainer" + $("#collection").text() + "/?explain=" + panlJsonData.panl.canonical_uri)
 

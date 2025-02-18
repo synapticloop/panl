@@ -875,6 +875,19 @@ public class CollectionProperties {
 		List<String> fields = new ArrayList<>();
 		for(String resultField : resultFields.split(",")) {
 			fields.add(resultField.trim());
+//			String resultFieldTrim = resultField.trim();
+//			// now look up to see whether we have this field
+//			// TODO - FIX THIS - need to only add the fields which exist
+//			if(SOLR_NAME_TO_LPSE_CODE_MAP.containsKey(resultFieldTrim)) {
+//				fields.add(resultFieldTrim);
+//			} else {
+//				LOGGER.warn("[ Solr/Panl '{}/{}' ] Cannot find field/facet definition for Solr field '{}'." +
+//								"This will not be added to the fieldSet '{}'.",
+//						solrCollection,
+//						panlCollectionUri,
+//						resultFieldTrim,
+//						resultFieldsName);
+//			}
 		}
 
 		resultFieldsMap.put(resultFieldsName, fields);
