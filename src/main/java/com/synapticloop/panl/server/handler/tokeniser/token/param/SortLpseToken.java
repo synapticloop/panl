@@ -1,7 +1,7 @@
 package com.synapticloop.panl.server.handler.tokeniser.token.param;
 
 /*
- * Copyright (c) 2008-2024 synapticloop.
+ * Copyright (c) 2008-2025 synapticloop.
  *
  * https://github.com/synapticloop/panl
  *
@@ -138,7 +138,13 @@ public class SortLpseToken extends LpseToken {
 				"' (solr field '" +
 				(this.solrFacetField == null ? " defaulting to <relevance>" : this.solrFacetField) +
 				"'), sorted " +
-				(this.sortOrder == SolrQuery.ORDER.asc ? "ASCending" : "DESCending"));
+				(this.sortOrder == SolrQuery.ORDER.asc ? "ASCending (+)" : "DESCending (-)") +
+				", incoming LPSE URL part '" +
+				this.lpseCode +
+				this.lpseSortCode +
+				(this.sortOrder == SolrQuery.ORDER.asc ? "+" : "-") +
+				"'."
+		);
 	}
 
 	@Override public String getType() {

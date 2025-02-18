@@ -1,7 +1,7 @@
 package com.synapticloop.panl.server.handler.fielderiser.field.param;
 
 /*
- * Copyright (c) 2008-2024 synapticloop.
+ * Copyright (c) 2008-2025 synapticloop.
  *
  * https://github.com/synapticloop/panl
  *
@@ -43,6 +43,8 @@ public class PanlQueryOperandField extends BaseField {
 
 	public PanlQueryOperandField(String lpseCode, String propertyKey, Properties properties, String solrCollection, String panlCollectionUri) throws PanlServerException {
 		super(lpseCode, properties, propertyKey, solrCollection, panlCollectionUri);
+		// TODO maybe override the constructor???  probably more confusing
+		super.hasURIComponent = false;
 	}
 
 	@Override
@@ -98,7 +100,7 @@ public class PanlQueryOperandField extends BaseField {
 		return(explanations);
 	}
 
-	public void applyToQueryInternal(SolrQuery solrQuery, List<LpseToken> lpseTokenList) {
+	public void applyToQueryInternal(SolrQuery solrQuery, List<LpseToken> lpseTokenList, CollectionProperties collectionProperties) {
 		if (!lpseTokenList.isEmpty()) {
 			solrQuery.setParam(SOLR_PARAM_Q_OP, ((QueryOperandLpseToken) lpseTokenList.get(0)).getQOpValue());
 		}
@@ -131,8 +133,8 @@ public class PanlQueryOperandField extends BaseField {
 	@Override public void appendToAvailableObjectInternal(JSONObject jsonObject) {
 
 	}
-	@Override public LpseToken instantiateToken(CollectionProperties collectionProperties, String lpseCode, String query, StringTokenizer valueTokeniser, LpseTokeniser lpseTokeniser) {
-		return(new QueryOperandLpseToken(collectionProperties, this.lpseCode, lpseTokeniser));
+	@Override public List<LpseToken> instantiateTokens(CollectionProperties collectionProperties, String lpseCode, String query, StringTokenizer valueTokeniser, LpseTokeniser lpseTokeniser) {
+		return(List.of(new QueryOperandLpseToken(collectionProperties, this.lpseCode, lpseTokeniser)));
 	}
 
 	@Override protected void logDetails() {

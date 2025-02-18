@@ -31,9 +31,9 @@ public class AvailableProcessorRangeFacetTest {
 
 		System.out.println(urisObject.toString(2));
 
-		assertEquals("/weighing+from+", urisObject.getString(Processor.JSON_KEY_BEFORE));
-		assertEquals("+to+", urisObject.getString(Processor.JSON_KEY_DURING));
-		assertEquals("+grams/w-w/", urisObject.getString(Processor.JSON_KEY_AFTER));
+		assertEquals("/weighing%20from%20", urisObject.getString(Processor.JSON_KEY_BEFORE));
+		assertEquals("%20to%20", urisObject.getString(Processor.JSON_KEY_DURING));
+		assertEquals("%20grams/w-/", urisObject.getString(Processor.JSON_KEY_AFTER));
 	}
 
 	@Test void testRangeAdditionURIPrefixInfix() throws PanlServerException, IOException {
@@ -53,9 +53,9 @@ public class AvailableProcessorRangeFacetTest {
 
 		System.out.println(urisObject.toString(2));
 
-		assertEquals("/weighing+", urisObject.getString(Processor.JSON_KEY_BEFORE));
-		assertEquals("+to+", urisObject.getString(Processor.JSON_KEY_DURING));
-		assertEquals("/w-w/", urisObject.getString(Processor.JSON_KEY_AFTER));
+		assertEquals("/weighing%20", urisObject.getString(Processor.JSON_KEY_BEFORE));
+		assertEquals("%20to%20", urisObject.getString(Processor.JSON_KEY_DURING));
+		assertEquals("/w-/", urisObject.getString(Processor.JSON_KEY_AFTER));
 	}
 
 	@Test void testRangeAdditionURIPrefix() throws PanlServerException, IOException {
@@ -73,9 +73,9 @@ public class AvailableProcessorRangeFacetTest {
 		System.out.println(urisObject.toString(2));
 		assertFalse(urisObject.toString().contains("PANL_WONT_APPEAR"));
 
-		assertEquals("/this+is+the+prefix", urisObject.getString(Processor.JSON_KEY_BEFORE));
-		assertEquals("~this+is+the+prefix", urisObject.getString(Processor.JSON_KEY_DURING));
-		assertEquals("/w+w/", urisObject.getString(Processor.JSON_KEY_AFTER));
+		assertEquals("/this%20is%20the%20prefix", urisObject.getString(Processor.JSON_KEY_BEFORE));
+		assertEquals("~this%20is%20the%20prefix", urisObject.getString(Processor.JSON_KEY_DURING));
+		assertEquals("/w+/", urisObject.getString(Processor.JSON_KEY_AFTER));
 	}
 
 	@Test void testRangeAdditionURISuffix() throws PanlServerException, IOException {
@@ -95,8 +95,8 @@ public class AvailableProcessorRangeFacetTest {
 		assertFalse(urisObject.toString().contains("PANL_WONT_APPEAR"));
 
 		assertEquals("/", urisObject.getString(Processor.JSON_KEY_BEFORE));
-		assertEquals("+grams~", urisObject.getString(Processor.JSON_KEY_DURING));
-		assertEquals("+grams/w+w/", urisObject.getString(Processor.JSON_KEY_AFTER));
+		assertEquals("%20grams~", urisObject.getString(Processor.JSON_KEY_DURING));
+		assertEquals("%20grams/w+/", urisObject.getString(Processor.JSON_KEY_AFTER));
 	}
 
 	@Test void testRangeAdditionURIPrefixSuffix() throws PanlServerException, IOException {
@@ -116,9 +116,9 @@ public class AvailableProcessorRangeFacetTest {
 		System.out.println(urisObject.toString(2));
 		assertFalse(urisObject.toString().contains("PANL_WONT_APPEAR"));
 
-		assertEquals("/this+is+the+prefix", urisObject.getString(Processor.JSON_KEY_BEFORE));
-		assertEquals("this+is+the+suffix~this+is+the+prefix", urisObject.getString(Processor.JSON_KEY_DURING));
-		assertEquals("this+is+the+suffix/w+w/", urisObject.getString(Processor.JSON_KEY_AFTER));
+		assertEquals("/this%20is%20the%20prefix", urisObject.getString(Processor.JSON_KEY_BEFORE));
+		assertEquals("this%20is%20the%20suffix~this%20is%20the%20prefix", urisObject.getString(Processor.JSON_KEY_DURING));
+		assertEquals("this%20is%20the%20suffix/w+/", urisObject.getString(Processor.JSON_KEY_AFTER));
 	}
 
 //	@Test
@@ -127,7 +127,7 @@ public class AvailableProcessorRangeFacetTest {
 		JSONObject jsonObject = TestHelper.invokeAvailableProcessor(
 				WEIGHT_FACETS,
 				"/range/prefix-infix-suffix.properties",
-				"/test/default/weighing+from+18+to+35+grams/w-w/",
+				"/test/default/weighing%20from%2018%20to%2035%20grams/w-/",
 				"",
 				10,
 				true);
@@ -146,17 +146,17 @@ public class AvailableProcessorRangeFacetTest {
 		System.out.println(urisObject.toString(2));
 		assertFalse(urisObject.toString().contains("PANL_WONT_APPEAR"));
 
-		assertEquals("/weighing+from+", urisObject.getString(Processor.JSON_KEY_BEFORE));
-		assertEquals("+to+", urisObject.getString(Processor.JSON_KEY_DURING));
-		assertEquals("+grams/w-w/", urisObject.getString(Processor.JSON_KEY_AFTER));
+		assertEquals("/weighing%20from%20", urisObject.getString(Processor.JSON_KEY_BEFORE));
+		assertEquals("%20to%20", urisObject.getString(Processor.JSON_KEY_DURING));
+		assertEquals("%20grams/w-/", urisObject.getString(Processor.JSON_KEY_AFTER));
 	}
 
 	@Test public void testAdditionOfFacetOnPageNumber() throws PanlServerException, IOException {
 		// test with the page number - it shouldn't have a 'p' LPSE code
-		assertResetOfPageNumbers("/test/default/2/p/", "/w+w/");
+		assertResetOfPageNumbers("/test/default/2/p/", "/w+/");
 		// test with the page number - it shouldn't have a 'p' LPSE code but should
 		// have the 'n'
-		assertResetOfPageNumbers("/test/default/2/3/pn/", "/3/w+wn/");
+		assertResetOfPageNumbers("/test/default/2/3/pn/", "/3/w+n/");
 	}
 
 	private void assertResetOfPageNumbers(String uriPath, String after) throws PanlServerException, IOException {
@@ -179,14 +179,14 @@ public class AvailableProcessorRangeFacetTest {
 	}
 
 	@Test public void testCanonicalURI() throws PanlServerException, IOException {
-		TestHelper.assertCanonicalURI("/test/default/11~18/w+w/", "/11~18/1/10/w+wpn/");
+		TestHelper.assertCanonicalURI("/test/default/11~18/w+/", "/11~18/1/10/w+pn/");
 	}
 
 	@Test public void testNoInfixSuffix() throws PanlServerException, IOException {
 		JSONObject jsonObject = TestHelper.invokeAvailableProcessor(
 				WEIGHT_FACETS,
 				"/range/suffix.properties",
-				"/test/default/10+grams~20+grams/w+w/",
+				"/test/default/10%20grams~20%20grams/w+/",
 				"",
 				10,
 				true);
@@ -199,8 +199,8 @@ public class AvailableProcessorRangeFacetTest {
 				.getJSONObject(Processor.JSON_KEY_URIS);
 
 		assertEquals("/", urisObject.getString(Processor.JSON_KEY_BEFORE));
-		assertEquals("+grams~", urisObject.getString(Processor.JSON_KEY_DURING));
-		assertEquals("+grams/w+w/", urisObject.getString(Processor.JSON_KEY_AFTER));
+		assertEquals("%20grams~", urisObject.getString(Processor.JSON_KEY_DURING));
+		assertEquals("%20grams/w+/", urisObject.getString(Processor.JSON_KEY_AFTER));
 
 	}
 

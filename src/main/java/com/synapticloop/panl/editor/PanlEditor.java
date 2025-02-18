@@ -1,5 +1,7 @@
+package com.synapticloop.panl.editor;
+
 /*
- * Copyright (c) 2008-2024 synapticloop.
+ * Copyright (c) 2008-2025 synapticloop.
  *
  * https://github.com/synapticloop/panl
  *
@@ -22,52 +24,59 @@
  * IN THE SOFTWARE.
  */
 
-package com.synapticloop.panl.editor;
-
 import com.formdev.flatlaf.FlatDarkLaf;
 import com.formdev.flatlaf.FlatLightLaf;
+import com.synapticloop.panl.editor.tab.CollectionURLPropertiesTab;
 import com.synapticloop.panl.editor.tab.NewCollectionTab;
-import com.synapticloop.panl.editor.tab.PanlPropertiesEditTab;
-import com.synapticloop.panl.editor.tab.PanlPropertiesNewTab;
+import com.synapticloop.panl.editor.tab.PanlPropertiesTab;
+import com.synapticloop.panl.editor.util.DialogHelper;
+import com.synapticloop.panl.editor.util.Settings;
+import com.synapticloop.panl.server.handler.properties.PanlProperties;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.KeyEvent;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.io.File;
+import java.io.FileInputStream;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.Properties;
+
+import static com.synapticloop.panl.editor.Constants.*;
 
 public class PanlEditor {
-	private static final ImageIcon ICON_APP =
-		new ImageIcon(PanlEditor.class.getResource("/webapp/static/favicon.png"));
+	public static final String TAB_TITLE_ADD = "[ + ]";
+	private JFrame mainWindowFrame;
+	private PanlProjectLauncher panlProjectLauncher;
+	private JMenu fileMenuItem;
+	private JMenuItem saveMenuItem;
+	private JMenuItem quitMenuItem;
+	private JLabel labelEdited;
 
 
+	private File panlDotPropertiesFile;
+	private boolean isEdited = false;
+	private List<File> collectionPropertyFiles = new ArrayList<>();
+	private PanlProperties panlProperties;
+	private PanlPropertiesTab panlPropertiesTab;
+	private int currentTabIndex = 1;
 
-	private static final ImageIcon ICON_MOON =
-		new ImageIcon(PanlEditor.class.getResource("/images/moon.png"));
-	private static final ImageIcon ICON_SUN =
-		new ImageIcon(PanlEditor.class.getResource("/images/sun.png"));
+	public PanlEditor(File panlDotPropertiesFile, PanlProjectLauncher panlProjectLauncher) throws Exception {
+		this.panlDotPropertiesFile = panlDotPropertiesFile;
+		this.panlProjectLauncher = panlProjectLauncher;
 
+		Properties properties = new Properties();
+		properties.load(new FileInputStream(panlDotPropertiesFile));
+		this.panlProperties = new PanlProperties(properties);
 
+		labelEdited = new JLabel("");
+		labelEdited.setBorder(BorderFactory.createEmptyBorder(4, 4, 4, 4));
 
-	private static final ImageIcon ICON_FILE =
-		new ImageIcon(PanlEditor.class.getResource("/images/file.png"));
-	private static final ImageIcon ICON_FILE_WHITE =
-		new ImageIcon(PanlEditor.class.getResource("/images/file-white.png"));
-
-	private static final ImageIcon ICON_SAVE =
-		new ImageIcon(PanlEditor.class.getResource("/images/save.png"));
-	private static final ImageIcon ICON_SAVE_WHITE =
-		new ImageIcon(PanlEditor.class.getResource("/images/save-white.png"));
-
-	private static final ImageIcon ICON_QUIT =
-		new ImageIcon(PanlEditor.class.getResource("/images/quit.png"));
-	private static final ImageIcon ICON_QUIT_WHITE =
-		new ImageIcon(PanlEditor.class.getResource("/images/quit-white.png"));
-
-	private static final ImageIcon ICON_RECENT =
-		new ImageIcon(PanlEditor.class.getResource("/images/clock.png"));
-	private static final ImageIcon ICON_RECENT_WHITE =
-		new ImageIcon(PanlEditor.class.getResource("/images/clock-white.png"));
-
-	private boolean isDarkUI = false;
+	}
 
 	public void show() {
 		FlatLightLaf.setup();
@@ -78,92 +87,193 @@ public class PanlEditor {
 			System.err.println("Failed to initialize Flat Look and Feel");
 		}
 
-		JFrame mainWindowFrame = new JFrame("Panl Configuration Editor");
+		mainWindowFrame = new JFrame("Panl Configuration Editor");
 		mainWindowFrame.setIconImage(ICON_APP.getImage());
 
-		mainWindowFrame.setPreferredSize(new Dimension(800, 600));
-		mainWindowFrame.setMinimumSize(new Dimension(800, 600));
-		mainWindowFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		mainWindowFrame.setResizable(false);
+		mainWindowFrame.addWindowListener(new WindowAdapter() {
+			@Override public void windowClosing(WindowEvent e) {
+				if(actionOnWindowClosing()) {
+					mainWindowFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+				} else {
+					mainWindowFrame.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
+				}
+			}
+		});
 
 		mainWindowFrame.setJMenuBar(createJMenuBar(mainWindowFrame));
 
 		JTabbedPane jTabbedPane = new JTabbedPane();
-		jTabbedPane.add("panl", PanlPropertiesEditTab.getJPanel(null));
+		jTabbedPane.putClientProperty( "FlatLaf.style", "font: bold" );
 		Component newCollection = NewCollectionTab.createNewCollection();
-		jTabbedPane.add("[ + ]", newCollection);
-		jTabbedPane.setEnabledAt(1, false);
+		jTabbedPane.add(TAB_TITLE_ADD, newCollection);
+
+		this.panlPropertiesTab = new PanlPropertiesTab(this);
+		jTabbedPane.add("{PANL} " + panlDotPropertiesFile.getName(), panlPropertiesTab.getJPanel());
+		// now add in the all of the collections
+		Map<String, List<String>> panlCollectionsMap = panlProperties.getPanlCollectionsMap();
+		for (String solrCollection : panlCollectionsMap.keySet()) {
+			// TODO - figure out filename and file location
+			String absolutePath = panlDotPropertiesFile.getParentFile().getAbsolutePath();
+			for (String collectionFileLocation : panlCollectionsMap.get(solrCollection)) {
+				File file = new File(absolutePath + File.separator + collectionFileLocation);
+				jTabbedPane.add(
+					"[" + solrCollection + "] " + collectionFileLocation,
+					new CollectionURLPropertiesTab(this, file).getJPanel());
+			}
+		}
 
 		jTabbedPane.addChangeListener(e -> {
-			JTabbedPane selectedTab = (JTabbedPane) e.getSource();
-			System.out.println(selectedTab.getTitleAt(selectedTab.getSelectedIndex()));
+			if(jTabbedPane.getTitleAt(jTabbedPane.getSelectedIndex()).equals(TAB_TITLE_ADD)) {
+				// TODO add new collection - show a dialog
+				jTabbedPane.setSelectedIndex(currentTabIndex);
+				DialogHelper.showWarning("creating a new Collection mapping");
+			} else {
+				currentTabIndex = jTabbedPane.getSelectedIndex();
+			}
 		});
 
-		mainWindowFrame.getContentPane().add(jTabbedPane, BorderLayout.NORTH);
+		jTabbedPane.setSelectedIndex(1);
+
+		Box fileLabelBox = Box.createHorizontalBox();
+
+		JLabel jLabel = new JLabel(panlDotPropertiesFile.getAbsolutePath());
+		jLabel.putClientProperty( "FlatLaf.styleClass", "h3" );
+		jLabel.setBorder(BorderFactory.createEmptyBorder(4, 4, 4, 4));
+		fileLabelBox.add(jLabel);
+		fileLabelBox.add(Box.createHorizontalGlue());
+		fileLabelBox.add(labelEdited);
+
+
+		mainWindowFrame.add(fileLabelBox, BorderLayout.NORTH);
+
+		mainWindowFrame.getContentPane().add(jTabbedPane, BorderLayout.CENTER);
+		mainWindowFrame.setLocation(Settings.getPanlPropertiesPosition(panlDotPropertiesFile));
 
 		mainWindowFrame.pack();
 
 		mainWindowFrame.setVisible(true);
+
 	}
 
 	private JMenuBar createJMenuBar(JFrame jFrame) {
 		JMenuBar jMenuBar = new JMenuBar();
 
-		JMenu fileMenuItem = new JMenu("File");
+		fileMenuItem = new JMenu("File");
 		fileMenuItem.setIcon(ICON_FILE);
 
-		JMenuItem recentsMenuItem = new JMenuItem("Recent files...");
-		recentsMenuItem.setIcon(ICON_RECENT);
+		saveMenuItem = new JMenuItem("Save");
+		Action saveAction = new AbstractAction("Save") {
+			@Override public void actionPerformed(ActionEvent e) {
+				// TODO - save file
+				setIsEdited(false);
+				panlPropertiesTab.saveFile();
+			}
+		};
 
-		fileMenuItem.add(recentsMenuItem);
-		fileMenuItem.addSeparator();
-
-		JMenuItem saveMenuItem = new JMenuItem("Save");
+		saveAction.putValue(Action.ACCELERATOR_KEY, KeyStroke.getKeyStroke(KeyEvent.VK_S, KeyEvent.CTRL_DOWN_MASK));
+		saveMenuItem.setAction(saveAction);
 		saveMenuItem.setIcon(ICON_SAVE);
+
+
 		fileMenuItem.add(saveMenuItem);
 
 		fileMenuItem.addSeparator();
 
-		JMenuItem exitMenuItem = new JMenuItem("Quit");
-		exitMenuItem.setIcon(ICON_QUIT);
-		fileMenuItem.add(exitMenuItem);
+		quitMenuItem = new JMenuItem("Quit");
+		Action quitAction = new AbstractAction("Quit") {
+			@Override public void actionPerformed(ActionEvent e) {
+				if(isEdited) {
+					// show a window
+				}
+				mainWindowFrame.dispatchEvent(new WindowEvent(mainWindowFrame, WindowEvent.WINDOW_CLOSING));
+			}
+		};
+		quitAction.putValue(Action.ACCELERATOR_KEY, KeyStroke.getKeyStroke(KeyEvent.VK_Q, KeyEvent.CTRL_DOWN_MASK));
+		quitMenuItem.setAction(quitAction);
+		quitMenuItem.setIcon(ICON_QUIT);
+
+		fileMenuItem.add(quitMenuItem);
 
 		jMenuBar.add(fileMenuItem);
 
 		jMenuBar.add( Box.createGlue() );
 
-		jMenuBar.add(new JLabel("       "));
-		JButton uiButton = new JButton("Dark mode", ICON_MOON);
-		jMenuBar.add(uiButton);
-		uiButton.addActionListener(e -> {
-			try {
-				if (isDarkUI) {
-					UIManager.setLookAndFeel(new FlatLightLaf());
-					SwingUtilities.updateComponentTreeUI(jFrame);
-					uiButton.setText("Dark mode");
-					uiButton.setIcon(ICON_MOON);
-					fileMenuItem.setIcon(ICON_FILE);
-					saveMenuItem.setIcon(ICON_SAVE);
-					exitMenuItem.setIcon(ICON_QUIT);
-					recentsMenuItem.setIcon(ICON_RECENT);
-
-					isDarkUI = false;
-				} else {
-					UIManager.setLookAndFeel(new FlatDarkLaf());
-					SwingUtilities.updateComponentTreeUI(jFrame);
-					uiButton.setText("Light mode");
-					uiButton.setIcon(ICON_SUN);
-					fileMenuItem.setIcon(ICON_FILE_WHITE);
-					saveMenuItem.setIcon(ICON_SAVE_WHITE);
-					exitMenuItem.setIcon(ICON_QUIT_WHITE);
-					recentsMenuItem.setIcon(ICON_RECENT_WHITE);
-
-					isDarkUI = true;
-				}
-			} catch (UnsupportedLookAndFeelException ex) {
-				throw new RuntimeException(ex);
-			}
-		});
-
 		return (jMenuBar);
+	}
+
+	public void moveToFront() {
+		mainWindowFrame.requestFocus();
+	}
+
+	public boolean closeEditor() {
+		if(actionOnWindowClosing()) {
+			mainWindowFrame.dispatchEvent(new WindowEvent(mainWindowFrame, WindowEvent.WINDOW_CLOSING));
+			return(true);
+		}
+
+		return(false);
+	}
+
+	public boolean actionOnWindowClosing() {
+		if(isEdited) {
+			// TODO show a file save window
+			int retVal = DialogHelper.showFileSaveWarning(
+				"<html><h2>The file '" + panlDotPropertiesFile.getName() + "' file has edits.<br>Would you like" +
+					" to save the file?</br>");
+			switch (retVal) {
+				case JOptionPane.YES_OPTION:
+					// save the file(s)
+					break;
+				case JOptionPane.NO_OPTION:
+					// close window
+					break;
+				case JOptionPane.CANCEL_OPTION:
+					return(false);
+			}
+		}
+
+		panlProjectLauncher.removeActiveWindow(panlDotPropertiesFile.getAbsolutePath());
+
+		Settings.setPanlPropertiesPosition(panlDotPropertiesFile, mainWindowFrame.getX(), mainWindowFrame.getY());
+		Settings.saveSettings();
+		return(true);
+	}
+
+	public void setUIDisplayMode(boolean isDarkUI) {
+		try {
+			if (!isDarkUI) {
+				UIManager.setLookAndFeel(new FlatLightLaf());
+				SwingUtilities.updateComponentTreeUI(mainWindowFrame);
+				fileMenuItem.setIcon(ICON_FILE);
+				saveMenuItem.setIcon(ICON_SAVE);
+				quitMenuItem.setIcon(ICON_QUIT);
+			} else {
+				UIManager.setLookAndFeel(new FlatDarkLaf());
+				SwingUtilities.updateComponentTreeUI(mainWindowFrame);
+				fileMenuItem.setIcon(ICON_FILE_WHITE);
+				saveMenuItem.setIcon(ICON_SAVE_WHITE);
+				quitMenuItem.setIcon(ICON_QUIT_WHITE);
+			}
+		} catch (UnsupportedLookAndFeelException ex) {
+			throw new RuntimeException(ex);
+		}
+	}
+
+	public PanlProperties getPanlProperties() {
+		return panlProperties;
+	}
+
+	public void setIsEdited(boolean isEdited) {
+		this.isEdited = isEdited;
+		if(isEdited) {
+			labelEdited.setText("[edited]");
+		} else {
+			labelEdited.setText("");
+		}
+	}
+
+	public File getPanlDotPropertiesFile() {
+		return panlDotPropertiesFile;
 	}
 }

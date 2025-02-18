@@ -1,0 +1,11 @@
+{
+	"id": "This is the 'id' field contains the word synapticloop, this field is just the primary key",
+	"indexed_field": "This is the 'indexed_field' field contains the word synapticloop, this field is indexed",
+	"stored_field": "This is the 'stored_field' field contains the word synapticloop, this field is stored",
+	"both_indexed_and_stored_field": "This is the 'both_indexed_and_stored_field' field contains the word synapticloop, this field is indexed and stored",
+	"none_field": "This is the 'none_field' field contains the word synapticloop, this field is neither indexed nor stored",
+	"analysed_indexed_field": "This is the 'analysed_indexed_field' field contains the word synapticloop, this field is analysed and indexed",
+	"analysed_stored_field": "This is the 'analysed_stored_field' field contains the word synapticloop, this field is analysed and stored",
+	"analysed_both_field": "This is the 'analysed_both_field' field contains the word synapticloop, this field is analysed and indexed and stored",
+	"analysed_none_field": "This is the 'analysed_none_field' field contains the word synapticloop, this field is analysed and neither indexed nor stored"
+}

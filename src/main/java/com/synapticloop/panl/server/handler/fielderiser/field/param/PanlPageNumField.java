@@ -1,7 +1,7 @@
 package com.synapticloop.panl.server.handler.fielderiser.field.param;
 
 /*
- * Copyright (c) 2008-2024 synapticloop.
+ * Copyright (c) 2008-2025 synapticloop.
  *
  * https://github.com/synapticloop/panl
  *
@@ -218,7 +218,7 @@ public class PanlPageNumField extends BasePrefixSuffixField {
 	 * @param solrQuery The SolrQuery to apply the tokens to
 	 * @param lpseTokenList The list of tokens to apply to the Solr query
 	 */
-	public void applyToQueryInternal(SolrQuery solrQuery, List<LpseToken> lpseTokenList) {
+	public void applyToQueryInternal(SolrQuery solrQuery, List<LpseToken> lpseTokenList, CollectionProperties collectionProperties) {
 		// do nothing - this relies on other data and is set by the handler
 	}
 
@@ -235,8 +235,8 @@ public class PanlPageNumField extends BasePrefixSuffixField {
 	 *
 	 * @see PageNumLpseToken
 	 */
-	@Override public LpseToken instantiateToken(CollectionProperties collectionProperties, String lpseCode, String query, StringTokenizer valueTokeniser, LpseTokeniser lpseTokeniser) {
-		return(new PageNumLpseToken(collectionProperties, this.lpseCode, valueTokeniser));
+	@Override public List<LpseToken> instantiateTokens(CollectionProperties collectionProperties, String lpseCode, String query, StringTokenizer valueTokeniser, LpseTokeniser lpseTokeniser) {
+		return(List.of(new PageNumLpseToken(collectionProperties, this.lpseCode, valueTokeniser)));
 	}
 
 	/**

@@ -1,7 +1,7 @@
 package com.synapticloop.panl.server.handler.processor;
 
 /*
- * Copyright (c) 2008-2024 synapticloop.
+ * Copyright (c) 2008-2025 synapticloop.
  *
  * https://github.com/synapticloop/panl
  *
@@ -60,7 +60,7 @@ public class CanonicalURIProcessor extends Processor {
 	}
 
 	@Override public String processToString(Map<String, List<LpseToken>> panlTokenMap) {
-		StringBuilder canonicalUri = new StringBuilder("/");
+		StringBuilder canonicalUri = new StringBuilder(FORWARD_SLASH);
 		StringBuilder canonicalLpse = new StringBuilder();
 
 		for (BaseField baseField : collectionProperties.getLpseFields()) {
@@ -68,6 +68,6 @@ public class CanonicalURIProcessor extends Processor {
 			canonicalLpse.append(baseField.getCanonicalLpseCode(panlTokenMap, collectionProperties));
 		}
 
-		return (canonicalUri.toString() + canonicalLpse + "/");
+		return (canonicalUri.toString() + canonicalLpse + FORWARD_SLASH);
 	}
 }

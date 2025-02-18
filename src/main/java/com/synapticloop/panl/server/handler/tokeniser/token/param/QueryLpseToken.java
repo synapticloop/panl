@@ -1,7 +1,7 @@
 package com.synapticloop.panl.server.handler.tokeniser.token.param;
 
 /*
- * Copyright (c) 2008-2024 synapticloop.
+ * Copyright (c) 2008-2025 synapticloop.
  *
  * https://github.com/synapticloop/panl
  *
@@ -25,6 +25,7 @@ package com.synapticloop.panl.server.handler.tokeniser.token.param;
  */
 
 import com.synapticloop.panl.server.handler.properties.CollectionProperties;
+import com.synapticloop.panl.server.handler.tokeniser.LpseTokeniser;
 import com.synapticloop.panl.server.handler.tokeniser.token.LpseToken;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.utils.URLEncodedUtils;
@@ -33,21 +34,28 @@ import java.net.URLDecoder;
 import java.nio.charset.StandardCharsets;
 import java.util.*;
 
+/**
+ * <p>The query operand </p>
+ */
 public class QueryLpseToken extends LpseToken {
 	private boolean isOverride;
+	private List<String> searchableLpseFields = new ArrayList<>();
 
 	public QueryLpseToken(
 			CollectionProperties collectionProperties,
 			String queryFromUri,
 			String lpseCode) {
-		this(collectionProperties, lpseCode, queryFromUri, null);
+
+		this(collectionProperties, lpseCode, queryFromUri, null, null);
 	}
 
 	public QueryLpseToken(
 			CollectionProperties collectionProperties,
 			String lpseCode,
 			String queryFromUri,
-			StringTokenizer valueTokeniser) {
+			StringTokenizer valueTokeniser,
+			LpseTokeniser lpseTokeniser) {
+
 		super(lpseCode, collectionProperties);
 
 		if (null != valueTokeniser && valueTokeniser.hasMoreTokens()) {
@@ -56,13 +64,73 @@ public class QueryLpseToken extends LpseToken {
 					StandardCharsets.UTF_8);
 		}
 
+		StringBuilder queryLpseCodes = new StringBuilder();
+		boolean foundCorrectTokens = false;
+		// now we need to see if we are going to search on specific fields
+		if (null != lpseTokeniser && lpseTokeniser.hasMoreTokens()) {
+			String lpseToken = lpseTokeniser.nextToken();
+			if (lpseToken.equals("(")) {
+				// consume until we get an end ")"
+				while (lpseTokeniser.hasMoreTokens()) {
+					lpseToken = lpseTokeniser.nextToken();
+					if (lpseToken.equals(")")) {
+						foundCorrectTokens = true;
+						break;
+					} else {
+						queryLpseCodes.append(lpseToken);
+					}
+				}
+			} else {
+				// we don't have a specific field search going on here
+				lpseTokeniser.decrementCurrentPosition();
+			}
+		}
+
+		if (foundCorrectTokens) {
+			// we want to split the tokens on the LPSE length
+
+			// \G is a zero-width assertion that matches the position where the previous match ended. If there was no
+			// previous match, it matches the beginning of the input, the same as \A. The enclosing lookbehind matches
+			// the position that's four characters along from the end of the last match.
+
+			for (String lpseSearchCode :
+					queryLpseCodes.toString()
+					              .split("(?<=\\G.{" + collectionProperties.getLpseLength() + "})")) {
+				// ensure that it is a valid searchable field - else ignore
+				if (lpseSearchCode.length() == collectionProperties.getLpseLength()) {
+					String solrSearchField = collectionProperties.getSearchCodesMap().get(lpseSearchCode);
+					if (null != solrSearchField) {
+						searchableLpseFields.add(solrSearchField);
+					}
+				}
+			}
+		}
+
+		Map<String, String> nameValuePairMap = new HashMap<>();
+
+		String formQueryRespondTo = collectionProperties.getFormQueryRespondTo();
 		for (NameValuePair nameValuePair : URLEncodedUtils.parse(queryFromUri, StandardCharsets.UTF_8)) {
-			if (nameValuePair.getName().equals(collectionProperties.getFormQueryRespondTo())) {
-				this.value = URLDecoder.decode(
-						nameValuePair.getValue(),
-						StandardCharsets.UTF_8);
-				isOverride = true;
-				break;
+			nameValuePairMap.put(nameValuePair.getName(), nameValuePair.getValue());
+		}
+
+		if (nameValuePairMap.containsKey(formQueryRespondTo)) {
+			this.value = URLDecoder.decode(
+					nameValuePairMap.get(formQueryRespondTo),
+					StandardCharsets.UTF_8);
+			isOverride = true;
+
+			searchableLpseFields.clear();
+
+			// now go through and find the fields to search in
+
+			Map<String, String> searchFields = collectionProperties.getSearchCodesMap();
+			Iterator<String> iterator = searchFields.keySet().iterator();
+			while (iterator.hasNext()) {
+				String next = iterator.next();
+				String key = searchFields.get(next);
+				if (nameValuePairMap.containsKey(formQueryRespondTo + "." + next)) {
+					searchableLpseFields.add(key);
+				}
 			}
 		}
 	}
@@ -73,12 +141,48 @@ public class QueryLpseToken extends LpseToken {
 				"' with value '" +
 				value +
 				"'" +
-				(isOverride ? " (Overridden by query parameter)." : ".")
+				(isOverride ? " (Overridden by query parameter)." : ".") +
+				getExplainSearchFields()
 		);
+	}
+
+	private String getExplainSearchFields() {
+		StringBuilder sb = new StringBuilder();
+		boolean first = true;
+		sb.append(" Searching Solr field(s) ");
+		for (String searchableLpseField : searchableLpseFields) {
+			if(!first) {
+				sb.append(", ");
+			}
+			first = false;
+			sb.append("'")
+			  .append(searchableLpseField)
+			  .append("'");
+		}
+
+		if(searchableLpseFields.isEmpty()) {
+			sb.append("'default'");
+		}
+		sb.append(".");
+
+		return sb.toString();
 	}
 
 	@Override public String getType() {
 		return ("query");
 	}
 
+	@Override public String getValue() {
+		return super.getValue();
+	}
+
+	/**
+	 * <p>Get the list of searchable solr fields that this query string should
+	 * operate on.</p>
+	 *
+	 * @return The list of searchable fields.
+	 */
+	public List<String> getSearchableLpseFields() {
+		return(searchableLpseFields);
+	}
 }

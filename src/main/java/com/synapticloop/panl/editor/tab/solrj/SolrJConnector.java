@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2008-2024 synapticloop.
+ * Copyright (c) 2008-2025 synapticloop.
  *
  * https://github.com/synapticloop/panl
  *
@@ -26,9 +26,10 @@ package com.synapticloop.panl.editor.tab.solrj;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Vector;
 
 public class SolrJConnector {
-	public static final List<String> AVAILABLE_SOLR_J_CONNECTORS = new ArrayList<>();
+	public static final Vector<String> AVAILABLE_SOLR_J_CONNECTORS = new Vector<>();
 	static {
 		AVAILABLE_SOLR_J_CONNECTORS.add("Http2SolrClient");
 		AVAILABLE_SOLR_J_CONNECTORS.add("HttpJdkSolrClient");

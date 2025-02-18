@@ -1,7 +1,7 @@
 package com.synapticloop.panl.server.handler.processor;
 
 /*
- * Copyright (c) 2008-2024 synapticloop.
+ * Copyright (c) 2008-2025 synapticloop.
  *
  * https://github.com/synapticloop/panl
  *
@@ -43,7 +43,7 @@ public class QueryOperandProcessor extends Processor {
 		String panlParamQueryOperand = collectionProperties.getPanlParamQueryOperand();
 
 		JSONObject jsonObject = new JSONObject();
-		StringBuilder lpseUri = new StringBuilder("/");
+		StringBuilder lpseUri = new StringBuilder(FORWARD_SLASH);
 		StringBuilder lpseCode = new StringBuilder();
 
 		for (BaseField lpseField : collectionProperties.getLpseFields()) {
@@ -56,7 +56,7 @@ public class QueryOperandProcessor extends Processor {
 			}
 		}
 
-		lpseCode.append("/");
+		lpseCode.append(FORWARD_SLASH);
 
 		String finalBefore = lpseUri + before + collectionProperties.getPanlParamQueryOperand();
 

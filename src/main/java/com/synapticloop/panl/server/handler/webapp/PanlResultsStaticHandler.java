@@ -1,7 +1,7 @@
 package com.synapticloop.panl.server.handler.webapp;
 
 /*
- * Copyright (c) 2008-2024 synapticloop.
+ * Copyright (c) 2008-2025 synapticloop.
  *
  * https://github.com/synapticloop/panl
  *
@@ -35,15 +35,10 @@ import org.apache.http.protocol.HttpRequestHandler;
  * static resources from the classpath.</p>
  *
  * @author synapticloop
+ *
  * @see ResourceHelper
  */
 public class PanlResultsStaticHandler implements HttpRequestHandler {
-
-	/**
-	 * <p>Instantiate the PanlResultsStaticHandler and do nothing</p>
-	 */
-	public PanlResultsStaticHandler() {
-	}
 
 	/**
 	 * <p>Handle a request for a static resource loading it from the classpath.

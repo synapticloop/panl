@@ -1,19 +1,45 @@
 package com.synapticloop.panl.server.handler.fielderiser.field;
 
+/*
+ * Copyright (c) 2008-2025 synapticloop.
+ *
+ * https://github.com/synapticloop/panl
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to
+ * deal in the Software without restriction, including without limitation the
+ * rights to use, copy, modify, merge, publish, distribute, sublicense, and/or
+ * sell copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in
+ * all copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+ * FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
+ * IN THE SOFTWARE.
+ */
+
 import com.synapticloop.panl.exception.PanlServerException;
+import com.synapticloop.panl.server.handler.properties.CollectionProperties;
 import com.synapticloop.panl.server.handler.tokeniser.token.LpseToken;
+import com.synapticloop.panl.util.PanlLPSEHelper;
 import org.json.JSONObject;
 
 import java.net.URLDecoder;
-import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Properties;
+import java.util.*;
+
+import static com.synapticloop.panl.server.handler.processor.Processor.*;
+import static com.synapticloop.panl.server.handler.processor.Processor.FORWARD_SLASH;
 
 /**
- * <p>The abstract BasePrefixSuffixField is the parent object for any
- * parameter, operand, or facet that allows a prefix and/or suffix.</p>
+ * <p>The abstract <code>BasePrefixSuffixField</code> is the parent object for
+ * any parameter, operand, or facet that allows a prefix and/or suffix.</p>
  */
 public abstract class BasePrefixSuffixField extends BaseField {
 	public static final String PROPERTY_KEY_SUFFIX_PREFIX = ".prefix";
@@ -213,7 +239,7 @@ public abstract class BasePrefixSuffixField extends BaseField {
 			sb.append(valueSuffix);
 		}
 
-		return (URLEncoder.encode(sb.toString(), StandardCharsets.UTF_8));
+		return (PanlLPSEHelper.encodeURIPath(sb.toString()));
 	}
 
 	/**
@@ -239,7 +265,9 @@ public abstract class BasePrefixSuffixField extends BaseField {
 	 * @param jsonObject The JSON object to append to
 	 */
 	@Override protected void appendToAvailableObjectInternal(JSONObject jsonObject) {
-
+		if (null != valueSeparator) {
+			jsonObject.put(JSON_KEY_VALUE_SEPARATOR, valueSeparator);
+		}
 	}
 
 	/**
@@ -264,4 +292,152 @@ public abstract class BasePrefixSuffixField extends BaseField {
 
 		return (explanations);
 	}
+
+	@Override
+	protected JSONObject getAdditionURIObject(
+			CollectionProperties collectionProperties,
+			BaseField lpseField,
+			Map<String, List<LpseToken>> panlTokenMap) {
+
+		JSONObject additionObject = new JSONObject();
+
+		StringBuilder lpseUri = new StringBuilder(FORWARD_SLASH);
+		StringBuilder lpseUriBefore = new StringBuilder();
+		StringBuilder lpseUriCode = new StringBuilder();
+
+		Map<String, Boolean> lpseCodeMap = new HashMap<>();
+
+		for(BaseField baseField : collectionProperties.getLpseFields()) {
+			// we need to add in any other token values in the correct order
+			String orderedLpseCode = baseField.getLpseCode();
+
+			if (orderedLpseCode.equals(this.lpseCode)) {
+				// we have found the current LPSE code, so reset the URI and add it to
+				// the after
+				if (valueSeparator != null) {
+					lpseUri.append(getMultivalueURIPathStart(panlTokenMap));
+				} else {
+					lpseUri.append(baseField.getResetUriPath(panlTokenMap, collectionProperties));
+				}
+
+				lpseUriBefore.append(lpseUri);
+				lpseUri.setLength(0);
+				if (valueSeparator != null) {
+					lpseUri.append(getMultiValueURIPathEnd());
+					lpseUri.append("/");
+				}
+
+				if(collectionProperties.getIsMultiValuedSeparatorFacetField(this.lpseCode)) {
+					if (!lpseCodeMap.containsKey(this.lpseCode)) {
+						lpseUriCode.append(this.lpseCode);
+					}
+					lpseCodeMap.put(this.lpseCode, true);
+				} else {
+					lpseUriCode.append(baseField.getResetLpseCode(panlTokenMap, collectionProperties));
+					lpseUriCode.append(this.lpseCode);
+				}
+
+			} else {
+				// if we don't have a current token, just carry on
+				if (!panlTokenMap.containsKey(orderedLpseCode)) {
+					continue;
+				}
+
+				// normally
+				lpseUri.append(baseField.getResetUriPath(panlTokenMap, collectionProperties));
+				int numTokens = panlTokenMap.get(orderedLpseCode).size();
+				if (numTokens == 1) {
+					// if we have a range facet - we need to make sure that we are
+					// encoding it correctly there can only be one range token for the
+					// panl field (no over-lapping ranges, or distinct ranges)
+
+					// if it is not a range facet - then this won't do any harm and is a
+					// better implementation
+					lpseUriCode.append(baseField.getResetLpseCode(panlTokenMap.get(orderedLpseCode).get(0),
+							collectionProperties));
+				} else {
+
+					// check for or separators...
+					if(collectionProperties.getIsMultiValuedSeparatorFacetField(baseField.getLpseCode())) {
+						lpseUriCode.append(baseField.getResetLpseCode(panlTokenMap, collectionProperties));
+					} else {
+						// just replace it with the correct number of LPSE codes
+						if(!baseField.getHasURIComponent()) {
+							lpseUriCode.append(baseField.getResetLpseCode(panlTokenMap, collectionProperties));
+						} else {
+							lpseUriCode.append(new String(new char[numTokens]).replace("\0", baseField.getLpseCode()));
+						}
+					}
+				}
+			}
+		}
+
+		additionObject.put(JSON_KEY_BEFORE, lpseUriBefore.toString());
+
+		// if we have an or separator, we have already added the forward slash
+		if (valueSeparator != null) {
+			additionObject.put(JSON_KEY_AFTER, lpseUri.toString() + lpseUriCode + FORWARD_SLASH);
+		} else {
+			additionObject.put(JSON_KEY_AFTER, FORWARD_SLASH + lpseUri + lpseUriCode + FORWARD_SLASH);
+		}
+
+		return (additionObject);
+	}
+
+	/**
+	 * <p>Get the Start of the OR URI path for this field</p>
+	 *
+	 * @param panlTokenMap The token map with the LPSe codes and values
+	 *
+	 * @return The URI path
+	 */
+	private String getMultivalueURIPathStart(Map<String, List<LpseToken>> panlTokenMap) {
+		StringBuilder sb = new StringBuilder();
+
+		if (valueSeparator != null) {
+			if (hasValuePrefix) {
+				sb.append(PanlLPSEHelper.encodeURIPath(valuePrefix));
+			}
+		}
+
+		if (panlTokenMap.containsKey(lpseCode)) {
+			if (valueSeparator != null) {
+				List<String> validValues = new ArrayList<>();
+
+				for(LpseToken lpseToken : panlTokenMap.get(lpseCode)) {
+					if (lpseToken.getIsValid() && lpseToken.getValue() != null) {
+						validValues.add(lpseToken.getValue());
+					}
+				}
+
+				if (!validValues.isEmpty()) {
+					for(String validValue : validValues) {
+						sb.append(PanlLPSEHelper.encodeURIPath(validValue));
+						sb.append(PanlLPSEHelper.encodeURIPath(valueSeparator));
+					}
+				}
+			} else {
+				for(LpseToken lpseToken : panlTokenMap.get(lpseCode)) {
+					if (lpseToken.getIsValid()) {
+						sb.append(getEncodedPanlValue(lpseToken));
+						sb.append("/");
+					}
+				}
+				return (sb.toString());
+			}
+		}
+
+		return (sb.toString());
+	}
+
+	private String getMultiValueURIPathEnd() {
+		StringBuilder sb = new StringBuilder();
+		if (valueSeparator != null) {
+			if (hasValueSuffix) {
+				sb.append(PanlLPSEHelper.encodeURIPath(valueSuffix));
+			}
+		}
+		return (sb.toString());
+	}
+
 }

@@ -1,10 +1,7 @@
 div#container, div#content, div#footer { width: 700px !important; }
-#searchfields {
-	column-count: 2;
-	column-width 350px;
-}
+#searchfields { column-count: 2; }
 .searchfield { margin: 0 15px 12px 15px; width: 320px !important; display:inline-block; }
-.searchheading { background-color: #efefef; border-left: 6px solid black; text-justify: none; }
+.searchheading { background-color: #efefef; border-left: 6px solid black; text-justify: unset; }
 select { font-size: larger; width: 100%; }
 select.date-range { width: 30% !important; }
 #searcharea { width: 100% !important; text-align: center; clear: both; }

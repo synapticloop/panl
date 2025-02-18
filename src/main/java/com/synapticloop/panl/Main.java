@@ -1,7 +1,7 @@
 package com.synapticloop.panl;
 
 /*
- * Copyright (c) 2008-2024 synapticloop.
+ * Copyright (c) 2008-2025 synapticloop.
  *
  * https://github.com/synapticloop/panl
  *
@@ -24,29 +24,61 @@ package com.synapticloop.panl;
  * IN THE SOFTWARE.
  */
 
-import com.synapticloop.panl.editor.PanlEditor;
+//import com.synapticloop.panl.editor.PanlProjectLauncher;
 import com.synapticloop.panl.exception.CommandLineOptionException;
 import com.synapticloop.panl.exception.PanlGenerateException;
 import com.synapticloop.panl.exception.PanlServerException;
 import com.synapticloop.panl.generator.PanlGenerator;
 import com.synapticloop.panl.server.PanlServer;
+import org.apache.logging.log4j.core.config.ConfigurationSource;
+import org.apache.logging.log4j.core.config.Configurator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
+//import javax.swing.*;
+import java.io.*;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
  * <p>This is the main class for the PANL server/generator.</p>
+ *
+ * @author synapticloop
  */
 public class Main {
+	// We want to find the log4j.xml file, so we are doing it first.  If it cannot
+	// be found, then we hope that it will be on the classpath
+	static {
+		String[] locations = {
+			"./log4j2.xml",
+			"./lib/log4j2.xml"
+		};
+
+		boolean hasFoundLog4j = false;
+		for(String location : locations) {
+			File log4jFile = new File(location);
+
+			try {
+				InputStream inputStream = new FileInputStream(log4jFile);
+				ConfigurationSource source = new ConfigurationSource(inputStream);
+				Configurator.initialize(null, source);
+				System.out.println("[LOGGING SETUP] Found log4j2 configuration file '" + log4jFile.getAbsolutePath() + "'.");
+				hasFoundLog4j = true;
+				break;
+			} catch (Exception ex) {
+				System.out.println("[LOGGING SETUP] Could not find the file located '" + log4jFile.getAbsolutePath() + "'.");
+				System.out.println("[LOGGING SETUP] message was: " + ex.getMessage());
+			}
+		}
+
+		if(!hasFoundLog4j) {
+			System.out.println("[LOGGING SETUP] Could not find a log4j2 configuration file.  See messages above...");
+			System.out.println("[LOGGING SETUP] If available, log4j2 will use the configuration file from the classpath.");
+		}
+
+		System.out.println("\n");
+	}
+
 	private static final Logger LOGGER = LoggerFactory.getLogger(Main.class);
 
 	public static final String CMD_OPTION_OVERWRITE = "-overwrite";
@@ -56,15 +88,18 @@ public class Main {
 
 	public static final String CMD_VALUE_SERVER = "server";
 	public static final String CMD_VALUE_GENERATE = "generate";
-	public static final String CMD_VALUE_EDITOR = "editor";
+//	public static final String CMD_VALUE_EDITOR = "editor";
 
 	private static final Set<String> ALLOWABLE_COMMANDS = new HashSet<>();
 
 	static {
 		ALLOWABLE_COMMANDS.add(CMD_VALUE_SERVER);
 		ALLOWABLE_COMMANDS.add(CMD_VALUE_GENERATE);
-		ALLOWABLE_COMMANDS.add(CMD_VALUE_EDITOR);
+//		ALLOWABLE_COMMANDS.add(CMD_VALUE_EDITOR);
 	}
+
+	public static String panlVersion = "Unknown - ¯\\_(ツ)_/¯";
+	public static String solrVersion = "Unknown - ¯\\_(ツ)_/¯";
 
 	public static final String DEFAULT_PANL_PROPERTIES = "panl.properties";
 	public static final String DEFAULT_PORT_NUMBER = "8181";
@@ -106,12 +141,14 @@ public class Main {
 	 */
 	private void parseAndExecuteCommandLine() throws PanlServerException, CommandLineOptionException, PanlGenerateException {
 		if (args.length < 1) {
+//			usageAndException("Could not determine command, should be one of 'server', 'generate', or 'editor'");
 			usageAndException("Could not determine command, should be one of 'server' or 'generate'");
 		}
 
 		String command = args[0];
 		if (!ALLOWABLE_COMMANDS.contains(command)) {
 			usageAndException(String.format("Unknown command of '%s', expecting 'server' or 'generate'", command));
+//			usageAndException(String.format("Unknown command of '%s', expecting 'server', 'generate', or 'editor'", command));
 		}
 
 		// now go through the rest of the command line arguments
@@ -127,12 +164,20 @@ public class Main {
 		}
 
 		// now parse the rest of the commands
-		if (command.equals(CMD_VALUE_SERVER)) {
-			parseAndExecuteServerCommands();
-		} else if(command.equals(CMD_VALUE_GENERATE)){
-			parseAndExecuteGenerateCommands();
-		} else if(command.equals(CMD_VALUE_EDITOR)) {
-			new PanlEditor().show();
+		switch (command) {
+			case CMD_VALUE_SERVER:
+				parseAndExecuteServerCommands();
+				break;
+			case CMD_VALUE_GENERATE:
+				parseAndExecuteGenerateCommands();
+				break;
+//			case CMD_VALUE_EDITOR:
+//				LOGGER.warn("THE EDITOR FUNCTIONALITY IS __NOT COMPLETE__...");
+//				LOGGER.warn("This can be considered an exercise in futility...");
+//				SwingUtilities.invokeLater(() -> {
+//					new PanlProjectLauncher().show();
+//				});
+//				break;
 		}
 	}
 
@@ -153,11 +198,11 @@ public class Main {
 			usageAndException(String.format("Could not parse port number of '%s'", portNumberString));
 		}
 
-		LOGGER.info("Starting Panl server with properties:");
-		LOGGER.info("  -properties {}", this.propertiesFileLocation);
-		LOGGER.info("        -port {}", this.portNumber);
+		LOGGER.info("  Starting Panl server with properties:");
+		LOGGER.info("    -properties {}", this.propertiesFileLocation);
+		LOGGER.info("          -port {}", this.portNumber);
 		LOGGER.info("");
-		LOGGER.info("            ~ ~ ~ * ~ ~ ~");
+		LOGGER.info("                  ~ ~ ~ * ~ ~ ~");
 		LOGGER.info("");
 
 		// at this point we are ready to go
@@ -187,12 +232,12 @@ public class Main {
 			usageAndException("Mandatory command line option of '-schema' missing.");
 		}
 
-		LOGGER.info("Starting Panl generation with properties:");
-		LOGGER.info("  -properties {}", this.propertiesFileLocation);
-		LOGGER.info("      -schema {}", schemaFileLocations);
-		LOGGER.info("   -overwrite {}", this.shouldOverwrite);
+		LOGGER.info("  Starting Panl generation with properties:");
+		LOGGER.info("    -properties {}", this.propertiesFileLocation);
+		LOGGER.info("        -schema {}", schemaFileLocations);
+		LOGGER.info("     -overwrite {}", this.shouldOverwrite);
 		LOGGER.info("");
-		LOGGER.info("            ~ ~ ~ * ~ ~ ~");
+		LOGGER.info("             ~ ~ ~ * ~ ~ ~");
 		LOGGER.info("");
 
 		PanlGenerator panlGenerator = new PanlGenerator(
@@ -243,25 +288,41 @@ public class Main {
 	 * parsing the options then it will print out an error message and exit.</p>
 	 *
 	 * @param args The arguments to parse
-	 *
-	 * @throws PanlServerException If there was an error starting the server
-	 * @throws CommandLineOptionException If the command line options could not
-	 * 		be parsed
-	 * @throws PanlGenerateException If there was an error with the generation
-	 * 		of the properties
 	 */
-	public static void main(String[] args) throws PanlServerException, CommandLineOptionException, PanlGenerateException {
+	public static void main(String[] args) {
 		Main main = new Main(args);
 
-		LOGGER.info("                           __ ");
-		LOGGER.info("       .-----.---.-.-----.|  |");
-		LOGGER.info("       |  _  |  _  |     ||  |");
-		LOGGER.info("       |   __|___._|__|__||__|");
-		LOGGER.info("       |__|     ... .-..      ");
+		Properties gradleProperties = new Properties();
+		try {
+			gradleProperties.load(Main.class.getResourceAsStream("/gradle.properties"));
+			Main.panlVersion = gradleProperties.getProperty("panl.version", "Unknown - ¯\\_(ツ)_/¯");
+			Main.solrVersion = gradleProperties.getProperty("panl.solr.version", "Unknown - ¯\\_(ツ)_/¯");
+		} catch (IOException ignored) {
+		}
+
+		LOGGER.info("                  ~ ~ ~ * ~ ~ ~");
 		LOGGER.info("");
-		LOGGER.info("            ~ ~ ~ * ~ ~ ~");
+		LOGGER.info("                                 __ ");
+		LOGGER.info("             .-----.---.-.-----.|  |");
+		LOGGER.info("             |  _  |  _  |     ||  |");
+		LOGGER.info("             |   __|___._|__|__||__|");
+		LOGGER.info("             |__|     ... .-..      ");
+		LOGGER.info("");
+		LOGGER.info("                  ~ ~ ~ * ~ ~ ~");
 		LOGGER.info("");
 
-		main.parseAndExecuteCommandLine();
+		LOGGER.info("               Panl version: {}", Main.panlVersion);
+		LOGGER.info("");
+		LOGGER.info("          Designed for integration with");
+		LOGGER.info("                 Solr version: {}", Main.solrVersion);
+		LOGGER.info("");
+		LOGGER.info("                  ~ ~ ~ * ~ ~ ~");
+		LOGGER.info("");
+
+		try {
+			main.parseAndExecuteCommandLine();
+		} catch (PanlServerException | CommandLineOptionException | PanlGenerateException e) {
+			LOGGER.error("FAILURE to start, message was: {}", e.getMessage(), e);
+		}
 	}
 }
