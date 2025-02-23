@@ -1,7 +1,7 @@
 package com.synapticloop.panl.server.handler.fielderiser.field.param;
 
 /*
- * Copyright (c) 2008-2024 synapticloop.
+ * Copyright (c) 2008-2025 synapticloop.
  *
  * https://github.com/synapticloop/panl
  *
@@ -96,7 +96,7 @@ public class PanlPassThroughField extends BaseField {
 		return(explanations);
 	}
 
-	public void applyToQueryInternal(SolrQuery solrQuery, List<LpseToken> lpseTokenList) {
+	public void applyToQueryInternal(SolrQuery solrQuery, List<LpseToken> lpseTokenList, CollectionProperties collectionProperties) {
 		// do nothing
 	}
 
@@ -104,8 +104,8 @@ public class PanlPassThroughField extends BaseField {
 
 	}
 
-	@Override public LpseToken instantiateToken(CollectionProperties collectionProperties, String lpseCode, String query, StringTokenizer valueTokeniser, LpseTokeniser lpseTokeniser) {
-		return(new PassThroughLpseToken(collectionProperties, this.lpseCode, valueTokeniser));
+	@Override public List<LpseToken> instantiateTokens(CollectionProperties collectionProperties, String lpseCode, String query, StringTokenizer valueTokeniser, LpseTokeniser lpseTokeniser) {
+		return(List.of(new PassThroughLpseToken(collectionProperties, this.lpseCode, valueTokeniser)));
 	}
 
 	@Override protected void logDetails() {

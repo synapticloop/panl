@@ -1,7 +1,7 @@
 package com.synapticloop.panl.server.handler.fielderiser.field.facet;
 
 /*
- * Copyright (c) 2008-2024 synapticloop.
+ * Copyright (c) 2008-2025 synapticloop.
  *
  * https://github.com/synapticloop/panl
  *
@@ -30,6 +30,7 @@ import com.synapticloop.panl.server.handler.properties.CollectionProperties;
 import com.synapticloop.panl.server.handler.tokeniser.LpseTokeniser;
 import com.synapticloop.panl.server.handler.tokeniser.token.facet.FacetLpseToken;
 import com.synapticloop.panl.server.handler.tokeniser.token.LpseToken;
+import com.synapticloop.panl.server.handler.tokeniser.token.facet.OrFacetLpseToken;
 import org.apache.solr.client.solrj.SolrQuery;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -85,18 +86,31 @@ public class PanlFacetField extends BasePrefixSuffixField {
 	}
 
 
-	protected void applyToQueryInternal(SolrQuery solrQuery, List<LpseToken> lpseTokenList) {
+	protected void applyToQueryInternal(SolrQuery solrQuery, List<LpseToken> lpseTokenList, CollectionProperties collectionProperties) {
 		// At this point, we just have regular facets.
 		for (LpseToken lpseToken : lpseTokenList) {
 			FacetLpseToken facetLpseToken = (FacetLpseToken) lpseToken;
-			solrQuery.addFilterQuery(String.format("%s:\"%s\"",
-					facetLpseToken.getSolrField(),
-					facetLpseToken.getValue()));
+			solrQuery.addFilterQuery(
+						facetLpseToken.getSolrField() +
+									":\"" +
+									facetLpseToken.getValue() +
+									"\"");
 		}
 	}
 
 	@Override
-	public LpseToken instantiateToken(CollectionProperties collectionProperties, String lpseCode, String query, StringTokenizer valueTokeniser, LpseTokeniser lpseTokeniser) {
-		return(new FacetLpseToken(collectionProperties, this.lpseCode, lpseTokeniser, valueTokeniser));
+	public List<LpseToken> instantiateTokens(CollectionProperties collectionProperties, String lpseCode, String query, StringTokenizer valueTokeniser, LpseTokeniser lpseTokeniser) {
+		if (this.valueSeparator != null) {
+			// we have an or separator
+			return (FacetLpseToken.getSeparatedLpseTokens(
+					valueSeparator,
+					collectionProperties,
+					this.lpseCode,
+					lpseTokeniser,
+					valueTokeniser));
+
+		} else {
+			return(List.of(new FacetLpseToken(collectionProperties, this.lpseCode, lpseTokeniser, valueTokeniser)));
+		}
 	}
 }

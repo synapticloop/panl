@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2008-2024 synapticloop.
+ * Copyright (c) 2008-2025 synapticloop.
  *
  * https://github.com/synapticloop/panl
  *
@@ -77,6 +77,7 @@ public abstract class BaseFileDropHandler extends TransferHandler {
 			for(String ending: endsWith) {
 				if(file.getName().toLowerCase().endsWith(ending.toLowerCase())) {
 					looksGood = true;
+					break;
 				}
 			}
 

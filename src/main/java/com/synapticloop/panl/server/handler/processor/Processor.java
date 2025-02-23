@@ -1,7 +1,7 @@
 package com.synapticloop.panl.server.handler.processor;
 
 /*
- * Copyright (c) 2008-2024 synapticloop.
+ * Copyright (c) 2008-2025 synapticloop.
  *
  * https://github.com/synapticloop/panl
  *
@@ -57,6 +57,7 @@ public abstract class Processor {
 	public static final String JSON_KEY_INVERSE_URI = "inverse_uri";
 	public static final String JSON_KEY_INVERSE_ENCODED = "inverse_encoded";
 	public static final String JSON_KEY_IS_DESCENDING = "is_descending";
+	public static final String JSON_KEY_KEYWORD = "keyword";
 	public static final String JSON_KEY_MAX = "max";
 	public static final String JSON_KEY_MIN = "min";
 	public static final String JSON_KEY_NAME = "name";
@@ -66,6 +67,7 @@ public abstract class Processor {
 	public static final String JSON_KEY_NUM_PER_PAGE_URIS = "num_per_page_uris";
 	public static final String JSON_KEY_OR = "OR";
 	public static final String JSON_KEY_PAGE_NUM = "page_num";
+	public static final String JSON_KEY_ACTIVE = "active";
 	public static final String JSON_KEY_PAGE_URIS = "page_uris";
 	public static final String JSON_KEY_PANL_CODE = "panl_code";
 	public static final String JSON_KEY_PREFIX = "prefix";

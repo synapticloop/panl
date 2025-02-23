@@ -1,7 +1,7 @@
 package com.synapticloop.panl.server;
 
 /*
- * Copyright (c) 2008-2024 synapticloop.
+ * Copyright (c) 2008-2025 synapticloop.
  *
  * https://github.com/synapticloop/panl
  *
@@ -49,9 +49,10 @@ import java.util.Properties;
 import java.util.concurrent.TimeUnit;
 
 /**
- * <p>This is the PANL server which parses the <code>panl.properties</code> file, loads all
- * the <code>collection.panl.properties</code> files.  If there are any errors with either
- * of the files, a PanlServerException will be thrown and the server will refuse to start.</p>
+ * <p>This is the PANL server which parses the <code>panl.properties</code> file,
+ * loads all the <code>collection.panl.properties</code> files.  If there are
+ * any errors with either of the files, a PanlServerException will be thrown and
+ * the server will refuse to start.</p>
  *
  * @author synapticloop
  */
@@ -60,13 +61,36 @@ public class PanlServer {
 
 	public static final String PROPERTY_KEY_PANL_COLLECTION = "panl.collection.";
 
+	/**
+	 * <p>The location of the <code>panl.properties file</code>.
+	 * <strong>Note:</strong> that the file can be named anything, this is just
+	 * the default name if not passed in as command line parameter.</p>
+	 */
 	private final String propertiesFileLocation;
+
+	/**
+	 * <p>The port number that this server will listen on.</p>
+	 */
 	private final int portNumber;
+
+	/**
+	 * <p>The Panl properties file.</p>
+	 */
 	private PanlProperties panlProperties;
 
+	/**
+	 * <p>All the Panl collection handlers.</p>
+	 */
 	private final List<CollectionRequestHandler> collectionRequestHandlers = new ArrayList<>();
+
+	/**
+	 * <p>The list of Collection Properties.</p>
+	 */
 	private final List<CollectionProperties> collectionPropertiesList = new ArrayList<>();
 
+	/**
+	 * <p>The HTTP Server instance</p>
+	 */
 	private HttpServer httpServer;
 
 	/**
@@ -242,10 +266,27 @@ public class PanlServer {
 		}
 
 		// register the single page search handlers
-		bootstrap.registerHandler(PanlSinglePageHandler.PANL_URL_BINDING_SINGLE_PAGE + "*", new PanlSinglePageHandler(panlProperties, collectionRequestHandlers));
 
-		// register the more facets handlers
-		bootstrap.registerHandler(PanlMoreFacetsHandler.PANL_URL_BINDING_MORE_FACETS + "*", new PanlMoreFacetsHandler(panlProperties, collectionRequestHandlers));
+		bootstrap.registerHandler(
+			PanlSinglePageHandler.PANL_URL_BINDING_SINGLE_PAGE + "*",
+			new PanlSinglePageHandler(
+				panlProperties,
+				collectionRequestHandlers));
+
+		LOGGER.info("Binding more facets handler to URI path {}*", PanlMoreFacetsHandler.PANL_URL_BINDING_MORE_FACETS);
+		bootstrap.registerHandler(
+			PanlMoreFacetsHandler.PANL_URL_BINDING_MORE_FACETS + "*",
+			new PanlMoreFacetsHandler(
+				panlProperties,
+				collectionRequestHandlers));
+
+		LOGGER.info("Binding lookahead handler to URI path {}*", PanlLookaheadHandler.PANL_URL_BINDING_LOOKAHEAD);
+		bootstrap.registerHandler(
+			PanlLookaheadHandler.PANL_URL_BINDING_LOOKAHEAD + "*",
+			new PanlLookaheadHandler(
+				panlProperties,
+				collectionRequestHandlers));
+
 
 		// finally register the collection and singlepagesearch handlers
 		for (CollectionRequestHandler collectionRequestHandler : collectionRequestHandlers) {
@@ -257,7 +298,11 @@ public class PanlServer {
 				LOGGER.info("Results will be available on /{}/{}/*", panlCollectionUri, resultFieldsName);
 			}
 
-			LOGGER.info("Binding Solr collection of '{}' to Panl configuration URI path " + PanlSinglePageHandler.PANL_URL_BINDING_SINGLE_PAGE + "{}/", solrCollection, panlCollectionUri);
+			LOGGER.info(
+				"Binding Solr collection of '{}' to Panl Single Page configuration URI path {}{}/*",
+				solrCollection,
+				PanlSinglePageHandler.PANL_URL_BINDING_SINGLE_PAGE,
+				panlCollectionUri);
 		}
 
 		// create the server

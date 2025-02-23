@@ -1,7 +1,7 @@
 package com.synapticloop.panl.server.handler;
 
 /*
- * Copyright (c) 2008-2024 synapticloop.
+ * Copyright (c) 2008-2025 synapticloop.
  *
  * https://github.com/synapticloop/panl
  *
@@ -35,6 +35,8 @@ import org.apache.http.protocol.HttpContext;
 import org.apache.http.protocol.HttpRequestHandler;
 import org.json.JSONArray;
 import org.json.JSONObject;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.*;
 
@@ -46,12 +48,12 @@ import static com.synapticloop.panl.server.handler.webapp.util.ResourceHelper.*;
  *
  * @author synapticloop
  */
-public class PanlSinglePageHandler implements HttpRequestHandler {
+public class PanlSinglePageHandler extends BaseResponseHandler implements HttpRequestHandler {
+	private final static Logger LOGGER = LoggerFactory.getLogger(PanlSinglePageHandler.class);
+
 	public static final String PANL_URL_BINDING_SINGLE_PAGE = "/panl-single-page/";
 
-	private final PanlProperties panlProperties;
 	private final Map<String, CollectionRequestHandler> validCollections = new HashMap<>();
-	private final JSONArray validUrls = new JSONArray();
 
 	/**
 	 * <p>Instantiate the Panl configuration handle.</p>
@@ -59,7 +61,9 @@ public class PanlSinglePageHandler implements HttpRequestHandler {
 	 * @param panlProperties The panl properties
 	 * @param collectionRequestHandlers The collection request handler
 	 */
-	public PanlSinglePageHandler(PanlProperties panlProperties, List<CollectionRequestHandler> collectionRequestHandlers) {		this.panlProperties = panlProperties;
+	public PanlSinglePageHandler(PanlProperties panlProperties, List<CollectionRequestHandler> collectionRequestHandlers) {
+		super(panlProperties);
+
 		for(CollectionRequestHandler collectionRequestHandler : collectionRequestHandlers) {
 			validCollections.put(collectionRequestHandler.getPanlCollectionUri(), collectionRequestHandler);
 			validUrls.put(PANL_URL_BINDING_SINGLE_PAGE + collectionRequestHandler.getPanlCollectionUri() + "/");
@@ -67,7 +71,7 @@ public class PanlSinglePageHandler implements HttpRequestHandler {
 	}
 
 	/**
-	 * <p>Return the JSON object that contains all of the configuration.</p>
+	 * <p>Return the JSON object that contains all configuration.</p>
 	 *
 	 * @param request the HTTP request.
 	 * @param response the HTTP response.
@@ -168,6 +172,9 @@ public class PanlSinglePageHandler implements HttpRequestHandler {
 								ResourceHelper.CONTENT_TYPE_JSON)
 				);
 			} catch (Exception e) {
+				// TODO - this can probably be refactored into the BaseResponseHandler
+				// TODO - set500ResponseMessage(HttpResponse response) method
+
 				response.setStatusCode(HttpStatus.SC_INTERNAL_SERVER_ERROR);
 				JSONObject jsonObject = new JSONObject();
 				jsonObject.put(JSON_KEY_ERROR, true);
@@ -185,6 +192,8 @@ public class PanlSinglePageHandler implements HttpRequestHandler {
 			}
 		} else {
 
+			// TODO - this can probably be refactored into the BaseResponseHandler
+			// TODO - set404ResponseMessage(HttpResponse response) method
 			JSONObject jsonObject = new JSONObject();
 
 			jsonObject.put(JSON_KEY_ERROR, true);
@@ -200,5 +209,9 @@ public class PanlSinglePageHandler implements HttpRequestHandler {
 					new StringEntity(jsonObject.toString(),
 							ResourceHelper.CONTENT_TYPE_JSON));
 		}
+	}
+
+	@Override protected Logger getLogger() {
+		return(LOGGER);
 	}
 }

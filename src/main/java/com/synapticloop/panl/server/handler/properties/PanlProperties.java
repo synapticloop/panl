@@ -1,7 +1,7 @@
 package com.synapticloop.panl.server.handler.properties;
 
 /*
- * Copyright (c) 2008-2024 synapticloop.
+ * Copyright (c) 2008-2025 synapticloop.
  *
  * https://github.com/synapticloop/panl
  *
@@ -31,7 +31,7 @@ import org.slf4j.LoggerFactory;
 import java.util.*;
 
 /**
- * <p>This class contains all of the properties defined in the
+ * <p>This class contains all properties defined in the
  * <code>panl.properties</code> file.</p>
  *
  * @author synapticloop
@@ -50,30 +50,57 @@ public class PanlProperties {
 	public static final String DEFAULT_SOLR_URL = "http://localhost:8983/solr";
 	public static final String DEFAULT_FALSE = "false";
 	public static final String DEFAULT_TRUE = "true";
-	public static final String PROPERTY_KEY_PANL_COLLECTIONS = "panl.collections";
 	public static final String PROPERTY_KEY_PREFIX_PANL_COLLECTION = "panl.collection.";
 
+	/**
+	 * <p>The SolrJ client to use.</p>
+	 */
 	private final String solrjClient;
+	/**
+	 * <p>The Solr search server URL(s) to use, which may include a zookeeper
+	 * prfix</p>
+	 */
 	private final String solrSearchServerUrl;
 
+	/**
+	 * <p>Whether the testing URLs are enabled.</p>
+	 */
 	private final boolean hasPanlResultsTestingUrls;
+	/**
+	 * <p>Whether the testing URLs are enabled.</p>
+	 */
 	private final boolean panlStatus404Verbose;
+	/**
+	 * <p>Whether the testing URLs are enabled.</p>
+	 */
 	private final boolean panlStatus500Verbose;
+	/**
+	 * <p>Whether to use a decimal point as the delimiter between the integer and
+	 * fractional parts.  (Used for internationalisation)</p>
+	 */
 	private static boolean isDecimalPoint = true;
+	/**
+	 * <p>A map of the </p>
+	 */
 	private final Map<String, List<String>> panlCollections = new HashMap<>();
 
 	/**
 	 * <p>Instantiate the Panl properties which defines what Solr server to
-	 * connect to, the SolrJ client, whether to use verbose messaging for 404 and/or 500 error messages, and whether to
-	 * serve the Panl results testing URL handlers.</p>
+	 * connect to, the SolrJ client, whether to use verbose messaging for 404
+	 * and/or 500 error messages, and whether to serve the Panl results testing
+	 * URL handlers.</p>
 	 *
 	 * @param properties The properties file
 	 */
 	public PanlProperties(Properties properties) {
-		this.hasPanlResultsTestingUrls = properties.getProperty(PROPERTY_KEY_PANL_RESULTS_TESTING_URLS, DEFAULT_FALSE)
-		                                           .equals(DEFAULT_TRUE);
-		PanlProperties.isDecimalPoint = properties.getProperty(PROPERTY_KEY_PANL_DECIMAL_POINT, DEFAULT_FALSE)
-		                                          .equals(DEFAULT_TRUE);
+		this.hasPanlResultsTestingUrls =
+			properties
+				.getProperty(PROPERTY_KEY_PANL_RESULTS_TESTING_URLS, DEFAULT_FALSE)
+				.equals(DEFAULT_TRUE);
+
+		PanlProperties.isDecimalPoint = properties
+			.getProperty(PROPERTY_KEY_PANL_DECIMAL_POINT, DEFAULT_FALSE)
+			.equals(DEFAULT_TRUE);
 
 		String solrjClientTemp;
 		solrjClientTemp = properties.getProperty(PROPERTY_KEY_SOLRJ_CLIENT, null);
@@ -169,14 +196,41 @@ public class PanlProperties {
 		return (panlStatus500Verbose);
 	}
 
+	/**
+	 * <p>Return whether this Panl properties is using a decimal point as the
+	 * separator for fractional parts.</p>
+	 *
+	 * <ul>
+	 *   <li>If <code>true</code> then the decimal format will be of the form
+	 *   <code>9,123,456.78</code></li>
+	 *   <li>If <code>false</code> then the decimal format will be of the form
+	 *   <code>9.123.456,78</code></li>
+	 * </ul>
+	 *
+	 * @return Whether decimal points are used as the separator for the fractional
+	 * part.
+	 */
 	public static boolean getIsDecimalPoint() {
 		return isDecimalPoint;
 	}
 
+	/**
+	 * <p>Set whether the decimal format uses a decimal point '<code>.</code>' to
+	 * separate the integer part from the fractional part.  If set to <code>false</code>
+	 * then separator is set to a comma '<code>,</code>'.</p>
+	 *
+	 * @param isDecimalPoint Whether to set the fractional separator to the decimal point
+	 */
 	public static void setIsDecimalPoint(boolean isDecimalPoint) {
 		PanlProperties.isDecimalPoint = isDecimalPoint;
 	}
 
+	/**
+	 * <p>Get the collections map for this panl properties file which is a map keyed
+	 * on the Solr collection name with the value a list of properties files</p>
+	 *
+	 * @return The collections map for this
+	 */
 	public Map<String, List<String>> getPanlCollectionsMap() {
 		return panlCollections;
 	}

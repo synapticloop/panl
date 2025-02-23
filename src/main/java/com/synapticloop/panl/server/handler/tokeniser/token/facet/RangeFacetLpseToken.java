@@ -1,7 +1,7 @@
 package com.synapticloop.panl.server.handler.tokeniser.token.facet;
 
 /*
- * Copyright (c) 2008-2024 synapticloop.
+ * Copyright (c) 2008-2025 synapticloop.
  *
  * https://github.com/synapticloop/panl
  *
@@ -94,6 +94,7 @@ public class RangeFacetLpseToken extends LpseToken {
 			StringTokenizer valueTokeniser) {
 		super(lpseCode, collectionProperties);
 
+
 		StringBuilder sb = new StringBuilder(lpseCode);
 		int i = sb.length();
 		while (i < collectionProperties.getLpseLength()) {
@@ -117,22 +118,6 @@ public class RangeFacetLpseToken extends LpseToken {
 				}
 
 				this.isRangeToken = true;
-
-				StringBuilder nextLpse = new StringBuilder();
-				int j = 0;
-
-				while (j < collectionProperties.getLpseLength()) {
-					if (lpseTokeniser.hasMoreTokens()) {
-						nextLpse.append(lpseTokeniser.nextToken());
-					}
-
-					j++;
-				}
-
-				// now check to ensure that this is the same....
-				if (!this.lpseCode.contentEquals(nextLpse)) {
-					isValid = false;
-				}
 			} else {
 				// this is not a range, just a single value
 				lpseTokeniser.decrementCurrentPosition();
@@ -185,7 +170,7 @@ public class RangeFacetLpseToken extends LpseToken {
 	@Override public String explain() {
 		return ("PANL " +
 				(this.isValid ? "[  VALID  ]" : "[ INVALID ]") +
-				" <facet (RANGE)>   LPSE code '" +
+				" <facet (RANGE)>     LPSE code '" +
 				this.lpseCode +
 				"' (solr field '" +
 				this.solrField +

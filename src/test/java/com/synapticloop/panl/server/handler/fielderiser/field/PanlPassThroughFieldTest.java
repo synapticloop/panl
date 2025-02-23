@@ -38,12 +38,12 @@ public class PanlPassThroughFieldTest {
 		assertEquals("", panlPassThroughField.getCanonicalUriPath(panlTokenMap, collectionProperties));
 		assertEquals("", panlPassThroughField.getCanonicalLpseCode(panlTokenMap, collectionProperties));
 
-		assertEquals("something+here/", panlPassThroughField.getURIPath(panlTokenMap, collectionProperties));
+		assertEquals("something%20here/", panlPassThroughField.getURIPath(panlTokenMap, collectionProperties));
 		assertEquals("z", panlPassThroughField.getLpseCode(panlTokenMap, collectionProperties));
 
 		assertEquals(1, lpseTokens.size());
 		for (LpseToken lpseToken : lpseTokens) {
-			assertEquals("something+here/", panlPassThroughField.getURIPath(lpseToken, collectionProperties));
+			assertEquals("something%20here/", panlPassThroughField.getURIPath(lpseToken, collectionProperties));
 			assertEquals("z", panlPassThroughField.getLpseCode(lpseToken, collectionProperties));
 		}
 	}
@@ -54,15 +54,15 @@ public class PanlPassThroughFieldTest {
 		List<LpseToken> lpseTokens = TestHelper.getLpseTokens("/passthrough/canonical.properties", "/test/default/something+here/z/", "");
 		Map<String, List<LpseToken>> panlTokenMap = getPanlTokenMap(lpseTokens);
 		PanlPassThroughField panlPassThroughField = (PanlPassThroughField) collectionProperties.getLpseField("z");
-		assertEquals("something+here/", panlPassThroughField.getCanonicalUriPath(panlTokenMap, collectionProperties));
+		assertEquals("something%20here/", panlPassThroughField.getCanonicalUriPath(panlTokenMap, collectionProperties));
 		assertEquals("z", panlPassThroughField.getCanonicalLpseCode(panlTokenMap, collectionProperties));
 
-		assertEquals("something+here/", panlPassThroughField.getURIPath(panlTokenMap, collectionProperties));
+		assertEquals("something%20here/", panlPassThroughField.getURIPath(panlTokenMap, collectionProperties));
 		assertEquals("z", panlPassThroughField.getLpseCode(panlTokenMap, collectionProperties));
 
 		assertEquals(1, lpseTokens.size());
 		for (LpseToken lpseToken : lpseTokens) {
-			assertEquals("something+here/", panlPassThroughField.getURIPath(lpseToken, collectionProperties));
+			assertEquals("something%20here/", panlPassThroughField.getURIPath(lpseToken, collectionProperties));
 			assertEquals("z", panlPassThroughField.getLpseCode(lpseToken, collectionProperties));
 		}
 	}
