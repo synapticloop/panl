@@ -232,16 +232,6 @@ public class PaginationProcessorTest {
 		assertEquals("-page-suffix/brand-name/wpb/", pageUrisObject.getString(Processor.JSON_KEY_AFTER));
 	}
 
-//	@Test void testInvalidPageNumberOutOfBounds() throws PanlServerException, IOException {
-//		JSONObject jsonObject = TestHelper.paginationProcesser(
-//				"/page/default.properties",
-//				"/test/default/page-prefix-100-page-suffix/p/",
-//				"",
-//				100L
-//		);
-//		assertBaseValidity(jsonObject);
-//	}
-
 	@Test void testNumPerPagePrefixSuffix() throws PanlServerException, IOException {
 		JSONObject jsonObject = TestHelper.invokePaginationProcessor(
 				"/page/prefix-suffix.properties",

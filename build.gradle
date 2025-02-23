@@ -2,10 +2,14 @@ plugins {
 	id 'java'
 	id 'application'
 	id 'jacoco'
+	id "synapticloop.copyrightr" version "1.3.1"
 }
 
+// load the properties for versioning - not that this is also used by the Panl
+// server to output the version on startup.
 def properties = new Properties()
 file("src/main/resources/gradle.properties").withInputStream { properties.load(it) }
+
 version = properties.getProperty("panl.version")
 group = 'com.synapticloop'
 
@@ -14,26 +18,39 @@ repositories {
 }
 
 java {
-		toolchain {
-				languageVersion = JavaLanguageVersion.of(11)
-		}
+	toolchain {
+		languageVersion = JavaLanguageVersion.of(11)
+	}
 }
 
 sourceSets {
-	integrationTest {
+	testIntegration {
 		java {
 			compileClasspath += main.output + test.output
 			runtimeClasspath += main.output + test.output
-			srcDir file('src/integration/java')
+			srcDir file('src/testintegration/java')
+			resources.srcDir file('src/testintegration/resources')
 		}
-		resources.srcDir file('src/integration/resources')
+	}
+
+	testIntegrationSpider {
+		java {
+			compileClasspath += main.output + test.output
+			runtimeClasspath += main.output + test.output
+			srcDir file('src/testintegrationspider/java')
+			resources.srcDir file('src/testintegrationspider/resources')
+		}
 	}
 }
 
 configurations {
-	integrationTestCompile.extendsFrom testCompile
-	integrationTestRuntime.extendsFrom testRuntime
-	integrationTestRuntime.extendsFrom runtime
+	testIntegrationCompile.extendsFrom testCompile
+	testIntegrationRuntime.extendsFrom testRuntime
+	testIntegrationRuntime.extendsFrom runtime
+
+	testIntegrationSpiderCompile.extendsFrom testCompile
+	testIntegrationSpiderRuntime.extendsFrom testRuntime
+	testIntegrationSpiderRuntime.extendsFrom runtime
 }
 
 dependencies {
@@ -41,8 +58,8 @@ dependencies {
 	implementation 'org.apache.solr:solr-solrj:7.7.3'
 
 	// HTTP server
-	implementation 'org.eclipse.jetty.http2:http2-server:10.0.20'
-	implementation 'org.eclipse.jetty:jetty-servlet:10.0.20'
+	implementation 'org.eclipse.jetty.http2:http2-server:10.0.22'
+	implementation 'org.eclipse.jetty:jetty-servlet:10.0.22'
 
 	// logging
 	implementation 'org.slf4j:slf4j-api:2.0.13'
@@ -59,8 +76,10 @@ dependencies {
 	// testing
 	testImplementation platform('org.junit:junit-bom:5.9.1')
 	testImplementation 'org.junit.jupiter:junit-jupiter'
-	testImplementation 'org.mockito:mockito-core:5.12.0'
+	testImplementation 'org.mockito:mockito-core:5.14.2'
+	testImplementation 'org.powermock:powermock-api-mockito2:2.0.9'
 	testImplementation 'com.fasterxml.jackson.core:jackson-databind:2.17.1'
+	testImplementation 'commons-codec:commons-codec:1.17.1'
 
 	// for the panl editor
 	implementation "com.formdev:flatlaf:3.5.1"
@@ -72,29 +91,60 @@ dependencies {
 	// integration testing
 	//
 	// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-	integrationTestImplementation platform('org.junit:junit-bom:5.9.1')
-	integrationTestImplementation 'org.junit.jupiter:junit-jupiter'
-	integrationTestImplementation 'org.mockito:mockito-core:5.12.0'
-	integrationTestImplementation 'com.fasterxml.jackson.core:jackson-databind:2.17.1'
-	integrationTestImplementation 'commons-io:commons-io:2.16.1'
-	integrationTestImplementation 'org.json:json:20240303'
+	testIntegrationImplementation platform('org.junit:junit-bom:5.9.1')
+	testIntegrationImplementation 'org.junit.jupiter:junit-jupiter'
+	testIntegrationImplementation 'org.mockito:mockito-core:5.12.0'
+	testIntegrationImplementation 'com.fasterxml.jackson.core:jackson-databind:2.17.1'
+	testIntegrationImplementation 'commons-io:commons-io:2.16.1'
+	testIntegrationImplementation 'org.json:json:20240303'
 	// HTTP server
-	integrationTestImplementation 'org.eclipse.jetty.http2:http2-server:10.0.20'
-	integrationTestImplementation 'org.eclipse.jetty:jetty-servlet:10.0.20'
+	testIntegrationImplementation 'org.eclipse.jetty.http2:http2-server:10.0.20'
+	testIntegrationImplementation 'org.eclipse.jetty:jetty-servlet:10.0.20'
 
 	// logging
-	integrationTestImplementation 'org.slf4j:slf4j-api:2.0.13'
-	integrationTestImplementation 'org.apache.logging.log4j:log4j-core:2.23.1'
-	integrationTestImplementation 'org.apache.logging.log4j:log4j-api:2.23.1'
-	integrationTestImplementation 'org.apache.logging.log4j:log4j-slf4j2-impl:2.23.1'
+	testIntegrationImplementation 'org.slf4j:slf4j-api:2.0.13'
+	testIntegrationImplementation 'org.apache.logging.log4j:log4j-core:2.23.1'
+	testIntegrationImplementation 'org.apache.logging.log4j:log4j-api:2.23.1'
+	testIntegrationImplementation 'org.apache.logging.log4j:log4j-slf4j2-impl:2.23.1'
 
 
 	// additional utilities
-	integrationTestImplementation 'commons-io:commons-io:2.16.1'
-	integrationTestImplementation 'org.json:json:20240303'}
+	testIntegrationImplementation 'commons-io:commons-io:2.16.1'
+	testIntegrationImplementation 'org.json:json:20240303'
+
+	// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+	//
+	// Site Spidering
+	//
+	// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+	testIntegrationSpiderImplementation platform('org.junit:junit-bom:5.9.1')
+	testIntegrationSpiderImplementation 'org.junit.jupiter:junit-jupiter'
+	testIntegrationSpiderImplementation 'org.mockito:mockito-core:5.12.0'
+	testIntegrationSpiderImplementation 'com.fasterxml.jackson.core:jackson-databind:2.17.1'
+	testIntegrationSpiderImplementation 'commons-io:commons-io:2.16.1'
+	testIntegrationSpiderImplementation 'org.json:json:20240303'
+
+	// HTTP server
+	testIntegrationSpiderImplementation 'org.eclipse.jetty.http2:http2-server:10.0.22'
+	testIntegrationSpiderImplementation 'org.eclipse.jetty:jetty-servlet:10.0.22'
+
+	// logging
+	testIntegrationSpiderImplementation 'org.slf4j:slf4j-api:2.0.13'
+	testIntegrationSpiderImplementation 'org.apache.logging.log4j:log4j-core:2.23.1'
+	testIntegrationSpiderImplementation 'org.apache.logging.log4j:log4j-api:2.23.1'
+	testIntegrationSpiderImplementation 'org.apache.logging.log4j:log4j-slf4j2-impl:2.23.1'
+
+	// additional utilities
+	testIntegrationSpiderImplementation 'commons-io:commons-io:2.16.1'
+	testIntegrationSpiderImplementation 'org.json:json:20240303'
+}
 
 application {
 	mainClass = 'com.synapticloop.panl.Main'
+}
+
+startScripts {
+	classpath = files( '$APP_HOME/lib/*' )
 }
 
 distributions {
@@ -108,48 +158,72 @@ distributions {
 			force "org.slf4j:slf4j-api:2.0.13",
 					"commons-io:commons-io:2.16.1",
 					"com.fasterxml.jackson.core:jackson-databind:2.17.1",
-					"com.fasterxml.jackson.core:jackson-annotations:2.17.1"
+					"com.fasterxml.jackson.core:jackson-annotations:2.17.1",
+					"org.mockito:mockito-core:5.14.2",
+					"net.bytebuddy:byte-buddy:1.15.4",
+					"net.bytebuddy:byte-buddy-agent:1.15.4",
+					"org.objenesis:objenesis:3.3",
+					"commons-codec:commons-codec:1.17.1"
+
 		}
 	}
 }
 
-task copyLoggingFile {
+tasks.register('copyLoggingFile') {
 	copy {
 		from file("src/main/resources/log4j2.xml")
 		into file("src/dist/lib/")
 	}
 }
 
-tasks.startScripts.doLast {
-	def unixScriptFile = file getUnixScript()
-	unixScriptFile.text = unixScriptFile.text.replace('DEFAULT_JVM_OPTS=""', 'DEFAULT_JVM_OPTS="-Dlog4j2.configurationFile=lib/log4j2.xml"')
-
-	def windowsScriptFile = file getWindowsScript()
-	windowsScriptFile.text = windowsScriptFile.text.replace('set DEFAULT_JVM_OPTS=', 'set DEFAULT_JVM_OPTS=-Dlog4j2.configurationFile=lib\\log4j2.xml')
+tasks.withType(Copy).configureEach {
+	duplicatesStrategy = DuplicatesStrategy.EXCLUDE
 }
-
-//
-// Exclude the Log4J configuration
-//
-jar {
-	exclude('log4j2.xml')
-}
-
 
 test {
 	useJUnitPlatform()
 	finalizedBy jacocoTestReport
 }
 
-tasks.register('integrationTest', Test) {
+tasks.register('testIntegration', Test) {
 	useJUnitPlatform()
-	testClassesDirs = sourceSets.integrationTest.output.classesDirs
-	classpath = sourceSets.integrationTest.runtimeClasspath
+	testClassesDirs = sourceSets.testIntegration.output.classesDirs
+	classpath = sourceSets.testIntegration.runtimeClasspath
+	classpath += sourceSets.main.runtimeClasspath
+	outputs.upToDateWhen { false }
+}
+
+tasks.register('testIntegrationSpider', Test) {
+	useJUnitPlatform()
+	testClassesDirs = sourceSets.testIntegrationSpider.output.classesDirs
+	classpath = sourceSets.testIntegrationSpider.runtimeClasspath
 	classpath += sourceSets.main.runtimeClasspath
 	outputs.upToDateWhen { false }
 }
 
 jacocoTestReport {
 	dependsOn test
+}
+
+copyrightr {
+	dryRun = false
+	copyrightHolder = "synapticloop"
+	includes = [
+			"src/**/*.java",
+			"src/**/*.js"
+	]
+	excludes = [
+			"src/test/java/**/*.java",
+			"src/testintegration/java/**/*.java",
+			"src/testintegrationspider/java/**/*.java",
+			"**/*.class",
+			"**/package-info.java",
+			"**/LpseTokeniser.java",
+			"**/*.*",
+			"**/nouislider.min.js"
+	]
+	onlyReplaceFirst = true
+	yearSeparator = " - "
+	failOnMissing = false
 }
 

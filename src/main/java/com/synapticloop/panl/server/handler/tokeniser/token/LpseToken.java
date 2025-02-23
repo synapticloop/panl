@@ -1,7 +1,7 @@
 package com.synapticloop.panl.server.handler.tokeniser.token;
 
 /*
- * Copyright (c) 2008-2024 synapticloop.
+ * Copyright (c) 2008-2025 synapticloop.
  *
  * https://github.com/synapticloop/panl
  *
@@ -29,6 +29,9 @@ import com.synapticloop.panl.server.handler.properties.CollectionProperties;
 import com.synapticloop.panl.server.handler.tokeniser.LpseTokeniser;
 import com.synapticloop.panl.server.handler.tokeniser.token.facet.*;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import java.util.StringTokenizer;
 
 /**
@@ -36,7 +39,7 @@ import java.util.StringTokenizer;
  * validates whether this token is valid.</p>
  *
  * <pre>
- *   /something/else/a value/another/2/dfgtn/
+ *   /something/else/a+value/another/2/dfgtn/
  *   --------------------------------- -----
  *         This is the URI part          |
  *                                       |
@@ -53,7 +56,7 @@ import java.util.StringTokenizer;
  * <ul>
  *   <li><code>something</code> maps to <code>d</code></li>
  *   <li><code>else</code> maps to <code>f</code></li>
- *   <li><code>a value</code> maps to <code>g</code></li>
+ *   <li><code>a+value</code> maps to <code>g</code></li>
  *   <li><code>another</code> maps to <code>t</code></li>
  *   <li><code>2</code> maps to <code>n</code></li>
  * </ul>
@@ -102,9 +105,9 @@ public abstract class LpseToken {
 	 * @param valueTokeniser The LPSE URI tokeniser
 	 * @param lpseTokeniser The LPSE code tokeniser
 	 *
-	 * @return The LpseToken for this LPSE code.
+	 * @return The list of LpseTokens for this LPSE code.
 	 */
-	public static LpseToken getLpseToken(
+	public static List<LpseToken> getLpseTokens(
 			CollectionProperties collectionProperties,
 			String lpseCode,
 			String query,
@@ -129,16 +132,16 @@ public abstract class LpseToken {
 			lpseField = collectionProperties.getLpseField(lpseCodeBuilder.toString());
 			if (null == lpseField) {
 				// still null
-				return (new FacetLpseToken(
+				return(List.of(new FacetLpseToken(
 						collectionProperties,
 						lpseCodeBuilder.toString(),
 						lpseTokeniser,
-						valueTokeniser));
+						valueTokeniser)));
 
 			}
 		}
 
-		return (lpseField.instantiateToken(collectionProperties, lpseCode, query, valueTokeniser, lpseTokeniser));
+		return (lpseField.instantiateTokens(collectionProperties, lpseCode, query, valueTokeniser, lpseTokeniser));
 	}
 
 	/**
@@ -173,7 +176,7 @@ public abstract class LpseToken {
 	}
 
 	/**
-	 * <p>Return a human readable explanation of what the URI has been parsed to
+	 * <p>Return a human-readable explanation of what the URI has been parsed to
 	 * be.</p>
 	 *
 	 * <p>

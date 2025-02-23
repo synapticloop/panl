@@ -1,10 +1,11 @@
 $(document).ready(function() {
-	var availableCollections = $("#available_collections");
-	var currentCollectionName = "";
+	let availableCollections = $("#available_collections");
+	let currentCollectionName = "";
+
 	for (const collectionUrl of collections) {
 		const lastIndex = collectionUrl.lastIndexOf("/");
 		const collectionName = collectionUrl.substring(1, lastIndex);
-		const fieldSet = collectionUrl.substring(lastIndex +1);
+		const fieldSet = collectionUrl.substring(lastIndex + 1);
 		if(currentCollectionName !== collectionName) {
 			availableCollections.append("<br />&nbsp;<strong>" + collectionName + "</strong>")
 			currentCollectionName = collectionName;
@@ -37,21 +38,21 @@ $(document).ready(function() {
 });
 
 function panlExplain() {
-	var text = $("#uris").val();
+	let text = $("#uris").val();
 	// maybe we will have a query parameter...?
 
-	if(text.length == 0) {
+	if(text.length === 0) {
 		text = getURLParameter("explain");
 		if(text !== undefined && text.length != 0) {
 			$("#uris").val(text)
-			var url = window.location.href;
+			let url = window.location.href;
       window.history.replaceState({}, "", url.split('?')[0]);
 		} else {
 			text = "";
 		}
 	}
 
-	if(text.length == 0) {
+	if(text.length === 0) {
 		text = "/";
 	}
 
@@ -59,8 +60,7 @@ function panlExplain() {
 		text = "/" + text;
 	}
 
-	var explainUrl = "/panl-results-explainer/explain" + $("#collection").text() + text;
-
+	let explainUrl = "/panl-results-explainer/explain" + $("#collection").text() + text;
 
 	$.ajax({
 		url:explainUrl,
@@ -71,18 +71,18 @@ function panlExplain() {
 }
 
 function getURLParameter(sParam) {
-	var sPageURL = window.location.search.substring(1);
-	var sURLVariables = sPageURL.split('&');
-	for (var i = 0; i < sURLVariables.length; i++) {
-		var sParameterName = sURLVariables[i].split('=');
-		if (sParameterName[0] == sParam)  {
+	let sPageURL = window.location.search.substring(1);
+	let sURLVariables = sPageURL.split('&');
+	for (let i = 0; i < sURLVariables.length; i++) {
+		let sParameterName = sURLVariables[i].split('=');
+		if (sParameterName[0] === sParam)  {
 			return sParameterName[1];
-     }
+		}
 	}
 }
 
 function isValidUrl(collection, fieldset) {
-	var fullUrl = "/" + collection + "/" + fieldset;
+	let fullUrl = "/" + collection + "/" + fieldset;
 	for (const collectionUrl of collections) {
 		if(collectionUrl === fullUrl) {
 			return(true);
@@ -94,44 +94,44 @@ function isValidUrl(collection, fieldset) {
 
 function populateExplainResults(panlJsonData) {
 	console.log(panlJsonData);
-
-	$("#documents").empty();
-	$("#documents").append("<h1>Request Token Explainer</h1>");
+	let resultDocuments = $("#documents");
+	resultDocuments.empty();
+	resultDocuments.append("<h1>Request Token Explainer</h1>");
 	if(panlJsonData.explanation.length === 0) {
-		$("#documents").append("<code class=\"explain\">No URI path entered, nothing to explain.</pre>")
+		resultDocuments.append("<code class=\"explain\">No URI path entered, nothing to explain.</pre>")
 	}
 
 	for(const expl of panlJsonData.explanation) {
 		if(expl.includes("[ INVALID ]")) {
-			$("#documents").append("<code class=\"explain invalid\">" + escapeHTML(expl) + "</pre>")
+			resultDocuments.append("<code class=\"explain invalid\">" + escapeHTML(expl) + "</pre>")
 		} else {
-			$("#documents").append("<code class=\"explain valid\">" + escapeHTML(expl) + "</pre>")
+			resultDocuments.append("<code class=\"explain valid\">" + escapeHTML(expl) + "</pre>")
 		}
 	}
 
-	$("#documents").append("<h1>Configuration Parameters</h1>");
+	resultDocuments.append("<h1>Configuration Parameters</h1>");
 	for(const parameter of panlJsonData.parameters) {
-		var innerCode = "<strong>[ " + parameter.value + " ] </strong> ";
+		let innerCode = "<strong>[ " + parameter.value + " ] </strong> ";
 
 		for(const inner of parameter.description) {
 			innerCode = innerCode + inner + "<br />";
 		}
 
 		 innerCode = innerCode + " <em>(set by the property '" + parameter.property + "')</em>";
-		$("#documents").append("<code class=\"explain\">" + innerCode + "</pre>")
+		resultDocuments.append("<code class=\"explain\">" + innerCode + "</pre>")
 	}
 
-	$("#documents").append("<h1>Field Configuration Explainer</h1>");
-	$("#documents").append("<p>In order of URI path</p>");
+	resultDocuments.append("<h1>Field Configuration Explainer</h1>");
+	resultDocuments.append("<p>In order of URI path</p>");
 	for(const conf of panlJsonData.configuration) {
-		var isFirst = true;
-		var innerCode = "";
-		for(const inner of conf) {
+		let isFirst = true;
+		let innerCode = "";
 
+		for(const inner of conf) {
 			innerCode = innerCode + (isFirst ? "" : " - ") +escapeHTML(inner) + "<br />";
 			isFirst = false;
 		}
-		$("#documents").append("<code class=\"explain\">" + innerCode + "</pre>")
+		resultDocuments.append("<code class=\"explain\">" + innerCode + "</pre>")
 	}
 }
 

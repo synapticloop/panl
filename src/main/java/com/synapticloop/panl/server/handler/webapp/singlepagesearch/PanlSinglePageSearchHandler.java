@@ -1,5 +1,7 @@
+package com.synapticloop.panl.server.handler.webapp.singlepagesearch;
+
 /*
- * Copyright (c) 2008-2024 synapticloop.
+ * Copyright (c) 2008-2025 synapticloop.
  *
  * https://github.com/synapticloop/panl
  *
@@ -22,7 +24,6 @@
  * IN THE SOFTWARE.
  */
 
-package com.synapticloop.panl.server.handler.webapp.singlepagesearch;
 
 import com.synapticloop.panl.server.handler.CollectionRequestHandler;
 import com.synapticloop.panl.server.handler.webapp.util.ResourceHelper;
@@ -32,7 +33,6 @@ import org.apache.http.protocol.HttpContext;
 import org.apache.http.protocol.HttpRequestHandler;
 
 import java.util.List;
-
 
 public class PanlSinglePageSearchHandler implements HttpRequestHandler {
 	public PanlSinglePageSearchHandler(List<CollectionRequestHandler> collectionRequestHandlers) {

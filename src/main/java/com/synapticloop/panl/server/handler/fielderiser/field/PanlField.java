@@ -1,7 +1,7 @@
 package com.synapticloop.panl.server.handler.fielderiser.field;
 
 /*
- * Copyright (c) 2008-2024 synapticloop.
+ * Copyright (c) 2008-2025 synapticloop.
  *
  * https://github.com/synapticloop/panl
  *
@@ -84,11 +84,7 @@ public class PanlField extends BaseField {
 		return ("");
 	}
 
-	/**
-	 * <p>Gets the logger for this class.</p>
-	 *
-	 * @return The logger for this class
-	 */
+
 	@Override public Logger getLogger() {
 		return (LOGGER);
 	}
@@ -99,7 +95,7 @@ public class PanlField extends BaseField {
 		return (explanations);
 	}
 
-	@Override public void applyToQueryInternal(SolrQuery solrQuery, List<LpseToken> lpseTokenList) { /* do nothing */ }
+	@Override public void applyToQueryInternal(SolrQuery solrQuery, List<LpseToken> lpseTokenList, CollectionProperties collectionProperties) { /* do nothing */ }
 
 	@Override protected void appendToAvailableObjectInternal(JSONObject jsonObject) { /* do nothing */ }
 
@@ -114,8 +110,8 @@ public class PanlField extends BaseField {
 	 *
 	 * @return The LpseToken - in this case a subset of the FacetLpseToken
 	 */
-	public LpseToken instantiateToken(CollectionProperties collectionProperties, String lpseCode, String query, StringTokenizer valueTokeniser, LpseTokeniser lpseTokeniser) {
-		return (new FacetLpseToken(collectionProperties, this.lpseCode, lpseTokeniser, valueTokeniser));
+	public List<LpseToken> instantiateTokens(CollectionProperties collectionProperties, String lpseCode, String query, StringTokenizer valueTokeniser, LpseTokeniser lpseTokeniser) {
+		return (List.of(new FacetLpseToken(collectionProperties, this.lpseCode, lpseTokeniser, valueTokeniser)));
 	}
 
 	@Override protected void logDetails() {

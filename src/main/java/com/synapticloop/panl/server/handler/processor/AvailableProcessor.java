@@ -1,7 +1,7 @@
 package com.synapticloop.panl.server.handler.processor;
 
 /*
- * Copyright (c) 2008-2024 synapticloop.
+ * Copyright (c) 2008-2025 synapticloop.
  *
  * https://github.com/synapticloop/panl
  *
@@ -120,7 +120,6 @@ public class AvailableProcessor extends Processor {
 				}
 
 				baseField.addToAdditionObject(facetObject, panlTokenMap);
-
 			}
 
 			// these range facets will always appear
@@ -139,7 +138,6 @@ public class AvailableProcessor extends Processor {
 			}
 		}
 
-
 		for (BaseField lpseField : collectionProperties.getLpseFields()) {
 			if (panlFacetOrderMap.containsKey(lpseField.getLpseCode())) {
 				panlFacets.put(panlFacetOrderMap.get(lpseField.getLpseCode()));
@@ -151,105 +149,4 @@ public class AvailableProcessor extends Processor {
 		jsonObject.put(JSON_KEY_DATE_RANGE_FACETS, dateRangeFacetArray);
 		return (jsonObject);
 	}
-
-	/**
-	 * <p>Get the addition URI Object for facets.  The addition URI will always
-	 * reset the page number LPSE code</p>
-	 *
-	 * @param lpseField The LPSE field to add to the URI
-	 * @param panlTokenMap The Map of existing tokens that are already in the URI
-	 *
-	 * @return The addition URI
-	 *
-
-	private JSONObject getAdditionURIObject(BaseField lpseField, Map<String, List<LpseToken>> panlTokenMap, boolean shouldRange) {
-		String additionLpseCode = lpseField.getLpseCode();
-		JSONObject additionObject = new JSONObject();
-		StringBuilder lpseUri = new StringBuilder(FORWARD_SLASH);
-		StringBuilder lpseUriAfterMax = new StringBuilder();
-		StringBuilder lpseCode = new StringBuilder();
-
-		// TODO - clean up this logic
-		for (BaseField baseField : collectionProperties.getLpseFields()) {
-			if(shouldRange) {
-				// whether we have an addition to the URI - we are going to ignore it
-				// as it is always a replacement (you cannot have two ranges available)
-
-			}
-
-			if (panlTokenMap.containsKey(baseField.getLpseCode()) &&
-							!(shouldRange &&
-									baseField.getLpseCode().equals(additionLpseCode))) {
-
-				String resetUriPath = baseField.getResetUriPath(panlTokenMap, collectionProperties);
-				lpseUri.append(resetUriPath);
-
-				if(lpseUriAfterMax.length() != 0) {
-					lpseUriAfterMax.append(resetUriPath);
-				}
-
-				lpseCode.append(baseField.getResetLpseCode(panlTokenMap, collectionProperties));
-			}
-
-			if (baseField.getLpseCode().equals(additionLpseCode)) {
-				if (shouldRange) {
-					// depends on whether there is an infix
-					// at this point we want to also do the min value replacement, if it
-					// exists
-					if(null != baseField.getRangeMinValueReplacement()) {
-						additionObject.put(JSON_KEY_BEFORE_MIN_VALUE, lpseUri.toString() + URLEncoder.encode(baseField.getRangeMinValueReplacement(), StandardCharsets.UTF_8));
-					}
-
-					if (lpseField.getHasRangeInfix()) {
-						// we have an infix - we will be using the range value prefix/suffix
-						lpseUri.append(URLEncoder.encode(baseField.getRangePrefix(), StandardCharsets.UTF_8));
-					} else {
-						// we don't have an infix - we will be using the value prefix/suffix
-						lpseUri.append(URLEncoder.encode(baseField.getValuePrefix(), StandardCharsets.UTF_8));
-					}
-
-					lpseCode.append(lpseField.getLpseCode());
-					lpseCode.append((lpseField.getHasRangeInfix() ? "-" : "+"));
-
-					if (baseField.getHasRangeInfix()) {
-						// we have the infix
-						additionObject.put(JSON_KEY_HAS_INFIX, true);
-						additionObject.put(JSON_KEY_DURING, URLEncoder.encode(baseField.getRangeValueInfix(), StandardCharsets.UTF_8));
-					} else {
-						// we shall use the value suffix and prefix;
-						additionObject.put(JSON_KEY_HAS_INFIX, false);
-						additionObject.put(
-								JSON_KEY_DURING,
-								URLEncoder.encode(baseField.getValueSuffix(), StandardCharsets.UTF_8) +
-										JSON_VALUE_NO_INFIX_REPLACEMENT +
-										URLEncoder.encode(baseField.getValuePrefix(), StandardCharsets.UTF_8));
-					}
-				}
-
-				additionObject.put(JSON_KEY_BEFORE, lpseUri.toString());
-				lpseUri.setLength(0);
-				lpseCode.append(baseField.getLpseCode());
-
-				if(shouldRange) {
-					if(baseField.getHasRangeInfix()) {
-						lpseUri.append(URLEncoder.encode(baseField.getRangeSuffix(), StandardCharsets.UTF_8));
-					} else {
-						lpseUri.append(URLEncoder.encode(baseField.getValueSuffix(), StandardCharsets.UTF_8));
-					}
-
-					if(null != baseField.getRangeMaxValueReplacement()) {
-						lpseUriAfterMax.append(URLEncoder.encode(baseField.getRangeMaxValueReplacement(), StandardCharsets.UTF_8))
-								.append(FORWARD_SLASH);
-					}
-				}
-				lpseUri.append(FORWARD_SLASH);
-			}
-		}
-
-		additionObject.put(JSON_KEY_AFTER, lpseUri.toString() + lpseCode.toString() + FORWARD_SLASH);
-		additionObject.put(JSON_KEY_AFTER_MAX_VALUE, lpseUriAfterMax.toString() + lpseCode.toString() + FORWARD_SLASH);
-		return (additionObject);
-	}
-	 */
-
 }

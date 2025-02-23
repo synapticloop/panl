@@ -3,7 +3,7 @@
     "id": 1,
     "author": "Michael Connelly",
     "title": "The Black Echo",
-    "description": "No description provided",
+    "description": "\"The Black Echo\" is the debut novel by Michael Connelly, introducing the character of LAPD detective Harry Bosch. The story begins with the discovery of a body in a drainage tunnel, which leads Bosch into a complex investigation tied to his past as a Vietnam War veteran. The victim, a fellow veteran, is found with a black echo—a term referring to the sound of a heartbeat in the dark, echoing through the tunnels.\n\nAs Bosch delves deeper into the case, he uncovers a web of crime that connects to a series of bank robberies and a notorious criminal known as the \"Black Echo.\" The investigation forces Bosch to confront his own demons from the war and his struggles with the LAPD, as he navigates the challenges of the police force and the personal toll of his work.\n\nThe novel explores themes of trauma, redemption, and the complexities of justice, all while delivering a gripping and suspenseful narrative. Connelly's sharp prose and intricate plotting set the stage for Bosch's character development, making \"The Black Echo\" a compelling start to a long-running series that has captivated readers with its blend of crime, mystery, and psychological depth.",
     "book_image": "http://example.com/image/",
     "buy_url": "http://example.com/buy/",
     "genre": [
@@ -15,18 +15,20 @@
     "num_pages": 842,
     "first_published_year": 1992,
     "language": "English",
-    "is_paperback": "true",
+    "is_paperback": false,
     "series": "Harry Bosch",
-    "price": 19.99,
+    "price": 12.99,
     "a_to_z_index": "C",
     "decade_published": 1990,
-    "book_length": "Novel"
+    "book_length": "Novel",
+    "on_backorder": false,
+    "speedy_delivery": true
   },
   {
     "id": 2,
     "author": "Michael Connelly",
     "title": "The Black Ice",
-    "description": "No description provided",
+    "description": "\"The Black Ice\" is the second novel in Michael Connelly's Harry Bosch series, following the debut of the iconic LAPD detective in \"The Black Echo.\" In this installment, Bosch is drawn into a complex investigation that begins with the discovery of a dead body in a seedy motel in Los Angeles. The victim is identified as a fellow LAPD officer, and the circumstances surrounding his death raise immediate suspicions.\n\nAs Bosch digs deeper, he uncovers a connection to a larger drug trafficking operation that leads him to the Mexican border and the dark underbelly of the narcotics trade. The investigation reveals a web of corruption, betrayal, and danger, as Bosch confronts not only the criminals involved but also the challenges within his own department.\n\nThroughout the novel, themes of loyalty, morality, and the consequences of choices are explored, as Bosch grapples with the realities of law enforcement and the personal toll it takes on him. Connelly's masterful storytelling and intricate plotting keep readers on the edge of their seats, making \"The Black Ice\" a thrilling continuation of Harry Bosch's journey as a relentless seeker of justice.",
     "book_image": "http://example.com/image/",
     "buy_url": "http://example.com/buy/",
     "genre": [
@@ -38,18 +40,20 @@
     "num_pages": 439,
     "first_published_year": 1993,
     "language": "English",
-    "is_paperback": "true",
+    "is_paperback": true,
     "series": "Harry Bosch",
-    "price": 19.99,
+    "price": 11.32,
     "a_to_z_index": "C",
     "decade_published": 1990,
-    "book_length": "Novel"
+    "book_length": "Novel",
+    "on_backorder": true,
+    "speedy_delivery": true
   },
   {
     "id": 3,
     "author": "Michael Connelly",
     "title": "The Concrete Blonde",
-    "description": "No description provided",
+    "description": "\"The Concrete Blonde\" is the third novel in Michael Connelly's Harry Bosch series, further developing the character of the tenacious LAPD detective. The story begins with Bosch being embroiled in a high-profile case involving a serial killer known as the \"Concrete Blonde,\" who has been terrorizing Los Angeles. The investigation takes a dramatic turn when Bosch is forced to confront the fallout from a previous case that he worked on, which involved the murder of a woman whose body was found in a concrete slab.\n\nAs Bosch delves into the current investigation, he discovers unsettling connections to his past, including the possibility that he may have wrongfully killed an innocent man in a previous case. This revelation leads to a tense legal battle, as Bosch faces a civil lawsuit from the family of the deceased. The narrative weaves together themes of guilt, redemption, and the moral complexities of law enforcement.\n\nConnelly's trademark suspense and intricate plotting keep readers engaged as Bosch navigates the challenges of his profession, the scrutiny of the media, and the personal demons that haunt him. \"The Concrete Blonde\" is a gripping exploration of justice and the lengths to which one will go to uncover the truth, solidifying Bosch's place as one of the most compelling characters in contemporary crime fiction.",
     "book_image": "http://example.com/image/",
     "buy_url": "http://example.com/buy/",
     "genre": [
@@ -61,18 +65,20 @@
     "num_pages": 484,
     "first_published_year": 1994,
     "language": "English",
-    "is_paperback": "true",
+    "is_paperback": true,
     "series": "Harry Bosch",
-    "price": 19.99,
+    "price": 12.45,
     "a_to_z_index": "C",
     "decade_published": 1990,
-    "book_length": "Novel"
+    "book_length": "Novel",
+    "on_backorder": false,
+    "speedy_delivery": true
   },
   {
     "id": 4,
     "author": "Michael Connelly",
     "title": "The Last Coyote",
-    "description": "No description provided",
+    "description": "\"The Last Coyote\" is the fourth novel in Michael Connelly's Harry Bosch series, continuing the journey of the relentless LAPD detective. In this installment, Bosch finds himself on forced leave from the police department after a series of confrontations with his superiors. During this time, he is drawn into a personal investigation that revolves around the unsolved murder of his mother, a case that has haunted him for decades.\n\nAs Bosch delves into the past, he uncovers long-buried secrets and a web of corruption that connects to his mother's death. His quest for answers leads him to revisit his childhood and the circumstances surrounding his family's history. The investigation takes him through the streets of Los Angeles, where he encounters various characters who hold pieces of the puzzle.\n\nConnelly masterfully intertwines Bosch's personal struggles with the broader themes of loss, memory, and the quest for justice. The novel explores Bosch's determination to confront his past while grappling with the complexities of his role as a detective. \"The Last Coyote\" is a compelling blend of personal and professional stakes, showcasing Bosch's relentless pursuit of truth and closure, making it a standout entry in the series.",
     "book_image": "http://example.com/image/",
     "buy_url": "http://example.com/buy/",
     "genre": [
@@ -84,18 +90,20 @@
     "num_pages": 400,
     "first_published_year": 1992,
     "language": "English",
-    "is_paperback": "true",
+    "is_paperback": true,
     "series": "Harry Bosch",
-    "price": 19.99,
+    "price": 13.99,
     "a_to_z_index": "C",
     "decade_published": 1990,
-    "book_length": "Novel"
+    "book_length": "Novel",
+    "on_backorder": false,
+    "speedy_delivery": true
   },
   {
     "id": 5,
     "author": "Michael Connelly",
     "title": "Trunk Music",
-    "description": "No description provided",
+    "description": "\"Trunk Music\" is the fifth novel in Michael Connelly's Harry Bosch series, featuring the relentless LAPD detective as he navigates a complex murder investigation. The story begins with the discovery of a body in the trunk of a car parked in the Hollywood Hills. The victim is identified as a low-level Hollywood producer, and the circumstances surrounding his death quickly draw Bosch into a web of intrigue.\n\nAs Bosch investigates, he uncovers connections to the world of organized crime, particularly the Las Vegas mob. The case becomes increasingly complicated as Bosch faces pressure from his superiors and the media, all while dealing with the personal demons that haunt him. The investigation leads him to Las Vegas, where he must navigate the dangerous underbelly of the city and confront powerful figures who will stop at nothing to protect their interests.\n\nConnelly's trademark blend of suspense, intricate plotting, and character development shines in \"Trunk Music.\" The novel explores themes of corruption, loyalty, and the moral ambiguities of law enforcement. As Bosch races against time to solve the case, he must also confront his own beliefs about justice and the lengths he is willing to go to uncover the truth. \"Trunk Music\" is a gripping and fast-paced entry in the series, solidifying Bosch's reputation as one of the most compelling detectives in contemporary crime fiction.",
     "book_image": "http://example.com/image/",
     "buy_url": "http://example.com/buy/",
     "genre": [
@@ -107,18 +115,20 @@
     "num_pages": 448,
     "first_published_year": 1997,
     "language": "English",
-    "is_paperback": "true",
+    "is_paperback": false,
     "series": "Harry Bosch",
-    "price": 19.99,
+    "price": 25.60,
     "a_to_z_index": "C",
     "decade_published": 1990,
-    "book_length": "Novel"
+    "book_length": "Novel",
+    "on_backorder": false,
+    "speedy_delivery": false
   },
   {
     "id": 6,
     "author": "Michael Connelly",
     "title": "Angels Flight",
-    "description": "No description provided",
+    "description": "\"Angels Flight\" is the sixth novel in Michael Connelly's Harry Bosch series, continuing the story of the tenacious LAPD detective. The novel opens with the shocking murder of a prominent defense attorney, who is known for representing controversial clients, including those accused of police misconduct. The case quickly becomes a high-profile investigation, drawing media attention and public scrutiny.\n\nAs Bosch delves into the details of the attorney's murder, he uncovers a complex web of corruption, racial tensions, and systemic issues within the LAPD. The investigation leads him to confront the realities of police work in a city grappling with its own troubled history. Bosch's pursuit of justice is further complicated by the involvement of the attorney's clients, some of whom have connections to organized crime and other dangerous elements.\n\nThroughout \"Angels Flight,\" Connelly explores themes of justice, morality, and the impact of the past on the present. Bosch's relentless quest for the truth forces him to navigate a treacherous landscape filled with political maneuvering and personal risk. The novel is marked by its intricate plotting and rich character development, showcasing Bosch's dedication to his work and his struggle to uphold his principles in a flawed system.\n\nAs the investigation unfolds, Bosch must confront not only the external challenges of the case but also his own beliefs about justice and the complexities of human nature. \"Angels Flight\" is a gripping and thought-provoking entry in the series, highlighting Connelly's skill in weaving together crime, social issues, and the personal journey of one of fiction's most enduring detectives.\n",
     "book_image": "http://example.com/image/",
     "buy_url": "http://example.com/buy/",
     "genre": [
@@ -130,18 +140,20 @@
     "num_pages": 454,
     "first_published_year": 1999,
     "language": "English",
-    "is_paperback": "true",
+    "is_paperback": true,
     "series": "Harry Bosch",
-    "price": 19.99,
+    "price": 12.99,
     "a_to_z_index": "C",
     "decade_published": 1990,
-    "book_length": "Novel"
+    "book_length": "Novel",
+    "on_backorder": false,
+    "speedy_delivery": true
   },
   {
     "id": 7,
     "author": "Michael Connelly",
     "title": "A Darkness More Than Night",
-    "description": "No description provided",
+    "description": "\"A Darkness More Than Night\" is the seventh novel in Michael Connelly's Harry Bosch series, featuring the iconic LAPD detective alongside his former partner, Terry McCaleb, from the earlier novel \"Blood Work.\" The story begins with the murder of a high-profile Hollywood director, which leads to an investigation that intertwines with Bosch's past and the complexities of the criminal justice system.\n\nAs Bosch delves into the case, he discovers that the director had connections to a notorious serial killer, and the investigation takes him into the dark world of Hollywood and its secrets. The narrative is further complicated by the involvement of McCaleb, who is drawn into the case due to his own connections to the victim. The two detectives must navigate a web of deception, betrayal, and moral ambiguity as they seek to uncover the truth behind the murder.\n\nConnelly masterfully explores themes of justice, redemption, and the impact of the past on the present. Bosch's relentless pursuit of the truth is challenged by the ethical dilemmas he faces, as well as the personal demons that haunt him. The novel's title reflects the darker aspects of human nature and the complexities of the cases Bosch encounters.\n\n\"A Darkness More Than Night\" is a gripping and thought-provoking entry in the series, showcasing Connelly's skill in blending crime fiction with deeper philosophical questions. As Bosch and McCaleb work together to solve the case, readers are taken on a suspenseful journey that highlights the intricacies of the human experience and the shadows that linger in the pursuit of justice.",
     "book_image": "http://example.com/image/",
     "buy_url": "http://example.com/buy/",
     "genre": [
@@ -153,18 +165,20 @@
     "num_pages": 470,
     "first_published_year": 2000,
     "language": "English",
-    "is_paperback": "true",
+    "is_paperback": true,
     "series": "Harry Bosch",
     "price": 19.99,
     "a_to_z_index": "C",
     "decade_published": 2000,
-    "book_length": "Novel"
+    "book_length": "Novel",
+    "on_backorder": false,
+    "speedy_delivery": true
   },
   {
     "id": 8,
     "author": "Michael Connelly",
     "title": "City of Bones",
-    "description": "No description provided",
+    "description": "\"City of Bones\" is the eighth novel in Michael Connelly's Harry Bosch series, featuring the relentless LAPD detective as he tackles a complex and chilling murder case. The story begins when the skeletal remains of a young woman are discovered in a remote area of the Los Angeles National Forest. The victim is identified as a missing person, and the investigation quickly reveals that her death is linked to a series of unsolved cases.\n\nAs Bosch delves deeper into the investigation, he uncovers a web of secrets that leads him to confront the darker aspects of Los Angeles, including issues of corruption, crime, and the impact of the past on the present. The case takes a personal turn for Bosch when he discovers connections to his own family history, forcing him to grapple with his own demons and the legacy of his mother.\n\nThroughout \"City of Bones,\" Connelly masterfully weaves together themes of justice, memory, and the complexities of human relationships. Bosch's relentless pursuit of the truth is challenged by the obstacles he faces within the police department and the broader societal issues that complicate his work. The novel is marked by its intricate plotting, rich character development, and a deep exploration of the moral ambiguities inherent in law enforcement.\n\nAs Bosch races against time to solve the case, he must navigate the treacherous landscape of Los Angeles and confront the shadows of his own past. \"City of Bones\" is a gripping and thought-provoking entry in the series, showcasing Connelly's ability to blend crime fiction with deeper philosophical questions about justice, identity, and the human experience.",
     "book_image": "http://example.com/image/",
     "buy_url": "http://example.com/buy/",
     "genre": [
@@ -176,14 +190,43 @@
     "num_pages": 408,
     "first_published_year": 2002,
     "language": "English",
-    "is_paperback": "true",
+    "is_paperback": true,
     "series": "Harry Bosch",
-    "price": 19.99,
+    "price": 35.12,
     "a_to_z_index": "C",
     "decade_published": 2000,
-    "book_length": "Novel"
+    "book_length": "Novel",
+    "on_backorder": true,
+    "speedy_delivery": true
   },
-
+  {
+    "id": 9,
+    "author": "Michael Connelly",
+    "title": "Lincoln Lawyer",
+    "description": "\"The Lincoln Lawyer,\" written by Michael Connelly and published in 2005, introduces readers to Mickey Haller, a charismatic and unconventional defense attorney who operates out of the back seat of his Lincoln Town Car. Known for his sharp wit and keen legal instincts, Haller navigates the gritty world of Los Angeles criminal defense, representing a diverse array of clients, from low-level offenders to high-profile cases.\n\nWhen Haller is hired to defend a wealthy real estate agent, Louis Roulet, accused of assaulting a woman, he believes he has landed a golden opportunity. However, as he delves deeper into the case, he uncovers a web of deceit and danger that challenges his moral compass and puts his life at risk. The more he investigates, the more he realizes that the case may be connected to a previous conviction that haunts him.\n\nConnelly masterfully weaves a gripping narrative filled with twists and turns, exploring themes of justice, ethics, and the complexities of the legal system. As Haller races against time to uncover the truth, he must confront his own demons and navigate the treacherous waters of the courtroom.\n\n\"The Lincoln Lawyer\" is a compelling legal thriller that keeps readers on the edge of their seats, showcasing Connelly's signature storytelling and deep understanding of the law. It is a captivating exploration of the lengths one man will go to seek justice, making it a standout entry in the genre.",
+    "book_image": "http://example.com/image/",
+    "buy_url": "http://example.com/buy/",
+    "genre": [
+      "Mystery",
+      "Crime",
+      "Legal",
+      "Law",
+      "Detective",
+      "Thriller",
+      "Fiction"
+    ],
+    "num_pages": 408,
+    "first_published_year": 2005,
+    "language": "English",
+    "is_paperback": true,
+    "series": "Lincoln Lawyer",
+    "price": 22.15,
+    "a_to_z_index": "C",
+    "decade_published": 2000,
+    "book_length": "Novel",
+    "on_backorder": false,
+    "speedy_delivery": true
+  },
 
 
 
@@ -192,7 +235,7 @@
     "id": 11,
     "author": "Maeve Binchy",
     "title": "Circle of Friends",
-    "description": "No description provided",
+    "description": "\"Circle of Friends\" is a poignant and engaging novel by Maeve Binchy that explores the complexities of friendship, love, and the challenges of growing up in a small Irish town. Set in the 1950s and 1960s in the fictional town of Knockglen, the story follows the lives of three main characters: Benny Hogan, a warm-hearted and optimistic girl from a modest background; Eve Malone, a spirited and independent girl with dreams of a different life; and Nan Mahon, a wealthy and glamorous girl who often feels trapped by her privileged upbringing.\n\nAs the three girls navigate their teenage years, they form a close-knit circle of friends, supporting each other through the trials and tribulations of adolescence. Their lives become intertwined with a cast of memorable characters, including family members, teachers, and romantic interests, each contributing to the rich tapestry of their experiences.\n\nThe novel delves into themes of loyalty, betrayal, and the impact of choices on one's future. As the friends grow older, they face various challenges, including love affairs, heartbreak, and the pressures of societal expectations. The story captures the essence of friendship and the bittersweet nature of growing up, highlighting how the bonds formed in youth can shape one's identity and life path.\n\nBinchy's warm and evocative prose brings the characters and their world to life, making \"Circle of Friends\" a heartfelt exploration of the joys and sorrows of friendship. The novel ultimately celebrates the enduring connections that define our lives, reminding readers of the importance of love, support, and understanding in the journey of life.",
     "book_image": "http://example.com/image/",
     "buy_url": "http://example.com/buy/",
     "genre": [
@@ -202,17 +245,19 @@
     "num_pages": 722,
     "first_published_year": 1980,
     "language": "English",
-    "is_paperback": "true",
-    "price": 19.99,
+    "is_paperback": true,
+    "price": 5.78,
     "a_to_z_index": "B",
     "decade_published": 1980,
-    "book_length": "Novel"
+    "book_length": "Novel",
+    "on_backorder": false,
+    "speedy_delivery": true
   },
   {
     "id": 12,
     "author": "Maeve Binchy",
     "title": "Tara Road",
-    "description": "No description provided",
+    "description": "\"Tara Road\" is a captivating novel by Maeve Binchy that explores themes of friendship, love, and the complexities of life through the intertwined stories of its characters. Set primarily in Dublin and the picturesque countryside of Ireland, the novel centers around Ria and her husband, Danny, who live on Tara Road, a charming street that serves as a backdrop for the lives of its residents.\n\nRia is a warm and nurturing woman who finds herself at a crossroads when her marriage begins to unravel. As she navigates the challenges of her personal life, she forms a deep connection with her neighbor, the enigmatic and independent woman named Marilyn. Their friendship blossoms as they share their experiences, dreams, and heartaches, providing each other with support and understanding.\n\nThe narrative unfolds through a series of events that bring together a diverse cast of characters, each with their own struggles and aspirations. From family dynamics to romantic entanglements, Binchy weaves a rich tapestry of relationships that reflect the joys and sorrows of life. The novel also explores the theme of home, both in a physical sense and in terms of emotional belonging.\n\nAs Ria and Marilyn's lives intersect with those of others on Tara Road, the story delves into the impact of choices and the importance of community. Binchy's signature warmth and keen insight into human nature shine through, making \"Tara Road\" a poignant exploration of the connections that shape our lives.\n\nUltimately, the novel is a celebration of resilience, friendship, and the power of love to heal and transform. \"Tara Road\" invites readers to reflect on their own relationships and the significance of the places we call home, making it a heartfelt and memorable read.",
     "book_image": "http://example.com/image/",
     "buy_url": "http://example.com/buy/",
     "genre": [
@@ -222,16 +267,18 @@
     "num_pages": 648,
     "first_published_year": 1998,
     "language": "English",
-    "is_paperback": "true",
-    "price": 19.99,
+    "is_paperback": false,
+    "price": 16.35,
     "a_to_z_index": "B",
     "decade_published": 1990,
-    "book_length": "Novel"
+    "book_length": "Novel",
+    "on_backorder": false,
+    "speedy_delivery": true
   },
   {
-    "id": 12,
+    "id": 13,
     "author": "Maeve Binchy",
-    "title": "Chestnut Street",
+    "title": "\"Chestnut Street\" is a charming and evocative novel by Maeve Binchy that weaves together the lives of various characters living on a fictional street in Dublin. The book is structured as a series of interconnected stories, each focusing on different residents of Chestnut Street, allowing readers to glimpse the rich tapestry of their lives, dreams, and struggles.\n\nThe narrative introduces a diverse cast of characters, including families, singles, and couples, each with their own unique stories and backgrounds. From the elderly widow reflecting on her past to the young couple navigating the challenges of their relationship, Binchy captures the essence of human experience with warmth and empathy. The characters face a range of issues, including love, loss, ambition, and the search for belonging, all set against the backdrop of the close-knit community on Chestnut Street.\n\nAs the stories unfold, themes of friendship, resilience, and the importance of connection emerge. Binchy's keen observations and rich character development allow readers to form deep emotional connections with the inhabitants of Chestnut Street, making their joys and sorrows feel personal and relatable.\n\nThrough her signature storytelling style, Binchy highlights the significance of community and the impact of seemingly small interactions on the lives of individuals. \"Chestnut Street\" is a celebration of the everyday moments that shape our lives and the bonds that connect us, making it a heartwarming and insightful read that resonates with anyone who appreciates the beauty of human relationships.",
     "description": "No description provided",
     "book_image": "http://example.com/image/",
     "buy_url": "http://example.com/buy/",
@@ -242,11 +289,13 @@
     "num_pages": 430,
     "first_published_year": 2014,
     "language": "English",
-    "is_paperback": "true",
-    "price": 19.99,
+    "is_paperback": true,
+    "price": 15.48,
     "a_to_z_index": "B",
     "decade_published": 2010,
-    "book_length": "Novel"
+    "book_length": "Novel",
+    "on_backorder": false,
+    "speedy_delivery": false
   },
 
 
@@ -257,7 +306,7 @@
     "id": 21,
     "author": "Stephenie Meyer",
     "title": "Twilight",
-    "description": "No description provided",
+    "description": "\"Twilight\" is the first novel in the popular young adult series by Stephenie Meyer, which introduces readers to the captivating world of vampires and romance. The story is narrated by Bella Swan, a teenage girl who moves from sunny Phoenix, Arizona, to the small, rainy town of Forks, Washington, to live with her father. Bella is a quiet and introspective character who feels out of place in her new environment.\n\nUpon arriving in Forks, Bella becomes intrigued by Edward Cullen, a mysterious and handsome classmate who seems to harbor a dark secret. As their paths cross, Bella discovers that Edward is not just an ordinary teenager; he is a vampire with extraordinary abilities and a complex past. Despite the dangers that come with their attraction, Bella and Edward are drawn to each other, leading to a passionate and tumultuous romance.\n\nAs their relationship deepens, Bella learns more about the vampire world, including the existence of other supernatural beings and the potential threats they pose. The novel explores themes of love, identity, and the struggle between desire and danger. Bella's journey is marked by her desire to understand Edward's world while grappling with her own feelings of vulnerability and longing.\n\nMeyer’s writing captures the intensity of first love and the challenges that come with it, creating a sense of suspense and intrigue throughout the story. \"Twilight\" not only sets the stage for the romantic and supernatural elements of the series but also delves into the complexities of relationships and the choices that define us.\n\nWith its blend of romance, fantasy, and coming-of-age themes, \"Twilight\" has resonated with readers around the world, sparking a cultural phenomenon and leading to a successful series that continues to captivate audiences.\n",
     "book_image": "http://example.com/image/",
     "buy_url": "http://example.com/buy/",
     "genre": [
@@ -268,18 +317,20 @@
     "num_pages": 498,
     "first_published_year": 2005,
     "language": "English",
-    "is_paperback": "true",
+    "is_paperback": true,
     "series": "The Twilight Saga",
-    "price": 19.99,
+    "price": 14.78,
     "a_to_z_index": "M",
     "decade_published": 2000,
-    "book_length": "Novel"
+    "book_length": "Novel",
+    "on_backorder": true,
+    "speedy_delivery": true
   },
   {
     "id": 22,
     "author": "Stephenie Meyer",
     "title": "New Moon",
-    "description": "No description provided",
+    "description": "\"Twilight\" is the first novel in the popular young adult series by Stephenie Meyer, which introduces readers to the captivating world of vampires and romance. The story is narrated by Bella Swan, a teenage girl who moves from sunny Phoenix, Arizona, to the small, rainy town of Forks, Washington, to live with her father. Bella is a quiet and introspective character who feels out of place in her new environment.\n\nUpon arriving in Forks, Bella becomes intrigued by Edward Cullen, a mysterious and handsome classmate who seems to harbor a dark secret. As their paths cross, Bella discovers that Edward is not just an ordinary teenager; he is a vampire with extraordinary abilities and a complex past. Despite the dangers that come with their attraction, Bella and Edward are drawn to each other, leading to a passionate and tumultuous romance.\n\nAs their relationship deepens, Bella learns more about the vampire world, including the existence of other supernatural beings and the potential threats they pose. The novel explores themes of love, identity, and the struggle between desire and danger. Bella's journey is marked by her desire to understand Edward's world while grappling with her own feelings of vulnerability and longing.\n\nMeyer’s writing captures the intensity of first love and the challenges that come with it, creating a sense of suspense and intrigue throughout the story. \"Twilight\" not only sets the stage for the romantic and supernatural elements of the series but also delves into the complexities of relationships and the choices that define us.\n\nWith its blend of romance, fantasy, and coming-of-age themes, \"Twilight\" has resonated with readers around the world, sparking a cultural phenomenon and leading to a successful series that continues to captivate audiences.\n\ncan you please write me a book overview for stephanie meyer new moon\n.\n\nGPT-4o mini\n\n\"New Moon\" is the second novel in Stephenie Meyer's \"Twilight\" series, continuing the story of Bella Swan and her tumultuous relationship with the vampire Edward Cullen. The novel begins with Bella's 18th birthday, a milestone that brings with it a sense of foreboding. During a birthday celebration at the Cullen household, an accident involving Bella prompts Edward to make a heart-wrenching decision to protect her from the dangers of his world.\n\nFeeling that Bella is better off without him, Edward leaves Forks, Washington, along with his family, breaking Bella's heart in the process. Devastated by his absence, Bella falls into a deep depression and struggles to navigate life without the love of her life. In her quest to cope with her pain, she forms a close friendship with Jacob Black, a warm and loyal friend who helps her heal. However, Bella soon discovers that Jacob harbors his own secrets, as he is part of a tribe with a long-standing history of werewolves, sworn enemies of vampires.\n\nAs Bella becomes more involved with Jacob and the world of the Quileute tribe, she finds herself torn between her feelings for him and her lingering love for Edward. The novel explores themes of heartbreak, friendship, and the complexities of love, as Bella grapples with her identity and the choices she must make.\n\nThe story takes a dramatic turn when Bella learns that Edward believes she is dead, prompting him to seek out the Volturi, a powerful coven of vampires, in a bid to end his own life. Bella races against time to save him, leading to a thrilling climax that tests the strength of their love and the bonds of friendship.\n\n\"New Moon\" delves into the emotional depths of its characters, showcasing Bella's journey of self-discovery and resilience. With its blend of romance, supernatural elements, and coming-of-age themes, the novel captivates readers and sets the stage for the continuing saga of Bella, Edward, and Jacob in the subsequent installments of the series.",
     "book_image": "http://example.com/image/",
     "buy_url": "http://example.com/buy/",
     "genre": [
@@ -290,18 +341,20 @@
     "num_pages": 563,
     "first_published_year": 2006,
     "language": "English",
-    "is_paperback": "true",
+    "is_paperback": false,
     "series": "The Twilight Saga",
-    "price": 19.99,
+    "price": 24.99,
     "a_to_z_index": "M",
     "decade_published": 2000,
-    "book_length": "Novel"
+    "book_length": "Novel",
+    "on_backorder": false,
+    "speedy_delivery": false
   },
   {
     "id": 23,
     "author": "Stephenie Meyer",
     "title": "Eclipse",
-    "description": "No description provided",
+    "description": "\"Eclipse\" is the third novel in Stephenie Meyer's \"Twilight\" series, continuing the intense love story between Bella Swan, a human, and Edward Cullen, a vampire. The novel picks up as Bella faces the emotional turmoil of her relationships with both Edward and Jacob Black, her close friend who is also a werewolf. As Bella navigates her feelings, she is forced to confront the consequences of her choices and the dangers that come with her connection to the supernatural world.\n\nAs tensions rise between the vampire and werewolf factions, a new threat emerges in the form of Victoria, a vengeful vampire seeking to avenge the death of her mate, James, from the first book. Victoria is determined to create an army of newborn vampires to attack Bella and the Cullens, forcing the two groups to unite against a common enemy. This alliance brings about a complex dynamic, as Bella must balance her feelings for Edward and Jacob while also grappling with the implications of her choice to become a vampire.\n\nThroughout \"Eclipse,\" themes of love, loyalty, and sacrifice are explored as Bella faces pivotal decisions about her future. The novel delves into the complexities of her relationships, highlighting the deep bond she shares with Edward and the passionate friendship she has with Jacob. As the story unfolds, Bella must confront her fears and desires, ultimately leading her to make a choice that will change her life forever.\n\nThe climax of the novel features intense action and emotional revelations, culminating in a battle against Victoria's army. Bella's journey of self-discovery and her struggle to define her identity in a world filled with supernatural beings come to a head, setting the stage for the final installment of the series.\n\n\"Eclipse\" is a compelling blend of romance, suspense, and personal growth, showcasing Meyer's ability to create a richly layered narrative that resonates with readers. The novel deepens the exploration of love in its various forms, making it a pivotal chapter in Bella's journey toward understanding her heart's true desire.",
     "book_image": "http://example.com/image/",
     "buy_url": "http://example.com/buy/",
     "genre": [
@@ -312,12 +365,14 @@
     "num_pages": 629,
     "first_published_year": 2007,
     "language": "English",
-    "is_paperback": "true",
+    "is_paperback": true,
     "series": "The Twilight Saga",
-    "price": 19.99,
+    "price": 13.48,
     "a_to_z_index": "M",
     "decade_published": 2000,
-    "book_length": "Novel"
+    "book_length": "Novel",
+    "on_backorder": false,
+    "speedy_delivery": true
   },
   {
     "id": 24,
@@ -334,18 +389,20 @@
     "num_pages": 756,
     "first_published_year": 2008,
     "language": "English",
-    "is_paperback": "true",
+    "is_paperback": true,
     "series": "The Twilight Saga",
-    "price": 19.99,
+    "price": 8.79,
     "a_to_z_index": "M",
     "decade_published": 2000,
-    "book_length": "Novel"
+    "book_length": "Novel",
+    "on_backorder": true,
+    "speedy_delivery": true
   },
   {
     "id": 25,
     "author": "Stephenie Meyer",
     "title": "Midnight Sun",
-    "description": "No description provided",
+    "description": "\"Midnight Sun\" is a retelling of Stephenie Meyer's \"Twilight\" from the perspective of Edward Cullen, the enigmatic vampire and love interest of Bella Swan. This novel provides readers with a deeper understanding of Edward's thoughts, feelings, and motivations as he navigates his complex emotions and the challenges of being a vampire in love with a human.\n\nThe story closely follows the events of \"Twilight,\" beginning with Bella's arrival in Forks, Washington, and her first encounters with Edward. Through Edward's eyes, readers gain insight into his internal struggles, including his desire to protect Bella from the dangers of his world, his fear of losing control, and the moral dilemmas he faces as a vampire. The novel delves into Edward's past, exploring his experiences and the events that shaped him into the character he is in \"Twilight.\"\n\nAs Edward grapples with his growing feelings for Bella, he is acutely aware of the risks involved in their relationship. His protective instincts are heightened as he senses the dangers that surround Bella, including the threat posed by other vampires. The narrative also highlights Edward's interactions with his family, particularly his siblings, and their differing views on Bella's presence in their lives.\n\n\"Midnight Sun\" enriches the original story by providing a more nuanced portrayal of Edward's character, revealing his vulnerabilities, fears, and the depth of his love for Bella. The novel explores themes of love, sacrifice, and the struggle between desire and duty, offering readers a fresh perspective on the beloved characters and their tumultuous relationship.\n\nWith its blend of romance, suspense, and introspection, \"Midnight Sun\" invites fans of the series to experience the \"Twilight\" saga anew, deepening their understanding of Edward Cullen and the choices he makes in the name of love. The novel serves as both a companion to \"Twilight\" and a standalone exploration of one of its most compelling characters.",
     "book_image": "http://example.com/image/",
     "buy_url": "http://example.com/buy/",
     "genre": [
@@ -356,18 +413,20 @@
     "num_pages": 756,
     "first_published_year": 2020,
     "language": "English",
-    "is_paperback": "true",
+    "is_paperback": true,
     "series": "The Twilight Saga",
-    "price": 19.99,
+    "price": 14.56,
     "a_to_z_index": "M",
     "decade_published": 2020,
-    "book_length": "Novel"
+    "book_length": "Novel",
+    "on_backorder": false,
+    "speedy_delivery": true
   },
   {
     "id": 26,
     "author": "Stephenie Meyer",
     "title": "The Chemist",
-    "description": "No description provided",
+    "description": "\"The Chemist\" is a standalone novel by Stephenie Meyer that blends elements of thriller, romance, and suspense. The story follows Alex, a former agent for a secret government organization, who is on the run after being targeted for elimination due to her knowledge of sensitive information. Having been trained as a chemist, Alex uses her skills to survive in a world where she is constantly hunted.\n\nAs the narrative unfolds, Alex is forced to adopt a new identity and live off the grid, evading those who want her dead. Her life takes a dramatic turn when she is approached by a mysterious man named Daniel, who offers her a chance to clear her name and uncover the truth behind the organization that betrayed her. Together, they embark on a dangerous journey that leads them to confront the dark secrets of the agency and the people involved.\n\nThroughout the novel, themes of trust, betrayal, and the quest for redemption are explored as Alex grapples with her past and the choices that have led her to this point. The tension escalates as she navigates a web of deceit, facing not only external threats but also her own internal struggles.\n\nMeyer’s writing combines fast-paced action with emotional depth, allowing readers to connect with Alex as she fights for her survival and seeks to reclaim her life. The novel also delves into the complexities of relationships, particularly the developing bond between Alex and Daniel, which adds a layer of romance to the suspenseful plot.\n\n\"The Chemist\" is a gripping and engaging read that showcases Meyer's ability to craft a compelling narrative filled with twists and turns, making it a thrilling addition to her body of work. The novel appeals to fans of both romance and action, offering a unique blend of genres that keeps readers on the edge of their seats.",
     "book_image": "http://example.com/image/",
     "buy_url": "http://example.com/buy/",
     "genre": [
@@ -378,11 +437,13 @@
     "num_pages": 521,
     "first_published_year": 2016,
     "language": "English",
-    "is_paperback": "true",
-    "price": 19.99,
+    "is_paperback": false,
+    "price": 10.00,
     "a_to_z_index": "M",
     "decade_published": 2010,
-    "book_length": "Novel"
+    "book_length": "Novel",
+    "on_backorder": false,
+    "speedy_delivery": false
   },
 
 
@@ -391,7 +452,7 @@
     "id": 31,
     "author": "Roald Dahl",
     "title": "Matilda",
-    "description": "No description provided",
+    "description": "\"Matilda\" is a beloved children's novel by Roald Dahl that tells the story of an extraordinary young girl with a passion for reading and a remarkable intellect. Matilda Wormwood is a bright and gifted child, but she is often overlooked and mistreated by her neglectful and self-absorbed parents, who fail to appreciate her talents. Instead of nurturing her abilities, they dismiss her love for books and learning, leaving Matilda to find solace in the world of literature.\n\nAs Matilda begins school, she encounters the tyrannical headmistress, Miss Trunchbull, who rules the school with an iron fist and instills fear in both students and teachers. However, Matilda also meets her kind and supportive teacher, Miss Honey, who recognizes Matilda's brilliance and becomes a source of encouragement in her life. The bond between Matilda and Miss Honey grows as they both face the challenges posed by Miss Trunchbull.\n\nMatilda discovers that she possesses a unique ability: she can move objects with her mind, a power that she learns to harness as she confronts the injustices in her life. With her intelligence, courage, and newfound abilities, Matilda devises clever plans to stand up to Miss Trunchbull and improve her situation.\n\nThe novel explores themes of resilience, empowerment, and the importance of kindness and education. Matilda's journey is one of self-discovery and triumph over adversity, as she learns to assert herself and fight for what is right. Dahl's signature wit and humor shine through in the storytelling, making \"Matilda\" a delightful and inspiring read for children and adults alike.\n\nUltimately, \"Matilda\" is a celebration of the power of knowledge, the strength of friendship, and the idea that even the smallest individuals can make a significant impact on the world around them. The story has resonated with readers for generations, solidifying Matilda's place as one of Dahl's most cherished characters.",
     "book_image": "http://example.com/image/",
     "buy_url": "http://example.com/buy/",
     "genre": [
@@ -403,17 +464,19 @@
     "num_pages": 240,
     "first_published_year": 1988,
     "language": "English",
-    "is_paperback": "true",
-    "price": 19.99,
+    "is_paperback": true,
+    "price": 11.14,
     "a_to_z_index": "D",
     "decade_published": 1980,
-    "book_length": "Novella"
+    "book_length": "Novella",
+    "on_backorder": true,
+    "speedy_delivery": true
   },
   {
     "id": 32,
     "author": "Roald Dahl",
     "title": "The BFG",
-    "description": "No description provided",
+    "description": "\"The BFG\" is a whimsical children's novel by Roald Dahl that tells the enchanting story of a young girl named Sophie and her extraordinary friendship with the Big Friendly Giant, or BFG. One night, while unable to sleep, Sophie looks out of her window and spots the BFG, who is busy blowing dreams into the bedrooms of children. To her surprise, the giant notices her and, fearing that she will reveal his existence, takes her away to his home in Giant Country.\n\nUnlike the other giants, who are cruel and eat humans, the BFG is gentle and kind-hearted. He introduces Sophie to his world, where he collects and distributes dreams to children while avoiding the other giants who are much larger and more menacing. The BFG and Sophie quickly form a bond, and she learns about his unique way of life, including his love for words and his peculiar vocabulary.\n\nAs the story unfolds, Sophie discovers that the other giants pose a significant threat to the human world. They are not only much larger than the BFG but also have a taste for human flesh. Determined to help her new friend and protect humanity, Sophie and the BFG devise a plan to stop the other giants once and for all. They seek the help of the Queen of England, leading to a series of humorous and adventurous events.\n\nDahl's storytelling is filled with imagination, humor, and heart, as he explores themes of friendship, bravery, and the power of dreams. The BFG's whimsical language and the vivid descriptions of Giant Country create a magical atmosphere that captivates readers of all ages.\n\nUltimately, \"The BFG\" is a tale of courage and compassion, showcasing the importance of standing up for what is right and the strength that can be found in unlikely friendships. The novel has become a classic, beloved for its charm, creativity, and the unforgettable characters of Sophie and the Big Friendly Giant.",
     "book_image": "http://example.com/image/",
     "buy_url": "http://example.com/buy/",
     "genre": [
@@ -425,17 +488,19 @@
     "num_pages": 199,
     "first_published_year": 1982,
     "language": "English",
-    "is_paperback": "true",
-    "price": 19.99,
+    "is_paperback": true,
+    "price": 7.54,
     "a_to_z_index": "D",
     "decade_published": 1980,
-    "book_length": "Novella"
+    "book_length": "Novella",
+    "on_backorder": false,
+    "speedy_delivery": true
   },
   {
     "id": 33,
     "author": "Roald Dahl",
     "title": "James and the Giant Peach",
-    "description": "No description provided",
+    "description": "\"James and the Giant Peach\" is a delightful children's novel by Roald Dahl that follows the adventurous journey of a young boy named James Henry Trotter. After the tragic loss of his parents, James is sent to live with his two cruel aunts, Aunt Sponge and Aunt Spiker, who treat him poorly and force him to do all the household chores. Feeling lonely and trapped, James longs for a better life.\n\nOne day, James encounters a mysterious old man who gives him magical green crystals that promise to change his life. When James accidentally spills the crystals near a barren peach tree, a giant peach begins to grow. To his astonishment, the peach becomes enormous, and James discovers a tunnel inside it. When he crawls through, he meets a group of anthropomorphic insects who have also made the peach their home, including a wise old grasshopper, a kind ladybug, a glamorous spider, and several others.\n\nTogether, they embark on a fantastical journey as the giant peach rolls away from the oppressive aunts and into the open sea. As they travel, the group faces various challenges, including encounters with sharks and a run-in with the Cloud-Men, who control the weather. Throughout their adventure, James and his new friends learn about friendship, teamwork, and the importance of believing in oneself.\n\nDahl's signature humor and imaginative storytelling shine through in \"James and the Giant Peach,\" making it a captivating read for children. The novel explores themes of resilience, the power of friendship, and the idea that even the most unlikely characters can come together to achieve great things.\n\nUltimately, \"James and the Giant Peach\" is a heartwarming tale of adventure and self-discovery, celebrating the joy of imagination and the magic of friendship. The story has become a classic, enchanting readers with its whimsical characters and unforgettable journey.",
     "book_image": "http://example.com/image/",
     "buy_url": "http://example.com/buy/",
     "genre": [
@@ -447,17 +512,19 @@
     "num_pages": 176,
     "first_published_year": 1961,
     "language": "English",
-    "is_paperback": "true",
-    "price": 19.99,
+    "is_paperback": false,
+    "price": 17.89,
     "a_to_z_index": "D",
     "decade_published": 1960,
-    "book_length": "Novella"
+    "book_length": "Novella",
+    "on_backorder": true,
+    "speedy_delivery": false
   },
   {
     "id": 33,
     "author": "Roald Dahl",
     "title": "The Witches",
-    "description": "No description provided",
+    "description": "\"The Witches\" is a captivating children's novel by Roald Dahl that tells the story of a young boy and his encounter with a group of witches who despise children. The story begins with the boy's grandmother, who is a knowledgeable and loving guardian, sharing her insights about witches. She explains that real witches are not the stereotypical figures seen in fairy tales; instead, they are cunning and dangerous beings who disguise themselves as ordinary women. They have a singular goal: to rid the world of children.\n\nAfter the boy's parents die in a car accident, he moves in with his grandmother, who becomes his protector and confidante. One day, they travel to a seaside hotel for a holiday, where they unexpectedly encounter a convention of witches led by the Grand High Witch, the most powerful witch of all. The boy and his grandmother quickly realize that the witches are plotting to eliminate children by turning them into mice using a magical formula.\n\nWhen the boy is discovered by the witches, he is transformed into a mouse himself. With his new mouse form, he must rely on his wits and the wisdom of his grandmother to thwart the witches' evil plans. Together, they devise a plan to stop the Grand High Witch and her followers, leading to a thrilling and suspenseful climax.\n\nDahl's storytelling is filled with humor, adventure, and a touch of darkness, making \"The Witches\" both entertaining and thought-provoking. The novel explores themes of bravery, the power of love and family, and the importance of standing up against evil.\n\nUltimately, \"The Witches\" is a memorable tale that captures the imagination of readers, blending fantasy and reality in a way that is uniquely Dahl. The story has become a classic, resonating with children and adults alike for its engaging characters and thrilling plot.\n",
     "book_image": "http://example.com/image/",
     "buy_url": "http://example.com/buy/",
     "genre": [
@@ -469,34 +536,13 @@
     "num_pages": 208,
     "first_published_year": 1981,
     "language": "English",
-    "is_paperback": "true",
-    "price": 19.99,
+    "is_paperback": true,
+    "price": 9.99,
     "a_to_z_index": "D",
     "decade_published": 1980,
-    "book_length": "Novella"
-  },
-
-  {
-    "id": 33,
-    "author": "Roald Dahl",
-    "title": "The Witches",
-    "description": "No description provided",
-    "book_image": "http://example.com/image/",
-    "buy_url": "http://example.com/buy/",
-    "genre": [
-      "Young Adult",
-      "Fantasy",
-      "Children",
-      "Humour"
-    ],
-    "num_pages": 208,
-    "first_published_year": 1981,
-    "language": "English",
-    "is_paperback": "true",
-    "price": 19.99,
-    "a_to_z_index": "D",
-    "decade_published": 1980,
-    "book_length": "Novella"
+    "book_length": "Novella",
+    "on_backorder": false,
+    "speedy_delivery": true
   },
 
 
@@ -504,7 +550,7 @@
     "id": 41,
     "author": "Suzanne Collins",
     "title": "The Hunger Games",
-    "description": "No description provided",
+    "description": "\"The Hunger Games\" is the first novel in Suzanne Collins' dystopian trilogy, set in a future society known as Panem, which is divided into the wealthy Capitol and twelve impoverished districts. The story follows Katniss Everdeen, a resourceful and determined sixteen-year-old girl from District 12, one of the poorest districts.\n\nEach year, the Capitol holds the Hunger Games, a brutal televised event in which one boy and one girl, known as \"tributes,\" are selected from each district to fight to the death in a controlled arena. The event serves as a reminder of the Capitol's power and a punishment for a past rebellion against its rule. When Katniss's younger sister, Prim, is chosen as the female tribute for District 12, Katniss bravely volunteers to take her place, setting off a chain of events that will change her life forever.\n\nAs Katniss enters the arena, she must rely on her survival skills, intelligence, and instincts to navigate the deadly competition. She forms an alliance with Peeta Mellark, the male tribute from her district, who has a complicated history with her. Throughout the Games, Katniss grapples with the moral implications of survival, the nature of sacrifice, and the impact of the media on public perception.\n\nCollins masterfully weaves themes of power, oppression, and rebellion into the narrative, as Katniss becomes a symbol of hope and resistance for the districts. The story is filled with tension, action, and emotional depth, as Katniss faces not only physical challenges but also the psychological toll of the Games.\n\n\"The Hunger Games\" is a gripping and thought-provoking novel that explores the consequences of a society driven by inequality and violence. It captivates readers with its strong protagonist, intricate world-building, and commentary on human nature, making it a powerful start to a trilogy that has resonated with audiences worldwide.",
     "book_image": "http://example.com/image/",
     "buy_url": "http://example.com/buy/",
     "genre": [
@@ -515,18 +561,20 @@
     "num_pages": 374,
     "first_published_year": 2008,
     "language": "English",
-    "is_paperback": "true",
+    "is_paperback": true,
     "series": "The Hunger Games",
-    "price": 19.99,
+    "price": 24.99,
     "a_to_z_index": "C",
     "decade_published": 2000,
-    "book_length": "Novella"
+    "book_length": "Novella",
+    "on_backorder": false,
+    "speedy_delivery": true
   },
   {
     "id": 42,
     "author": "Suzanne Collins",
     "title": "Catching Fire",
-    "description": "No description provided",
+    "description": "\"Catching Fire\" is the second novel in Suzanne Collins' acclaimed \"The Hunger Games\" trilogy, continuing the story of Katniss Everdeen as she navigates the aftermath of her victory in the 74th Hunger Games. Having defied the Capitol by winning the Games alongside fellow tribute Peeta Mellark, Katniss returns to District 12, but her life is far from normal. The Capitol is not pleased with her act of rebellion, which has sparked unrest in the districts.\n\nAs Katniss and Peeta embark on their Victory Tour, they are confronted with the harsh realities of their new fame and the consequences of their defiance. The Capitol uses their victory as a propaganda tool, but Katniss struggles with the weight of her actions and the growing unrest among the districts. She becomes increasingly aware of the political tensions brewing in Panem, as various districts begin to rise up against the oppressive regime.\n\nThe story takes a dramatic turn when President Snow visits Katniss and makes it clear that her defiance has made her a target. To quell the rebellion, he announces the 75th Hunger Games, known as the Quarter Quell, which will feature previous victors as tributes. This shocking twist forces Katniss and Peeta back into the arena, where they must once again fight for their lives against other skilled and experienced competitors.\n\nAs the Games unfold, Katniss forms alliances with other tributes and faces new challenges in the arena, including deadly traps and unexpected twists. The novel explores themes of survival, sacrifice, and the complexities of rebellion, as Katniss grapples with her role as a symbol of hope for the districts.\n\n\"Catching Fire\" is a gripping and emotionally charged sequel that deepens the exploration of power dynamics and the consequences of resistance. Collins' masterful storytelling keeps readers on the edge of their seats, leading to a shocking and suspenseful conclusion that sets the stage for the final installment of the trilogy. The novel not only expands the world of Panem but also highlights Katniss's growth as a character and her evolving understanding of the fight against tyranny.",
     "book_image": "http://example.com/image/",
     "buy_url": "http://example.com/buy/",
     "genre": [
@@ -537,18 +585,20 @@
     "num_pages": 391,
     "first_published_year": 2009,
     "language": "English",
-    "is_paperback": "true",
+    "is_paperback": true,
     "series": "The Hunger Games",
-    "price": 19.99,
+    "price": 22.56,
     "a_to_z_index": "C",
     "decade_published": 2000,
-    "book_length": "Novella"
+    "book_length": "Novella",
+    "on_backorder": false,
+    "speedy_delivery": true
    },
   {
     "id": 43,
     "author": "Suzanne Collins",
-    "title": "Mockingjat",
-    "description": "No description provided",
+    "title": "Mockingjay",
+    "description": "\"Mockingjay\" is the third and final novel in Suzanne Collins' \"The Hunger Games\" trilogy, concluding the harrowing journey of Katniss Everdeen as she becomes a symbol of rebellion against the oppressive Capitol. Following the events of \"Catching Fire,\" Katniss finds herself in District 13, a hidden stronghold of the rebellion, after narrowly escaping the destruction of District 12.\n\nAs the war against the Capitol escalates, Katniss grapples with the trauma of her experiences in the Hunger Games and the weight of her newfound role as the \"Mockingjay,\" the face of the revolution. District 13's leaders, including President Coin, seek to use Katniss as a propaganda tool to rally support for their cause. However, Katniss struggles with her identity and the moral complexities of war, questioning the cost of rebellion and the sacrifices required for freedom.\n\nThroughout the novel, Katniss is haunted by the loss of her loved ones, including Peeta Mellark, who has been captured and brainwashed by the Capitol. As she fights to rescue him and confront the Capitol's tyranny, Katniss must navigate the treacherous political landscape, where alliances shift and loyalties are tested. The story explores themes of power, sacrifice, and the impact of war on individuals and society.\n\nAs the final battle approaches, Katniss faces difficult choices that will determine the fate of Panem. The novel culminates in a gripping and emotional climax, revealing the true cost of rebellion and the complexities of leadership. Katniss's journey ultimately leads her to confront not only the Capitol but also her own beliefs about justice, love, and the future she desires.\n\n\"Mockingjay\" is a powerful and thought-provoking conclusion to the trilogy, highlighting the harsh realities of war and the resilience of the human spirit. Collins' masterful storytelling and character development create a poignant exploration of hope, loss, and the struggle for freedom, leaving readers with a lasting impact as they reflect on the themes of the series.",
     "book_image": "http://example.com/image/",
     "buy_url": "http://example.com/buy/",
     "genre": [
@@ -559,10 +609,231 @@
     "num_pages": 390,
     "first_published_year": 2010,
     "language": "English",
-    "is_paperback": "true",
-    "price": 19.99,
+    "is_paperback": true,
+    "price": 17.45,
     "a_to_z_index": "C",
     "decade_published": 2010,
-    "book_length": "Novella"
+    "book_length": "Novella",
+    "on_backorder": false,
+    "speedy_delivery": false
+  },
+
+
+
+  {
+    "id": 50,
+    "author": "Andy Weir",
+    "title": "The Martian",
+    "description": "\"The Martian\" is a science fiction novel by Andy Weir that tells the gripping story of astronaut Mark Watney, who becomes stranded on Mars during a manned mission. The novel begins with the Ares 3 mission, where a team of astronauts is conducting research on the Martian surface. When a severe dust storm threatens the mission, the crew is forced to abort and evacuate. In the chaos, Watney is struck by debris and left behind, presumed dead by his crewmates.\n\nUpon regaining consciousness, Watney realizes he is alone on the desolate planet with limited supplies and no immediate way to communicate with Earth. Using his skills as a botanist and engineer, he devises a plan to survive. Watney grows potatoes using Martian soil, his own waste as fertilizer, and water he creates through chemical reactions. He meticulously documents his daily struggles and scientific experiments in a series of log entries, showcasing his ingenuity and determination.\n\nAs Watney battles the harsh Martian environment, he also works to establish contact with NASA. After a series of setbacks and challenges, he successfully communicates with mission control, leading to a collaborative effort to rescue him. Meanwhile, his crewmates, who are unaware that he is alive, grapple with their own feelings of guilt and responsibility.\n\nThe novel explores themes of survival, human resilience, and the power of science and problem-solving. Watney's humor and optimism shine through even in the direst situations, making him a relatable and inspiring character. The story is rich in technical detail, reflecting Weir's commitment to scientific accuracy, which adds to the realism of the narrative.\n\n\"The Martian\" received widespread acclaim for its engaging storytelling, well-developed characters, and meticulous attention to detail. It became a bestseller and won several awards, including the 2015 Goodreads Choice Award for Best Science Fiction. In 2015, it was adapted into a successful film directed by Ridley Scott, starring Matt Damon as Mark Watney.\n\nOverall, \"The Martian\" is a thrilling and thought-provoking tale of survival and ingenuity, celebrating the human spirit's ability to overcome adversity in the face of overwhelming odds.",
+    "book_image": "http://example.com/image/",
+    "buy_url": "http://example.com/buy/",
+    "genre": [
+      "Science Fiction",
+      "Adventure",
+      "Space",
+      "Thriller",
+      "Humour",
+      "Survival"
+    ],
+    "num_pages": 384,
+    "first_published_year": 2011,
+    "language": "English",
+    "is_paperback": true,
+    "price": 5.99,
+    "a_to_z_index": "W",
+    "decade_published": 2010,
+    "book_length": "Novella",
+    "on_backorder": false,
+    "speedy_delivery": true
+  },
+  {
+    "id": 51,
+    "author": "Andy Weir",
+    "title": "Artemis",
+    "description": "\"Artemis\" is a science fiction novel by Andy Weir, set in the late 2080s in the first and only city on the Moon, known as Artemis. The story follows Jazz Bashara, a witty and resourceful young woman who has lived on the Moon since childhood. Jazz is a small-time smuggler and entrepreneur, always looking for ways to make a quick profit in the lunar city, which is a hub of commerce and tourism.\n\nJazz's life takes a dramatic turn when she is approached by a wealthy businessman named Trond Landvik, who offers her a lucrative job: to sabotage the operations of a rival company, which could lead to a significant financial gain for her. Initially tempted by the promise of wealth, Jazz soon finds herself embroiled in a dangerous conspiracy that threatens not only her life but also the stability of Artemis itself.\n\nAs she navigates the challenges of her new mission, Jazz must rely on her intelligence, street smarts, and a network of friends and allies, including her childhood friend and a local security officer. The novel explores themes of ambition, morality, and the consequences of one's choices, as Jazz grapples with the ethical implications of her actions and the impact they have on her community.\n\nWeir's signature blend of humor, scientific accuracy, and fast-paced storytelling is evident throughout \"Artemis.\" The novel features detailed descriptions of life on the Moon, including the unique challenges and opportunities presented by a lunar environment. Jazz's character is both relatable and complex, as she strives to find her place in a world that often feels out of reach.\n\nOverall, \"Artemis\" is an engaging and entertaining read that combines elements of heist fiction with a vivid portrayal of a futuristic lunar society. While it may not have received the same level of acclaim as Weir's debut novel, \"The Martian,\" it showcases his ability to create a compelling narrative filled with adventure, humor, and thought-provoking themes.",
+    "book_image": "http://example.com/image/",
+    "buy_url": "http://example.com/buy/",
+    "genre": [
+      "Science Fiction",
+      "Adventure",
+      "Space",
+      "Thriller",
+      "Crime"
+    ],
+    "num_pages": 305,
+    "first_published_year": 2017,
+    "language": "English",
+    "is_paperback": false,
+    "price": 18.99,
+    "a_to_z_index": "W",
+    "decade_published": 2010,
+    "book_length": "Novella",
+    "on_backorder": false,
+    "speedy_delivery": true
+  },
+  {
+    "id": 52,
+    "author": "Andy Weir",
+    "title": "Project Hail Mary",
+    "description": "\"Project Hail Mary\" is a science fiction novel by Andy Weir that follows the story of Ryland Grace, a lone astronaut who wakes up on a spaceship called the Hail Mary with no memory of how he got there. As he regains consciousness, he discovers that he is on a mission to save humanity from an impending extinction event caused by a mysterious microorganism called Astrophage, which is draining the Sun's energy and threatening life on Earth.\n\nGrace learns that he is the sole survivor of a crew sent to investigate Astrophage and find a solution to the crisis. His mission is to travel to another star system, specifically the Tau Ceti system, where scientists believe Astrophage may have a natural predator. As he navigates the challenges of space travel, Grace must rely on his scientific knowledge and problem-solving skills to understand the complexities of Astrophage and devise a plan to combat it.\n\nDuring his journey, Grace encounters an unexpected ally: an alien named Rocky from a nearby planet in the Tau Ceti system. Despite their differences in biology and communication, the two form a strong bond as they work together to solve the problem of Astrophage. Their collaboration highlights themes of friendship, cooperation, and the shared goal of saving their respective species.\n\nWeir's trademark humor and meticulous attention to scientific detail are evident throughout the novel, making the story both engaging and intellectually stimulating. The narrative is filled with suspense, as Grace faces numerous obstacles and must make critical decisions that could determine the fate of humanity.\n\nProject Hail Mary explores themes of sacrifice, resilience, and the power of collaboration across species. It is a thrilling and thought-provoking tale that showcases the ingenuity of the human spirit in the face of overwhelming odds. The novel has been well-received by readers and critics alike, solidifying Andy Weir's reputation as a master of contemporary science fiction.",
+    "book_image": "http://example.com/image/",
+    "buy_url": "http://example.com/buy/",
+    "genre": [
+      "Science Fiction",
+      "Adventure",
+      "Space",
+      "Thriller",
+      "Mystery"
+    ],
+    "num_pages": 476,
+    "first_published_year": 2021,
+    "language": "English",
+    "is_paperback": true,
+    "price": 12.69,
+    "a_to_z_index": "W",
+    "decade_published": 2020,
+    "book_length": "Novella",
+    "on_backorder": false,
+    "speedy_delivery": true
+  },
+
+  {
+    "id": 100,
+    "author": "Mary Wollstonecraft Shelley",
+    "title": "Frankenstein",
+    "description": "\"Frankenstein,\" written by Mary Shelley, is a groundbreaking novel that explores the themes of creation, ambition, and the consequences of playing God. Published in 1818, it tells the haunting story of Victor Frankenstein, a young scientist who becomes obsessed with the idea of creating life. Driven by his insatiable curiosity and desire for knowledge, Victor successfully animates a creature assembled from the remains of the dead.\n\nHowever, upon bringing his creation to life, Victor is horrified by the creature's grotesque appearance and abandons it, leading to a tragic chain of events. The creature, rejected by society and yearning for companionship, grapples with feelings of loneliness and despair. As it seeks revenge on its creator for the misery of its existence, the novel delves into profound questions about humanity, responsibility, and the ethical implications of scientific exploration.\n\nSet against the backdrop of the Romantic era, \"Frankenstein\" is not only a tale of horror but also a poignant reflection on the nature of existence and the quest for acceptance. Shelley's masterful storytelling and rich character development invite readers to ponder the moral dilemmas of creation and the consequences of isolation, making \"Frankenstein\" a timeless classic that continues to resonate with audiences today.",
+    "book_image": "http://example.com/image/",
+    "buy_url": "http://example.com/buy/",
+    "genre": [
+      "Science Fiction",
+      "Adventure",
+      "Space",
+      "Thriller",
+      "Mystery",
+      "Horror",
+      "Gothic",
+      "Fantasy"
+    ],
+    "num_pages": 260,
+    "first_published_year": 1818,
+    "language": "English",
+    "is_paperback": true,
+    "price": 8.69,
+    "a_to_z_index": "S",
+    "decade_published": 1810,
+    "book_length": "Novella",
+    "on_backorder": false,
+    "speedy_delivery": true
+  },
+  {
+    "id": 101,
+    "author": "Frances Hodgson Burnett",
+    "title": "The Secret Garden",
+    "description": "\"The Secret Garden,\" written by Frances Hodgson Burnett and first published in 1911, is a beloved children's novel that tells the enchanting story of Mary Lennox, a spoiled and lonely girl who is sent to live with her reclusive uncle, Archibald Craven, in a vast, mysterious mansion on the Yorkshire moors after the death of her parents.\n\nUpon her arrival, Mary discovers a neglected garden that has been locked away for years, hidden behind a high wall. Intrigued and determined to uncover its secrets, she befriends a local boy named Dickon, who has a deep connection with nature, and her sickly cousin, Colin, who has been confined to his room due to his ailments. Together, they embark on a journey of healing and transformation as they tend to the garden, bringing it back to life.\n\nAs the garden flourishes, so do the children, who learn valuable lessons about friendship, resilience, and the restorative power of nature. Through their adventures, Mary, Colin, and Dickon discover not only the beauty of the garden but also the importance of love, connection, and personal growth.\n\n\"The Secret Garden\" is a timeless tale that celebrates the magic of nature and the profound impact it can have on the human spirit, making it a cherished classic for readers of all ages.",
+    "book_image": "http://example.com/image/",
+    "buy_url": "http://example.com/buy/",
+    "genre": [
+      "Young Adult",
+      "Classics",
+      "Fiction",
+      "Childrens"
+    ],
+    "num_pages": 331,
+    "first_published_year": 1911,
+    "language": "English",
+    "is_paperback": true,
+    "price": 4.49,
+    "a_to_z_index": "B",
+    "decade_published": 1910,
+    "book_length": "Novella",
+    "on_backorder": false,
+    "speedy_delivery": true
+  },
+
+
+
+
+  {
+    "id": 201,
+    "author": "P. L. Travers",
+    "title": "Mary Poppins",
+    "description": "\"Mary Poppins,\" written by P. L. Travers and first published in 1934, is a beloved children's classic that introduces readers to the enchanting and whimsical world of the iconic nanny, Mary Poppins. With her magical abilities and no-nonsense attitude, Mary Poppins arrives at the Banks household in London, bringing a touch of wonder and adventure to the lives of the children, Jane and Michael.\n\nFrom the moment she steps into their lives, Mary Poppins transforms the mundane into the extraordinary. With her magical umbrella and carpet bag filled with surprises, she takes the children on fantastical adventures that defy the laws of reality. Whether it's jumping into a chalk drawing, having tea with a talking bird, or visiting the rooftops of London, each escapade is filled with delightful charm and life lessons.\n\nTravers's storytelling is rich with imagination and wit, capturing the essence of childhood wonder while exploring themes of family, responsibility, and the importance of joy in everyday life. Mary Poppins is not just a nanny; she is a catalyst for change, encouraging the Banks family to embrace creativity, kindness, and the magic that exists in the world around them.\n\n\"Mary Poppins\" is a timeless tale that has captivated generations of readers, celebrating the power of imagination and the joy of adventure. It remains a cherished classic that continues to inspire and delight both children and adults alike.",
+    "book_image": "http://example.com/image/",
+    "buy_url": "http://example.com/buy/",
+    "genre": [
+      "Young Adult",
+      "Magic",
+      "Adventure",
+      "Classics",
+      "Fiction",
+      "Childrens",
+      "Fantasy"
+    ],
+    "series": "Mary Poppins",
+    "num_pages": 209,
+    "first_published_year": 1934,
+    "language": "English",
+    "is_paperback": true,
+    "price": 7.54,
+    "a_to_z_index": "T",
+    "decade_published": 1930,
+    "book_length": "Novella",
+    "on_backorder": false,
+    "speedy_delivery": true
+  },
+
+  {
+    "id": 202,
+    "author": "P. L. Travers",
+    "title": "Mary Poppins Comes Back",
+    "description": "\"Mary Poppins Comes Back,\" the delightful sequel to P. L. Travers's beloved classic, continues the enchanting adventures of the magical nanny, Mary Poppins. First published in 1935, this charming tale reunites readers with the Banks family as they welcome back their extraordinary caregiver, who arrives with her signature blend of whimsy and wisdom.\n\nIn this installment, Mary Poppins returns to the Banks household just when they need her most. The children, Jane and Michael, are growing up, and the family faces new challenges and changes. With her magical umbrella and a carpet bag full of surprises, Mary Poppins brings a fresh wave of adventure and excitement into their lives. From a delightful tea party with the whimsical character of Uncle Albert to a thrilling journey through the skies, each chapter is filled with imaginative escapades that spark joy and wonder.\n\nTravers's storytelling shines as she weaves together themes of family, imagination, and the importance of embracing the magic in everyday life. Mary Poppins's unique approach to parenting encourages the children to explore their creativity and see the world through a lens of possibility.\n\n\"Mary Poppins Comes Back\" is a timeless tale that captures the essence of childhood wonder and the enduring bond between a nanny and her charges. With its enchanting narrative and memorable characters, this sequel is a delightful continuation of Mary Poppins's adventures, sure to captivate readers of all ages.",
+    "book_image": "http://example.com/image/",
+    "buy_url": "http://example.com/buy/",
+    "genre": [
+      "Young Adult",
+      "Magic",
+      "Adventure",
+      "Classics",
+      "Fiction",
+      "Childrens",
+      "Fantasy"
+    ],
+    "series": "Mary Poppins",
+    "num_pages": 312,
+    "first_published_year": 1935,
+    "language": "English",
+    "is_paperback": true,
+    "price": 7.54,
+    "a_to_z_index": "T",
+    "decade_published": 1930,
+    "book_length": "Novella",
+    "on_backorder": false,
+    "speedy_delivery": true
+  },
+
+  {
+    "id": 301,
+    "author": "Mary Kennedy",
+    "title": "Mary 's Angel",
+    "description": "\"Mary's Angel\" by Mary Kennedy is a heartwarming and engaging read that beautifully weaves themes of love, loss, and redemption. The story centers around Mary, a character who navigates the complexities of her life while grappling with her past and the relationships that shape her present.\n\nKennedy's writing is both lyrical and accessible, drawing readers into Mary's world with vivid descriptions and relatable emotions. The characters are well-developed, each bringing their own struggles and triumphs to the narrative, which adds depth to the story. The interactions between Mary and the supporting characters are particularly poignant, showcasing the importance of connection and understanding in overcoming life's challenges.\n\nOne of the standout elements of \"Mary's Angel\" is its exploration of the concept of angels in our lives—both literal and metaphorical. Kennedy skillfully intertwines moments of magic and realism, prompting readers to reflect on the unseen forces that guide us through difficult times.\n\nThe pacing of the book is well-balanced, with moments of tension and introspection that keep readers engaged. Kennedy's ability to evoke emotion is commendable, making it easy to empathize with Mary's journey.\n\nOverall, \"Mary's Angel\" is a touching and inspiring read that resonates with anyone who has faced adversity and sought hope. Mary Kennedy has crafted a story that not only entertains but also encourages readers to believe in the power of love and the possibility of new beginnings. Whether you're a longtime fan of Kennedy's work or a newcomer, this book is sure to leave a lasting impression.",
+    "book_image": "http://example.com/image/",
+    "buy_url": "http://example.com/buy/",
+    "genre": [
+      "Romance",
+      "Contemporary",
+      "Military",
+      "Fiction"
+    ],
+    "series": "Reaper",
+    "num_pages": 248,
+    "first_published_year": 2017,
+    "language": "English",
+    "is_paperback": true,
+    "price": 9.23,
+    "a_to_z_index": "K",
+    "decade_published": 2010,
+    "book_length": "Novelette",
+    "on_backorder": false,
+    "speedy_delivery": true
   }
 ]

@@ -56,7 +56,6 @@ public class AvailableProcessorTest {
 			assertEquals("/brand/" +
 					lpseCode +
 					"+" +
-					lpseCode +
 					"b/", urisObject.getString(Processor.JSON_KEY_AFTER));
 
 		}
@@ -94,7 +93,6 @@ public class AvailableProcessorTest {
 			assertEquals("/" +
 					lpseCode +
 					"+" +
-					lpseCode +
 					"sb-sm+/", urisObject.getString(Processor.JSON_KEY_AFTER));
 
 		}

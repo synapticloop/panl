@@ -1,7 +1,7 @@
 package com.synapticloop.panl.server.handler.webapp.viewer;
 
 /*
- * Copyright (c) 2008-2024 synapticloop.
+ * Copyright (c) 2008-2025 synapticloop.
  *
  * https://github.com/synapticloop/panl
  *
@@ -26,19 +26,43 @@ package com.synapticloop.panl.server.handler.webapp.viewer;
 
 import com.synapticloop.panl.server.handler.CollectionRequestHandler;
 import com.synapticloop.panl.server.handler.webapp.util.ResourceHelper;
+import org.apache.http.HttpException;
 import org.apache.http.HttpRequest;
 import org.apache.http.HttpResponse;
 import org.apache.http.protocol.HttpContext;
 import org.apache.http.protocol.HttpRequestHandler;
 
+import java.io.IOException;
 import java.util.List;
 
-
+/**
+ * <p>The Panl Results Viewer is the in-built Panl web app that provides a
+ * fully functional search UI to test out configurations and should be used for
+ * testing purposes.</p>
+ *
+ * <p><strong>THIS HANDLER AND REGISTERED URL(s) ARE DESIGNED FOR TESTING
+ * PURPOSES AND NOT RECOMMENDED FOR PRODUCTION USES.</strong></p>
+ *
+ * <p>It is recommended to disable this handler by setting the property
+ * <code>panl.results.testing.urls</code> to <code>false</code> in the
+ * <code>panl.properties</code> file.</p>
+ *
+ * @author synapticloop
+ */
 public class PanlResultsViewerHandler implements HttpRequestHandler {
+	public static final String WEBAPP_VIEWER_INDEX_HTML = "/webapp/viewer/index.html";
+
 	public PanlResultsViewerHandler(List<CollectionRequestHandler> collectionRequestHandlers) {
 	}
 
+	/**
+	 * <p>Handle the request.</p>
+	 *
+	 * @param request the HTTP request.
+	 * @param response the HTTP response.
+	 * @param context the HTTP execution context.
+	 */
 	@Override public void handle(HttpRequest request, HttpResponse response, HttpContext context) {
-		ResourceHelper.serveResource("/webapp/viewer/index.html", response);
+		ResourceHelper.serveResource(WEBAPP_VIEWER_INDEX_HTML, response);
 	}
 }

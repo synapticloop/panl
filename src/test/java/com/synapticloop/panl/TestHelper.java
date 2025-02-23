@@ -411,7 +411,7 @@ public class TestHelper {
 		Map<String, List<LpseToken>> panlTokenMap = TestHelper.getPanlTokenMap(lpseTokens);
 
 		for (BaseField lpseField : collectionProperties.getLpseFields()) {
-			lpseField.applyToQuery(solrQuery, panlTokenMap);
+			lpseField.applyToQuery(solrQuery, panlTokenMap, collectionProperties);
 		}
 
 		System.out.println(solrQuery.toString());
@@ -427,7 +427,7 @@ public class TestHelper {
 		Map<String, List<LpseToken>> panlTokenMap = TestHelper.getPanlTokenMap(lpseTokens);
 
 		for (BaseField lpseField : collectionProperties.getLpseFields()) {
-			lpseField.applyToQuery(solrQuery, panlTokenMap);
+			lpseField.applyToQuery(solrQuery, panlTokenMap, collectionProperties);
 		}
 
 		System.out.println(solrQuery.toString());

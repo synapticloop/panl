@@ -1,9 +1,9 @@
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
-#                                              __                             #
-#                          .-----.---.-.-----.|  |                            #
-#                          |  _  |  _  |     ||  |                            #
-#                          |   __|___._|__|__||__|                            #
-#                          |__|     ... .-..                                  #
+#                                               __                            #
+#                           .-----.---.-.-----.|  |                           #
+#                           |  _  |  _  |     ||  |                           #
+#                           |   __|___._|__|__||__|                           #
+#                           |__|     ... .-..                                 #
 #                                                                             #
 #                                ~ ~ ~ * ~ ~ ~                                #
 #                                                                             #
@@ -17,16 +17,29 @@
 #                                                                             #
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 
-#                            Which Solr Client To Use
-#                            ----- ---- ------ -- ---
+$                                ~ ~ ~ * ~ ~ ~
+$
+$  NOTE: Any line in this file that starts with a dollar sign (and at least one
+$        character) is used by the panl generator for in-line replacement, and
+$        are __NOT__ replacement properties that can be set.
+$
+$        Any line that starts with a dollar sign then has a whitespace
+$        character are considered comments and will not appear in the output.
+$        (i.e. These lines will not appear in the output properties file.)
+$
+$                                ~ ~ ~ * ~ ~ ~
+
+#                           Which Solr Client To Use
+#                           ----- ---- ------ -- ---
 # Choose the correct SolrJ client for the Solr installation that you require,
 # by default, it is the CloudSolrClient.
 #
 # NOTE: What the solr.search.server.url will be will depend on the client that
 #       you choose.  The SolrJ client __MUST__ be one of
 #
-#  - HttpSolrClient
-#  - LBHttpSolrClient
+#  - Http2SolrClient
+#  - HttpJdkSolrClient
+#  - LBHttp2SolrClient
 #  - CloudSolrClient
 #
 # By default - we will be using the CloudSolrClient as it works with the
@@ -38,8 +51,8 @@
 #solrj.client=LBHttpSolrClient
 solrj.client=CloudSolrClient
 
-#                           Which URLs To Connect To
-#                           ----- ---- -- ------- --
+#                        Which Solr URLs To Connect To
+#                        ----- ---- ---- -- ------- --
 # Dependent on which Solr server installation you have, and consequently the
 # SolrJ Client that is configured, this will either be a single url, or a comma
 # separated list of URLs
@@ -64,8 +77,8 @@ solrj.client=CloudSolrClient
 
 $solr.search.server.url
 
-#                      Whether To Enable The Testing URLs
-#                      ------- -- ------ --- ------- ----
+#                     Whether To Enable The Testing URLs
+#                     ------- -- ------ --- ------- ----
 # The Panl results viewer / explainer URLs, this is a simple web app which will
 # allow you to test and explain the collections and the URLs that are
 # generated, including fields, faceting, querying, sorting, and results.
@@ -83,8 +96,8 @@ $solr.search.server.url
 
 $panl.results.testing.urls
 
-#                     Whether To Enable Verbose Error Messaging
-#                     ------- -- ------ ------- ----- ---------
+#                  Whether To Enable Verbose Error Messaging
+#                  ------- -- ------ ------- ----- ---------
 # Whether verbose messaging is turned on for the error (404 / 500) http status
 # messages.  Verbose messaging for the 404 error will provide valid URI paths
 # to connect to.  Verbose messaging for the 500 error will provide a
@@ -121,8 +134,8 @@ $panl.status.500.verbose
 
 $panl.decimal.point
 
-#                      Collection Property File Inclusion
-#                      ---------- -------- ---- ---------
+#                     Collection Property File Inclusion
+#                     ---------- -------- ---- ---------
 # Each property file defines a singular collection, with the associated
 # properties and configuration.  The format of the property is:
 #

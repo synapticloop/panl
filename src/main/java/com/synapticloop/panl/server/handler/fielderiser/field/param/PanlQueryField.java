@@ -1,7 +1,7 @@
 package com.synapticloop.panl.server.handler.fielderiser.field.param;
 
 /*
- * Copyright (c) 2008-2024 synapticloop.
+ * Copyright (c) 2008-2025 synapticloop.
  *
  * https://github.com/synapticloop/panl
  *
@@ -31,14 +31,13 @@ import com.synapticloop.panl.server.handler.tokeniser.LpseTokeniser;
 import com.synapticloop.panl.server.handler.tokeniser.token.LpseToken;
 import com.synapticloop.panl.server.handler.tokeniser.token.param.QueryLpseToken;
 import org.apache.solr.client.solrj.SolrQuery;
+import org.apache.solr.client.solrj.response.FacetField;
+import org.json.JSONArray;
 import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Properties;
-import java.util.StringTokenizer;
+import java.util.*;
 
 public class PanlQueryField extends BaseField {
 	private static final Logger LOGGER = LoggerFactory.getLogger(PanlQueryField.class);
@@ -53,10 +52,140 @@ public class PanlQueryField extends BaseField {
 	 * @param solrQuery The Solr Query to apply to
 	 * @param lpseTokenList The list of tokens
 	 */
-	public void applyToQueryInternal(SolrQuery solrQuery, List<LpseToken> lpseTokenList) {
-		if(!lpseTokenList.isEmpty()) {
-			solrQuery.setQuery("\"" + lpseTokenList.get(0).getValue() + "\"");
+	@Override public void applyToQueryInternal(SolrQuery solrQuery, List<LpseToken> lpseTokenList, CollectionProperties collectionProperties) {
+		applyOperandToQuery(solrQuery, lpseTokenList, collectionProperties.getSolrDefaultQueryOperand(), collectionProperties);
+	}
+
+	@Override protected void applyToQueryInternalOperand(
+			SolrQuery solrQuery,
+			List<LpseToken> lpseTokenList,
+			List<LpseToken> queryLpseTokenList,
+			CollectionProperties collectionProperties) {
+
+		if(!queryLpseTokenList.isEmpty()) {
+			String value = queryLpseTokenList.get(0).getValue().equals("+") ? "AND" : "OR";
+			applyOperandToQuery(solrQuery, lpseTokenList, value, collectionProperties);
+		} else {
+			applyOperandToQuery(solrQuery, lpseTokenList, collectionProperties.getSolrDefaultQueryOperand(), collectionProperties);
 		}
+	}
+
+	private void applyOperandToQuery(
+			SolrQuery solrQuery,
+			List<LpseToken> lpseTokenList,
+			String queryOperand,
+			CollectionProperties collectionProperties) {
+
+		if(!lpseTokenList.isEmpty()) {
+			StringBuilder stringBuilder = new StringBuilder();
+			QueryLpseToken queryLpseToken = (QueryLpseToken)lpseTokenList.get(0);
+			List<String> searchableLpseFields = queryLpseToken.getSearchableLpseFields();
+			if(searchableLpseFields.isEmpty()) {
+				// just do the default search as per usual - need to split on the
+				// default query operand
+				boolean isFirst = true;
+				StringBuilder querySb = new StringBuilder();
+				for (String queryValue : parseKeywords(queryLpseToken.getValue())) {
+					if(!isFirst) {
+						querySb.append(" ");
+					}
+
+					if(!queryValue.trim().isEmpty()) {
+						querySb.append("\"")
+						       .append(queryValue)
+						       .append("\"");
+						isFirst = false;
+					}
+				}
+
+				solrQuery.setQuery(querySb.toString());
+			} else {
+				boolean isFirst = true;
+				// There have been passed through queries for specific search fields,
+				// so we add them to the query, using the default query operator
+				for (String searchableLpseField : searchableLpseFields) {
+					if(!isFirst) {
+						stringBuilder.append(" ")
+								.append(queryOperand)
+								.append(" ");
+					}
+					isFirst = false;
+					boolean isFirstValue = true;
+					for (String queryLpseValue : parseKeywords(queryLpseToken.getValue())) {
+						if(!isFirstValue) {
+							stringBuilder.append(" " + queryOperand + " ");
+						}
+						if(!queryLpseValue.trim().isEmpty()) {
+							stringBuilder
+									.append(searchableLpseField)
+									.append(":\"")
+									.append(queryLpseValue)
+									.append("\"")
+									.append(collectionProperties.getSpecificSearchBoost(searchableLpseField));
+							isFirstValue = false;
+						}
+
+					}
+				}
+				solrQuery.setQuery(stringBuilder.toString());
+			}
+		}
+	}
+
+	/**
+	 * <p>Get the keyword(s) from the passed in value including if there are
+	 * quotation marks.</p>
+	 *
+	 * @param queryValue The query LPSE token value
+	 *
+	 * @return The list of keywords
+	 */
+	public static List<String> parseKeywords(String queryValue) {
+		// TODO - this should be refactored somewhere else
+		List<String> keywordPhrases = new ArrayList<>();
+		StringTokenizer stringTokenizer = new StringTokenizer(queryValue, "\" ", true);
+		boolean isInQuotes = false;
+		StringBuilder keywordPhrase = new StringBuilder();
+
+		while (stringTokenizer.hasMoreTokens()) {
+			String token = stringTokenizer.nextToken();
+			switch (token) {
+				case "\"":
+					if(isInQuotes) {
+						// if we are currently in quotes, we are at the end of the quote, add
+						// the stringBuffer contents to the keywordPhrases list
+						if(!keywordPhrase.toString().trim().isEmpty()) {
+							keywordPhrases.add(keywordPhrase.toString());
+						}
+						// clear the stringbuilder
+						keywordPhrase.setLength(0);
+					}
+					isInQuotes = !isInQuotes;
+					break;
+				case " ":
+					if(isInQuotes) {
+						// add the space to the stringbuilder
+						keywordPhrase.append(" ");
+					}
+					break;
+				default:
+					if(isInQuotes) {
+						keywordPhrase.append(token);
+					} else {
+						// just add it to thew list
+						keywordPhrases.add(token);
+					}
+			}
+		}
+
+		// maybe we are still in quotes and haven't finished because the user didn't
+		// end the quotation mark...
+
+		if(keywordPhrase.length() > 0) {
+			keywordPhrases.add(keywordPhrase.toString());
+		}
+
+		return(keywordPhrases);
 	}
 
 	@Override public Logger getLogger() {
@@ -73,8 +202,55 @@ public class PanlQueryField extends BaseField {
 
 	}
 
-	@Override public LpseToken instantiateToken(CollectionProperties collectionProperties, String lpseCode, String query, StringTokenizer valueTokeniser, LpseTokeniser lpseTokeniser) {
-		return(new QueryLpseToken(collectionProperties, this.lpseCode, query, valueTokeniser));
+	@Override public List<LpseToken> instantiateTokens(CollectionProperties collectionProperties, String lpseCode, String query, StringTokenizer valueTokeniser, LpseTokeniser lpseTokeniser) {
+		return(List.of(new QueryLpseToken(collectionProperties, this.lpseCode, query, valueTokeniser, lpseTokeniser)));
+	}
+
+
+	@Override public String getCanonicalLpseCode(
+			Map<String, List<LpseToken>> panlTokenMap,
+			CollectionProperties collectionProperties) {
+
+		StringBuilder stringBuilder = new StringBuilder();
+
+		List<LpseToken> lpseTokens = panlTokenMap.get(collectionProperties.getPanlParamQuery());
+		if (null != lpseTokens && !lpseTokens.isEmpty()) {
+			QueryLpseToken queryLpseToken = (QueryLpseToken) lpseTokens.get(0);
+			stringBuilder.append(queryLpseToken.getLpseCode());
+
+			List<String> searchableLpseFields = queryLpseToken.getSearchableLpseFields();
+			if(!searchableLpseFields.isEmpty()) {
+				stringBuilder.append("(");
+				for(String searchableLpseField : searchableLpseFields) {
+					stringBuilder.append(collectionProperties.getSearchFieldsMap().get(searchableLpseField));
+				}
+				stringBuilder.append(")");
+			}
+		}
+
+		return(stringBuilder.toString());
+	}
+
+	@Override public String getLpseCode(Map<String, List<LpseToken>> panlTokenMap,
+			CollectionProperties collectionProperties) {
+		return(getCanonicalLpseCode(panlTokenMap, collectionProperties));
+	}
+
+	@Override public String getLpseCode(LpseToken token, CollectionProperties collectionProperties) {
+		StringBuilder stringBuilder = new StringBuilder();
+		QueryLpseToken queryLpseToken = (QueryLpseToken) token;
+		stringBuilder.append(queryLpseToken.getLpseCode());
+
+		List<String> searchableLpseFields = queryLpseToken.getSearchableLpseFields();
+		if(!searchableLpseFields.isEmpty()) {
+			stringBuilder.append("(");
+			for(String searchableLpseField : searchableLpseFields) {
+				stringBuilder.append(collectionProperties.getSearchFieldsMap().get(searchableLpseField));
+			}
+			stringBuilder.append(")");
+		}
+
+		return(stringBuilder.toString());
 	}
 
 	@Override protected void logDetails() {
@@ -96,5 +272,4 @@ public class PanlQueryField extends BaseField {
 		temp.addAll(WARNING_MESSAGES);
 		return(temp);
 	}
-
 }
