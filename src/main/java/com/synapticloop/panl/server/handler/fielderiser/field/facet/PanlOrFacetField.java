@@ -1,7 +1,7 @@
 package com.synapticloop.panl.server.handler.fielderiser.field.facet;
 
 /*
- * Copyright (c) 2008-2024 synapticloop.
+ * Copyright (c) 2008-2025 synapticloop.
  *
  * https://github.com/synapticloop/panl
  *
@@ -25,11 +25,11 @@ package com.synapticloop.panl.server.handler.fielderiser.field.facet;
  */
 
 import com.synapticloop.panl.exception.PanlServerException;
-import com.synapticloop.panl.server.handler.fielderiser.field.BaseField;
 import com.synapticloop.panl.server.handler.properties.CollectionProperties;
 import com.synapticloop.panl.server.handler.tokeniser.LpseTokeniser;
 import com.synapticloop.panl.server.handler.tokeniser.token.LpseToken;
 import com.synapticloop.panl.server.handler.tokeniser.token.facet.OrFacetLpseToken;
+import com.synapticloop.panl.util.PanlLPSEHelper;
 import org.apache.solr.client.solrj.SolrQuery;
 import org.apache.solr.client.solrj.response.FacetField;
 import org.json.JSONArray;
@@ -39,28 +39,28 @@ import org.slf4j.LoggerFactory;
 
 import java.util.*;
 
-import static com.synapticloop.panl.server.handler.processor.Processor.*;
-import static com.synapticloop.panl.server.handler.processor.Processor.FORWARD_SLASH;
-
 public class PanlOrFacetField extends PanlFacetField {
 	private static final Logger LOGGER = LoggerFactory.getLogger(PanlOrFacetField.class);
+
+	public static final String JSON_KEY_IS_OR_FACET = "is_or_facet";
 
 	// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - //
 	//                            OR Facet properties                          //
 	// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - //
 	protected boolean isAlwaysOr = false;
-	protected String orSeparator = null;
 
-	public PanlOrFacetField(String lpseCode, String propertyKey, Properties properties, String solrCollection, String panlCollectionUri, int lpseLength) throws PanlServerException {
+	public PanlOrFacetField(String lpseCode, String propertyKey, Properties properties, String solrCollection,
+			String panlCollectionUri, int lpseLength) throws PanlServerException {
 		super(lpseCode, propertyKey, properties, solrCollection, panlCollectionUri, lpseLength);
 
 		this.isAlwaysOr = properties.getProperty(PROPERTY_KEY_PANL_OR_ALWAYS + lpseCode, "false").equalsIgnoreCase("true");
-		this.orSeparator = properties.getProperty(PROPERTY_KEY_PANL_OR_SEPARATOR + lpseCode, null);
+		this.valueSeparator = properties.getProperty(PROPERTY_KEY_PANL_OR_SEPARATOR + lpseCode, null);
 	}
 
 	@Override public List<String> explainAdditional() {
 		List<String> explanations = new ArrayList<>(super.explainAdditional());
-		explanations.add("Is an OR facet which will allow multiple selections of this facet, consequently increasing the number of results.");
+		explanations.add(
+				"Is an OR facet which will allow multiple selections of this facet, consequently increasing the number of results.");
 		return (explanations);
 	}
 
@@ -68,15 +68,16 @@ public class PanlOrFacetField extends PanlFacetField {
 		return (LOGGER);
 	}
 
-	@Override protected void applyToQueryInternal(SolrQuery solrQuery, List<LpseToken> lpseTokenList) {
+	@Override protected void applyToQueryInternal(SolrQuery solrQuery, List<LpseToken> lpseTokenList, CollectionProperties collectionProperties) {
 		// if there is only one... no need to do anything different
 		if (lpseTokenList.size() == 1) {
 			OrFacetLpseToken facetLpseToken = (OrFacetLpseToken) lpseTokenList.get(0);
 
 			solrQuery.addFilterQuery(
-					String.format("%s:\"%s\"",
-							facetLpseToken.getSolrField(),
-							facetLpseToken.getValue()));
+					facetLpseToken.getSolrField() +
+							":\"" +
+							facetLpseToken.getValue() +
+							"\"");
 			return;
 		}
 
@@ -107,10 +108,11 @@ public class PanlOrFacetField extends PanlFacetField {
 		solrQuery.addFilterQuery(stringBuilder.toString());
 	}
 
-	public static final String JSON_KEY_IS_OR_FACET = "is_or_facet";
-
 	@Override public void appendToAvailableObjectInternal(JSONObject jsonObject) {
 		jsonObject.put(JSON_KEY_IS_OR_FACET, true);
+		if (null != valueSeparator) {
+			jsonObject.put(JSON_KEY_VALUE_SEPARATOR, valueSeparator);
+		}
 	}
 
 	/**
@@ -118,7 +120,7 @@ public class PanlOrFacetField extends PanlFacetField {
 	 * facet and more</p>
 	 *
 	 * @param facetObject The facet object to append to
-	 * @param collectionProperties The colleciton properties
+	 * @param collectionProperties The collection properties
 	 * @param panlTokenMap The incoming Panl tokens
 	 * @param existingLpseValues The existing LPSE values
 	 * @param facetCountValues The facet count values
@@ -170,6 +172,12 @@ public class PanlOrFacetField extends PanlFacetField {
 				facetValueObject.put(JSON_KEY_VALUE, valueName);
 				facetValueObject.put(JSON_KEY_COUNT, value.getCount());
 				facetValueObject.put(JSON_KEY_ENCODED, getEncodedPanlValue(valueName));
+
+				// the OR encoding has no prefix or suffix - but only if it has a value
+				// separator
+				if(null != valueSeparator) {
+					facetValueObject.put(JSON_KEY_ENCODED_MULTI, PanlLPSEHelper.encodeURIPath(valueName));
+				}
 				facetValueArrays.put(facetValueObject);
 			}
 		}
@@ -193,90 +201,49 @@ public class PanlOrFacetField extends PanlFacetField {
 	}
 
 	/**
-	 * <p>This is an OR facet, so we can additional </p>
+	 * <p>Instantiate OR facet tokens.  This works differently from other fields
+	 * in that it may have a separator character, with only one LPSE code.</p>
 	 *
 	 * @param collectionProperties The collection properties
-	 * @param lpseField The LPSE field that this applies to
-	 * @param panlTokenMap The inbound Panl tokens
+	 * @param lpseCode The lpseCode for this field
+	 * @param query The query parameter
+	 * @param valueTokeniser The value tokeniser
+	 * @param lpseTokeniser The lpse tokeniser
 	 *
-	 * @return The JSON object with the URIs for adding this field to the
-	 * 		existing search URI.
+	 * @return The list of OR tokens
 	 */
-	@Override
-	protected JSONObject getAdditionURIObject(
-			CollectionProperties collectionProperties,
-			BaseField lpseField,
-			Map<String, List<LpseToken>> panlTokenMap) {
+	@Override public List<LpseToken> instantiateTokens(
+			CollectionProperties collectionProperties, String lpseCode,
+			String query,
+			StringTokenizer valueTokeniser,
+			LpseTokeniser lpseTokeniser) {
 
-		JSONObject additionObject = new JSONObject();
+		if (this.valueSeparator != null) {
+			// we have an or separator
+			return (OrFacetLpseToken.getSeparatedLpseTokens(
+					valueSeparator,
+					collectionProperties,
+					this.lpseCode,
+					lpseTokeniser,
+					valueTokeniser));
 
-		StringBuilder lpseUri = new StringBuilder(FORWARD_SLASH);
-		StringBuilder lpseUriBefore = new StringBuilder();
-		StringBuilder lpseUriCode = new StringBuilder();
-
-		for (BaseField baseField : collectionProperties.getLpseFields()) {
-			// we need to add in any other token values in the correct order
-			String orderedLpseCode = baseField.getLpseCode();
-
-			if (orderedLpseCode.equals(this.lpseCode)) {
-				// we have found the current LPSE code, so reset the URI and add it to
-				// the after
-
-				lpseUri.append(baseField.getURIPath(panlTokenMap, collectionProperties));
-				lpseUriBefore.append(lpseUri);
-				lpseUri.setLength(0);
-				lpseUriCode.append(baseField.getLpseCode(panlTokenMap, collectionProperties));
-				lpseUriCode.append(this.lpseCode);
-
-			} else {
-				// if we don't have a current token, just carry on
-				if (!panlTokenMap.containsKey(orderedLpseCode)) {
-					continue;
-				}
-
-				// normally
-				lpseUri.append(baseField.getURIPath(panlTokenMap, collectionProperties));
-				int numTokens = panlTokenMap.get(orderedLpseCode).size();
-				if(numTokens == 1) {
-					// if we have a range facet - we need to make sure that we are
-					// encoding it correctly there can only be one range token for the
-					// panl field (no over-lapping ranges, or distinct ranges)
-
-					// if it is not a range facet - then this won't do any harm and is a
-					// better implementation
-					lpseUriCode.append(baseField.getLpseCode(panlTokenMap.get(orderedLpseCode).get(0), collectionProperties));
-				} else {
-					lpseUriCode.append(new String(new char[numTokens]).replace("\0", baseField.getLpseCode()));
-				}
-			}
+		} else {
+			return (List.of(new OrFacetLpseToken(collectionProperties, this.lpseCode, lpseTokeniser, valueTokeniser)));
 		}
-
-		additionObject.put(JSON_KEY_BEFORE, lpseUriBefore.toString());
-
-		additionObject.put(JSON_KEY_AFTER, FORWARD_SLASH + lpseUri.toString() + lpseUriCode.toString() + FORWARD_SLASH);
-		return (additionObject);
-	}
-
-	@Override
-	public LpseToken instantiateToken(CollectionProperties collectionProperties, String lpseCode, String query, StringTokenizer valueTokeniser, LpseTokeniser lpseTokeniser) {
-		return (new OrFacetLpseToken(collectionProperties, this.lpseCode, lpseTokeniser, valueTokeniser));
 	}
 
 	@Override public void addToRemoveObject(JSONObject removeObject, LpseToken lpseToken) {
 		removeObject.put(JSON_KEY_IS_OR_FACET, true);
 	}
 
-	public boolean getIsAlwaysOr() {
-		return isAlwaysOr;
-	}
-
 	/**
-	 * <p>Return the OR separator for OR field values.  This will return null if
-	 * no OR separator is configured.</p>
+	 * <p>Return whether this is an ALWAYS OR facet field, an always OR field will
+	 * return the facet values for this specific facet, even if the facet will not increase the number of results (i.e.
+	 * the facet count is zero).</p>
 	 *
-	 * @return the string for the OR separator, or null if not set
+	 * @return Whether this is an ALWAYS OR facet field
 	 */
-	public String getOrSeparator() {
-		return orSeparator;
+	public boolean getIsAlwaysOr() {
+		return (isAlwaysOr);
 	}
 }

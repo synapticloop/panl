@@ -1,7 +1,7 @@
 package com.synapticloop.panl.server.handler.tokeniser.token.facet;
 
 /*
- * Copyright (c) 2008-2024 synapticloop.
+ * Copyright (c) 2008-2025 synapticloop.
  *
  * https://github.com/synapticloop/panl
  *
@@ -92,7 +92,7 @@ public class DateRangeFacetLpseToken extends LpseToken {
 	@Override public String explain() {
 		return ("PANL " +
 				(this.isValid ? "[  VALID  ]" : "[ INVALID ]") +
-				" <facet (DATE)>    LPSE code '" +
+				" <facet (DATE)>      LPSE code '" +
 				this.lpseCode +
 				"' (solr field '" +
 				this.solrField +

@@ -7,7 +7,7 @@
                                  ~ ~ ~ * ~ ~ ~
 
 Usage:
-  java -jar panl.jar \
+  bin\panl \
     [command] \
     [-properties panl_properties_file_location] \
     [-config solr_config_location] \
@@ -26,16 +26,16 @@ Where:
 
   [SERVER] To start the Panl server:
 
-    java -jar panl.jar \
+    bin\panl \
       server \
       [-properties panl_properties_file_location] \
       [-port port_number]
 
                                  ~ ~ ~ * ~ ~ ~
 
-  [GENERATOR] To generate the panl.properties file for each collection
+  [GENERATE] To generate the panl.properties file from a Solr schema
 
-    java -jar panl.jar \
+    bin\panl \
       generate \
       [-properties panl_properties_file_location] \
       [-overwrite true_or_false] \
@@ -69,7 +69,10 @@ available:
 
     NOTE: If the files exist, the generation will TERMINATE, you will need to
     remove those files before the generation - unless you have the
-    -overwrite true command line option present
+
+      -overwrite true
+
+    command line option present
 
   [-overwrite true_or_false] (optional - default false) - whether to overwrite
     the file if it exists

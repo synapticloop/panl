@@ -1,7 +1,7 @@
 package com.synapticloop.panl.server.handler.webapp.explainer;
 
 /*
- * Copyright (c) 2008-2024 synapticloop.
+ * Copyright (c) 2008-2025 synapticloop.
  *
  * https://github.com/synapticloop/panl
  *
@@ -287,8 +287,7 @@ public class PanlResultsExplainerExplainHandler implements HttpRequestHandler {
 
 			while (lpseTokeniser.hasMoreTokens()) {
 				String token = lpseTokeniser.nextToken();
-				LpseToken lpseToken = LpseToken.getLpseToken(collectionProperties, token, query, valueTokeniser, lpseTokeniser);
-				lpseTokens.add(lpseToken);
+				lpseTokens.addAll(LpseToken.getLpseTokens(collectionProperties, token, query, valueTokeniser, lpseTokeniser));
 			}
 		}
 

@@ -1,7 +1,7 @@
 package com.synapticloop.panl.server.handler.fielderiser.field.facet;
 
 /*
- * Copyright (c) 2008-2024 synapticloop.
+ * Copyright (c) 2008-2025 synapticloop.
  *
  * https://github.com/synapticloop/panl
  *
@@ -29,11 +29,11 @@ import com.synapticloop.panl.server.handler.properties.CollectionProperties;
 import com.synapticloop.panl.server.handler.tokeniser.LpseTokeniser;
 import com.synapticloop.panl.server.handler.tokeniser.token.LpseToken;
 import com.synapticloop.panl.server.handler.tokeniser.token.facet.BooleanFacetLpseToken;
+import com.synapticloop.panl.util.PanlLPSEHelper;
 import org.apache.solr.client.solrj.SolrQuery;
 import org.json.JSONObject;
 
 import java.net.URLDecoder;
-import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.util.*;
 
@@ -43,6 +43,7 @@ public class PanlBooleanFacetField extends PanlFacetField {
 	public static final String BOOLEAN_TRUE_VALUE = "true";
 	public static final String BOOLEAN_FALSE_VALUE = "false";
 	public static final String JSON_KEY_IS_BOOLEAN_FACET = "is_boolean_facet";
+	public static final String JSON_KEY_CHECKBOX_VALUE = "checkbox_value";
 
 	// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - //
 	//                         BOOLEAN Facet properties                        //
@@ -52,11 +53,31 @@ public class PanlBooleanFacetField extends PanlFacetField {
 	private String booleanTrueReplacement;
 	private String booleanFalseReplacement;
 
-	public PanlBooleanFacetField(String lpseCode, String propertyKey, Properties properties, String solrCollection, String panlCollectionUri, int lpseLength) throws PanlServerException {
+	private boolean isCheckbox = false;
+	private boolean checkboxValue = false;
+
+	/**
+	 * <p>Instantiate a BOOLEAN facet field</p>
+	 *
+	 * @param lpseCode The LPSE code that this is bound to
+	 * @param propertyKey The property key from the properties file
+	 * @param properties The properties to look up
+	 * @param solrCollection The Solr collection that this will connect to (this
+	 * 		is used for debugging and logging output)
+	 * @param panlCollectionUri The Panl collection URI that this is bound to
+	 * 		(this is used for debugging and logging output)
+	 * @param lpseLength The length of the LPSE code
+	 *
+	 * @throws PanlServerException If there was an error parsing/decoding the
+	 * 		token
+	 */
+	public PanlBooleanFacetField(String lpseCode, String propertyKey, Properties properties, String solrCollection,
+				String panlCollectionUri, int lpseLength) throws PanlServerException {
 		super(lpseCode, propertyKey, properties, solrCollection, panlCollectionUri, lpseLength);
 		validateProperties();
 
 		populateBooleanReplacements();
+		populateBooleanCheckbox();
 		populateSuffixAndPrefix();
 		populateSolrFieldTypeValidation();
 		populatePanlAndSolrFieldNames();
@@ -98,6 +119,14 @@ public class PanlBooleanFacetField extends PanlFacetField {
 		}
 	}
 
+	private void populateBooleanCheckbox() {
+		String checkboxProperty = properties.getProperty("panl.bool.checkbox." + this.lpseCode, null);
+		this.isCheckbox = null != checkboxProperty;
+		if(this.isCheckbox) {
+			this.checkboxValue = Boolean.parseBoolean(checkboxProperty);
+		}
+	}
+
 	public String getEncodedPanlValue(LpseToken lpseToken) {
 		return (getEncodedPanlValue(lpseToken.getValue()));
 	}
@@ -121,7 +150,7 @@ public class PanlBooleanFacetField extends PanlFacetField {
 			sb.append(valueSuffix);
 		}
 
-		return (URLEncoder.encode(sb.toString(), StandardCharsets.UTF_8));
+		return (PanlLPSEHelper.encodeURIPath(sb.toString()));
 	}
 
 	public String getDecodedValue(String value) {
@@ -175,7 +204,7 @@ public class PanlBooleanFacetField extends PanlFacetField {
 			return ("");
 		}
 
-		for (LpseToken lpseToken : panlTokenMap.get(lpseCode)) {
+		for(LpseToken lpseToken : panlTokenMap.get(lpseCode)) {
 			if (!lpseToken.getIsValid()) {
 				// not a valid token - keep going
 				continue;
@@ -213,51 +242,66 @@ public class PanlBooleanFacetField extends PanlFacetField {
 			sb.append(valueSuffix);
 		}
 
-		return (URLEncoder.encode(sb.toString(), StandardCharsets.UTF_8) + "/");
+		return (PanlLPSEHelper.encodeURIPath(sb.toString()) + "/");
 	}
 
-	protected void applyToQueryInternal(SolrQuery solrQuery, List<LpseToken> lpseTokenList) {
+	protected void applyToQueryInternal(SolrQuery solrQuery, List<LpseToken> lpseTokenList, CollectionProperties collectionProperties) {
 		// we are only going to do the first one
-		for (LpseToken lpseToken : lpseTokenList) {
+		for(LpseToken lpseToken : lpseTokenList) {
 			BooleanFacetLpseToken booleanFacetLpseToken = (BooleanFacetLpseToken) lpseToken;
-			solrQuery.addFilterQuery(String.format("%s:\"%s\"",
-					booleanFacetLpseToken.getSolrField(),
-					booleanFacetLpseToken.getValue()));
+			solrQuery.addFilterQuery(
+						booleanFacetLpseToken.getSolrField() +
+									":\"" +
+									booleanFacetLpseToken.getValue() + "\"");
 			return;
 		}
 	}
 
-	public LpseToken instantiateToken(CollectionProperties collectionProperties, String lpseCode, String query, StringTokenizer valueTokeniser, LpseTokeniser lpseTokeniser) {
-		return(new BooleanFacetLpseToken(collectionProperties, this.lpseCode, lpseTokeniser, valueTokeniser));
+	public List<LpseToken> instantiateTokens(CollectionProperties collectionProperties, String lpseCode, String query,
+				StringTokenizer valueTokeniser, LpseTokeniser lpseTokeniser) {
+		return (List.of(new BooleanFacetLpseToken(collectionProperties, this.lpseCode, lpseTokeniser, valueTokeniser)));
 	}
 
 	@Override public void appendToAvailableObjectInternal(JSONObject jsonObject) {
 		jsonObject.put(JSON_KEY_IS_BOOLEAN_FACET, true);
+		if(this.isCheckbox) {
+			jsonObject.put(JSON_KEY_CHECKBOX_VALUE, this.checkboxValue);
+		}
 	}
 
 	@Override public void addToRemoveObject(JSONObject removeObject, LpseToken lpseToken) {
 		removeObject.put(JSON_KEY_IS_BOOLEAN_FACET, true);
-		BooleanFacetLpseToken booleanFacetLpseToken = (BooleanFacetLpseToken)lpseToken;
-		// now we need to put in the inverse URI
-		if(lpseToken.getIsValid()) {
+		BooleanFacetLpseToken booleanFacetLpseToken = (BooleanFacetLpseToken) lpseToken;
+
+		if (lpseToken.getIsValid()) {
+			// now we need to put in the inverse URI
 			removeObject.put(JSON_KEY_INVERSE_ENCODED, booleanFacetLpseToken.getInverseBooleanValue(lpseToken));
+
+			if(this.isCheckbox) {
+				removeObject.put(JSON_KEY_CHECKBOX_VALUE, this.checkboxValue);
+			}
 		}
+
 	}
 
 	@Override public List<String> explainAdditional() {
 		List<String> explanations = new ArrayList<>(super.explainAdditional());
 		explanations.add("Is a BOOLEAN facet which will allow a selection of either 'true' or 'false'.");
 
-		if(hasBooleanTrueReplacement) {
+		if (hasBooleanTrueReplacement) {
 			explanations.add("Will replace boolean 'true' values with '" + booleanTrueReplacement + "'.");
 		} else {
 			explanations.add("Will not replace boolean 'true' values.");
 		}
 
-		if(hasBooleanFalseReplacement) {
+		if (hasBooleanFalseReplacement) {
 			explanations.add("Will replace boolean 'false' values with '" + booleanFalseReplacement + "'.");
 		} else {
 			explanations.add("Will not replace boolean 'false' values.");
+		}
+
+		if(this.isCheckbox) {
+			explanations.add("Has a checkbox with for '" + this.checkboxValue + "' values.");
 		}
 
 		return (explanations);

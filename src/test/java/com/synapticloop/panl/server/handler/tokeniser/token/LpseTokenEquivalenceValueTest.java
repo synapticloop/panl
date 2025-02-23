@@ -5,6 +5,7 @@ import com.synapticloop.panl.server.handler.properties.CollectionProperties;
 import com.synapticloop.panl.server.handler.tokeniser.LpseTokeniser;
 import org.junit.jupiter.api.Test;
 
+import java.util.List;
 import java.util.StringTokenizer;
 
 import static com.synapticloop.panl.TestHelper.getLpseTokeniser;
@@ -12,64 +13,64 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class LpseTokenEquivalenceValueTest {
-	private LpseToken getLpseToken(String propertiesLocation, String uri, String lpseUri) {
+	private List<LpseToken> getLpseTokens(String propertiesLocation, String uri, String lpseUri) {
 		CollectionProperties collectionProperties = TestHelper.getCollectionProperties(propertiesLocation);
 		StringTokenizer stringTokenizer = new StringTokenizer(uri, "/", false);
 		LpseTokeniser lpseTokeniser = getLpseTokeniser(lpseUri);
 		String lpseCode = lpseTokeniser.nextToken();
-		return(LpseToken.getLpseToken(collectionProperties, lpseCode, "", stringTokenizer, lpseTokeniser));
+		return(LpseToken.getLpseTokens(collectionProperties, lpseCode, "", stringTokenizer, lpseTokeniser));
 	}
 
 	@Test public void testQueryOperandEquivalence() {
-		LpseToken lpseToken = getLpseToken("/default.properties", "//", "o-");
+		LpseToken lpseToken = getLpseTokens("/default.properties", "//", "o-").get(0);
 		assertEquals("o/", lpseToken.getEquivalenceValue());
 
-		lpseToken = getLpseToken("/default.properties", "//", "o+");
+		lpseToken = getLpseTokens("/default.properties", "//", "o+").get(0);
 		assertEquals("o/", lpseToken.getEquivalenceValue());
 
 	}
 
 	@Test public void testPageNumberEquivalence() {
-		LpseToken lpseToken = getLpseToken("/default.properties", "/1/", "p");
+		LpseToken lpseToken = getLpseTokens("/default.properties", "/1/", "p").get(0);
 		assertEquals("p/", lpseToken.getEquivalenceValue());
 
-		lpseToken = getLpseToken("/default.properties", "/2/", "p");
+		lpseToken = getLpseTokens("/default.properties", "/2/", "p").get(0);
 		assertEquals("p/", lpseToken.getEquivalenceValue());
 	}
 
 	@Test public void testNumPerPageEquivalence() {
-		LpseToken lpseToken = getLpseToken("/default.properties", "/1/", "n");
+		LpseToken lpseToken = getLpseTokens("/default.properties", "/1/", "n").get(0);
 		assertEquals("n/", lpseToken.getEquivalenceValue());
 
-		lpseToken = getLpseToken("/default.properties", "/2/", "n");
+		lpseToken = getLpseTokens("/default.properties", "/2/", "n").get(0);
 		assertEquals("n/", lpseToken.getEquivalenceValue());
 	}
 
 	@Test public void testFacetEquivalence() {
-		LpseToken lpseToken = getLpseToken("/default.properties", "/the-value-of-a-facet/", "b");
+		LpseToken lpseToken = getLpseTokens("/default.properties", "/the-value-of-a-facet/", "b").get(0);
 		assertEquals("b/the-value-of-a-facet", lpseToken.getEquivalenceValue());
 
 		// URI decoding
-		lpseToken = getLpseToken("/default.properties", "/the+value+of+a+facet/", "b");
+		lpseToken = getLpseTokens("/default.properties", "/the+value+of+a+facet/", "b").get(0);
 		assertEquals("b/the value of a facet", lpseToken.getEquivalenceValue());
 
-		lpseToken = getLpseToken("/default.properties", "/the value of a facet/", "b");
+		lpseToken = getLpseTokens("/default.properties", "/the value of a facet/", "b").get(0);
 		assertEquals("b/the value of a facet", lpseToken.getEquivalenceValue());
 	}
 
 	@Test public void testSortEquivalence() {
-		LpseToken lpseToken = getLpseToken("/default.properties", "//", "sN-");
+		LpseToken lpseToken = getLpseTokens("/default.properties", "//", "sN-").get(0);
 		assertEquals("s/N", lpseToken.getEquivalenceValue());
 
-		lpseToken = getLpseToken("/default.properties", "//", "sN+");
+		lpseToken = getLpseTokens("/default.properties", "//", "sN+").get(0);
 		assertEquals("s/N", lpseToken.getEquivalenceValue());
 	}
 
 	@Test public void testPassThroughEquivalence() {
-		LpseToken lpseToken = getLpseToken("/default.properties", "/something here/", "z");
+		LpseToken lpseToken = getLpseTokens("/default.properties", "/something here/", "z").get(0);
 		assertEquals("", lpseToken.getEquivalenceValue());
 
-		lpseToken = getLpseToken("/default.properties", "/something else goes here/", "z");
+		lpseToken = getLpseTokens("/default.properties", "/something else goes here/", "z").get(0);
 		assertEquals("", lpseToken.getEquivalenceValue());
 	}
 

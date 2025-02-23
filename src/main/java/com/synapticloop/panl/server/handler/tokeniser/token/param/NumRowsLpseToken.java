@@ -1,7 +1,7 @@
 package com.synapticloop.panl.server.handler.tokeniser.token.param;
 
 /*
- * Copyright (c) 2008-2024 synapticloop.
+ * Copyright (c) 2008-2025 synapticloop.
  *
  * https://github.com/synapticloop/panl
  *
@@ -89,6 +89,15 @@ public class NumRowsLpseToken extends LpseToken {
 
 	public int getNumRows() {
 		return(this.numRows);
+	}
+
+	/**
+	 * <p>Override the value of this token with the new number of rows.</p>
+	 *
+	 * @param numRows The override number of rows for this token
+	 */
+	public void setNumRows(int numRows) {
+		this.numRows = numRows;
 	}
 
 	/**

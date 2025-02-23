@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2008-2024 synapticloop.
+ * Copyright (c) 2008-2025 synapticloop.
  *
  * https://github.com/synapticloop/panl
  *
@@ -26,21 +26,21 @@ package com.synapticloop.panl.generator.bean;
 
 public class SolrField {
 	private final String name;
-	private final boolean isFacet;
+	private final boolean isFacetable;
 	private boolean isSupported = false;
 	private boolean isMultiValued = false;
 
-	public SolrField(String name, boolean isFacet) {
+	public SolrField(String name, boolean isFacetable) {
 		this.name = name;
-		this.isFacet = isFacet;
+		this.isFacetable = isFacetable;
 	}
 
 	public String getName() {
 		return name;
 	}
 
-	public boolean getIsFacet() {
-		return isFacet;
+	public boolean getIsFacetable() {
+		return isFacetable;
 	}
 
 	public boolean getIsSupported() {

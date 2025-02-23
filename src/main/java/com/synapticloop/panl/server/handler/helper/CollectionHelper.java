@@ -1,7 +1,7 @@
 package com.synapticloop.panl.server.handler.helper;
 
 /*
- * Copyright (c) 2008-2024 synapticloop.
+ * Copyright (c) 2008-2025 synapticloop.
  *
  * https://github.com/synapticloop/panl
  *
@@ -35,6 +35,18 @@ import org.slf4j.LoggerFactory;
 public class CollectionHelper {
 	private static final Logger LOGGER = LoggerFactory.getLogger(CollectionHelper.class);
 
+	/**
+	 * <p>Factory method to get the Panl client.</p>
+	 *
+	 * @param solrJClient The name of the client to instantiate
+	 * @param solrCollection The Solr collection that this client will connect to
+	 * @param panlProperties The Panl properties for this collection
+	 * @param collectionProperties The Panl Collection properties
+	 *
+	 * @return The instantiated Panl Client
+	 *
+	 * @throws PanlServerException If the Solr client type could not be looked up
+	 */
 	public static PanlClient getPanlClient(String solrJClient, String solrCollection, PanlProperties panlProperties, CollectionProperties collectionProperties) throws PanlServerException {
 		LOGGER.info("[ Solr collection '{}' ] Looking up solrjClient of '{}'", solrCollection, solrJClient);
 

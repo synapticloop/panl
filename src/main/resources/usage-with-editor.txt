@@ -7,7 +7,7 @@
                                  ~ ~ ~ * ~ ~ ~
 
 Usage:
-  java -jar panl.jar \
+  bin\panl \
     [command] \
     [-properties panl_properties_file_location] \
     [-config solr_config_location] \
@@ -27,7 +27,7 @@ Where:
 
   [SERVER] To start the Panl server:
 
-    java -jar panl.jar \
+    bin\panl \
       server \
       [-properties panl_properties_file_location] \
       [-port port_number]
@@ -36,7 +36,7 @@ Where:
 
   [GENERATOR] To generate the panl.properties file for each collection
 
-    java -jar panl.jar \
+    bin\panl \
       generate \
       [-properties panl_properties_file_location] \
       [-overwrite true_or_false] \
@@ -46,7 +46,7 @@ Where:
 
   [EDITOR] To launch the Panl Project Launcher GUI
 
-    java -jar panl.jar \
+    bin\panl \
       editor
 
                                  ~ ~ ~ * ~ ~ ~
