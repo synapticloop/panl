@@ -943,7 +943,12 @@ public class CollectionProperties {
 	}
 
 	public List<String> getResultFieldsForFieldSet(String name) {
-		return (resultFieldsMap.get(name));
+		List<String> strings = resultFieldsMap.get(name);
+		if(null == strings) {
+			return(new ArrayList<>());
+		} else {
+			return (strings);
+		}
 	}
 
 	public boolean isValidResultFieldsName(String name) {
