@@ -942,6 +942,14 @@ public class CollectionProperties {
 		return (new ArrayList<>(resultFieldsMap.keySet()));
 	}
 
+	/**
+	 * <p>Return the fields for a specific fieldSet, or an empty list if either
+	 * the field does not exist, or it is an emp[ty fieldset.</p>
+	 *
+	 * @param name The name of the fieldSet
+	 * 
+	 * @return The list of fields in this fieldset
+	 */
 	public List<String> getResultFieldsForFieldSet(String name) {
 		List<String> strings = resultFieldsMap.get(name);
 		if(null == strings) {

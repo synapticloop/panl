@@ -60,8 +60,8 @@ public class DateRangeTest extends TestBase {
 				Root.class);
 		assertFalse(root.error);
 
-//		assertEquals("/next%2010%20months/S/", root.panl.sorting.remove_uri);
-//		assertEquals("/next%2010%20months/SsN+/", root.panl.active.sort[0].remove_uri);
+		assertEquals("/next%2010%20months/S/", root.panl.sorting.remove_uri);
+		assertEquals("/next%2010%20months/S/", root.panl.active.sort[0].remove_uri);
 //		assertEquals("/next%2010%20months/S-sb-sN+/", root.panl.active.sort[0].inverse_uri);
 //		assertEquals("/next%2010%20months/S-sb+/", root.panl.active.sort[1].remove_uri);
 //		assertEquals("/next%2010%20months/S-sb+sN-/", root.panl.active.sort[1].inverse_uri);
