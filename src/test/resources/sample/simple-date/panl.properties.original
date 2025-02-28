@@ -7,8 +7,10 @@
 #                                                                             #
 #                                ~ ~ ~ * ~ ~ ~                                #
 #                                                                             #
-#                  PANL/SOLR SERVER CONNECTION CONFIGURATION                  #
-#                  --------- ------ ---------- -------------                  #
+#             [ INTEGRATING WITH APACHE SOLR VERSION 7.X.X ]                  #
+#                                                                             #
+#                PANL/SOLR SERVER CONNECTION CONFIGURATION                    #
+#                --------- ------ ---------- -------------                    #
 #                                                                             #
 # This is the Panl configuration file which configures the base functionality #
 # and defines how Panl will connect to the Solr server.                       #
@@ -34,10 +36,8 @@
 #
 #                                ~ ~ ~ * ~ ~ ~
 
-#solrj.client=Http2SolrClient
-#solrj.client=HttpJdkSolrClient
-#solrj.client=LBHttp2SolrClient
-#solrj.client=CloudSolrClient
+#solrj.client=HttpSolrClient
+#solrj.client=LBHttpSolrClient
 solrj.client=CloudSolrClient
 
 #                        Which Solr URLs To Connect To
