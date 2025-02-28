@@ -163,7 +163,12 @@ distributions {
 					"net.bytebuddy:byte-buddy:1.15.4",
 					"net.bytebuddy:byte-buddy-agent:1.15.4",
 					"org.objenesis:objenesis:3.3",
-					"commons-codec:commons-codec:1.17.1"
+					"commons-codec:commons-codec:1.17.1",
+					"org.eclipse.jetty.http2:http2-common:10.0.22",
+					"org.eclipse.jetty.http2:http2-hpack:10.0.22",
+					"org.eclipse.jetty:jetty-http:10.0.22",
+					"org.eclipse.jetty:jetty-io:10.0.22",
+					"org.eclipse.jetty:jetty-util:10.0.22"
 
 		}
 	}
