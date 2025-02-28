@@ -1,11 +1,18 @@
 /* basic formatting */
 body { min-height: 100%; }
-html, body { margin: 0; padding: 0; font-family: "Libre Baskerville", serif; font-weight: 400; font-style: normal; }
+html, body { margin: 0; padding: 0; font-family: "Libre Baskerville", serif; font-weight: 400; font-style: normal; font-size: 12pt; }
 h1, h2, form, p { padding: 0 10px;}
 h2 { font-size: 14px; font-style: italic; font-weight: 400; }
 
 a:link, a:visited, a:hover, a:active { color: blue; }
+#navigation a:link, #navigation a:visited, #navigation a:hover, #navigation a:active { color: #252525; }
+img.add, img.remove, img.invert { margin-bottom: -6px;}
+a.invert { color: #070a9b; text-decoration: none; background: #070a9b2e; padding: 2px 4px; border-radius: 6px; margin: 2px; }
+a img { padding-right: 4px; }
 
+ul#active li strong { margin: 15px 0 4px 0; border: 1px solid lightgray; border-left: 6px solid lightgray; display: block; padding-left: 4px; background-color: #efefef80; }
+
+dt em, dd em { font-style: normal; border: 2px solid black; padding: 0 4px; margin: 4px; background-color: #000; color: #fff; border-radius: 8px; }
 p { line-height: 1.8; text-align:justify; text-justify:auto; }
 p.info { line-height: 1.4; font-size: 12px; font-style: italic; }
 p.tight { margin-bottom: 2px; padding-bottom: 2px; }
@@ -33,7 +40,12 @@ div#content { float: right; width: 700px; }
 /* navigation */
 div#navigation { margin-bottom: 104px; float: left; width: 300px; }
 div#navigation li { list-style: none; }
+div#navigation li.heading { border-top: 2px dotted dimgray; padding: 10px 0 10px 0; }
+div#navigation li.heading:nth-child(odd) { background-color: #fafafa; }
 .navheading { background-color: #efefef; border-left: 6px solid black; }
+
+#search-checkboxes { padding-top: 10px; }
+#search-checkboxes p { padding: 0; margin: 0; }
 
 /* document (i.e. results) list */
 #documents dl:nth-child(odd) { background-color: #efefef; }
@@ -41,15 +53,15 @@ div#navigation li { list-style: none; }
 dl { border-top: 1px solid black; padding: 14px 10px; margin: 0; }
 dt { font-weight: bold; }
 dd { padding-bottom: 3px; }
-#documents p { text-justify: none }
+#documents p { text-justify: unset; }
 
 div.padding { padding-bottom: 14px;}
-.range-link { text-align: center; position: relative; z-index: 1000; }
+.range-link { text-align: center; position: relative; z-index: 1; }
 .more-facets { padding: 8px 8px 8px 10px; background-color: #efefef; margin-bottom: 16px; border-left: 4px double black; }
 
 /* footer */
 div#footer { border-top: 1px solid #afafaf; margin: 84px auto 0 auto; padding: 6px 0; background-color: #efefef; clear: both; position: relative; height: 80px; margin-top: -80px; width: 1024px; }
-div#footer p { text-align: center; text-justify: none }
+div#footer p { text-align: center; text-justify: unset; }
 
 #timings { padding-top: 12px; border-top: 1px solid #efefef; }
 
@@ -60,10 +72,13 @@ input.date_number { width: 10%; margin: 0 8px; text-align: right; }
 
 /* styling of the nouislider and ranges */
 #ranges { padding: 0 14px; }
-#ranges p { font-weight: bold; padding-left: 0px; }
+#ranges p { font-weight: bold; padding-left: 0; }
 
 .slider-round { height: 8px; border-radius: 16px; }
-.noUi-value-horizontal { padding: 4px 0 0 0px; }
+.noUi-value-horizontal { padding: 4px 0 0 0; }
 .noUi-horizontal .noUi-handle { border-radius: 100%; width: 22px; background: white; border: 4px solid black; height: 22px; margin-top: -2px; margin-right: 5px; }
 .noUi-handle::after, .noUi-handle::before { background: none; }
 .noUi-connect { background: #afafaf;}
+
+/* autocomplete */
+.ui-autocomplete, .ui-menu-item-wrapper, .ui-menu-item { z-index: 10; }

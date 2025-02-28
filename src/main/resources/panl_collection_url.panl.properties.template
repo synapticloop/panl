@@ -81,15 +81,18 @@
 
 $                                ~ ~ ~ * ~ ~ ~
 $
-$  NOTE: any line in this file that starts with a dollar sign are used by the
-$        panl generator for in-line replacement, and are __NOT__ properties
-$        that can be set.  (These lines will not appear in the output
-$        properties file)
+$  NOTE: Any line in this file that starts with a dollar sign (and at least one
+$        character) is used by the panl generator for in-line replacement, and
+$        are __NOT__ replacement properties that can be set.
+$
+$        Any line that starts with a dollar sign then has a whitespace
+$        character are considered comments and will not appear in the output.
+$        (i.e. These lines will not appear in the output properties file.)
 $
 $                                ~ ~ ~ * ~ ~ ~
 
-#                               Panl LPSE Length
-#                               ---- ---- ------
+#                              Panl LPSE Length
+#                              ---- ---- ------
 # The length (or number of characters) for each of the LPSE codes for the
 # facet and normal field.  This length does not apply to the Panl metadata
 # LPSE codes which are __ALWAYS__ of length 1 (one)
@@ -98,8 +101,8 @@ $                                ~ ~ ~ * ~ ~ ~
 
 $panl.lpse.length
 
-#                                 Panl Metadata
-#                                 ---- --------
+#                                Panl Metadata
+#                                ---- --------
 # The following are considered metadata that changes what results are returned
 # and in what format.  These are not considered facets, however they
 # __DO_NOT__ conform to the panl.lpse.length property above and are __ALWAYS__
@@ -138,10 +141,10 @@ $panl.param.page
 $panl.param.numrows
 $panl.param.query.operand
 $panl.param.passthrough
-panl.param.passthrough.canonical=false
+$panl.param.passthrough.canonical
 
-#                         The Form Query To Respond To
-#                         --- ---- ----- -- ------- --
+#                        The Form Query To Respond To
+#                        --- ---- ----- -- ------- --
 # In the below HTML form definition, the 'q' named parameter is passed through
 # to the Panl server, which is then parsed and send through to the Solr search
 # sever as the Solr Query 'q' parameter.
@@ -158,11 +161,11 @@ panl.param.passthrough.canonical=false
 #
 #                                ~ ~ ~ * ~ ~ ~
 
-panl.form.query.respondto=q
+panl.form.query.respondto=search
 
 
-#                     Whether to include single facets
-#                     ------- -- ------- ------ ------
+#                      Whether To Include Single Facets
+#                      ------- -- ------- ------ ------
 # Facets that only include a single result to further refine the query will not
 # be included by default.  The reasoning behind this is that having a list of
 # facets with only one result will not refine the query at all, it will simply
@@ -179,7 +182,7 @@ panl.form.query.respondto=q
 
 panl.include.single.facets=false
 
-#                    Whether to include same number facets
+#                    Whether To Include Same Number Facets
 #                    ------- -- ------- ---- ------ ------
 # Facets that include the same number of results as the number of found
 # documents will not be included by default.  The reasoning behind this is that
@@ -196,8 +199,8 @@ panl.include.single.facets=false
 
 panl.include.same.number.facets=false
 
-#                         The Default Query Operand
-#                         --- ------- ----- -------
+#                          The Default Query Operand
+#                          --- ------- ----- -------
 # This maps to the Solr q.op parameter, by default it is OR (the '-') character
 # - i.e. the search query will need to be in one of the search fields.
 #
@@ -215,8 +218,8 @@ panl.include.same.number.facets=false
 
 solr.default.query.operand=-
 
-#           The Default Maximum Number Of Facet Values To Return
-#           --- ------- ------- ------ -- ----- ------ -- ------
+#            The Default Maximum Number Of Facet Values To Return
+#            --- ------- ------- ------ -- ----- ------ -- ------
 # This is not a required property, the default set by Solr is 100, you may
 # change this to any positive integer value (see note below).  This works on a
 # per-facet basis so the maximum number of facet values that are returned for
@@ -237,22 +240,37 @@ solr.facet.limit=100
 
 solr.facet.min.count=1
 
-#               The Default Number of Rows (Documents) To Return
-#               --- ------- ------ -- ---- ----------- -- ------
+#              The Default Number of Rows (Documents) To Return
+#              --- ------- ------ -- ---- ----------- -- ------
 # The Solr default is 10 documents to be returned, however, this may be set to
-# any positive integer value.
+# any positive integer value.  There are two number of results that can be
+# returned, one for the faceted document results, and the other for the
+# lookahead number of results.
 #
-# This value can also be changed by the end user with the LPSE encoded
-# parameter see the property for the LPSE code that this is bound to:
+# For the faceted document results (solr.numrows.default), this value can also
+# be changed by the end user with the LPSE encoded parameter see the property
+# for the LPSE code that this is bound to:
 #
 #    panl.param.numrows
+#
+# For the lookahead document results (solr.numrows.lookahead) this is the
+# number of results to be returned by the lookahead handler.  It CANNOT be
+# changed through a LPSE URL parameter.
+#
+# The maximum number of results that will ever be allowed to be returned by the
+# Panl server (solr.numrows.maximum).  If a LPSE code is passed through which
+# is greater than this, then it will be set to this.  This stops arbitrary LPSE
+# code values to retrieve all documents.  It CANNOT be changed through a LPSE
+# URL parameter.
 #
 #                                ~ ~ ~ * ~ ~ ~
 
 solr.numrows.default=10
+solr.numrows.lookahead=5
+solr.numrows.maximum=10
 
-#          Whether to return search results with highlight markup
-#          ------- -- ------ ------ ------- ---- --------- ------
+#           Whether To Return Search Results With Highlight Markup
+#           ------- -- ------ ------ ------- ---- --------- ------
 # This controls whether Solr will surround found search query text with markup,
 # with the markup being defined in the solrconfig.xml file (see line ~1060 in
 # the included sample configuration files).
@@ -264,8 +282,8 @@ solr.numrows.default=10
 
 solr.highlight=false
 
-#                             Panl Facet Configuration
-#                             ---- ----- -------------
+#                          Panl Facet Configuration
+#                          ---- ----- -------------
 # The panl facets that are in use by this collection.  The format is:
 #     panl.facet.<code>=<solr_field>
 #     panl.name.<code>=<field_name>
@@ -378,9 +396,9 @@ solr.highlight=false
 #         (Optional) If the maximum value acts as a wildcard (and therefore
 #         will also include values which are greater than this value)
 #     panl.range.suppress.<lpse_code>
-#         (Optional) By default, panl will return a range and the individual
-#         values for a facet. Setting this to true will only return the range
-#         values.
+#         (Optional) By default, panl will return a range JSON object and the
+#         individual values for a facet. Setting this to true will only return
+#         the range JSON object.
 #
 #                                ~ ~ ~ * ~ ~ ~
 #
@@ -435,8 +453,8 @@ $panl.lpse.fields
 
 $panl.lpse.order
 
-#                        Panl LPSE Ignore Configuration
-#                        ---- ---- ------ -------------
+#                       Panl LPSE Ignore Configuration
+#                       ---- ---- ------ -------------
 # Any LPSE code listed below will be ignored and not returned in either the
 # active or available filters JSON object
 #
@@ -450,8 +468,8 @@ $panl.lpse.order
 
 panl.lpse.ignore=
 
-#                        Panl Results Field Configuration
-#                        ---- ------- ----- -------------
+#                      Panl Results Field Configuration
+#                      ---- ------- ----- -------------
 # Below are the fields that are configured to be returned for the query, these
 # fields are added to the query and must match the solr fields.
 #
@@ -481,8 +499,8 @@ panl.lpse.ignore=
 $panl.results.fields.default
 $panl.results.fields.firstfive
 
-#                         Panl Sort Field Configuration
-#                         ---- ---- ----- -------------
+#                        Panl Sort Field Configuration
+#                        ---- ---- ----- -------------
 # Below are the fields that are configured to be able to be sorted on, these
 # fields must either be defined as a panl.facet or a panl.field and __MUST__ be
 # the Solr field name.
@@ -490,3 +508,15 @@ $panl.results.fields.firstfive
 #                                ~ ~ ~ * ~ ~ ~
 
 panl.sort.fields=
+
+#                       Panl Search Field Configuration
+#                       ---- ------ ----- -------------
+# Below are the fields that are configured to be able to be searched on, these
+# fields must be defined as a panl.search (which means that they cannot be
+# faceted upon) and __MUST__ be the Solr field name.
+#
+# If left blank, then this will default to the *:* query selector
+#
+#                                ~ ~ ~ * ~ ~ ~
+
+panl.search.fields=

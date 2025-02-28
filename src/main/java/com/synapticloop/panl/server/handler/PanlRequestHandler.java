@@ -1,7 +1,7 @@
 package com.synapticloop.panl.server.handler;
 
 /*
- * Copyright (c) 2008-2024 synapticloop.
+ * Copyright (c) 2008-2025 synapticloop.
  *
  * https://github.com/synapticloop/panl
  *
@@ -33,6 +33,7 @@ import org.apache.http.HttpStatus;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.protocol.HttpContext;
 import org.apache.http.protocol.HttpRequestHandler;
+import org.json.JSONArray;
 import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -45,23 +46,21 @@ import static com.synapticloop.panl.server.handler.webapp.util.ResourceHelper.*;
  *
  * @author synapticloop
  */
-public class PanlRequestHandler implements HttpRequestHandler {
+public class PanlRequestHandler extends BaseResponseHandler implements HttpRequestHandler {
 	private final static Logger LOGGER = LoggerFactory.getLogger(PanlRequestHandler.class);
 
-	private final PanlProperties panlProperties;
 	private final CollectionRequestHandler collectionRequestHandler;
 
 	/**
 	 * <p>Instantiate The Panl request handler which will bind the request URL to
-	 * the collection request handle.</p>
+	 * the collection request handler.</p>
 	 *
-	 * @param panlProperties           The panl properties file
-	 * @param collectionRequestHandler The collection request handler that will
-	 *                                 handle this request
+	 * @param panlProperties The panl properties file
+	 * @param collectionRequestHandler The collection request handler that will handle this request
 	 */
 	public PanlRequestHandler(PanlProperties panlProperties, CollectionRequestHandler collectionRequestHandler) {
-		super();
-		this.panlProperties = panlProperties;
+		super(panlProperties);
+		this.validUrls = collectionRequestHandler.getValidUrls();
 		this.collectionRequestHandler = collectionRequestHandler;
 	}
 
@@ -73,12 +72,11 @@ public class PanlRequestHandler implements HttpRequestHandler {
 	 * there was an error processing the request.</p>
 	 *
 	 * <p>This request handler returns a 404 internal error HTTPS status code if
-	 * there is no registered <code>CollectionRequestHandler</code> registered for
-	 * the URL.</p>
+	 * there is no registered <code>CollectionRequestHandler</code> registered for the URL.</p>
 	 *
-	 * @param request  the HTTP request - the incoming request
+	 * @param request the HTTP request - the incoming request
 	 * @param response the HTTP response - the outgoing response
-	 * @param context  the HTTP execution context. (which is ignored by this processor)
+	 * @param context the HTTP execution context. (which is ignored by this processor)
 	 *
 	 * @see CollectionRequestHandler
 	 */
@@ -96,8 +94,8 @@ public class PanlRequestHandler implements HttpRequestHandler {
 
 		String[] paths = uri.split("/");
 		if (paths.length < 3 ||
-				paths[2].isBlank() ||
-				!collectionRequestHandler.isValidResultsFields(paths[2])) {
+			paths[2].isBlank() ||
+			!collectionRequestHandler.isValidResultsFields(paths[2])) {
 
 			set404ResponseMessage(response);
 			return;
@@ -118,46 +116,7 @@ public class PanlRequestHandler implements HttpRequestHandler {
 		}
 	}
 
-	private void set500ResponseMessage(HttpResponse response, Exception e) {
-		LOGGER.error("Internal server error, message was '{}'", e.getMessage(), e);
-
-		response.setStatusCode(HttpStatus.SC_INTERNAL_SERVER_ERROR);
-
-		JSONObject jsonObject = new JSONObject();
-		jsonObject.put(JSON_KEY_ERROR, true);
-		jsonObject.put(JSON_KEY_STATUS, HttpStatus.SC_INTERNAL_SERVER_ERROR);
-		if (panlProperties.getUseVerbose500Messages()) {
-			jsonObject.put(JSON_KEY_MESSAGE,
-				String.format("Class: %s, message: %s.",
-					e.getClass().getCanonicalName(),
-					e.getMessage()));
-
-			response.setEntity(
-				new StringEntity(
-					jsonObject.toString(),
-					ResourceHelper.CONTENT_TYPE_JSON));
-		} else {
-			jsonObject.put(JSON_KEY_MESSAGE, JSON_VALUE_MESSAGE_500);
-		}
-	}
-
-
-	private void set404ResponseMessage(HttpResponse response) {
-		response.setStatusCode(HttpStatus.SC_NOT_FOUND);
-
-		JSONObject jsonObject = new JSONObject(collectionRequestHandler.getValidUrlsJSONArrayString());
-		jsonObject.put(JSON_KEY_ERROR, true);
-		jsonObject.put(JSON_KEY_STATUS, HttpStatus.SC_NOT_FOUND);
-		if (panlProperties.getUseVerbose404Messages()) {
-			jsonObject.put(JSON_KEY_MESSAGE, PanlDefaultHandler.JSON_VALUE_MESSAGE);
-		} else {
-			jsonObject.put(JSON_KEY_MESSAGE, JSON_VALUE_MESSAGE_404);
-			jsonObject.remove(JSON_KEY_VALID_URLS);
-		}
-
-		response.setEntity(
-			new StringEntity(
-				jsonObject.toString(),
-				ResourceHelper.CONTENT_TYPE_JSON));
+	@Override protected Logger getLogger() {
+		return (LOGGER);
 	}
 }

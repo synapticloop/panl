@@ -1,7 +1,7 @@
 package com.synapticloop.panl.server.handler.tokeniser.token.param;
 
 /*
- * Copyright (c) 2008-2024 synapticloop.
+ * Copyright (c) 2008-2025 synapticloop.
  *
  * https://github.com/synapticloop/panl
  *
@@ -32,6 +32,7 @@ import java.util.StringTokenizer;
 
 public class PageNumLpseToken extends LpseToken {
 	private int pageNum = 0;
+
 	public PageNumLpseToken(CollectionProperties collectionProperties, String lpseCode, StringTokenizer valueTokenizer) {
 		super(lpseCode, collectionProperties);
 
@@ -41,7 +42,6 @@ public class PageNumLpseToken extends LpseToken {
 			BaseField lpseField = collectionProperties.getLpseField(lpseCode);
 			if(null != lpseField) {
 				this.originalValue = valueTokenizer.nextToken();
-				// TODO - only deprecated in the Basefield
 				this.value = lpseField.getDecodedValue(this.originalValue);
 			} else {
 				this.isValid = false;
@@ -84,6 +84,10 @@ public class PageNumLpseToken extends LpseToken {
 
 	public int getPageNum() {
 		return (this.pageNum);
+	}
+
+	public void setPageNum(int pageNum) {
+		this.pageNum = pageNum;
 	}
 
 	/**

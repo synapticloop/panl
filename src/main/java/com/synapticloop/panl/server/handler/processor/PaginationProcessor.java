@@ -1,7 +1,7 @@
 package com.synapticloop.panl.server.handler.processor;
 
 /*
- * Copyright (c) 2008-2024 synapticloop.
+ * Copyright (c) 2008-2025 synapticloop.
  *
  * https://github.com/synapticloop/panl
  *
@@ -103,10 +103,6 @@ public class PaginationProcessor extends Processor {
 
 		String afterValue = panlPageNumField.getValueSuffix() + FORWARD_SLASH + uriPath + lpseCode + FORWARD_SLASH;
 		pageUris.put(JSON_KEY_AFTER, afterValue);
-
-//		if(pageNumber > numPages) {
-//			pageNumber = 1;
-//		}
 
 		if (pageNumber < numPages) {
 			pageUris.put(JSON_KEY_NEXT, pageUris.getString(JSON_KEY_BEFORE) + (pageNumber + 1) + pageUris.getString(JSON_KEY_AFTER));

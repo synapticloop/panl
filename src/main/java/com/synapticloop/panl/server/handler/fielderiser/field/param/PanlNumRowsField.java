@@ -1,7 +1,7 @@
 package com.synapticloop.panl.server.handler.fielderiser.field.param;
 
 /*
- * Copyright (c) 2008-2024 synapticloop.
+ * Copyright (c) 2008-2025 synapticloop.
  *
  * https://github.com/synapticloop/panl
  *
@@ -46,8 +46,7 @@ public class PanlNumRowsField extends BasePrefixSuffixField {
 		super(lpseCode, propertyKey, properties, solrCollection, panlCollectionUri);
 	}
 
-	@Override
-	public Logger getLogger() {
+	@Override public Logger getLogger() {
 		return (LOGGER);
 	}
 
@@ -62,8 +61,8 @@ public class PanlNumRowsField extends BasePrefixSuffixField {
 	 *
 	 * @return The URI path, never an empty string
 	 */
-	@Override
-	public String getCanonicalUriPath(Map<String, List<LpseToken>> panlTokenMap, CollectionProperties collectionProperties) {
+	@Override public String getCanonicalUriPath(Map<String, List<LpseToken>> panlTokenMap,
+		CollectionProperties collectionProperties) {
 		StringBuilder sb = new StringBuilder();
 		if (panlTokenMap.containsKey(lpseCode) && !panlTokenMap.get(lpseCode).isEmpty()) {
 
@@ -80,8 +79,8 @@ public class PanlNumRowsField extends BasePrefixSuffixField {
 		return (sb.toString());
 	}
 
-	@Override
-	public String getCanonicalLpseCode(Map<String, List<LpseToken>> panlTokenMap, CollectionProperties collectionProperties) {
+	@Override public String getCanonicalLpseCode(Map<String, List<LpseToken>> panlTokenMap,
+		CollectionProperties collectionProperties) {
 		return (lpseCode);
 	}
 
@@ -91,12 +90,12 @@ public class PanlNumRowsField extends BasePrefixSuffixField {
 		return(explanations);
 	}
 
-	@Override public void applyToQueryInternal(SolrQuery solrQuery, List<LpseToken> lpseTokenList) {
+	@Override public void applyToQueryInternal(SolrQuery solrQuery, List<LpseToken> lpseTokenList, CollectionProperties collectionProperties) {
 		// do nothing - this relies on other data and is set by the handler
 	}
 
-	@Override public LpseToken instantiateToken(CollectionProperties collectionProperties, String lpseCode, String query, StringTokenizer valueTokeniser, LpseTokeniser lpseTokeniser) {
-		return(new NumRowsLpseToken(collectionProperties, this.lpseCode, valueTokeniser));
+	@Override public List<LpseToken> instantiateTokens(CollectionProperties collectionProperties, String lpseCode, String query, StringTokenizer valueTokeniser, LpseTokeniser lpseTokeniser) {
+		return(List.of(new NumRowsLpseToken(collectionProperties, this.lpseCode, valueTokeniser)));
 	}
 
 	@Override protected void logDetails() {
