@@ -266,10 +266,8 @@ public class CollectionRequestHandler {
 
 			// we are checking for the empty fieldsets
 			List<String> resultFieldsForFieldSet = collectionProperties.getResultFieldsForFieldSet(fieldSet);
-			if (null != resultFieldsForFieldSet) {
-				for (String fieldName : resultFieldsForFieldSet) {
-					solrQuery.addField(fieldName);
-				}
+			for (String fieldName : resultFieldsForFieldSet) {
+				solrQuery.addField(fieldName);
 			}
 
 			collectionProperties.setFacetMinCounts(solrQuery, panlTokenMap);
@@ -337,7 +335,7 @@ public class CollectionRequestHandler {
 			solrQuery.setRows(numRows);
 
 			// this is done for the empty fieldset
-			if (null == resultFieldsForFieldSet) {
+			if (resultFieldsForFieldSet.isEmpty()) {
 				solrQuery.setRows(0);
 			}
 

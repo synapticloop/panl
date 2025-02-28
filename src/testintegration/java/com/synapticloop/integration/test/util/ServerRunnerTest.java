@@ -32,8 +32,8 @@ import org.junit.jupiter.api.extension.ExtendWith;
 @ExtendWith({BeforeAllExtension.class})
 public class ServerRunnerTest {
 	@Test public void runServerTest() throws Exception {
-		while(true) {
-			Thread.sleep(1000000);
-		}
+//		while(true) {
+//			Thread.sleep(1000000);
+//		}
 	}
 }

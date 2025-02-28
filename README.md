@@ -36,7 +36,7 @@ out._**
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 ```
 
-`Build and test 'needy-phantom' branch:` [![CircleCI](https://dl.circleci.com/status-badge/img/circleci/3Y1eqqe4mcvtSZuzJnQ3tJ/DyFKUm7c7AoLa1wHmRjAnf/tree/needy-phanton.svg?style=svg)](https://dl.circleci.com/status-badge/redirect/circleci/3Y1eqqe4mcvtSZuzJnQ3tJ/DyFKUm7c7AoLa1wHmRjAnf/tree/needy-phanton) (courtesy of Circle-CI)
+---
 
 `Latest release tag:` ![GitHub Tag](https://img.shields.io/github/v/tag/synapticloop/panl)
 
@@ -167,42 +167,56 @@ parameters into concise and precise URL paths.
 
 1. **PREFIXES and SUFFIXES** - Panl can also add prefixes and suffixes to the
    URI path to increase readability, for example, with configuration. For the
-   example LPSE URI path of `/Caran d'Ache/true/Black/bDW/` could also have the
-   brand Solr field prefixed with ‘Manufactured By ’ and suffixed by ‘ Company’
-   to produce the URI path
+   example LPSE URI path of 
+
+   `/Caran d'Ache/true/Black/bDW/` 
+
+   could also have the brand Solr field prefixed with ‘`Manufactured By `’ and 
+   suffixed by ‘` Company`’ to produce the URI path
+
    `/Manufactured By The Caran d'Ache Company/true/Black/bDW/`
 
 1. **BOOLEAN value translations**, for any Solr field that is defined as a
    `solr.BoolField`, then an additional translation can be performed. ‘True’ and
    ‘false’ values can be replaced with arbitrary text, which will be
    transparently converted between Panl and Solr. For the LPSE URI path of
-   `/Caran d'Ache/true/Black/bDW/` the true value (which is defined as whether
-   the mechanical pencil can be disassembled could be changed to ‘Able to be
-   disassembled’ for true values, and ‘Cannot be disassembled’ for false values.
+   
+   `/Caran d'Ache/true/Black/bDW/` 
+
+   the true value (which is defined as whether the mechanical pencil can be 
+   disassembled could be changed to ‘`Able to be disassembled`’ for true values, 
+   and ‘`Cannot be disassembled`’ for false values.
+
    The above URI path would then become
+
    `/Caran d'Ache/Able to be disassembled/Black/bDW/`
 
-1. **BOOLEAN checkboxes** - Whilst this may seem obvious to have a checkbox for
-   a true/false value, the checkboxes work in a subtly different way.  By
-   selecting the checkbox, the only one of facet values will be selected
-   when deselected, the BOOLEAN facet is in a don't care start - the facet value
+1. **BOOLEAN checkboxes** - Whilst this may seem obvious to have a checkbox for 
+   a true/false value, the checkboxes work in a subtly different way.  By 
+   selecting the checkbox, the only one of facet values will be selected 
+   when deselected, the BOOLEAN facet is in a don't care start - the facet value 
    can be either of the values.
 
-2. **CONDENSE multiple field values** - Rather than having a forward slash URL
+1. **CONDENSE multiple field values** - Rather than having a forward slash URL
    path separator for multiple values of the same facet (used in OR Facets and
    Multi-valued REGULAR facets), Panl can be configured to condense these values
    into a single path part, saving URL characters, and reducing URL length, and
    making the URL far more human-readable. For example, selecting pencils
    manufactured by `Faber-Castell` **OR** `Koh-i-Noor` could have the URI path
-   of `/Manufactured by Koh-i-Noor/Manufactured by Faber-Castell/bb/`, with
-   condensed multiple field values - this could be configured to become
-   `/Manufactured by Koh-i-Noor, or Faber-Castell Co./b/` (with a value
-   separator configured to be `, or `).
+   of 
+
+   `/Manufactured by Koh-i-Noor/Manufactured by Faber-Castell/bb/`, 
+
+   with condensed multiple field values - this could be configured to become
+ 
+   `/Manufactured by Koh-i-Noor, or Faber-Castell Co./b/` 
+
+   (with a value separator configured to be `, or `).
 
 1. **SEARCH ALL OR SPECIFIC SOLR FIELDS** - Any Solr field that is analysed can
-   be selected to be searched on, for example, in the Book Store Walkthrough,
+   be selected to be searched on, for example, in the Book Store Walkthrough, 
    the user can select to search within the title, the author, the description,
-   or all of them. **Also configure the query time boost.**
+   or all of them. **Also configure the query time boost.** 
 
 1. **FIELD VALUE validation** - By default, Solr can error when an invalid value
    is passed through - for example, if Solr is expecting a numeric value and it
@@ -214,6 +228,9 @@ parameters into concise and precise URL paths.
    selected, allowing you to narrow down the facet results and lead users
    through the search journey.
 
+1. **UNLESS facets** - Continue to show a facet unless another specified facet is 
+   selected.  This can be thought of as the inverse of a hierarchical facet.
+
 1. **SORTED facets** - Each individual facet can be sorted by either the facet
    count (which is the default), or the facet value (e.g. alphabetic/numeric)
 
@@ -222,7 +239,7 @@ parameters into concise and precise URL paths.
 
 1. **RESULTS SORTING options** - Sort by any of the Solr fields, either
    ascending, or descending and with multiple sub-sorting available - e.g.
-   sorting by a brand name, than the model number.  Additionally Panl generates
+   sorting by a brand name, than the model number.  Additionally Panl generates 
    URLs for the inverse of the sorting without impacting any sub-sorting.
 
 1. **INTEGRATED TYPEAHEAD/LOOKAHEAD** - Retrieve results suggestions as you type
@@ -287,7 +304,7 @@ results._
    name as The Solr server - i.e. 'q'. This can be configured to be a different
    value should you choose.
 
-   **Specific Search Fields (not shown)** If multiple fields are configured
+   **Specific Search Fields (not shown)** If multiple fields are configured 
    to be searchable, display the fields that are available to search within, and
    allow the user to select within the field.
 
@@ -300,23 +317,23 @@ results._
    versa).
 
 1. **Active sorting** - sorting options that are currently ordering the
-   results - the <img src="src/main/resources/webapp/static/remove.png" alt="remove" /> link
+   results - the <img src="src/main/resources/webapp/static/remove.png" alt="remove" /> link 
    is the URI path that will remove this query, facet,
    or sorting option from the results. If it is an active sorting filter, the
-   <img src="src/main/resources/webapp/static/invert.png" alt="invert" />
-   `Change to DESC` or <img src="src/main/resources/webapp/static/invert.png" alt="invert" />
+   <img src="src/main/resources/webapp/static/invert.png" alt="invert" /> 
+   `Change to DESC` or <img src="src/main/resources/webapp/static/invert.png" alt="invert" /> 
    `Change to ASC` links will invert the sorting
    order without affecting any further sub-ordering.
 
-1. **BOOLEAN Checkboxes** - any facets that have been defined as BOOLEAN
-   checkboxes, which allows the integrator to highlight one of the values
+1. **BOOLEAN Checkboxes** - any facets that have been defined as BOOLEAN 
+   checkboxes, which allows the integrator to highlight one of the values 
    (either true or false).
 
 1. **RANGE filters** - for facets that are defined as ranges - allowing
    end-users to select a range of values - the values are inclusive (i.e.
    include the minimum and maximum values).
 
-   **DATE Range filters (not shown)** - Enabling searching on a range of dates
+   **DATE Range filters (not shown)** - Enabling searching on a range of dates 
    (but not a specific date) in the form of:
    next/previous <any_integer> hours/days/months/years.
     - For example:
@@ -446,7 +463,7 @@ section for a more in-depth explanation and approach.**
 ---
 
 > **WARNING:** The Solr Release version `9.7.0` has changed the options for
-> creating a new example cloud.  The command line option has changed from
+> creating a new example cloud.  The command line option has changed from 
 > `-noprompt` to `--no-prompt`
 
 > All other commands remain the same
@@ -786,7 +803,7 @@ number.
     - Changed the `panl.form.query.respondto` documentation to point to `search`
       rather than the previously defined `q` to reduce confusion
     - General spelling and grammatical mistake updates
-    - Addition of new functionality and configuration properties pushing the
+    - Addition of new functionality and configuration properties pushing the 
       book to be over 400 pages.
 
 [View the code for this release](https://github.com/synapticloop/panl/tree/2.0.0)
@@ -884,166 +901,166 @@ number.
 # Additional Functionality In The Pipeline (possibly :)
 
 1. Additional support for Solr field types (Low priority)
-    - Some will be implemented, some will probably be ignored (anything
-      geospatial is probably not going to be included).
+   - Some will be implemented, some will probably be ignored (anything
+       geospatial is probably not going to be included).
 1. ~~Single search page~~
-    - **[Released in version 9-1.1.0]**
-    - ~~Being able to have a search landing page with all options available,
-      with the ability to implement a single search page.~~
+   - **[Released in version 9-1.1.0]**
+   - ~~Being able to have a search landing page with all options available,
+       with the ability to implement a single search page.~~
 1. Hierarchical facets based on value (Low priority)
-    - Being able to only show facets if another facet has been selected with a
-      specific value. This is probably not the best feature to include as it
-      ties the configuration with the data values, which may change over time.
+   - Being able to only show facets if another facet has been selected with a
+       specific value. This is probably not the best feature to include as it
+       ties the configuration with the data values, which may change over time.
 1. Facet value replacement (Low priority)
-    - Being able to replace values for specific values of any facet, although
-      this feature would tie the dataset and the Panl configuration together
-      more tightly than I would like. This will probably be a simple lookup
-      table for word replacement, however would also need to be parsed on the
-      way out of the Solr results as well.
+   - Being able to replace values for specific values of any facet, although
+       this feature would tie the dataset and the Panl configuration together
+       more tightly than I would like. This will probably be a simple lookup
+       table for word replacement, however would also need to be parsed on the
+       way out of the Solr results as well.
 1. 'More Like This' functionality (Medium priority)
     1. The ability to return 'more like this' results on a certain field, or
        FieldSets.
 1. ~~Dynamic range functionality~~
-    - **[Released in version 9-1.1.0]**
-    - ~~Dynamically generate the minimum and maximum value for a range for a
-      facet value.~~
+   - **[Released in version 9-1.1.0]**
+   - ~~Dynamically generate the minimum and maximum value for a range for a
+       facet value.~~
 1. ~~Suppress range values~~
-    - **[Released in version 9-1.1.0]**
-    - ~~For a RANGE facet, provide a configuration option to suppress the
-      values that appear in the range as separate values.~~
+   - **[Released in version 9-1.1.0]**
+   - ~~For a RANGE facet, provide a configuration option to suppress the
+       values that appear in the range as separate values.~~
 1. ~~Returning more facets for a specific facet field~~
-    - **[Released in version 9-1.2.0]**
-    - ~~By default, the facet limit is set to be 100 facet values per facet, in
-      the instance where the returned number of facets are greater than this
-      value, the facets will be truncated. The Panl server should be able to
-      return the remaining facets with a simple query, without returning any
-      documents with it. This should be done on an individual facet and
-      possibly have pagination.~~
+   - **[Released in version 9-1.2.0]**
+   - ~~By default, the facet limit is set to be 100 facet values per facet, in
+       the instance where the returned number of facets are greater than this
+       value, the facets will be truncated. The Panl server should be able to
+       return the remaining facets with a simple query, without returning any
+       documents with it. This should be done on an individual facet and
+       possibly have pagination.~~
 1. ~~Default empty FieldSet~~
-    - **[Released in version 9-1.1.0]**
-    - ~~In addition to the 'default' FieldSet, add another FieldSet always
-      named 'empty' which will return no fields (this links in with the '
-      Returning more facets for a specific facet field' and 'Single search
-      page' items).~~
+   - **[Released in version 9-1.1.0]**
+   - ~~In addition to the 'default' FieldSet, add another FieldSet always
+       named 'empty' which will return no fields (this links in with the '
+       Returning more facets for a specific facet field' and 'Single search
+       page' items).~~
 1. ~~Internationalisation~~
-    - **[Released in version 9-1.1.0]**
-    - ~~Floating point digits in particular suffer from using a full
-      stop/period as a decimal place i.e. in the UK, a digit would be formatted
-      e.g. 12,345,678.90, whilst most other European countries use a comma for
-      the decimal place e.g. 12.345.678,90.~~
+   - **[Released in version 9-1.1.0]**
+   - ~~Floating point digits in particular suffer from using a full
+       stop/period as a decimal place i.e. in the UK, a digit would be formatted
+       e.g. 12,345,678.90, whilst most other European countries use a comma for
+       the decimal place e.g. 12.345.678,90.~~
 1. DATE Range facet update (Medium priority)
-    - As an extension to internationalisation, the DATE Range facet could do
-      with an update to ensure that the SEO URL is better suited to
-      international uses. For example, this facet will respond to
-      `<range_identifier><value><range_type>` - e.g. 'previous 30 days' however
-      for other languages this is not the most suitable - e.g. in French it
-      might be '30 jours précédents' as in
-      `<value><range_type><range_identifier>`.
+   - As an extension to internationalisation, the DATE Range facet could do
+       with an update to ensure that the SEO URL is better suited to
+       international uses. For example, this facet will respond to
+       `<range_identifier><value><range_type>` - e.g. 'previous 30 days' however
+       for other languages this is not the most suitable - e.g. in French it
+       might be '30 jours précédents' as in
+       `<value><range_type><range_identifier>`.
 1. ~~Integrated typeahead~~
-    - **[Released in version 9-2.0.0]**
-    - ~~An example and implementation of type-ahead in the search results, this
-      is not the suggester feature of the Solr server, rather a way to return
-      documents with no facet information - just the documents. In effect this
-      is the opposite of the 'empty' CaFUP - where documents are returned, just
-      no facets, just relying on the Solr index.~~
+   - **[Released in version 9-2.0.0]**
+   - ~~An example and implementation of type-ahead in the search results, this
+       is not the suggester feature of the Solr server, rather a way to return
+       documents with no facet information - just the documents. In effect this
+       is the opposite of the 'empty' CaFUP - where documents are returned, just
+       no facets, just relying on the Solr index.~~
 1. ~~Specific Solr field search query options (Medium priority)~~
-    - **[Released in version 9-2.0.0]**
-    - ~~Add in an LPSE code to be able to search on a specific field, fields, or
-      all fields, rather than the default search field, or search for
-      individual fields.~~
+   - **[Released in version 9-2.0.0]**
+   - ~~Add in an LPSE code to be able to search on a specific field, fields, or
+       all fields, rather than the default search field, or search for
+       individual fields.~~
 1. Panl configuration editor (Low priority)
-    - A GUI to edit (and validate) the Panl configuration files making it
-      easier for a developer to get the configuration correct.
+   - A GUI to edit (and validate) the Panl configuration files making it
+       easier for a developer to get the configuration correct.
 1. Arbitrary Solr query addition (Low priority)
-    - Being able to add arbitrary Solr query params to individual collections -
-      there is some Solr functionality which does not require any configuration
-      parameters to be surfaced through the Panl server.
+   - Being able to add arbitrary Solr query params to individual collections -
+       there is some Solr functionality which does not require any configuration
+       parameters to be surfaced through the Panl server.
 1. ~~Update RANGE LPSE URL encoding~~
-    - **[Released in version 9-2.0.0]**
-    - ~~Changing the RANGE LPSE URL from <lpse_code>(+/-)<lpse_code> to just <
-      lpse_code>(+/-) - not really sure why this wasn't implemented in the
-      initial release, will require backwards compatibility checking.~~
+   - **[Released in version 9-2.0.0]**
+   - ~~Changing the RANGE LPSE URL from <lpse_code>(+/-)<lpse_code> to just <
+       lpse_code>(+/-) - not really sure why this wasn't implemented in the
+       initial release, will require backwards compatibility checking.~~
 1. ~~Always on OR facets~~
-    - **[Released in version 9-1.2.0]**
-    - ~~OR facets will not be presented if another facet has been selected,
-      this will force the facet to always be returned, this will allow the
-      results to continue to grow.~~
+   - **[Released in version 9-1.2.0]**
+   - ~~OR facets will not be presented if another facet has been selected,
+       this will force the facet to always be returned, this will allow the
+       results to continue to grow.~~
 1. Arbitrary DATE Ranges  (Low priority)
-    - Being able to have a way of having arbitrary ranges - e.g. from 3 to 6
-      months, or 3 to 6 months before - this almost ties in with the DATE Range
-      facet update element.
+   - Being able to have a way of having arbitrary ranges - e.g. from 3 to 6
+       months, or 3 to 6 months before - this almost ties in with the DATE Range
+       facet update element.
 1. ~~Arbitrary Separated Values for OR facets~~
-    - **[Released in version 9-2.0.0]**
-    - ~~Rather than having a prefix and/or suffix added to the Solr field value
-      for each OR facet, being able to have a separator character (or
-      characters) between the values. E.g. for the following example URL:~~
-    - ~~`/Manufactured By The Caran d'Ache Company/Manufactured By The BIC Company/bb/`~~
-    - ~~Should be able to be configured to be displayed as (or something along
-      the lines of it):~~
-    - ~~`/Manufactured By The Caran d'Ache, or BIC Company/b/`~~
+   - **[Released in version 9-2.0.0]**
+   - ~~Rather than having a prefix and/or suffix added to the Solr field value
+       for each OR facet, being able to have a separator character (or
+       characters) between the values. E.g. for the following example URL:~~
+   - ~~`/Manufactured By The Caran d'Ache Company/Manufactured By The BIC Company/bb/`~~
+   - ~~Should be able to be configured to be displayed as (or something along
+       the lines of it):~~
+   - ~~`/Manufactured By The Caran d'Ache, or BIC Company/b/`~~
 1. Update command line help text (Low priority)
-    - Currently, the full help is displayed, which should only be done if no
-      command is given. If a command is given, then only the help for that
-      command should be printed out.
+   - Currently, the full help is displayed, which should only be done if no
+       command is given. If a command is given, then only the help for that
+       command should be printed out.
 1. ~~Arbitrary Separated Values for REGULAR multi-valued facets~~
-    - **[Released in version 9-2.0.0]**
-    - ~~Rather than having a prefix and/or suffix added to the Solr field value
-      for each REGULAR multi-valued facet, being able to have a separator
-      character (or characters) between the values. E.g. for the following
-      example URL:~~
-    - ~~`/Black/Blue/WW/`~~
-    - ~~Should be able to be configured to be displayed as (or something along
-      the lines of it):~~
-    - ~~`/Colours:Black,Blue/W/`~~
+   - **[Released in version 9-2.0.0]**
+   - ~~Rather than having a prefix and/or suffix added to the Solr field value
+       for each REGULAR multi-valued facet, being able to have a separator
+       character (or characters) between the values. E.g. for the following
+       example URL:~~
+   - ~~`/Black/Blue/WW/`~~
+   - ~~Should be able to be configured to be displayed as (or something along
+       the lines of it):~~
+   - ~~`/Colours:Black,Blue/W/`~~
 1. ~~BOOLEAN Facet set checkbox value (Low priority)~~
-    - **[Released in version 9-2.0.0]**
-    - ~~Have an additional option for whether a BOOLEAN facet should be displayed
-      as a checkbox, the property either doesn't exist or is set to true or
-      false depending on which of the boolean values should be highlighted.~~
-    - ~~Thought is required as to whether this becomes an additional key in the
-      available facets, and whether it should be permanent.~~
+   - **[Released in version 9-2.0.0]**
+   - ~~Have an additional option for whether a BOOLEAN facet should be displayed
+       as a checkbox, the property either doesn't exist or is set to true or
+       false depending on which of the boolean values should be highlighted.~~
+   - ~~Thought is required as to whether this becomes an additional key in the
+       available facets, and whether it should be permanent.~~
 1. Multiple lookaheads based on query fields (Low priority)
-    - This has a dependency on the 'Specific Solr field search query options'
-      and would allow a lookahead to work only on specific fields. Although
-      this is probably better as database driven…
+   - This has a dependency on the 'Specific Solr field search query options'
+       and would allow a lookahead to work only on specific fields. Although
+       this is probably better as database driven…
 1. JSON configuration file (Low priority)
     - Change the panl.properties file to be JSON based, this makes the parsing
-      a little more difficult, but also easier.
+       a little more difficult, but also easier.
     - Step one would be to generate the properties files in memory from the
-      JSON configuration, then completely replace them.
-    - Whilst
-    - there are some niceties with JSON files, there are also some parts
+       JSON configuration, then completely replace them.
+    - Whilst 
+    - there are some niceties with JSON files, there are also some parts 
       which make it worse (especially around commenting).
 1. Cached OR Facet Values (Medium Priority)
-    - Where the user wants to display an OR facet, and also wants to display
-      the original counts (which will display as zero if any of the OR facets
-      are displayed)
+     - Where the user wants to display an OR facet, and also wants to display 
+       the original counts (which will display as zero if any of the OR facets 
+       are displayed)
 1. Panl generator - attempt to keep existing field LPSE codes (Low Priority)
-    - For any LPSE codes which are randomly assigned by the generator, keep a
-      lookup map of the codes and attempt to keep this assignment on
-      re-generation.
+     - For any LPSE codes which are randomly assigned by the generator, keep a 
+       lookup map of the codes and attempt to keep this assignment on 
+       re-generation.
 1. Update the Explainer (Low Priority)
-    - The explainer has languished and only returns simple lists of strings
-      this should return JSON and be able to be inspected.
+   - The explainer has languished and only returns simple lists of strings 
+     this should return JSON and be able to be inspected.
 1. ~~Specific Search Field Boosting (Low Priority)~~
-    - [Released in version 9-2.0.0]
-    - ~~Being able to boost specific fields when searching on Specific Solr
-      fields this is done on a Panl collection basis.~~
+   - [Released in version 9-2.0.0]
+   - ~~Being able to boost specific fields when searching on Specific Solr 
+     fields this is done on a Panl collection basis.~~
 1. DATE Range and RANGE value replacement (Low Priority)
-    -  For both of the range facets, it would be nice to be able to configure to
-       replace the URL with a Panl query, for example: The DATE Range Facet could
-       have a replacement of 'Coming Soon' which would be translate to
-       'Next 3 months' and the RANGE Facet could have a replacement of
-       'Inexpensive' to translate to 'From 5 to 10 dollars'
+   -  For both of the range facets, it would be nice to be able to configure to 
+      replace the URL with a Panl query, for example: The DATE Range Facet could
+      have a replacement of 'Coming Soon' which would be translate to 
+      'Next 3 months' and the RANGE Facet could have a replacement of 
+      'Inexpensive' to translate to 'From 5 to 10 dollars'
 1. ~~Unless property (Medium Priority)~~
-    - [Released in version 9-2.0.0]
-    - ~~Display this facet 'unless' another facet within the list of 'unless'
-      facets is selected.~~
-    - ~~This is the opposite of the panl.when.<lpse_code>.~~
+   - [Released in version 9-2.0.0]
+   - ~~Display this facet 'unless' another facet within the list of 'unless' 
+     facets is selected.~~
+   - ~~This is the opposite of the panl.when.<lpse_code>.~~
 1. Remove unneeded Solr JSON Response keys (Low Priority)
-    - Solr returns JSON keys that are duplicated in the Panl response
-      (think `facet_counts`) which are duplicated in the values array for Panl.
-    - Provide a property which removes the unneeded/duplicate keys - need to
-      decide whether this is server level, or CaFUP level.
+   - Solr returns JSON keys that are duplicated in the Panl response 
+     (think `facet_counts`) which are duplicated in the values array for Panl.
+   - Provide a property which removes the unneeded/duplicate keys - need to 
+     decide whether this is server level, or CaFUP level.
 
 
