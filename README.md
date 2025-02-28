@@ -18,6 +18,6 @@ The results will be generated into the
 
 `book/` directory.
 
-The `index.html` can be edited.
+The `index.html` can be edited. 
 
 see `src/main/resources/template.html` file for the template and the replacements.
