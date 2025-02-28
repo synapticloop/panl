@@ -161,19 +161,28 @@ parameters into concise and precise URL paths.
 
 1. **PREFIXES and SUFFIXES** - Panl can also add prefixes and suffixes to the
    URI path to increase readability, for example, with configuration. For the
-   example LPSE URI path of `/Caran d'Ache/true/Black/bDW/` could also have the
-   brand Solr field prefixed with ‘Manufactured By ’ and suffixed by ‘ Company’
-   to produce the URI path
+   example LPSE URI path of 
+
+   `/Caran d'Ache/true/Black/bDW/` 
+
+   could also have the brand Solr field prefixed with ‘`Manufactured By `’ and 
+   suffixed by ‘` Company`’ to produce the URI path
+
    `/Manufactured By The Caran d'Ache Company/true/Black/bDW/`
 
 1. **BOOLEAN value translations**, for any Solr field that is defined as a
    `solr.BoolField`, then an additional translation can be performed. ‘True’ and
    ‘false’ values can be replaced with arbitrary text, which will be
    transparently converted between Panl and Solr. For the LPSE URI path of
-   `/Caran d'Ache/true/Black/bDW/` the true value (which is defined as whether
-   the mechanical pencil can be disassembled could be changed to ‘Able to be
-   disassembled’ for true values, and ‘Cannot be disassembled’ for false values.
+   
+   `/Caran d'Ache/true/Black/bDW/` 
+
+   the true value (which is defined as whether the mechanical pencil can be 
+   disassembled could be changed to ‘`Able to be disassembled`’ for true values, 
+   and ‘`Cannot be disassembled`’ for false values.
+
    The above URI path would then become
+
    `/Caran d'Ache/Able to be disassembled/Black/bDW/`
 
 1. **BOOLEAN checkboxes** - Whilst this may seem obvious to have a checkbox for 
@@ -182,16 +191,21 @@ parameters into concise and precise URL paths.
    when deselected, the BOOLEAN facet is in a don't care start - the facet value 
    can be either of the values.
 
-2. **CONDENSE multiple field values** - Rather than having a forward slash URL
+1. **CONDENSE multiple field values** - Rather than having a forward slash URL
    path separator for multiple values of the same facet (used in OR Facets and
    Multi-valued REGULAR facets), Panl can be configured to condense these values
    into a single path part, saving URL characters, and reducing URL length, and
    making the URL far more human-readable. For example, selecting pencils
    manufactured by `Faber-Castell` **OR** `Koh-i-Noor` could have the URI path
-   of `/Manufactured by Koh-i-Noor/Manufactured by Faber-Castell/bb/`, with
-   condensed multiple field values - this could be configured to become
-   `/Manufactured by Koh-i-Noor, or Faber-Castell Co./b/` (with a value 
-   separator configured to be `, or `).
+   of 
+
+   `/Manufactured by Koh-i-Noor/Manufactured by Faber-Castell/bb/`, 
+
+   with condensed multiple field values - this could be configured to become
+ 
+   `/Manufactured by Koh-i-Noor, or Faber-Castell Co./b/` 
+
+   (with a value separator configured to be `, or `).
 
 1. **SEARCH ALL OR SPECIFIC SOLR FIELDS** - Any Solr field that is analysed can
    be selected to be searched on, for example, in the Book Store Walkthrough, 
@@ -207,6 +221,9 @@ parameters into concise and precise URL paths.
 1. **HIERARCHICAL facets** - Only show facets if a parent facet is currently
    selected, allowing you to narrow down the facet results and lead users
    through the search journey.
+
+1. **UNLESS facets** - Continue to show a facet unless another specified facet is 
+   selected.  This can be thought of as the inverse of a hierarchical facet.
 
 1. **SORTED facets** - Each individual facet can be sorted by either the facet
    count (which is the default), or the facet value (e.g. alphabetic/numeric)
