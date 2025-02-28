@@ -4,7 +4,8 @@
 
 <img src="src/main/resources/webapp/static/favicon.png" alt="The Synapticloop Panl Favicon" />&nbsp;anl&nbsp;Server
 
-> **WARNING:** This is the Solr Panl Release for integrating Solr version 8.x.x and Panl
+> **WARNING:** This is the Solr Panl Release for integrating Solr version 8.x.x 
+> and Panl
 
 > **_Rapidly get up and running with a fully featured, SEO friendly, keyword
 searchable, faceted search engine with an in-built, search page to test it all
@@ -12,9 +13,7 @@ out._**
 
 ---
 
----
-
-
+```
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 #                                        __                                   #
 #                          .-----.-----.|  |.----.                            #
