@@ -740,7 +740,11 @@ number.
 
 # Version History
 
-## 2.0.0 - fluffy stuff (codename `billowing-feather`) **UNDER DEVELOPMENT**
+## 2.1.0 Internal niceties  (codename `hidden-summer`)  **UNDER DEVELOPMENT**
+
+
+
+## 2.0.0 - fluffy stuff (codename `billowing-feather`)
 
 > This is a breaking change for the LPSE URL path part
 
