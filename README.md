@@ -36,6 +36,8 @@ out._**
 
 `Latest release:` ![GitHub Release](https://img.shields.io/github/v/release/synapticloop/panl)
 
+`Development Branch:` `hidden-summer`
+
 **Major branch release status:**
 
 | BRANCH          | STATUS                                                                                                                                                                                                                                                                                    | TYPE                                                                                      |
@@ -65,7 +67,7 @@ The book version matches the version of the Synapticloop Project version. Any
 changes to the book without any changes to the codebase will be updated on the
 `main` branch and the `ghpages` based website will be updated.
 
-ANy out-of-band book updates will not be reflected in the panl code release 
+Any out-of-band book updates will not be reflected in the panl code release 
 updates.
 
 # Instructions
