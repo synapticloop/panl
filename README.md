@@ -746,6 +746,9 @@ number.
 
 - **New Features**
   - Added in `is_mutlivalue` JSON key to the active facets  
+  - Added in `panl.extra.<lpse_code>` to add a JSON object keyed on `extra` to 
+    the returned active and available facets.
+
 
 - **Documentation update**
   - Added in documentation for new features

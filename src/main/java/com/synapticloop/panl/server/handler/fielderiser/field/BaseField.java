@@ -36,6 +36,7 @@ import com.synapticloop.panl.util.PanlLPSEHelper;
 import org.apache.solr.client.solrj.SolrQuery;
 import org.apache.solr.client.solrj.response.FacetField;
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 import org.slf4j.Logger;
 
@@ -62,12 +63,14 @@ public abstract class BaseField {
 	public static final String JSON_KEY_FACET_LIMIT = "facet_limit";
 	public static final String JSON_KEY_URIS = "uris";
 	public static final String JSON_KEY_IS_MULTIVALUE = "is_multivalue";
+	public static final String JSON_KEY_EXTRA = "extra";
 	public static final String JSON_KEY_VALUE_SEPARATOR = "value_separator";
 
 	public static final String PROPERTY_KEY_IS_MULTIVALUE = "panl.multivalue.";
 	public static final String PROPERTY_KEY_MULTIVALUE_SEPARATOR = "panl.multivalue.separator.";
 
 	public static final String PROPERTY_KEY_PANL_FACET = "panl.facet.";
+	public static final String PROPERTY_KEY_PANL_EXTRA = "panl.extra.";
 	public static final String PROPERTY_KEY_PANL_FACETSORT = "panl.facetsort.";
 	public static final String PROPERTY_KEY_PANL_FIELD = "panl.field.";
 	public static final String PROPERTY_KEY_PANL_INCLUDE_SAME_NUMBER_FACETS = "panl.include.same.number.facets";
@@ -99,6 +102,7 @@ public abstract class BaseField {
 	protected boolean isMultiValue = false;
 	protected String valueSeparator = null;
 	protected boolean hasURIComponent = true;
+	private JSONObject extraJSONObject = null;
 
 	protected final Properties properties;
 	protected final String solrCollection;
@@ -167,6 +171,17 @@ public abstract class BaseField {
 		this.isMultiValue = properties
 				.getProperty(PROPERTY_KEY_IS_MULTIVALUE + this.lpseCode, "false")
 				.equals("true");
+
+		String extraJSONObjectString = properties
+				.getProperty(PROPERTY_KEY_PANL_EXTRA + this.lpseCode, null);
+
+		if(null != extraJSONObjectString) {
+			try {
+				this.extraJSONObject = new JSONObject(extraJSONObjectString);
+			} catch(JSONException ex) {
+				throw new PanlServerException("Could not parse the JSON extra property with value '" + extraJSONObjectString + "'.");
+			}
+		}
 
 
 
@@ -788,6 +803,10 @@ public abstract class BaseField {
 		jsonObject.put(JSON_KEY_NAME, this.panlFieldName);
 		jsonObject.put(JSON_KEY_PANL_CODE, this.lpseCode);
 
+		if(null != extraJSONObject) {
+			jsonObject.put(JSON_KEY_EXTRA, extraJSONObject);
+		}
+
 		if (this.isMultiValue) {
 			jsonObject.put(JSON_KEY_IS_MULTIVALUE, this.isMultiValue);
 
@@ -997,6 +1016,9 @@ public abstract class BaseField {
 	 * @param lpseToken The lpse token to use when computing what information is added
 	 */
 	public void addToRemoveObject(JSONObject removeObject, LpseToken lpseToken) {
+		if(null != extraJSONObject) {
+			removeObject.put(JSON_KEY_EXTRA, extraJSONObject);
+		}
 		if (this.isMultiValue) {
 			removeObject.put(JSON_KEY_IS_MULTIVALUE, true);
 		}
@@ -1047,5 +1069,9 @@ public abstract class BaseField {
 	 */
 	public String getValueSeparator() {
 		return valueSeparator;
+	}
+
+	public JSONObject getExtraJSONObject() {
+		return extraJSONObject;
 	}
 }
