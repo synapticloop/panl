@@ -432,7 +432,7 @@ solr.highlight=false
 #
 #                                ~ ~ ~ * ~ ~ ~
 
-panl.lpse.fields=
+
 # <field "stored"="true" "name"="id" "type"="string" "multiValued"="false" "required"="true" />
 # This configuration can __ONLY__ ever be a field as it is not indexed in Solr
 panl.field.i=id

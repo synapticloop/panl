@@ -752,7 +752,12 @@ number.
     and un-needed information
 
 
-- **Documentation update**
+- **Bug Fixes**
+  - Fixed generator where it would leave an empty (and ignored) property of
+    `panl.lpse.fields` in the properties file 
+
+
+- **Documentation Update**
   - Added in documentation for new features
   - Added in new key and description
   - Updated cookbook
@@ -781,7 +786,7 @@ number.
       `q.op` parameter for both default and Specific Solr Search Fields.
 
 
-- **Bug fixes**
+- **Bug Fixes**
     - Bug where Panl client will always look for the '`q`' parameter for the
       query, changed to ensure that the correct configured
       `panl.form.query.respondto` is used instead
@@ -808,7 +813,7 @@ number.
     - Modularised the JavaScript for common functions.
 
 
-- **Documentation update**
+- **Documentation Update**
     - Added in keyword search integration and 'search within results'
       integration notes
     - Changed the `panl.form.query.respondto` documentation to point to `search`
@@ -825,13 +830,13 @@ number.
 
 ## 1.2.0 - more like this (codename `needy-phanton`)
 
-- **Bug fixes**
+- **Bug Fixes**
     - Fixed JavaScript in Single Page Search results in-built web app to take
       into account range facets
     - Fixed serving in-built panl testing URLs when run from the script
 
 
-- **Code changes**
+- **Code Changes**
     - Retrieval of more facets functionality added:
         - Added in `facet_limit` JSON key for retrieving more facet results
         - Added in handler for retrieving more facets for a specific search
@@ -847,7 +852,7 @@ number.
       `/panl-single-page/` as it makes more sense
 
 
-- **Documentation update**
+- **Documentation Updates**
     - General spelling and grammatical mistake updates
     - Update to new functionality and configuration properties
     - Added in the `pagination` returned JSON Object implementation details
@@ -861,12 +866,12 @@ number.
 
 ## 1.1.1 - the fly spray (codename `grizzled-pebble`)
 
-- **Bug fixes**
+- **Bug Fixes**
     - Fixed 'OR' facet `before` and `after` URL values in the JSON response
       where a range facet has already been selected
 
 
-- **Code cleanup**
+- **Code Cleanup**
     - Updated explanation for DATE Range and RANGE facets
 
 [View the code for this release](https://github.com/synapticloop/panl/tree/1.1.1)
@@ -886,7 +891,7 @@ number.
   range UI, and the individual range facet values do not appear
 
 
-- **Documentation update**
+- **Documentation Update**
     - New documentation for additional features and functionality
     - Fixed general spelling and grammar errors
     - Updated mechanical pencils introductory dataset explanations
@@ -1068,7 +1073,7 @@ number.
    - ~~Display this facet 'unless' another facet within the list of 'unless' 
      facets is selected.~~
    - ~~This is the opposite of the panl.when.<lpse_code>.~~
-1. Remove unneeded Solr JSON Response keys (Low Priority)
+1. ~~Remove unneeded Solr JSON Response keys (Low Priority)~~
    - **[Released in version 9-2.1.0]**
    - ~~Solr returns JSON keys that are duplicated in the Panl response 
      (think `facet_counts`) which are duplicated in the values array for Panl.~~
