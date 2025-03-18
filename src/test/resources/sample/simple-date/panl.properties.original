@@ -123,6 +123,22 @@ panl.status.500.verbose=true
 
 panl.decimal.point=true
 
+
+#                        Remove Un-needed JSON Keys
+#                        ------ --------- ---- ----
+# Set this property to true is you do not require information in the JSON
+# response object.  This will remove the JSON keys from the response:
+#
+#     - facet_counts
+#     - responseHeader.params
+#
+# If you are starting from a fresh implementation without any legacy use of the
+# original Solr response object, then this is safe to set to 'true'
+#
+#                                ~ ~ ~ * ~ ~ ~
+
+panl.remove.solr.json.keys=false
+
 #                     Collection Property File Inclusion
 #                     ---------- -------- ---- ---------
 # Each property file defines a singular collection, with the associated

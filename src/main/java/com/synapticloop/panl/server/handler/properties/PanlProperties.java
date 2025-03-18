@@ -44,6 +44,7 @@ public class PanlProperties {
 	public static final String PROPERTY_KEY_SOLR_SEARCH_SERVER_URL = "solr.search.server.url";
 	public static final String PROPERTY_KEY_PANL_STATUS_404_VERBOSE = "panl.status.404.verbose";
 	public static final String PROPERTY_KEY_PANL_STATUS_500_VERBOSE = "panl.status.500.verbose";
+	public static final String PROPERTY_KEY_PANL_REMOVE_SOLR_JSON_KEYS = "panl.remove.solr.json.keys";
 	public static final String PROPERTY_KEY_PANL_DECIMAL_POINT = "panl.decimal.point";
 
 	public static final String DEFAULT_CLOUD_SOLR_CLIENT = "CloudSolrClient";
@@ -79,6 +80,10 @@ public class PanlProperties {
 	 * fractional parts.  (Used for internationalisation)</p>
 	 */
 	private static boolean isDecimalPoint = true;
+	/**
+	 * <p>Remove the Solr response keys that are duplicated in the panl response.</p>
+	 */
+	private final boolean removeSolrJsonKeys;
 	/**
 	 * <p>A map of the </p>
 	 */
@@ -130,6 +135,10 @@ public class PanlProperties {
 		this.panlStatus500Verbose = properties
 			.getProperty(PROPERTY_KEY_PANL_STATUS_500_VERBOSE, DEFAULT_FALSE)
 			.equals(DEFAULT_TRUE);
+
+		this.removeSolrJsonKeys = properties
+				.getProperty(PROPERTY_KEY_PANL_REMOVE_SOLR_JSON_KEYS, DEFAULT_FALSE)
+				.equals(DEFAULT_TRUE);
 
 		for (String stringPropertyName : properties.stringPropertyNames()) {
 			if (stringPropertyName.startsWith(PROPERTY_KEY_PREFIX_PANL_COLLECTION)) {
@@ -233,6 +242,16 @@ public class PanlProperties {
 	 */
 	public Map<String, List<String>> getPanlCollectionsMap() {
 		return panlCollections;
+	}
+
+	/**
+	 * <p>Return whether to remove the Solr JSON keys that are duplicated by the
+	 * Panl response.</p>
+	 *
+	 * @return whether to remove the Solr JSON keys that are duplicated.
+	 */
+	public boolean getRemoveSolrJsonKeys() {
+		return(removeSolrJsonKeys);
 	}
 }
 

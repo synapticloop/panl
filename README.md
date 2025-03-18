@@ -748,10 +748,14 @@ number.
   - Added in `is_mutlivalue` JSON key to the active facets  
   - Added in `panl.extra.<lpse_code>` to add a JSON object keyed on `extra` to 
     the returned active and available facets.
+  - Added `panl.remove.solr.json.keys` which will removed duplicated information
+    and un-needed information
 
 
 - **Documentation update**
   - Added in documentation for new features
+  - Added in new key and description
+  - Updated cookbook
 
 ## 2.0.0 - fluffy stuff (codename `billowing-feather`)
 
@@ -1065,10 +1069,11 @@ number.
      facets is selected.~~
    - ~~This is the opposite of the panl.when.<lpse_code>.~~
 1. Remove unneeded Solr JSON Response keys (Low Priority)
-   - Solr returns JSON keys that are duplicated in the Panl response 
-     (think `facet_counts`) which are duplicated in the values array for Panl.
-   - Provide a property which removes the unneeded/duplicate keys - need to 
-     decide whether this is server level, or CaFUP level.
+   - **[Released in version 9-2.1.0]**
+   - ~~Solr returns JSON keys that are duplicated in the Panl response 
+     (think `facet_counts`) which are duplicated in the values array for Panl.~~
+   - ~~Provide a property which removes the unneeded/duplicate keys - need to 
+     decide whether this is server level, or CaFUP level.~~
 1. Add in separate ordering of facets (Low Priority)
    - Panl splits the available facets into facets, range_facets, and 
      date_facets, which is fine for the Panl Web App Results Viewer, users 
@@ -1082,9 +1087,10 @@ number.
      multi-valued facet, which could then be used.~~
    - ~~Add in a key for multi-valued facets to indicate whether this facet is 
       multi-faceted.~~
-1. Add in configurable JSON objects to the facet (Medium Priority)
-   - For any facet, it would be good to be able to add an arbitrary JSON 
-      object to a facet so that it could be queried during rendering.
-   - Add in a property key for any specific facet so that a json object can 
-      be returned with the facet (both available and active facets).
+1. ~~Add in configurable JSON objects to the facet (Medium Priority)~~
+    - **[Released in version 9-2.1.0]**
+    - ~~For any facet, it would be good to be able to add an arbitrary JSON 
+      object to a facet so that it could be queried during rendering.~~
+    - ~~Add in a property key for any specific facet so that a json object can 
+      be returned with the facet (both available and active facets).~~
 

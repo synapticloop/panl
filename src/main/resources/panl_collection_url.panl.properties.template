@@ -352,6 +352,24 @@ solr.highlight=false
 #
 #                                ~ ~ ~ * ~ ~ ~
 #
+# Should you wish to return an additional fixed JSON object to both the active
+# and available facets, then you may define a property for an facet with the
+# format:
+#
+#     panl.extra.<code>=<valid_json_object>
+#
+# where:
+#                  <code> is the LPSE code and __MUST__ be the same length as
+#                         the panl.lpse.length
+#     <valid_json_object> is any arbitrary (and valid) JSON object in string
+#                         format, e.g.:
+#                           { "valid": "JSON", "object": true }
+#
+# This 'extra' JSON object will be added to the defined facet in the available
+# and active facets objects under the JSON key 'extra'.
+#
+#                                ~ ~ ~ * ~ ~ ~
+#
 # For RANGE facets the following properties are available, these options work
 # best with Integer or Floating point types for Solr Fields.  It is available
 # for String Solr dataTypes, although if there is is anything more than just a

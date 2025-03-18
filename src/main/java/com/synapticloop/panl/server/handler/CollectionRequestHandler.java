@@ -89,9 +89,11 @@ public class CollectionRequestHandler {
 	public static final String JSON_KEY_DYNAMIC_MAX = "dynamic_max";
 
 	public static final String JSON_KEY_SOLR_RESPONSE_HEADER = "responseHeader";
+	public static final String JSON_KEY_SOLR_PARAM = "params";
 	public static final String JSON_KEY_SOLR_RESPONSE = "response";
 	public static final String JSON_KEY_SOLR_FACET_COUNTS = "facetCounts";
 	public static final String JSON_KEY_STATS = "stats";
+	public static final String JSON_KEY_FACET_COUNTS = "facet_counts";
 	public static final String JSON_KEY_STATS_FIELDS = "stats_fields";
 	public static final String SOLR_PARAM_KEY_STATS_FIELD = "stats.field";
 
@@ -100,6 +102,7 @@ public class CollectionRequestHandler {
 
 	private final String solrCollection;
 	private final CollectionProperties collectionProperties;
+	private final PanlProperties panlProperties;
 	private final PanlClient panlClient;
 
 	// These are the processors, which processes the Solr response and creates
@@ -141,6 +144,7 @@ public class CollectionRequestHandler {
 		this.solrCollection = solrCollection;
 		this.panlCollectionUri = panlCollectionUri;
 		this.collectionProperties = collectionProperties;
+		this.panlProperties = panlProperties;
 
 		this.panlClient = CollectionHelper.getPanlClient(
 			panlProperties.getSolrjClient(),
@@ -451,6 +455,11 @@ public class CollectionRequestHandler {
 
 		solrJsonObject.remove(JSON_KEY_STATS);
 
+		if(this.panlProperties.getRemoveSolrJsonKeys()) {
+			solrJsonObject.remove(JSON_KEY_FACET_COUNTS);
+			solrJsonObject.getJSONObject(JSON_KEY_SOLR_RESPONSE_HEADER).remove(JSON_KEY_SOLR_PARAM);
+		}
+
 		// now we need to go through the range facets and remove any that are
 		// suppressed
 
@@ -662,7 +671,7 @@ public class CollectionRequestHandler {
 	/**
 	 * <p>Return the URL parameter key that this request handler will respond to</p>
 	 *
-	 * @return The URL parametyer key to respond to
+	 * @return The URL parameter key to respond to
 	 */
 	public String getFormQueryRespondTo() {
 		return (collectionProperties.getFormQueryRespondTo());
