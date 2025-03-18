@@ -40,17 +40,35 @@ out._**
 
 **Major branch release status:**
 
-| BRANCH          | STATUS                                                                                                                                                                                                                                                                                    | TYPE                                                                                      |
-|-----------------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|-------------------------------------------------------------------------------------------|
-| `MAIN`          | [![CircleCI](https://dl.circleci.com/status-badge/img/circleci/3Y1eqqe4mcvtSZuzJnQ3tJ/DyFKUm7c7AoLa1wHmRjAnf/tree/main.svg?style=shield)](https://dl.circleci.com/status-badge/redirect/circleci/3Y1eqqe4mcvtSZuzJnQ3tJ/DyFKUm7c7AoLa1wHmRjAnf/tree/main)                                 | Trunk - integrates with the latest Solr version (currently 9)                             |
-| `SOLR PANL 9`   | [![CircleCI](https://dl.circleci.com/status-badge/img/circleci/3Y1eqqe4mcvtSZuzJnQ3tJ/DyFKUm7c7AoLa1wHmRjAnf/tree/solr-panl-9.svg?style=shield)](https://dl.circleci.com/status-badge/redirect/circleci/3Y1eqqe4mcvtSZuzJnQ3tJ/DyFKUm7c7AoLa1wHmRjAnf/tree/solr-panl-9)                   | Panl version for integrating with Solr version 9                                          |
-| `SOLR PANL 8`   | [![CircleCI](https://dl.circleci.com/status-badge/img/circleci/3Y1eqqe4mcvtSZuzJnQ3tJ/DyFKUm7c7AoLa1wHmRjAnf/tree/solr-panl-8.svg?style=shield)](https://dl.circleci.com/status-badge/redirect/circleci/3Y1eqqe4mcvtSZuzJnQ3tJ/DyFKUm7c7AoLa1wHmRjAnf/tree/solr-panl-8)                   | Panl version for integrating with Solr version 8                                          |
-| `SOLR PANL 7`   | [![CircleCI](https://dl.circleci.com/status-badge/img/circleci/3Y1eqqe4mcvtSZuzJnQ3tJ/DyFKUm7c7AoLa1wHmRjAnf/tree/solr-panl-7.svg?style=shield)](https://dl.circleci.com/status-badge/redirect/circleci/3Y1eqqe4mcvtSZuzJnQ3tJ/DyFKUm7c7AoLa1wHmRjAnf/tree/solr-panl-7)                   | Panl version for integrating with Solr version 7                                          |
-| `hidden-summer` | [![CircleCI](https://dl.circleci.com/status-badge/img/circleci/3Y1eqqe4mcvtSZuzJnQ3tJ/DyFKUm7c7AoLa1wHmRjAnf/tree/hidden-summer.svg?style=shield)](https://dl.circleci.com/status-badge/redirect/circleci/3Y1eqqe4mcvtSZuzJnQ3tJ/DyFKUm7c7AoLa1wHmRjAnf/tree/hidden-summer) | Panl development release version 2.1.0 |
+| BRANCH          | STATUS   | VERSION | TYPE                                                                                      |
+|-----------------|----------|---------|-------------------------------------------------------------------------------------------|
+| `MAIN`          | [![CircleCI](https://dl.circleci.com/status-badge/img/circleci/3Y1eqqe4mcvtSZuzJnQ3tJ/DyFKUm7c7AoLa1wHmRjAnf/tree/main.svg?style=shield)](https://dl.circleci.com/status-badge/redirect/circleci/3Y1eqqe4mcvtSZuzJnQ3tJ/DyFKUm7c7AoLa1wHmRjAnf/tree/main)           | `2.0.0` | Trunk - integrates with the latest Solr version (currently 9)                                                                                                                                                                                                                   |
+| `SOLR PANL 9`   | [![CircleCI](https://dl.circleci.com/status-badge/img/circleci/3Y1eqqe4mcvtSZuzJnQ3tJ/DyFKUm7c7AoLa1wHmRjAnf/tree/solr-panl-9.svg?style=shield)](https://dl.circleci.com/status-badge/redirect/circleci/3Y1eqqe4mcvtSZuzJnQ3tJ/DyFKUm7c7AoLa1wHmRjAnf/tree/solr-panl-9)           | `2.0.0` | Panl version for integrating with Solr version 9 |
+| `SOLR PANL 8`   | [![CircleCI](https://dl.circleci.com/status-badge/img/circleci/3Y1eqqe4mcvtSZuzJnQ3tJ/DyFKUm7c7AoLa1wHmRjAnf/tree/solr-panl-8.svg?style=shield)](https://dl.circleci.com/status-badge/redirect/circleci/3Y1eqqe4mcvtSZuzJnQ3tJ/DyFKUm7c7AoLa1wHmRjAnf/tree/solr-panl-8)           | `2.0.0` | Panl version for integrating with Solr version 8 |
+| `SOLR PANL 7`   | [![CircleCI](https://dl.circleci.com/status-badge/img/circleci/3Y1eqqe4mcvtSZuzJnQ3tJ/DyFKUm7c7AoLa1wHmRjAnf/tree/solr-panl-7.svg?style=shield)](https://dl.circleci.com/status-badge/redirect/circleci/3Y1eqqe4mcvtSZuzJnQ3tJ/DyFKUm7c7AoLa1wHmRjAnf/tree/solr-panl-7)           | `2.0.0` | Panl version for integrating with Solr version 7 |
+| `hidden-summer` | [![CircleCI](https://dl.circleci.com/status-badge/img/circleci/3Y1eqqe4mcvtSZuzJnQ3tJ/DyFKUm7c7AoLa1wHmRjAnf/tree/hidden-summer.svg?style=shield)](https://dl.circleci.com/status-badge/redirect/circleci/3Y1eqqe4mcvtSZuzJnQ3tJ/DyFKUm7c7AoLa1wHmRjAnf/tree/hidden-summer) | `2.1.0` | Panl development release version 2.1.0 |
 
 > We _always_ recommend that you use the most recently available release which
 > contains bug fixes and new functionality and is _generally_ backwards
 > compatible.
+
+**Branches/Release:**
+
+This is for reference
+
+| BRANCH              | TYPE     | VERSION | GITHUB                                                                                    |
+|---------------------|----------|---------|-------------------------------------------------------------------------------------------|
+| `MAIN`              | `BRANCH` | `2.0.0` | [GitHub > MAIN](https://github.com/synapticloop/panl)                                     |
+|                     |          |         |                                                                                           |
+| `hidden-summer`     | `BRANCH` | `2.1.0` | [GitHub > Hidden Summer](https://github.com/synapticloop/panl/tree/hidden-summer)         |
+| `billowing-feather` | `BRANCH` | `2.0.0` | [GitHub > Billowing Feather](https://github.com/synapticloop/panl/tree/billowing-feather) |
+| `needy-phantom`     | `BRANCH` | `1.2.0` | [GitHub > Needy Phantom](https://github.com/synapticloop/panl/tree/needy-phanton)         |
+| `grizzled-pebble`   | `TAG`    | `1.1.1` | [GitHub > Tag 1.1.1](https://github.com/synapticloop/panl/tree/1.1.1)                     |
+| `broad-firefly`     | `TAG`    | `1.1.0` | [GitHub > Tag 1.1.0](https://github.com/synapticloop/panl/tree/1.1.0)                     |
+| `bright-wildflower` | `TAG`    | `1.0.0` | [GitHub > Tag 1.1.0](https://github.com/synapticloop/panl/tree/1.0.0)                     |
+
+
+
 
 The Synapticloop Panl project uses `major.minor.micro` versioning, the meaning
 of which:
