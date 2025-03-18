@@ -744,7 +744,11 @@ number.
 
 ## 2.1.0 Internal niceties  (codename `hidden-summer`)  **UNDER DEVELOPMENT**
 
+- **New Features**
+  - Added in `is_mutlivalue` JSON key to the active facets  
 
+- **Documentation update**
+  - Added in documentation for new features
 
 ## 2.0.0 - fluffy stuff (codename `billowing-feather`)
 
@@ -792,8 +796,8 @@ number.
     - Refactored PanlFields for the generator to output better comments and
       helpful information rather than more comments than necessary
     - General code cleanup and refactorings
-    - Updated the look and feel for the Panl Simple Results Viewer Web App (
-      including images)
+    - Updated the look and feel for the Panl Simple Results Viewer Web App 
+      (including images)
     - Modularised the JavaScript for common functions.
 
 
@@ -1043,7 +1047,7 @@ number.
    - The explainer has languished and only returns simple lists of strings 
      this should return JSON and be able to be inspected.
 1. ~~Specific Search Field Boosting (Low Priority)~~
-   - [Released in version 9-2.0.0]
+   - **[Released in version 9-2.0.0]**
    - ~~Being able to boost specific fields when searching on Specific Solr 
      fields this is done on a Panl collection basis.~~
 1. DATE Range and RANGE value replacement (Low Priority)
@@ -1053,7 +1057,7 @@ number.
       'Next 3 months' and the RANGE Facet could have a replacement of 
       'Inexpensive' to translate to 'From 5 to 10 dollars'
 1. ~~Unless property (Medium Priority)~~
-   - [Released in version 9-2.0.0]
+   - **[Released in version 9-2.0.0]**
    - ~~Display this facet 'unless' another facet within the list of 'unless' 
      facets is selected.~~
    - ~~This is the opposite of the panl.when.<lpse_code>.~~
@@ -1062,5 +1066,22 @@ number.
      (think `facet_counts`) which are duplicated in the values array for Panl.
    - Provide a property which removes the unneeded/duplicate keys - need to 
      decide whether this is server level, or CaFUP level.
-
+1. Add in separate ordering of facets (Low Priority)
+   - Panl splits the available facets into facets, range_facets, and 
+     date_facets, which is fine for the Panl Web App Results Viewer, users 
+     may want to display the facets in the order in which they are defined
+   - Add a new key with the LPSE order and properties (which may be different 
+     from the LPSE order which controls the URL placement - which is almost the 
+     same as Single Page Search Implementation)
+1. ~~Add in multi-valued JSON Key for Active facets (Medium Priority)~~
+   - **[Released in version 9-2.1.0]**
+   - ~~For active facets, there is no designator for whether this is a 
+     multi-valued facet, which could then be used.~~
+   - ~~Add in a key for multi-valued facets to indicate whether this facet is 
+      multi-faceted.~~
+1. Add in configurable JSON objects to the facet (Medium Priority)
+   - For any facet, it would be good to be able to add an arbitrary JSON 
+      object to a facet so that it could be queried during rendering.
+   - Add in a property key for any specific facet so that a json object can 
+      be returned with the facet (both available and active facets).
 
