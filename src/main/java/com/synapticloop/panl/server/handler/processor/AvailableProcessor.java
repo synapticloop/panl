@@ -99,6 +99,7 @@ public class AvailableProcessor extends Processor {
 
 			String lpseCode = collectionProperties.getPanlCodeFromSolrFacetFieldName(facetField.getName());
 			BaseField baseField = collectionProperties.getLpseField(lpseCode);
+
 			// unlikely to get a facet field that wasn't selected...
 			if(null == baseField) {
 				continue;

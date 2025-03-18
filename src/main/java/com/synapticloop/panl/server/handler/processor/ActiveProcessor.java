@@ -37,6 +37,8 @@ import org.json.JSONObject;
 
 import java.util.*;
 
+import static com.synapticloop.panl.server.handler.fielderiser.field.BaseField.JSON_KEY_IS_MULTIVALUE;
+
 /**
  * <p>The active processor adds all current active filters that are passed through the lpse PATH the returned panl
  * JSON object.  Additionally, this will generate the remove links for this particular facet.</p>

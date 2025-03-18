@@ -787,6 +787,7 @@ public abstract class BaseField {
 		jsonObject.put(JSON_KEY_FACET_NAME, this.solrFieldName);
 		jsonObject.put(JSON_KEY_NAME, this.panlFieldName);
 		jsonObject.put(JSON_KEY_PANL_CODE, this.lpseCode);
+
 		if (this.isMultiValue) {
 			jsonObject.put(JSON_KEY_IS_MULTIVALUE, this.isMultiValue);
 
@@ -996,6 +997,9 @@ public abstract class BaseField {
 	 * @param lpseToken The lpse token to use when computing what information is added
 	 */
 	public void addToRemoveObject(JSONObject removeObject, LpseToken lpseToken) {
+		if (this.isMultiValue) {
+			removeObject.put(JSON_KEY_IS_MULTIVALUE, true);
+		}
 	}
 
 	/**
