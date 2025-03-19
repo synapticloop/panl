@@ -779,6 +779,7 @@ number.
   - Added in documentation for new features
   - Added in new key and description
   - Updated cookbook
+  - Spelling and grammar updates
 
 ## 2.0.0 - fluffy stuff (codename `billowing-feather`)
 

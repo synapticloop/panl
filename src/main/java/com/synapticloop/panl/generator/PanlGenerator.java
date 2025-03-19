@@ -46,8 +46,7 @@ import java.util.*;
 public class PanlGenerator {
 	private static final Logger LOGGER = LoggerFactory.getLogger(PanlGenerator.class);
 
-	public static final String TEMPLATE_LOCATION_COLLECTION_PANL_PROPERTIES = "/panl_collection_url.panl.properties" +
-		".template";
+	public static final String TEMPLATE_LOCATION_COLLECTION_PANL_PROPERTIES = "/panl_collection_url.panl.properties.template";
 	public static final String TEMPLATE_LOCATION_PANL_PROPERTIES = "/panl.properties.template";
 
 	public static final String PANL_PARAM_QUERY = "panl.param.query";
@@ -338,7 +337,10 @@ public class PanlGenerator {
 
 			panlReplacementPropertyMap.put("panl.lpse.length", panlCollection.getLpseLength() + "");
 			panlReplacementPropertyMap.put("panl.lpse.fields", panlCollection.getPanlProperty("panl.lpse.fields"));
+
 			panlReplacementPropertyMap.put("panl.lpse.order", panlCollection.getPanlProperty("panl.lpse.order"));
+			panlReplacementPropertyMap.put("panl.lpse.facetorder", panlCollection.getPanlProperty("panl.lpse.facetorder"));
+
 			panlReplacementPropertyMap.put("panl.results.fields.default", panlCollection.getPanlProperty("panl.results.fields.default"));
 			panlReplacementPropertyMap.put("panl.results.fields.firstfive", panlCollection.getPanlProperty("panl.results.fields.firstfive"));
 			panlReplacementPropertyMap.put("panl.collections", panlCollection.getPanlProperty("panl.collections"));
