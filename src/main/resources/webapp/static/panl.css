@@ -11,7 +11,10 @@ a.invert { color: #070a9b; text-decoration: none; background: #070a9b2e; padding
 a img { padding-right: 4px; }
 
 ul#active li strong { margin: 15px 0 4px 0; border: 1px solid lightgray; border-left: 6px solid lightgray; display: block; padding-left: 4px; background-color: #efefef80; }
-
+ul#available li ul {
+    max-height: 240px;
+    overflow: auto;
+}
 dt em, dd em { font-style: normal; border: 2px solid black; padding: 0 4px; margin: 4px; background-color: #000; color: #fff; border-radius: 8px; }
 p { line-height: 1.8; text-align:justify; text-justify:auto; }
 p.info { line-height: 1.4; font-size: 12px; font-style: italic; }
