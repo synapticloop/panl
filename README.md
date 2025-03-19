@@ -768,6 +768,7 @@ number.
     the returned active and available facets.
   - Added `panl.remove.solr.json.keys` which will removed duplicated information
     and un-needed information
+  - Added `panl.lpse.facetorder` to the Panl response object
 
 
 - **Bug Fixes**

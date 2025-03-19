@@ -61,6 +61,7 @@ public class Panl {
 	public Sorting sorting;
 	public String canonical_uri;
 	public String query_respond_to;
+	public FacetOrder[] facetorder;
 
 	public Available available;
 	public Map<String, String> fields;
