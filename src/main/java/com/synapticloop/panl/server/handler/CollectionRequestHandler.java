@@ -77,6 +77,7 @@ public class CollectionRequestHandler {
 	public static final String JSON_KEY_FIELDS = "fields";
 	public static final String JSON_KEY_PAGINATION = "pagination";
 	public static final String JSON_KEY_PANL = "panl";
+	public static final String JSON_KEY_PANL_FACETORDER = "facetorder";
 	public static final String JSON_KEY_PANL_BUILD_REQUEST_TIME = "panl_build_request_time";
 	public static final String JSON_KEY_PANL_BUILD_RESPONSE_TIME = "panl_build_response_time";
 	public static final String JSON_KEY_PANL_PARSE_REQUEST_TIME = "panl_parse_request_time";
@@ -503,6 +504,10 @@ public class CollectionRequestHandler {
 		panlObject.put(JSON_KEY_TIMINGS, timingsObject);
 
 		solrJsonObject.put(ResourceHelper.JSON_KEY_ERROR, false);
+
+		JSONArray facetOrderJsonArray = collectionProperties.getPanlLpseFacetOrderJsonArray();
+		// TODO - we need to remove tthe facets which are not active
+		panlObject.put(JSON_KEY_PANL_FACETORDER, facetOrderJsonArray);
 
 		// last thing - we want to put the panl to solr field mappings in
 		solrJsonObject.put(JSON_KEY_PANL, panlObject);
