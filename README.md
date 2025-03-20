@@ -32,6 +32,8 @@ out._**
 
 ---
 
+# Development Information 
+
 `Latest release tag:` ![GitHub Tag](https://img.shields.io/github/v/tag/synapticloop/panl)
 
 `Latest release:` ![GitHub Release](https://img.shields.io/github/v/release/synapticloop/panl)
@@ -88,42 +90,6 @@ changes to the book without any changes to the codebase will be updated on the
 Any out-of-band book updates will not be reflected in the panl code release 
 updates.
 
-# Instructions
-
-## Download the Panl Server Release
-
-1. [https://github.com/synapticloop/panl/releases](https://github.com/synapticloop/panl/releases)
-2. Read
-   the [5-Step Quick Start section](https://github.com/synapticloop/panl/tree/main?tab=readme-ov-file#quick-start---the-5-steps)
-3. Done.
-
-## Upgrading the Panl Server Release
-
-> **IMPORTANT !!!** 
-> 
-> Version 2.0.0 is a breaking change with version 1.\*.\*,
-> 
-> Both the LPSE URL and the JSON response have changes.
-
-
-Panl is designed to be a drop in replacement for your current version. Although
-backwards compatibility is always the highest priority, do keep an eye out 
-in the release notes for any breaking features.
-
-Your existing configuration files should just work with the downloaded release
-package.
-
-## Read the Documentation
-
-- Online book (
-  HTML): [https://synapticloop.github.io/panl/](https://synapticloop.github.io/panl/)
-- Offline book (
-  PDF): [Getting Started With Synapticloop Panl.pdf](https://github.com/synapticloop/panl/blob/main/src/dist/book/Getting%20Started%20With%20Synapticloop%20Panl.pdf)
-  _(over 500 pages of documentation, written with you, the integrator, in mind)_
-
-Both of the book links above refer to Solr Panl integration 9 with instructions
-for setting up and running earlier versions of Solr.
-
 ## Why?
 
 Because...
@@ -144,7 +110,8 @@ Working with a Solr schema, the Panl configuration files translate unwieldy URL
 parameters into concise and precise URL paths.
 
 - **Have SEO friendlier URL paths with much shorter URLs than traditional query
-  parameters** - This was the primary driver and the base functionality.
+  parameters (ll the way through the search journey)** - This was the primary
+  driver and the base functionality.
 
 - **Abstract away the complexities of the Solr query string** - Being able to
   have a simple interface through the URL which could generate complex queries.
@@ -181,11 +148,11 @@ parameters into concise and precise URL paths.
 
 1. **PREFIXES and SUFFIXES** - Panl can also add prefixes and suffixes to the
    URI path to increase readability, for example, with configuration. For the
-   example LPSE URI path of 
+   example LPSE URI path of
 
-   `/Caran d'Ache/true/Black/bDW/` 
+   `/Caran d'Ache/true/Black/bDW/`
 
-   could also have the brand Solr field prefixed with ‘`Manufactured By `’ and 
+   could also have the brand Solr field prefixed with ‘`Manufactured By `’ and
    suffixed by ‘` Company`’ to produce the URI path
 
    `/Manufactured By The Caran d'Ache Company/true/Black/bDW/`
@@ -194,21 +161,21 @@ parameters into concise and precise URL paths.
    `solr.BoolField`, then an additional translation can be performed. ‘True’ and
    ‘false’ values can be replaced with arbitrary text, which will be
    transparently converted between Panl and Solr. For the LPSE URI path of
-   
-   `/Caran d'Ache/true/Black/bDW/` 
 
-   the true value (which is defined as whether the mechanical pencil can be 
-   disassembled could be changed to ‘`Able to be disassembled`’ for true values, 
+   `/Caran d'Ache/true/Black/bDW/`
+
+   the true value (which is defined as whether the mechanical pencil can be
+   disassembled could be changed to ‘`Able to be disassembled`’ for true values,
    and ‘`Cannot be disassembled`’ for false values.
 
    The above URI path would then become
 
    `/Caran d'Ache/Able to be disassembled/Black/bDW/`
 
-1. **BOOLEAN checkboxes** - Whilst this may seem obvious to have a checkbox for 
-   a true/false value, the checkboxes work in a subtly different way.  By 
-   selecting the checkbox, the only one of facet values will be selected 
-   when deselected, the BOOLEAN facet is in a don't care start - the facet value 
+1. **BOOLEAN checkboxes** - Whilst this may seem obvious to have a checkbox for
+   a true/false value, the checkboxes work in a subtly different way.  By
+   selecting the checkbox, the only one of facet values will be selected
+   when deselected, the BOOLEAN facet is in a don't care start - the facet value
    can be either of the values.
 
 1. **CONDENSE multiple field values** - Rather than having a forward slash URL
@@ -217,20 +184,20 @@ parameters into concise and precise URL paths.
    into a single path part, saving URL characters, and reducing URL length, and
    making the URL far more human-readable. For example, selecting pencils
    manufactured by `Faber-Castell` **OR** `Koh-i-Noor` could have the URI path
-   of 
+   of
 
-   `/Manufactured by Koh-i-Noor/Manufactured by Faber-Castell/bb/`, 
+   `/Manufactured by Koh-i-Noor/Manufactured by Faber-Castell/bb/`,
 
    with condensed multiple field values - this could be configured to become
- 
-   `/Manufactured by Koh-i-Noor, or Faber-Castell Co./b/` 
+
+   `/Manufactured by Koh-i-Noor, or Faber-Castell Co./b/`
 
    (with a value separator configured to be `, or `).
 
 1. **SEARCH ALL OR SPECIFIC SOLR FIELDS** - Any Solr field that is analysed can
-   be selected to be searched on, for example, in the Book Store Walkthrough, 
+   be selected to be searched on, for example, in the Book Store Walkthrough,
    the user can select to search within the title, the author, the description,
-   or all of them. **Also configure the query time boost.** 
+   or all of them. **Also configure the query time boost.**
 
 1. **FIELD VALUE validation** - By default, Solr can error when an invalid value
    is passed through - for example, if Solr is expecting a numeric value and it
@@ -242,7 +209,7 @@ parameters into concise and precise URL paths.
    selected, allowing you to narrow down the facet results and lead users
    through the search journey.
 
-1. **UNLESS facets** - Continue to show a facet unless another specified facet is 
+1. **UNLESS facets** - Continue to show a facet unless another specified facet is
    selected.  This can be thought of as the inverse of a hierarchical facet.
 
 1. **SORTED facets** - Each individual facet can be sorted by either the facet
@@ -253,7 +220,7 @@ parameters into concise and precise URL paths.
 
 1. **RESULTS SORTING options** - Sort by any of the Solr fields, either
    ascending, or descending and with multiple sub-sorting available - e.g.
-   sorting by a brand name, than the model number.  Additionally Panl generates 
+   sorting by a brand name, than the model number.  Additionally Panl generates
    URLs for the inverse of the sorting without impacting any sub-sorting.
 
 1. **INTEGRATED TYPEAHEAD/LOOKAHEAD** - Retrieve results suggestions as you type
@@ -279,6 +246,43 @@ parameters into concise and precise URL paths.
    (Java .properties) files so they can be stored in a source code management
    system. Additionally, upgrades to the Panl server are easy and with quick
    startup times, any configuration changes will be seen instantly.
+
+# Instructions
+
+## Download the Panl Server Release
+
+1. [https://github.com/synapticloop/panl/releases](https://github.com/synapticloop/panl/releases)
+2. Read
+   the [5-Step Quick Start section](https://github.com/synapticloop/panl/tree/main?tab=readme-ov-file#quick-start---the-5-steps)
+3. Done.
+
+## Upgrading the Panl Server Release
+
+> **IMPORTANT !!!** 
+> 
+> Version 2.0.0 is a breaking change with version 1.\*.\*,
+> 
+> Both the LPSE URL and the JSON response have changes.
+
+
+Panl is designed to be a drop in replacement for your current version. Although
+backwards compatibility is always the highest priority, do keep an eye out 
+in the release notes for any breaking features.
+
+Your existing configuration files should just work with the downloaded release
+package.
+
+## Read the Documentation
+
+- Online book (
+  HTML): [https://synapticloop.github.io/panl/](https://synapticloop.github.io/panl/)
+- Offline book (
+  PDF): [Getting Started With Synapticloop Panl.pdf](https://github.com/synapticloop/panl/blob/main/src/dist/book/Getting%20Started%20With%20Synapticloop%20Panl.pdf)
+  _(over 500 pages of documentation, written with you, the integrator, in mind)_
+
+Both of the book links above refer to Solr Panl integration 9 with instructions
+for setting up and running earlier versions of Solr.
+
 
 # Getting up to Speed... Fast!
 
