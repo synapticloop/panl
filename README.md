@@ -1,40 +1,11 @@
 # Synapticloop PANL
 
-<img src="src/docs/synapticloop-logo.png" alt="The Synapticloop logo" />
+<img src="src/docs/synapticloop-panl-headline.png" alt="The Synapticloop Panl headline" />
 
-<img src="src/main/resources/webapp/static/favicon.png" alt="The Synapticloop Panl Favicon" />&nbsp;anl&nbsp;Server
 
 > **_Rapidly get up and running with a fully featured, SEO friendly, keyword
 searchable, faceted search engine with an in-built, search page to test it all
 out._**
-
----
-
-<img src="src/docs/synapticloop-panl-headline.png" alt="The Synapticloop logo" />
-
----
-
-```
-# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
-#                                        __                                   #
-#                          .-----.-----.|  |.----.                            #
-#                          |__ --|  _  ||  ||   _|                            #
-#                          |_.-----.-----.--.--|  |                           #
-#                            |  _  |  _  |     |  |                           #
-#                            |   __|___._|__|__|__|                           #
-#                            |__|     ... .-..                                #
-#                                                                             #
-#                                ~ ~ ~ * ~ ~ ~                                #
-#                                                                             #
-#                                                                             #
-#                                  SOLR/PANL                                  #
-#                                                                             #
-#                                  ---------                                  #
-#                                                                             #
-# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
-```
-
----
 
 # Development Information 
 
@@ -1126,3 +1097,23 @@ number.
     - ~~Add in a property key for any specific facet so that a json object can 
       be returned with the facet (both available and active facets).~~
 
+
+```
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
+#                                        __                                   #
+#                          .-----.-----.|  |.----.                            #
+#                          |__ --|  _  ||  ||   _|                            #
+#                          |_.-----.-----.--.--|  |                           #
+#                            |  _  |  _  |     |  |                           #
+#                            |   __|___._|__|__|__|                           #
+#                            |__|     ... .-..                                #
+#                                                                             #
+#                                ~ ~ ~ * ~ ~ ~                                #
+#                                                                             #
+#                                                                             #
+#                                  SOLR/PANL                                  #
+#                                                                             #
+#                                  ---------                                  #
+#                                                                             #
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
+```
