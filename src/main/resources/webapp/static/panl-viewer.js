@@ -21,6 +21,9 @@ $(document).ready(function () {
 	}
 
 	availableCollections.append("<br />")
+	$("#collection_toggle").on("click", function (event) {
+		$("#collection_holder").toggle();
+	});
 
 	// test to see whether we are ready to invoke the panl search service
 	var uris = window.location.pathname.split("/");

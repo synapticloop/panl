@@ -16,14 +16,21 @@
 <body>
 <div id="container">
 	<div id="header">
-		<h1>Panl</h1>
-		<h2><em>a very simple results explainer (or <a href="/panl-results-viewer/">viewer</a> or <a href="/panl-single-page-search/">single page search</a>)</em></h2>
+		<div id="heading">
+			<h1>Panl</h1>
+			<h2><em>a very simple results explainer (or <a href="/panl-results-viewer/">viewer</a> or <a href="/panl-single-page-search/">single page search</a>)</em></h2>
+		</div>
 
-		<hr />
+		<p>Available collections/fieldset URI Paths (CaFUPs): <span id="collection_toggle"><strong>[Toggle visibility]</strong></span></p>
+		<div id="collection_holder">
+			<p><span id="available_collections"></span></p>
+		</div>
 
-		<p>Available collections/fieldset URI Paths (CaFUPs): <br /><span id="available_collections"></span></p>
+		<p><strong>~ ~ ~ * ~ ~ ~</strong></p>
 
 		<p><strong>You are viewing collection/fieldset URI Path (CaFUP): <span id="collection"></span></strong></p>
+
+		<p><strong>~ ~ ~ * ~ ~ ~</strong></p>
 
 		<p>Enter the Canonical URI path below:</p>
 		<form method="GET">
