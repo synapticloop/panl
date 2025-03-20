@@ -34,9 +34,10 @@ This is for reference
 
 | BRANCH              | TYPE     | VERSION | GITHUB                                                                                    |
 |---------------------|----------|---------|-------------------------------------------------------------------------------------------|
+| `hidden-summer`     | `BRANCH` | `2.1.0` | [GitHub > Hidden Summer](https://github.com/synapticloop/panl/tree/hidden-summer)         |
+|                     |          |         |                                                                                           |
 | `MAIN`              | `BRANCH` | `2.0.0` | [GitHub > MAIN](https://github.com/synapticloop/panl)                                     |
 |                     |          |         |                                                                                           |
-| `hidden-summer`     | `BRANCH` | `2.1.0` | [GitHub > Hidden Summer](https://github.com/synapticloop/panl/tree/hidden-summer)         |
 | `billowing-feather` | `BRANCH` | `2.0.0` | [GitHub > Billowing Feather](https://github.com/synapticloop/panl/tree/billowing-feather) |
 | `needy-phantom`     | `BRANCH` | `1.2.0` | [GitHub > Needy Phantom](https://github.com/synapticloop/panl/tree/needy-phanton)         |
 | `grizzled-pebble`   | `TAG`    | `1.1.1` | [GitHub > Tag 1.1.1](https://github.com/synapticloop/panl/tree/1.1.1)                     |
