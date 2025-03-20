@@ -10,6 +10,10 @@ out._**
 
 ---
 
+<img src="src/docs/synapticloop-panl-headline.png" alt="The Synapticloop logo" />
+
+---
+
 ```
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 #                                        __                                   #
@@ -34,17 +38,16 @@ out._**
 
 # Development Information 
 
-`Latest release tag:` ![GitHub Tag](https://img.shields.io/github/v/tag/synapticloop/panl)
+| Release Tag | Latest Release | Development Branch |
+|-------------|----------------|--------------------|
+| ![GitHub Tag](https://img.shields.io/github/v/tag/synapticloop/panl) | ![GitHub Release](https://img.shields.io/github/v/release/synapticloop/panl) | `hidden-summer` |
 
-`Latest release:` ![GitHub Release](https://img.shields.io/github/v/release/synapticloop/panl)
-
-`Development Branch:` `hidden-summer`
 
 **Major branch release status:**
 
-| BRANCH          | STATUS   | VERSION | TYPE                                                                                      |
-|-----------------|----------|---------|-------------------------------------------------------------------------------------------|
-| `MAIN`          | [![CircleCI](https://dl.circleci.com/status-badge/img/circleci/3Y1eqqe4mcvtSZuzJnQ3tJ/DyFKUm7c7AoLa1wHmRjAnf/tree/main.svg?style=shield)](https://dl.circleci.com/status-badge/redirect/circleci/3Y1eqqe4mcvtSZuzJnQ3tJ/DyFKUm7c7AoLa1wHmRjAnf/tree/main)           | `2.0.0` | Trunk - integrates with the latest Solr version (currently 9)                                                                                                                                                                                                                   |
+| BRANCH          | STATUS   | VERSION | TYPE |
+|-----------------|----------|---------|------|
+| `MAIN`          | [![CircleCI](https://dl.circleci.com/status-badge/img/circleci/3Y1eqqe4mcvtSZuzJnQ3tJ/DyFKUm7c7AoLa1wHmRjAnf/tree/main.svg?style=shield)](https://dl.circleci.com/status-badge/redirect/circleci/3Y1eqqe4mcvtSZuzJnQ3tJ/DyFKUm7c7AoLa1wHmRjAnf/tree/main)           | `2.0.0` | Trunk - integrates with the latest Solr version (currently 9)                                                                                                                                                                                                                  |
 | `SOLR PANL 9`   | [![CircleCI](https://dl.circleci.com/status-badge/img/circleci/3Y1eqqe4mcvtSZuzJnQ3tJ/DyFKUm7c7AoLa1wHmRjAnf/tree/solr-panl-9.svg?style=shield)](https://dl.circleci.com/status-badge/redirect/circleci/3Y1eqqe4mcvtSZuzJnQ3tJ/DyFKUm7c7AoLa1wHmRjAnf/tree/solr-panl-9)           | `2.0.0` | Panl version for integrating with Solr version 9 |
 | `SOLR PANL 8`   | [![CircleCI](https://dl.circleci.com/status-badge/img/circleci/3Y1eqqe4mcvtSZuzJnQ3tJ/DyFKUm7c7AoLa1wHmRjAnf/tree/solr-panl-8.svg?style=shield)](https://dl.circleci.com/status-badge/redirect/circleci/3Y1eqqe4mcvtSZuzJnQ3tJ/DyFKUm7c7AoLa1wHmRjAnf/tree/solr-panl-8)           | `2.0.0` | Panl version for integrating with Solr version 8 |
 | `SOLR PANL 7`   | [![CircleCI](https://dl.circleci.com/status-badge/img/circleci/3Y1eqqe4mcvtSZuzJnQ3tJ/DyFKUm7c7AoLa1wHmRjAnf/tree/solr-panl-7.svg?style=shield)](https://dl.circleci.com/status-badge/redirect/circleci/3Y1eqqe4mcvtSZuzJnQ3tJ/DyFKUm7c7AoLa1wHmRjAnf/tree/solr-panl-7)           | `2.0.0` | Panl version for integrating with Solr version 7 |
@@ -90,7 +93,7 @@ changes to the book without any changes to the codebase will be updated on the
 Any out-of-band book updates will not be reflected in the panl code release 
 updates.
 
-## Why?
+# Why?
 
 Because...
 
