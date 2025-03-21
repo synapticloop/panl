@@ -454,9 +454,9 @@ section for a more in-depth explanation and approach.**
 
 ---
 
-> **WARNING:** The Solr Release version `9.7.0` has changed the options for
-> creating a new example cloud.  The command line option has changed from 
-> `-noprompt` to `--no-prompt`
+> **WARNING:** The Solr Release version before `9.8.0` has changed the 
+> options for creating a new example cloud.  The command line option has 
+> changed from `--no-prompt` to `-noprompt` 
 
 > All other commands remain the same
 
@@ -486,7 +486,8 @@ Command(s)
 
 ```shell
 cd SOLR_INSTALL_DIRECTORY
-bin\solr start -e cloud -noprompt
+
+bin/solr start -e cloud --no-prompt
 ```
 
 ## 2. Create the mechanical pencils collection
@@ -497,7 +498,8 @@ Command(s)
 
 ```shell
 cd SOLR_INSTALL_DIRECTORY
-bin\solr create -c mechanical-pencils -d PANL_INSTALL_DIRECTORY\sample\solr\mechanical-pencils\ -s 2 -rf 2
+
+bin/solr create -c mechanical-pencils -d PANL_INSTALL_DIRECTORY/sample/solr/mechanical-pencils/ --shards 2 -rf 2
 ```
 
 ## 3. Index the mechanical pencils data
@@ -507,7 +509,8 @@ Command(s)
 
 ```shell
 cd SOLR_INSTALL_DIRECTORY
-bin\solr post -c mechanical-pencils PANL_INSTALL_DIRECTORY\sample\data\mechanical-pencils.json
+
+bin/solr post -c mechanical-pencils PANL_INSTALL_DIRECTORY/sample/data/mechanical-pencils.json
 ```
 
 ## 4. Start the Panl server
@@ -517,6 +520,7 @@ Command(s)
 
 ```shell
 cd PANL_INSTALL_DIRECTORY
+
 bin\panl.bat -properties PANL_INSTALL_DIRECTORY\sample\panl\mechanical-properties\panl.properties
 ```
 
