@@ -938,10 +938,6 @@ number.
 1. Additional support for Solr field types (Low priority)
    - Some will be implemented, some will probably be ignored (anything
        geospatial is probably not going to be included).
-1. ~~Single search page~~
-   - **[Released in version 9-1.1.0]**
-   - ~~Being able to have a search landing page with all options available,
-       with the ability to implement a single search page.~~
 1. Hierarchical facets based on value (Low priority)
    - Being able to only show facets if another facet has been selected with a
        specific value. This is probably not the best feature to include as it
@@ -955,34 +951,6 @@ number.
 1. 'More Like This' functionality (Medium priority)
    - The ability to return 'more like this' results on a certain field, or
        FieldSets.
-1. ~~Dynamic range functionality~~
-   - **[Released in version 9-1.1.0]**
-   - ~~Dynamically generate the minimum and maximum value for a range for a
-       facet value.~~
-1. ~~Suppress range values~~
-   - **[Released in version 9-1.1.0]**
-   - ~~For a RANGE facet, provide a configuration option to suppress the
-       values that appear in the range as separate values.~~
-1. ~~Returning more facets for a specific facet field~~
-   - **[Released in version 9-1.2.0]**
-   - ~~By default, the facet limit is set to be 100 facet values per facet, in
-       the instance where the returned number of facets are greater than this
-       value, the facets will be truncated. The Panl server should be able to
-       return the remaining facets with a simple query, without returning any
-       documents with it. This should be done on an individual facet and
-       possibly have pagination.~~
-1. ~~Default empty FieldSet~~
-   - **[Released in version 9-1.1.0]**
-   - ~~In addition to the 'default' FieldSet, add another FieldSet always
-       named 'empty' which will return no fields (this links in with the '
-       Returning more facets for a specific facet field' and 'Single search
-       page' items).~~
-1. ~~Internationalisation~~
-   - **[Released in version 9-1.1.0]**
-   - ~~Floating point digits in particular suffer from using a full
-       stop/period as a decimal place i.e. in the UK, a digit would be formatted
-       e.g. 12,345,678.90, whilst most other European countries use a comma for
-       the decimal place e.g. 12.345.678,90.~~
 1. DATE Range facet update (Medium priority)
    - As an extension to internationalisation, the DATE Range facet could do
        with an update to ensure that the SEO URL is better suited to
@@ -991,18 +959,6 @@ number.
        for other languages this is not the most suitable - e.g. in French it
        might be '30 jours précédents' as in
        `<value><range_type><range_identifier>`.
-1. ~~Integrated typeahead~~
-   - **[Released in version 9-2.0.0]**
-   - ~~An example and implementation of type-ahead in the search results, this
-       is not the suggester feature of the Solr server, rather a way to return
-       documents with no facet information - just the documents. In effect this
-       is the opposite of the 'empty' CaFUP - where documents are returned, just
-       no facets, just relying on the Solr index.~~
-1. ~~Specific Solr field search query options (Medium priority)~~
-   - **[Released in version 9-2.0.0]**
-   - ~~Add in an LPSE code to be able to search on a specific field, fields, or
-       all fields, rather than the default search field, or search for
-       individual fields.~~
 1. Panl configuration editor (Low priority)
    - A GUI to edit (and validate) the Panl configuration files making it
        easier for a developer to get the configuration correct.
@@ -1010,50 +966,14 @@ number.
    - Being able to add arbitrary Solr query params to individual collections -
        there is some Solr functionality which does not require any configuration
        parameters to be surfaced through the Panl server.
-1. ~~Update RANGE LPSE URL encoding~~
-   - **[Released in version 9-2.0.0]**
-   - ~~Changing the RANGE LPSE URL from <lpse_code>(+/-)<lpse_code> to just <
-       lpse_code>(+/-) - not really sure why this wasn't implemented in the
-       initial release, will require backwards compatibility checking.~~
-1. ~~Always on OR facets~~
-   - **[Released in version 9-1.2.0]**
-   - ~~OR facets will not be presented if another facet has been selected,
-       this will force the facet to always be returned, this will allow the
-       results to continue to grow.~~
 1. Arbitrary DATE Ranges  (Low priority)
    - Being able to have a way of having arbitrary ranges - e.g. from 3 to 6
        months, or 3 to 6 months before - this almost ties in with the DATE Range
        facet update element.
-1. ~~Arbitrary Separated Values for OR facets~~
-   - **[Released in version 9-2.0.0]**
-   - ~~Rather than having a prefix and/or suffix added to the Solr field value
-       for each OR facet, being able to have a separator character (or
-       characters) between the values. E.g. for the following example URL:~~
-   - ~~`/Manufactured By The Caran d'Ache Company/Manufactured By The BIC Company/bb/`~~
-   - ~~Should be able to be configured to be displayed as (or something along
-       the lines of it):~~
-   - ~~`/Manufactured By The Caran d'Ache, or BIC Company/b/`~~
 1. Update command line help text (Low priority)
    - Currently, the full help is displayed, which should only be done if no
        command is given. If a command is given, then only the help for that
        command should be printed out.
-1. ~~Arbitrary Separated Values for REGULAR multi-valued facets~~
-   - **[Released in version 9-2.0.0]**
-   - ~~Rather than having a prefix and/or suffix added to the Solr field value
-       for each REGULAR multi-valued facet, being able to have a separator
-       character (or characters) between the values. E.g. for the following
-       example URL:~~
-   - ~~`/Black/Blue/WW/`~~
-   - ~~Should be able to be configured to be displayed as (or something along
-       the lines of it):~~
-   - ~~`/Colours:Black,Blue/W/`~~
-1. ~~BOOLEAN Facet set checkbox value (Low priority)~~
-   - **[Released in version 9-2.0.0]**
-   - ~~Have an additional option for whether a BOOLEAN facet should be displayed
-       as a checkbox, the property either doesn't exist or is set to true or
-       false depending on which of the boolean values should be highlighted.~~
-   - ~~Thought is required as to whether this becomes an additional key in the
-       available facets, and whether it should be permanent.~~
 1. Multiple lookaheads based on query fields (Low priority)
    - This has a dependency on the 'Specific Solr field search query options'
        and would allow a lookahead to work only on specific fields. Although
@@ -1077,47 +997,12 @@ number.
 1. Update the Explainer (Low Priority)
    - The explainer has languished and only returns simple lists of strings 
      this should return JSON and be able to be inspected.
-1. ~~Specific Search Field Boosting (Low Priority)~~
-   - **[Released in version 9-2.0.0]**
-   - ~~Being able to boost specific fields when searching on Specific Solr 
-     fields this is done on a Panl collection basis.~~
 1. DATE Range and RANGE value replacement (Low Priority)
    -  For both of the range facets, it would be nice to be able to configure to 
       replace the URL with a Panl query, for example: The DATE Range Facet could
       have a replacement of 'Coming Soon' which would be translate to 
       'Next 3 months' and the RANGE Facet could have a replacement of 
       'Inexpensive' to translate to 'From 5 to 10 dollars'
-1. ~~Unless property (Medium Priority)~~
-   - **[Released in version 9-2.0.0]**
-   - ~~Display this facet 'unless' another facet within the list of 'unless' 
-     facets is selected.~~
-   - ~~This is the opposite of the panl.when.<lpse_code>.~~
-1. ~~Remove unneeded Solr JSON Response keys (Low Priority)~~
-   - **[Released in version 9-2.1.0]**
-   - ~~Solr returns JSON keys that are duplicated in the Panl response 
-     (think `facet_counts`) which are duplicated in the values array for Panl.~~
-   - ~~Provide a property which removes the unneeded/duplicate keys - need to 
-     decide whether this is server level, or CaFUP level.~~
-1. ~~Add in separate ordering of facets (Low Priority)~~
-   - **[Released in version 9-2.1.0]**
-   - ~~Panl splits the available facets into facets, range_facets, and 
-     date_facets, which is fine for the Panl Web App Results Viewer, users 
-     may want to display the facets in the order in which they are defined~~
-   - ~~Add a new key with the LPSE order and properties (which may be different 
-     from the LPSE order which controls the URL placement - which is almost the 
-     same as Single Page Search Implementation)~~
-1. ~~Add in multi-valued JSON Key for Active facets (Medium Priority)~~
-   - **[Released in version 9-2.1.0]**
-   - ~~For active facets, there is no designator for whether this is a 
-     multi-valued facet, which could then be used.~~
-   - ~~Add in a key for multi-valued facets to indicate whether this facet is 
-      multi-faceted.~~
-1. ~~Add in configurable JSON objects to the facet (Medium Priority)~~
-    - **[Released in version 9-2.1.0]**
-    - ~~For any facet, it would be good to be able to add an arbitrary JSON 
-      object to a facet so that it could be queried during rendering.~~
-    - ~~Add in a property key for any specific facet so that a json object can 
-      be returned with the facet (both available and active facets).~~
 1. Add in allowable num per page options (Low Priority)
     - The in-built view web app hard codes the number of results per page at 
       the values of 3, 5, and 10.  This could be configurable through a 
