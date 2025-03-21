@@ -454,9 +454,12 @@ section for a more in-depth explanation and approach.**
 
 ---
 
-> **WARNING:** The Solr Release version before `9.8.0` has changed the 
-> options for creating a new example cloud.  The command line option has 
-> changed from `--no-prompt` to `-noprompt` 
+> **WARNING:** The Solr Release version before `9.8.0` has different command 
+> line options for creating a new example cloud.  For these versions the 
+> command line option should be `-noprompt` rather than `--no-prompt`.
+> 
+> Additionally, when creating the collection, the options should be changed 
+> from `--shards` to `-s`.
 
 > All other commands remain the same
 
@@ -464,9 +467,13 @@ section for a more in-depth explanation and approach.**
 
 ```
 **IMPORTANT**: You will need to replace the
+
 SOLR_INSTALL_DIRECTORY
-and
+
+  and
+
 PANL_INSTALL_DIRECTORY
+
 references in the commands for your particular setup.
 ```
 
@@ -547,6 +554,7 @@ Command(s)
 
 ```shell
 cd SOLR_INSTALL_DIRECTORY
+
 bin/solr start -e cloud -noprompt
 ```
 
@@ -557,7 +565,8 @@ Command(s)
 
 ```shell
 cd SOLR_INSTALL_DIRECTORY
-bin/solr create -c mechanical-pencils -d PANL_INSTALL_DIRECTORY/sample/solr/mechanical-pencils/ -s 2 -rf 2
+
+bin/solr create -c mechanical-pencils -d PANL_INSTALL_DIRECTORY/sample/solr/mechanical-pencils/ --shards 2 -rf 2
 ```
 
 ## 3. Index the mechanical pencils data
@@ -567,6 +576,7 @@ Command(s)
 
 ```shell
 cd SOLR_INSTALL_DIRECTORY
+
 bin/solr post -c mechanical-pencils PANL_INSTALL_DIRECTORY/sample/data/mechanical-pencils.json
 ```
 
@@ -577,6 +587,7 @@ Command(s)
 
 ```shell
 cd PANL_INSTALL_DIRECTORY
+
 bin/panl -properties PANL_INSTALL_DIRECTORY/sample/panl/mechanical-properties/panl.properties
 ```
 
