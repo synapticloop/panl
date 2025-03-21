@@ -110,8 +110,8 @@ parameters into concise and precise URL paths.
   single Solr collection should be able to serve up different fields and facets
   from the result documents without any back-end logic.
 
-- **Have a configuration file drive the generation of the UI as much as possible
-  ** - Rather than hard-coding facets and then determining how to display them,
+- **Have a configuration file drive the generation of the UI as much as 
+  possible** - Rather than hard-coding facets and then determining how to display them,
   being able to have a returned JSON response which can be interrogated to
   determine how the facets should be displayed.
 
@@ -227,15 +227,14 @@ parameters into concise and precise URL paths.
 ## Download the Panl Server Release
 
 1. [https://github.com/synapticloop/panl/releases](https://github.com/synapticloop/panl/releases)
-2. Read
-   the [5-Step Quick Start section](https://github.com/synapticloop/panl/tree/main?tab=readme-ov-file#quick-start---the-5-steps)
+2. Read the [5-Step Quick Start section](https://github.com/synapticloop/panl/tree/main?tab=readme-ov-file#quick-start---the-5-steps)
 3. Done.
 
 ## Upgrading the Panl Server Release
 
 > **IMPORTANT !!!** 
 > 
-> Version 2.0.0 is a breaking change with version 1.\*.\*,
+> Version 2.\*.\* is a breaking change with version 1.\*.\*,
 > 
 > Both the LPSE URL and the JSON response have changes.
 
@@ -330,8 +329,8 @@ results._
    (but not a specific date) in the form of:
    next/previous <any_integer> hours/days/months/years.
     - For example:
-    - Last 30 days
-    - Previous 24 hours
+      - Last 30 days
+      - Previous 24 hours
 
 1. **Available filters** - additional facets that can further refine and limit
    the Solr search results.
@@ -442,7 +441,7 @@ Download the latest release of Synapticloop Panl
 
 [https://github.com/synapticloop/panl/releases](https://github.com/synapticloop/panl/releases)
 
-Download the latest version of Apache Solr - this book is using the `9.6.1-slim`
+Download the latest version of Apache Solr - this book is using the `9.8.1-slim`
 version
 
 [https://solr.apache.org/downloads.html](https://solr.apache.org/downloads.html)
@@ -761,6 +760,12 @@ number.
   - Updated cookbook
   - Spelling and grammar updates
 
+[View the code for this release](https://github.com/synapticloop/panl/tree/2.1.0)
+
+[Download the release packages](https://github.com/synapticloop/panl/releases/tag/2.1.0)
+
+[See all releases](https://github.com/synapticloop/panl/releases/)
+
 ## 2.0.0 - fluffy stuff (codename `billowing-feather`)
 
 > This is a breaking change for the LPSE URL path part
@@ -933,7 +938,7 @@ number.
        table for word replacement, however would also need to be parsed on the
        way out of the Solr results as well.
 1. 'More Like This' functionality (Medium priority)
-    1. The ability to return 'more like this' results on a certain field, or
+   - The ability to return 'more like this' results on a certain field, or
        FieldSets.
 1. ~~Dynamic range functionality~~
    - **[Released in version 9-1.1.0]**
@@ -1078,13 +1083,14 @@ number.
      (think `facet_counts`) which are duplicated in the values array for Panl.~~
    - ~~Provide a property which removes the unneeded/duplicate keys - need to 
      decide whether this is server level, or CaFUP level.~~
-1. Add in separate ordering of facets (Low Priority)
-   - Panl splits the available facets into facets, range_facets, and 
+1. ~~Add in separate ordering of facets (Low Priority)~~
+   - **[Released in version 9-2.1.0]**
+   - ~~Panl splits the available facets into facets, range_facets, and 
      date_facets, which is fine for the Panl Web App Results Viewer, users 
-     may want to display the facets in the order in which they are defined
-   - Add a new key with the LPSE order and properties (which may be different 
+     may want to display the facets in the order in which they are defined~~
+   - ~~Add a new key with the LPSE order and properties (which may be different 
      from the LPSE order which controls the URL placement - which is almost the 
-     same as Single Page Search Implementation)
+     same as Single Page Search Implementation)~~
 1. ~~Add in multi-valued JSON Key for Active facets (Medium Priority)~~
    - **[Released in version 9-2.1.0]**
    - ~~For active facets, there is no designator for whether this is a 
@@ -1097,6 +1103,14 @@ number.
       object to a facet so that it could be queried during rendering.~~
     - ~~Add in a property key for any specific facet so that a json object can 
       be returned with the facet (both available and active facets).~~
+1. Add in allowable num per page options (Low Priority)
+    - The in-built view web app hard codes the number of results per page at 
+      the values of 3, 5, and 10.  This could be configurable through a 
+      property to allow the UI to be automatically generated.
+    - This would increase the payload size of the response marginally. Still 
+      yet to determine whether this is server configuration, or collection - 
+      probably server level with collection level override.
+
 
 # End Plate 
 
