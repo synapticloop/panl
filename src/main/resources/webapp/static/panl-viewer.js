@@ -395,9 +395,9 @@ function addActiveFilters(activeObject, removeUri) {
 		active.append("<li><a href=\"" + panlResultsViewerUrl +
 				$("#collection").text() +
 				activeObject.query.remove_uri +
-				"\"><img class=\"remove\" src=\"/webapp/static/remove.png\" title=\"Remove this facet\"></a>&nbsp;" +
+				"\"><img class=\"remove\" src=\"/webapp/static/remove.png\" title=\"Remove this facet\">&nbsp;" +
 				activeObject.query.value +
-				"</li><li><hr /></li>");
+				"</a></li><li><hr /></li>");
 	}
 
 	// now for the facets
@@ -464,7 +464,8 @@ function addActiveFacets(facets) {
 					$("#collection").text() +
 					facet.remove_uri +
 					"\"><img class=\"remove\" src=\"/webapp/static/remove.png\" title=\"Remove this facet\"/>" +
-					decodePanl(facet.encoded) +
+					(facet.extra !== undefined && facet.extra.swatch === true ? "<img class='add' src='/webapp/static/swatches/" + facet.value + ".png'/>": "") +
+					(facet.extra !== undefined && facet.extra.short_value === true ? facet.value : decodePanl(facet.encoded)) +
 					"</a></li>");
 
 			if (facet.is_boolean_facet) {
@@ -819,8 +820,16 @@ function generateFacetHTML(facet) {
 				facet.uris.before +
 				((facet.value_separator !== undefined) ? value.encoded_multi : value.encoded) +
 				facet.uris.after +
-				"\"><img class=\"add\" src=\"/webapp/static/add.png\" title=\"Add facet\">" +
-				(facet.is_multivalue && value.encoded_multi !== undefined ? decodePanl(value.encoded_multi) : decodePanl(value.encoded)) +"</a>";
+				"\"><img class=\"add\" src=\"/webapp/static/add.png\" title=\"Add facet\"/>" +
+				(facet.extra !== undefined && facet.extra.swatch === true ? "<img class='add' src='/webapp/static/swatches/" + value.value + ".png'/>": "") +
+				(
+						facet.extra !== undefined && facet.extra.short_value === true ?
+								value.value : (
+										facet.is_multivalue && value.encoded_multi !== undefined ?
+												decodePanl(value.encoded_multi) :
+												decodePanl(value.encoded)
+								)
+				) + "</a>";
 
 		if (!facet.is_or_facet) {
 			innerUl += "&nbsp;(" + value.count + ")";

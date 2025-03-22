@@ -37,6 +37,7 @@ import org.json.JSONObject;
 
 import java.util.*;
 
+import static com.synapticloop.panl.server.handler.fielderiser.field.BaseField.JSON_KEY_EXTRA;
 import static com.synapticloop.panl.server.handler.fielderiser.field.BaseField.JSON_KEY_IS_MULTIVALUE;
 
 /**
@@ -159,6 +160,10 @@ public class ActiveProcessor extends Processor {
 				removeObject.put(JSON_KEY_FACET_NAME, collectionProperties.getSolrFieldNameFromLpseCode(lpseCode));
 				removeObject.put(JSON_KEY_NAME, collectionProperties.getPanlNameFromPanlCode(lpseCode));
 				removeObject.put(JSON_KEY_ENCODED, lpseField.getEncodedPanlValue(lpseToken));
+
+				// add in the 'extra' JSON object
+				removeObject.put(JSON_KEY_EXTRA, lpseField.getExtraJSONObject());
+
 			}
 
 
