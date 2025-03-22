@@ -222,10 +222,6 @@ parameters into concise and precise URL paths.
    system. Additionally, upgrades to the Panl server are easy and with quick
    startup times, any configuration changes will be seen instantly.
 
-1. **PANL CONFIGURATION TO DRIVE UI RENDERING** - Add configuration to the 
-   returned Panl response object to help drive the UI rendering, rather than 
-   hard-coding the rendering logic in the UI.
-
 # Instructions
 
 ## Download the Panl Server Release
