@@ -460,7 +460,7 @@ section for a more in-depth explanation and approach.**
 > 
 > Additionally, when creating the collection, the options should be changed 
 > from `--shards` to `-s`.
-
+>
 > All other commands remain the same
 
 ---
