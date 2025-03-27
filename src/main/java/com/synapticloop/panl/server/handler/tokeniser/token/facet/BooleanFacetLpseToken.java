@@ -39,7 +39,7 @@ import java.util.StringTokenizer;
  *   <li><code>false</code></li>
  * </ul>
  *
- * <p>BOOLEAN facets can have a prefix, a suffix, neither, or both as well as a
+ * <p>BOOLEAN facets can have a prefix, a suffix, neither, or both, as well as a
  * true/false value replacement.</p>
  *
  * @author syanapticloop
