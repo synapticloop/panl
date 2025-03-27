@@ -147,7 +147,7 @@ public class Constants {
 			public static final String NUM_RESULTS = "num_results";
 			public static final String NUM_RESULTS_EXACT = "num_results_exact";
 			public static final String IS_OR_FACET = "is_or_facet";
-
+			public static final String PREVIOUS_NEXT = "previous_next";
 		}
 	}
 
@@ -161,6 +161,12 @@ public class Constants {
 			public static final String Q_OP = "q.op";
 			public static final String STATS_FIELD = "stats.field";
 			public static final String STATS = "stats";
+
+			public static final String QUERY_DESIGNATOR_DAYS = "DAYS";
+			public static final String QUERY_DESIGNATOR_HOURS = "HOURS";
+			public static final String QUERY_DESIGNATOR_MONTHS = "MONTHS";
+			public static final String QUERY_DESIGNATOR_YEARS = "YEARS";
+
 		}
 
 		public static class Panl {
@@ -228,6 +234,15 @@ public class Constants {
 			public static final String PANL_RANGE_SUFFIX = "panl.range.suffix.";
 			public static final String PANL_RANGE_MIN_VALUE = "panl.range.min.value.";
 			public static final String PANL_RANGE_MAX_VALUE = "panl.range.max.value.";
+			public static final String PANL_DATE = "panl.date.";
+			public static final String SUFFIX_DAYS = ".days";
+			public static final String SUFFIX_HOURS = ".hours";
+			public static final String SUFFIX_MONTHS = ".months";
+			public static final String SUFFIX_NEXT = ".next";
+			public static final String SUFFIX_PREVIOUS = ".previous";
+			public static final String SUFFIX_YEARS = ".years";
+			public static final String SUFFIX_PREFIX = ".prefix";
+			public static final String SUFFIX_SUFFIX = ".suffix";
 		}
 
 		public static class Solr {

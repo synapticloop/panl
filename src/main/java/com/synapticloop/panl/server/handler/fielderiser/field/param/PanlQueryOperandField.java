@@ -30,6 +30,7 @@ import com.synapticloop.panl.server.handler.properties.CollectionProperties;
 import com.synapticloop.panl.server.handler.tokeniser.LpseTokeniser;
 import com.synapticloop.panl.server.handler.tokeniser.token.LpseToken;
 import com.synapticloop.panl.server.handler.tokeniser.token.param.QueryOperandLpseToken;
+import com.synapticloop.panl.util.Constants;
 import org.apache.solr.client.solrj.SolrQuery;
 import org.json.JSONObject;
 import org.slf4j.Logger;
@@ -39,7 +40,6 @@ import java.util.*;
 
 public class PanlQueryOperandField extends BaseField {
 	private static final Logger LOGGER = LoggerFactory.getLogger(PanlQueryOperandField.class);
-	public static final String SOLR_PARAM_Q_OP = "q.op";
 
 	public PanlQueryOperandField(String lpseCode, String propertyKey, Properties properties, String solrCollection, String panlCollectionUri) throws PanlServerException {
 		super(lpseCode, properties, propertyKey, solrCollection, panlCollectionUri);
@@ -102,7 +102,7 @@ public class PanlQueryOperandField extends BaseField {
 
 	public void applyToQueryInternal(SolrQuery solrQuery, List<LpseToken> lpseTokenList, CollectionProperties collectionProperties) {
 		if (!lpseTokenList.isEmpty()) {
-			solrQuery.setParam(SOLR_PARAM_Q_OP, ((QueryOperandLpseToken) lpseTokenList.get(0)).getQOpValue());
+			solrQuery.setParam(Constants.Parameter.Solr.Q_OP, ((QueryOperandLpseToken) lpseTokenList.get(0)).getQOpValue());
 		}
 	}
 

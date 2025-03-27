@@ -43,8 +43,6 @@ import static com.synapticloop.panl.server.handler.processor.Processor.FORWARD_S
  * any parameter, operand, or facet that allows a prefix and/or suffix.</p>
  */
 public abstract class BasePrefixSuffixField extends BaseField {
-	public static final String PROPERTY_KEY_SUFFIX_PREFIX = ".prefix";
-	public static final String PROPERTY_KEY_SUFFIX_SUFFIX = ".suffix";
 
 	protected boolean hasValuePrefix = false;
 	protected boolean hasValueSuffix = false;
@@ -99,9 +97,9 @@ public abstract class BasePrefixSuffixField extends BaseField {
 	 * @param propertyKey The property key to look up
 	 */
 	protected void populateParamSuffixAndPrefix(String propertyKey) {
-		this.valuePrefix = properties.getProperty(propertyKey + PROPERTY_KEY_SUFFIX_PREFIX);
+		this.valuePrefix = properties.getProperty(propertyKey + Constants.Property.Panl.SUFFIX_PREFIX);
 
-		this.valueSuffix = properties.getProperty(propertyKey + PROPERTY_KEY_SUFFIX_SUFFIX);
+		this.valueSuffix = properties.getProperty(propertyKey + Constants.Property.Panl.SUFFIX_SUFFIX);
 
 		checkPrefixSuffix();
 	}
