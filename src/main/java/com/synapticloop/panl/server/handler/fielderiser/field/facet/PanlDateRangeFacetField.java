@@ -43,8 +43,7 @@ import java.net.URLDecoder;
 import java.nio.charset.StandardCharsets;
 import java.util.*;
 
-import static com.synapticloop.panl.server.handler.processor.Processor.*;
-import static com.synapticloop.panl.server.handler.processor.Processor.FORWARD_SLASH;
+import static com.synapticloop.panl.util.Constants.FORWARD_SLASH;
 
 /**
  * <p>A Panl facet field comes in five flavours</p>

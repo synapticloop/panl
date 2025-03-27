@@ -39,15 +39,6 @@ import java.util.Map;
  * @author synapticloop
  */
 public abstract class Processor {
-	//
-	// static strings for json values
-	//
-	public static final String JSON_VALUE_NO_INFIX_REPLACEMENT = "~";
-
-	//
-	// static strings for the forward slash
-	//
-	public static final String FORWARD_SLASH = "/";
 
 	/**
 	 * <p>The collection properties for this request.</p>

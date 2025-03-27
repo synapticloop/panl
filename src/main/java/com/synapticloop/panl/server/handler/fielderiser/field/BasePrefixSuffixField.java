@@ -35,8 +35,7 @@ import java.net.URLDecoder;
 import java.nio.charset.StandardCharsets;
 import java.util.*;
 
-import static com.synapticloop.panl.server.handler.processor.Processor.*;
-import static com.synapticloop.panl.server.handler.processor.Processor.FORWARD_SLASH;
+import static com.synapticloop.panl.util.Constants.FORWARD_SLASH;
 
 /**
  * <p>The abstract <code>BasePrefixSuffixField</code> is the parent object for

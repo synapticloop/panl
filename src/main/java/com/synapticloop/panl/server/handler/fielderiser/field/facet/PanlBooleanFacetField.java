@@ -38,11 +38,7 @@ import java.net.URLDecoder;
 import java.nio.charset.StandardCharsets;
 import java.util.*;
 
-import static com.synapticloop.panl.server.handler.processor.Processor.*;
-
 public class PanlBooleanFacetField extends PanlFacetField {
-	public static final String BOOLEAN_TRUE_VALUE = "true";
-	public static final String BOOLEAN_FALSE_VALUE = "false";
 
 	// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - //
 	//                         BOOLEAN Facet properties                        //
@@ -103,14 +99,14 @@ public class PanlBooleanFacetField extends PanlFacetField {
 			if (null != this.booleanTrueReplacement) {
 				hasBooleanTrueReplacement = true;
 			} else {
-				this.booleanTrueReplacement = BOOLEAN_TRUE_VALUE;
+				this.booleanTrueReplacement = Constants.BOOLEAN_TRUE_VALUE;
 			}
 
 			this.booleanFalseReplacement = properties.getProperty("panl.bool." + this.lpseCode + ".false", null);
 			if (null != this.booleanFalseReplacement) {
 				hasBooleanFalseReplacement = true;
 			} else {
-				this.booleanFalseReplacement = BOOLEAN_FALSE_VALUE;
+				this.booleanFalseReplacement = Constants.BOOLEAN_FALSE_VALUE;
 			}
 		} else {
 			this.booleanTrueReplacement = null;
@@ -172,18 +168,18 @@ public class PanlBooleanFacetField extends PanlFacetField {
 		}
 
 		if (hasBooleanTrueReplacement && booleanTrueReplacement.equals(decodedValue)) {
-			return BOOLEAN_TRUE_VALUE;
+			return Constants.BOOLEAN_TRUE_VALUE;
 		}
 
 		if (hasBooleanFalseReplacement && booleanFalseReplacement.equals(decodedValue)) {
-			return BOOLEAN_FALSE_VALUE;
+			return Constants.BOOLEAN_FALSE_VALUE;
 		}
 
 		// if we get to this point, and we cannot determine whether it is true or false
-		if (BOOLEAN_TRUE_VALUE.equalsIgnoreCase(value)) {
-			return (BOOLEAN_TRUE_VALUE);
-		} else if (BOOLEAN_FALSE_VALUE.equalsIgnoreCase(value)) {
-			return (BOOLEAN_FALSE_VALUE);
+		if (Constants.BOOLEAN_TRUE_VALUE.equalsIgnoreCase(value)) {
+			return (Constants.BOOLEAN_TRUE_VALUE);
+		} else if (Constants.BOOLEAN_FALSE_VALUE.equalsIgnoreCase(value)) {
+			return (Constants.BOOLEAN_FALSE_VALUE);
 		} else {
 			return (null);
 		}
@@ -223,17 +219,17 @@ public class PanlBooleanFacetField extends PanlFacetField {
 			sb.append(valuePrefix);
 		}
 
-		if (decoded.equals(BOOLEAN_TRUE_VALUE)) {
+		if (decoded.equals(Constants.BOOLEAN_TRUE_VALUE)) {
 			if (hasBooleanTrueReplacement) {
 				sb.append(booleanTrueReplacement);
 			} else {
-				sb.append(BOOLEAN_TRUE_VALUE);
+				sb.append(Constants.BOOLEAN_TRUE_VALUE);
 			}
 		} else {
 			if (hasBooleanFalseReplacement) {
 				sb.append(booleanFalseReplacement);
 			} else {
-				sb.append(BOOLEAN_FALSE_VALUE);
+				sb.append(Constants.BOOLEAN_FALSE_VALUE);
 			}
 		}
 

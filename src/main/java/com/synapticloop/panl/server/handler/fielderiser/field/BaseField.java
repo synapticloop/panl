@@ -45,8 +45,6 @@ import java.net.URLDecoder;
 import java.nio.charset.StandardCharsets;
 import java.util.*;
 
-import static com.synapticloop.panl.server.handler.processor.Processor.*;
-
 /**
  * <p>This is the Base Field for all fields.</p>
  */
@@ -912,7 +910,7 @@ public abstract class BaseField {
 
 		String additionLpseCode = lpseField.getLpseCode();
 		JSONObject additionObject = new JSONObject();
-		StringBuilder lpseUri = new StringBuilder(FORWARD_SLASH);
+		StringBuilder lpseUri = new StringBuilder(Constants.FORWARD_SLASH);
 		StringBuilder lpseCode = new StringBuilder();
 
 		// go through the LPSE fields in order
@@ -939,11 +937,11 @@ public abstract class BaseField {
 				lpseCode.append(baseField.getResetLpseCode(panlTokenMap, collectionProperties));
 				lpseCode.append(baseField.getLpseCode());
 
-				lpseUri.append(FORWARD_SLASH);
+				lpseUri.append(Constants.FORWARD_SLASH);
 			}
 		}
 
-		additionObject.put(Constants.Json.Panl.AFTER, lpseUri.toString() + lpseCode.toString() + FORWARD_SLASH);
+		additionObject.put(Constants.Json.Panl.AFTER, lpseUri.toString() + lpseCode.toString() + Constants.FORWARD_SLASH);
 		return (additionObject);
 	}
 

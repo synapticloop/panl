@@ -64,7 +64,7 @@ public class SortingProcessor extends Processor {
 
 		// Run through the sorting order
 		JSONObject jsonObject = new JSONObject();
-		StringBuilder replaceLpseUri = new StringBuilder(FORWARD_SLASH);
+		StringBuilder replaceLpseUri = new StringBuilder(Constants.FORWARD_SLASH);
 		StringBuilder lpseCode = new StringBuilder();
 
 		for (BaseField lpseField : collectionProperties.getLpseFields()) {
@@ -80,14 +80,14 @@ public class SortingProcessor extends Processor {
 			}
 		}
 
-		lpseCode.append(FORWARD_SLASH);
+		lpseCode.append(Constants.FORWARD_SLASH);
 
 		// This is the reset URI link (i.e. remove all sort orders and go back to
 		// sorting by relevance descending)
 		String finalBefore = replaceLpseUri + before;
 		if (finalBefore.length() + lpseCode.length() == 2) {
 			// we have nothing in the URI - i.e. the URI is "//"
-			jsonObject.put(Constants.Json.Panl.REMOVE_URI, FORWARD_SLASH);
+			jsonObject.put(Constants.Json.Panl.REMOVE_URI, Constants.FORWARD_SLASH);
 		} else {
 			jsonObject.put(Constants.Json.Panl.REMOVE_URI, finalBefore + lpseCode);
 		}

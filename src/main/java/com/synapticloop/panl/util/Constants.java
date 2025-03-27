@@ -31,6 +31,12 @@ package com.synapticloop.panl.util;
  * @author Synapticloop
  */
 public class Constants {
+
+	public static final String JSON_VALUE_NO_INFIX_REPLACEMENT = "~";
+	public static final String FORWARD_SLASH = "/";
+	public static final String BOOLEAN_TRUE_VALUE = "true";
+	public static final String BOOLEAN_FALSE_VALUE = "false";
+
 	/**
 	 * <p>JSON Key Constants</p>
 	 */

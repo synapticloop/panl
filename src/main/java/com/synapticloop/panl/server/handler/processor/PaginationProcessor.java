@@ -82,7 +82,7 @@ public class PaginationProcessor extends Processor {
 		}
 		paginationObject.put(Constants.Json.Panl.NUM_PAGES, numPages);
 
-		StringBuilder uriPath = new StringBuilder(FORWARD_SLASH);
+		StringBuilder uriPath = new StringBuilder(Constants.FORWARD_SLASH);
 		StringBuilder lpseCode = new StringBuilder();
 
 		JSONObject pageUris = new JSONObject();
@@ -101,7 +101,7 @@ public class PaginationProcessor extends Processor {
 
 		BaseField panlPageNumField = collectionProperties.getLpseField(panlParamPageLpseCode);
 
-		String afterValue = panlPageNumField.getValueSuffix() + FORWARD_SLASH + uriPath + lpseCode + FORWARD_SLASH;
+		String afterValue = panlPageNumField.getValueSuffix() + Constants.FORWARD_SLASH + uriPath + lpseCode + Constants.FORWARD_SLASH;
 		pageUris.put(Constants.Json.Panl.AFTER, afterValue);
 
 		if (pageNumber < numPages) {
@@ -159,7 +159,7 @@ public class PaginationProcessor extends Processor {
 
 		BaseField baseField = collectionProperties.getLpseField(replaceLpseCode);
 
-		pageUris.put(Constants.Json.Panl.AFTER, baseField.getValueSuffix() + FORWARD_SLASH + uriPath + lpseCode + FORWARD_SLASH);
+		pageUris.put(Constants.Json.Panl.AFTER, baseField.getValueSuffix() + Constants.FORWARD_SLASH + uriPath + lpseCode + Constants.FORWARD_SLASH);
 
 		return (pageUris);
 	}

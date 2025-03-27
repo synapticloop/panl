@@ -27,6 +27,7 @@ package com.synapticloop.panl.server.handler.processor;
 import com.synapticloop.panl.server.handler.properties.CollectionProperties;
 import com.synapticloop.panl.server.handler.fielderiser.field.BaseField;
 import com.synapticloop.panl.server.handler.tokeniser.token.LpseToken;
+import com.synapticloop.panl.util.Constants;
 import org.apache.solr.client.solrj.response.QueryResponse;
 import org.json.JSONObject;
 
@@ -60,7 +61,7 @@ public class CanonicalURIProcessor extends Processor {
 	}
 
 	@Override public String processToString(Map<String, List<LpseToken>> panlTokenMap) {
-		StringBuilder canonicalUri = new StringBuilder(FORWARD_SLASH);
+		StringBuilder canonicalUri = new StringBuilder(Constants.FORWARD_SLASH);
 		StringBuilder canonicalLpse = new StringBuilder();
 
 		for (BaseField baseField : collectionProperties.getLpseFields()) {
@@ -68,6 +69,6 @@ public class CanonicalURIProcessor extends Processor {
 			canonicalLpse.append(baseField.getCanonicalLpseCode(panlTokenMap, collectionProperties));
 		}
 
-		return (canonicalUri.toString() + canonicalLpse + FORWARD_SLASH);
+		return (canonicalUri.toString() + canonicalLpse + Constants.FORWARD_SLASH);
 	}
 }

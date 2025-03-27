@@ -26,7 +26,6 @@ package com.synapticloop.panl.server.handler.fielderiser.field.facet;
 
 import com.synapticloop.panl.exception.PanlServerException;
 import com.synapticloop.panl.server.handler.fielderiser.field.BaseField;
-import com.synapticloop.panl.server.handler.processor.Processor;
 import com.synapticloop.panl.server.handler.properties.CollectionProperties;
 import com.synapticloop.panl.server.handler.tokeniser.LpseTokeniser;
 import com.synapticloop.panl.server.handler.tokeniser.token.LpseToken;
@@ -44,8 +43,6 @@ import org.slf4j.LoggerFactory;
 import java.net.URLDecoder;
 import java.nio.charset.StandardCharsets;
 import java.util.*;
-
-import static com.synapticloop.panl.server.handler.processor.Processor.*;
 
 public class PanlRangeFacetField extends PanlFacetField {
 	// LOGGER
@@ -137,7 +134,7 @@ public class PanlRangeFacetField extends PanlFacetField {
 		if (hasRangeInfix) {
 			explanations.add("Has a range infix of '" + rangeValueInfix + "'.");
 		} else {
-			explanations.add("No range infix, and is set to the default '" + JSON_VALUE_NO_INFIX_REPLACEMENT + "'.");
+			explanations.add("No range infix, and is set to the default '" + Constants.JSON_VALUE_NO_INFIX_REPLACEMENT + "'.");
 		}
 
 		if (hasRangeSuffix) {
@@ -377,7 +374,7 @@ public class PanlRangeFacetField extends PanlFacetField {
 
 		String additionLpseCode = lpseCode;
 		JSONObject additionObject = new JSONObject();
-		StringBuilder lpseUri = new StringBuilder(FORWARD_SLASH);
+		StringBuilder lpseUri = new StringBuilder(Constants.FORWARD_SLASH);
 		StringBuilder lpseUriAfterMax = new StringBuilder();
 		StringBuilder lpseCodeUri = new StringBuilder();
 
@@ -425,7 +422,7 @@ public class PanlRangeFacetField extends PanlFacetField {
 					additionObject.put(
 								Constants.Json.Panl.DURING,
 							PanlLPSEHelper.encodeURIPath(getValueSuffix()) +
-											JSON_VALUE_NO_INFIX_REPLACEMENT +
+											Constants.JSON_VALUE_NO_INFIX_REPLACEMENT +
 									PanlLPSEHelper.encodeURIPath(getValuePrefix()));
 				}
 
@@ -441,17 +438,17 @@ public class PanlRangeFacetField extends PanlFacetField {
 
 				if (null != rangeMaxValueReplacement) {
 					lpseUriAfterMax.append(PanlLPSEHelper.encodeURIPath(rangeMaxValueReplacement))
-					               .append(FORWARD_SLASH);
+					               .append(Constants.FORWARD_SLASH);
 				}
 
-				lpseUri.append(FORWARD_SLASH);
+				lpseUri.append(Constants.FORWARD_SLASH);
 			}
 		}
 
-		additionObject.put(Constants.Json.Panl.AFTER, lpseUri.toString() + lpseCodeUri.toString() + FORWARD_SLASH);
+		additionObject.put(Constants.Json.Panl.AFTER, lpseUri.toString() + lpseCodeUri.toString() + Constants.FORWARD_SLASH);
 
 		if (null != rangeMaxValueReplacement) {
-			additionObject.put(Constants.Json.Panl.AFTER_MAX_VALUE, lpseUriAfterMax.toString() + lpseCodeUri.toString() + FORWARD_SLASH);
+			additionObject.put(Constants.Json.Panl.AFTER_MAX_VALUE, lpseUriAfterMax.toString() + lpseCodeUri.toString() + Constants.FORWARD_SLASH);
 		}
 		return (additionObject);
 	}
@@ -512,7 +509,7 @@ public class PanlRangeFacetField extends PanlFacetField {
 				toString = fromToSplit[1];
 			}
 		} else {
-			String[] fromToSplit = value.split(Processor.JSON_VALUE_NO_INFIX_REPLACEMENT);
+			String[] fromToSplit = value.split(Constants.JSON_VALUE_NO_INFIX_REPLACEMENT);
 			if (fromToSplit.length != 2) {
 				return (null);
 			} else {
@@ -696,7 +693,7 @@ public class PanlRangeFacetField extends PanlFacetField {
 
 			}
 
-			sb.append(Processor.JSON_VALUE_NO_INFIX_REPLACEMENT);
+			sb.append(Constants.JSON_VALUE_NO_INFIX_REPLACEMENT);
 
 			if (rangeFacetLpseToken.getToValue().equals(rangeMaxValue) && null != rangeMaxValueReplacement) {
 				sb.append(PanlLPSEHelper.encodeURIPath(rangeMaxValueReplacement));
@@ -721,7 +718,7 @@ public class PanlRangeFacetField extends PanlFacetField {
 
 		String additionLpseCode = lpseField.getLpseCode();
 		JSONObject additionObject = new JSONObject();
-		StringBuilder lpseUri = new StringBuilder(FORWARD_SLASH);
+		StringBuilder lpseUri = new StringBuilder(Constants.FORWARD_SLASH);
 		StringBuilder lpseUriAfterMax = new StringBuilder();
 		StringBuilder lpseCode = new StringBuilder();
 
@@ -746,12 +743,12 @@ public class PanlRangeFacetField extends PanlFacetField {
 				lpseUri.setLength(0);
 				lpseCode.append(baseField.getLpseCode());
 
-				lpseUri.append(FORWARD_SLASH);
+				lpseUri.append(Constants.FORWARD_SLASH);
 			}
 		}
 
-		additionObject.put(Constants.Json.Panl.AFTER, lpseUri.toString() + lpseCode.toString() + FORWARD_SLASH);
-		additionObject.put(Constants.Json.Panl.AFTER_MAX_VALUE, lpseUriAfterMax.toString() + lpseCode.toString() + FORWARD_SLASH);
+		additionObject.put(Constants.Json.Panl.AFTER, lpseUri.toString() + lpseCode.toString() + Constants.FORWARD_SLASH);
+		additionObject.put(Constants.Json.Panl.AFTER_MAX_VALUE, lpseUriAfterMax.toString() + lpseCode.toString() + Constants.FORWARD_SLASH);
 		return (additionObject);
 	}
 
