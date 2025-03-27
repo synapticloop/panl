@@ -31,6 +31,7 @@ import com.synapticloop.panl.server.handler.tokeniser.LpseTokeniser;
 import com.synapticloop.panl.server.handler.tokeniser.token.facet.FacetLpseToken;
 import com.synapticloop.panl.server.handler.tokeniser.token.LpseToken;
 import com.synapticloop.panl.server.handler.tokeniser.token.facet.OrFacetLpseToken;
+import com.synapticloop.panl.util.Constants;
 import org.apache.solr.client.solrj.SolrQuery;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -71,7 +72,7 @@ public class PanlFacetField extends BasePrefixSuffixField {
 	}
 
 	private void populateSolrFieldType() {
-		this.solrFieldType = properties.getProperty(PROPERTY_KEY_PANL_TYPE + lpseCode);
+		this.solrFieldType = properties.getProperty(Constants.Property.Panl.PANL_TYPE + lpseCode);
 	}
 
 	@Override public Logger getLogger() {

@@ -25,6 +25,7 @@ package com.synapticloop.panl.server.handler.webapp.util;
  */
 
 import com.synapticloop.panl.server.handler.webapp.PanlResultsStaticHandler;
+import com.synapticloop.panl.util.Constants;
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
 import org.apache.http.entity.*;
@@ -55,11 +56,6 @@ import java.util.Objects;
  */
 public class ResourceHelper {
 	public static final String URL_PANL_RESULTS_VIEWER_SUBSET = "/panl-results-viewer";
-
-	public static final String JSON_KEY_ERROR = "error";
-	public static final String JSON_KEY_STATUS = "status";
-	public static final String JSON_KEY_MESSAGE = "message";
-	public static final String JSON_KEY_VALID_URLS = "valid_urls";
 
 	public static final String JSON_VALUE_MESSAGE_404 = "Not found";
 	public static final String JSON_VALUE_MESSAGE_500 = "Internal server error";
@@ -113,8 +109,8 @@ public class ResourceHelper {
 
 			} else {
 				JSONObject jsonObject = new JSONObject();
-				jsonObject.put(JSON_KEY_ERROR, true);
-				jsonObject.put(JSON_KEY_MESSAGE, "Could not find the resourcePath '" + resourcePath + "'");
+				jsonObject.put(Constants.Json.Response.ERROR, true);
+				jsonObject.put(Constants.Json.Response.MESSAGE, "Could not find the resourcePath '" + resourcePath + "'");
 
 				CONTENT_CACHE.put(resourcePath, jsonObject.toString().getBytes());
 				CONTENT_TYPE_CACHE.put(resourcePath, CONTENT_TYPE_JSON);
@@ -122,8 +118,8 @@ public class ResourceHelper {
 			}
 		} catch (IOException ioex) {
 			JSONObject jsonObject = new JSONObject();
-			jsonObject.put(JSON_KEY_ERROR, true);
-			jsonObject.put(JSON_KEY_MESSAGE, "Could not serve the resourcePath '" + resourcePath + "'");
+			jsonObject.put(Constants.Json.Response.ERROR, true);
+			jsonObject.put(Constants.Json.Response.MESSAGE, "Could not serve the resourcePath '" + resourcePath + "'");
 			CONTENT_CACHE.put(resourcePath, jsonObject.toString().getBytes());
 			CONTENT_TYPE_CACHE.put(resourcePath, CONTENT_TYPE_JSON);
 			CONTENT_RESPONSE_CODE_CACHE.put(resourcePath, HttpStatus.SC_INTERNAL_SERVER_ERROR);

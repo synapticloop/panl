@@ -29,6 +29,7 @@ import com.synapticloop.panl.server.handler.properties.CollectionProperties;
 import com.synapticloop.panl.server.handler.tokeniser.LpseTokeniser;
 import com.synapticloop.panl.server.handler.tokeniser.token.LpseToken;
 import com.synapticloop.panl.server.handler.tokeniser.token.facet.OrFacetLpseToken;
+import com.synapticloop.panl.util.Constants;
 import com.synapticloop.panl.util.PanlLPSEHelper;
 import org.apache.solr.client.solrj.SolrQuery;
 import org.apache.solr.client.solrj.response.FacetField;
@@ -42,7 +43,6 @@ import java.util.*;
 public class PanlOrFacetField extends PanlFacetField {
 	private static final Logger LOGGER = LoggerFactory.getLogger(PanlOrFacetField.class);
 
-	public static final String JSON_KEY_IS_OR_FACET = "is_or_facet";
 
 	// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - //
 	//                            OR Facet properties                          //
@@ -53,8 +53,9 @@ public class PanlOrFacetField extends PanlFacetField {
 			String panlCollectionUri, int lpseLength) throws PanlServerException {
 		super(lpseCode, propertyKey, properties, solrCollection, panlCollectionUri, lpseLength);
 
-		this.isAlwaysOr = properties.getProperty(PROPERTY_KEY_PANL_OR_ALWAYS + lpseCode, "false").equalsIgnoreCase("true");
-		this.valueSeparator = properties.getProperty(PROPERTY_KEY_PANL_OR_SEPARATOR + lpseCode, null);
+		this.isAlwaysOr =
+				properties.getProperty(Constants.Property.Panl.PANL_OR_ALWAYS + lpseCode, "false").equalsIgnoreCase("true");
+		this.valueSeparator = properties.getProperty(Constants.Property.Panl.PANL_OR_SEPARATOR + lpseCode, null);
 	}
 
 	@Override public List<String> explainAdditional() {
@@ -109,9 +110,9 @@ public class PanlOrFacetField extends PanlFacetField {
 	}
 
 	@Override public void appendToAvailableObjectInternal(JSONObject jsonObject) {
-		jsonObject.put(JSON_KEY_IS_OR_FACET, true);
+		jsonObject.put(Constants.Json.Panl.IS_OR_FACET, true);
 		if (null != valueSeparator) {
-			jsonObject.put(JSON_KEY_VALUE_SEPARATOR, valueSeparator);
+			jsonObject.put(Constants.Json.Panl.VALUE_SEPARATOR, valueSeparator);
 		}
 	}
 
@@ -169,14 +170,14 @@ public class PanlOrFacetField extends PanlFacetField {
 
 			if (shouldAdd) {
 				JSONObject facetValueObject = new JSONObject();
-				facetValueObject.put(JSON_KEY_VALUE, valueName);
-				facetValueObject.put(JSON_KEY_COUNT, value.getCount());
-				facetValueObject.put(JSON_KEY_ENCODED, getEncodedPanlValue(valueName));
+				facetValueObject.put(Constants.Json.Panl.VALUE, valueName);
+				facetValueObject.put(Constants.Json.Panl.COUNT, value.getCount());
+				facetValueObject.put(Constants.Json.Panl.ENCODED, getEncodedPanlValue(valueName));
 
 				// the OR encoding has no prefix or suffix - but only if it has a value
 				// separator
 				if(null != valueSeparator) {
-					facetValueObject.put(JSON_KEY_ENCODED_MULTI, PanlLPSEHelper.encodeURIPath(valueName));
+					facetValueObject.put(Constants.Json.Panl.ENCODED_MULTI, PanlLPSEHelper.encodeURIPath(valueName));
 				}
 				facetValueArrays.put(facetValueObject);
 			}
@@ -185,10 +186,10 @@ public class PanlOrFacetField extends PanlFacetField {
 		// if we don't have any values for this facet, don't put it in
 
 		if (!facetValueArrays.isEmpty()) {
-			facetObject.put(JSON_KEY_VALUES, facetValueArrays);
-			facetObject.put(JSON_KEY_FACET_LIMIT, collectionProperties.getSolrFacetLimit());
+			facetObject.put(Constants.Json.Panl.VALUES, facetValueArrays);
+			facetObject.put(Constants.Json.Panl.FACET_LIMIT, collectionProperties.getSolrFacetLimit());
 			if (null != lpseCode) {
-				facetObject.put(JSON_KEY_URIS,
+				facetObject.put(Constants.Json.Panl.URIS,
 						getAdditionURIObject(
 								collectionProperties,
 								this,
@@ -233,7 +234,7 @@ public class PanlOrFacetField extends PanlFacetField {
 	}
 
 	@Override public void addToRemoveObject(JSONObject removeObject, LpseToken lpseToken) {
-		removeObject.put(JSON_KEY_IS_OR_FACET, true);
+		removeObject.put(Constants.Json.Panl.IS_OR_FACET, true);
 	}
 
 	/**

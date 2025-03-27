@@ -31,6 +31,7 @@ import com.synapticloop.panl.server.handler.tokeniser.LpseTokeniser;
 import com.synapticloop.panl.server.handler.tokeniser.token.LpseToken;
 import com.synapticloop.panl.server.handler.tokeniser.token.facet.DateRangeFacetLpseToken;
 import com.synapticloop.panl.server.handler.tokeniser.token.facet.bean.PreviousNextValueBean;
+import com.synapticloop.panl.util.Constants;
 import com.synapticloop.panl.util.PanlLPSEHelper;
 import org.apache.solr.client.solrj.SolrQuery;
 import org.apache.solr.client.solrj.response.FacetField;
@@ -60,16 +61,6 @@ public class PanlDateRangeFacetField extends PanlFacetField {
 	public static final String PREVIOUS_NEXT = "previous_next";
 	private static final Logger LOGGER = LoggerFactory.getLogger(PanlDateRangeFacetField.class);
 
-	public static final String JSON_KEY_DAYS = "days";
-	public static final String JSON_KEY_SOLR_DESIGNATOR = "solr_range_designator";
-	public static final String JSON_KEY_DESIGNATOR = "designator";
-	public static final String JSON_KEY_DESIGNATORS = "designators";
-	public static final String JSON_KEY_HOURS = "hours";
-	public static final String JSON_KEY_IS_DATE_FACET = "is_date_facet";
-	public static final String JSON_KEY_MONTHS = "months";
-	public static final String JSON_KEY_NEXT = "next";
-	public static final String JSON_KEY_PREVIOUS = "previous";
-	public static final String JSON_KEY_YEARS = "years";
 
 	public static final String PROPERTY_KEY_PREFIX_PANL_DATE = "panl.date.";
 	public static final String PROPERTY_KEY_SUFFIX_DAYS = ".days";
@@ -137,10 +128,10 @@ public class PanlDateRangeFacetField extends PanlFacetField {
 			addToSolrLookupMap(hoursSuffix, SOLR_DESIGNATOR_HOURS);
 		}
 
-		logWarnProperties(this.lpseCode, PROPERTY_KEY_PANL_OR_FACET + this.lpseCode);
-		logWarnProperties(this.lpseCode, PROPERTY_KEY_PANL_RANGE_FACET + this.lpseCode);
-		logWarnProperties(this.lpseCode, PROPERTY_KEY_PANL_PREFIX + this.lpseCode);
-		logWarnProperties(this.lpseCode, PROPERTY_KEY_PANL_SUFFIX + this.lpseCode);
+		logWarnProperties(this.lpseCode, Constants.Property.Panl.PANL_OR_FACET + this.lpseCode);
+		logWarnProperties(this.lpseCode, Constants.Property.Panl.PANL_RANGE_FACET + this.lpseCode);
+		logWarnProperties(this.lpseCode, Constants.Property.Panl.PANL_PREFIX + this.lpseCode);
+		logWarnProperties(this.lpseCode, Constants.Property.Panl.PANL_SUFFIX + this.lpseCode);
 
 		logDetails();
 	}
@@ -382,11 +373,11 @@ public class PanlDateRangeFacetField extends PanlFacetField {
 	}
 
 	@Override public void appendToAvailableObjectInternal(JSONObject jsonObject) {
-		jsonObject.put(JSON_KEY_IS_DATE_FACET, true);
+		jsonObject.put(Constants.Json.Panl.IS_DATE_FACET, true);
 	}
 
 	@Override public void addToRemoveObject(JSONObject removeObject, LpseToken lpseToken) {
-		removeObject.put(JSON_KEY_IS_DATE_FACET, true);
+		removeObject.put(Constants.Json.Panl.IS_DATE_FACET, true);
 	}
 
 	/**
@@ -424,31 +415,31 @@ public class PanlDateRangeFacetField extends PanlFacetField {
 			return (false);
 		}
 
-		additionObject.put(JSON_KEY_FACET_NAME, this.solrFieldName);
-		additionObject.put(JSON_KEY_NAME, this.panlFieldName);
-		additionObject.put(JSON_KEY_PANL_CODE, this.lpseCode);
+		additionObject.put(Constants.Json.Panl.FACET_NAME, this.solrFieldName);
+		additionObject.put(Constants.Json.Panl.NAME, this.panlFieldName);
+		additionObject.put(Constants.Json.Panl.PANL_CODE, this.lpseCode);
 
-		additionObject.put(JSON_KEY_NEXT, PanlLPSEHelper.encodeURIPath(nextIndicator));
-		additionObject.put(JSON_KEY_PREVIOUS, PanlLPSEHelper.encodeURIPath(previousIndicator));
+		additionObject.put(Constants.Json.Panl.NEXT, PanlLPSEHelper.encodeURIPath(nextIndicator));
+		additionObject.put(Constants.Json.Panl.PREVIOUS, PanlLPSEHelper.encodeURIPath(previousIndicator));
 
 		JSONObject designatorObject = new JSONObject();
-		designatorObject.put(JSON_KEY_HOURS, solrRangeDesignatorEncodedLookupMap.get(SOLR_DESIGNATOR_HOURS));
-		designatorObject.put(JSON_KEY_DAYS, solrRangeDesignatorEncodedLookupMap.get(SOLR_DESIGNATOR_DAYS));
-		designatorObject.put(JSON_KEY_MONTHS, solrRangeDesignatorEncodedLookupMap.get(SOLR_DESIGNATOR_MONTHS));
-		designatorObject.put(JSON_KEY_YEARS, solrRangeDesignatorEncodedLookupMap.get(SOLR_DESIGNATOR_YEARS));
+		designatorObject.put(Constants.Json.Panl.HOURS, solrRangeDesignatorEncodedLookupMap.get(SOLR_DESIGNATOR_HOURS));
+		designatorObject.put(Constants.Json.Panl.DAYS, solrRangeDesignatorEncodedLookupMap.get(SOLR_DESIGNATOR_DAYS));
+		designatorObject.put(Constants.Json.Panl.MONTHS, solrRangeDesignatorEncodedLookupMap.get(SOLR_DESIGNATOR_MONTHS));
+		designatorObject.put(Constants.Json.Panl.YEARS, solrRangeDesignatorEncodedLookupMap.get(SOLR_DESIGNATOR_YEARS));
 
-		additionObject.put(JSON_KEY_DESIGNATORS, designatorObject);
+		additionObject.put(Constants.Json.Panl.DESIGNATORS, designatorObject);
 
 		boolean shouldBreak = false;
 		for(LpseToken lpseToken : panlTokenMap.getOrDefault(this.lpseCode, new ArrayList<>())) {
 			if (lpseToken.getIsValid()) {
 				DateRangeFacetLpseToken dateRangeFacetLpseToken = (DateRangeFacetLpseToken) lpseToken;
-				additionObject.put(JSON_KEY_VALUE, dateRangeFacetLpseToken.getValue());
+				additionObject.put(Constants.Json.Panl.VALUE, dateRangeFacetLpseToken.getValue());
 				additionObject.put(PREVIOUS_NEXT,
 						PanlLPSEHelper.encodeURIPath(dateRangeFacetLpseToken.getPreviousNext()));
-				additionObject.put(JSON_KEY_SOLR_DESIGNATOR,
+				additionObject.put(Constants.Json.Panl.SOLR_DESIGNATOR,
 						PanlLPSEHelper.encodeURIPath(dateRangeFacetLpseToken.getSolrRangeDesignator()));
-				additionObject.put(JSON_KEY_DESIGNATOR,
+				additionObject.put(Constants.Json.Panl.DESIGNATOR,
 						PanlLPSEHelper.encodeURIPath(dateRangeFacetLpseToken.getDesignator()));
 				shouldBreak = true;
 			}
@@ -460,7 +451,7 @@ public class PanlDateRangeFacetField extends PanlFacetField {
 		}
 
 		JSONObject additionURIObject = getRangeAdditionURIObject(collectionProperties, panlTokenMap);
-		additionObject.put(JSON_KEY_URIS, additionURIObject);
+		additionObject.put(Constants.Json.Panl.URIS, additionURIObject);
 
 		return (true);
 	}
@@ -501,9 +492,9 @@ public class PanlDateRangeFacetField extends PanlFacetField {
 			}
 		}
 
-		additionObject.put(JSON_KEY_BEFORE, lpseUriBefore.toString());
+		additionObject.put(Constants.Json.Panl.BEFORE, lpseUriBefore.toString());
 
-		additionObject.put(JSON_KEY_AFTER, FORWARD_SLASH + lpseUri.toString() + lpseUriCode.toString() + FORWARD_SLASH);
+		additionObject.put(Constants.Json.Panl.AFTER, FORWARD_SLASH + lpseUri.toString() + lpseUriCode.toString() + FORWARD_SLASH);
 		return (additionObject);
 	}
 

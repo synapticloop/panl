@@ -40,6 +40,7 @@ import com.synapticloop.panl.server.handler.tokeniser.token.LpseToken;
 import com.synapticloop.panl.server.handler.tokeniser.token.param.NumRowsLpseToken;
 import com.synapticloop.panl.server.handler.tokeniser.token.param.PageNumLpseToken;
 import com.synapticloop.panl.server.handler.tokeniser.token.param.QueryLpseToken;
+import com.synapticloop.panl.util.Constants;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.utils.URLEncodedUtils;
 import org.apache.http.protocol.HttpContext;
@@ -65,38 +66,6 @@ import static com.synapticloop.panl.server.handler.processor.Processor.*;
  */
 public class CollectionRequestHandler {
 	private static final Logger LOGGER = LoggerFactory.getLogger(CollectionRequestHandler.class);
-
-	public static final String SOLR_PARAM_HL_FL = "hl.fl";
-	public static final String SOLR_PARAM_HL = "hl";
-	public static final String SOLR_PARAM_Q_OP = "q.op";
-
-	public static final String JSON_KEY_ACTIVE = "active";
-	public static final String JSON_KEY_SEARCH = "search";
-	public static final String JSON_KEY_AVAILABLE = "available";
-	public static final String JSON_KEY_CANONICAL_URI = "canonical_uri";
-	public static final String JSON_KEY_FIELDS = "fields";
-	public static final String JSON_KEY_PAGINATION = "pagination";
-	public static final String JSON_KEY_PANL = "panl";
-	public static final String JSON_KEY_PANL_FACETORDER = "facetorder";
-	public static final String JSON_KEY_PANL_BUILD_REQUEST_TIME = "panl_build_request_time";
-	public static final String JSON_KEY_PANL_BUILD_RESPONSE_TIME = "panl_build_response_time";
-	public static final String JSON_KEY_PANL_PARSE_REQUEST_TIME = "panl_parse_request_time";
-	public static final String JSON_KEY_PANL_SEND_REQUEST_TIME = "panl_send_request_time";
-	public static final String JSON_KEY_PANL_TOTAL_TIME = "panl_total_time";
-	public static final String JSON_KEY_QUERY_OPERAND = "query_operand";
-	public static final String JSON_KEY_SORTING = "sorting";
-	public static final String JSON_KEY_TIMINGS = "timings";
-	public static final String JSON_KEY_DYNAMIC_MIN = "dynamic_min";
-	public static final String JSON_KEY_DYNAMIC_MAX = "dynamic_max";
-
-	public static final String JSON_KEY_SOLR_RESPONSE_HEADER = "responseHeader";
-	public static final String JSON_KEY_SOLR_PARAM = "params";
-	public static final String JSON_KEY_SOLR_RESPONSE = "response";
-	public static final String JSON_KEY_SOLR_FACET_COUNTS = "facetCounts";
-	public static final String JSON_KEY_STATS = "stats";
-	public static final String JSON_KEY_FACET_COUNTS = "facet_counts";
-	public static final String JSON_KEY_STATS_FIELDS = "stats_fields";
-	public static final String SOLR_PARAM_KEY_STATS_FIELD = "stats.field";
 
 	public static String CODES = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz01234567890";
 	public static String CODES_AND_METADATA = CODES + "[].+-()";
@@ -192,7 +161,8 @@ public class CollectionRequestHandler {
 		long startNanos = System.nanoTime();
 
 		// check to ensure that the more facets LPSE code is correct
-		String contextLpseCode = (String) context.getAttribute(PanlMoreFacetsHandler.CONTEXT_KEY_LPSE_CODE);
+		String contextLpseCode =
+				(String) context.getAttribute(Constants.Context.Panl.LPSE_CODE);
 		if (null != contextLpseCode) {
 			String solrFieldName = collectionProperties.getSolrFieldNameFromLpseCode(contextLpseCode);
 			if (null == solrFieldName) {
@@ -259,11 +229,11 @@ public class CollectionRequestHandler {
 			// we set the default query - to be overridden later if one exists
 			SolrQuery solrQuery = panlClient.getQuery(query);
 			// set the operand - to be over-ridden later if it is in the URI path
-			solrQuery.setParam(SOLR_PARAM_Q_OP, collectionProperties.getSolrDefaultQueryOperand());
+			solrQuery.setParam(Constants.Parameter.Solr.Q_OP, collectionProperties.getSolrDefaultQueryOperand());
 
 			// if we have something in the context - set it to this value
-			if (null != context.getAttribute(PanlMoreFacetsHandler.CONTEXT_KEY_FACET_LIMIT)) {
-				solrQuery.setFacetLimit((Integer) context.getAttribute(PanlMoreFacetsHandler.CONTEXT_KEY_FACET_LIMIT));
+			if (null != context.getAttribute(Constants.Context.Panl.FACET_LIMIT)) {
+				solrQuery.setFacetLimit((Integer) context.getAttribute(Constants.Context.Panl.FACET_LIMIT));
 				isMoreFacets = true;
 			} else {
 				solrQuery.setFacetLimit(collectionProperties.getSolrFacetLimit());
@@ -278,8 +248,8 @@ public class CollectionRequestHandler {
 			collectionProperties.setFacetMinCounts(solrQuery, panlTokenMap);
 
 			if (collectionProperties.getHighlight()) {
-				solrQuery.setParam(SOLR_PARAM_HL_FL, "*");
-				solrQuery.setParam(SOLR_PARAM_HL, "on");
+				solrQuery.setParam(Constants.Parameter.Solr.HL_FL, "*");
+				solrQuery.setParam(Constants.Parameter.Solr.HL, "on");
 			}
 
 			// this may be overridden by the lpse status
@@ -318,9 +288,9 @@ public class CollectionRequestHandler {
 
 				if (!isMoreFacets) {
 					if (lpseField instanceof PanlRangeFacetField) {
-						solrQuery.add(SOLR_PARAM_KEY_STATS_FIELD, lpseField.getSolrFieldName());
+						solrQuery.add(Constants.Parameter.Solr.STATS_FIELD, lpseField.getSolrFieldName());
 						if (!hasStats) {
-							solrQuery.add(JSON_KEY_STATS, "true");
+							solrQuery.add(Constants.Parameter.Solr.STATS, "true");
 							hasStats = true;
 						}
 					}
@@ -429,59 +399,59 @@ public class CollectionRequestHandler {
 			}
 		}
 
-		panlObject.put(JSON_KEY_AVAILABLE, availableProcessor.processToObject(panlTokenMap, solrQueryResponse));
+		panlObject.put(Constants.Json.Panl.AVAILABLE, availableProcessor.processToObject(panlTokenMap, solrQueryResponse));
 
 		// now we are going to add the dynamic range if they exist
-		JSONObject statsObject = solrJsonObject.optJSONObject(JSON_KEY_STATS);
+		JSONObject statsObject = solrJsonObject.optJSONObject(Constants.Json.Solr.STATS);
 		if (null != statsObject) {
-			JSONObject statsFieldObjects = statsObject.optJSONObject(JSON_KEY_STATS_FIELDS);
+			JSONObject statsFieldObjects = statsObject.optJSONObject(Constants.Json.Solr.STATS_FIELDS);
 			if (null != statsFieldObjects) {
 				Iterator<String> keys = statsFieldObjects.keys();
 				while (keys.hasNext()) {
 					String key = keys.next();
 					JSONObject valueObject = statsFieldObjects.getJSONObject(key);
 					// now that we have the value, go through the range facets and get the right one.
-					JSONArray jsonArray = panlObject.getJSONObject(JSON_KEY_AVAILABLE)
-					                                .getJSONArray(Processor.JSON_KEY_RANGE_FACETS);
+					JSONArray jsonArray = panlObject.getJSONObject(Constants.Json.Panl.AVAILABLE)
+					                                .getJSONArray(Constants.Json.Panl.RANGE_FACETS);
 					for (Object object : jsonArray) {
 						JSONObject rangeObject = (JSONObject) object;
-						if (rangeObject.getString(JSON_KEY_FACET_NAME).equals(key)) {
-							rangeObject.put(JSON_KEY_DYNAMIC_MIN, valueObject.optInt(JSON_KEY_MIN, -1));
-							rangeObject.put(JSON_KEY_DYNAMIC_MAX, valueObject.optInt(JSON_KEY_MAX, -1));
+						if (rangeObject.getString(Constants.Json.Panl.FACET_NAME).equals(key)) {
+							rangeObject.put(Constants.Json.Panl.DYNAMIC_MIN, valueObject.optInt(Constants.Json.Panl.MIN, -1));
+							rangeObject.put(Constants.Json.Panl.DYNAMIC_MAX, valueObject.optInt(Constants.Json.Panl.MAX, -1));
 						}
 					}
 				}
 			}
 		}
 
-		solrJsonObject.remove(JSON_KEY_STATS);
+		solrJsonObject.remove(Constants.Json.Solr.STATS);
 
 		if(this.panlProperties.getRemoveSolrJsonKeys()) {
-			solrJsonObject.remove(JSON_KEY_FACET_COUNTS);
-			solrJsonObject.getJSONObject(JSON_KEY_SOLR_RESPONSE_HEADER).remove(JSON_KEY_SOLR_PARAM);
+			solrJsonObject.remove(Constants.Json.Solr.FACET_COUNTS);
+			solrJsonObject.getJSONObject(Constants.Json.Solr.RESPONSE_HEADER).remove(Constants.Json.Solr.PARAMS);
 		}
 
 		// now we need to go through the range facets and remove any that are
 		// suppressed
 
 		JSONArray removedRanges = new JSONArray();
-		for (Object jsonObject : panlObject.getJSONObject(JSON_KEY_AVAILABLE).getJSONArray(Processor.JSON_KEY_FACETS)) {
+		for (Object jsonObject : panlObject.getJSONObject(Constants.Json.Panl.AVAILABLE).getJSONArray(Constants.Json.Panl.FACETS)) {
 			JSONObject facetObject = (JSONObject) jsonObject;
-			String lpseCode = facetObject.getString(Processor.JSON_KEY_PANL_CODE);
+			String lpseCode = facetObject.getString(Constants.Json.Panl.PANL_CODE);
 			if (!collectionProperties.getIsSuppressedRangeFacet(lpseCode)) {
 				removedRanges.put(facetObject);
 			}
 		}
 
-		panlObject.getJSONObject(JSON_KEY_AVAILABLE).put(Processor.JSON_KEY_FACETS, removedRanges);
+		panlObject.getJSONObject(Constants.Json.Panl.AVAILABLE).put(Constants.Json.Panl.FACETS, removedRanges);
 
-		panlObject.put(JSON_KEY_ACTIVE, activeProcessor.processToObject(panlTokenMap));
-		panlObject.put(JSON_KEY_SEARCH, searchFieldsProcessor.processToObject(panlTokenMap));
-		panlObject.put(JSON_KEY_PAGINATION, paginationProcessor.processToObject(panlTokenMap, solrQueryResponse));
-		panlObject.put(JSON_KEY_SORTING, sortingProcessor.processToObject(panlTokenMap));
-		panlObject.put(JSON_KEY_QUERY_OPERAND, queryOperandProcessor.processToObject(panlTokenMap));
-		panlObject.put(JSON_KEY_FIELDS, fieldsProcessor.processToObject(panlTokenMap, fieldSet));
-		panlObject.put(JSON_KEY_CANONICAL_URI, canonicalURIProcessor.processToString(panlTokenMap));
+		panlObject.put(Constants.Json.Panl.ACTIVE, activeProcessor.processToObject(panlTokenMap));
+		panlObject.put(Constants.Json.Panl.SEARCH, searchFieldsProcessor.processToObject(panlTokenMap));
+		panlObject.put(Constants.Json.Panl.PAGINATION, paginationProcessor.processToObject(panlTokenMap, solrQueryResponse));
+		panlObject.put(Constants.Json.Panl.SORTING, sortingProcessor.processToObject(panlTokenMap));
+		panlObject.put(Constants.Json.Panl.QUERY_OPERAND, queryOperandProcessor.processToObject(panlTokenMap));
+		panlObject.put(Constants.Json.Panl.FIELDS, fieldsProcessor.processToObject(panlTokenMap, fieldSet));
+		panlObject.put(Constants.Json.Panl.CANONICAL_URI, canonicalURIProcessor.processToString(panlTokenMap));
 
 		// now add in the timings
 		JSONObject timingsObject = new JSONObject();
@@ -489,28 +459,29 @@ public class CollectionRequestHandler {
 		long buildResponseTime = System.nanoTime() - startNanos;
 
 		// add in some statistics
-		timingsObject.put(JSON_KEY_PANL_PARSE_REQUEST_TIME, TimeUnit.NANOSECONDS.toMillis(parseRequestNanos));
-		timingsObject.put(JSON_KEY_PANL_BUILD_REQUEST_TIME, TimeUnit.NANOSECONDS.toMillis(buildRequestNanos));
-		timingsObject.put(JSON_KEY_PANL_SEND_REQUEST_TIME, TimeUnit.NANOSECONDS.toMillis(sendAndReceiveNanos));
+		timingsObject.put(Constants.Json.Panl.PARSE_REQUEST_TIME,
+				TimeUnit.NANOSECONDS.toMillis(parseRequestNanos));
+		timingsObject.put(Constants.Json.Panl.BUILD_REQUEST_TIME, TimeUnit.NANOSECONDS.toMillis(buildRequestNanos));
+		timingsObject.put(Constants.Json.Panl.SEND_REQUEST_TIME, TimeUnit.NANOSECONDS.toMillis(sendAndReceiveNanos));
 
-		timingsObject.put(JSON_KEY_PANL_BUILD_RESPONSE_TIME, TimeUnit.NANOSECONDS.toMillis(buildResponseTime));
-		timingsObject.put(JSON_KEY_PANL_TOTAL_TIME, TimeUnit.NANOSECONDS.toMillis(
+		timingsObject.put(Constants.Json.Panl.BUILD_RESPONSE_TIME, TimeUnit.NANOSECONDS.toMillis(buildResponseTime));
+		timingsObject.put(Constants.Json.Panl.TOTAL_TIME, TimeUnit.NANOSECONDS.toMillis(
 			parseRequestNanos +
 				buildRequestNanos +
 				sendAndReceiveNanos +
 				buildResponseTime
 		));
 
-		panlObject.put(JSON_KEY_TIMINGS, timingsObject);
+		panlObject.put(Constants.Json.Panl.TIMINGS, timingsObject);
 
-		solrJsonObject.put(ResourceHelper.JSON_KEY_ERROR, false);
+		solrJsonObject.put(Constants.Json.Response.ERROR, false);
 
 		JSONArray facetOrderJsonArray = collectionProperties.getPanlLpseFacetOrderJsonArray();
-		// TODO - we need to remove tthe facets which are not active
-		panlObject.put(JSON_KEY_PANL_FACETORDER, facetOrderJsonArray);
+		// TODO - we need to remove the facets which are not active
+		panlObject.put(Constants.Json.Panl.FACETORDER, facetOrderJsonArray);
 
 		// last thing - we want to put the panl to solr field mappings in
-		solrJsonObject.put(JSON_KEY_PANL, panlObject);
+		solrJsonObject.put(Constants.Json.Panl.PANL, panlObject);
 
 		return (solrJsonObject.toString());
 	}

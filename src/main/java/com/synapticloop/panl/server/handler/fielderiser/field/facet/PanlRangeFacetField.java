@@ -32,6 +32,7 @@ import com.synapticloop.panl.server.handler.tokeniser.LpseTokeniser;
 import com.synapticloop.panl.server.handler.tokeniser.token.LpseToken;
 import com.synapticloop.panl.server.handler.tokeniser.token.facet.RangeFacetLpseToken;
 import com.synapticloop.panl.server.handler.tokeniser.token.facet.bean.FromToBean;
+import com.synapticloop.panl.util.Constants;
 import com.synapticloop.panl.util.PanlLPSEHelper;
 import org.apache.solr.client.solrj.SolrQuery;
 import org.apache.solr.client.solrj.response.FacetField;
@@ -49,24 +50,6 @@ import static com.synapticloop.panl.server.handler.processor.Processor.*;
 public class PanlRangeFacetField extends PanlFacetField {
 	// LOGGER
 	private static final Logger LOGGER = LoggerFactory.getLogger(PanlRangeFacetField.class);
-
-	// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - //
-	//                        RANGE Facet property keys                        //
-	// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - //
-	public static final String PROPERTY_KEY_PANL_RANGE_MIN = "panl.range.min.";
-	public static final String PROPERTY_KEY_PANL_RANGE_MAX = "panl.range.max.";
-	public static final String PROPERTY_KEY_PANL_RANGE_MIN_WILDCARD = "panl.range.min.wildcard.";
-	public static final String PROPERTY_KEY_PANL_RANGE_MAX_WILDCARD = "panl.range.max.wildcard.";
-	public static final String PROPERTY_KEY_PANL_RANGE_SUPPRESS = "panl.range.suppress.";
-	public static final String PROPERTY_KEY_PANL_RANGE_PREFIX = "panl.range.prefix.";
-	public static final String PROPERTY_KEY_PANL_RANGE_SUFFIX = "panl.range.suffix.";
-	public static final String PROPERTY_KEY_PANL_RANGE_MIN_VALUE = "panl.range.min.value.";
-	public static final String PROPERTY_KEY_PANL_RANGE_MAX_VALUE = "panl.range.max.value.";
-
-	public static final String JSON_KEY_IS_RANGE_FACET = "is_range_facet";
-	public static final String JSON_KEY_BEFORE_MIN_VALUE = "before_min_value";
-	public static final String JSON_KEY_RANGE_MAX_VALUE = "range_max_value";
-	public static final String JSON_KEY_RANGE_MIN_VALUE = "range_min_value";
 
 	// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - //
 	//                          RANGE Facet properties                         //
@@ -99,38 +82,39 @@ public class PanlRangeFacetField extends PanlFacetField {
 		super(lpseCode, propertyKey, properties, solrCollection, panlCollectionUri, lpseLength);
 
 		// get the other properties, if they exist...
-		this.rangeMinValue = properties.getProperty(PROPERTY_KEY_PANL_RANGE_MIN + lpseCode, null);
+		this.rangeMinValue = properties.getProperty(Constants.Property.Panl.PANL_RANGE_MIN + lpseCode, null);
 		if (null != this.rangeMinValue) {
 			hasMinRange = true;
 		}
 
-		this.rangeMaxValue = properties.getProperty(PROPERTY_KEY_PANL_RANGE_MAX + lpseCode, null);
+		this.rangeMaxValue = properties.getProperty(Constants.Property.Panl.PANL_RANGE_MAX + lpseCode, null);
 		if (null != this.rangeMaxValue) {
 			hasMaxRange = true;
 		}
 
-		this.rangePrefix = properties.getProperty(PROPERTY_KEY_PANL_RANGE_PREFIX + lpseCode, null);
+		this.rangePrefix = properties.getProperty(Constants.Property.Panl.PANL_RANGE_PREFIX + lpseCode, null);
 		if (null != this.rangePrefix) {
 			hasRangePrefix = true;
 		}
 
-		this.rangeSuffix = properties.getProperty(PROPERTY_KEY_PANL_RANGE_SUFFIX + lpseCode, null);
+		this.rangeSuffix = properties.getProperty(Constants.Property.Panl.PANL_RANGE_SUFFIX + lpseCode, null);
 		if (null != this.rangeSuffix) {
 			hasRangeSuffix = true;
 		}
 
-		this.rangeValueInfix = properties.getProperty(PROPERTY_KEY_PANL_RANGE_INFIX + lpseCode, null);
+		this.rangeValueInfix = properties.getProperty(Constants.Property.Panl.PANL_RANGE_INFIX + lpseCode, null);
 		if (null != this.rangeValueInfix) {
 			hasRangeInfix = true;
 		}
 
-		this.rangeMinValueReplacement = properties.getProperty(PROPERTY_KEY_PANL_RANGE_MIN_VALUE + lpseCode, null);
-		this.rangeMaxValueReplacement = properties.getProperty(PROPERTY_KEY_PANL_RANGE_MAX_VALUE + lpseCode, null);
-		this.hasMinRangeWildcard = properties.getProperty(PROPERTY_KEY_PANL_RANGE_MIN_WILDCARD + lpseCode, "false")
+		this.rangeMinValueReplacement = properties.getProperty(Constants.Property.Panl.PANL_RANGE_MIN_VALUE + lpseCode,
+				null);
+		this.rangeMaxValueReplacement = properties.getProperty(Constants.Property.Panl.PANL_RANGE_MAX_VALUE + lpseCode, null);
+		this.hasMinRangeWildcard = properties.getProperty(Constants.Property.Panl.PANL_RANGE_MIN_WILDCARD + lpseCode, "false")
 		                                     .equals("true");
-		this.hasMaxRangeWildcard = properties.getProperty(PROPERTY_KEY_PANL_RANGE_MAX_WILDCARD + lpseCode, "false")
+		this.hasMaxRangeWildcard = properties.getProperty(Constants.Property.Panl.PANL_RANGE_MAX_WILDCARD + lpseCode, "false")
 		                                     .equals("true");
-		this.rangeSuppress = properties.getProperty(PROPERTY_KEY_PANL_RANGE_SUPPRESS + lpseCode, "false").equals("true");
+		this.rangeSuppress = properties.getProperty(Constants.Property.Panl.PANL_RANGE_SUPPRESS + lpseCode, "false").equals("true");
 	}
 
 	@Override
@@ -250,7 +234,7 @@ public class PanlRangeFacetField extends PanlFacetField {
 	}
 
 	@Override public void appendToAvailableObjectInternal(JSONObject jsonObject) {
-		jsonObject.put(JSON_KEY_IS_RANGE_FACET, true);
+		jsonObject.put(Constants.Json.Panl.IS_RANGE_FACET, true);
 	}
 
 	/**
@@ -310,9 +294,9 @@ public class PanlRangeFacetField extends PanlFacetField {
 
 			if (shouldAdd) {
 				JSONObject facetValueObject = new JSONObject();
-				facetValueObject.put(JSON_KEY_VALUE, valueName);
-				facetValueObject.put(JSON_KEY_COUNT, value.getCount());
-				facetValueObject.put(JSON_KEY_ENCODED, getEncodedPanlValue(valueName));
+				facetValueObject.put(Constants.Json.Panl.VALUE, valueName);
+				facetValueObject.put(Constants.Json.Panl.COUNT, value.getCount());
+				facetValueObject.put(Constants.Json.Panl.ENCODED, getEncodedPanlValue(valueName));
 				facetValueArrays.put(facetValueObject);
 			}
 		}
@@ -331,9 +315,9 @@ public class PanlRangeFacetField extends PanlFacetField {
 		// if we don't have any values for this facet, don't put it in
 
 		if (shouldIncludeFacet) {
-			facetObject.put(JSON_KEY_VALUES, facetValueArrays);
+			facetObject.put(Constants.Json.Panl.VALUES, facetValueArrays);
 			if (null != lpseCode) {
-				facetObject.put(JSON_KEY_URIS,
+				facetObject.put(Constants.Json.Panl.URIS,
 							getAdditionURIObject(
 										collectionProperties,
 										this,
@@ -350,22 +334,22 @@ public class PanlRangeFacetField extends PanlFacetField {
 				Map<String, List<LpseToken>> panlTokenMap) {
 
 		// put this in the array please
-		rangeFacetObject.put(JSON_KEY_FACET_NAME, collectionProperties.getSolrFieldNameFromLpseCode(lpseCode));
-		rangeFacetObject.put(JSON_KEY_NAME, collectionProperties.getPanlNameFromPanlCode(lpseCode));
-		rangeFacetObject.put(JSON_KEY_PANL_CODE, lpseCode);
-		rangeFacetObject.put(JSON_KEY_MIN, getMinRange());
-		rangeFacetObject.put(JSON_KEY_MAX, getMaxRange());
-		rangeFacetObject.put(JSON_KEY_PREFIX, PanlLPSEHelper.encodeURIPath(getValuePrefix()));
-		rangeFacetObject.put(JSON_KEY_SUFFIX, PanlLPSEHelper.encodeURIPath(getValueSuffix()));
+		rangeFacetObject.put(Constants.Json.Panl.FACET_NAME, collectionProperties.getSolrFieldNameFromLpseCode(lpseCode));
+		rangeFacetObject.put(Constants.Json.Panl.NAME, collectionProperties.getPanlNameFromPanlCode(lpseCode));
+		rangeFacetObject.put(Constants.Json.Panl.PANL_CODE, lpseCode);
+		rangeFacetObject.put(Constants.Json.Panl.MIN, getMinRange());
+		rangeFacetObject.put(Constants.Json.Panl.MAX, getMaxRange());
+		rangeFacetObject.put(Constants.Json.Panl.PREFIX, PanlLPSEHelper.encodeURIPath(getValuePrefix()));
+		rangeFacetObject.put(Constants.Json.Panl.SUFFIX, PanlLPSEHelper.encodeURIPath(getValueSuffix()));
 
 		// range min and max values
 		if (null != rangeMaxValueReplacement) {
-			rangeFacetObject.put(JSON_KEY_RANGE_MAX_VALUE,
+			rangeFacetObject.put(Constants.Json.Panl.RANGE_MAX_VALUE,
 					PanlLPSEHelper.encodeURIPath(rangeMaxValueReplacement));
 		}
 
 		if (null != rangeMinValueReplacement) {
-			rangeFacetObject.put(JSON_KEY_RANGE_MIN_VALUE,
+			rangeFacetObject.put(Constants.Json.Panl.RANGE_MIN_VALUE,
 					PanlLPSEHelper.encodeURIPath(rangeMinValueReplacement));
 		}
 
@@ -374,14 +358,14 @@ public class PanlRangeFacetField extends PanlFacetField {
 		if (panlTokenMap.containsKey(lpseCode)) {
 			RangeFacetLpseToken rangeFacetLpseToken = (RangeFacetLpseToken) panlTokenMap.get(lpseCode).get(0);
 			if (null != rangeFacetLpseToken.getToValue()) {
-				rangeFacetObject.put(JSON_KEY_VALUE, rangeFacetLpseToken.getValue());
-				rangeFacetObject.put(JSON_KEY_VALUE_TO, rangeFacetLpseToken.getToValue());
+				rangeFacetObject.put(Constants.Json.Panl.VALUE, rangeFacetLpseToken.getValue());
+				rangeFacetObject.put(Constants.Json.Panl.VALUE_TO, rangeFacetLpseToken.getToValue());
 			}
 		}
 
 		// addition URIs are a little bit different...
 		JSONObject additionURIObject = getRangeAdditionURIObject(collectionProperties, panlTokenMap);
-		rangeFacetObject.put(JSON_KEY_URIS, additionURIObject);
+		rangeFacetObject.put(Constants.Json.Panl.URIS, additionURIObject);
 
 
 		return (true);
@@ -416,7 +400,7 @@ public class PanlRangeFacetField extends PanlFacetField {
 				// at this point we want to also do the min value replacement, if it
 				// exists
 				if (null != rangeMinValueReplacement) {
-					additionObject.put(JSON_KEY_BEFORE_MIN_VALUE,
+					additionObject.put(Constants.Json.Panl.BEFORE_MIN_VALUE,
 								lpseUri + PanlLPSEHelper.encodeURIPath(rangeMinValueReplacement));
 				}
 
@@ -433,20 +417,20 @@ public class PanlRangeFacetField extends PanlFacetField {
 
 				if (hasRangeInfix) {
 					// we have the infix
-					additionObject.put(JSON_KEY_HAS_INFIX, true);
-					additionObject.put(JSON_KEY_DURING, PanlLPSEHelper.encodeURIPath(rangeValueInfix));
+					additionObject.put(Constants.Json.Panl.HAS_INFIX, true);
+					additionObject.put(Constants.Json.Panl.DURING, PanlLPSEHelper.encodeURIPath(rangeValueInfix));
 				} else {
 					// we shall use the value suffix and prefix;
-					additionObject.put(JSON_KEY_HAS_INFIX, false);
+					additionObject.put(Constants.Json.Panl.HAS_INFIX, false);
 					additionObject.put(
-								JSON_KEY_DURING,
+								Constants.Json.Panl.DURING,
 							PanlLPSEHelper.encodeURIPath(getValueSuffix()) +
 											JSON_VALUE_NO_INFIX_REPLACEMENT +
 									PanlLPSEHelper.encodeURIPath(getValuePrefix()));
 				}
 
 
-				additionObject.put(JSON_KEY_BEFORE, lpseUri.toString());
+				additionObject.put(Constants.Json.Panl.BEFORE, lpseUri.toString());
 				lpseUri.setLength(0);
 
 				if (hasRangeInfix) {
@@ -464,10 +448,10 @@ public class PanlRangeFacetField extends PanlFacetField {
 			}
 		}
 
-		additionObject.put(JSON_KEY_AFTER, lpseUri.toString() + lpseCodeUri.toString() + FORWARD_SLASH);
+		additionObject.put(Constants.Json.Panl.AFTER, lpseUri.toString() + lpseCodeUri.toString() + FORWARD_SLASH);
 
 		if (null != rangeMaxValueReplacement) {
-			additionObject.put(JSON_KEY_AFTER_MAX_VALUE, lpseUriAfterMax.toString() + lpseCodeUri.toString() + FORWARD_SLASH);
+			additionObject.put(Constants.Json.Panl.AFTER_MAX_VALUE, lpseUriAfterMax.toString() + lpseCodeUri.toString() + FORWARD_SLASH);
 		}
 		return (additionObject);
 	}
@@ -758,7 +742,7 @@ public class PanlRangeFacetField extends PanlFacetField {
 
 			if (baseField.getLpseCode().equals(additionLpseCode)) {
 
-				additionObject.put(JSON_KEY_BEFORE, lpseUri.toString());
+				additionObject.put(Constants.Json.Panl.BEFORE, lpseUri.toString());
 				lpseUri.setLength(0);
 				lpseCode.append(baseField.getLpseCode());
 
@@ -766,8 +750,8 @@ public class PanlRangeFacetField extends PanlFacetField {
 			}
 		}
 
-		additionObject.put(JSON_KEY_AFTER, lpseUri.toString() + lpseCode.toString() + FORWARD_SLASH);
-		additionObject.put(JSON_KEY_AFTER_MAX_VALUE, lpseUriAfterMax.toString() + lpseCode.toString() + FORWARD_SLASH);
+		additionObject.put(Constants.Json.Panl.AFTER, lpseUri.toString() + lpseCode.toString() + FORWARD_SLASH);
+		additionObject.put(Constants.Json.Panl.AFTER_MAX_VALUE, lpseUriAfterMax.toString() + lpseCode.toString() + FORWARD_SLASH);
 		return (additionObject);
 	}
 
@@ -814,18 +798,18 @@ public class PanlRangeFacetField extends PanlFacetField {
 	}
 
 	public void addToRemoveObject(JSONObject removeObject, LpseToken lpseToken) {
-		removeObject.put(JSON_KEY_IS_RANGE_FACET, true);
+		removeObject.put(Constants.Json.Panl.IS_RANGE_FACET, true);
 
 		RangeFacetLpseToken rangeFacetLpseToken = (RangeFacetLpseToken) lpseToken;
 		if (rangeFacetLpseToken.getIsRangeToken()) {
-			removeObject.put(JSON_KEY_HAS_INFIX, hasRangeInfix);
+			removeObject.put(Constants.Json.Panl.HAS_INFIX, hasRangeInfix);
 
 			String toValue = rangeFacetLpseToken.getToValue();
 
 			if (null == toValue) {
-				removeObject.remove(JSON_KEY_VALUE_TO);
+				removeObject.remove(Constants.Json.Panl.VALUE_TO);
 			} else {
-				removeObject.put(JSON_KEY_VALUE_TO, toValue);
+				removeObject.put(Constants.Json.Panl.VALUE_TO, toValue);
 			}
 		}
 	}

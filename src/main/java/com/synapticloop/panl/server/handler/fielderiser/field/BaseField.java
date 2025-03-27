@@ -32,6 +32,7 @@ import com.synapticloop.panl.server.handler.tokeniser.LpseTokeniser;
 import com.synapticloop.panl.server.handler.tokeniser.token.facet.FacetLpseToken;
 import com.synapticloop.panl.server.handler.tokeniser.token.LpseToken;
 import com.synapticloop.panl.server.handler.tokeniser.token.facet.RangeFacetLpseToken;
+import com.synapticloop.panl.util.Constants;
 import com.synapticloop.panl.util.PanlLPSEHelper;
 import org.apache.solr.client.solrj.SolrQuery;
 import org.apache.solr.client.solrj.response.FacetField;
@@ -45,47 +46,11 @@ import java.nio.charset.StandardCharsets;
 import java.util.*;
 
 import static com.synapticloop.panl.server.handler.processor.Processor.*;
-import static com.synapticloop.panl.server.handler.properties.CollectionProperties.PROPERTY_KEY_PANL_SORT_FIELDS;
 
 /**
  * <p>This is the Base Field for all fields.</p>
  */
 public abstract class BaseField {
-
-	public static final String JSON_KEY_FACET_NAME = "facet_name";
-	public static final String JSON_KEY_NAME = "name";
-	public static final String JSON_KEY_PANL_CODE = "panl_code";
-	public static final String JSON_KEY_VALUE = "value";
-	public static final String JSON_KEY_COUNT = "count";
-	public static final String JSON_KEY_ENCODED = "encoded";
-	public static final String JSON_KEY_ENCODED_MULTI = "encoded_multi";
-	public static final String JSON_KEY_VALUES = "values";
-	public static final String JSON_KEY_FACET_LIMIT = "facet_limit";
-	public static final String JSON_KEY_URIS = "uris";
-	public static final String JSON_KEY_IS_MULTIVALUE = "is_multivalue";
-	public static final String JSON_KEY_EXTRA = "extra";
-	public static final String JSON_KEY_VALUE_SEPARATOR = "value_separator";
-
-	public static final String PROPERTY_KEY_IS_MULTIVALUE = "panl.multivalue.";
-	public static final String PROPERTY_KEY_MULTIVALUE_SEPARATOR = "panl.multivalue.separator.";
-
-	public static final String PROPERTY_KEY_PANL_FACET = "panl.facet.";
-	public static final String PROPERTY_KEY_PANL_EXTRA = "panl.extra.";
-	public static final String PROPERTY_KEY_PANL_FACETSORT = "panl.facetsort.";
-	public static final String PROPERTY_KEY_PANL_FIELD = "panl.field.";
-	public static final String PROPERTY_KEY_PANL_INCLUDE_SAME_NUMBER_FACETS = "panl.include.same.number.facets";
-	public static final String PROPERTY_KEY_PANL_INCLUDE_SINGLE_FACETS = "panl.include.single.facets";
-	public static final String PROPERTY_KEY_PANL_NAME = "panl.name.";
-	public static final String PROPERTY_KEY_PANL_OR_ALWAYS = "panl.or.always.";
-	public static final String PROPERTY_KEY_PANL_OR_FACET = "panl.or.facet.";
-	public static final String PROPERTY_KEY_PANL_OR_SEPARATOR = "panl.or.separator.";
-	public static final String PROPERTY_KEY_PANL_PREFIX = "panl.prefix.";
-	public static final String PROPERTY_KEY_PANL_RANGE_FACET = "panl.range.facet.";
-	public static final String PROPERTY_KEY_PANL_RANGE_INFIX = "panl.range.infix.";
-	public static final String PROPERTY_KEY_PANL_SUFFIX = "panl.suffix.";
-	public static final String PROPERTY_KEY_PANL_TYPE = "panl.type.";
-	public static final String PROPERTY_KEY_PANL_UNLESS = "panl.unless.";
-	public static final String PROPERTY_KEY_PANL_WHEN = "panl.when.";
 
 	public static final String TYPE_SOLR_BOOL_FIELD = "solr.BoolField";
 	public static final String TYPE_SOLR_INT_POINT_FIELD = "solr.IntPointField";
@@ -153,10 +118,10 @@ public abstract class BaseField {
 			int lpseLength) throws PanlServerException {
 
 		this.panlIncludeSingleFacets = properties
-				.getProperty(PROPERTY_KEY_PANL_INCLUDE_SINGLE_FACETS, "false")
+				.getProperty(Constants.Property.Panl.PANL_INCLUDE_SINGLE_FACETS, "false")
 				.equals("true");
 		this.panlIncludeSameNumberFacets = properties
-				.getProperty(PROPERTY_KEY_PANL_INCLUDE_SAME_NUMBER_FACETS, "false")
+				.getProperty(Constants.Property.Panl.PANL_INCLUDE_SAME_NUMBER_FACETS, "false")
 				.equals("true");
 
 		this.lpseCode = lpseCode;
@@ -166,14 +131,14 @@ public abstract class BaseField {
 		this.panlCollectionUri = panlCollectionUri;
 		this.lpseLength = lpseLength;
 		this.facetSortByIndex = properties
-				.getProperty(PROPERTY_KEY_PANL_FACETSORT + this.lpseCode, "count")
+				.getProperty(Constants.Property.Panl.PANL_FACETSORT + this.lpseCode, "count")
 				.equals("index");
 		this.isMultiValue = properties
-				.getProperty(PROPERTY_KEY_IS_MULTIVALUE + this.lpseCode, "false")
+				.getProperty(Constants.Property.Panl.IS_MULTIVALUE + this.lpseCode, "false")
 				.equals("true");
 
 		String extraJSONObjectString = properties
-				.getProperty(PROPERTY_KEY_PANL_EXTRA + this.lpseCode, null);
+				.getProperty(Constants.Property.Panl.PANL_EXTRA + this.lpseCode, null);
 
 		if(null != extraJSONObjectString) {
 			try {
@@ -187,7 +152,7 @@ public abstract class BaseField {
 
 		// if it is multivalued, then we will see if we have a multivalued separator
 		this.valueSeparator = properties
-				.getProperty(PROPERTY_KEY_MULTIVALUE_SEPARATOR + this.lpseCode, null);
+				.getProperty(Constants.Property.Panl.MULTIVALUE_SEPARATOR + this.lpseCode, null);
 		if(this.valueSeparator != null) {
 			if(this.valueSeparator.isEmpty()) {
 				String message = String.format(
@@ -195,7 +160,7 @@ public abstract class BaseField {
 								"the property '%s%s' will be ignored.",
 						lpseCode,
 						lpseCode,
-						PROPERTY_KEY_IS_MULTIVALUE);
+						Constants.Property.Panl.IS_MULTIVALUE);
 				getLogger().warn(message);
 				this.valueSeparator = null;
 			} else if (this.valueSeparator.trim().equals("/")) {
@@ -204,7 +169,7 @@ public abstract class BaseField {
 								"the property '%s%s' will be ignored.",
 						lpseCode,
 						lpseCode,
-						PROPERTY_KEY_IS_MULTIVALUE);
+						Constants.Property.Panl.IS_MULTIVALUE);
 				getLogger().warn(message);
 			} else {
 				// if this is not multivalued, then you cannot have a multivalued separator
@@ -213,11 +178,11 @@ public abstract class BaseField {
 							"LPSE code '%s' sets a multivalued (or) separator but does __NOT__ define this field as being multivalued " +
 									"see property '%s%s' and '%s%s'.  The property '%s%s' will be ignored.",
 							lpseCode,
-							PROPERTY_KEY_MULTIVALUE_SEPARATOR,
+							Constants.Property.Panl.MULTIVALUE_SEPARATOR,
 							lpseCode,
-							PROPERTY_KEY_IS_MULTIVALUE,
+							Constants.Property.Panl.IS_MULTIVALUE,
 							lpseCode,
-							PROPERTY_KEY_MULTIVALUE_SEPARATOR,
+							Constants.Property.Panl.MULTIVALUE_SEPARATOR,
 							lpseCode);
 
 					getLogger().warn(message);
@@ -229,7 +194,7 @@ public abstract class BaseField {
 		}
 
 
-		if (!propertyKey.equals(PROPERTY_KEY_PANL_SORT_FIELDS)) {
+		if (!propertyKey.equals(Constants.Property.Panl.PANL_SORT_FIELDS)) {
 			// sort keys can be longer than the panlParamSort property code
 
 			if (this.lpseCode.length() != lpseLength) {
@@ -253,29 +218,29 @@ public abstract class BaseField {
 	protected void validateProperties() throws PanlServerException {
 		boolean hasErrors = false;
 		// check for or facet and range facet
-		boolean orFacet = properties.getProperty(PROPERTY_KEY_PANL_OR_FACET + this.lpseCode, "false").equals("true");
-		boolean rangeFacet = properties.getProperty(PROPERTY_KEY_PANL_RANGE_FACET + this.lpseCode, "false").equals("true");
+		boolean orFacet = properties.getProperty(Constants.Property.Panl.PANL_OR_FACET + this.lpseCode, "false").equals("true");
+		boolean rangeFacet = properties.getProperty(Constants.Property.Panl.PANL_RANGE_FACET + this.lpseCode, "false").equals("true");
 		if (orFacet && rangeFacet) {
 			hasErrors = true;
 			getLogger().error("You __MAY_NOT__ set a facet to both OR and RANGE.  Properties: '{}{}' and '{}{}'.",
-					PROPERTY_KEY_PANL_OR_FACET,
+					Constants.Property.Panl.PANL_OR_FACET,
 					this.lpseCode,
-					PROPERTY_KEY_PANL_RANGE_FACET,
+					Constants.Property.Panl.PANL_RANGE_FACET,
 					this.lpseCode);
 		}
 
 		if (rangeFacet) {
-			String infix = properties.getProperty(PROPERTY_KEY_PANL_RANGE_INFIX + this.lpseCode, null);
+			String infix = properties.getProperty(Constants.Property.Panl.PANL_RANGE_INFIX + this.lpseCode, null);
 			if (null != infix) {
 				if (infix.equals("-")) {
 					hasErrors = true;
 					getLogger().error("You __MAY_NOT__ set an infix value to the minus character '-'.  Property: '{}{}'.",
-							PROPERTY_KEY_PANL_RANGE_INFIX,
+							Constants.Property.Panl.PANL_RANGE_INFIX,
 							this.lpseCode);
 				} else if (infix.contains("-")) {
 					getLogger().warn(
 							"Setting an infix value that contains the minus character '-' __MAY__ cause parsing errors.  Property: '{}{}'.",
-							PROPERTY_KEY_PANL_RANGE_INFIX,
+							Constants.Property.Panl.PANL_RANGE_INFIX,
 							this.lpseCode);
 				}
 			}
@@ -292,7 +257,7 @@ public abstract class BaseField {
 	 */
 	protected void populateSolrFieldTypeValidation() {
 		if (null == this.solrFieldType) {
-			this.solrFieldType = properties.getProperty(PROPERTY_KEY_PANL_TYPE + lpseCode);
+			this.solrFieldType = properties.getProperty(Constants.Property.Panl.PANL_TYPE + lpseCode);
 			switch (this.solrFieldType) {
 				case TYPE_SOLR_INT_POINT_FIELD:
 				case TYPE_SOLR_LONG_POINT_FIELD:
@@ -319,13 +284,13 @@ public abstract class BaseField {
 	 * Solr field name.</p>
 	 */
 	protected void populatePanlAndSolrFieldNames() {
-		this.solrFieldName = properties.getProperty(PROPERTY_KEY_PANL_FACET + lpseCode);
+		this.solrFieldName = properties.getProperty(Constants.Property.Panl.PANL_FACET + lpseCode);
 
 		if (null == this.solrFieldName) {
-			this.solrFieldName = properties.getProperty(PROPERTY_KEY_PANL_FIELD + lpseCode);
+			this.solrFieldName = properties.getProperty(Constants.Property.Panl.PANL_FIELD + lpseCode);
 		}
 
-		String panlFieldNameTemp = properties.getProperty(PROPERTY_KEY_PANL_NAME + this.lpseCode, null);
+		String panlFieldNameTemp = properties.getProperty(Constants.Property.Panl.PANL_NAME + this.lpseCode, null);
 		if (null == panlFieldNameTemp) {
 			this.panlFieldName = solrFieldName;
 		} else {
@@ -799,19 +764,19 @@ public abstract class BaseField {
 	 * @param jsonObject The JSON object to append values to
 	 */
 	public void appendToAvailableFacetObject(JSONObject jsonObject) {
-		jsonObject.put(JSON_KEY_FACET_NAME, this.solrFieldName);
-		jsonObject.put(JSON_KEY_NAME, this.panlFieldName);
-		jsonObject.put(JSON_KEY_PANL_CODE, this.lpseCode);
+		jsonObject.put(Constants.Json.Panl.FACET_NAME, this.solrFieldName);
+		jsonObject.put(Constants.Json.Panl.NAME, this.panlFieldName);
+		jsonObject.put(Constants.Json.Panl.PANL_CODE, this.lpseCode);
 
 		if(null != extraJSONObject) {
-			jsonObject.put(JSON_KEY_EXTRA, extraJSONObject);
+			jsonObject.put(Constants.Json.Panl.EXTRA, extraJSONObject);
 		}
 
 		if (this.isMultiValue) {
-			jsonObject.put(JSON_KEY_IS_MULTIVALUE, this.isMultiValue);
+			jsonObject.put(Constants.Json.Panl.IS_MULTIVALUE, this.isMultiValue);
 
 			if(null != valueSeparator) {
-				jsonObject.put(JSON_KEY_VALUE_SEPARATOR, this.valueSeparator);
+				jsonObject.put(Constants.Json.Panl.VALUE_SEPARATOR, this.valueSeparator);
 			}
 		}
 
@@ -892,12 +857,12 @@ public abstract class BaseField {
 
 			if (shouldAdd) {
 				JSONObject facetValueObject = new JSONObject();
-				facetValueObject.put(JSON_KEY_VALUE, valueName);
-				facetValueObject.put(JSON_KEY_COUNT, value.getCount());
-				facetValueObject.put(JSON_KEY_ENCODED, getEncodedPanlValue(valueName));
+				facetValueObject.put(Constants.Json.Panl.VALUE, valueName);
+				facetValueObject.put(Constants.Json.Panl.COUNT, value.getCount());
+				facetValueObject.put(Constants.Json.Panl.ENCODED, getEncodedPanlValue(valueName));
 
 				if(isMultiValue) {
-					facetValueObject.put(JSON_KEY_ENCODED_MULTI, PanlLPSEHelper.encodeURIPath(valueName));
+					facetValueObject.put(Constants.Json.Panl.ENCODED_MULTI, PanlLPSEHelper.encodeURIPath(valueName));
 				}
 				facetValueArrays.put(facetValueObject);
 			}
@@ -917,10 +882,10 @@ public abstract class BaseField {
 		// if we don't have any values for this facet, don't put it in
 
 		if (shouldIncludeFacet) {
-			facetObject.put(JSON_KEY_VALUES, facetValueArrays);
-			facetObject.put(JSON_KEY_FACET_LIMIT, collectionProperties.getSolrFacetLimit());
+			facetObject.put(Constants.Json.Panl.VALUES, facetValueArrays);
+			facetObject.put(Constants.Json.Panl.FACET_LIMIT, collectionProperties.getSolrFacetLimit());
 			if (null != lpseCode) {
-				facetObject.put(JSON_KEY_URIS,
+				facetObject.put(Constants.Json.Panl.URIS,
 						getAdditionURIObject(
 								collectionProperties,
 								this,
@@ -965,7 +930,7 @@ public abstract class BaseField {
 			if (baseField.getLpseCode().equals(additionLpseCode)) {
 
 				additionObject.put(
-						JSON_KEY_BEFORE,
+						Constants.Json.Panl.BEFORE,
 						lpseUri + baseField.getResetUriPath(
 								panlTokenMap,
 								collectionProperties));
@@ -978,7 +943,7 @@ public abstract class BaseField {
 			}
 		}
 
-		additionObject.put(JSON_KEY_AFTER, lpseUri.toString() + lpseCode.toString() + FORWARD_SLASH);
+		additionObject.put(Constants.Json.Panl.AFTER, lpseUri.toString() + lpseCode.toString() + FORWARD_SLASH);
 		return (additionObject);
 	}
 
@@ -1017,10 +982,10 @@ public abstract class BaseField {
 	 */
 	public void addToRemoveObject(JSONObject removeObject, LpseToken lpseToken) {
 		if(null != extraJSONObject) {
-			removeObject.put(JSON_KEY_EXTRA, extraJSONObject);
+			removeObject.put(Constants.Json.Panl.EXTRA, extraJSONObject);
 		}
 		if (this.isMultiValue) {
-			removeObject.put(JSON_KEY_IS_MULTIVALUE, true);
+			removeObject.put(Constants.Json.Panl.IS_MULTIVALUE, true);
 		}
 	}
 

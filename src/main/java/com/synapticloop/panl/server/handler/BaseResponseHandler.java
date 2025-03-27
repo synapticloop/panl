@@ -26,6 +26,7 @@ package com.synapticloop.panl.server.handler;
 
 import com.synapticloop.panl.server.handler.properties.PanlProperties;
 import com.synapticloop.panl.server.handler.webapp.util.ResourceHelper;
+import com.synapticloop.panl.util.Constants;
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
 import org.apache.http.entity.StringEntity;
@@ -72,17 +73,17 @@ public abstract class BaseResponseHandler {
 		getLogger().error("Internal server error, message was '{}'", exception.getMessage(), exception);
 		response.setStatusCode(HttpStatus.SC_INTERNAL_SERVER_ERROR);
 		JSONObject jsonObject = new JSONObject();
-		jsonObject.put(JSON_KEY_ERROR, true);
-		jsonObject.put(JSON_KEY_STATUS, HttpStatus.SC_INTERNAL_SERVER_ERROR);
+		jsonObject.put(Constants.Json.Response.ERROR, true);
+		jsonObject.put(Constants.Json.Response.STATUS, HttpStatus.SC_INTERNAL_SERVER_ERROR);
 		if (panlProperties.getUseVerbose500Messages()) {
-			jsonObject.put(JSON_KEY_MESSAGE,
+			jsonObject.put(Constants.Json.Response.MESSAGE,
 				String.format("Class: %s, message: %s.",
 					exception.getClass().getCanonicalName(),
 					exception.getMessage()));
 
 			response.setEntity(new StringEntity(jsonObject.toString(), ResourceHelper.CONTENT_TYPE_JSON));
 		} else {
-			jsonObject.put(JSON_KEY_MESSAGE, JSON_VALUE_MESSAGE_500);
+			jsonObject.put(Constants.Json.Response.MESSAGE, JSON_VALUE_MESSAGE_500);
 		}
 	}
 
@@ -101,13 +102,13 @@ public abstract class BaseResponseHandler {
 
 		JSONObject jsonObject = new JSONObject();
 
-		jsonObject.put(JSON_KEY_ERROR, true);
-		jsonObject.put(JSON_KEY_STATUS, HttpStatus.SC_NOT_FOUND);
+		jsonObject.put(Constants.Json.Response.ERROR, true);
+		jsonObject.put(Constants.Json.Response.STATUS, HttpStatus.SC_NOT_FOUND);
 		if (panlProperties.getUseVerbose404Messages()) {
-			jsonObject.put(JSON_KEY_MESSAGE, PanlDefaultHandler.JSON_VALUE_MESSAGE);
-			jsonObject.put(JSON_KEY_VALID_URLS, validUrls);
+			jsonObject.put(Constants.Json.Response.MESSAGE, PanlDefaultHandler.JSON_VALUE_MESSAGE);
+			jsonObject.put(Constants.Json.Response.VALID_URLS, validUrls);
 		} else {
-			jsonObject.put(JSON_KEY_MESSAGE, JSON_VALUE_MESSAGE_404);
+			jsonObject.put(Constants.Json.Response.MESSAGE, JSON_VALUE_MESSAGE_404);
 		}
 
 		response.setEntity(

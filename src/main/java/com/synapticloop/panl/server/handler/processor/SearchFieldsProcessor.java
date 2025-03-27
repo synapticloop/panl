@@ -27,6 +27,7 @@ package com.synapticloop.panl.server.handler.processor;
 import com.synapticloop.panl.server.handler.properties.CollectionProperties;
 import com.synapticloop.panl.server.handler.tokeniser.token.LpseToken;
 import com.synapticloop.panl.server.handler.tokeniser.token.param.QueryLpseToken;
+import com.synapticloop.panl.util.Constants;
 import org.apache.solr.client.solrj.response.QueryResponse;
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -43,7 +44,6 @@ import java.util.Set;
  * @author synapticloop
  */
 public class SearchFieldsProcessor extends Processor {
-	public static final String JSON_KEY_QUERY_RESPOND_TO = "query_respond_to";
 
 	public SearchFieldsProcessor(CollectionProperties collectionProperties) {
 		super(collectionProperties);
@@ -76,19 +76,19 @@ public class SearchFieldsProcessor extends Processor {
 				String value = searchCodesMap.get(panlCode);
 
 				JSONObject searchFieldsObject = new JSONObject();
-				searchFieldsObject.put(JSON_KEY_PANL_CODE, panlCode);
-				searchFieldsObject.put(JSON_KEY_VALUE, collectionProperties.getPanlNameFromSearchLpseCode(panlCode));
+				searchFieldsObject.put(Constants.Json.Panl.PANL_CODE, panlCode);
+				searchFieldsObject.put(Constants.Json.Panl.VALUE, collectionProperties.getPanlNameFromSearchLpseCode(panlCode));
 
 				// now put in whether this is active...
-				searchFieldsObject.put(JSON_KEY_ACTIVE, activeSearchCodes.contains(value));
+				searchFieldsObject.put(Constants.Json.Panl.ACTIVE, activeSearchCodes.contains(value));
 
 				jsonArray.put(searchFieldsObject);
 			}
-			jsonObject.put(JSON_KEY_FIELDS, jsonArray);
+			jsonObject.put(Constants.Json.Panl.FIELDS, jsonArray);
 		}
 
-		jsonObject.put(JSON_KEY_QUERY_RESPOND_TO, collectionProperties.getFormQueryRespondTo());
-		jsonObject.put(JSON_KEY_KEYWORD, keyword);
+		jsonObject.put(Constants.Json.Panl.QUERY_RESPOND_TO, collectionProperties.getFormQueryRespondTo());
+		jsonObject.put(Constants.Json.Panl.KEYWORD, keyword);
 
 		return jsonObject;
 	}

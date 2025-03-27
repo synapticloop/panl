@@ -29,6 +29,7 @@ import com.synapticloop.panl.server.handler.fielderiser.field.BaseField;
 import com.synapticloop.panl.server.handler.tokeniser.token.LpseToken;
 import com.synapticloop.panl.server.handler.tokeniser.token.param.NumRowsLpseToken;
 import com.synapticloop.panl.server.handler.tokeniser.token.param.PageNumLpseToken;
+import com.synapticloop.panl.util.Constants;
 import org.apache.solr.client.solrj.response.QueryResponse;
 import org.apache.solr.common.SolrDocumentList;
 import org.json.JSONObject;
@@ -39,15 +40,14 @@ import java.util.Map;
 
 public class PaginationProcessor extends Processor {
 
-	public static final String JSON_KEY_NUM_RESULTS = "num_results";
-	public static final String JSON_KEY_NUM_RESULTS_EXACT = "num_results_exact";
 
 	public PaginationProcessor(CollectionProperties collectionProperties) {
 		super(collectionProperties);
 	}
 
 	public JSONObject processToObject(Map<String, List<LpseToken>> panlTokenMap, QueryResponse queryResponse) {
-		SolrDocumentList solrDocuments = (SolrDocumentList) queryResponse.getResponse().get(JSON_KEY_SOLR_JSON_KEY_RESPONSE);
+		SolrDocumentList solrDocuments =
+				(SolrDocumentList) queryResponse.getResponse().get(Constants.Json.Solr.RESPONSE);
 		long numFound = solrDocuments.getNumFound();
 
 		// TODO - maybe check if the results would be out of bounds....
@@ -72,15 +72,15 @@ public class PaginationProcessor extends Processor {
 		}
 
 		JSONObject paginationObject = new JSONObject();
-		paginationObject.put(JSON_KEY_NUM_RESULTS, numFound);
-		paginationObject.put(JSON_KEY_NUM_RESULTS_EXACT, solrDocuments.getNumFoundExact());
-		paginationObject.put(JSON_KEY_NUM_PER_PAGE, numPerPage);
-		paginationObject.put(JSON_KEY_PAGE_NUM, pageNumber);
+		paginationObject.put(Constants.Json.Panl.NUM_RESULTS, numFound);
+		paginationObject.put(Constants.Json.Panl.NUM_RESULTS_EXACT, solrDocuments.getNumFoundExact());
+		paginationObject.put(Constants.Json.Panl.NUM_PER_PAGE, numPerPage);
+		paginationObject.put(Constants.Json.Panl.PAGE_NUM, pageNumber);
 		long numPages = numFound / numPerPage;
 		if (numFound % numPerPage != 0) {
 			numPages++;
 		}
-		paginationObject.put(JSON_KEY_NUM_PAGES, numPages);
+		paginationObject.put(Constants.Json.Panl.NUM_PAGES, numPages);
 
 		StringBuilder uriPath = new StringBuilder(FORWARD_SLASH);
 		StringBuilder lpseCode = new StringBuilder();
@@ -92,7 +92,7 @@ public class PaginationProcessor extends Processor {
 				uriPath.append(baseField.getURIPath(panlTokenMap, collectionProperties));
 				lpseCode.append(baseField.getLpseCode(panlTokenMap, collectionProperties));
 			} else {
-				pageUris.put(JSON_KEY_BEFORE, uriPath + baseField.getValuePrefix());
+				pageUris.put(Constants.Json.Panl.BEFORE, uriPath + baseField.getValuePrefix());
 				// clear the sting builder
 				lpseCode.append(baseField.getLpseCode());
 				uriPath.setLength(0);
@@ -102,19 +102,19 @@ public class PaginationProcessor extends Processor {
 		BaseField panlPageNumField = collectionProperties.getLpseField(panlParamPageLpseCode);
 
 		String afterValue = panlPageNumField.getValueSuffix() + FORWARD_SLASH + uriPath + lpseCode + FORWARD_SLASH;
-		pageUris.put(JSON_KEY_AFTER, afterValue);
+		pageUris.put(Constants.Json.Panl.AFTER, afterValue);
 
 		if (pageNumber < numPages) {
-			pageUris.put(JSON_KEY_NEXT, pageUris.getString(JSON_KEY_BEFORE) + (pageNumber + 1) + pageUris.getString(JSON_KEY_AFTER));
+			pageUris.put(Constants.Json.Panl.NEXT, pageUris.getString(Constants.Json.Panl.BEFORE) + (pageNumber + 1) + pageUris.getString(Constants.Json.Panl.AFTER));
 		}
 
 		if (pageNumber > 1) {
-			pageUris.put(JSON_KEY_PREVIOUS, pageUris.getString(JSON_KEY_BEFORE) + (pageNumber - 1) + pageUris.getString(JSON_KEY_AFTER));
+			pageUris.put(Constants.Json.Panl.PREVIOUS, pageUris.getString(Constants.Json.Panl.BEFORE) + (pageNumber - 1) + pageUris.getString(Constants.Json.Panl.AFTER));
 		}
 
-		paginationObject.put(JSON_KEY_PAGE_URIS, pageUris);
+		paginationObject.put(Constants.Json.Panl.PAGE_URIS, pageUris);
 
-		paginationObject.put(JSON_KEY_NUM_PER_PAGE_URIS,
+		paginationObject.put(Constants.Json.Panl.NUM_PER_PAGE_URIS,
 				getReplacementResetURIObject(
 						collectionProperties.getPanlParamNumRows(),
 						panlTokenMap,
@@ -150,7 +150,7 @@ public class PaginationProcessor extends Processor {
 				uriPath.append(baseField.getResetUriPath(panlTokenMap, collectionProperties));
 				lpseCode.append(baseField.getResetLpseCode(panlTokenMap, collectionProperties));
 			} else {
-				pageUris.put(JSON_KEY_BEFORE, uriPath + baseField.getValuePrefix());
+				pageUris.put(Constants.Json.Panl.BEFORE, uriPath + baseField.getValuePrefix());
 				// clear the sting builder
 				lpseCode.append(baseField.getLpseCode());
 				uriPath.setLength(0);
@@ -159,7 +159,7 @@ public class PaginationProcessor extends Processor {
 
 		BaseField baseField = collectionProperties.getLpseField(replaceLpseCode);
 
-		pageUris.put(JSON_KEY_AFTER, baseField.getValueSuffix() + FORWARD_SLASH + uriPath + lpseCode + FORWARD_SLASH);
+		pageUris.put(Constants.Json.Panl.AFTER, baseField.getValueSuffix() + FORWARD_SLASH + uriPath + lpseCode + FORWARD_SLASH);
 
 		return (pageUris);
 	}

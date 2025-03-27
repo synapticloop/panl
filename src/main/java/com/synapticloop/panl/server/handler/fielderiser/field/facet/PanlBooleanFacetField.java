@@ -29,6 +29,7 @@ import com.synapticloop.panl.server.handler.properties.CollectionProperties;
 import com.synapticloop.panl.server.handler.tokeniser.LpseTokeniser;
 import com.synapticloop.panl.server.handler.tokeniser.token.LpseToken;
 import com.synapticloop.panl.server.handler.tokeniser.token.facet.BooleanFacetLpseToken;
+import com.synapticloop.panl.util.Constants;
 import com.synapticloop.panl.util.PanlLPSEHelper;
 import org.apache.solr.client.solrj.SolrQuery;
 import org.json.JSONObject;
@@ -42,8 +43,6 @@ import static com.synapticloop.panl.server.handler.processor.Processor.*;
 public class PanlBooleanFacetField extends PanlFacetField {
 	public static final String BOOLEAN_TRUE_VALUE = "true";
 	public static final String BOOLEAN_FALSE_VALUE = "false";
-	public static final String JSON_KEY_IS_BOOLEAN_FACET = "is_boolean_facet";
-	public static final String JSON_KEY_CHECKBOX_VALUE = "checkbox_value";
 
 	// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - //
 	//                         BOOLEAN Facet properties                        //
@@ -82,8 +81,8 @@ public class PanlBooleanFacetField extends PanlFacetField {
 		populateSolrFieldTypeValidation();
 		populatePanlAndSolrFieldNames();
 
-		logWarnProperties(this.lpseCode, PROPERTY_KEY_PANL_OR_FACET + this.lpseCode);
-		logWarnProperties(this.lpseCode, PROPERTY_KEY_PANL_RANGE_FACET + this.lpseCode);
+		logWarnProperties(this.lpseCode, Constants.Property.Panl.PANL_OR_FACET + this.lpseCode);
+		logWarnProperties(this.lpseCode, Constants.Property.Panl.PANL_RANGE_FACET + this.lpseCode);
 		logDetails();
 	}
 
@@ -263,22 +262,22 @@ public class PanlBooleanFacetField extends PanlFacetField {
 	}
 
 	@Override public void appendToAvailableObjectInternal(JSONObject jsonObject) {
-		jsonObject.put(JSON_KEY_IS_BOOLEAN_FACET, true);
+		jsonObject.put(Constants.Json.Panl.IS_BOOLEAN_FACET, true);
 		if(this.isCheckbox) {
-			jsonObject.put(JSON_KEY_CHECKBOX_VALUE, this.checkboxValue);
+			jsonObject.put(Constants.Json.Panl.CHECKBOX_VALUE, this.checkboxValue);
 		}
 	}
 
 	@Override public void addToRemoveObject(JSONObject removeObject, LpseToken lpseToken) {
-		removeObject.put(JSON_KEY_IS_BOOLEAN_FACET, true);
+		removeObject.put(Constants.Json.Panl.IS_BOOLEAN_FACET, true);
 		BooleanFacetLpseToken booleanFacetLpseToken = (BooleanFacetLpseToken) lpseToken;
 
 		if (lpseToken.getIsValid()) {
 			// now we need to put in the inverse URI
-			removeObject.put(JSON_KEY_INVERSE_ENCODED, booleanFacetLpseToken.getInverseBooleanValue(lpseToken));
+			removeObject.put(Constants.Json.Panl.INVERSE_ENCODED, booleanFacetLpseToken.getInverseBooleanValue(lpseToken));
 
 			if(this.isCheckbox) {
-				removeObject.put(JSON_KEY_CHECKBOX_VALUE, this.checkboxValue);
+				removeObject.put(Constants.Json.Panl.CHECKBOX_VALUE, this.checkboxValue);
 			}
 		}
 

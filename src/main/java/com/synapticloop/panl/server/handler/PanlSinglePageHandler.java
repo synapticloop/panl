@@ -27,6 +27,7 @@ package com.synapticloop.panl.server.handler;
 import com.synapticloop.panl.server.handler.properties.CollectionProperties;
 import com.synapticloop.panl.server.handler.properties.PanlProperties;
 import com.synapticloop.panl.server.handler.webapp.util.ResourceHelper;
+import com.synapticloop.panl.util.Constants;
 import org.apache.http.HttpRequest;
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
@@ -43,8 +44,8 @@ import java.util.*;
 import static com.synapticloop.panl.server.handler.webapp.util.ResourceHelper.*;
 
 /**
- * <p>This is the single page handler which will return the configuration
- * for a specific CaFUP so that a single search page may be built.</p>
+ * <p>This is the single page handler which will return the configuration for a
+ * specific CaFUP so that a single search page may be built.</p>
  *
  * @author synapticloop
  */
@@ -94,21 +95,21 @@ public class PanlSinglePageHandler extends BaseResponseHandler implements HttpRe
 						context));
 
 				// now that we have the JSON object - time to remove the things we don't need
-				jsonObject.remove("responseHeader");
-				jsonObject.remove("response");
-				jsonObject.remove("facet_counts");
+				jsonObject.remove(Constants.Json.Solr.RESPONSE_HEADER);
+				jsonObject.remove(Constants.Json.Solr.RESPONSE);
+				jsonObject.remove(Constants.Json.Solr.FACET_COUNTS);
 
-				JSONObject panlJsonObject = jsonObject.getJSONObject("panl");
+				JSONObject panlJsonObject = jsonObject.getJSONObject(Constants.Json.Panl.PANL);
 
-				panlJsonObject.remove("pagination");
-				panlJsonObject.remove("active");
-				panlJsonObject.remove("query_operand");
-				panlJsonObject.remove("timings");
-				panlJsonObject.remove("canonical_uri");
+				panlJsonObject.remove(Constants.Json.Panl.PAGINATION);
+				panlJsonObject.remove(Constants.Json.Panl.ACTIVE);
+				panlJsonObject.remove(Constants.Json.Panl.QUERY_OPERAND);
+				panlJsonObject.remove(Constants.Json.Panl.TIMINGS);
+				panlJsonObject.remove(Constants.Json.Panl.CANONICAL_URI);
 
 				// now to add the data that we do need
 				List<String> lpseOrders = collectionRequestHandler.getLpseOrder();
-				panlJsonObject.put("lpse_order", new ArrayList<>());
+				panlJsonObject.put(Constants.Json.Panl.LPSE_ORDER, new ArrayList<>());
 				int i = 0;
 				JSONObject lpseLookupObject = new JSONObject();
 				for(String lpseOrder: lpseOrders) {
@@ -116,54 +117,54 @@ public class PanlSinglePageHandler extends BaseResponseHandler implements HttpRe
 					i++;
 				}
 
-				panlJsonObject.put("lpse_lookup", lpseLookupObject);
+				panlJsonObject.put(Constants.Json.Panl.LPSE_LOOKUP, lpseLookupObject);
 
 				// now go through the available facets and place them in the correct place
-				JSONObject availableJsonObject = panlJsonObject.getJSONObject("available");
+				JSONObject availableJsonObject = panlJsonObject.getJSONObject(Constants.Json.Panl.AVAILABLE);
 
 				// regular facets
-				for (Object regularFacets : availableJsonObject.getJSONArray("facets")) {
+				for (Object regularFacets : availableJsonObject.getJSONArray(Constants.Json.Panl.FACETS)) {
 					JSONObject regularFacetObject = (JSONObject) regularFacets;
-					String panlCode = regularFacetObject.getString("panl_code");
+					String panlCode = regularFacetObject.getString(Constants.Json.Panl.PANL_CODE);
 					if(null != panlCode) {
 						int lpseOrder = lpseLookupObject.optInt(panlCode, -1);
 						if(lpseOrder != -1) {
-							panlJsonObject.getJSONArray("lpse_order").put(lpseOrder, regularFacetObject);
+							panlJsonObject.getJSONArray(Constants.Json.Panl.LPSE_ORDER).put(lpseOrder, regularFacetObject);
 						}
 					}
 				}
 
 				// range facets always need to go after regular facets, as they are
 				// both returned, and the range must overwrite the regular one
-				for (Object rangeFacets : availableJsonObject.getJSONArray("range_facets")) {
+				for (Object rangeFacets : availableJsonObject.getJSONArray(Constants.Json.Panl.RANGE_FACETS)) {
 					JSONObject rangeFacetObject = (JSONObject) rangeFacets;
-					String panlCode = rangeFacetObject.getString("panl_code");
+					String panlCode = rangeFacetObject.getString(Constants.Json.Panl.PANL_CODE);
 					if(null != panlCode) {
 						int lpseOrder = lpseLookupObject.optInt(panlCode, -1);
 						if(lpseOrder != -1) {
-							rangeFacetObject.put("is_range_facet", true);
-							panlJsonObject.getJSONArray("lpse_order").put(lpseOrder, rangeFacetObject);
+							rangeFacetObject.put(Constants.Json.Panl.IS_RANGE_FACETS, true);
+							panlJsonObject.getJSONArray(Constants.Json.Panl.LPSE_ORDER).put(lpseOrder, rangeFacetObject);
 						}
 					}
 				}
 
 				// date range facets next
-				for (Object rangeFacets : availableJsonObject.getJSONArray("date_range_facets")) {
+				for (Object rangeFacets : availableJsonObject.getJSONArray(Constants.Json.Panl.DATE_RANGE_FACETS)) {
 					JSONObject rangeFacetObject = (JSONObject) rangeFacets;
-					String panlCode = rangeFacetObject.getString("panl_code");
+					String panlCode = rangeFacetObject.getString(Constants.Json.Panl.PANL_CODE);
 					if(null != panlCode) {
 						int lpseOrder = lpseLookupObject.optInt(panlCode, -1);
 						if(lpseOrder != -1) {
-							rangeFacetObject.put("is_date_range_facet", true);
-							panlJsonObject.getJSONArray("lpse_order").put(lpseOrder, rangeFacetObject);
+							rangeFacetObject.put(Constants.Json.Panl.IS_DATE_RANGE_FACET, true);
+							panlJsonObject.getJSONArray(Constants.Json.Panl.LPSE_ORDER).put(lpseOrder, rangeFacetObject);
 						}
 					}
 				}
 
 				// lastly remove the facets
-				panlJsonObject.remove("sorting");
-				panlJsonObject.remove("available");
-				panlJsonObject.remove("fields");
+				panlJsonObject.remove(Constants.Json.Panl.SORTING);
+				panlJsonObject.remove(Constants.Json.Panl.AVAILABLE);
+				panlJsonObject.remove(Constants.Json.Panl.FIELDS);
 
 				response.setStatusCode(HttpStatus.SC_OK);
 				response.setEntity(
@@ -177,17 +178,17 @@ public class PanlSinglePageHandler extends BaseResponseHandler implements HttpRe
 
 				response.setStatusCode(HttpStatus.SC_INTERNAL_SERVER_ERROR);
 				JSONObject jsonObject = new JSONObject();
-				jsonObject.put(JSON_KEY_ERROR, true);
-				jsonObject.put(JSON_KEY_STATUS, HttpStatus.SC_INTERNAL_SERVER_ERROR);
+				jsonObject.put(Constants.Json.Response.ERROR, true);
+				jsonObject.put(Constants.Json.Response.STATUS, HttpStatus.SC_INTERNAL_SERVER_ERROR);
 				if (panlProperties.getUseVerbose500Messages()) {
-					jsonObject.put(JSON_KEY_MESSAGE,
+					jsonObject.put(Constants.Json.Response.MESSAGE,
 							String.format("Class: %s, message: %s.",
 									e.getClass().getCanonicalName(),
 									e.getMessage()));
 
 					response.setEntity(new StringEntity(jsonObject.toString(), ResourceHelper.CONTENT_TYPE_JSON));
 				} else {
-					jsonObject.put(JSON_KEY_MESSAGE, JSON_VALUE_MESSAGE_500);
+					jsonObject.put(Constants.Json.Response.MESSAGE, JSON_VALUE_MESSAGE_500);
 				}
 			}
 		} else {
@@ -196,13 +197,13 @@ public class PanlSinglePageHandler extends BaseResponseHandler implements HttpRe
 			// TODO - set404ResponseMessage(HttpResponse response) method
 			JSONObject jsonObject = new JSONObject();
 
-			jsonObject.put(JSON_KEY_ERROR, true);
-			jsonObject.put(JSON_KEY_STATUS, HttpStatus.SC_NOT_FOUND);
+			jsonObject.put(Constants.Json.Response.ERROR, true);
+			jsonObject.put(Constants.Json.Response.STATUS, HttpStatus.SC_NOT_FOUND);
 			if (panlProperties.getUseVerbose404Messages()) {
-				jsonObject.put(JSON_KEY_MESSAGE, PanlDefaultHandler.JSON_VALUE_MESSAGE);
-				jsonObject.put(JSON_KEY_VALID_URLS, validUrls);
+				jsonObject.put(Constants.Json.Response.MESSAGE, PanlDefaultHandler.JSON_VALUE_MESSAGE);
+				jsonObject.put(Constants.Json.Response.VALID_URLS, validUrls);
 			} else {
-				jsonObject.put(JSON_KEY_MESSAGE, JSON_VALUE_MESSAGE_404);
+				jsonObject.put(Constants.Json.Response.MESSAGE, JSON_VALUE_MESSAGE_404);
 			}
 
 			response.setEntity(

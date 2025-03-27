@@ -28,6 +28,7 @@ import com.synapticloop.panl.server.handler.fielderiser.field.facet.PanlDateRang
 import com.synapticloop.panl.server.handler.properties.CollectionProperties;
 import com.synapticloop.panl.server.handler.fielderiser.field.BaseField;
 import com.synapticloop.panl.server.handler.tokeniser.token.LpseToken;
+import com.synapticloop.panl.util.Constants;
 import org.apache.solr.client.solrj.response.FacetField;
 import org.apache.solr.client.solrj.response.QueryResponse;
 import org.apache.solr.common.SolrDocumentList;
@@ -81,7 +82,8 @@ public class AvailableProcessor extends Processor {
 			}
 		}
 
-		SolrDocumentList solrDocuments = (SolrDocumentList) queryResponse.getResponse().get(JSON_KEY_SOLR_JSON_KEY_RESPONSE);
+		SolrDocumentList solrDocuments =
+				(SolrDocumentList) queryResponse.getResponse().get(Constants.Json.Solr.RESPONSE);
 		long numFound = solrDocuments.getNumFound();
 		boolean numFoundExact = solrDocuments.getNumFoundExact();
 
@@ -145,9 +147,9 @@ public class AvailableProcessor extends Processor {
 			}
 		}
 
-		jsonObject.put(JSON_KEY_FACETS, panlFacets);
-		jsonObject.put(JSON_KEY_RANGE_FACETS, rangeFacetArray);
-		jsonObject.put(JSON_KEY_DATE_RANGE_FACETS, dateRangeFacetArray);
+		jsonObject.put(Constants.Json.Panl.FACETS, panlFacets);
+		jsonObject.put(Constants.Json.Panl.RANGE_FACETS, rangeFacetArray);
+		jsonObject.put(Constants.Json.Panl.DATE_RANGE_FACETS, dateRangeFacetArray);
 		return (jsonObject);
 	}
 }

@@ -29,6 +29,7 @@ import com.synapticloop.panl.server.handler.processor.SearchFieldsProcessor;
 import com.synapticloop.panl.server.handler.properties.CollectionProperties;
 import com.synapticloop.panl.server.handler.properties.PanlProperties;
 import com.synapticloop.panl.server.handler.webapp.util.ResourceHelper;
+import com.synapticloop.panl.util.Constants;
 import org.apache.http.HttpRequest;
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
@@ -62,12 +63,6 @@ public class PanlMoreFacetsHandler extends BaseResponseHandler implements HttpRe
 	private static final Logger LOGGER = LoggerFactory.getLogger(PanlMoreFacetsHandler.class);
 
 	public static final String PANL_URL_BINDING_MORE_FACETS = "/panl-more-facets/";
-
-	public static final String QUERY_PARAM_CODE = "code";
-	public static final String QUERY_PARAM_LIMIT = "limit";
-
-	public static final String CONTEXT_KEY_LPSE_CODE = "lpse_code";
-	public static final String CONTEXT_KEY_FACET_LIMIT = "facet_limit";
 
 	private final Map<String, CollectionRequestHandler> validCollections = new HashMap<>();
 
@@ -106,9 +101,9 @@ public class PanlMoreFacetsHandler extends BaseResponseHandler implements HttpRe
 		try {
 			final List<NameValuePair> pairs = new URIBuilder(request.getRequestLine().getUri()).getQueryParams();
 			for (NameValuePair pair : pairs) {
-				if (pair.getName().equals(QUERY_PARAM_CODE)) {
+				if (pair.getName().equals(Constants.Parameter.Panl.CODE)) {
 					lpseCode = pair.getValue();
-				} else if (pair.getName().equals(QUERY_PARAM_LIMIT)) {
+				} else if (pair.getName().equals(Constants.Parameter.Panl.LIMIT)) {
 					try {
 						facetLimit = Integer.parseInt(pair.getValue());
 					} catch (NumberFormatException ignored) {
@@ -152,8 +147,8 @@ public class PanlMoreFacetsHandler extends BaseResponseHandler implements HttpRe
 
 			try {
 				CollectionRequestHandler collectionRequestHandler = validCollections.get(paths[2]);
-				context.setAttribute(CONTEXT_KEY_LPSE_CODE, lpseCode);
-				context.setAttribute(CONTEXT_KEY_FACET_LIMIT, facetLimit);
+				context.setAttribute(Constants.Context.Panl.LPSE_CODE, lpseCode);
+				context.setAttribute(Constants.Context.Panl.FACET_LIMIT, facetLimit);
 				JSONObject jsonObject = new JSONObject(
 					collectionRequestHandler.handleRequest(
 						stringBuilder.toString(),
@@ -161,22 +156,22 @@ public class PanlMoreFacetsHandler extends BaseResponseHandler implements HttpRe
 						context));
 
 				// now that we have the JSON object - time to remove the things we don't need
-				jsonObject.remove(JSON_KEY_SOLR_RESPONSE_HEADER);
-				jsonObject.remove(JSON_KEY_SOLR_RESPONSE);
-				jsonObject.remove(JSON_KEY_SOLR_FACET_COUNTS);
+				jsonObject.remove(Constants.Json.Solr.RESPONSE_HEADER);
+				jsonObject.remove(Constants.Json.Solr.RESPONSE);
+				jsonObject.remove(Constants.Json.Solr.FACET_COUNTS);
 
-				JSONObject panlJsonObject = jsonObject.getJSONObject(JSON_KEY_PANL);
+				JSONObject panlJsonObject = jsonObject.getJSONObject(Constants.Json.Panl.PANL);
 
-				panlJsonObject.remove(JSON_KEY_PAGINATION);
-				panlJsonObject.remove(JSON_KEY_ACTIVE);
-				panlJsonObject.remove(JSON_KEY_QUERY_OPERAND);
-				panlJsonObject.remove(JSON_KEY_TIMINGS);
-				panlJsonObject.remove(JSON_KEY_CANONICAL_URI);
+				panlJsonObject.remove(Constants.Json.Panl.PAGINATION);
+				panlJsonObject.remove(Constants.Json.Panl.ACTIVE);
+				panlJsonObject.remove(Constants.Json.Panl.QUERY_OPERAND);
+				panlJsonObject.remove(Constants.Json.Panl.TIMINGS);
+				panlJsonObject.remove(Constants.Json.Panl.CANONICAL_URI);
 
 				// now go through and get the facet that we want
 
 				// now go through the available facets and place them in the correct place
-				JSONObject availableJsonObject = panlJsonObject.getJSONObject(JSON_KEY_AVAILABLE);
+				JSONObject availableJsonObject = panlJsonObject.getJSONObject(Constants.Json.Panl.AVAILABLE);
 
 				// regular facets
 				for (Object regularFacets : availableJsonObject.getJSONArray("facets")) {
@@ -190,10 +185,10 @@ public class PanlMoreFacetsHandler extends BaseResponseHandler implements HttpRe
 				}
 
 				// lastly remove the facets
-				panlJsonObject.remove(SearchFieldsProcessor.JSON_KEY_QUERY_RESPOND_TO);
-				panlJsonObject.remove(JSON_KEY_SORTING);
-				panlJsonObject.remove(JSON_KEY_AVAILABLE);
-				panlJsonObject.remove(JSON_KEY_FIELDS);
+				panlJsonObject.remove(Constants.Json.Panl.QUERY_RESPOND_TO);
+				panlJsonObject.remove(Constants.Json.Panl.SORTING);
+				panlJsonObject.remove(Constants.Json.Panl.AVAILABLE);
+				panlJsonObject.remove(Constants.Json.Panl.FIELDS);
 
 				response.setStatusCode(HttpStatus.SC_OK);
 				response.setEntity(

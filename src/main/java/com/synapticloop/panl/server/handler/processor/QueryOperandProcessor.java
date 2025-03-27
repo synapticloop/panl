@@ -27,6 +27,7 @@ package com.synapticloop.panl.server.handler.processor;
 import com.synapticloop.panl.server.handler.properties.CollectionProperties;
 import com.synapticloop.panl.server.handler.fielderiser.field.BaseField;
 import com.synapticloop.panl.server.handler.tokeniser.token.LpseToken;
+import com.synapticloop.panl.util.Constants;
 import org.apache.solr.client.solrj.response.QueryResponse;
 import org.json.JSONObject;
 import java.util.Map;
@@ -60,8 +61,8 @@ public class QueryOperandProcessor extends Processor {
 
 		String finalBefore = lpseUri + before + collectionProperties.getPanlParamQueryOperand();
 
-		jsonObject.put(JSON_KEY_OR, finalBefore + "-" + lpseCode);
-		jsonObject.put(JSON_KEY_AND, finalBefore + "+" + lpseCode);
+		jsonObject.put(Constants.Json.Panl.OR, finalBefore + "-" + lpseCode);
+		jsonObject.put(Constants.Json.Panl.AND, finalBefore + "+" + lpseCode);
 
 		return (jsonObject);
 	}
