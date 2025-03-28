@@ -426,7 +426,7 @@ public class CollectionProperties {
 		this.formQueryRespondTo = properties.getProperty(Constants.Property.Panl.PANL_FORM_QUERY_RESPONDTO, "q");
 
 		this.facetMinCount = PropertyHelper.getIntProperty(LOGGER, properties, Constants.Property.Solr.SOLR_FACET_MIN_COUNT, 1);
-		this.highlight = properties.getProperty(Constants.Property.Panl.SOLR_HIGHLIGHT, "false").equals("true");
+		this.highlight = properties.getProperty(Constants.Property.Solr.SOLR_HIGHLIGHT, "false").equals("true");
 		this.numResultsPerPage = PropertyHelper.getIntProperty(LOGGER, properties, Constants.Property.Solr.SOLR_NUMROWS_DEFAULT, 10);
 
 		// we are setting the maximum number of results to default to the same

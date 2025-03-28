@@ -270,7 +270,7 @@ public class PanlBooleanFacetField extends PanlFacetField {
 
 		if (lpseToken.getIsValid()) {
 			// now we need to put in the inverse URI
-			removeObject.put(Constants.Json.Panl.INVERSE_ENCODED, booleanFacetLpseToken.getInverseBooleanValue(lpseToken));
+			removeObject.put(Constants.Json.Panl.INVERSE_ENCODED, booleanFacetLpseToken.getInverseBooleanValue());
 
 			if(this.isCheckbox) {
 				removeObject.put(Constants.Json.Panl.CHECKBOX_VALUE, this.checkboxValue);

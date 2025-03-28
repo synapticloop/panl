@@ -28,6 +28,7 @@ import com.synapticloop.panl.server.handler.fielderiser.field.facet.PanlBooleanF
 import com.synapticloop.panl.server.handler.properties.CollectionProperties;
 import com.synapticloop.panl.server.handler.tokeniser.LpseTokeniser;
 import com.synapticloop.panl.server.handler.tokeniser.token.LpseToken;
+import com.synapticloop.panl.util.Constants;
 
 import java.util.StringTokenizer;
 
@@ -49,6 +50,14 @@ public class BooleanFacetLpseToken extends LpseToken {
 
 	private String solrField = null;
 
+	/**
+	 * <p>Instantiate a BOOLEAN Facet LPSE Token.</p>
+	 *
+	 * @param collectionProperties The Collection that this belongs to
+	 * @param lpseCode The LPSE code
+	 * @param lpseTokeniser The LPSE tokeniser
+	 * @param valueTokeniser The value tokeniser
+	 */
 	public BooleanFacetLpseToken(
 			CollectionProperties collectionProperties,
 			String lpseCode,
@@ -89,7 +98,6 @@ public class BooleanFacetLpseToken extends LpseToken {
 		} else {
 			this.isValid = false;
 		}
-
 	}
 
 	@Override public String explain() {
@@ -106,12 +114,19 @@ public class BooleanFacetLpseToken extends LpseToken {
 				"'.");
 	}
 
-	public String getInverseBooleanValue(LpseToken lpseToken) {
+
+	/**
+	 * <p>Return the inverse BOOLEAN value for the token, which will be encoded
+	 * if there is a true/false/value replacement.</p>
+	 *
+	 * @return The inverse (and encoded) BOOLEAN value.
+	 */
+	public String getInverseBooleanValue() {
 		PanlBooleanFacetField lpseField = (PanlBooleanFacetField) collectionProperties.getLpseField(this.lpseCode);
-		if(value.equals("true")) {
-			return(lpseField.getEncodedPanlValue("false"));
+		if(value.equals(Constants.BOOLEAN_TRUE_VALUE)) {
+			return(lpseField.getEncodedPanlValue(Constants.BOOLEAN_FALSE_VALUE));
 		} else {
-			return(lpseField.getEncodedPanlValue("true"));
+			return(lpseField.getEncodedPanlValue(Constants.BOOLEAN_TRUE_VALUE));
 		}
 
 	}
@@ -120,10 +135,19 @@ public class BooleanFacetLpseToken extends LpseToken {
 		return TOKEN_TYPE;
 	}
 
+	/**
+	 * <p>Return the Solr field name for this token</p>
+	 *
+	 * @return The Solr field name for this token.
+	 */
 	public String getSolrField() {
 		return solrField;
 	}
 
+	/**
+	 * TODO: This probably should return false...
+	 * @return
+	 */
 	@Override public boolean getCanHaveMultiple() {
 		return (true);
 	}

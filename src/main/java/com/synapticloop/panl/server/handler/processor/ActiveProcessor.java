@@ -429,7 +429,7 @@ public class ActiveProcessor extends Processor {
 			CollectionProperties collectionProperties) {
 
 		String booleanLpseCode = booleanFacetLpseToken.getLpseCode();
-		String inverseBooleanValue = booleanFacetLpseToken.getInverseBooleanValue(booleanFacetLpseToken);
+		String inverseBooleanValue = booleanFacetLpseToken.getInverseBooleanValue();
 
 		StringBuilder uri = new StringBuilder();
 		StringBuilder lpse = new StringBuilder();

@@ -132,7 +132,7 @@ public abstract class BaseField {
 				.getProperty(Constants.Property.Panl.PANL_FACETSORT + this.lpseCode, "count")
 				.equals("index");
 		this.isMultiValue = properties
-				.getProperty(Constants.Property.Panl.IS_MULTIVALUE + this.lpseCode, "false")
+				.getProperty(Constants.Property.Panl.PANL_IS_MULTIVALUE + this.lpseCode, "false")
 				.equals("true");
 
 		String extraJSONObjectString = properties
@@ -150,7 +150,7 @@ public abstract class BaseField {
 
 		// if it is multivalued, then we will see if we have a multivalued separator
 		this.valueSeparator = properties
-				.getProperty(Constants.Property.Panl.MULTIVALUE_SEPARATOR + this.lpseCode, null);
+				.getProperty(Constants.Property.Panl.PANL_MULTIVALUE_SEPARATOR + this.lpseCode, null);
 		if(this.valueSeparator != null) {
 			if(this.valueSeparator.isEmpty()) {
 				String message = String.format(
@@ -158,7 +158,7 @@ public abstract class BaseField {
 								"the property '%s%s' will be ignored.",
 						lpseCode,
 						lpseCode,
-						Constants.Property.Panl.IS_MULTIVALUE);
+						Constants.Property.Panl.PANL_IS_MULTIVALUE);
 				getLogger().warn(message);
 				this.valueSeparator = null;
 			} else if (this.valueSeparator.trim().equals("/")) {
@@ -167,7 +167,7 @@ public abstract class BaseField {
 								"the property '%s%s' will be ignored.",
 						lpseCode,
 						lpseCode,
-						Constants.Property.Panl.IS_MULTIVALUE);
+						Constants.Property.Panl.PANL_IS_MULTIVALUE);
 				getLogger().warn(message);
 			} else {
 				// if this is not multivalued, then you cannot have a multivalued separator
@@ -176,11 +176,11 @@ public abstract class BaseField {
 							"LPSE code '%s' sets a multivalued (or) separator but does __NOT__ define this field as being multivalued " +
 									"see property '%s%s' and '%s%s'.  The property '%s%s' will be ignored.",
 							lpseCode,
-							Constants.Property.Panl.MULTIVALUE_SEPARATOR,
+							Constants.Property.Panl.PANL_MULTIVALUE_SEPARATOR,
 							lpseCode,
-							Constants.Property.Panl.IS_MULTIVALUE,
+							Constants.Property.Panl.PANL_IS_MULTIVALUE,
 							lpseCode,
-							Constants.Property.Panl.MULTIVALUE_SEPARATOR,
+							Constants.Property.Panl.PANL_MULTIVALUE_SEPARATOR,
 							lpseCode);
 
 					getLogger().warn(message);
