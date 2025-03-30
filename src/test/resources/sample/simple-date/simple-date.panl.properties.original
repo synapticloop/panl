@@ -188,6 +188,26 @@ panl.include.single.facets=false
 
 panl.include.same.number.facets=false
 
+#                Add 'extra' Information To Every Response
+#                --- ------- ----------- -- ----- --------
+# This property __MUST__ be a valid JSON object and will be added to every
+# response from the Panl server for this collection.  It will be added to the
+# JSON response object under the panl.extra JSON key.
+#
+# IMPORTANT:
+#
+#   - If this is not a valid JSON object, then the server will error and fail
+#     to start.
+#   - Any values in this JSON object will overwrite keys in the panl.properties
+#     file with the property of panl.server.extra (if it is set)
+#   - You may remove this property or leave it blank and it will have no effect
+#     and will not be included in the Panl JSON Response
+#
+#                                ~ ~ ~ * ~ ~ ~
+
+panl.collection.extra=
+
+
 #                          The Default Query Operand
 #                          --- ------- ----- -------
 # This maps to the Solr q.op parameter, by default it is OR (the '-') character
