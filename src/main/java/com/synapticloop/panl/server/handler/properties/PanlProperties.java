@@ -25,6 +25,10 @@ package com.synapticloop.panl.server.handler.properties;
  */
 
 import com.formdev.flatlaf.util.StringUtils;
+import com.synapticloop.panl.exception.PanlServerException;
+import com.synapticloop.panl.util.Constants;
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -90,6 +94,11 @@ public class PanlProperties {
 	private final Map<String, List<String>> panlCollections = new HashMap<>();
 
 	/**
+	 * <p>The extra information as a JSON Object</p>
+	 */
+	private JSONObject jsonExtraObject = null;
+
+	/**
 	 * <p>Instantiate the Panl properties which defines what Solr server to
 	 * connect to, the SolrJ client, whether to use verbose messaging for 404
 	 * and/or 500 error messages, and whether to serve the Panl results testing
@@ -97,7 +106,7 @@ public class PanlProperties {
 	 *
 	 * @param properties The properties file
 	 */
-	public PanlProperties(Properties properties) {
+	public PanlProperties(Properties properties) throws PanlServerException {
 		this.hasPanlResultsTestingUrls =
 			properties
 				.getProperty(PROPERTY_KEY_PANL_RESULTS_TESTING_URLS, DEFAULT_FALSE)
@@ -139,6 +148,19 @@ public class PanlProperties {
 		this.removeSolrJsonKeys = properties
 				.getProperty(PROPERTY_KEY_PANL_REMOVE_SOLR_JSON_KEYS, DEFAULT_FALSE)
 				.equals(DEFAULT_TRUE);
+
+		String jsonTemp = properties.getProperty(Constants.Property.Panl.PANL_SERVER_EXTRA, "");
+		if(!jsonTemp.trim().isEmpty()) {
+			try {
+				jsonExtraObject = new JSONObject(jsonTemp);
+			} catch(JSONException ex) {
+				throw new PanlServerException("Could not parse the property '" +
+						Constants.Property.Panl.PANL_SERVER_EXTRA +
+						"' which __MUST__ be a valid JSON Object.  value was '" +
+						jsonTemp +
+						"'.");
+			}
+		}
 
 		for (String stringPropertyName : properties.stringPropertyNames()) {
 			if (stringPropertyName.startsWith(PROPERTY_KEY_PREFIX_PANL_COLLECTION)) {
@@ -252,6 +274,16 @@ public class PanlProperties {
 	 */
 	public boolean getRemoveSolrJsonKeys() {
 		return(removeSolrJsonKeys);
+	}
+
+	/**
+	 * <p>Get the 'extra' information JSON Object (if set) - will return null if
+	 * it is not set.</p>
+	 *
+	 * @return The 'extra' JSON Object - will return null if not set.
+	 */
+	public JSONObject getExtraJsonObject() {
+		return(jsonExtraObject);
 	}
 }
 

@@ -108,7 +108,7 @@ public class TestHelper {
 		return (properties);
 	}
 
-	public static PanlProperties getTestPanlProperties() throws IOException {
+	public static PanlProperties getTestPanlProperties() throws IOException, PanlServerException {
 		if (null == testPanlProperties) {
 			testPanlProperties = new PanlProperties(getTestProperties("/test.panl.properties"));
 		}

@@ -236,6 +236,7 @@ public class Constants {
 		public static class Panl {
 			public static final String PANL_BOOL = "panl.bool.";
 			public static final String PANL_BOOL_CHECKBOX = "panl.bool.checkbox.";
+			public static final String PANL_COLLECTION_EXTRA = "panl.extra";
 			public static final String PANL_DATE = "panl.date.";
 			public static final String PANL_EXTRA = "panl.extra.";
 			public static final String PANL_FACET = "panl.facet.";
@@ -275,6 +276,7 @@ public class Constants {
 			public static final String PANL_RESULTS_FIELDS = "panl.results.fields.";
 			public static final String PANL_SEARCH = "panl.search.";
 			public static final String PANL_SEARCH_FIELDS = "panl.search.fields";
+			public static final String PANL_SERVER_EXTRA = "panl.server.extra";
 			public static final String PANL_SORT_FIELDS = "panl.sort.fields";
 			public static final String PANL_SUFFIX = "panl.suffix.";
 			public static final String PANL_TYPE = "panl.type.";
