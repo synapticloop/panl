@@ -69,8 +69,10 @@ public class PageNumLpseToken extends LpseToken {
 	@Override public String explain() {
 		return ("PANL " +
 				(this.isValid ? "[  VALID  ]" : "[ INVALID ]") +
-				" <page_number>        LPSE code '" +
+				" <page_number>       LPSE code '" +
 				this.lpseCode +
+				"' original URI path value '" +
+				this.originalValue +
 				"' using " +
 				(this.isValid ? "parsed" : "default") +
 				" value of '" +

@@ -166,7 +166,6 @@ public class RangeFacetLpseToken extends LpseToken {
 		}
 	}
 
-	// TODO - update for range facets
 	@Override public String explain() {
 		return ("PANL " +
 				(this.isValid ? "[  VALID  ]" : "[ INVALID ]") +
@@ -174,10 +173,10 @@ public class RangeFacetLpseToken extends LpseToken {
 				this.lpseCode +
 				"' (solr field '" +
 				this.solrField +
-				"') incoming value '" +
-				this.originalValue +
-				"', parsed value '" +
+				"') with parsed value '" +
 				("RANGE(" + value + ":" + toValue + ") " + (hasInfix ? "with" : "without") + " infix" ) +
+				"', incoming value '" +
+				this.originalValue +
 				"'.");
 	}
 

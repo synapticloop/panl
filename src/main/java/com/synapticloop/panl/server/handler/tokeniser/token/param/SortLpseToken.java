@@ -131,7 +131,7 @@ public class SortLpseToken extends LpseToken {
 		// TODO - there shouldn't be a relevance
 		return ("PANL " +
 				(this.isValid ? "[  VALID  ]" : "[ INVALID ]") +
-				" <sort>               LPSE code '" +
+				" <sort>              LPSE code '" +
 				this.lpseCode +
 				"' sort code '" +
 				this.lpseSortCode +

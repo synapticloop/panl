@@ -81,7 +81,7 @@ public class QueryOperandLpseToken extends LpseToken {
 	@Override public String explain() {
 		return ("PANL " +
 					(this.isValid ? "[  VALID  ]" : "[ INVALID ]") +
-				" <query_operand>      LPSE code '" +
+				" <query_operand>     LPSE code '" +
 				this.lpseCode +
 				"' operand '" +
 				this.queryOperand +

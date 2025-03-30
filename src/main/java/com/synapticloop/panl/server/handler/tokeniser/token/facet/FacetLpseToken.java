@@ -162,7 +162,6 @@ public class FacetLpseToken extends LpseToken {
 		return ("PANL " +
 				(this.isValid ? "[  VALID  ]" : "[ INVALID ]") +
 				(this.hasMultivalueSeparator ? " <facet (multi SEP)> LPSE code '" : " <facet>             LPSE code '") +
-				" <facet>             LPSE code '" +
 				this.lpseCode +
 				"' (solr field '" +
 				this.solrField +

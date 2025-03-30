@@ -69,10 +69,9 @@ public class NumRowsLpseToken extends LpseToken {
 	}
 
 	@Override public String explain() {
-		// TODO - suffix and prefix
 		return ("PANL " +
 				(this.isValid ? "[  VALID  ]" : "[ INVALID ]") +
-				" <num_rows>           LPSE code '" +
+				" <num_rows>          LPSE code '" +
 				this.lpseCode +
 				"' original URI path value '" +
 				this.originalValue +
