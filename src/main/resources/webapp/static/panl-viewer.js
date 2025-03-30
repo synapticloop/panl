@@ -179,7 +179,7 @@ function populatePanlResults(panlJsonData) {
 	addSearchFieldCheckboxes(panlJsonData.panl.search)
 	addQueryOperand(panlJsonData.panl.query_operand);
 	addSortingOptions(panlJsonData.panl.sorting, panlJsonData.panl.active);
-	addPagination(panlJsonData.panl.pagination);
+	addPagination(panlJsonData.panl.pagination, panlJsonData.panl.extra);
 	addActiveFilters(panlJsonData.panl.active, panlJsonData.panl.sorting.remove_uri);
 	addAvailableFilters(panlJsonData.panl.available, panlJsonData.panl.active);
 }
@@ -338,7 +338,7 @@ function addSortingOptions(sortingObject, activeObject) {
 	}
 }
 
-function addPagination(paginationObject) {
+function addPagination(paginationObject, extraObject) {
 	console.log("[ RETURNED PANL PAGINATION JSON OBJECT ]")
 	console.log(paginationObject);
 	$("#page_num").append(paginationObject.page_num);
@@ -368,10 +368,24 @@ function addPagination(paginationObject) {
 		$("#previous").append("&laquo; PREV");
 	}
 
-	// now for the per_page_uris
-	addPerPage(paginationObject, "3");
-	addPerPage(paginationObject, "5");
-	addPerPage(paginationObject, "10");
+	var foundExtra = false;
+	if(undefined !== extraObject) {
+		// we will look into the num_per_page object
+		if(extraObject.num_per_page !== undefined) {
+			for (const index in extraObject.num_per_page) {
+
+				addPerPage(paginationObject, extraObject.num_per_page[index]);
+			}
+			foundExtra = true;
+		}
+	}
+
+	if(!foundExtra) {
+		// now for the per_page_uris
+		addPerPage(paginationObject, "3");
+		addPerPage(paginationObject, "5");
+		addPerPage(paginationObject, "10");
+	}
 }
 
 function addPerPage(paginationObject, number) {

@@ -26,6 +26,7 @@ package com.synapticloop.panl.util;
 
 import org.junit.jupiter.api.Test;
 
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class PanlLPSEHelperTest {
@@ -34,6 +35,22 @@ public class PanlLPSEHelperTest {
 
 		for (int character : characters) {
 			assertTrue(PanlLPSEHelper.isSubDelimiter(character));
+		}
+	}
+
+	@Test public void testIsGenericDelimiter() {
+		char[] genericDelimiterCharacters = { ':', '/', '?', '#', '[', ']', '@' };
+
+		for (int character : genericDelimiterCharacters) {
+			assertTrue(PanlLPSEHelper.isGenericDelimiter(character));
+		}
+	}
+
+	@Test public void IsNotGenericSubDelimiter() {
+		String characters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+		for (int i = 0; i < characters.length(); i++) {
+			assertFalse(PanlLPSEHelper.isSubDelimiter(characters.charAt(i)));
+			assertFalse(PanlLPSEHelper.isGenericDelimiter(characters.charAt(i)));
 		}
 	}
 }

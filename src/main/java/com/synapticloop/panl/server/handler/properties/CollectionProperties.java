@@ -36,6 +36,7 @@ import com.synapticloop.panl.server.handler.tokeniser.token.LpseToken;
 import com.synapticloop.panl.util.Constants;
 import org.apache.solr.client.solrj.SolrQuery;
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -247,6 +248,11 @@ public class CollectionProperties {
 	private final Set<String> LPSE_URI_CODES = new HashSet<>();
 
 	/**
+	 * <p>The extra information as a JSON Object</p>
+	 */
+	private JSONObject jsonExtraObject = null;
+
+	/**
 	 * <p>The set of all LPSE codes that are ignored.</p>
 	 */
 	private final Set<String> LPSE_IGNORED_URI_CODES = new HashSet<>();
@@ -288,13 +294,18 @@ public class CollectionProperties {
 	 * @param solrCollection The Solr collection to connect to - this is used for debugging and logging purposes
 	 * @param panlCollectionUri The Panl collection URI that this collection is registered to - this is used for
 	 * 		debugging and logging purposes
-	 * @param properties The panl_collection_uri.properties object to generate the configuration from
+	 * @param properties The &lt;panl_collection_uri&gt;.properties object to generate the configuration from
+	 * @param panlExtraJsonObject the extra JSON object from the Panl server, which may be null
 	 *
 	 * @throws PanlServerException If there was an error in parsing, there are missing, or there was an invalid
 	 * 		property.
 	 */
-	public CollectionProperties(String solrCollection, String panlCollectionUri,
-			Properties properties) throws PanlServerException {
+	public CollectionProperties(
+			String solrCollection,
+			String panlCollectionUri,
+			Properties properties,
+			JSONObject panlExtraJsonObject) throws PanlServerException {
+
 		this.solrCollection = solrCollection;
 		this.panlCollectionUri = panlCollectionUri;
 		this.properties = properties;
@@ -312,6 +323,8 @@ public class CollectionProperties {
 		parseLpseFacetOrder();
 		parseLpseIgnore();
 		parseFacetSortFields();
+
+		parseExtraProperties(panlExtraJsonObject);
 
 
 		// Generate some static information
@@ -1543,6 +1556,36 @@ public class CollectionProperties {
 		}
 	}
 
+	private void parseExtraProperties(JSONObject panlJsonExtraObject) throws PanlServerException {
+		JSONObject serverObject = new JSONObject();
+		if(null == panlJsonExtraObject) {
+			serverObject = panlJsonExtraObject;
+		}
+
+		String jsonTemp = properties.getProperty(Constants.Property.Panl.PANL_COLLECTION_EXTRA, "");
+		if(!jsonTemp.trim().isEmpty()) {
+			try {
+				JSONObject collectionObject = new JSONObject(jsonTemp);
+
+				// at this point we have a valid JSON Object, now go through and add it
+				// to the panl Server object
+				Iterator<String> keys = collectionObject.keys();
+				while (keys.hasNext()) {
+					String key = keys.next();
+					serverObject.put(key, collectionObject.get(key));
+				}
+
+				jsonExtraObject = serverObject;
+			} catch(JSONException ex) {
+				throw new PanlServerException("Could not parse the property '" +
+						Constants.Property.Panl.PANL_COLLECTION_EXTRA +
+						"' which __MUST__ be a valid JSON Object.  value was '" +
+						jsonTemp +
+						"'.");
+			}
+		}
+	}
+
 	/**
 	 * <p>Get the list of the LPSE codes</p>
 	 *
@@ -1615,6 +1658,15 @@ public class CollectionProperties {
 		} else {
 			return ("");
 		}
+	}
+
+	/**
+	 * <p>Get the JSON extra</p>
+	 *
+	 * @return The JSON object for extra information
+	 */
+	public JSONObject getJsonExtraObject() {
+		return(jsonExtraObject);
 	}
 }
 

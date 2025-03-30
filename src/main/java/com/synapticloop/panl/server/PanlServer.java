@@ -34,6 +34,7 @@ import com.synapticloop.panl.server.handler.webapp.PanlResultsStaticHandler;
 import com.synapticloop.panl.server.handler.webapp.viewer.PanlResultsViewerHandler;
 import com.synapticloop.panl.server.handler.properties.PanlProperties;
 import com.synapticloop.panl.server.handler.properties.CollectionProperties;
+import com.synapticloop.panl.util.Constants;
 import org.apache.http.impl.bootstrap.HttpServer;
 import org.apache.http.impl.bootstrap.ServerBootstrap;
 import org.slf4j.Logger;
@@ -50,16 +51,14 @@ import java.util.concurrent.TimeUnit;
 
 /**
  * <p>This is the PANL server which parses the <code>panl.properties</code> file,
- * loads all the <code>collection.panl.properties</code> files.  If there are
- * any errors with either of the files, a PanlServerException will be thrown and
- * the server will refuse to start.</p>
+ * loads all the <code>&lt;panl_collection_url>.panl.properties</code> files.  If
+ * there are any errors with either of the files, a PanlServerException will be
+ * thrown and the server will refuse to start.</p>
  *
  * @author synapticloop
  */
 public class PanlServer {
 	private static final Logger LOGGER = LoggerFactory.getLogger(PanlServer.class);
-
-	public static final String PROPERTY_KEY_PANL_COLLECTION = "panl.collection.";
 
 	/**
 	 * <p>The location of the <code>panl.properties file</code>.
@@ -139,9 +138,9 @@ public class PanlServer {
 		Enumeration<Object> keys = properties.keys();
 		while (keys.hasMoreElements()) {
 			String key = (String) keys.nextElement();
-			if (key.startsWith(PROPERTY_KEY_PANL_COLLECTION)) {
+			if (key.startsWith(Constants.Property.Panl.PANL_COLLECTION)) {
 				// we have found a new collection
-				String solrCollection = key.substring(PROPERTY_KEY_PANL_COLLECTION.length());
+				String solrCollection = key.substring(Constants.Property.Panl.PANL_COLLECTION.length());
 
 				for (String propertyFileName : properties.getProperty(key).split(",")) {
 					Properties propertiesCollectionProperties = new Properties();
@@ -164,7 +163,8 @@ public class PanlServer {
 						collectionProperties = new CollectionProperties(
 								solrCollection,
 								panlCollectionUri,
-								propertiesCollectionProperties);
+								propertiesCollectionProperties,
+								panlProperties.getExtraJsonObject());
 
 
 						collectionPropertiesList.add(collectionProperties);
@@ -246,6 +246,7 @@ public class PanlServer {
 
 		if (panlProperties.getHasPanlResultsTestingUrls()) {
 			LOGGER.info("Panl testing URLs are active, binding the following:");
+
 			bootstrap.registerHandler("/webapp/static/*", new PanlResultsStaticHandler());
 			LOGGER.info("Binding testing URL: /webapp/static/*");
 

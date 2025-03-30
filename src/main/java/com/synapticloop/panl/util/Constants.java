@@ -236,8 +236,10 @@ public class Constants {
 		public static class Panl {
 			public static final String PANL_BOOL = "panl.bool.";
 			public static final String PANL_BOOL_CHECKBOX = "panl.bool.checkbox.";
-			public static final String PANL_COLLECTION_EXTRA = "panl.extra";
+			public static final String PANL_COLLECTION = "panl.collection.";
+			public static final String PANL_COLLECTION_EXTRA = "panl.collection.extra";
 			public static final String PANL_DATE = "panl.date.";
+			public static final String PANL_DECIMAL_POINT = "panl.decimal.point";
 			public static final String PANL_EXTRA = "panl.extra.";
 			public static final String PANL_FACET = "panl.facet.";
 			public static final String PANL_FACETSORT = "panl.facetsort.";
@@ -273,11 +275,15 @@ public class Constants {
 			public static final String PANL_RANGE_PREFIX = "panl.range.prefix.";
 			public static final String PANL_RANGE_SUFFIX = "panl.range.suffix.";
 			public static final String PANL_RANGE_SUPPRESS = "panl.range.suppress.";
+			public static final String PANL_REMOVE_SOLR_JSON_KEYS = "panl.remove.solr.json.keys";
 			public static final String PANL_RESULTS_FIELDS = "panl.results.fields.";
+			public static final String PANL_RESULTS_TESTING_URLS = "panl.results.testing.urls";
 			public static final String PANL_SEARCH = "panl.search.";
 			public static final String PANL_SEARCH_FIELDS = "panl.search.fields";
 			public static final String PANL_SERVER_EXTRA = "panl.server.extra";
 			public static final String PANL_SORT_FIELDS = "panl.sort.fields";
+			public static final String PANL_STATUS_404_VERBOSE = "panl.status.404.verbose";
+			public static final String PANL_STATUS_500_VERBOSE = "panl.status.500.verbose";
 			public static final String PANL_SUFFIX = "panl.suffix.";
 			public static final String PANL_TYPE = "panl.type.";
 			public static final String PANL_UNLESS = "panl.unless.";
@@ -297,6 +303,11 @@ public class Constants {
 			public static final String SOLR_VALUE_COUNT = "count";
 			public static final String SOLR_VALUE_INDEX = "index";
 
+			public static final String SOLRJ_CLIENT = "solrj.client";
+			public static final String SOLR_SEARCH_SERVER_URL = "solr.search.server.url";
+
+			public static final String DEFAULT_CLOUD_SOLR_CLIENT = "CloudSolrClient";
+			public static final String DEFAULT_SOLR_URL = "http://localhost:8983/solr";
 		}
 
 		/**

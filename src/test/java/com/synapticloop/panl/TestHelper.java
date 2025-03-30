@@ -88,7 +88,11 @@ public class TestHelper {
 		CollectionProperties collectionProperties;
 		if(!collectionPropertiesCache.containsKey(propertiesFileLocation)) {
 			try {
-				collectionProperties = new CollectionProperties(COLLECTION_NAME_TEST, COLLECTION_NAME_TEST, TestHelper.getTestProperties(propertiesFileLocation));
+				collectionProperties = new CollectionProperties(
+						COLLECTION_NAME_TEST,
+						COLLECTION_NAME_TEST,
+						TestHelper.getTestProperties(propertiesFileLocation),
+						null);
 				collectionPropertiesCache.put(propertiesFileLocation, collectionProperties);
 			} catch (PanlServerException | IOException e) {
 				fail(e);

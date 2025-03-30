@@ -27,7 +27,7 @@ package com.synapticloop.panl.generator;
 import com.synapticloop.panl.exception.PanlGenerateException;
 import com.synapticloop.panl.generator.bean.PanlCollection;
 import com.synapticloop.panl.generator.util.PropertiesMerger;
-import com.synapticloop.panl.server.handler.properties.PanlProperties;
+import com.synapticloop.panl.util.Constants;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -287,7 +287,7 @@ public class PanlGenerator {
 		for (PanlCollection panlCollection : panlCollections) {
 			String niceCollectionName = panlCollection.getCollectionName().toLowerCase().replaceAll("[^a-z0-9]", "-");
 			collectionPropertyFiles
-				.append(PanlProperties.PROPERTY_KEY_PREFIX_PANL_COLLECTION)
+				.append(Constants.Property.Panl.PANL_COLLECTION)
 				.append(niceCollectionName)
 				.append("=")
 				.append(niceCollectionName)

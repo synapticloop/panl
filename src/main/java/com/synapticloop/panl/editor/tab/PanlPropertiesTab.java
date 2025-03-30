@@ -31,6 +31,7 @@ import com.synapticloop.panl.editor.util.DialogHelper;
 import com.synapticloop.panl.generator.PanlGenerator;
 import com.synapticloop.panl.generator.util.PropertiesMerger;
 import com.synapticloop.panl.server.handler.properties.PanlProperties;
+import com.synapticloop.panl.util.Constants;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.StringUtils;
 
@@ -196,7 +197,7 @@ public class PanlPropertiesTab extends PropertiesTab {
 		Map<String, List<String>> panlCollectionsMap = panlEditor.getPanlProperties().getPanlCollectionsMap();
 		for (String key : panlCollectionsMap.keySet()) {
 			panlCollectionsProperty
-				.append(PanlProperties.PROPERTY_KEY_PREFIX_PANL_COLLECTION)
+				.append(Constants.Property.Panl.PANL_COLLECTION)
 				.append(key)
 				.append("=")
 				.append(StringUtils.join(panlCollectionsMap.get(key), ",\\\n    "))

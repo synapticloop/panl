@@ -477,11 +477,18 @@ public class CollectionRequestHandler {
 		solrJsonObject.put(Constants.Json.Response.ERROR, false);
 
 		JSONArray facetOrderJsonArray = collectionProperties.getPanlLpseFacetOrderJsonArray();
-		// TODO - we need to remove the facets which are not active
+		// TODO - we possibly need to remove the facets which are not active -
+		// TODO - this could be done on the front end and would make it faster
+		// TODO - rather than done server side.
 		panlObject.put(Constants.Json.Panl.FACETORDER, facetOrderJsonArray);
 
-		// last thing - we want to put the panl to solr field mappings in
+		// now put the panl to solr field mappings in
 		solrJsonObject.put(Constants.Json.Panl.PANL, panlObject);
+
+		// Add the 'extra' object - if it exists
+		if(null != collectionProperties.getJsonExtraObject()) {
+			panlObject.put(Constants.Json.Panl.EXTRA, collectionProperties.getJsonExtraObject());
+		}
 
 		return (solrJsonObject.toString());
 	}
