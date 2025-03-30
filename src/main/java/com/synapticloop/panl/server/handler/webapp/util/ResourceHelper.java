@@ -33,15 +33,9 @@ import org.json.JSONObject;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.net.URISyntaxException;
-import java.net.URL;
 import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
-import java.nio.file.Path;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Objects;
 
 /**
  * <p>A helper class for serving up assets from the classpath.  Used by the
@@ -56,9 +50,6 @@ import java.util.Objects;
  */
 public class ResourceHelper {
 	public static final String URL_PANL_RESULTS_VIEWER_SUBSET = "/panl-results-viewer";
-
-	public static final String JSON_VALUE_MESSAGE_404 = "Not found";
-	public static final String JSON_VALUE_MESSAGE_500 = "Internal server error";
 
 	public static final ContentType CONTENT_TYPE_JSON = ContentType.create("application/json", StandardCharsets.UTF_8);
 	public static final ContentType CONTENT_TYPE_TEXT = ContentType.create("text/plain", StandardCharsets.UTF_8);

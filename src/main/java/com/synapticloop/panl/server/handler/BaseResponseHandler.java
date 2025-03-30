@@ -34,11 +34,20 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 import org.slf4j.Logger;
 
-import static com.synapticloop.panl.server.handler.webapp.util.ResourceHelper.*;
-
+/**
+ * <p>The base response handler for all incoming requests to Panl</p>
+ *
+ * @author Synapticloop
+ */
 public abstract class BaseResponseHandler {
 
+	/**
+	 * <p>The Panl properties driving the responses</p>
+	 */
 	protected final PanlProperties panlProperties;
+	/**
+	 * <p>Pre-built valid URLs object</p>
+	 */
 	protected JSONArray validUrls = new JSONArray();
 
 	/**
@@ -83,14 +92,14 @@ public abstract class BaseResponseHandler {
 
 			response.setEntity(new StringEntity(jsonObject.toString(), ResourceHelper.CONTENT_TYPE_JSON));
 		} else {
-			jsonObject.put(Constants.Json.Response.MESSAGE, JSON_VALUE_MESSAGE_500);
+			jsonObject.put(Constants.Json.Response.MESSAGE, Constants.Json.Response.JSON_VALUE_MESSAGE_500);
 		}
 	}
 
 	/**
 	 * <p>Set the response as a 404 status code, also checking to see whether
-	 * verbose messaging is set.  If so, it will add in the <code>valid_urls</code> JSON object to the response as
-	 * well.</p>
+	 * verbose messaging is set.  If so, it will add in the <code>valid_urls</code>
+	 * JSON object to the response as well.</p>
 	 *
 	 * <p><strong>NOTE:</strong> This will set the response code and body, but not
 	 * return it.</p>
@@ -108,7 +117,7 @@ public abstract class BaseResponseHandler {
 			jsonObject.put(Constants.Json.Response.MESSAGE, PanlDefaultHandler.JSON_VALUE_MESSAGE);
 			jsonObject.put(Constants.Json.Response.VALID_URLS, validUrls);
 		} else {
-			jsonObject.put(Constants.Json.Response.MESSAGE, JSON_VALUE_MESSAGE_404);
+			jsonObject.put(Constants.Json.Response.MESSAGE, Constants.Json.Response.JSON_VALUE_MESSAGE_404);
 		}
 
 		response.setEntity(

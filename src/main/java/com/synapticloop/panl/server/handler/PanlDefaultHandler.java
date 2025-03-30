@@ -88,7 +88,7 @@ public class PanlDefaultHandler implements HttpRequestHandler {
 			}
 			jsonObject.put(Constants.Json.Response.VALID_URLS, validUrls);
 		} else {
-			jsonObject.put(Constants.Json.Response.MESSAGE, JSON_VALUE_MESSAGE_404);
+			jsonObject.put(Constants.Json.Response.MESSAGE, Constants.Json.Response.JSON_VALUE_MESSAGE_404);
 		}
 
 		json404ErrorString = jsonObject.toString();

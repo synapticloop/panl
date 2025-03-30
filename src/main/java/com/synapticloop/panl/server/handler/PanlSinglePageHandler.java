@@ -39,8 +39,6 @@ import org.slf4j.LoggerFactory;
 
 import java.util.*;
 
-import static com.synapticloop.panl.server.handler.webapp.util.ResourceHelper.*;
-
 /**
  * <p>This is the single page handler which will return the configuration for a
  * specific CaFUP so that a single search page may be built.</p>
@@ -171,42 +169,10 @@ public class PanlSinglePageHandler extends BaseResponseHandler implements HttpRe
 								ResourceHelper.CONTENT_TYPE_JSON)
 				);
 			} catch (Exception e) {
-				// TODO - this can probably be refactored into the BaseResponseHandler
-				// TODO - set500ResponseMessage(HttpResponse response) method
-
-				response.setStatusCode(HttpStatus.SC_INTERNAL_SERVER_ERROR);
-				JSONObject jsonObject = new JSONObject();
-				jsonObject.put(Constants.Json.Response.ERROR, true);
-				jsonObject.put(Constants.Json.Response.STATUS, HttpStatus.SC_INTERNAL_SERVER_ERROR);
-				if (panlProperties.getUseVerbose500Messages()) {
-					jsonObject.put(Constants.Json.Response.MESSAGE,
-							String.format("Class: %s, message: %s.",
-									e.getClass().getCanonicalName(),
-									e.getMessage()));
-
-					response.setEntity(new StringEntity(jsonObject.toString(), ResourceHelper.CONTENT_TYPE_JSON));
-				} else {
-					jsonObject.put(Constants.Json.Response.MESSAGE, JSON_VALUE_MESSAGE_500);
-				}
+				set500ResponseMessage(response, e);
 			}
 		} else {
-
-			// TODO - this can probably be refactored into the BaseResponseHandler
-			// TODO - set404ResponseMessage(HttpResponse response) method
-			JSONObject jsonObject = new JSONObject();
-
-			jsonObject.put(Constants.Json.Response.ERROR, true);
-			jsonObject.put(Constants.Json.Response.STATUS, HttpStatus.SC_NOT_FOUND);
-			if (panlProperties.getUseVerbose404Messages()) {
-				jsonObject.put(Constants.Json.Response.MESSAGE, PanlDefaultHandler.JSON_VALUE_MESSAGE);
-				jsonObject.put(Constants.Json.Response.VALID_URLS, validUrls);
-			} else {
-				jsonObject.put(Constants.Json.Response.MESSAGE, JSON_VALUE_MESSAGE_404);
-			}
-
-			response.setEntity(
-					new StringEntity(jsonObject.toString(),
-							ResourceHelper.CONTENT_TYPE_JSON));
+			set404ResponseMessage(response);
 		}
 	}
 

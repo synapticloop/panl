@@ -53,6 +53,9 @@ public class Constants {
 		 * <p>JSON keys for HTTP Responses</p>
 		 */
 		public static class Response {
+			public static final String JSON_VALUE_MESSAGE_404 = "Not found";
+			public static final String JSON_VALUE_MESSAGE_500 = "Internal server error";
+
 			public static final String ERROR = "error";
 			public static final String MESSAGE = "message";
 			public static final String STATUS = "status";
