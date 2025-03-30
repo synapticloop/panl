@@ -50,9 +50,6 @@ import java.util.Set;
 /**
  * <p>Utility class for LPSE path helping.</p>
  *
- * TODO - this can probably be quicker if it was done as a lookup on a set
- * TODO - perhaps
- *
  * @author synapticloop
  * @author original authors
  */

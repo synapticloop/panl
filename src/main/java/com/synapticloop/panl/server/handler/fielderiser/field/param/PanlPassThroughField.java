@@ -66,9 +66,19 @@ public class PanlPassThroughField extends BaseField {
 		}
 	}
 
+	/**
+	 * <p>Get the LPSE code for the canonical URL, which will only return a value
+	 * if the passthrough value has been set.</p>
+	 *
+	 * @param panlTokenMap The panl Token Map
+	 * @param collectionProperties the collection properties
+	 *
+	 * @return the canonical LPSe code (or an empty string if no canonical value
+	 * has been passed through.
+	 */
 	@Override
 	public String getCanonicalLpseCode(Map<String, List<LpseToken>> panlTokenMap, CollectionProperties collectionProperties) {
-		if(this.panlParamPassThroughCanonical) {
+		if(this.panlParamPassThroughCanonical && panlTokenMap.containsKey(lpseCode)) {
 			return(this.lpseCode);
 		} else {
 			return ("");

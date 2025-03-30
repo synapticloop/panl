@@ -58,17 +58,19 @@ public class PanlBooleanFacetField extends PanlFacetField {
 	 * @param propertyKey The property key from the properties file
 	 * @param properties The properties to look up
 	 * @param solrCollection The Solr collection that this will connect to (this
-	 * 		is used for debugging and logging output)
+	 *    is used for debugging and logging output)
 	 * @param panlCollectionUri The Panl collection URI that this is bound to
-	 * 		(this is used for debugging and logging output)
+	 *    (this is used for debugging and logging output)
 	 * @param lpseLength The length of the LPSE code
 	 *
 	 * @throws PanlServerException If there was an error parsing/decoding the
-	 * 		token
+	 *    token
 	 */
 	public PanlBooleanFacetField(String lpseCode, String propertyKey, Properties properties, String solrCollection,
-				String panlCollectionUri, int lpseLength) throws PanlServerException {
+			String panlCollectionUri, int lpseLength) throws PanlServerException {
+
 		super(lpseCode, propertyKey, properties, solrCollection, panlCollectionUri, lpseLength);
+
 		validateProperties();
 
 		populateBooleanReplacements();
@@ -79,6 +81,7 @@ public class PanlBooleanFacetField extends PanlFacetField {
 
 		logWarnProperties(this.lpseCode, Constants.Property.Panl.PANL_OR_FACET + this.lpseCode);
 		logWarnProperties(this.lpseCode, Constants.Property.Panl.PANL_RANGE_FACET + this.lpseCode);
+
 		logDetails();
 	}
 
@@ -127,7 +130,7 @@ public class PanlBooleanFacetField extends PanlFacetField {
 	private void populateBooleanCheckbox() {
 		String checkboxProperty = properties.getProperty(Constants.Property.Panl.PANL_BOOL_CHECKBOX + this.lpseCode, null);
 		this.isCheckbox = null != checkboxProperty;
-		if(this.isCheckbox) {
+		if (this.isCheckbox) {
 			this.checkboxValue = Boolean.parseBoolean(checkboxProperty);
 		}
 	}
@@ -209,7 +212,7 @@ public class PanlBooleanFacetField extends PanlFacetField {
 			return ("");
 		}
 
-		for(LpseToken lpseToken : panlTokenMap.get(lpseCode)) {
+		for (LpseToken lpseToken : panlTokenMap.get(lpseCode)) {
 			if (!lpseToken.getIsValid()) {
 				// not a valid token - keep going
 				continue;
@@ -250,26 +253,27 @@ public class PanlBooleanFacetField extends PanlFacetField {
 		return (PanlLPSEHelper.encodeURIPath(sb.toString()) + "/");
 	}
 
-	protected void applyToQueryInternal(SolrQuery solrQuery, List<LpseToken> lpseTokenList, CollectionProperties collectionProperties) {
+	protected void applyToQueryInternal(SolrQuery solrQuery, List<LpseToken> lpseTokenList,
+			CollectionProperties collectionProperties) {
 		// we are only going to do the first one
-		for(LpseToken lpseToken : lpseTokenList) {
+		for (LpseToken lpseToken : lpseTokenList) {
 			BooleanFacetLpseToken booleanFacetLpseToken = (BooleanFacetLpseToken) lpseToken;
 			solrQuery.addFilterQuery(
-						booleanFacetLpseToken.getSolrField() +
-									":\"" +
-									booleanFacetLpseToken.getValue() + "\"");
+					booleanFacetLpseToken.getSolrField() +
+							":\"" +
+							booleanFacetLpseToken.getValue() + "\"");
 			return;
 		}
 	}
 
 	public List<LpseToken> instantiateTokens(CollectionProperties collectionProperties, String lpseCode, String query,
-				StringTokenizer valueTokeniser, LpseTokeniser lpseTokeniser) {
+			StringTokenizer valueTokeniser, LpseTokeniser lpseTokeniser) {
 		return (List.of(new BooleanFacetLpseToken(collectionProperties, this.lpseCode, lpseTokeniser, valueTokeniser)));
 	}
 
 	@Override public void appendToAvailableObjectInternal(JSONObject jsonObject) {
 		jsonObject.put(Constants.Json.Panl.IS_BOOLEAN_FACET, true);
-		if(this.isCheckbox) {
+		if (this.isCheckbox) {
 			jsonObject.put(Constants.Json.Panl.CHECKBOX_VALUE, this.checkboxValue);
 		}
 	}
@@ -282,7 +286,7 @@ public class PanlBooleanFacetField extends PanlFacetField {
 			// now we need to put in the inverse URI
 			removeObject.put(Constants.Json.Panl.INVERSE_ENCODED, booleanFacetLpseToken.getInverseBooleanValue());
 
-			if(this.isCheckbox) {
+			if (this.isCheckbox) {
 				removeObject.put(Constants.Json.Panl.CHECKBOX_VALUE, this.checkboxValue);
 			}
 		}
@@ -305,7 +309,7 @@ public class PanlBooleanFacetField extends PanlFacetField {
 			explanations.add("Will not replace boolean 'false' values.");
 		}
 
-		if(this.isCheckbox) {
+		if (this.isCheckbox) {
 			explanations.add("Has a checkbox with for '" + this.checkboxValue + "' values.");
 		}
 

@@ -411,25 +411,58 @@ public class CollectionProperties {
 				.getProperty(Constants.Property.Panl.PANL_INCLUDE_SAME_NUMBER_FACETS, Constants.BOOLEAN_FALSE_VALUE)
 				.equals(Constants.BOOLEAN_TRUE_VALUE);
 
-		this.formQueryRespondTo = properties.getProperty(Constants.Property.Panl.PANL_FORM_QUERY_RESPONDTO, "q");
+		this.formQueryRespondTo = properties
+				.getProperty(
+						Constants.Property.Panl.PANL_FORM_QUERY_RESPONDTO,
+						Constants.DEFAULT_VALUE_QUERY_RESPOND_TO);
 
-		this.facetMinCount = PropertyHelper.getIntProperty(LOGGER, properties, Constants.Property.Solr.SOLR_FACET_MIN_COUNT, 1);
-		this.highlight =
-				properties.getProperty(Constants.Property.Solr.SOLR_HIGHLIGHT, Constants.BOOLEAN_FALSE_VALUE)
-				          .equals(Constants.BOOLEAN_TRUE_VALUE);
-		this.numResultsPerPage = PropertyHelper.getIntProperty(LOGGER, properties, Constants.Property.Solr.SOLR_NUMROWS_DEFAULT, 10);
+		this.facetMinCount =
+				PropertyHelper.getIntProperty(
+						LOGGER,
+						properties,
+						Constants.Property.Solr.SOLR_FACET_MIN_COUNT,
+						Constants.DEFAULT_VALUE_FACET_MIN_COUNT);
+
+		this.highlight = properties
+				.getProperty(Constants.Property.Solr.SOLR_HIGHLIGHT, Constants.BOOLEAN_FALSE_VALUE)
+				.equals(Constants.BOOLEAN_TRUE_VALUE);
+
+		this.numResultsPerPage =
+				PropertyHelper.getIntProperty(
+						LOGGER,
+						properties,
+						Constants.Property.Solr.SOLR_NUMROWS_DEFAULT,
+						Constants.DEFAULT_VALUE_NUM_RESULTS_PER_PAGE);
 
 		// we are setting the maximum number of results to default to the same
 		// number for the results per page if it is not set
-		this.maxNumResultsPerPage = PropertyHelper.getIntProperty(LOGGER, properties, Constants.Property.Solr.SOLR_NUMROWS_MAXIMUM,
-				this.numResultsPerPage);
+		this.maxNumResultsPerPage =
+				PropertyHelper.getIntProperty(
+						LOGGER,
+						properties,
+						Constants.Property.Solr.SOLR_NUMROWS_MAXIMUM,
+						this.numResultsPerPage);
 
-		this.numResultsLookahead = PropertyHelper.getIntProperty(LOGGER, properties, Constants.Property.Solr.SOLR_NUMROWS_LOOKAHEAD,
-				5);
-		this.solrFacetLimit = PropertyHelper.getIntProperty(LOGGER, properties, Constants.Property.Solr.SOLR_FACET_LIMIT, 100);
+		this.numResultsLookahead =
+				PropertyHelper.getIntProperty(
+						LOGGER,
+						properties,
+						Constants.Property.Solr.SOLR_NUMROWS_LOOKAHEAD,
+						Constants.DEFAULT_VALUE_NUM_RESULTS_LOOKAHEAD);
 
+		this.solrFacetLimit =
+				PropertyHelper.getIntProperty(
+						LOGGER,
+						properties,
+						Constants.Property.Solr.SOLR_FACET_LIMIT,
+						Constants.DEFAULT_VALUE_SOLR_FACET_LIMIT);
 
-		this.lpseLength = PropertyHelper.getIntProperty(LOGGER, properties, Constants.Property.Panl.PANL_LPSE_LENGTH, null);
+		this.lpseLength =
+				PropertyHelper.getIntProperty(
+						LOGGER,
+						properties,
+						Constants.Property.Panl.PANL_LPSE_LENGTH,
+						null);
 		if (null == lpseLength) {
 			throw new PanlServerException(
 					"MANDATORY PROPERTY MISSING: Could not find the 'panl.lpse.length' property in the '" + this.solrCollection + "'.panl.properties file.'");
@@ -548,8 +581,7 @@ public class CollectionProperties {
 	 * the panl facet property key.</p>
 	 *
 	 * <p> See the
-	 * {@link  Constants.Property.Panl#PANL_FACET} static String for the panl prefix
-	 * property</p>
+	 * {@link  Constants.Property.Panl#PANL_FACET} static String for the panl prefix property</p>
 	 *
 	 * @throws PanlServerException If there was an error looking up the properties, or with the found property and its
 	 * 		associated values
@@ -694,8 +726,7 @@ public class CollectionProperties {
 	 * <p>This property is used as a lookup for specific search field lookups.</p>
 	 *
 	 * <p> See the
-	 * {@link Constants.Property.Panl#PANL_SEARCH} static String for the panl prefix
-	 * property</p>
+	 * {@link Constants.Property.Panl#PANL_SEARCH} static String for the panl prefix property</p>
 	 *
 	 * @throws PanlServerException If there was an error looking up the properties, or with the found property and its
 	 * 		associated values
@@ -853,36 +884,36 @@ public class CollectionProperties {
 
 				if (!LPSE_METADATA.contains(lpseCode)) {
 					boolean found = false;
-					if(LPSE_CODE_TO_FACET_FIELD_MAP.containsKey(lpseCode)) {
+					if (LPSE_CODE_TO_FACET_FIELD_MAP.containsKey(lpseCode)) {
 						PanlFacetField panlFacetField = LPSE_CODE_TO_FACET_FIELD_MAP.get(lpseCode);
 						JSONObject jsonObject = new JSONObject();
-						jsonObject.put("panl_code", lpseCode);
-						jsonObject.put("facet_name", panlFacetField.getSolrFieldName());
-						jsonObject.put("type", "facets");
+						jsonObject.put(Constants.Json.Panl.PANL_CODE, lpseCode);
+						jsonObject.put(Constants.Json.Panl.FACET_NAME, panlFacetField.getSolrFieldName());
+						jsonObject.put(Constants.Json.Panl.TYPE, "facets");
 						panlLpseFacetOrderJsonArray.put(jsonObject);
 						found = true;
 					} else if (LPSE_CODE_DATE_RANGE_FACET_MAP.containsKey(lpseCode)) {
 						PanlDateRangeFacetField panlDateRangeFacetField = LPSE_CODE_DATE_RANGE_FACET_MAP.get(lpseCode);
 						JSONObject jsonObject = new JSONObject();
-						jsonObject.put("panl_code", lpseCode);
-						jsonObject.put("facet_name", panlDateRangeFacetField.getSolrFieldName());
-						jsonObject.put("type", "date_range_facets");
+						jsonObject.put(Constants.Json.Panl.PANL_CODE, lpseCode);
+						jsonObject.put(Constants.Json.Panl.FACET_NAME, panlDateRangeFacetField.getSolrFieldName());
+						jsonObject.put(Constants.Json.Panl.TYPE, "date_range_facets");
 						panlLpseFacetOrderJsonArray.put(jsonObject);
 						found = true;
 					}
 
 					// it can be a facet and a date range facet
-					if(LPSE_CODE_RANGE_FACET_MAP.containsKey(lpseCode)) {
+					if (LPSE_CODE_RANGE_FACET_MAP.containsKey(lpseCode)) {
 						PanlRangeFacetField panlRangeFacetField = LPSE_CODE_RANGE_FACET_MAP.get(lpseCode);
 						JSONObject jsonObject = new JSONObject();
-						jsonObject.put("panl_code", lpseCode);
-						jsonObject.put("facet_name", panlRangeFacetField.getSolrFieldName());
-						jsonObject.put("type", "range_facets");
+						jsonObject.put(Constants.Json.Panl.PANL_CODE, lpseCode);
+						jsonObject.put(Constants.Json.Panl.FACET_NAME, panlRangeFacetField.getSolrFieldName());
+						jsonObject.put(Constants.Json.Panl.TYPE, "range_facets");
 						panlLpseFacetOrderJsonArray.put(jsonObject);
 						found = true;
 					}
 
-					if(!found) {
+					if (!found) {
 						LOGGER.warn("Could not find the LPSE code '{}' for the facet order.", lpseCode);
 					}
 				}
@@ -898,40 +929,40 @@ public class CollectionProperties {
 
 			for (String lpseCode : panlLpseFacetOrder.split(",")) {
 				lpseCode = lpseCode.trim();
-				if(allFacetLPSECodes.contains(lpseCode)) {
+				if (allFacetLPSECodes.contains(lpseCode)) {
 
 					if (!LPSE_METADATA.contains(lpseCode)) {
 						boolean found = false;
-						if(LPSE_CODE_TO_FACET_FIELD_MAP.containsKey(lpseCode)) {
+						if (LPSE_CODE_TO_FACET_FIELD_MAP.containsKey(lpseCode)) {
 							PanlFacetField panlFacetField = LPSE_CODE_TO_FACET_FIELD_MAP.get(lpseCode);
 							JSONObject jsonObject = new JSONObject();
-							jsonObject.put("panl_code", lpseCode);
-							jsonObject.put("facet_name", panlFacetField.getSolrFieldName());
-							jsonObject.put("type", "facets");
+							jsonObject.put(Constants.Json.Panl.PANL_CODE, lpseCode);
+							jsonObject.put(Constants.Json.Panl.FACET_NAME, panlFacetField.getSolrFieldName());
+							jsonObject.put(Constants.Json.Panl.TYPE, "facets");
 							panlLpseFacetOrderJsonArray.put(jsonObject);
 							found = true;
 						} else if (LPSE_CODE_DATE_RANGE_FACET_MAP.containsKey(lpseCode)) {
 							PanlDateRangeFacetField panlDateRangeFacetField = LPSE_CODE_DATE_RANGE_FACET_MAP.get(lpseCode);
 							JSONObject jsonObject = new JSONObject();
-							jsonObject.put("panl_code", lpseCode);
-							jsonObject.put("facet_name", panlDateRangeFacetField.getSolrFieldName());
-							jsonObject.put("type", "date_range_facets");
+							jsonObject.put(Constants.Json.Panl.PANL_CODE, lpseCode);
+							jsonObject.put(Constants.Json.Panl.FACET_NAME, panlDateRangeFacetField.getSolrFieldName());
+							jsonObject.put(Constants.Json.Panl.TYPE, "date_range_facets");
 							panlLpseFacetOrderJsonArray.put(jsonObject);
 							found = true;
 						}
 
 						// it can be a facet and a date range facet
-						if(LPSE_CODE_RANGE_FACET_MAP.containsKey(lpseCode)) {
+						if (LPSE_CODE_RANGE_FACET_MAP.containsKey(lpseCode)) {
 							PanlRangeFacetField panlRangeFacetField = LPSE_CODE_RANGE_FACET_MAP.get(lpseCode);
 							JSONObject jsonObject = new JSONObject();
-							jsonObject.put("panl_code", lpseCode);
-							jsonObject.put("facet_name", panlRangeFacetField.getSolrFieldName());
-							jsonObject.put("type", "range_facets");
+							jsonObject.put(Constants.Json.Panl.PANL_CODE, lpseCode);
+							jsonObject.put(Constants.Json.Panl.FACET_NAME, panlRangeFacetField.getSolrFieldName());
+							jsonObject.put(Constants.Json.Panl.TYPE, "range_facets");
 							panlLpseFacetOrderJsonArray.put(jsonObject);
 							found = true;
 						}
 
-						if(!found) {
+						if (!found) {
 							LOGGER.warn("Could not find the LPSE code '{}' for the facet order.", lpseCode);
 						}
 					}
@@ -948,13 +979,14 @@ public class CollectionProperties {
 				}
 			}
 			// now just add all other LPSE code
-			if(!allFacetLPSECodes.isEmpty()) {
-				LOGGER.warn("[Solr/Panl '{}/{}'] Remaining LPSE codes not added to the '{}' property, adding them to the end of the order",
+			if (!allFacetLPSECodes.isEmpty()) {
+				LOGGER.warn(
+						"[Solr/Panl '{}/{}'] Remaining LPSE codes not added to the '{}' property, adding them to the end of the order",
 						solrCollection,
 						panlCollectionUri,
 						Constants.Property.Panl.PANL_LPSE_FACETORDER);
 
-				for (String remainingLpseCode : allFacetLPSECodes.toArray(new String[] {})) {
+				for (String remainingLpseCode : allFacetLPSECodes.toArray(new String[]{})) {
 					LOGGER.warn("Remaining LPSE code '{}' added to the '{}' property.",
 							remainingLpseCode,
 							Constants.Property.Panl.PANL_LPSE_FACETORDER);
@@ -1497,8 +1529,7 @@ public class CollectionProperties {
 	 * <p>Return the list of facet fields that should be sorted by the index,
 	 * rather than the count.</p>
 	 *
-	 * @return The list of facet fields that should be sorted by index rather
-	 * than the count.
+	 * @return The list of facet fields that should be sorted by index rather than the count.
 	 */
 	public List<PanlFacetField> getFacetIndexSortFields() {
 		return (FACET_INDEX_SORT_FIELDS);
@@ -1571,8 +1602,8 @@ public class CollectionProperties {
 	 * an empty string.</p>
 	 *
 	 * <p>For example, if the Solr field does not have a boost applied to it, this
-	 * method will return <code>""</code>.  If it does have a boost value (e.g. '4')
-	 * it will return <code>"^4"</code>.</p>
+	 * method will return <code>""</code>.  If it does have a boost value (e.g. '4') it will return
+	 * <code>"^4"</code>.</p>
 	 *
 	 * @param solrFieldName The Solr field name to look up to determine if there is a boost value.
 	 *

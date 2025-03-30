@@ -1,4 +1,4 @@
-# Synapticloop PANL
+__# Synapticloop PANL
 
 <img src="src/docs/synapticloop-panl-headline.png" alt="The Synapticloop Panl headline" />
 
@@ -630,127 +630,6 @@ bin/solr start -cloud -p 8983 -s "example/cloud/node1/solr"
 bin/solr start -cloud -p 7574 -s "example/cloud/node2/solr" -z localhost:9983
 ```
 
-# Build Related Tasks
-
-## Updating the Version Number
-
-Gradle looks in the file `src/main/resources/gradle.properties` for the Panl
-release version number and the Solr version
-number that Panl will integrate with.
-
-The two properties are:
-
-- `panl.version` - the release version
-- `panl.solr.version` - the Solr version for integration
-
-Both of these properties are used to generate the distributable file versions
-and are used within the code when
-generating startup output.
-
-## Testing the Code
-
-There are three test suites
-
-1. The regular Java unit tests
-2. The integration tests
-3. The integration spider tess
-
-4. **Unit tests**
-
-### _Windows_
-
-```shell
-gradlew.bat test
-```
-
-### _*NIX_
-
-```shell
-./gradlew test
-```
-
-**Integration tests**
-
-> **Note:**  A Solr server will need to be running, available, and setup with
-> the appropriate collections indexed for this to work.
-
-### _Windows_
-
-```shell
-gradlew.bat testIntegration
-```
-
-### _*NIX_
-
-```shell
-./gradlew testIntegration
-```
-
-**Integration Spider tests**
-
-> **Note:**  A Solr server will need to be running, available, and setup with
-> the appropriate collections indexed for
-> this to work.
-
-These tests will spider a running Panl/Solr server for the output and ensure
-that all links down to two levels contain
-valid tokens
-
-### _Windows_
-
-```shell
-gradlew.bat testIntegrationSpider
-```
-
-### _*NIX_
-
-```shell
-./gradlew testIntegrationSpider
-```
-
-## Building the Code
-
-This will build, test, and assemble the distributable
-
-### _Windows_
-
-```shell
-gradlew.bat build
-```
-
-### _*NIX_
-
-```shell
-./gradlew build
-```
-
-## Assembling the Distributable
-
-This will assemble the distribution
-
-### _Windows_
-
-```shell
-gradlew.bat assemble
-```
-
-### _*NIX_
-
-```shell
-./gradlew assemble
-```
-
-The distributions (both a `.zip` and a `.tar` file) will be created in the build
-distributions directory.
-
-I.e.
-
-- `./build/distributions` (*NIX), or
-- `.\build\distributions` (Windows)
-
-with the release files named `solr-panl-9-x.x.x` where `x.x.x` is the version
-number.
-
 # Version History
 
 ## 2.1.0 Internal niceties  (codename `hidden-summer`)  **UNDER DEVELOPMENT**
@@ -767,6 +646,10 @@ number.
 - **Bug Fixes**
   - Fixed generator where it would leave an empty (and ignored) property of
     `panl.lpse.fields` in the properties file 
+  - Fixed bug where BOOLEAN facets were allowed to have multiple values - 
+    which it shouldn't.
+  - Fixed passing through the LPSE code for the passthrough parameter if 
+    there wasn't a passthrough value sent through.
 
 
 - **Documentation Update**
@@ -932,6 +815,55 @@ number.
 [Download the release packages](https://github.com/synapticloop/panl/releases/tag/1.0.0)
 
 [See all releases](https://github.com/synapticloop/panl/releases/)
+
+
+# Build/Development Related Tasks
+
+See the `DEV-PROCESS.md` file in this repository for building and testing 
+the code.
+
+## Building the Code
+
+This will build, test, and assemble the distributable
+
+### _Windows_
+
+```shell
+gradlew.bat build
+```
+
+### _*NIX_
+
+```shell
+./gradlew build
+```
+
+## Assembling the Distributable
+
+This will assemble the distribution
+
+### _Windows_
+
+```shell
+gradlew.bat assemble
+```
+
+### _*NIX_
+
+```shell
+./gradlew assemble
+```
+
+The distributions (both a `.zip` and a `.tar` file) will be created in the build
+distributions directory.
+
+I.e.
+
+- `./build/distributions` (*NIX), or
+- `.\build\distributions` (Windows)
+
+with the release files named `solr-panl-9-x.x.x` where `x.x.x` is the version
+number.
 
 
 # End Plate 

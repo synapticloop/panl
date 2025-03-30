@@ -31,6 +31,10 @@ import java.net.URLDecoder;
 import java.nio.charset.StandardCharsets;
 import java.util.StringTokenizer;
 
+/**
+ *
+ * @author Synapticloop
+ */
 public class PassThroughLpseToken extends LpseToken {
 	public PassThroughLpseToken(
 			CollectionProperties collectionProperties,

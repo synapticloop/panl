@@ -32,15 +32,15 @@ package com.synapticloop.panl.util;
  */
 public class Constants {
 
-	public static final String JSON_VALUE_NO_INFIX_REPLACEMENT = "~";
-	public static final String FORWARD_SLASH = "/";
-	public static final String BOOLEAN_TRUE_VALUE = "true";
 	public static final String BOOLEAN_FALSE_VALUE = "false";
+	public static final String BOOLEAN_TRUE_VALUE = "true";
+	public static final String FORWARD_SLASH = "/";
+	public static final String JSON_VALUE_NO_INFIX_REPLACEMENT = "~";
 
 	public static final String DEFAULT_VALUE_QUERY_RESPOND_TO = "q";
 	public static final int DEFAULT_VALUE_FACET_MIN_COUNT = 1;
+	public static final int DEFAULT_VALUE_NUM_RESULTS_LOOKAHEAD = 5;
 	public static final int DEFAULT_VALUE_NUM_RESULTS_PER_PAGE = 10;
-	public static final int DEFAULT_VALUE_NUM_RESULTS_LOOKAHED = 5;
 	public static final int DEFAULT_VALUE_SOLR_FACET_LIMIT = 100;
 
 
@@ -155,6 +155,7 @@ public class Constants {
 			public static final String SUFFIX = "suffix";
 			public static final String TIMINGS = "timings";
 			public static final String TOTAL_TIME = "panl_total_time";
+			public static final String TYPE = "type";
 			public static final String URIS = "uris";
 			public static final String VALUE = "value";
 			public static final String VALUES = "values";

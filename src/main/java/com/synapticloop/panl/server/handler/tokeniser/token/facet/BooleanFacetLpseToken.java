@@ -145,10 +145,31 @@ public class BooleanFacetLpseToken extends LpseToken {
 	}
 
 	/**
-	 * TODO: This probably should return false...
-	 * @return
+	 * <p>A BOOLEAN facet cannot have multiple, it will either be a true or false
+	 * value, however, physically you can have more than one value passed through,
+	 * it is the further values that will be marked as invalid.</p>
+	 *
+	 * <p>I.e. logically, you cannot have two BOOLEAN values passed through,
+	 * in reality you could pass through as many as you want.</p>
+	 *
+	 * @return ALWAYS 'true', although any further values will be ignored by Panl
+	 *    and marked as 'INVALID'
 	 */
 	@Override public boolean getCanHaveMultiple() {
 		return (true);
 	}
+
+	/**
+	 * <p>Get the equivalence value, which will only return the LPSE code with a
+	 * forward slash, as it doesn't matter whether it is true or false, you may
+	 * only have one LPSE token value for this token.</p>
+	 *
+	 * @return The equivalence value
+	 */
+	public String getEquivalenceValue() {
+		// as there cannot be multiple, the equivalence value is just the lpse
+		// code with a forward slash
+		return(lpseCode + "/");
+	}
+
 }
