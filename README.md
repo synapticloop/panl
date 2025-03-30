@@ -111,9 +111,9 @@ parameters into concise and precise URL paths.
   from the result documents without any back-end logic.
 
 - **Have a configuration file drive the generation of the UI as much as 
-  possible** - Rather than hard-coding facets and then determining how to display them,
-  being able to have a returned JSON response which can be interrogated to
-  determine how the facets should be displayed.
+  possible** - Rather than hard-coding facets and then determining how to  
+  display them, being able to have a returned JSON response which can be 
+  interrogated to determine how the facets should be displayed.
 
 ## Additional Panl Niceties
 
@@ -635,12 +635,18 @@ bin/solr start -cloud -p 7574 -s "example/cloud/node2/solr" -z localhost:9983
 ## 2.1.0 Internal niceties  (codename `hidden-summer`)  **UNDER DEVELOPMENT**
 
 - **New Features**
-  - Added in `is_mutlivalue` JSON key to the active facets  
-  - Added in `panl.extra.<lpse_code>` to add a JSON object keyed on `extra` to 
+  - Added in `is_multivalue` JSON key to the active facets
+  - Added in `panl.extra.<lpse_code>` to add a JSON object keyed on `extra` to
     the returned active and available facets.
+  - Added in `panl.server.extra` to add a JSON object keyed on `extra` to 
+    the server with every response.
+  - Added in `panl.collection.extra` to add a JSON object keyed on `extra` to
+    every returned response for the collection (this will overwrite any 
+    duplicate keys in the server response above).
   - Added `panl.remove.solr.json.keys` which will removed duplicated information
-    and un-needed information
-  - Added `panl.lpse.facetorder` to the Panl response object
+    and un-needed information in the returned Solr response.
+  - Added `panl.lpse.facetorder` to the Panl response object so that the 
+    ordering may be different from the LPSE URL order.
 
 
 - **Bug Fixes**
@@ -653,6 +659,7 @@ bin/solr start -cloud -p 7574 -s "example/cloud/node2/solr" -z localhost:9983
 
 - **Code Changes**
     - Fixed output formatting for explanation of tokens
+    - Refactored constants into single place
 
 
 - **Documentation Update**
