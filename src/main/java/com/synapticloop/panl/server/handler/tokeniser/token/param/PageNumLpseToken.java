@@ -69,7 +69,7 @@ public class PageNumLpseToken extends LpseToken {
 	@Override public String explain() {
 		return ("PANL " +
 				(this.isValid ? "[  VALID  ]" : "[ INVALID ]") +
-				" <page_number>     LPSE code '" +
+				" <page_number>        LPSE code '" +
 				this.lpseCode +
 				"' using " +
 				(this.isValid ? "parsed" : "default") +

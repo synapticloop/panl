@@ -651,6 +651,9 @@ bin/solr start -cloud -p 7574 -s "example/cloud/node2/solr" -z localhost:9983
   - Fixed passing through the LPSE code for the passthrough parameter if 
     there wasn't a passthrough value sent through.
 
+- **Code Changes**
+    - Fixed output formatting for explanation of tokens
+
 
 - **Documentation Update**
   - Added in documentation for new features
