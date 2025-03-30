@@ -35,9 +35,6 @@ import java.util.StringTokenizer;
 public class DateRangeFacetLpseToken extends LpseToken {
 	public static final String TOKEN_TYPE = "facet";
 
-	// TODO - should be done in the BaseField
-	private String solrField = null;
-
 	private String previousNext;
 	private String solrRangeDesignator;
 	private String designator;
@@ -92,7 +89,7 @@ public class DateRangeFacetLpseToken extends LpseToken {
 	@Override public String explain() {
 		return ("PANL " +
 				(this.isValid ? "[  VALID  ]" : "[ INVALID ]") +
-				" <facet (DATE)>      LPSE code '" +
+				" <facet (DATE)>       LPSE code '" +
 				this.lpseCode +
 				"' (solr field '" +
 				this.solrField +

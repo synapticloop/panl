@@ -40,7 +40,6 @@ import java.util.Map;
 
 public class PaginationProcessor extends Processor {
 
-
 	public PaginationProcessor(CollectionProperties collectionProperties) {
 		super(collectionProperties);
 	}

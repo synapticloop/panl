@@ -33,8 +33,8 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * <p>Base processor that all other processors inherit from.  Holds JSON keys,
- * and defines base methods that can be overridden.</p>
+ * <p>Base processor that all other processors inherit from.  Defines base
+ * methods that can be overridden.</p>
  *
  * @author synapticloop
  */
@@ -82,6 +82,8 @@ public abstract class Processor {
 	/**
 	 * <p>Process the panlTokenMap to a string, will return an empty string
 	 * unless overridden.</p>
+	 * <p>{@link com.synapticloop.panl.server.handler.processor.CanonicalURIProcessor#processToString(Map)
+	 * See CanonicalURIProcessor#processToString(Map) that overrides this method}</p>
 	 *
 	 * @param panlTokenMap The panl token map to interrogate
 	 *

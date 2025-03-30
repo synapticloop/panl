@@ -75,6 +75,12 @@ public abstract class LpseToken {
 	 * <p>The LPSE code that was found in the last path encoding</p>
 	 */
 	protected String lpseCode;
+
+	/**
+	 * <p>The Solr field that this maps to</p>
+	 */
+	protected String solrField = null;
+
 	/**
 	 * <p>The original value </p>
 	 */

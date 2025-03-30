@@ -137,7 +137,7 @@ public class QueryLpseToken extends LpseToken {
 
 	@Override public String explain() {
 		return ("PANL [  VALID  ]" +
-				" <query>             LPSE code '" +
+				" <query>              LPSE code '" +
 				this.lpseCode +
 				"' with value '" +
 				value +

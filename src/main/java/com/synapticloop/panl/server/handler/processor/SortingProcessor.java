@@ -38,6 +38,8 @@ import java.util.*;
 /**
  * <p>The Sorting processor adds in the sorting options that are available for
  * the Panl JSON return object.</p>
+ *
+ * @author Synapticloop
  */
 public class SortingProcessor extends Processor {
 
@@ -47,8 +49,8 @@ public class SortingProcessor extends Processor {
 
 	/**
 	 * <p>There are two Sorting URIs - An additive URI, and a replacement URI,
-	 * unlike other LPSE codes - these are a finite, set number of sort fields which are defined by the
-	 * <code>panl.sort.fields</code> property.</p>
+	 * unlike other LPSE codes - these are a finite, set number of sort fields
+	 * which are defined by the <code>panl.sort.fields</code> property.</p>
 	 *
 	 * @param panlTokenMap the map of LPSE codes to list of panl tokens
 	 *
