@@ -1,4 +1,4 @@
-__# Synapticloop PANL
+# Synapticloop PANL
 
 <img src="src/docs/synapticloop-panl-headline.png" alt="The Synapticloop Panl headline" />
 
