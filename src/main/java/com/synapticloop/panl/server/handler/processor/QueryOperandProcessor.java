@@ -33,12 +33,32 @@ import org.json.JSONObject;
 import java.util.Map;
 import java.util.List;
 
+/**
+ * <p>This process is used for the Query Operand processing it to the response
+ * Panl object.</p>
+ *
+ * @author Synapticloop
+ */
 public class QueryOperandProcessor extends Processor {
 
+	/**
+	 * <p>Instantiate the Query Operand Processor</p>
+	 *
+	 * @param collectionProperties The collection properties for this processor
+	 */
 	public QueryOperandProcessor(CollectionProperties collectionProperties) {
 		super(collectionProperties);
 	}
 
+	/**
+	 * <p>Process the Query Operand to a JSON object which will include everything
+	 * that is required to generate the links for the query operand.</p>
+	 *
+	 * @param panlTokenMap The map of LPSE codes to the list of tokens
+	 * @param queryResponse The Solr query response
+	 *
+	 * @return The JSONObject which contains the links for the Panl object
+	 */
 	public JSONObject processToObject(Map<String, List<LpseToken>> panlTokenMap, QueryResponse queryResponse) {
 		String before = "";
 		String panlParamQueryOperand = collectionProperties.getPanlParamQueryOperand();

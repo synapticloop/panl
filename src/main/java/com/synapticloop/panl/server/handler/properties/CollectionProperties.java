@@ -59,17 +59,6 @@ import static com.synapticloop.panl.server.handler.fielderiser.field.BaseField.*
 public class CollectionProperties {
 	private static final Logger LOGGER = LoggerFactory.getLogger(CollectionProperties.class);
 
-	// STATIC strings for properties or property prefixes that are used to
-	// look up the configuration in the <panl_collection_url>.panl.properties
-	// file
-	// The default fieldsets that will __ALWAYS__ be registered
-	public static final String FIELDSETS_DEFAULT = "default";
-	public static final String FIELDSETS_EMPTY = "empty";
-
-	// Solr Query operands that are passed through to the Solr server
-	public static final String SOLR_DEFAULT_QUERY_OPERAND_OR = "OR";
-	public static final String SOLR_DEFAULT_QUERY_OPERAND_AND = "AND";
-
 	/**
 	 * <p>The name of this Solr collection</p>
 	 */
@@ -202,7 +191,6 @@ public class CollectionProperties {
 	 * <p>The LPSE passthrough parameter that is used</p>
 	 */
 	private String panlParamPassThrough;
-
 
 	/**
 	 * <p>The URL Parameter key that the Panl server will use for a keyword search
@@ -416,17 +404,19 @@ public class CollectionProperties {
 	 */
 	private void parseDefaultProperties() throws PanlServerException {
 		this.panlIncludeSingleFacets = properties
-				.getProperty(Constants.Property.Panl.PANL_INCLUDE_SINGLE_FACETS, "false")
-				.equals("true");
+				.getProperty(Constants.Property.Panl.PANL_INCLUDE_SINGLE_FACETS, Constants.BOOLEAN_FALSE_VALUE)
+				.equals(Constants.BOOLEAN_TRUE_VALUE);
 
 		this.panlIncludeSameNumberFacets = properties
-				.getProperty(Constants.Property.Panl.PANL_INCLUDE_SAME_NUMBER_FACETS, "false")
-				.equals("true");
+				.getProperty(Constants.Property.Panl.PANL_INCLUDE_SAME_NUMBER_FACETS, Constants.BOOLEAN_FALSE_VALUE)
+				.equals(Constants.BOOLEAN_TRUE_VALUE);
 
 		this.formQueryRespondTo = properties.getProperty(Constants.Property.Panl.PANL_FORM_QUERY_RESPONDTO, "q");
 
 		this.facetMinCount = PropertyHelper.getIntProperty(LOGGER, properties, Constants.Property.Solr.SOLR_FACET_MIN_COUNT, 1);
-		this.highlight = properties.getProperty(Constants.Property.Solr.SOLR_HIGHLIGHT, "false").equals("true");
+		this.highlight =
+				properties.getProperty(Constants.Property.Solr.SOLR_HIGHLIGHT, Constants.BOOLEAN_FALSE_VALUE)
+				          .equals(Constants.BOOLEAN_TRUE_VALUE);
 		this.numResultsPerPage = PropertyHelper.getIntProperty(LOGGER, properties, Constants.Property.Solr.SOLR_NUMROWS_DEFAULT, 10);
 
 		// we are setting the maximum number of results to default to the same
@@ -569,33 +559,68 @@ public class CollectionProperties {
 			String lpseCode = panlFieldKey.substring(panlFieldKey.lastIndexOf(".") + 1);
 			// now we need to know the type of the facetField
 			String solrFieldType = properties.getProperty(Constants.Property.Panl.PANL_TYPE + lpseCode, null);
-			boolean isOrFacet = properties.getProperty(Constants.Property.Panl.PANL_OR_FACET + lpseCode, "false").equals("true");
-			boolean isRangeFacet = properties.getProperty(Constants.Property.Panl.PANL_RANGE_FACET + lpseCode, "false").equals("true");
+			boolean isOrFacet = properties.getProperty(
+					Constants.Property.Panl.PANL_OR_FACET + lpseCode,
+					Constants.BOOLEAN_FALSE_VALUE).equals(Constants.BOOLEAN_TRUE_VALUE);
+			boolean isRangeFacet = properties.getProperty(Constants.Property.Panl.PANL_RANGE_FACET + lpseCode,
+					Constants.BOOLEAN_FALSE_VALUE).equals(Constants.BOOLEAN_TRUE_VALUE);
 
 			PanlFacetField facetField;
 			if (TYPE_SOLR_DATE_POINT_FIELD.equals(solrFieldType)) {
-				facetField = new PanlDateRangeFacetField(lpseCode, panlFieldKey, properties, solrCollection, panlCollectionUri,
+				facetField = new PanlDateRangeFacetField(
+						lpseCode,
+						panlFieldKey,
+						properties,
+						solrCollection,
+						panlCollectionUri,
 						lpseLength);
+
 				LPSE_CODE_DATE_RANGE_FACET_MAP.put(lpseCode, (PanlDateRangeFacetField) facetField);
+
 			} else if (TYPE_SOLR_BOOL_FIELD.equals(solrFieldType)) {
-				facetField = new PanlBooleanFacetField(lpseCode, panlFieldKey, properties, solrCollection, panlCollectionUri,
+				facetField = new PanlBooleanFacetField(
+						lpseCode,
+						panlFieldKey,
+						properties,
+						solrCollection,
+						panlCollectionUri,
 						lpseLength);
+
 				LPSE_CODE_BOOLEAN_FACET_MAP.put(lpseCode, (PanlBooleanFacetField) facetField);
+
 			} else if (isOrFacet) {
-				facetField = new PanlOrFacetField(lpseCode, panlFieldKey, properties, solrCollection, panlCollectionUri,
+				facetField = new PanlOrFacetField(
+						lpseCode,
+						panlFieldKey,
+						properties,
+						solrCollection,
+						panlCollectionUri,
 						lpseLength);
+
 				PANL_CODE_OR_FIELDS.add(lpseCode);
 				PanlOrFacetField panlOrFacetField = (PanlOrFacetField) facetField;
+
 				if (panlOrFacetField.getIsAlwaysOr()) {
 					PANL_CODE_OR_FIELDS_ALWAYS.add(lpseCode);
 				}
 			} else if (isRangeFacet) {
-				facetField = new PanlRangeFacetField(lpseCode, panlFieldKey, properties, solrCollection, panlCollectionUri,
+				facetField = new PanlRangeFacetField(
+						lpseCode,
+						panlFieldKey,
+						properties,
+						solrCollection,
+						panlCollectionUri,
 						lpseLength);
+
 				LPSE_CODE_RANGE_FACET_MAP.put(lpseCode, (PanlRangeFacetField) facetField);
 				PANL_CODE_RANGE_FIELDS.add(lpseCode);
 			} else {
-				facetField = new PanlFacetField(lpseCode, panlFieldKey, properties, solrCollection, panlCollectionUri,
+				facetField = new PanlFacetField(
+						lpseCode,
+						panlFieldKey,
+						properties,
+						solrCollection,
+						panlCollectionUri,
 						lpseLength);
 			}
 
@@ -972,18 +997,18 @@ public class CollectionProperties {
 		}
 
 		// there must always be a default field
-		if (!resultFieldsMap.containsKey(FIELDSETS_DEFAULT)) {
+		if (!resultFieldsMap.containsKey(Constants.Url.Panl.FIELDSETS_DEFAULT)) {
 			LOGGER.warn("[ Solr/Panl '{}/{}' ] Missing default field set, adding one which will return all fields.",
 					solrCollection, panlCollectionUri);
-			resultFieldsMap.put(FIELDSETS_DEFAULT, new ArrayList<>());
+			resultFieldsMap.put(Constants.Url.Panl.FIELDSETS_DEFAULT, new ArrayList<>());
 		}
 
-		if (resultFieldsMap.containsKey(FIELDSETS_EMPTY)) {
+		if (resultFieldsMap.containsKey(Constants.Url.Panl.FIELDSETS_EMPTY)) {
 			LOGGER.warn(
 					"[ Solr/Panl '{}/{}' ] 'empty' fieldset defined.  This will be ignored, and empty fieldset __ALWAYS__ returns no fields.",
 					solrCollection, panlCollectionUri);
 		}
-		resultFieldsMap.put(FIELDSETS_EMPTY, null);
+		resultFieldsMap.put(Constants.Url.Panl.FIELDSETS_EMPTY, null);
 	}
 
 	private void addResultsFields(String resultFieldsName, String resultFields) throws PanlServerException {
@@ -1050,9 +1075,9 @@ public class CollectionProperties {
 
 	public String getSolrDefaultQueryOperand() {
 		if (solrDefaultQueryOperand.equals("-")) {
-			return (SOLR_DEFAULT_QUERY_OPERAND_OR);
+			return (Constants.Parameter.Solr.SOLR_DEFAULT_QUERY_OPERAND_OR);
 		} else {
-			return (SOLR_DEFAULT_QUERY_OPERAND_AND);
+			return (Constants.Parameter.Solr.SOLR_DEFAULT_QUERY_OPERAND_AND);
 		}
 	}
 
@@ -1468,6 +1493,13 @@ public class CollectionProperties {
 		return (LPSE_CODE_WHEN_MAP.get(lpseCode));
 	}
 
+	/**
+	 * <p>Return the list of facet fields that should be sorted by the index,
+	 * rather than the count.</p>
+	 *
+	 * @return The list of facet fields that should be sorted by index rather
+	 * than the count.
+	 */
 	public List<PanlFacetField> getFacetIndexSortFields() {
 		return (FACET_INDEX_SORT_FIELDS);
 	}
@@ -1535,10 +1567,14 @@ public class CollectionProperties {
 	}
 
 	/**
-	 * <p>Return the boost for a field in the Solr form of <code>^number</code> or
-	 * an empty string</p>
+	 * <p>Return the boost for a field in the Solr form of <code>^&lt;number&gt;</code> or
+	 * an empty string.</p>
 	 *
-	 * @param solrFieldName The Solr field name
+	 * <p>For example, if the Solr field does not have a boost applied to it, this
+	 * method will return <code>""</code>.  If it does have a boost value (e.g. '4')
+	 * it will return <code>"^4"</code>.</p>
+	 *
+	 * @param solrFieldName The Solr field name to look up to determine if there is a boost value.
 	 *
 	 * @return The Solr query boost in the correct format, or an empty string if no boost is available.
 	 */

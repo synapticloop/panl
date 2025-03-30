@@ -437,5 +437,4 @@ public abstract class BasePrefixSuffixField extends BaseField {
 		}
 		return (sb.toString());
 	}
-
 }

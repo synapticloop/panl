@@ -48,7 +48,11 @@ import java.util.Map;
  * </ul>
  *
  * <p><strong>NOTE:</strong> The pass-through parameter, if defined, will
- * __NEVER__ be included.</p>
+ * __NOT__ be included, unless the property
+ * <code>panl.param.passthrough.canonical</code> is set to <code>true</code>.</p>
+ *
+ * <p><em>i.e.<code>panl.param.passthrough.canonical=true</code> in the
+ * <code>&lt;panl_collection_url&gt;.panl.properties</code> file.</em></p>
  */
 public class CanonicalURIProcessor extends Processor {
 

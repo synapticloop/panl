@@ -25,8 +25,6 @@ package com.synapticloop.panl.server.handler;
  */
 
 import com.synapticloop.panl.exception.PanlNotFoundException;
-import com.synapticloop.panl.server.handler.processor.SearchFieldsProcessor;
-import com.synapticloop.panl.server.handler.properties.CollectionProperties;
 import com.synapticloop.panl.server.handler.properties.PanlProperties;
 import com.synapticloop.panl.server.handler.webapp.util.ResourceHelper;
 import com.synapticloop.panl.util.Constants;
@@ -46,8 +44,6 @@ import java.net.URISyntaxException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import static com.synapticloop.panl.server.handler.CollectionRequestHandler.*;
 
 /**
  * <p>This is the handler which will return more facets for a specific facet
@@ -135,7 +131,7 @@ public class PanlMoreFacetsHandler extends BaseResponseHandler implements HttpRe
 						i++;
 						continue;
 					case 3:
-						stringBuilder.append(CollectionProperties.FIELDSETS_EMPTY);
+						stringBuilder.append(Constants.Url.Panl.FIELDSETS_EMPTY);
 						break;
 					default:
 						stringBuilder.append(path);

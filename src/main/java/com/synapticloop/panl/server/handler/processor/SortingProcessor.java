@@ -41,10 +41,6 @@ import java.util.*;
  */
 public class SortingProcessor extends Processor {
 
-
-	public static final String SORTING_OPTION_DESC = "-";
-	public static final String SORTING_OPTION_ASC = "+";
-
 	public SortingProcessor(CollectionProperties collectionProperties) {
 		super(collectionProperties);
 	}
@@ -122,9 +118,9 @@ public class SortingProcessor extends Processor {
 				sortObject.put(Constants.Json.Panl.NAME, collectionProperties.getPanlNameFromPanlCode(sortFieldLpseCode));
 				sortObject.put(Constants.Json.Panl.FACET_NAME, collectionProperties.getSolrFieldNameFromLpseCode(sortFieldLpseCode));
 				sortObject.put(Constants.Json.Panl.SET_URI_DESC,
-					finalBefore + panlParamSortLpseKey + sortFieldLpseCode + SORTING_OPTION_DESC + lpseCode);
+					finalBefore + panlParamSortLpseKey + sortFieldLpseCode + Constants.Url.Panl.SORTING_OPTION_DESC + lpseCode);
 				sortObject.put(Constants.Json.Panl.SET_URI_ASC,
-					finalBefore + panlParamSortLpseKey + sortFieldLpseCode + SORTING_OPTION_ASC + lpseCode);
+					finalBefore + panlParamSortLpseKey + sortFieldLpseCode + Constants.Url.Panl.SORTING_OPTION_ASC + lpseCode);
 
 
 				// Now for the add fields
@@ -137,7 +133,7 @@ public class SortingProcessor extends Processor {
 							sortBefore +
 							panlParamSortLpseKey +
 							sortFieldLpseCode +
-							SORTING_OPTION_DESC +
+							Constants.Url.Panl.SORTING_OPTION_DESC +
 							lpseCode);
 
 					sortObject.put(Constants.Json.Panl.ADD_URI_ASC,
@@ -145,7 +141,7 @@ public class SortingProcessor extends Processor {
 							sortBefore +
 							panlParamSortLpseKey +
 							sortFieldLpseCode +
-							SORTING_OPTION_ASC +
+							Constants.Url.Panl.SORTING_OPTION_ASC +
 							lpseCode);
 				}
 				sortFieldsArray.put(sortObject);

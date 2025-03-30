@@ -107,6 +107,19 @@ public abstract class BaseField {
 		this(lpseCode, propertyKey, properties, solrCollection, panlCollectionUri, 1);
 	}
 
+	/**
+	 * <p>Instantiate a new BaseField</p>
+	 *
+	 * @param lpseCode The LPSE code
+	 * @param properties The properties for all LPSE codes
+	 * @param propertyKey The property key for a substring
+	 * @param solrCollection The Solr Collection that this attaches to
+	 * @param panlCollectionUri The Panl collection URL that this is bound to
+	 * @param lpseLength The LPSE code length for the collection
+	 *
+	 * @throws PanlServerException If there was an error in instantiation
+	 */
+
 	public BaseField(
 			String lpseCode,
 			String propertyKey,
@@ -116,11 +129,11 @@ public abstract class BaseField {
 			int lpseLength) throws PanlServerException {
 
 		this.panlIncludeSingleFacets = properties
-				.getProperty(Constants.Property.Panl.PANL_INCLUDE_SINGLE_FACETS, "false")
-				.equals("true");
+				.getProperty(Constants.Property.Panl.PANL_INCLUDE_SINGLE_FACETS, Constants.BOOLEAN_FALSE_VALUE)
+				.equals(Constants.BOOLEAN_TRUE_VALUE);
 		this.panlIncludeSameNumberFacets = properties
-				.getProperty(Constants.Property.Panl.PANL_INCLUDE_SAME_NUMBER_FACETS, "false")
-				.equals("true");
+				.getProperty(Constants.Property.Panl.PANL_INCLUDE_SAME_NUMBER_FACETS, Constants.BOOLEAN_FALSE_VALUE)
+				.equals(Constants.BOOLEAN_TRUE_VALUE);
 
 		this.lpseCode = lpseCode;
 		this.properties = properties;
@@ -129,36 +142,36 @@ public abstract class BaseField {
 		this.panlCollectionUri = panlCollectionUri;
 		this.lpseLength = lpseLength;
 		this.facetSortByIndex = properties
-				.getProperty(Constants.Property.Panl.PANL_FACETSORT + this.lpseCode, "count")
-				.equals("index");
+				.getProperty(Constants.Property.Panl.PANL_FACETSORT + this.lpseCode, Constants.Property.Panl.SOLR_VALUE_COUNT)
+				.equals(Constants.Property.Panl.SOLR_VALUE_INDEX);
 		this.isMultiValue = properties
-				.getProperty(Constants.Property.Panl.PANL_IS_MULTIVALUE + this.lpseCode, "false")
-				.equals("true");
+				.getProperty(Constants.Property.Panl.PANL_MULTIVALUE + this.lpseCode, Constants.BOOLEAN_FALSE_VALUE)
+				.equals(Constants.BOOLEAN_TRUE_VALUE);
 
 		String extraJSONObjectString = properties
 				.getProperty(Constants.Property.Panl.PANL_EXTRA + this.lpseCode, null);
 
-		if(null != extraJSONObjectString) {
+		if (null != extraJSONObjectString) {
 			try {
 				this.extraJSONObject = new JSONObject(extraJSONObjectString);
-			} catch(JSONException ex) {
-				throw new PanlServerException("Could not parse the JSON extra property with value '" + extraJSONObjectString + "'.");
+			} catch (JSONException ex) {
+				throw new PanlServerException(
+						"Could not parse the JSON extra property with value '" + extraJSONObjectString + "'.");
 			}
 		}
-
 
 
 		// if it is multivalued, then we will see if we have a multivalued separator
 		this.valueSeparator = properties
 				.getProperty(Constants.Property.Panl.PANL_MULTIVALUE_SEPARATOR + this.lpseCode, null);
-		if(this.valueSeparator != null) {
-			if(this.valueSeparator.isEmpty()) {
+		if (this.valueSeparator != null) {
+			if (this.valueSeparator.isEmpty()) {
 				String message = String.format(
 						"LPSE code '%s' sets a multivalued (or) separator which is of zero length, " +
 								"the property '%s%s' will be ignored.",
 						lpseCode,
 						lpseCode,
-						Constants.Property.Panl.PANL_IS_MULTIVALUE);
+						Constants.Property.Panl.PANL_MULTIVALUE);
 				getLogger().warn(message);
 				this.valueSeparator = null;
 			} else if (this.valueSeparator.trim().equals("/")) {
@@ -167,7 +180,7 @@ public abstract class BaseField {
 								"the property '%s%s' will be ignored.",
 						lpseCode,
 						lpseCode,
-						Constants.Property.Panl.PANL_IS_MULTIVALUE);
+						Constants.Property.Panl.PANL_MULTIVALUE);
 				getLogger().warn(message);
 			} else {
 				// if this is not multivalued, then you cannot have a multivalued separator
@@ -178,7 +191,7 @@ public abstract class BaseField {
 							lpseCode,
 							Constants.Property.Panl.PANL_MULTIVALUE_SEPARATOR,
 							lpseCode,
-							Constants.Property.Panl.PANL_IS_MULTIVALUE,
+							Constants.Property.Panl.PANL_MULTIVALUE,
 							lpseCode,
 							Constants.Property.Panl.PANL_MULTIVALUE_SEPARATOR,
 							lpseCode);
@@ -216,8 +229,10 @@ public abstract class BaseField {
 	protected void validateProperties() throws PanlServerException {
 		boolean hasErrors = false;
 		// check for or facet and range facet
-		boolean orFacet = properties.getProperty(Constants.Property.Panl.PANL_OR_FACET + this.lpseCode, "false").equals("true");
-		boolean rangeFacet = properties.getProperty(Constants.Property.Panl.PANL_RANGE_FACET + this.lpseCode, "false").equals("true");
+		boolean orFacet = properties.getProperty(Constants.Property.Panl.PANL_OR_FACET + this.lpseCode, "false")
+		                            .equals("true");
+		boolean rangeFacet = properties.getProperty(Constants.Property.Panl.PANL_RANGE_FACET + this.lpseCode, "false")
+		                               .equals("true");
 		if (orFacet && rangeFacet) {
 			hasErrors = true;
 			getLogger().error("You __MAY_NOT__ set a facet to both OR and RANGE.  Properties: '{}{}' and '{}{}'.",
@@ -524,12 +539,12 @@ public abstract class BaseField {
 
 						FacetLpseToken facetLpseToken = (FacetLpseToken) lpseToken;
 						if (facetLpseToken.getIsRangeToken()) {
-							RangeFacetLpseToken rangeFacetLpseToken = (RangeFacetLpseToken)lpseToken;
+							RangeFacetLpseToken rangeFacetLpseToken = (RangeFacetLpseToken) lpseToken;
 							sb.append(lpseToken.getLpseCode());
 							sb.append(facetLpseToken.getLpseCode());
 
 							// whilst this may be a range token, it may just be a single value
-							if(null != rangeFacetLpseToken.getToValue()) {
+							if (null != rangeFacetLpseToken.getToValue()) {
 								sb.append(rangeFacetLpseToken.getHasInfix() ? "-" : "+");
 							}
 						} else {
@@ -553,7 +568,7 @@ public abstract class BaseField {
 	 * @return The URI path for this field, or an empty string if the field has no values
 	 */
 	public String getCanonicalUriPath(Map<String, List<LpseToken>> panlTokenMap,
-																		CollectionProperties collectionProperties) {
+			CollectionProperties collectionProperties) {
 		if (this.valueSeparator != null) {
 			if (panlTokenMap.containsKey(lpseCode)) {
 				StringBuilder stringBuilder = new StringBuilder(getValuePrefix());
@@ -574,7 +589,7 @@ public abstract class BaseField {
 	}
 
 	public String getCanonicalLpseCode(Map<String, List<LpseToken>> panlTokenMap,
-																		 CollectionProperties collectionProperties) {
+			CollectionProperties collectionProperties) {
 		if (this.valueSeparator != null) {
 			if (panlTokenMap.containsKey(lpseCode)) {
 				// for or separators, there is only ever one lpse code
@@ -659,11 +674,13 @@ public abstract class BaseField {
 	 * @param panlTokenMap The token map to get the parameters from
 	 * @param collectionProperties The Collection properties for this request
 	 */
-	public void applyToQuery(SolrQuery solrQuery, Map<String, List<LpseToken>> panlTokenMap, CollectionProperties collectionProperties) {
+	public void applyToQuery(SolrQuery solrQuery, Map<String, List<LpseToken>> panlTokenMap,
+			CollectionProperties collectionProperties) {
 		// no facets, no query, all is good :)
 		if (panlTokenMap.containsKey(getLpseCode())) {
-			if(panlTokenMap.containsKey(collectionProperties.getPanlParamQueryOperand())) {
-				applyToQueryInternalOperand(solrQuery, panlTokenMap.get(getLpseCode()), panlTokenMap.get(collectionProperties.getPanlParamQueryOperand()), collectionProperties);
+			if (panlTokenMap.containsKey(collectionProperties.getPanlParamQueryOperand())) {
+				applyToQueryInternalOperand(solrQuery, panlTokenMap.get(getLpseCode()),
+						panlTokenMap.get(collectionProperties.getPanlParamQueryOperand()), collectionProperties);
 			} else {
 				applyToQueryInternal(solrQuery, panlTokenMap.get(getLpseCode()), collectionProperties);
 			}
@@ -733,7 +750,7 @@ public abstract class BaseField {
 			List<LpseToken> queryLpseTokenList,
 			CollectionProperties collectionProperties) {
 
-			applyToQueryInternal(solrQuery, lpseTokenList, collectionProperties);
+		applyToQueryInternal(solrQuery, lpseTokenList, collectionProperties);
 	}
 
 	/**
@@ -755,8 +772,8 @@ public abstract class BaseField {
 	/**
 	 * <p>Append information to the available facet object.</p>
 	 *
-	 * <p>This will add the base information to the facet object, and then calls
-	 * the internal method <code>appendAvailableObjectInternal</code> which sub classes can override and append additional
+	 * <p>This will add the base information to the facet object, and then calls the internal method
+	 * <code>appendAvailableObjectInternal</code> which sub classes can override and append additional
 	 * information to the JSON object.</p>
 	 *
 	 * @param jsonObject The JSON object to append values to
@@ -766,14 +783,14 @@ public abstract class BaseField {
 		jsonObject.put(Constants.Json.Panl.NAME, this.panlFieldName);
 		jsonObject.put(Constants.Json.Panl.PANL_CODE, this.lpseCode);
 
-		if(null != extraJSONObject) {
+		if (null != extraJSONObject) {
 			jsonObject.put(Constants.Json.Panl.EXTRA, extraJSONObject);
 		}
 
 		if (this.isMultiValue) {
 			jsonObject.put(Constants.Json.Panl.IS_MULTIVALUE, this.isMultiValue);
 
-			if(null != valueSeparator) {
+			if (null != valueSeparator) {
 				jsonObject.put(Constants.Json.Panl.VALUE_SEPARATOR, this.valueSeparator);
 			}
 		}
@@ -859,7 +876,7 @@ public abstract class BaseField {
 				facetValueObject.put(Constants.Json.Panl.COUNT, value.getCount());
 				facetValueObject.put(Constants.Json.Panl.ENCODED, getEncodedPanlValue(valueName));
 
-				if(isMultiValue) {
+				if (isMultiValue) {
 					facetValueObject.put(Constants.Json.Panl.ENCODED_MULTI, PanlLPSEHelper.encodeURIPath(valueName));
 				}
 				facetValueArrays.put(facetValueObject);
@@ -905,8 +922,8 @@ public abstract class BaseField {
 	 * @return The JSON object with the URIs for adding this field to the existing search URI.
 	 */
 	protected JSONObject getAdditionURIObject(CollectionProperties collectionProperties,
-																						BaseField lpseField,
-																						Map<String, List<LpseToken>> panlTokenMap) {
+			BaseField lpseField,
+			Map<String, List<LpseToken>> panlTokenMap) {
 
 		String additionLpseCode = lpseField.getLpseCode();
 		JSONObject additionObject = new JSONObject();
@@ -979,7 +996,7 @@ public abstract class BaseField {
 	 * @param lpseToken The lpse token to use when computing what information is added
 	 */
 	public void addToRemoveObject(JSONObject removeObject, LpseToken lpseToken) {
-		if(null != extraJSONObject) {
+		if (null != extraJSONObject) {
 			removeObject.put(Constants.Json.Panl.EXTRA, extraJSONObject);
 		}
 		if (this.isMultiValue) {
@@ -997,8 +1014,10 @@ public abstract class BaseField {
 	 *
 	 * @return whether information has been appended to the JSON object.
 	 */
-	public boolean appendAvailableDateRangeValues(JSONObject dateRangeFacetObject,
-																								CollectionProperties collectionProperties, Map<String, List<LpseToken>> panlTokenMap) {
+	public boolean appendAvailableDateRangeValues(
+			JSONObject dateRangeFacetObject,
+			CollectionProperties collectionProperties,
+			Map<String, List<LpseToken>> panlTokenMap) {
 		return (false);
 	}
 
@@ -1024,9 +1043,8 @@ public abstract class BaseField {
 
 	/**
 	 * <p>Return the value separator facet values.  This will return null if
-	 * not configured - This is only available on OR Facet fields with an OR
-	 * separator configured, and on REGULAR facets which are multivalued and
-	 * have a multivalue separator configured.</p>
+	 * not configured - This is only available on OR Facet fields with an OR separator configured, and on REGULAR facets
+	 * which are multivalued and have a multivalue separator configured.</p>
 	 *
 	 * @return the string for the value separator, or null if not set
 	 */
@@ -1034,6 +1052,14 @@ public abstract class BaseField {
 		return valueSeparator;
 	}
 
+	/**
+	 * <p>Return the configured JSON object from the properties file that will be
+	 * added to the response JSON object under the key <code>extra</code></p>
+	 *
+	 * <p><strong>WILL RETURN NULL if not configured</strong></p>
+	 *
+	 * @return The JSON object for the 'extra' information
+	 */
 	public JSONObject getExtraJSONObject() {
 		return extraJSONObject;
 	}

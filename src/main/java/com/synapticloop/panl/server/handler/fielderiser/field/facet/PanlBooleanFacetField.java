@@ -95,14 +95,24 @@ public class PanlBooleanFacetField extends PanlFacetField {
 		populateSolrFieldTypeValidation();
 
 		if (null != solrFieldType && solrFieldType.equals(TYPE_SOLR_BOOL_FIELD)) {
-			this.booleanTrueReplacement = properties.getProperty("panl.bool." + this.lpseCode + ".true", null);
+			this.booleanTrueReplacement = properties.getProperty(
+					Constants.Property.Panl.PANL_BOOL +
+							this.lpseCode +
+							Constants.Property.Panl.SUFFIX_TRUE,
+					null);
+
 			if (null != this.booleanTrueReplacement) {
 				hasBooleanTrueReplacement = true;
 			} else {
 				this.booleanTrueReplacement = Constants.BOOLEAN_TRUE_VALUE;
 			}
 
-			this.booleanFalseReplacement = properties.getProperty("panl.bool." + this.lpseCode + ".false", null);
+			this.booleanFalseReplacement = properties.getProperty(
+					Constants.Property.Panl.PANL_BOOL +
+							this.lpseCode +
+							Constants.Property.Panl.SUFFIX_FALSE,
+					null);
+
 			if (null != this.booleanFalseReplacement) {
 				hasBooleanFalseReplacement = true;
 			} else {
@@ -115,7 +125,7 @@ public class PanlBooleanFacetField extends PanlFacetField {
 	}
 
 	private void populateBooleanCheckbox() {
-		String checkboxProperty = properties.getProperty("panl.bool.checkbox." + this.lpseCode, null);
+		String checkboxProperty = properties.getProperty(Constants.Property.Panl.PANL_BOOL_CHECKBOX + this.lpseCode, null);
 		this.isCheckbox = null != checkboxProperty;
 		if(this.isCheckbox) {
 			this.checkboxValue = Boolean.parseBoolean(checkboxProperty);
@@ -133,7 +143,7 @@ public class PanlBooleanFacetField extends PanlFacetField {
 			sb.append(valuePrefix);
 		}
 
-		if ("true".equals(value) && hasBooleanTrueReplacement) {
+		if (Constants.BOOLEAN_TRUE_VALUE.equals(value) && hasBooleanTrueReplacement) {
 			sb.append(booleanTrueReplacement);
 		} else if (hasBooleanFalseReplacement) {
 			sb.append(booleanFalseReplacement);

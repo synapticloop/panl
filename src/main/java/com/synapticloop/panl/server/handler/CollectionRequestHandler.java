@@ -74,6 +74,7 @@ public class CollectionRequestHandler {
 	private final CollectionProperties collectionProperties;
 	private final PanlProperties panlProperties;
 	private final PanlClient panlClient;
+	private final String panlCollectionUri;
 
 	// These are the processors, which processes the Solr response and creates
 	// the Panl response object
@@ -85,8 +86,6 @@ public class CollectionRequestHandler {
 	private final FieldsProcessor fieldsProcessor;
 	private final AvailableProcessor availableProcessor;
 	private final CanonicalURIProcessor canonicalURIProcessor;
-
-	private final String panlCollectionUri;
 
 	/**
 	 * <p>The collection request handler which maps a single collection and its
@@ -139,7 +138,7 @@ public class CollectionRequestHandler {
 	 * server and parse the response.</p>
 	 *
 	 * <p>This handler also handles the More Facets response by looking for a
-	 * context attribute of <code>PanlMoreFacetsHandler.CONTEXT_KEY_LPSE_CODE</code>,
+	 * context attribute of <code>Constants.Context.Panl.LPSE_CODE</code>,
 	 * which, if it exists, will only return the details for that specific facet
 	 * code.</p>
 	 *
@@ -277,6 +276,7 @@ public class CollectionRequestHandler {
 				// need to be displayed
 
 				solrQuery.addFacetField(collectionProperties.getWhenUnlessSolrFacetFields(lpseTokens));
+
 				for (PanlFacetField facetIndexSortField : collectionProperties.getFacetIndexSortFields()) {
 					solrQuery.add("f." + facetIndexSortField.getSolrFieldName() + ".facet.sort", "index");
 				}
@@ -290,7 +290,7 @@ public class CollectionRequestHandler {
 					if (lpseField instanceof PanlRangeFacetField) {
 						solrQuery.add(Constants.Parameter.Solr.STATS_FIELD, lpseField.getSolrFieldName());
 						if (!hasStats) {
-							solrQuery.add(Constants.Parameter.Solr.STATS, "true");
+							solrQuery.add(Constants.Parameter.Solr.STATS, Constants.BOOLEAN_TRUE_VALUE);
 							hasStats = true;
 						}
 					}

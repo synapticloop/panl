@@ -37,23 +37,30 @@ public class Constants {
 	public static final String BOOLEAN_TRUE_VALUE = "true";
 	public static final String BOOLEAN_FALSE_VALUE = "false";
 
+	public static final String DEFAULT_VALUE_QUERY_RESPOND_TO = "q";
+	public static final int DEFAULT_VALUE_FACET_MIN_COUNT = 1;
+	public static final int DEFAULT_VALUE_NUM_RESULTS_PER_PAGE = 10;
+	public static final int DEFAULT_VALUE_NUM_RESULTS_LOOKAHED = 5;
+	public static final int DEFAULT_VALUE_SOLR_FACET_LIMIT = 100;
+
+
 	/**
 	 * <p>JSON Key Constants</p>
 	 */
 	public static class Json {
 
 		/**
-		 * <p>JSON keys for Responses</p>
+		 * <p>JSON keys for HTTP Responses</p>
 		 */
 		public static class Response {
 			public static final String ERROR = "error";
 			public static final String MESSAGE = "message";
 			public static final String STATUS = "status";
 			public static final String VALID_URLS = "valid_urls";
-
 		}
+
 		/**
-		 * <p>JSON keys for Solr</p>
+		 * <p>JSON keys for Solr JSON response addition/removal</p>
 		 */
 		public static class Solr {
 			public static final String FACET_COUNTS = "facetCounts";
@@ -65,7 +72,7 @@ public class Constants {
 		}
 
 		/**
-		 * <p>JSON keys for Panl response</p>
+		 * <p>JSON keys for Panl response object</p>
 		 */
 		public static class Panl {
 			public static final String ACTIVE = "active";
@@ -161,6 +168,11 @@ public class Constants {
 	 * <p>URL/Solr query parameters</p>
 	 */
 	public static class Parameter {
+
+		/**
+		 * <p>Parameters that are sent through to the Solr server, either as a key,
+		 * the value, or a part of the key or value.</p>
+		 */
 		public static class Solr {
 			public static final String HL = "hl";
 			public static final String HL_FL = "hl.fl";
@@ -173,8 +185,15 @@ public class Constants {
 			public static final String QUERY_DESIGNATOR_MONTHS = "MONTHS";
 			public static final String QUERY_DESIGNATOR_YEARS = "YEARS";
 
+			// Solr Query operands that are passed through to the Solr server
+			public static final String SOLR_DEFAULT_QUERY_OPERAND_OR = "OR";
+			public static final String SOLR_DEFAULT_QUERY_OPERAND_AND = "AND";
 		}
 
+		/**
+		 * <p>Query parameter keys that are passed through to the Panl response
+		 * handlers.</p>
+		 */
 		public static class Panl {
 			public static final String CODE = "code";
 			public static final String LIMIT = "limit";
@@ -185,6 +204,10 @@ public class Constants {
 	 * <p>Context constants</p>
 	 */
 	public static class Context {
+
+		/**
+		 * <p>Context keys for the Panl server</p>
+		 */
 		public static class Panl {
 			public static final String FACET_LIMIT = "facet_limit";
 			public static final String LPSE_CODE = "lpse_code";
@@ -192,10 +215,23 @@ public class Constants {
 	}
 
 	/**
-	 * <p>Property file constants</p>
+	 * <p>Property file constants which are used to lookup properties within the
+	 * <code>.properties</code> files.</p>
+	 *
+	 * <p>The constants are split into two subclasses, the <code>Panl</code>
+	 * class has all properties that start with <code>panl.</code> string and the
+	 * <code>Solr</code> subclass has all constants that start with the
+	 * <code>solr.</code> String.</p>
 	 */
 	public static class Property {
+
+		/**
+		 * <p>property keys, suffix, prefixes, or substrings that are used by the
+		 * property files for picking up properties.</p>
+		 */
 		public static class Panl {
+			public static final String PANL_BOOL = "panl.bool.";
+			public static final String PANL_BOOL_CHECKBOX = "panl.bool.checkbox.";
 			public static final String PANL_DATE = "panl.date.";
 			public static final String PANL_EXTRA = "panl.extra.";
 			public static final String PANL_FACET = "panl.facet.";
@@ -204,11 +240,11 @@ public class Constants {
 			public static final String PANL_FORM_QUERY_RESPONDTO = "panl.form.query.respondto";
 			public static final String PANL_INCLUDE_SAME_NUMBER_FACETS = "panl.include.same.number.facets";
 			public static final String PANL_INCLUDE_SINGLE_FACETS = "panl.include.single.facets";
-			public static final String PANL_IS_MULTIVALUE = "panl.multivalue.";
 			public static final String PANL_LPSE_FACETORDER = "panl.lpse.facetorder";
 			public static final String PANL_LPSE_IGNORE = "panl.lpse.ignore";
 			public static final String PANL_LPSE_LENGTH = "panl.lpse.length";
 			public static final String PANL_LPSE_ORDER = "panl.lpse.order";
+			public static final String PANL_MULTIVALUE = "panl.multivalue.";
 			public static final String PANL_MULTIVALUE_SEPARATOR = "panl.multivalue.separator.";
 			public static final String PANL_NAME = "panl.name.";
 			public static final String PANL_OR_ALWAYS = "panl.or.always.";
@@ -242,23 +278,47 @@ public class Constants {
 			public static final String PANL_WHEN = "panl.when.";
 
 			public static final String SUFFIX_DAYS = ".days";
+			public static final String SUFFIX_FALSE = ".false";
 			public static final String SUFFIX_HOURS = ".hours";
 			public static final String SUFFIX_MONTHS = ".months";
 			public static final String SUFFIX_NEXT = ".next";
 			public static final String SUFFIX_PREFIX = ".prefix";
 			public static final String SUFFIX_PREVIOUS = ".previous";
 			public static final String SUFFIX_SUFFIX = ".suffix";
+			public static final String SUFFIX_TRUE = ".true";
 			public static final String SUFFIX_YEARS = ".years";
+
+			public static final String SOLR_VALUE_COUNT = "count";
+			public static final String SOLR_VALUE_INDEX = "index";
+
 		}
 
+		/**
+		 * <p>Properties that pertain to the Solr server setup</p>
+		 */
 		public static class Solr {
 			public static final String SOLR_DEFAULT_QUERY_OPERAND = "solr.default.query.operand";
 			public static final String SOLR_FACET_LIMIT = "solr.facet.limit";
 			public static final String SOLR_FACET_MIN_COUNT = "solr.facet.min.count";
 			public static final String SOLR_HIGHLIGHT = "solr.highlight";
+
 			public static final String SOLR_NUMROWS_DEFAULT = "solr.numrows.default";
 			public static final String SOLR_NUMROWS_LOOKAHEAD = "solr.numrows.lookahead";
 			public static final String SOLR_NUMROWS_MAXIMUM = "solr.numrows.maximum";
+		}
+	}
+
+	public static class Url {
+		public static class Panl {
+			public static final String SORTING_OPTION_ASC = "+";
+			public static final String SORTING_OPTION_DESC = "-";
+
+			// STATIC strings for properties or property prefixes that are used to
+			// look up the configuration in the <panl_collection_url>.panl.properties
+			// file
+			// The default fieldsets that will __ALWAYS__ be registered
+			public static final String FIELDSETS_DEFAULT = "default";
+			public static final String FIELDSETS_EMPTY = "empty";
 		}
 	}
 }

@@ -44,6 +44,8 @@ package com.synapticloop.panl.util;
 import java.io.ByteArrayOutputStream;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * <p>Utility class for LPSE path helping.</p>
@@ -55,6 +57,21 @@ import java.nio.charset.StandardCharsets;
  * @author original authors
  */
 public class PanlLPSEHelper {
+	private static final Set<Integer> SUB_DELIMITER_SET = new HashSet<>();
+	private static final Set<Integer> GENERIC_DELIMITER_SET = new HashSet<>();
+	static {
+		char[] subDelimiterCharacters = { '!', '$', '&', '\'', '(', ')', '*', '+', ',', ';', '=' };
+		char[] genericDelimiterCharacters = { ':', '/', '?', '#', '[', ']', '@' };
+
+		for (char c : subDelimiterCharacters) {
+			SUB_DELIMITER_SET.add((int)c);
+		}
+
+		for (char c : genericDelimiterCharacters) {
+			GENERIC_DELIMITER_SET.add((int)c);
+		}
+
+	}
 
 	/**
 	 * <p>Encode a query Parameter</p>
@@ -129,7 +146,7 @@ public class PanlLPSEHelper {
 	 * @see <a href="https://www.ietf.org/rfc/rfc3986.txt">RFC 3986, appendix A</a>
 	 */
 	protected static boolean isGenericDelimiter(int c) {
-		return (':' == c || '/' == c || '?' == c || '#' == c || '[' == c || ']' == c || '@' == c);
+		return(GENERIC_DELIMITER_SET.contains(c));
 	}
 
 	/**
@@ -137,8 +154,7 @@ public class PanlLPSEHelper {
 	 * @see <a href="https://www.ietf.org/rfc/rfc3986.txt">RFC 3986, appendix A</a>
 	 */
 	protected static boolean isSubDelimiter(int c) {
-		return ('!' == c || '$' == c || '&' == c || '\'' == c || '(' == c || ')' == c || '*' == c || '+' == c ||
-				',' == c || ';' == c || '=' == c);
+		return(SUB_DELIMITER_SET.contains(c));
 	}
 
 	/**

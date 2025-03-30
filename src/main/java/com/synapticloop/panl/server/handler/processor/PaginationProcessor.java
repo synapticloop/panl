@@ -140,7 +140,7 @@ public class PaginationProcessor extends Processor {
 	 * @return The JSON object
 	 */
 	private static JSONObject getReplacementResetURIObject(String replaceLpseCode, Map<String, List<LpseToken>> panlTokenMap, CollectionProperties collectionProperties) {
-		StringBuilder uriPath = new StringBuilder("/");
+		StringBuilder uriPath = new StringBuilder(Constants.FORWARD_SLASH);
 		StringBuilder lpseCode = new StringBuilder();
 
 		JSONObject pageUris = new JSONObject();
@@ -159,7 +159,12 @@ public class PaginationProcessor extends Processor {
 
 		BaseField baseField = collectionProperties.getLpseField(replaceLpseCode);
 
-		pageUris.put(Constants.Json.Panl.AFTER, baseField.getValueSuffix() + Constants.FORWARD_SLASH + uriPath + lpseCode + Constants.FORWARD_SLASH);
+		pageUris.put(Constants.Json.Panl.AFTER,
+				baseField.getValueSuffix() +
+						Constants.FORWARD_SLASH +
+						uriPath +
+						lpseCode +
+						Constants.FORWARD_SLASH);
 
 		return (pageUris);
 	}

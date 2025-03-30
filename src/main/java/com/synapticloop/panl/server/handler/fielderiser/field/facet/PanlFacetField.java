@@ -42,15 +42,22 @@ import java.util.Properties;
 import java.util.StringTokenizer;
 
 /**
- * <p>A Panl facet field comes in five flavours</p>
+ * <p>A Panl facet field comes in five flavours:</p>
  *
  * <ol>
  *   <li>A regular facet,</li>
  *   <li>A RANGE facet,</li>
  *   <li>An OR facet, or</li>
  *   <li>A BOOLEAN facet</li>
- *   <li>A DATE facet</li>
+ *   <li>A DATE Range facet - </li>
  * </ol>
+ *
+ * <p>This class deals with the regular facet</p>
+ *
+ * {@link com.synapticloop.panl.server.handler.fielderiser.field.facet.PanlRangeFacetField RANGE facet (PanlRangeFacetField)}
+ * {@link com.synapticloop.panl.server.handler.fielderiser.field.facet.PanlOrFacetField RANGE facet (PanlOrFacetField)}
+ * {@link com.synapticloop.panl.server.handler.fielderiser.field.facet.PanlBooleanFacetField RANGE facet (PanlBooleanFacetField)}
+ * {@link com.synapticloop.panl.server.handler.fielderiser.field.facet.PanlDateRangeFacetField RANGE facet (PanlDateRangeFacetField)}
  */
 public class PanlFacetField extends BasePrefixSuffixField {
 	private static final Logger LOGGER = LoggerFactory.getLogger(PanlFacetField.class);
