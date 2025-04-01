@@ -98,6 +98,7 @@ public class PanlGenerator {
 		if (!shouldOverwrite) {
 			checkPropertiesFileLocation();
 		}
+
 		File file = new File(propertiesFileLocation);
 		this.collectionPropertiesOutputDirectory = file.getParentFile().getAbsolutePath();
 		checkSchemaFileLocations();
@@ -201,6 +202,7 @@ public class PanlGenerator {
 		// time to go through them and generate the panl.properties file
 
 		generatePanlDotProperties();
+
 		for (PanlCollection panlCollection : panlCollections) {
 			generateCollectionDotPanlDotProperties(panlCollection);
 		}
@@ -226,11 +228,16 @@ public class PanlGenerator {
 	 *
 	 * @return The inputted parameter
 	 */
-	private String getAndValidateParameterInput(String description, String panlParamProperty, String defaultValue,
-		String errorPrompt) {
+	private String getAndValidateParameterInput(
+			String description,
+			String panlParamProperty,
+			String defaultValue,
+			String errorPrompt) {
+
 		if (null != errorPrompt) {
 			System.out.printf("Invalid value. %s Please try again.\n", errorPrompt);
 		}
+
 		System.out.printf(
 			"Enter the 1 character property value for '%s' (%s), default [%s]: ",
 			panlParamProperty,
@@ -320,7 +327,8 @@ public class PanlGenerator {
 	}
 
 	/**
-	 * <p>Generate the collection_uri.panl.properties file.</p>
+	 * <p>Generate the <code>&lt;panl_collection_url&gt;.panl.properties</code>
+	 * file.</p>
 	 *
 	 * @param panlCollection The panl collection object to generate the file with
 	 */

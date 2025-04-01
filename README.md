@@ -9,9 +9,9 @@ out._**
 
 # Development Information 
 
-| Release Tag | Latest Release | Development Branch |
-|-------------|----------------|--------------------|
-| ![GitHub Tag](https://img.shields.io/github/v/tag/synapticloop/panl) | ![GitHub Release](https://img.shields.io/github/v/release/synapticloop/panl) | `hidden-summer` |
+| Release<br />Tag                                                   | Latest<br />Release                                                         | Development<br >Branch                                                               | Development<br />Version |
+|---------------------------------------------------------------------|------------------------------------------------------------------------------|---------------------------------------------------------------------------------------|-------------------------------------|
+| ![GitHub Tag](https://img.shields.io/github/v/tag/synapticloop/panl) | ![GitHub Release](https://img.shields.io/github/v/release/synapticloop/panl) | `hidden-summer` [See Branch](https://github.com/synapticloop/panl/tree/hidden-summer) | 2.1.0                               |
 
 
 **Major branch release status:**
@@ -32,17 +32,17 @@ out._**
 
 This is for reference
 
-| BRANCH              | TYPE     | VERSION | GITHUB                                                                                    |
-|---------------------|----------|---------|-------------------------------------------------------------------------------------------|
-| `hidden-summer`     | `BRANCH` | `2.1.0` | [GitHub > Hidden Summer](https://github.com/synapticloop/panl/tree/hidden-summer)         |
-|                     |          |         |                                                                                           |
-| `MAIN`              | `BRANCH` | `2.0.0` | [GitHub > MAIN](https://github.com/synapticloop/panl)                                     |
-|                     |          |         |                                                                                           |
-| `billowing-feather` | `BRANCH` | `2.0.0` | [GitHub > Billowing Feather](https://github.com/synapticloop/panl/tree/billowing-feather) |
-| `needy-phantom`     | `BRANCH` | `1.2.0` | [GitHub > Needy Phantom](https://github.com/synapticloop/panl/tree/needy-phanton)         |
-| `grizzled-pebble`   | `TAG`    | `1.1.1` | [GitHub > Tag 1.1.1](https://github.com/synapticloop/panl/tree/1.1.1)                     |
-| `broad-firefly`     | `TAG`    | `1.1.0` | [GitHub > Tag 1.1.0](https://github.com/synapticloop/panl/tree/1.1.0)                     |
-| `bright-wildflower` | `TAG`    | `1.0.0` | [GitHub > Tag 1.1.0](https://github.com/synapticloop/panl/tree/1.0.0)                     |
+| BRANCH              | TYPE     | VERSION | GITHUB                                                                                                        |
+|---------------------|----------|---------|---------------------------------------------------------------------------------------------------------------|
+| `hidden-summer`     | `BRANCH` | `2.1.0` | [GitHub > `hidden-summer`](https://github.com/synapticloop/panl/tree/hidden-summer)             |
+|                     |          |         |                                                                                                               |
+| `MAIN`              | `BRANCH` | `2.0.0` | [GitHub > MAIN](https://github.com/synapticloop/panl)                                                         |
+|                     |          |         |                                                                                                               |
+| `billowing-feather` | `BRANCH` | `2.0.0` | [GitHub > `billowing-feather`](https://github.com/synapticloop/panl/tree/billowing-feather) |
+| `needy-phantom`     | `BRANCH` | `1.2.0` | [GitHub > `needy-phanton`](https://github.com/synapticloop/panl/tree/needy-phanton)              |
+| `grizzled-pebble`   | `TAG`    | `1.1.1` | [GitHub > Tag 1.1.1](https://github.com/synapticloop/panl/tree/1.1.1)                                         |
+| `broad-firefly`     | `TAG`    | `1.1.0` | [GitHub > Tag 1.1.0](https://github.com/synapticloop/panl/tree/1.1.0)                                         |
+| `bright-wildflower` | `TAG`    | `1.0.0` | [GitHub > Tag 1.1.0](https://github.com/synapticloop/panl/tree/1.0.0)                                         |
 
 
 
@@ -173,6 +173,10 @@ parameters into concise and precise URL paths.
    be selected to be searched on, for example, in the Book Store Walkthrough,
    the user can select to search within the title, the author, the description,
    or all of them. **Also configure the query time boost.**
+
+1. **MORE LIKE THIS** - Return 'More Like This' results from the Solr server 
+   with your specific query, with the ability to configure the Solr query 
+   operands on the fly.
 
 1. **FIELD VALUE validation** - By default, Solr can error when an invalid value
    is passed through - for example, if Solr is expecting a numeric value and it
@@ -647,6 +651,10 @@ bin/solr start -cloud -p 7574 -s "example/cloud/node2/solr" -z localhost:9983
     and un-needed information in the returned Solr response.
   - Added `panl.lpse.facetorder` to the Panl response object so that the 
     ordering may be different from the LPSE URL order.
+  - Added 'More Like This' Solr functionality, including handler and 
+    additional properties:
+    - `panl.mlt.handler`
+    - `panl.mlt.fields`
 
 
 - **Bug Fixes**
@@ -664,9 +672,12 @@ bin/solr start -cloud -p 7574 -s "example/cloud/node2/solr" -z localhost:9983
 
 - **Documentation Update**
   - Added in documentation for new features
-  - Added in new key and description
-  - Updated cookbook
+  - Larger documentation update for:
+    - 'More Like This' functionality
+    - Panl Cookbook
+  - Added in new keys and descriptions
   - Spelling and grammar updates
+  - Added in more detail for the `TODO` tags
 
 [View the code for this release](https://github.com/synapticloop/panl/tree/2.1.0)
 

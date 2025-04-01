@@ -102,6 +102,11 @@ public class CollectionProperties {
 	private Integer lpseLength;
 
 	/**
+	 * <p>The URL path for the 'more like this' Solr handler</p>
+	 */
+	private String mltHandler = "/mlt";
+
+	/**
 	 * <p>This is the list of all facet fields that are registered with panl.
 	 * These fields may be used as facets.</p>
 	 */
@@ -324,6 +329,7 @@ public class CollectionProperties {
 		parseLpseIgnore();
 		parseFacetSortFields();
 
+		parseMltProperties();
 		parseExtraProperties(panlExtraJsonObject);
 
 
@@ -1556,6 +1562,26 @@ public class CollectionProperties {
 		}
 	}
 
+	/**
+	 * <p>Parse the 'more like this' properties.</p>
+	 */
+	private void parseMltProperties() {
+		this.mltHandler = properties.getProperty(Constants.Property.Panl.PANL_MLT_HANDLER, Constants.DEFAULT_MLT_HANDLER);
+		if(this.mltHandler.isEmpty()) {
+			LOGGER.warn("The property '{}' is empty, setting it to the default '{}'",
+					Constants.Property.Panl.PANL_MLT_HANDLER,
+					Constants.DEFAULT_MLT_HANDLER);
+			this.mltHandler = Constants.DEFAULT_MLT_HANDLER;
+		}
+
+		if(!this.mltHandler.startsWith("/")) {
+			LOGGER.warn("The property '{}' value of '{}' does not start with a '/', this may affect the Solr more like this" +
+							" handler.",
+					Constants.Property.Panl.PANL_MLT_HANDLER,
+					this.mltHandler);
+		}
+	}
+
 	private void parseExtraProperties(JSONObject panlJsonExtraObject) throws PanlServerException {
 		JSONObject serverObject = new JSONObject();
 		if(null == panlJsonExtraObject) {
@@ -1667,6 +1693,29 @@ public class CollectionProperties {
 	 */
 	public JSONObject getJsonExtraObject() {
 		return(jsonExtraObject);
+	}
+
+	/**
+	 * <p>Get the 'more like this' handler - which defaults to <code>/mlt</code>.</p>
+	 *
+	 * <p><strong>NOTE:</strong> This __SHOULD__ start with a forward slash
+	 * '<code>/</code>', else it will be passed through as a a <code>qt</code>
+	 * parameter to the Solr server.</p>
+	 *
+	 * <p><strong>NOTE:</strong> This must match the configuration in the
+	 * <code>solrconfig.xml</code> handler - e.g. the <code>name</code> attribute
+	 * of the <code>&lt;requestHandler /&gt;</code> XML element:</p>
+	 *
+	 * <pre>
+	 *   &lt;requestHandler name="/mlt" class="solr.MoreLikeThisHandler"&gt;
+	 *     &lt;str name="mlt.fl"&gt;body&lt;/str&gt;
+	 *   &lt;/requestHandler&gt;
+	 * </pre>
+	 *
+	 * @return the URL path for the more like this handler
+	 */
+	public String getMltHandler() {
+		return mltHandler;
 	}
 }
 

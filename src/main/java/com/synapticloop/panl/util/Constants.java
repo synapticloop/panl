@@ -43,6 +43,7 @@ public class Constants {
 	public static final int DEFAULT_VALUE_NUM_RESULTS_PER_PAGE = 10;
 	public static final int DEFAULT_VALUE_SOLR_FACET_LIMIT = 100;
 
+	public static final String DEFAULT_MLT_HANDLER = "/mlt";
 
 	/**
 	 * <p>JSON Key Constants</p>
@@ -308,6 +309,8 @@ public class Constants {
 
 			public static final String DEFAULT_CLOUD_SOLR_CLIENT = "CloudSolrClient";
 			public static final String DEFAULT_SOLR_URL = "http://localhost:8983/solr";
+
+			public static final String PANL_MLT_HANDLER = "panl.mlt.handler";
 		}
 
 		/**
