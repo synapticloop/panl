@@ -311,6 +311,8 @@ public class Constants {
 			public static final String DEFAULT_SOLR_URL = "http://localhost:8983/solr";
 
 			public static final String PANL_MLT_HANDLER = "panl.mlt.handler";
+			public static final String PANL_MLT_ENABLE = "panl.mlt.enable";
+			public static final String PANL_MLT_FIELD_LIST = "panl.mlt.fl";
 		}
 
 		/**

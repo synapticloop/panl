@@ -45,8 +45,6 @@ This is for reference
 | `bright-wildflower` | `TAG`    | `1.0.0` | [GitHub > Tag 1.1.0](https://github.com/synapticloop/panl/tree/1.0.0)                                         |
 
 
-
-
 The Synapticloop Panl project uses `major.minor.micro` versioning, the meaning
 of which:
 
@@ -247,8 +245,17 @@ Panl is designed to be a drop in replacement for your current version. Although
 backwards compatibility is always the highest priority, do keep an eye out 
 in the release notes for any breaking features.
 
-Your existing configuration files should just work with the downloaded release
+Your existing configuration files _should_ just work with the downloaded release
 package.
+
+### Some important notes on upgrading
+
+With the release of Panl version 2.1.0 the addition of the 'More Like This' 
+functionality will require additional configuration in the `solrconfig.xml` 
+file in order for this to work.  This configuration is _not_ included by 
+default in the Apache Solr distributions.  Unless you are starting from a 
+fresh install, you _will need to reconfigure your Solr server with a new 
+handler_.
 
 ## Read the Documentation
 
@@ -653,8 +660,9 @@ bin/solr start -cloud -p 7574 -s "example/cloud/node2/solr" -z localhost:9983
     ordering may be different from the LPSE URL order.
   - Added 'More Like This' Solr functionality, including handler and 
     additional properties:
-    - `panl.mlt.handler`
-    - `panl.mlt.fields`
+    - `panl.mlt.enable` (default is '`false`')
+    - `panl.mlt.handler` (default is '`/mlt`')
+    - `panl.mlt.fields` (no default)
 
 
 - **Bug Fixes**
