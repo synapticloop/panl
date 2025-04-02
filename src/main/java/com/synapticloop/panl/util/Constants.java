@@ -310,9 +310,23 @@ public class Constants {
 			public static final String DEFAULT_CLOUD_SOLR_CLIENT = "CloudSolrClient";
 			public static final String DEFAULT_SOLR_URL = "http://localhost:8983/solr";
 
-			public static final String PANL_MLT_HANDLER = "panl.mlt.handler";
 			public static final String PANL_MLT_ENABLE = "panl.mlt.enable";
-			public static final String PANL_MLT_FIELD_LIST = "panl.mlt.fl";
+			public static final String PANL_MLT_HANDLER = "panl.mlt.handler";
+
+			public static final String PANL_MLT_BOOST = "panl.mlt.boost";
+			public static final String PANL_MLT_FL = "panl.mlt.fl";
+			public static final String PANL_MLT_INTERESTINGTERMS = "panl.mlt.interestingTerms";
+			public static final String PANL_MLT_MATCH_INCLUDE = "panl.mlt.match.include";
+			public static final String PANL_MLT_MATCH_OFFSET = "panl.mlt.match.offset";
+			public static final String PANL_MLT_MAXDF = "panl.mlt.maxdf";
+			public static final String PANL_MLT_MAXDFPCT = "panl.mlt.maxdfpct";
+			public static final String PANL_MLT_MAXNTP = "panl.mlt.maxntp";
+			public static final String PANL_MLT_MAXQT = "panl.mlt.maxqt";
+			public static final String PANL_MLT_MAXWL = "panl.mlt.maxwl";
+			public static final String PANL_MLT_MINDF = "panl.mlt.mindf";
+			public static final String PANL_MLT_MINTF = "panl.mlt.mintf";
+			public static final String PANL_MLT_MINWL = "panl.mlt.minwl";
+			public static final String PANL_MLT_QF = "panl.mlt.qf";
 		}
 
 		/**

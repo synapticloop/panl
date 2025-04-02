@@ -1567,6 +1567,7 @@ public class CollectionProperties {
 	 */
 	private void parseMltProperties() {
 		this.mltHandler = properties.getProperty(Constants.Property.Panl.PANL_MLT_HANDLER, Constants.DEFAULT_MLT_HANDLER);
+
 		if(this.mltHandler.isEmpty()) {
 			LOGGER.warn("The property '{}' is empty, setting it to the default '{}'",
 					Constants.Property.Panl.PANL_MLT_HANDLER,
