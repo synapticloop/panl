@@ -256,22 +256,22 @@ panl.mlt.handler=/mlt
 #                           'More Like This' (MLT) Overrides
 #                           ----- ---- ----- ----- ---------
 # The following properties will override any default properties that are
-# defined in the solrconfig.xml file - you do not need to set any of these
+# defined in the solrconfig.xml file - i.e. you do not need to set any of these
 # properties if they are already defined in this file.
 #
 # See https://solr.apache.org/guide/solr/latest/query-guide/morelikethis.html
-# (or the correct version for
+# (or the correct version for your Solr installation)
 #
 #                             ~ ~ ~ IMPORTANT ~ ~ ~
 #
-# THERE MAY BE DIFFERENCES WITH THE PARAMETERS THAT CAN BE SET DEPENDING ON THE
-#                           SOLR VERSION THAT YOU ARE USING
+#          THERE MAY BE DIFFERENCES WITH THE PARAMETERS THAT CAN BE SET
+#                DEPENDING ON THE SOLR VERSION THAT YOU ARE USING
 #
 #   - If the following property is not set in the default solrconfig.xml file
 #     and is not overridden here, then the MLT will __NOT__ work:
 #      - panl.mlt.fl
-#     Which is the comma separated list of Solr fields
-#
+#     Which is the comma separated list of Solr fields to perform the more like
+#     this query
 #                                ~ ~ ~ * ~ ~ ~
 panl.mlt.fl=
 panl.mlt.mintf=

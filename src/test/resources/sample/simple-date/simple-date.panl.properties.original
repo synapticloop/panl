@@ -194,7 +194,7 @@ panl.include.same.number.facets=false
 # response from the Panl server for this collection.  It will be added to the
 # JSON response object under the panl.extra JSON key.
 #
-# IMPORTANT:
+#                             ~ ~ ~ IMPORTANT ~ ~ ~
 #
 #   - If this is not a valid JSON object, then the server will error and fail
 #     to start.
@@ -206,6 +206,76 @@ panl.include.same.number.facets=false
 #                                ~ ~ ~ * ~ ~ ~
 
 panl.collection.extra=
+
+#                      'More Like This' (MLT) Functionality
+#                      ----- ---- ----- ----- -------------
+# The following properties will enable the MLT functionality in the Panl server
+# and works in conjunction with the solrconfig.xml file which requires
+# additional configuration - e.g.
+#
+#  <requestHandler name="/mlt" class="solr.MoreLikeThisHandler">
+#    <str name="mlt.fl">body</str>
+#  </requestHandler>
+#
+# By default this functionality is DISABLED with the panl.mlt.enable property
+# set to false if missing or not set to exactly "true".
+#
+# The properties are as follows:
+#
+#    panl.mlt.enable - Whether the MLT functionality is enabled in Panl for
+#        this CaFUP (type: Boolean, default: false)
+#    panl.mlt.handler - The handler path for the Solr MLT request handler
+#        (type: String, default: /mlt)
+#    panl.mlt.fl - The fields to reference for the MLT lookup (type: comma
+#        separated Strings, default: N/A)
+#
+#                             ~ ~ ~ IMPORTANT ~ ~ ~
+#
+#   - If you have not enabled the MLT functionality in Solr, then this will
+#     not work in the Panl server
+#   - The panl.mlt.handler property MUST match the configured handler in the
+#     Solr configuration
+#   - The panl.mlt.fl MUST exist in the Solr collection
+#
+#                                ~ ~ ~ * ~ ~ ~
+
+panl.mlt.enable=false
+panl.mlt.handler=/mlt
+
+#                           'More Like This' (MLT) Overrides
+#                           ----- ---- ----- ----- ---------
+# The following properties will override any default properties that are
+# defined in the solrconfig.xml file - i.e. you do not need to set any of these
+# properties if they are already defined in this file.
+#
+# See https://solr.apache.org/guide/solr/latest/query-guide/morelikethis.html
+# (or the correct version for your Solr installation)
+#
+#                             ~ ~ ~ IMPORTANT ~ ~ ~
+#
+#          THERE MAY BE DIFFERENCES WITH THE PARAMETERS THAT CAN BE SET
+#                DEPENDING ON THE SOLR VERSION THAT YOU ARE USING
+#
+#   - If the following property is not set in the default solrconfig.xml file
+#     and is not overridden here, then the MLT will __NOT__ work:
+#      - panl.mlt.fl
+#     Which is the comma separated list of Solr fields to perform the more like
+#     this query
+#                                ~ ~ ~ * ~ ~ ~
+panl.mlt.fl=
+panl.mlt.mintf=
+panl.mlt.mindf=
+panl.mlt.maxdf=
+panl.mlt.maxdfpct=
+panl.mlt.minwl=
+panl.mlt.maxwl=
+panl.mlt.maxqt=
+panl.mlt.maxntp=
+panl.mlt.boost=
+panl.mlt.qf=
+panl.mlt.interestingTerms=
+panl.mlt.match.include=
+panl.mlt.match.offset=
 
 
 #                          The Default Query Operand
