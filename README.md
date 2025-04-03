@@ -32,17 +32,18 @@ out._**
 
 This is for reference
 
-| BRANCH              | TYPE     | VERSION | GITHUB                                                                                                        |
-|---------------------|----------|---------|---------------------------------------------------------------------------------------------------------------|
-| `hidden-summer`     | `BRANCH` | `2.1.0` | [GitHub > `hidden-summer`](https://github.com/synapticloop/panl/tree/hidden-summer)             |
-|                     |          |         |                                                                                                               |
-| `MAIN`              | `BRANCH` | `2.0.0` | [GitHub > MAIN](https://github.com/synapticloop/panl)                                                         |
-|                     |          |         |                                                                                                               |
-| `billowing-feather` | `BRANCH` | `2.0.0` | [GitHub > `billowing-feather`](https://github.com/synapticloop/panl/tree/billowing-feather) |
-| `needy-phantom`     | `BRANCH` | `1.2.0` | [GitHub > `needy-phanton`](https://github.com/synapticloop/panl/tree/needy-phanton)              |
-| `grizzled-pebble`   | `TAG`    | `1.1.1` | [GitHub > Tag 1.1.1](https://github.com/synapticloop/panl/tree/1.1.1)                                         |
-| `broad-firefly`     | `TAG`    | `1.1.0` | [GitHub > Tag 1.1.0](https://github.com/synapticloop/panl/tree/1.1.0)                                         |
-| `bright-wildflower` | `TAG`    | `1.0.0` | [GitHub > Tag 1.1.0](https://github.com/synapticloop/panl/tree/1.0.0)                                         |
+| BRANCH                                                 | TYPE     | VERSION | GITHUB                                                                                                        |
+|--------------------------------------------------------|----------|---------|---------------------------------------------------------------------------------------------------------------|
+| `hidden-summer`                                        | `BRANCH` | `2.1.0` | [GitHub > `hidden-summer`](https://github.com/synapticloop/panl/tree/hidden-summer)             |
+|                                                        |          |         |                                                                                                               |
+| `MAIN`                                                 | `BRANCH` | `2.0.0` | [GitHub > MAIN](https://github.com/synapticloop/panl)                                                         |
+|                                                        |          |         |                                                                                                               |
+| `billowing-feather`                                    | `BRANCH` | `2.0.0` | [GitHub > `billowing-feather`](https://github.com/synapticloop/panl/tree/billowing-feather) |
+| <strong>BREAKING CHANGE TO LPSE URL path part</strong> |          |        |                                                                              |
+| `needy-phantom`                                        | `BRANCH` | `1.2.0` | [GitHub > `needy-phanton`](https://github.com/synapticloop/panl/tree/needy-phanton)              |
+| `grizzled-pebble`                                      | `TAG`    | `1.1.1` | [GitHub > Tag 1.1.1](https://github.com/synapticloop/panl/tree/1.1.1)                                         |
+| `broad-firefly`                                        | `TAG`    | `1.1.0` | [GitHub > Tag 1.1.0](https://github.com/synapticloop/panl/tree/1.1.0)                                         |
+| `bright-wildflower`                                    | `TAG`    | `1.0.0` | [GitHub > Tag 1.1.0](https://github.com/synapticloop/panl/tree/1.0.0)                                         |
 
 
 The Synapticloop Panl project uses `major.minor.micro` versioning, the meaning
