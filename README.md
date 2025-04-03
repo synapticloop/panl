@@ -9,9 +9,9 @@ out._**
 
 # Development Information 
 
-| Release<br />Tag                                                   | Latest<br />Release                                                         | Development<br >Branch<br />(version)                                                                       |
-|---------------------------------------------------------------------|------------------------------------------------------------------------------|-------------------------------------------------------------------------------------------------------------|
-| ![GitHub Tag](https://img.shields.io/github/v/tag/synapticloop/panl) | ![GitHub Release](https://img.shields.io/github/v/release/synapticloop/panl) | `hidden-summer` <br /> [See Branch](https://github.com/synapticloop/panl/tree/hidden-summer) <br /> (2.1.0) |
+| Release<br />Tag                                                   | Latest<br />Release                                                         | Development Branch (version)                                                                               |
+|---------------------------------------------------------------------|------------------------------------------------------------------------------|------------------------------------------------------------------------------------------------------------|
+| ![GitHub Tag](https://img.shields.io/github/v/tag/synapticloop/panl) | ![GitHub Release](https://img.shields.io/github/v/release/synapticloop/panl) | `hidden-summer` [See Branch](https://github.com/synapticloop/panl/tree/hidden-summer) (2.1.0) |
 
 
 **Major branch release status:**
