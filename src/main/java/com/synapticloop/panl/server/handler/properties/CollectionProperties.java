@@ -32,6 +32,8 @@ import com.synapticloop.panl.server.handler.fielderiser.field.*;
 import com.synapticloop.panl.server.handler.fielderiser.field.facet.*;
 import com.synapticloop.panl.server.handler.fielderiser.field.param.*;
 import com.synapticloop.panl.server.handler.helper.PropertyHelper;
+import com.synapticloop.panl.server.handler.properties.holder.MoreLikeThisHolder;
+import com.synapticloop.panl.server.handler.properties.holder.SolrFieldHolder;
 import com.synapticloop.panl.server.handler.tokeniser.token.LpseToken;
 import com.synapticloop.panl.util.Constants;
 import org.apache.solr.client.solrj.SolrQuery;
@@ -292,6 +294,14 @@ public class CollectionProperties {
 	private final Map<String, String> MANDATORY_LPSE_ORDER_FIELDS = new HashMap<>();
 	private boolean highlight;
 
+	// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+	//
+	// PROPERTY/PARAMETER HOLDERS FOR SPECIFIC AND ASSOCIATED PROPERTIES
+	//
+	// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+	private MoreLikeThisHolder moreLikeThisHolder;
+	private SolrFieldHolder solrFieldHolder;
+
 	/**
 	 * <p>Instantiate the Collection properties which maps to one Panl collection
 	 * URI path and multiple fieldsets.</p>
@@ -329,7 +339,11 @@ public class CollectionProperties {
 		parseLpseIgnore();
 		parseFacetSortFields();
 
-		parseMltProperties();
+
+		// now for the property holders
+		this.solrFieldHolder = new SolrFieldHolder(properties);
+		this.moreLikeThisHolder = new MoreLikeThisHolder(properties, solrFieldHolder);
+
 		parseExtraProperties(panlExtraJsonObject);
 
 
@@ -1562,30 +1576,9 @@ public class CollectionProperties {
 		}
 	}
 
-	/**
-	 * <p>Parse the 'more like this' properties.</p>
-	 */
-	private void parseMltProperties() {
-		this.mltHandler = properties.getProperty(Constants.Property.Panl.PANL_MLT_HANDLER, Constants.DEFAULT_MLT_HANDLER);
-
-		if(this.mltHandler.isEmpty()) {
-			LOGGER.warn("The property '{}' is empty, setting it to the default '{}'",
-					Constants.Property.Panl.PANL_MLT_HANDLER,
-					Constants.DEFAULT_MLT_HANDLER);
-			this.mltHandler = Constants.DEFAULT_MLT_HANDLER;
-		}
-
-		if(!this.mltHandler.startsWith("/")) {
-			LOGGER.warn("The property '{}' value of '{}' does not start with a '/', this may affect the Solr more like this" +
-							" handler.",
-					Constants.Property.Panl.PANL_MLT_HANDLER,
-					this.mltHandler);
-		}
-	}
-
 	private void parseExtraProperties(JSONObject panlJsonExtraObject) throws PanlServerException {
 		JSONObject serverObject = new JSONObject();
-		if(null == panlJsonExtraObject) {
+		if(null != panlJsonExtraObject) {
 			serverObject = panlJsonExtraObject;
 		}
 

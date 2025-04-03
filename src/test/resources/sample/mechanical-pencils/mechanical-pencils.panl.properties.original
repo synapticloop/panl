@@ -248,6 +248,52 @@ panl.mlt.handler=/mlt
 # defined in the solrconfig.xml file - i.e. you do not need to set any of these
 # properties if they are already defined in this file.
 #
+# The properties match the More Like This properties for the Solr server:
+#
+#    panl.mlt.fl=<String> (comma separated) - Specifies the fields to use for
+#        similarity. A list of fields can be provided separated by commas. If
+#        possible, the fields should have stored termVectors.
+#    panl.mlt.mintf=<Integer> (default: 2) - Specifies the minimum frequency
+#        below which terms will be ignored in the source document.
+#    panl.mlt.mindf=<Integer> (default: 5) - Specifies the minimum frequency
+#        below which terms will be ignored which do not occur in at least this
+#        many documents.
+#    panl.mlt.maxdf=<Integer> (default: none) - Specifies the maximum frequency
+#        above which terms will be ignored which occur in more than this many
+#        documents.
+#    panl.mlt.maxdfpct=<Integer> (default: none - between 0 and 100) -Specifies
+#        the maximum document frequency using a ratio relative to the number of
+#        documents in the index. The value provided must be an integer between
+#        0 and 100. For example, mlt.maxdfpct=75 means the word will be ignored
+#        if it occurs in more than 75 percent of the documents in the index.
+#    panl.mlt.minwl=<Integer> (default: none) - Sets the minimum word length
+#        below which words will be ignored.
+#    panl.mlt.maxwl=<Integer> (default: none) - Sets the maximum word length
+#        above which words will be ignored.
+#    panl.mlt.maxqt=<Integer> (default: 25) - Sets the maximum number of query
+#        terms that will be included in any generated query.
+#    panl.mlt.maxntp=<Integer> (Default: 5000) - Sets the maximum number of
+#        tokens to parse in each example document field that is not stored with
+#        TermVector support.
+#    panl.mlt.boost=<Boolean> (default: false) - Specifies if the query will be
+#        boosted by the interesting term relevance. Possible values are true or
+#        false.
+#    panl.mlt.qf=<String> (default: none) - Query fields and their boosts using
+#        the same format used by the DisMax Query Parser. These fields must
+#        also be specified in mlt.fl.
+#    panl.mlt.interestingTerms=<String> - Adds a section in the response that
+#        shows the top terms (based on TF/IDF) used for the MoreLikeThis query.
+#        __MUST__ BE one of 'list', 'none', or 'details' (case sensitive and
+#        without the single quotes).  The default is 'none' if missing or not
+#        configured.
+#    panl.mlt.match.include=<Boolean> (default: true) - Specifies if the
+#        response should include the matched document. If set to false, the
+#        response will look like a normal select response.
+#    panl.mlt.match.offset=<Integer> (default: none) - Specifies an offset into
+#        the main query search results to locate the document on which the
+#        MoreLikeThis query should operate. By default, the query operates on
+#        the first result for the q parameter.
+#
 # See https://solr.apache.org/guide/solr/latest/query-guide/morelikethis.html
 # (or the correct version for your Solr installation)
 #

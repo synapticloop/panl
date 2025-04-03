@@ -680,10 +680,11 @@ bin/solr start -cloud -p 7574 -s "example/cloud/node2/solr" -z localhost:9983
 - **Bug Fixes**
   - Fixed generator where it would leave an empty (and ignored) property of
     `panl.lpse.fields` in the properties file 
-  - Fixed bug where BOOLEAN facets were allowed to have multiple values - 
-    which it shouldn't.
-  - Fixed passing through the LPSE code for the passthrough parameter if 
-    there wasn't a passthrough value sent through.
+  - Fixed bug where BOOLEAN facets were allowed to have multiple values - which 
+    it shouldn't.
+  - Fixed passing through the LPSE code for the passthrough parameter if there 
+    wasn't a passthrough value sent through.
+  - Fixed bug with 'extra' JSON object not correctly overriding parent object
 
 - **Code Changes**
     - Fixed output formatting for explanation of tokens

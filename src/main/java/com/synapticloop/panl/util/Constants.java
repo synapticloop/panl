@@ -288,6 +288,7 @@ public class Constants {
 			public static final String PANL_SUFFIX = "panl.suffix.";
 			public static final String PANL_TYPE = "panl.type.";
 			public static final String PANL_UNLESS = "panl.unless.";
+			public static final String PANL_UNIQUEKEY = "panl.uniquekey.";
 			public static final String PANL_WHEN = "panl.when.";
 
 			public static final String SUFFIX_DAYS = ".days";
