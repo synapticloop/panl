@@ -68,7 +68,6 @@ changes to the book without any changes to the codebase will be updated on the
 Any out-of-band book updates will not be reflected in the panl code release 
 updates.
 
-<img src="src/docs/divider.png" alt="divider" align="center" />
 
 # Why?
 
@@ -231,7 +230,7 @@ parameters into concise and precise URL paths.
    system. Additionally, upgrades to the Panl server are easy and with quick
    startup times, any configuration changes will be seen instantly.
 
-<img src="src/docs/divider.png" alt="divider" align="center" />
+
 
 # Instructions
 
@@ -277,7 +276,6 @@ handler_.
 Both of the book links above refer to Solr Panl integration 9 with instructions
 for setting up and running earlier versions of Solr.
 
-<img src="src/docs/divider.png" alt="divider" align="center" />
 
 # Getting up to Speed... Fast!
 
@@ -446,7 +444,6 @@ at a glance.
    so that you can view the results instantly.
 
 
-<img src="src/docs/divider.png" alt="divider" align="center" />
 
 
 # Quick Start - The 5 Steps
@@ -655,7 +652,6 @@ bin/solr start -cloud -p 8983 -s "example/cloud/node1/solr"
 bin/solr start -cloud -p 7574 -s "example/cloud/node2/solr" -z localhost:9983
 ```
 
-<img src="src/docs/divider.png" alt="divider" align="center" />
 
 
 # Version History
@@ -864,7 +860,6 @@ bin/solr start -cloud -p 7574 -s "example/cloud/node2/solr" -z localhost:9983
 [See all releases](https://github.com/synapticloop/panl/releases/)
 
 
-<img src="src/docs/divider.png" alt="divider" align="center" />
 
 # Build/Development Related Tasks
 
@@ -914,7 +909,6 @@ I.e.
 with the release files named `solr-panl-9-x.x.x` where `x.x.x` is the version
 number.
 
-<img src="src/docs/divider.png" alt="divider" align="center" />
 
 # End Plate 
 
