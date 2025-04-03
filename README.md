@@ -42,6 +42,8 @@ This is for reference
 
 <strong>BREAKING CHANGE TO LPSE URL path part for versions below</strong>
 
+| BRANCH                                                 | TYPE     | VERSION | GITHUB                                                                                                        |
+|--------------------------------------------------------|----------|---------|---------------------------------------------------------------------------------------------------------------|
 | `needy-phantom`                                        | `BRANCH` | `1.2.0` | [GitHub > `needy-phanton`](https://github.com/synapticloop/panl/tree/needy-phanton)              |
 | `grizzled-pebble`                                      | `TAG`    | `1.1.1` | [GitHub > Tag 1.1.1](https://github.com/synapticloop/panl/tree/1.1.1)                                         |
 | `broad-firefly`                                        | `TAG`    | `1.1.0` | [GitHub > Tag 1.1.0](https://github.com/synapticloop/panl/tree/1.1.0)                                         |
