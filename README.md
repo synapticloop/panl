@@ -319,6 +319,14 @@ results._
    to be searchable, display the fields that are available to search within, and
    allow the user to select within the field.
 
+   <img src="src/docs/specific-search-fields.png" >
+
+   **Integrated Lookahead (not shown)** If multiple fields are configured
+   to be searchable, display the fields that are available to search within, and
+   allow the user to select within the field.
+
+   <img src="src/docs/lookahead.png" >
+
 1. **Active filters** - either queries or any of the selected facets that have
    been used to refine the search results.
 
