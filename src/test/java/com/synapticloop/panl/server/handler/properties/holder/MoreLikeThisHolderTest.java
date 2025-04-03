@@ -102,5 +102,4 @@ public class MoreLikeThisHolderTest {
 		assertEquals(5, solrQuery.getMoreLikeThisMinDocFreq());
 		assertEquals("one:hello", solrQuery.getQuery());
 	}
-
 }

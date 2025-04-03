@@ -104,20 +104,45 @@ public class SolrFieldHolder {
 		}
 	}
 
+	/**
+	 * <p>Return whether this is a defined field or facet.</p>
+	 *
+	 * @param solrFieldName The Solr field name to look up
+	 *
+	 * @return Whether this is a defined field or facet
+	 */
 	public boolean getIsFieldOrFacet(String solrFieldName) {
 		return(ALL_FIELDS.containsKey(solrFieldName));
 	}
 
+	/**
+	 * <p>Return whether this is a defined field.</p>
+	 *
+	 * @param solrFieldName The Solr field name to look up
+	 *
+	 * @return Whether this is a defined field
+	 */
 	public boolean getIsField(String solrFieldName) {
 		return(REGULAR_FIELDS.containsKey(solrFieldName));
 	}
 
+	/**
+	 * <p>Return whether this is a defined facet.</p>
+	 *
+	 * @param solrFieldName The Solr field name to look up
+	 *
+	 * @return Whether this is a defined facet
+	 */
 	public boolean getIsFacet(String solrFieldName) {
 		return(FACET_FIELDS.containsKey(solrFieldName));
 	}
 
+	/**
+	 * <p>Return the unique key for this collection.</p>
+	 *
+	 * @return The unique key for this collection.
+	 */
 	public SolrPanlField getUniqueKeySolrField() {
 		return(uniqueKeySolrPanlField);
 	}
-
 }
