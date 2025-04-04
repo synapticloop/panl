@@ -131,11 +131,16 @@ public class MoreLikeThisHolder {
 	 * <code>panl.mlt.enable</code> is set to <code>true</code> (case-sensitive)</p>
 	 *
 	 * @param properties The properties to use as a lookup
+	 * @param solrFieldHolder The field holder to interrogate to ensure that the
+	 *    field is valid when using MLT fields and MLT query fields
 	 *
 	 * @throws PanlServerException If there was an error with one of the
 	 * properties
 	 */
-	public MoreLikeThisHolder(Properties properties, SolrFieldHolder solrFieldHolder) throws PanlServerException {
+	public MoreLikeThisHolder(
+			Properties properties,
+			SolrFieldHolder solrFieldHolder) throws PanlServerException {
+
 		this.mltEnabled = properties.getProperty(Constants.Property.Panl.PANL_MLT_ENABLE,
 				Constants.BOOLEAN_FALSE_VALUE).equals(Constants.BOOLEAN_TRUE_VALUE);
 
@@ -147,9 +152,10 @@ public class MoreLikeThisHolder {
 
 		SolrPanlField uniqueKeySolrPanlField = solrFieldHolder.getUniqueKeySolrField();
 		if(null == uniqueKeySolrPanlField) {
-			throw new PanlServerException("Solr More Like This query handler requires a query of the Solr uniqueKey field, " +
-					"which has not been defined in the <panl_collection_url>.panl.properties file.  You must add ONE and ONLY " +
-					"one panl.uniquekey.<lpse_code>=true property to the file.");
+			throw new PanlServerException("[ Solr/Panl '" + solrFieldHolder.getSolrCollection() + "/" +
+					solrFieldHolder.getPanlCollectionUri() +"' ] Solr More Like This query handler requires a query of the " +
+					"Solr uniqueKey field, which has not been defined in the <panl_collection_url>.panl.properties file.  You " +
+					"must add ONE and ONLY one panl.uniquekey.<lpse_code>=true property to the file.");
 		} else {
 			this.uniqueKeySolrFieldName = uniqueKeySolrPanlField.getSolrFieldName();
 		}
@@ -165,7 +171,9 @@ public class MoreLikeThisHolder {
 		this.mltFieldList = this.mltFl.split(",");
 		for (String solrFieldName : this.mltFieldList) {
 			if (!solrFieldHolder.getIsFieldOrFacet(solrFieldName)) {
-				throw new PanlServerException("Attempting to define property '" +
+				throw new PanlServerException("[ Solr/Panl '" + solrFieldHolder.getSolrCollection() + "/" +
+						solrFieldHolder.getPanlCollectionUri() +"' ]" +
+						" Attempting to define property '" +
 						Constants.Property.Panl.PANL_MLT_FL +
 						"' with a field value of '" +
 						solrFieldName +
@@ -238,11 +246,13 @@ public class MoreLikeThisHolder {
 				case "details":
 					break;
 				case "none":
+				case "":
 					this.mltInterestingTerms = null;
 					break;
 				default:
 					throw new PanlServerException("The property '" + Constants.Property.Panl.PANL_MLT_INTERESTINGTERMS + "' " +
-							"MUST be one of 'none', 'list', or 'details' (case-sensitive and without the single quotes.");
+							"MUST be one of 'none', 'list', or 'details' (case-sensitive and without the single quotes).  Or you " +
+							"can leave it blank/empty string to default to 'none'");
 			}
 		}
 

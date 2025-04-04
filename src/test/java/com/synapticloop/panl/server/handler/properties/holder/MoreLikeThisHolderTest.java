@@ -38,7 +38,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 public class MoreLikeThisHolderTest {
 	private static final Properties PROPERTIES = new Properties();
-	private static SolrFieldHolder solrFieldHolder;
+	private static final SolrFieldHolder solrFieldHolder;
 	static {
 		PROPERTIES.put("panl.facet.f", "field");
 		PROPERTIES.put("panl.facet.a", "another");
@@ -46,7 +46,7 @@ public class MoreLikeThisHolderTest {
 		PROPERTIES.put("panl.uniquekey.o", "true");
 
 		try {
-			solrFieldHolder = new SolrFieldHolder(PROPERTIES);
+			solrFieldHolder = new SolrFieldHolder("solr", "panl", PROPERTIES);
 		} catch (PanlServerException e) {
 			throw new RuntimeException(e);
 		}

@@ -341,7 +341,7 @@ public class CollectionProperties {
 
 
 		// now for the property holders
-		this.solrFieldHolder = new SolrFieldHolder(properties);
+		this.solrFieldHolder = new SolrFieldHolder(solrCollection, panlCollectionUri, properties);
 		this.moreLikeThisHolder = new MoreLikeThisHolder(properties, solrFieldHolder);
 
 		parseExtraProperties(panlExtraJsonObject);

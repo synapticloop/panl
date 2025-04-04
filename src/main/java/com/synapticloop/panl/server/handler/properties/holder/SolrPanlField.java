@@ -33,6 +33,7 @@ public class SolrPanlField {
 
 	public SolrPanlField(String lpseCode, String solrFieldName, boolean isFacet, boolean isUniqueKey,
 			boolean isMultivalue) {
+
 		this.lpseCode = lpseCode;
 		this.solrFieldName = solrFieldName;
 		this.isFacet = isFacet;

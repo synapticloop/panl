@@ -36,13 +36,33 @@ import java.util.Properties;
 
 public class SolrFieldHolder {
 	private static final Logger LOGGER = LoggerFactory.getLogger(SolrFieldHolder.class);
+
+	private final String solrCollection;
+	private final String panlCollectionUri;
+
 	private Map<String, SolrPanlField> ALL_FIELDS = new HashMap<>();;
 	private Map<String, SolrPanlField> FACET_FIELDS = new HashMap<>();;
 	private Map<String, SolrPanlField> REGULAR_FIELDS = new HashMap<>();;
 
 	private SolrPanlField uniqueKeySolrPanlField = null;
 
-	public SolrFieldHolder(Properties properties) throws PanlServerException {
+	/**
+	 *
+	 * @param solrCollection The Solr collection that this connects to, used for
+	 *    debugging and logging.
+	 * @param panlCollectionUri The Panl collection URI that this is bound to,
+	 *    used for debugging and logging.
+	 * @param properties
+	 * @throws PanlServerException
+	 */
+	public SolrFieldHolder(
+			String solrCollection,
+			String panlCollectionUri,
+			Properties properties) throws PanlServerException {
+
+		this.solrCollection = solrCollection;
+		this.panlCollectionUri = panlCollectionUri;
+
 		for (String propertiesByPrefix : PropertyHelper.getPropertiesByPrefix(
 				properties, Constants.Property.Panl.PANL_FACET)) {
 
@@ -67,7 +87,7 @@ public class SolrFieldHolder {
 
 			String lpseCode = propertiesByPrefix.substring(propertiesByPrefix.lastIndexOf('.') + 1);
 
-			String solrFieldName = properties.getProperty(Constants.Property.Panl.PANL_FACET + lpseCode, null);
+			String solrFieldName = properties.getProperty(Constants.Property.Panl.PANL_FIELD + lpseCode, null);
 
 			boolean isMultivalue = properties.getProperty(Constants.Property.Panl.PANL_MULTIVALUE + lpseCode,
 					Constants.BOOLEAN_FALSE_VALUE).equals(
@@ -102,6 +122,24 @@ public class SolrFieldHolder {
 		} else {
 			REGULAR_FIELDS.put(solrPanlField.getSolrFieldName(), solrPanlField);
 		}
+	}
+
+	/**
+	 * <p>Get the Solr collection that these fields connect to</p>
+	 *
+	 * @return The Solr collection that these fields connect to
+	 */
+	public String getSolrCollection() {
+		return solrCollection;
+	}
+
+	/**
+	 * <p>Get the Panl collection URI that this is bound to.</p>
+	 *
+	 * @return The panl collection URI that this is bound to
+	 */
+	public String getPanlCollectionUri() {
+		return panlCollectionUri;
 	}
 
 	/**
