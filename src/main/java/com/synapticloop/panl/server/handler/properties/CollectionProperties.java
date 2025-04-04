@@ -104,11 +104,6 @@ public class CollectionProperties {
 	private Integer lpseLength;
 
 	/**
-	 * <p>The URL path for the 'more like this' Solr handler</p>
-	 */
-	private String mltHandler = "/mlt";
-
-	/**
 	 * <p>This is the list of all facet fields that are registered with panl.
 	 * These fields may be used as facets.</p>
 	 */
@@ -1690,26 +1685,12 @@ public class CollectionProperties {
 	}
 
 	/**
-	 * <p>Get the 'more like this' handler - which defaults to <code>/mlt</code>.</p>
+	 * <p>Return the More Like This holder with all validated properties</p>
 	 *
-	 * <p><strong>NOTE:</strong> This __SHOULD__ start with a forward slash
-	 * '<code>/</code>', else it will be passed through as a a <code>qt</code>
-	 * parameter to the Solr server.</p>
-	 *
-	 * <p><strong>NOTE:</strong> This must match the configuration in the
-	 * <code>solrconfig.xml</code> handler - e.g. the <code>name</code> attribute
-	 * of the <code>&lt;requestHandler /&gt;</code> XML element:</p>
-	 *
-	 * <pre>
-	 *   &lt;requestHandler name="/mlt" class="solr.MoreLikeThisHandler"&gt;
-	 *     &lt;str name="mlt.fl"&gt;body&lt;/str&gt;
-	 *   &lt;/requestHandler&gt;
-	 * </pre>
-	 *
-	 * @return the URL path for the more like this handler
+	 * @return The More Like This Holder
 	 */
-	public String getMltHandler() {
-		return mltHandler;
+	public MoreLikeThisHolder getMoreLikeThisHolder() {
+		return(this.moreLikeThisHolder);
 	}
 }
 
