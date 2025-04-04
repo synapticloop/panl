@@ -144,4 +144,8 @@ public class PanlQueryOperandField extends BaseField {
 				lpseCode);
 	}
 
+	@Override public String getPanlFieldType() {
+		return("QUERY OPERAND");
+	}
+
 }

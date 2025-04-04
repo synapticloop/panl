@@ -247,4 +247,10 @@ public class PanlOrFacetField extends PanlFacetField {
 	public boolean getIsAlwaysOr() {
 		return (isAlwaysOr);
 	}
+
+
+	@Override public String getPanlFieldType() {
+		return("OR");
+	}
+
 }

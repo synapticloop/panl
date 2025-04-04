@@ -33,12 +33,15 @@ import com.synapticloop.panl.util.Constants;
 import com.synapticloop.panl.util.PanlLPSEHelper;
 import org.apache.solr.client.solrj.SolrQuery;
 import org.json.JSONObject;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.net.URLDecoder;
 import java.nio.charset.StandardCharsets;
 import java.util.*;
 
 public class PanlBooleanFacetField extends PanlFacetField {
+	private static final Logger LOGGER = LoggerFactory.getLogger(PanlBooleanFacetField.class);
 
 	// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - //
 	//                         BOOLEAN Facet properties                        //
@@ -81,8 +84,6 @@ public class PanlBooleanFacetField extends PanlFacetField {
 
 		logWarnProperties(this.lpseCode, Constants.Property.Panl.PANL_OR_FACET + this.lpseCode);
 		logWarnProperties(this.lpseCode, Constants.Property.Panl.PANL_RANGE_FACET + this.lpseCode);
-
-		logDetails();
 	}
 
 	/**
@@ -315,4 +316,13 @@ public class PanlBooleanFacetField extends PanlFacetField {
 
 		return (explanations);
 	}
+
+	@Override public Logger getLogger() {
+		return(LOGGER);
+	}
+
+	@Override public String getPanlFieldType() {
+		return("BOOLEAN");
+	}
+
 }

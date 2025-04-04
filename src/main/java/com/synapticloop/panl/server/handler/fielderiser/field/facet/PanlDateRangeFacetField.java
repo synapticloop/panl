@@ -116,8 +116,6 @@ public class PanlDateRangeFacetField extends PanlFacetField {
 		logWarnProperties(this.lpseCode, Constants.Property.Panl.PANL_RANGE_FACET + this.lpseCode);
 		logWarnProperties(this.lpseCode, Constants.Property.Panl.PANL_PREFIX + this.lpseCode);
 		logWarnProperties(this.lpseCode, Constants.Property.Panl.PANL_SUFFIX + this.lpseCode);
-
-		logDetails();
 	}
 
 	/**
@@ -528,6 +526,10 @@ public class PanlDateRangeFacetField extends PanlFacetField {
 
 	@Override public Logger getLogger() {
 		return (LOGGER);
+	}
+
+	@Override public String getPanlFieldType() {
+		return("DATE RANGE");
 	}
 
 }

@@ -124,4 +124,9 @@ public class PanlPassThroughField extends BaseField {
 				panlCollectionUri,
 				lpseCode);
 	}
+
+	@Override public String getPanlFieldType() {
+		return("PASSTHROUGH");
+	}
+
 }

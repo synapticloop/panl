@@ -345,6 +345,9 @@ public class Constants {
 		}
 	}
 
+	/**
+	 * <p>Constants for Strings that are in the URL</p>
+	 */
 	public static class Url {
 		public static class Panl {
 			public static final String SORTING_OPTION_ASC = "+";

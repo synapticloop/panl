@@ -692,11 +692,13 @@ public abstract class BaseField {
 	 */
 	protected void logDetails() {
 		getLogger().info(
-				"[ Solr/Panl '{}/{}' ] Mapping Solr facet field name '{}' of type '{}' to panl key '{}', LPSE length {}",
+				"[ Solr/Panl '{}/{}' ] Mapping Solr facet field name '{}' of type '{}' to panl type '{}', lpse code '{}', " +
+						"LPSE length {}",
 				solrCollection,
 				panlCollectionUri,
 				solrFieldName,
 				solrFieldType,
+				getPanlFieldType(),
 				lpseCode,
 				lpseLength);
 	}
@@ -1063,4 +1065,11 @@ public abstract class BaseField {
 	public JSONObject getExtraJSONObject() {
 		return extraJSONObject;
 	}
+
+	/**
+	 * <p>Get the Panl field type</p>
+	 *
+	 * @return The type of the Panl field or facet
+	 */
+	public abstract String getPanlFieldType();
 }

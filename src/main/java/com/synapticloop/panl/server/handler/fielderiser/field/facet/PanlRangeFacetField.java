@@ -814,4 +814,9 @@ public class PanlRangeFacetField extends PanlFacetField {
 	public boolean getRangeSuppress() {
 		return rangeSuppress;
 	}
+
+	@Override public String getPanlFieldType() {
+		return("RANGE");
+	}
+
 }
