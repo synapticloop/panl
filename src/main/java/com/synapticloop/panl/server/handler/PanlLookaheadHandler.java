@@ -113,6 +113,7 @@ public class PanlLookaheadHandler extends BaseResponseHandler implements HttpReq
 
 		// now check the CaFUP
 		String[] paths = uri.split("/");
+		// TODO - this may be a array index out of bounds.... need to check first...
 		CollectionRequestHandler collectionRequestHandler = validCollectionsMap.get(paths[2]);
 		if(paths.length < 4 || null == collectionRequestHandler) {
 			set404ResponseMessage(response);

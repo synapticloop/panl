@@ -47,7 +47,14 @@ import java.util.Properties;
 public class MoreLikeThisHolder {
 	private static final Logger LOGGER = LoggerFactory.getLogger(MoreLikeThisHolder.class);
 
+	/**
+	 * <p>Whether the More Like This functionality is enabled for this collection</p>
+	 */
 	private boolean mltEnabled = false;
+
+	/**
+	 * <p>The Solr More Like This handler URL.</p>
+	 */
 	private String mltHandler = Constants.DEFAULT_MLT_HANDLER;
 
 	// (Required - Default: false) Specifies the fields to use for similarity. A
@@ -147,6 +154,8 @@ public class MoreLikeThisHolder {
 		if(!this.mltEnabled) {
 			return;
 		}
+
+		properties.getProperty(Constants.Property.Panl.PANL_MLT_HANDLER, Constants.DEFAULT_MLT_HANDLER);
 
 		// at this point MLT is enabled so we should load the additional properties
 
@@ -284,6 +293,7 @@ public class MoreLikeThisHolder {
 		}
 
 		solrQuery.setMoreLikeThis(true);
+		// TODO - confirm that this is correct...
 		solrQuery.setRequestHandler(this.mltHandler);
 		solrQuery.setMoreLikeThisFields(this.mltFieldList);
 		solrQuery.setMoreLikeThisMinTermFreq(this.mltMinTermFrequency);
@@ -324,7 +334,9 @@ public class MoreLikeThisHolder {
 		// for some unknown reason there are no setters for this on the Solr query
 		// for the following - very odd
 		solrQuery.set(MoreLikeThisParams.MATCH_INCLUDE, this.mltMatchInclude);
-		solrQuery.set(MoreLikeThisParams.MATCH_OFFSET, this.mltMatchOffset);
+		if(this.mltMatchOffset != -1) {
+			solrQuery.set(MoreLikeThisParams.MATCH_OFFSET, this.mltMatchOffset);
+		}
 	}
 
 	/**
@@ -334,5 +346,14 @@ public class MoreLikeThisHolder {
 	 */
 	public boolean getIsMltEnabled() {
 		return(this.mltEnabled);
+	}
+
+	/**
+	 * <p>Return the MLT handler for Solr (default <code>/mlt</code>).</p>
+	 *
+	 * @return The MLT handler for Solr (default <code>/mlt</code>).
+	 */
+	public String getMltHandler() {
+		return mltHandler;
 	}
 }

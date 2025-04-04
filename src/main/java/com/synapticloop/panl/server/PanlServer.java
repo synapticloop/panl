@@ -288,6 +288,13 @@ public class PanlServer {
 				panlProperties,
 				collectionRequestHandlers));
 
+		LOGGER.info("Binding More Like This (MLT) handler to URI path {}*", PanlMoreLikeThisHandler.PANL_URL_BINDING_MORE_LIKE_THIS);
+		bootstrap.registerHandler(
+				PanlMoreLikeThisHandler.PANL_URL_BINDING_MORE_LIKE_THIS + "*",
+				new PanlMoreLikeThisHandler(
+						panlProperties,
+						collectionRequestHandlers));
+
 
 		// finally register the collection and singlepagesearch handlers
 		for (CollectionRequestHandler collectionRequestHandler : collectionRequestHandlers) {

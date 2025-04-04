@@ -30,6 +30,7 @@ import com.synapticloop.panl.server.client.PanlClient;
 import com.synapticloop.panl.server.handler.helper.CollectionHelper;
 import com.synapticloop.panl.server.handler.properties.CollectionProperties;
 import com.synapticloop.panl.server.handler.properties.PanlProperties;
+import com.synapticloop.panl.server.handler.properties.holder.MoreLikeThisHolder;
 import com.synapticloop.panl.server.handler.webapp.util.ResourceHelper;
 import com.synapticloop.panl.util.Constants;
 import org.apache.http.HttpRequest;
@@ -62,58 +63,33 @@ import java.util.*;
  */
 public class PanlMoreLikeThisHandler extends BaseResponseHandler implements HttpRequestHandler {
 	private static final Logger LOGGER = LoggerFactory.getLogger(PanlMoreLikeThisHandler.class);
-
-	private static final Set<String> ALLOWABLE_PARAMETERS = new HashSet<>();
-	static {
-		ALLOWABLE_PARAMETERS.add("mlt.fl");
-		ALLOWABLE_PARAMETERS.add("mlt.mintf");
-		ALLOWABLE_PARAMETERS.add("mlt.mindf");
-		ALLOWABLE_PARAMETERS.add("mlt.maxdf");
-		ALLOWABLE_PARAMETERS.add("mlt.maxdfpct");
-		ALLOWABLE_PARAMETERS.add("mlt.minwl");
-		ALLOWABLE_PARAMETERS.add("mlt.maxwl");
-		ALLOWABLE_PARAMETERS.add("mlt.maxqt");
-		ALLOWABLE_PARAMETERS.add("mlt.maxntp");
-		ALLOWABLE_PARAMETERS.add("mlt.boost");
-		ALLOWABLE_PARAMETERS.add("mlt.qf");
-		ALLOWABLE_PARAMETERS.add("mlt.interestingTerms");
-		ALLOWABLE_PARAMETERS.add("mlt.match.include");
-		ALLOWABLE_PARAMETERS.add("mlt.match.offset");
-	}
-
 	public static final String PANL_URL_BINDING_MORE_LIKE_THIS = "/panl-more-like-this/";
 
-	private final PanlClient panlClient;
-	private final String solrCollection;
-	private final String panlCollectionUri;
-	private final CollectionProperties collectionProperties;
+	private final List<CollectionRequestHandler> collectionRequestHandlers;
+
+	private final Map<String, CollectionRequestHandler> validCollectionsMap = new HashMap<>();
 
 	/**
 	 * <p>Instantiate the Panl more facets handler.</p>
 	 *
-	 * @param solrCollection The solr collection name to retrieve the search results from
-	 * @param panlCollectionUri The name of the collection that the Panl server is bound to.
-	 * @param panlProperties The panl base properties, for connection to the Solr server
-	 * @param collectionProperties The collection properties
+	 * @param panlProperties The panl properties
+	 * @param collectionRequestHandlers The collection request handler
 	 *
 	 * @throws PanlServerException If there was an error with the request
 	 */
 	public PanlMoreLikeThisHandler(
-			String solrCollection,
-			String panlCollectionUri,
 			PanlProperties panlProperties,
-			CollectionProperties collectionProperties) throws PanlServerException {
+			List<CollectionRequestHandler> collectionRequestHandlers) throws PanlServerException {
+
 		super(panlProperties);
+		this.collectionRequestHandlers = collectionRequestHandlers;
 
-		this.solrCollection = solrCollection;
-		this.panlCollectionUri = panlCollectionUri;
-		this.collectionProperties = collectionProperties;
-
-		this.panlClient = CollectionHelper.getPanlClient(
-				panlProperties.getSolrjClient(),
-				solrCollection,
-				panlProperties,
-				collectionProperties);
+		for (CollectionRequestHandler collectionRequestHandler : collectionRequestHandlers) {
+			if(collectionRequestHandler.getCollectionProperties().getMoreLikeThisHolder().getIsMltEnabled()) {
+				validCollectionsMap.put(collectionRequestHandler.getPanlCollectionUri(), collectionRequestHandler);
+				validUrls.put(PANL_URL_BINDING_MORE_LIKE_THIS + collectionRequestHandler.getPanlCollectionUri() + "/");
+			}
+		}
 	}
 
 	/**
@@ -125,13 +101,47 @@ public class PanlMoreLikeThisHandler extends BaseResponseHandler implements Http
 	 */
 	@Override
 	public void handle(HttpRequest request, HttpResponse response, HttpContext context) {
-		try (SolrClient solrClient = panlClient.getClient()) {
-			SolrQuery solrQuery = new SolrQuery();
-			solrQuery.setMoreLikeThis(true);
-			solrQuery.setRequestHandler(collectionProperties.getMltHandler());
 
-			// need to put in the additional parameters
-			QueryResponse queryResponse = solrClient.query(this.solrCollection, solrQuery);
+		String uri = request.getRequestLine().getUri();
+		String[] paths = uri.split("/");
+
+		if(paths.length < 4) {
+			set404ResponseMessage(response);
+			return;
+		}
+
+		CollectionRequestHandler collectionRequestHandler = validCollectionsMap.get(paths[2]);
+		if(null == collectionRequestHandler) {
+			set404ResponseMessage(response);
+			return;
+		}
+
+
+		MoreLikeThisHolder moreLikeThisHolder = collectionRequestHandler.getCollectionProperties().getMoreLikeThisHolder();
+
+		// if MLT is not enabled for this collection, then return a 404
+		if(!moreLikeThisHolder.getIsMltEnabled()) {
+			set404ResponseMessage(response);
+			return;
+		}
+
+		// at this point MLT is enabled and we are ready to serve the response
+		try (SolrClient solrClient = collectionRequestHandler.getPanlClient().getClient()) {
+			SolrQuery solrQuery = new SolrQuery();
+
+			try {
+				moreLikeThisHolder.applyMltToQuery(solrQuery, "hello");
+			} catch(PanlServerException ex) {
+				// the only time that this happens if the MLT is not enabled - this
+				// shouldn't happen as it was checked as the first part of the method
+				// call.
+				set404ResponseMessage(response);
+				return;
+			}
+
+			LOGGER.debug(solrQuery.toString());
+
+			QueryResponse queryResponse = solrClient.query(collectionRequestHandler.getSolrCollection(), solrQuery);
 
 			JSONObject solrJsonObject = new JSONObject(queryResponse.jsonStr());
 			solrJsonObject.put(Constants.Json.Response.ERROR, false);
