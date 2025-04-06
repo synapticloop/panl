@@ -36,6 +36,7 @@ import org.slf4j.LoggerFactory;
 
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
+import java.util.List;
 import java.util.Properties;
 
 /**
@@ -329,7 +330,7 @@ public class MoreLikeThisHolder {
 	 * @throws PanlServerException if the Collection has not enabled the MLT
 	 * processor.
 	 */
-	public void applyMltToQuery(SolrQuery solrQuery, String uniqueKeyValue) throws PanlServerException {
+	public void applyMltToQuery(SolrQuery solrQuery, List<String> returnFields, String uniqueKeyValue) throws PanlServerException {
 		if(!this.mltEnabled) {
 			throw new PanlServerException("Attempting to retrieve an MLT query on a collection that hasn't enabled it.");
 		}
@@ -398,6 +399,9 @@ public class MoreLikeThisHolder {
 		solrQuery.set(ShardParams.SHARDS, SHARD_1);
 		solrQuery.set(ShardParams.SHARDS_PREFERENCE, REPLICA_LEADER_TRUE);
 		solrQuery.setRows(this.numResultsMoreLikeThis);
+
+		// TODO set field list
+		solrQuery.setFields(returnFields.toArray(new String[] {}));
 	}
 
 	/**

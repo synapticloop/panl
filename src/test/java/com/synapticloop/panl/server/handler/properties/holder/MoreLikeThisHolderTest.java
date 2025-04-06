@@ -29,10 +29,7 @@ import com.synapticloop.panl.util.Constants;
 import org.apache.solr.client.solrj.SolrQuery;
 import org.junit.jupiter.api.Test;
 
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.Properties;
-import java.util.Set;
+import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -92,7 +89,7 @@ public class MoreLikeThisHolderTest {
 		MoreLikeThisHolder moreLikeThisHolder = new MoreLikeThisHolder(properties, solrFieldHolder);
 
 		SolrQuery solrQuery = new SolrQuery();
-		moreLikeThisHolder.applyMltToQuery(solrQuery, "hello");
+		moreLikeThisHolder.applyMltToQuery(solrQuery, new ArrayList<String>(), "hello");
 		Set<String> fields = new HashSet<>(Arrays.asList(solrQuery.getMoreLikeThisFields()));
 		assertTrue(fields.contains("field"));
 		assertTrue(fields.contains("another"));
