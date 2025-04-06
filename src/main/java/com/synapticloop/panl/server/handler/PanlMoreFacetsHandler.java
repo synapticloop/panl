@@ -87,6 +87,8 @@ public class PanlMoreFacetsHandler extends BaseResponseHandler implements HttpRe
 	 */
 	@Override
 	public void handle(HttpRequest request, HttpResponse response, HttpContext context) {
+		TimingsHelper timingsHelper = new TimingsHelper();
+
 		// the first thing that we are going to do is to ensure that we have a
 		// valid uri with the correct parameters
 		String uri = request.getRequestLine().getUri() + "?";
@@ -140,21 +142,25 @@ public class PanlMoreFacetsHandler extends BaseResponseHandler implements HttpRe
 				stringBuilder.append("/");
 			}
 
+			timingsHelper.markParseInboundRequestEnd();
 
 			try {
 				CollectionRequestHandler collectionRequestHandler = validCollections.get(paths[2]);
 				context.setAttribute(Constants.Context.Panl.LPSE_CODE, lpseCode);
 				context.setAttribute(Constants.Context.Panl.FACET_LIMIT, facetLimit);
+				timingsHelper.markBuildOutboundRequestEnd();
+
 				JSONObject jsonObject = new JSONObject(
 					collectionRequestHandler.handleRequest(
 						stringBuilder.toString(),
 						"",
 						context));
 
+				timingsHelper.markSendOutboundRequestEnd();
 				// now that we have the JSON object - time to remove the things we don't need
 				jsonObject.remove(Constants.Json.Solr.RESPONSE_HEADER);
 				jsonObject.remove(Constants.Json.Solr.RESPONSE);
-				jsonObject.remove(Constants.Json.Solr.FACET_COUNTS);
+				jsonObject.remove(Constants.Json.Solr.FACET_UNDER_COUNTS);
 
 				JSONObject panlJsonObject = jsonObject.getJSONObject(Constants.Json.Panl.PANL);
 
@@ -186,7 +192,13 @@ public class PanlMoreFacetsHandler extends BaseResponseHandler implements HttpRe
 				panlJsonObject.remove(Constants.Json.Panl.AVAILABLE);
 				panlJsonObject.remove(Constants.Json.Panl.FIELDS);
 
+				timingsHelper.markBuildInboundResponseEnd();
+
+				timingsHelper.addTimings(panlJsonObject);
+
 				response.setStatusCode(HttpStatus.SC_OK);
+				jsonObject.put(Constants.Json.Response.STATUS, HttpStatus.SC_OK);
+
 				response.setEntity(
 					new StringEntity(
 						jsonObject.toString(),

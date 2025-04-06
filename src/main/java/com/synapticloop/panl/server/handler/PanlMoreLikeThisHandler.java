@@ -124,7 +124,7 @@ public class PanlMoreLikeThisHandler extends BaseResponseHandler implements Http
 		}
 
 
-		timingsHelper.markParseRequestEnd();
+		timingsHelper.markParseInboundRequestEnd();
 		MoreLikeThisHolder moreLikeThisHolder = collectionRequestHandler.getCollectionProperties().getMoreLikeThisHolder();
 
 		// if MLT is not enabled for this collection, then return a 404
@@ -139,7 +139,7 @@ public class PanlMoreLikeThisHandler extends BaseResponseHandler implements Http
 
 			try {
 				moreLikeThisHolder.applyMltToQuery(solrQuery, resultFieldsForFieldSet, uniqueKeyValue);
-				timingsHelper.markBuildRequestEnd();
+				timingsHelper.markBuildOutboundRequestEnd();
 			} catch(PanlServerException ex) {
 				// the only time that this happens if the MLT is not enabled - this
 				// shouldn't happen as it was checked as the first part of the method
@@ -176,8 +176,8 @@ public class PanlMoreLikeThisHandler extends BaseResponseHandler implements Http
 				numRetries++;
 			}
 
-			timingsHelper.markSendRequestEnd();
-			timingsHelper.markBuildResponseEnd();
+			timingsHelper.markSendOutboundRequestEnd();
+			timingsHelper.markBuildInboundResponseEnd();
 			timingsHelper.addTimings(panlJsonObject);
 			solrJsonObject.put(Constants.Json.Panl.PANL, panlJsonObject);
 

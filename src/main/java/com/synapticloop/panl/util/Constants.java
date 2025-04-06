@@ -69,6 +69,7 @@ public class Constants {
 		 */
 		public static class Solr {
 			public static final String FACET_COUNTS = "facetCounts";
+			public static final String FACET_UNDER_COUNTS = "facet_counts";
 			public static final String PARAMS = "params";
 			public static final String RESPONSE = "response";
 			public static final String RESPONSE_HEADER = "responseHeader";

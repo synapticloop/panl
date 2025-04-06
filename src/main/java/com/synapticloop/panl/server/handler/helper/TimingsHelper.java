@@ -38,22 +38,22 @@ public class TimingsHelper {
 		 this.startNanos = System.nanoTime();
 	}
 
-	public void markParseRequestEnd() {
+	public void markParseInboundRequestEnd() {
 		this.currentNanos = System.nanoTime();
 		timingsObject.put("panl_parse_request_time", TimeUnit.NANOSECONDS.toMillis(currentNanos - startNanos));
 	}
 
-	public void markBuildRequestEnd() {
+	public void markBuildOutboundRequestEnd() {
 		timingsObject.put("panl_build_request_time", TimeUnit.NANOSECONDS.toMillis(System.nanoTime() - currentNanos));
 		this.currentNanos = System.nanoTime();
 	}
 
-	public void markSendRequestEnd() {
+	public void markSendOutboundRequestEnd() {
 		timingsObject.put("panl_send_request_time", TimeUnit.NANOSECONDS.toMillis(System.nanoTime() - currentNanos));
 		this.currentNanos = System.nanoTime();
 	}
 
-	public void markBuildResponseEnd() {
+	public void markBuildInboundResponseEnd() {
 		timingsObject.put("panl_build_response_time", TimeUnit.NANOSECONDS.toMillis(System.nanoTime() - currentNanos));
 		timingsObject.put("panl_total_time", TimeUnit.NANOSECONDS.toMillis(System.nanoTime() - startNanos));
 	}
