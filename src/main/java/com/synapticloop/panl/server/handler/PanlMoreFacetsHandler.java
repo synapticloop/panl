@@ -25,6 +25,7 @@ package com.synapticloop.panl.server.handler;
  */
 
 import com.synapticloop.panl.exception.PanlNotFoundException;
+import com.synapticloop.panl.server.handler.helper.TimingsHelper;
 import com.synapticloop.panl.server.handler.properties.PanlProperties;
 import com.synapticloop.panl.server.handler.webapp.util.ResourceHelper;
 import com.synapticloop.panl.util.Constants;
@@ -86,7 +87,6 @@ public class PanlMoreFacetsHandler extends BaseResponseHandler implements HttpRe
 	 */
 	@Override
 	public void handle(HttpRequest request, HttpResponse response, HttpContext context) {
-
 		// the first thing that we are going to do is to ensure that we have a
 		// valid uri with the correct parameters
 		String uri = request.getRequestLine().getUri() + "?";

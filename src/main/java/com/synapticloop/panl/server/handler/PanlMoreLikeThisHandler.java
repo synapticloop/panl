@@ -24,27 +24,20 @@ package com.synapticloop.panl.server.handler;
  * IN THE SOFTWARE.
  */
 
-import com.synapticloop.panl.exception.PanlNotFoundException;
 import com.synapticloop.panl.exception.PanlServerException;
-import com.synapticloop.panl.server.client.PanlClient;
-import com.synapticloop.panl.server.handler.helper.CollectionHelper;
-import com.synapticloop.panl.server.handler.properties.CollectionProperties;
+import com.synapticloop.panl.server.handler.helper.TimingsHelper;
 import com.synapticloop.panl.server.handler.properties.PanlProperties;
 import com.synapticloop.panl.server.handler.properties.holder.MoreLikeThisHolder;
 import com.synapticloop.panl.server.handler.webapp.util.ResourceHelper;
 import com.synapticloop.panl.util.Constants;
-import io.swagger.v3.oas.annotations.StringToClassMapItem;
 import org.apache.http.HttpRequest;
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
-import org.apache.http.NameValuePair;
-import org.apache.http.client.utils.URIBuilder;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.protocol.HttpContext;
 import org.apache.http.protocol.HttpRequestHandler;
 import org.apache.solr.client.solrj.SolrClient;
 import org.apache.solr.client.solrj.SolrQuery;
-import org.apache.solr.client.solrj.SolrRequest;
 import org.apache.solr.client.solrj.SolrServerException;
 import org.apache.solr.client.solrj.response.QueryResponse;
 import org.json.JSONObject;
@@ -52,7 +45,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
-import java.net.URISyntaxException;
 import java.util.*;
 
 /**
@@ -105,6 +97,7 @@ public class PanlMoreLikeThisHandler extends BaseResponseHandler implements Http
 	 */
 	@Override
 	public void handle(HttpRequest request, HttpResponse response, HttpContext context) {
+		TimingsHelper timingsHelper = new TimingsHelper();
 
 		String uri = request.getRequestLine().getUri();
 		String[] paths = uri.split("/");
@@ -131,6 +124,7 @@ public class PanlMoreLikeThisHandler extends BaseResponseHandler implements Http
 		}
 
 
+		timingsHelper.markParseRequestEnd();
 		MoreLikeThisHolder moreLikeThisHolder = collectionRequestHandler.getCollectionProperties().getMoreLikeThisHolder();
 
 		// if MLT is not enabled for this collection, then return a 404
@@ -145,6 +139,7 @@ public class PanlMoreLikeThisHandler extends BaseResponseHandler implements Http
 
 			try {
 				moreLikeThisHolder.applyMltToQuery(solrQuery, resultFieldsForFieldSet, uniqueKeyValue);
+				timingsHelper.markBuildRequestEnd();
 			} catch(PanlServerException ex) {
 				// the only time that this happens if the MLT is not enabled - this
 				// shouldn't happen as it was checked as the first part of the method
@@ -155,30 +150,41 @@ public class PanlMoreLikeThisHandler extends BaseResponseHandler implements Http
 
 			LOGGER.debug(solrQuery.toString());
 
-			int numRetries = 5;
+			int numRetries = 1;
 			boolean hasSolrShardError = true;
 
 			JSONObject solrJsonObject = new JSONObject();
 			// TODO - whilst this is technically true - it is actually that Solr
 			// TODO - couldn't find the more like this handler query....
 			// TODO - Should probably do a code that indicates a retry
-			solrJsonObject.put(Constants.Json.Response.STATUS, 404);
+			// TODO - For now it is an SC No Content error code (that will be weird...
+			// TODO - and probably not correct)
+			solrJsonObject.put(Constants.Json.Response.STATUS, HttpStatus.SC_NO_CONTENT);
 			solrJsonObject.put(Constants.Json.Response.ERROR, true);
 
-			while(hasSolrShardError && numRetries > 0) {
+			JSONObject panlJsonObject = new JSONObject();
+
+			while(hasSolrShardError && numRetries < 6) {
 				QueryResponse queryResponse = solrClient.query(collectionRequestHandler.getSolrCollection(), solrQuery);
 				solrJsonObject = new JSONObject(queryResponse.jsonStr());
 				if(!solrJsonObject.isNull(Constants.Json.Solr.RESPONSE)) {
 					hasSolrShardError = false;
-					solrJsonObject.put(Constants.Json.Response.STATUS, 200);
+					solrJsonObject.put(Constants.Json.Response.STATUS, HttpStatus.SC_OK);
 					solrJsonObject.put(Constants.Json.Response.ERROR, false);
 				}
-				numRetries--;
+				panlJsonObject.put(Constants.Json.Panl.NUM_RETRIES, numRetries);
+				numRetries++;
 			}
+
+			timingsHelper.markSendRequestEnd();
+			timingsHelper.markBuildResponseEnd();
+			timingsHelper.addTimings(panlJsonObject);
+			solrJsonObject.put(Constants.Json.Panl.PANL, panlJsonObject);
 
 
 			response.setEntity(new StringEntity(solrJsonObject.toString(), ResourceHelper.CONTENT_TYPE_JSON));
 			response.setStatusCode(HttpStatus.SC_OK);
+
 			return;
 		} catch (IOException | SolrServerException e) {
 			set500ResponseMessage(response, e);

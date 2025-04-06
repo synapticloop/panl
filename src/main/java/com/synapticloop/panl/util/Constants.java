@@ -132,6 +132,7 @@ public class Constants {
 			public static final String NUM_PAGES = "num_pages";
 			public static final String NUM_PER_PAGE = "num_per_page";
 			public static final String NUM_PER_PAGE_URIS = "num_per_page_uris";
+			public static final String NUM_RETRIES = "num_retries";
 			public static final String NUM_RESULTS = "num_results";
 			public static final String NUM_RESULTS_EXACT = "num_results_exact";
 			public static final String OR = "OR";
