@@ -24,6 +24,7 @@ package com.synapticloop.panl.server.handler;
  * IN THE SOFTWARE.
  */
 
+import com.synapticloop.panl.server.handler.helper.TimingsHelper;
 import com.synapticloop.panl.server.handler.properties.PanlProperties;
 import com.synapticloop.panl.server.handler.webapp.util.ResourceHelper;
 import com.synapticloop.panl.util.Constants;
@@ -36,6 +37,7 @@ import org.apache.http.protocol.HttpRequestHandler;
 import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.xml.sax.helpers.AttributesImpl;
 
 import java.util.*;
 
@@ -75,6 +77,7 @@ public class PanlSinglePageHandler extends BaseResponseHandler implements HttpRe
 	 * @param context the HTTP execution context.
 	 */
 	@Override public void handle(HttpRequest request, HttpResponse response, HttpContext context) {
+		TimingsHelper timingsHelper = new TimingsHelper();
 
 		// the first thing that we are going to do is to ensure that we have a
 		// valid request
@@ -84,12 +87,15 @@ public class PanlSinglePageHandler extends BaseResponseHandler implements HttpRe
 		if (paths.length == 3  && validCollections.containsKey(paths[2])) {
 			try {
 				CollectionRequestHandler collectionRequestHandler = validCollections.get(paths[2]);
+				timingsHelper.markParseInboundRequestEnd();
+				timingsHelper.markBuildOutboundRequestEnd();
 				JSONObject jsonObject = new JSONObject(
 					collectionRequestHandler.handleRequest(
 						"/" + paths[2] + "/" + Constants.Url.Panl.FIELDSETS_EMPTY + "/",
 						"",
 						context));
 
+				timingsHelper.markSendOutboundRequestEnd();
 				// now that we have the JSON object - time to remove the things we don't need
 				jsonObject.remove(Constants.Json.Solr.RESPONSE_HEADER);
 				jsonObject.remove(Constants.Json.Solr.RESPONSE);
@@ -161,6 +167,9 @@ public class PanlSinglePageHandler extends BaseResponseHandler implements HttpRe
 				panlJsonObject.remove(Constants.Json.Panl.SORTING);
 				panlJsonObject.remove(Constants.Json.Panl.AVAILABLE);
 				panlJsonObject.remove(Constants.Json.Panl.FIELDS);
+
+				timingsHelper.markBuildInboundResponseEnd();
+				timingsHelper.addTimings(panlJsonObject);
 
 				response.setStatusCode(HttpStatus.SC_OK);
 				response.setEntity(
