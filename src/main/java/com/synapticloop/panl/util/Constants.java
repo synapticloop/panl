@@ -40,6 +40,7 @@ public class Constants {
 	public static final String DEFAULT_VALUE_QUERY_RESPOND_TO = "q";
 	public static final int DEFAULT_VALUE_FACET_MIN_COUNT = 1;
 	public static final int DEFAULT_VALUE_NUM_RESULTS_LOOKAHEAD = 5;
+	public static final int DEFAULT_VALUE_NUM_RESULTS_MORELIKETHIS = 5;
 	public static final int DEFAULT_VALUE_NUM_RESULTS_PER_PAGE = 10;
 	public static final int DEFAULT_VALUE_SOLR_FACET_LIMIT = 100;
 
@@ -342,6 +343,7 @@ public class Constants {
 			public static final String SOLR_NUMROWS_DEFAULT = "solr.numrows.default";
 			public static final String SOLR_NUMROWS_LOOKAHEAD = "solr.numrows.lookahead";
 			public static final String SOLR_NUMROWS_MAXIMUM = "solr.numrows.maximum";
+			public static final String SOLR_NUMROWS_MORELIKETHIS = "solr.numrows.morelikethis";
 		}
 	}
 

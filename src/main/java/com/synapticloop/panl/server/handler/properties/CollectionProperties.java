@@ -478,6 +478,13 @@ public class CollectionProperties {
 						Constants.Property.Solr.SOLR_NUMROWS_LOOKAHEAD,
 						Constants.DEFAULT_VALUE_NUM_RESULTS_LOOKAHEAD);
 
+		this.numResultsPerPage =
+				PropertyHelper.getIntProperty(
+						LOGGER,
+						properties,
+						Constants.Property.Solr.SOLR_NUMROWS_DEFAULT,
+						Constants.DEFAULT_VALUE_NUM_RESULTS_PER_PAGE);
+
 		this.solrFacetLimit =
 				PropertyHelper.getIntProperty(
 						LOGGER,
@@ -1238,9 +1245,22 @@ public class CollectionProperties {
 		return numResultsPerPage;
 	}
 
+	/**
+	 * <p>Return the maximum number of results to return</p>
+	 *
+	 * @return The maximum number of results to return.
+	 */
+
 	public int getMaxNumResultsPerPage() {
 		return (maxNumResultsPerPage);
 	}
+
+	/**
+	 * <p>Return the number of results for the 'Lookahead' query handler.</p>
+	 *
+	 * @return The number of results to return with the 'Lookahead' query
+	 * handler.
+	 */
 
 	public int getNumResultsLookahead() {
 		return numResultsLookahead;

@@ -30,9 +30,12 @@ import com.synapticloop.panl.util.Constants;
 import com.synapticloop.panl.util.PanlLPSEHelper;
 import org.apache.solr.client.solrj.SolrQuery;
 import org.apache.solr.common.params.MoreLikeThisParams;
+import org.apache.solr.common.params.ShardParams;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.util.Properties;
 
 /**
@@ -46,6 +49,14 @@ import java.util.Properties;
 
 public class MoreLikeThisHolder {
 	private static final Logger LOGGER = LoggerFactory.getLogger(MoreLikeThisHolder.class);
+
+	public static final String SHARD_1 = "shard1";
+	public static final String REPLICA_LEADER_TRUE = ShardParams.SHARDS_PREFERENCE_REPLICA_LEADER + ":true";
+
+	/**
+	 * <p>The number of results returned for the more like this query</p>
+	 */
+	private int numResultsMoreLikeThis;
 
 	/**
 	 * <p>Whether the More Like This functionality is enabled for this collection</p>
@@ -61,51 +72,53 @@ public class MoreLikeThisHolder {
 	// list of fields can be provided separated by commas. If possible, the fields
 	// should have stored termVectors.
 	private String mltFl;  // maps to mlt.fl
+
+	// This is the parsed values of the mltFl member
 	private String[] mltFieldList;
 
 	// (Optional - Default: 2) Specifies the minimum frequency below which terms
 	// will be ignored in the source document.
-	private int mltMinTermFrequency = 2;
+	private Integer mltMinTermFrequency = null;
 
 	// (Optional - Default: 5) Specifies the maximum frequency above which terms
 	// will be ignored which occur in more than this many documents.
-	private int mltMinDocFrequency = 5;
+	private Integer mltMinDocFrequency = null;
 
 	// (Optional - Default: none) Specifies the maximum frequency above which
 	// terms will be ignored which occur in more than this many documents.
-	private int mltMaxDocFrequency;
+	private Integer mltMaxDocFrequency = null;
 
 	// (Optional - Default: none) Specifies the maximum document frequency using a
 	// ratio relative to the number of documents in the index. The value provided
 	// must be an integer between 0 and 100. For example, mlt.maxdfpct=75 means
 	// the word will be ignored if it occurs in more than 75 percent of the
 	// documents in the index.
-	private int mltMaxDocFreqPercentage;
+	private Integer mltMaxDocFreqPercentage = null;
 
 	// (Optional - Default: none) Sets the minimum word length below which words
 	// will be ignored.
-	private int mltMinWordLength;
+	private Integer mltMinWordLength = null;
 
 	// (Optional - Default: none) Sets the maximum word length above which words
 	// will be ignored.
-	private int mltMaxWordLength;
+	private Integer mltMaxWordLength = null;
 
 	// (Optional - Default: 25) Sets the maximum number of query terms that will
 	// be included in any generated query.
-	private int mltMaxQueryTerms;
+	private Integer mltMaxQueryTerms = null;
 
 	// (Optional - Default: 5000) Sets the maximum number of tokens to parse in
 	// each example document field that is not stored with TermVector support.
-	private int mltMaxNumTokensParse;
+	private Integer mltMaxNumTokensParse = null;
 
 	// (Optional - Default: false) Specifies if the query will be boosted by the
 	// interesting term relevance. Possible values are true or false.
-	private boolean mltBoost = false;
+	private Boolean mltBoost = null;
 
 	// (Optional - Default: false) Query fields and their boosts using the same
 	// format used by the DisMax Query Parser. These fields must also be specified
 	// in mlt.fl.
-	private String mltQueryFields;
+	private String mltQueryFields = null;
 
 	// (Optional - Default: none) Adds a section in the response that shows the
 	// top terms (based on TF/IDF) used for the MoreLikeThis query. It supports
@@ -115,23 +128,23 @@ public class MoreLikeThisHolder {
 	//  - none lists no terms (the default).
 	//  - details lists the terms along with the boost value used for each term.
 	//    Unless mlt.boost=true, all terms will have boost=1.0.
-	private String mltInterestingTerms;
+	private String mltInterestingTerms = null;
 
 	// (Optional - Default: true) Specifies if the response should include the
 	// matched document. If set to false, the response will look like a normal
 	// select response.
-	private boolean mltMatchInclude;
+	private Boolean mltMatchInclude = null;
 
 	// (Optional - Default: none) Specifies an offset into the main query search
 	// results to locate the document on which the MoreLikeThis query should
 	// operate. By default, the query operates on the first result for the q
 	// parameter.
-	private int mltMatchOffset;
+	private Integer mltMatchOffset = null;
 
 	/**
 	 * <p>The Solr Field Name that is the unique key</p>
 	 */
-	private String uniqueKeySolrFieldName;
+	private String uniqueKeySolrFieldName = null;
 	/**
 	 * <p>Instantiate an MLT Holder and parse and process the properties to set
 	 * them.  This will only parse the property file if the property
@@ -147,6 +160,13 @@ public class MoreLikeThisHolder {
 	public MoreLikeThisHolder(
 			Properties properties,
 			SolrFieldHolder solrFieldHolder) throws PanlServerException {
+
+		this.numResultsMoreLikeThis =
+				PropertyHelper.getIntProperty(
+						LOGGER,
+						properties,
+						Constants.Property.Solr.SOLR_NUMROWS_MORELIKETHIS,
+						Constants.DEFAULT_VALUE_NUM_RESULTS_MORELIKETHIS);
 
 		this.mltEnabled = properties.getProperty(Constants.Property.Panl.PANL_MLT_ENABLE,
 				Constants.BOOLEAN_FALSE_VALUE).equals(Constants.BOOLEAN_TRUE_VALUE);
@@ -169,7 +189,11 @@ public class MoreLikeThisHolder {
 			this.uniqueKeySolrFieldName = uniqueKeySolrPanlField.getSolrFieldName();
 		}
 
-		this.mltFl = properties.getProperty(Constants.Property.Panl.PANL_MLT_FL, null);
+		this.mltFl = PropertyHelper.getProperty(
+				properties,
+				Constants.Property.Panl.PANL_MLT_FL,
+				null);
+
 		// if the above is null - error
 		if(null == mltFl) {
 			throw new PanlServerException("The property '" + Constants.Property.Panl.PANL_MLT_FL + "' MUST " +
@@ -194,26 +218,26 @@ public class MoreLikeThisHolder {
 				LOGGER,
 				properties,
 				Constants.Property.Panl.PANL_MLT_MINTF,
-			2);
+			null);
 
 		this.mltMinDocFrequency = PropertyHelper.getIntProperty(
 				LOGGER,
 				properties,
 				Constants.Property.Panl.PANL_MLT_MINDF,
-				5);
+				null);
 
 		this.mltMaxDocFrequency = PropertyHelper.getIntProperty(
 				LOGGER,
 				properties,
 				Constants.Property.Panl.PANL_MLT_MAXDF,
-				-1);
+				null);
 
 		this.mltMaxDocFreqPercentage = PropertyHelper.getIntProperty(
 				LOGGER,
 				properties,
 				Constants.Property.Panl.PANL_MLT_MAXDFPCT,
-				-1);
-		if(this.mltMaxDocFreqPercentage != -1) {
+				null);
+		if(null != this.mltMaxDocFreqPercentage) {
 			if(this.mltMaxDocFreqPercentage < 0 || this.mltMaxDocFreqPercentage > 100) {
 				throw new PanlServerException("The property '" + Constants.Property.Panl.PANL_MLT_MAXDFPCT + "' MUST be " +
 						"between 0 and 100 (inclusive)");
@@ -224,37 +248,50 @@ public class MoreLikeThisHolder {
 				LOGGER,
 				properties,
 				Constants.Property.Panl.PANL_MLT_MINWL,
-				-1);
+				null);
 
 		this.mltMaxWordLength = PropertyHelper.getIntProperty(
 				LOGGER,
 				properties,
 				Constants.Property.Panl.PANL_MLT_MAXWL,
-				-1);
+				null);
 
 		this.mltMaxQueryTerms = PropertyHelper.getIntProperty(
 				LOGGER,
 				properties,
 				Constants.Property.Panl.PANL_MLT_MAXQT,
-				25);
+				null);
 
 		this.mltMaxNumTokensParse = PropertyHelper.getIntProperty(
 				LOGGER,
 				properties,
 				Constants.Property.Panl.PANL_MLT_MAXNTP,
-				5000);
+				null);
 
-		this.mltBoost = properties.getProperty(Constants.Property.Panl.PANL_MLT_BOOST, Constants.BOOLEAN_FALSE_VALUE).equals(Constants.BOOLEAN_TRUE_VALUE);
+		String mltBoostTemp = PropertyHelper.getProperty(
+				properties,
+				Constants.Property.Panl.PANL_MLT_BOOST,
+				null);
+		if(null != mltBoostTemp) {
+			this.mltBoost = Boolean.parseBoolean(mltBoostTemp);
+		}
 
-		this.mltQueryFields = properties.getProperty(Constants.Property.Panl.PANL_MLT_QF);
+		this.mltQueryFields = PropertyHelper.getProperty(
+				properties,
+				Constants.Property.Panl.PANL_MLT_QF,
+				null);
 
-		this.mltInterestingTerms = properties.getProperty(Constants.Property.Panl.PANL_MLT_INTERESTINGTERMS, null);
+		this.mltInterestingTerms = PropertyHelper.getProperty(
+				properties,
+				Constants.Property.Panl.PANL_MLT_INTERESTINGTERMS,
+				null);
+
 		if(null != this.mltInterestingTerms) {
 			switch(this.mltInterestingTerms) {
 				case "list":
 				case "details":
-					break;
 				case "none":
+					break;
 				case "":
 					this.mltInterestingTerms = null;
 					break;
@@ -265,14 +302,19 @@ public class MoreLikeThisHolder {
 			}
 		}
 
-		this.mltMatchInclude = properties.getProperty(Constants.Property.Panl.PANL_MLT_MATCH_INCLUDE,
-				Constants.BOOLEAN_TRUE_VALUE).equals(Constants.BOOLEAN_TRUE_VALUE);
+		String mltMatchInclude = PropertyHelper.getProperty(
+				properties,
+				Constants.Property.Panl.PANL_MLT_MATCH_INCLUDE,
+				null);
+		if(null != mltMatchInclude) {
+			this.mltMatchInclude = Boolean.parseBoolean(mltMatchInclude);
+		}
 
 		this.mltMatchOffset = PropertyHelper.getIntProperty(
 				LOGGER,
 				properties,
 				Constants.Property.Panl.PANL_MLT_MATCH_OFFSET,
-				-1);
+				null);
 	}
 
 	/**
@@ -293,37 +335,46 @@ public class MoreLikeThisHolder {
 		}
 
 		solrQuery.setMoreLikeThis(true);
-		// TODO - confirm that this is correct...
 		solrQuery.setRequestHandler(this.mltHandler);
 		solrQuery.setMoreLikeThisFields(this.mltFieldList);
-		solrQuery.setMoreLikeThisMinTermFreq(this.mltMinTermFrequency);
-		solrQuery.setMoreLikeThisMinDocFreq(this.mltMinDocFrequency);
-		// TODO - check that this is correct
-		solrQuery.setQuery(uniqueKeySolrFieldName + ":" + PanlLPSEHelper.encodeURIPath(uniqueKeyValue));
 
-		if(this.mltMaxDocFrequency != -1) {
+		if(null != this.mltMinTermFrequency) {
+			solrQuery.setMoreLikeThisMinTermFreq(this.mltMinTermFrequency);
+		}
+
+		if(null != this.mltMinDocFrequency) {
+			solrQuery.setMoreLikeThisMinDocFreq(this.mltMinDocFrequency);
+		}
+
+		solrQuery.setQuery(uniqueKeySolrFieldName + ":" + uniqueKeyValue);
+
+		if(null != this.mltMaxDocFrequency) {
 			// for some unknown reason there is not a setter for this on the Solr
 			// query - very odd
 			solrQuery.set(MoreLikeThisParams.MAX_DOC_FREQ, this.mltMaxDocFrequency);
 		}
 
-		if(this.mltMaxDocFreqPercentage != -1) {
+		if(null != this.mltMaxDocFreqPercentage) {
 			// for some unknown reason there is not a setter for this on the Solr
 			// query - very odd
 			solrQuery.set(MoreLikeThisParams.MAX_DOC_FREQ_PCT, this.mltMaxDocFreqPercentage);
 		}
 
-		if(this.mltMinWordLength != -1) {
+		if(null != this.mltMinWordLength) {
 			solrQuery.setMoreLikeThisMinWordLen(this.mltMinWordLength);
 		}
 
-		if(this.mltMaxWordLength != -1) {
+		if(null != this.mltMaxWordLength) {
 			solrQuery.setMoreLikeThisMaxWordLen(this.mltMaxWordLength);
 		}
 
-		solrQuery.setMoreLikeThisBoost(this.mltBoost);
+		if(null != this.mltMaxQueryTerms) {
+			solrQuery.setMoreLikeThisBoost(this.mltBoost);
+		}
 
-		solrQuery.setMoreLikeThisMaxQueryTerms(this.mltMaxQueryTerms);
+		if(null != this.mltMaxQueryTerms) {
+			solrQuery.setMoreLikeThisMaxQueryTerms(this.mltMaxQueryTerms);
+		}
 
 		if(null != this.mltInterestingTerms) {
 			// for some unknown reason there is not a setter for this on the Solr
@@ -333,10 +384,20 @@ public class MoreLikeThisHolder {
 
 		// for some unknown reason there are no setters for this on the Solr query
 		// for the following - very odd
-		solrQuery.set(MoreLikeThisParams.MATCH_INCLUDE, this.mltMatchInclude);
-		if(this.mltMatchOffset != -1) {
+		if(null != this.mltMatchInclude) {
+			solrQuery.set(MoreLikeThisParams.MATCH_INCLUDE, this.mltMatchInclude);
+		}
+
+		if(null != this.mltMatchOffset) {
 			solrQuery.set(MoreLikeThisParams.MATCH_OFFSET, this.mltMatchOffset);
 		}
+
+
+		// This __MAY__ help getting the correct results...
+		// always attempt to hit shard 1
+		solrQuery.set(ShardParams.SHARDS, SHARD_1);
+		solrQuery.set(ShardParams.SHARDS_PREFERENCE, REPLICA_LEADER_TRUE);
+		solrQuery.setRows(this.numResultsMoreLikeThis);
 	}
 
 	/**

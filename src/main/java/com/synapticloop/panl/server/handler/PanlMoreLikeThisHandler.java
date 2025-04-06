@@ -111,6 +111,8 @@ public class PanlMoreLikeThisHandler extends BaseResponseHandler implements Http
 		}
 
 		CollectionRequestHandler collectionRequestHandler = validCollectionsMap.get(paths[2]);
+		String uniqueKeyValue = paths[3];
+
 		if(null == collectionRequestHandler) {
 			set404ResponseMessage(response);
 			return;
@@ -130,7 +132,7 @@ public class PanlMoreLikeThisHandler extends BaseResponseHandler implements Http
 			SolrQuery solrQuery = new SolrQuery();
 
 			try {
-				moreLikeThisHolder.applyMltToQuery(solrQuery, "hello");
+				moreLikeThisHolder.applyMltToQuery(solrQuery, uniqueKeyValue);
 			} catch(PanlServerException ex) {
 				// the only time that this happens if the MLT is not enabled - this
 				// shouldn't happen as it was checked as the first part of the method
@@ -141,10 +143,23 @@ public class PanlMoreLikeThisHandler extends BaseResponseHandler implements Http
 
 			LOGGER.debug(solrQuery.toString());
 
-			QueryResponse queryResponse = solrClient.query(collectionRequestHandler.getSolrCollection(), solrQuery);
+			int numRetries = 5;
+			boolean hasSolrShardError = true;
 
-			JSONObject solrJsonObject = new JSONObject(queryResponse.jsonStr());
-			solrJsonObject.put(Constants.Json.Response.ERROR, false);
+			JSONObject solrJsonObject = new JSONObject();
+
+			while(hasSolrShardError && numRetries > 0) {
+				QueryResponse queryResponse = solrClient.query(collectionRequestHandler.getSolrCollection(), solrQuery);
+				solrJsonObject = new JSONObject(queryResponse.jsonStr());
+				if(!solrJsonObject.isNull(Constants.Json.Solr.RESPONSE)) {
+					hasSolrShardError = false;
+					solrJsonObject.put(Constants.Json.Response.ERROR, false);
+				} else {
+					solrJsonObject.put(Constants.Json.Response.ERROR, true);
+				}
+				numRetries--;
+			}
+
 
 			response.setEntity(new StringEntity(solrJsonObject.toString(), ResourceHelper.CONTENT_TYPE_JSON));
 			response.setStatusCode(HttpStatus.SC_OK);

@@ -74,7 +74,7 @@ public class PropertyHelper {
 		String property = null;
 		try {
 			property = properties.getProperty(key, null);
-			if (null == property) {
+			if (null == property || property.isEmpty()) {
 				logger.warn("Could not find the property with key '{}', setting it to the default value of '{}'", key, defaultValue);
 				return (defaultValue);
 			}
@@ -86,6 +86,25 @@ public class PropertyHelper {
 				property,
 				defaultValue);
 			return (defaultValue);
+		}
+	}
+
+	/**
+	 * <p>Get the property </p>
+	 *
+	 * @param properties The properties to look at
+	 * @param key The key to look up
+	 * @param defaultValue the default if the property is not set, or is empty
+	 *
+	 * @return the property value, or the default value if the value does not
+	 * exist, or is empty.
+	 */
+	public static String getProperty(Properties properties, String key, String defaultValue) {
+		String property = properties.getProperty(key, null);
+		if (null == property || property.isEmpty()) {
+			return(defaultValue);
+		} else {
+			return(property);
 		}
 	}
 }
