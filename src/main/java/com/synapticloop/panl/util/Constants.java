@@ -359,8 +359,7 @@ public class Constants {
 
 			// STATIC strings for properties or property prefixes that are used to
 			// look up the configuration in the <panl_collection_url>.panl.properties
-			// file
-			// The default fieldsets that will __ALWAYS__ be registered
+			// file - the default fieldsets that will __ALWAYS__ be registered
 			public static final String FIELDSETS_DEFAULT = "default";
 			public static final String FIELDSETS_EMPTY = "empty";
 		}
