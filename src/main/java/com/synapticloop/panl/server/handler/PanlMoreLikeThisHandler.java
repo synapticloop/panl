@@ -172,6 +172,7 @@ public class PanlMoreLikeThisHandler extends BaseResponseHandler implements Http
 			JSONObject panlJsonObject = new JSONObject();
 
 			while(hasSolrShardError && numRetries < 6) {
+				System.out.println(numRetries);
 				QueryResponse queryResponse = solrClient.query(collectionRequestHandler.getSolrCollection(), solrQuery);
 				solrJsonObject = new JSONObject(queryResponse.jsonStr());
 				if(!solrJsonObject.isNull(Constants.Json.Solr.RESPONSE)) {

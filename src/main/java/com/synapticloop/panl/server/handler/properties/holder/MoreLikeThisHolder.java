@@ -398,6 +398,7 @@ public class MoreLikeThisHolder {
 		// always attempt to hit shard 1
 		solrQuery.set(ShardParams.SHARDS, SHARD_1);
 		solrQuery.set(ShardParams.SHARDS_PREFERENCE, REPLICA_LEADER_TRUE);
+		solrQuery.set("shards.preference", "replica.location:local");
 		solrQuery.setRows(this.numResultsMoreLikeThis);
 
 		// TODO set field list
