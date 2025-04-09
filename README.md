@@ -695,6 +695,8 @@ bin/solr start -cloud -p 7574 -s "example/cloud/node2/solr" -z localhost:9983
   - Fixed passing through the LPSE code for the passthrough parameter if there 
     wasn't a passthrough value sent through.
   - Fixed bug with 'extra' JSON object not correctly overriding parent object
+  - Fixed connection reset when attempting to get the SolrJ client - now 
+    returns a 503 status message
 
 - **Code Changes**
     - Fixed output formatting for explanation of tokens
