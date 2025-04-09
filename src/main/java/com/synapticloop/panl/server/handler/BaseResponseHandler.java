@@ -124,4 +124,26 @@ public abstract class BaseResponseHandler {
 			new StringEntity(jsonObject.toString(),
 				ResourceHelper.CONTENT_TYPE_JSON));
 	}
+
+	/**
+	 * <p>Set the response as a 503 status code, there is no verbose messaging
+	 * flag for this as the Solr server has gone away :(</p>
+	 *
+	 * <p><strong>NOTE:</strong> This will set the response code and body, but not
+	 * return it.</p>
+	 *
+	 * @param response The response object
+	 */
+	protected void set503ResponseMessage(HttpResponse response) {
+		response.setStatusCode(HttpStatus.SC_SERVICE_UNAVAILABLE);
+
+		JSONObject jsonObject = new JSONObject();
+
+		jsonObject.put(Constants.Json.Response.ERROR, true);
+		jsonObject.put(Constants.Json.Response.STATUS, HttpStatus.SC_SERVICE_UNAVAILABLE);
+
+		response.setEntity(
+				new StringEntity(jsonObject.toString(),
+						ResourceHelper.CONTENT_TYPE_JSON));
+	}
 }

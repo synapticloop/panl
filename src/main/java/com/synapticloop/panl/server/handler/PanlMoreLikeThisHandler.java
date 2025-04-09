@@ -25,6 +25,7 @@ package com.synapticloop.panl.server.handler;
  */
 
 import com.synapticloop.panl.exception.PanlServerException;
+import com.synapticloop.panl.server.client.PanlClient;
 import com.synapticloop.panl.server.handler.helper.TimingsHelper;
 import com.synapticloop.panl.server.handler.properties.PanlProperties;
 import com.synapticloop.panl.server.handler.properties.holder.MoreLikeThisHolder;
@@ -133,8 +134,30 @@ public class PanlMoreLikeThisHandler extends BaseResponseHandler implements Http
 			return;
 		}
 
-		// at this point MLT is enabled and we are ready to serve the response
-		try (SolrClient solrClient = collectionRequestHandler.getPanlClient().getClient()) {
+		// You will look at this code and ask yourself why this isn't in a try with resources statement...
+		// You may even be tempted to move this code to something like:
+		//    try (SolrClient solrClient = collectionRequestHandler.getPanlClient().getClient())
+		// Then you will test it and you will get a connection reset message, instead of the nicer 503 error response...
+		// and you will wonder why...
+		// then you will look through the code and finally determine where it is happening and how to fix it...
+		// and you will land back here...
+		// so, don't bother, just be thankful that somebody else has done the investigation...
+		// if you really want to now why...
+		// look at the org.apache.http.impl.bootstrap.Worker#run() - which logs the exception and closes the connection...
+		SolrClient solrClient = null;
+		try {
+			solrClient = collectionRequestHandler.getPanlClient().getClient();
+		} catch(Exception ex) {
+		}
+
+		if(null == solrClient) {
+			set503ResponseMessage(response);
+			return;
+		}
+
+		// at this point MLT is enabled, the Solr server is there and we are ready
+		// to serve the response
+		try {
 			SolrQuery solrQuery = new SolrQuery();
 
 			try {
@@ -165,6 +188,7 @@ public class PanlMoreLikeThisHandler extends BaseResponseHandler implements Http
 			JSONObject panlJsonObject = new JSONObject();
 
 			while(hasSolrShardError && numRetries < 6) {
+				System.out.println(numRetries);
 				QueryResponse queryResponse = solrClient.query(collectionRequestHandler.getSolrCollection(), solrQuery);
 				solrJsonObject = new JSONObject(queryResponse.jsonStr());
 				if(!solrJsonObject.isNull(Constants.Json.Solr.RESPONSE)) {
@@ -188,6 +212,11 @@ public class PanlMoreLikeThisHandler extends BaseResponseHandler implements Http
 			return;
 		} catch (IOException | SolrServerException e) {
 			set500ResponseMessage(response, e);
+		} finally {
+			try {
+				solrClient.close();
+			} catch (IOException ignored) {
+			}
 		}
 	}
 
