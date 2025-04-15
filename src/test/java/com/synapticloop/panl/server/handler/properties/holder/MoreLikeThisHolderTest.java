@@ -86,6 +86,8 @@ public class MoreLikeThisHolderTest {
 		Properties properties = new Properties();
 		properties.put(Constants.Property.Panl.PANL_MLT_ENABLE, "true");
 		properties.put(Constants.Property.Panl.PANL_MLT_FL, "field,another,one");
+		properties.put(Constants.Property.Panl.PANL_MLT_TYPE, "mlt");
+		properties.put(Constants.Property.Panl.PANL_MLT_HANDLER, "/mlt");
 		MoreLikeThisHolder moreLikeThisHolder = new MoreLikeThisHolder(properties, solrFieldHolder);
 
 		SolrQuery solrQuery = new SolrQuery();

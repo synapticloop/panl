@@ -171,8 +171,7 @@ public class PanlMoreLikeThisHandler extends BaseResponseHandler implements Http
 
 			JSONObject panlJsonObject = new JSONObject();
 
-			while(hasSolrShardError && numRetries < 6) {
-				System.out.println(numRetries);
+			while(hasSolrShardError && numRetries < moreLikeThisHolder.getNumMltRetries()) {
 				QueryResponse queryResponse = solrClient.query(collectionRequestHandler.getSolrCollection(), solrQuery);
 				solrJsonObject = new JSONObject(queryResponse.jsonStr());
 				if(!solrJsonObject.isNull(Constants.Json.Solr.RESPONSE)) {
@@ -181,6 +180,11 @@ public class PanlMoreLikeThisHandler extends BaseResponseHandler implements Http
 					solrJsonObject.put(Constants.Json.Response.ERROR, false);
 				}
 				panlJsonObject.put(Constants.Json.Panl.NUM_RETRIES, numRetries);
+				if(hasSolrShardError) {
+					LOGGER.warn("Received invalid result from solr 'MLT' handler - invalid shard hit, request [{}/{}].",
+							numRetries,
+							moreLikeThisHolder.getNumMltRetries());
+				}
 				numRetries++;
 			}
 

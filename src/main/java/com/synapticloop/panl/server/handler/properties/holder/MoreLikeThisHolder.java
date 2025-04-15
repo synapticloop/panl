@@ -75,10 +75,19 @@ public class MoreLikeThisHolder {
 	public static final String REPLICA_LEADER_TRUE = ShardParams.SHARDS_PREFERENCE_REPLICA_LEADER + ":true";
 	public static final String REPLICA_LOCATION_LOCAL = "replica.location:local";
 
+	public static final String REQUEST_PROPERTY_MINTF = "mintf";
+	public static final String REQUEST_PROPERTY_MINDF = "mindf";
+	public static final String REQUEST_PROPERTY_MAXDF = "maxdf";
+	public static final String REQUEST_PROPERTY_MINWL = "minwl";
+	public static final String REQUEST_PROPERTY_MAXWL = "maxwl";
+	public static final String REQUEST_PROPERTY_MAXQT = "maxqt";
+	public static final String REQUEST_PROPERTY_MAXNTP = "maxntp";
+	public static final String REQUEST_PROPERTY_BOOST = "boost";
+
 	/**
 	 * <p>The number of results returned for the more like this query</p>
 	 */
-	private final int numResultsMoreLikeThis;
+	private int numResultsMoreLikeThis;
 
 	/**
 	 * <p>Whether the More Like This functionality is enabled for this collection</p>
@@ -181,7 +190,12 @@ public class MoreLikeThisHolder {
 	 */
 	private String uniqueKeySolrFieldName = null;
 
+	/**
+	 * <p>The string builder for the cache-able part of the select query</p>
+	 */
 	private StringBuilder selectQueryStringBuilder = new StringBuilder();
+
+	private int numMltRetries = Constants.DEFAULT_MLT_NUM_RETRIES;
 
 	/**
 	 * <p>Instantiate an MLT Holder and parse and process the properties to set
@@ -198,12 +212,6 @@ public class MoreLikeThisHolder {
 			Properties properties,
 			SolrFieldHolder solrFieldHolder) throws PanlServerException {
 
-		this.numResultsMoreLikeThis =
-				PropertyHelper.getIntProperty(
-						LOGGER,
-						properties,
-						Constants.Property.Solr.SOLR_NUMROWS_MORELIKETHIS,
-						Constants.DEFAULT_VALUE_NUM_RESULTS_MORELIKETHIS);
 
 		this.mltEnabled = properties.getProperty(Constants.Property.Panl.PANL_MLT_ENABLE,
 				Constants.BOOLEAN_FALSE_VALUE).equals(Constants.BOOLEAN_TRUE_VALUE);
@@ -228,6 +236,28 @@ public class MoreLikeThisHolder {
 		}
 
 		// at this point MLT is enabled so we should load the additional properties
+
+		this.numResultsMoreLikeThis =
+				PropertyHelper.getIntProperty(
+						LOGGER,
+						properties,
+						Constants.Property.Solr.SOLR_NUMROWS_MORELIKETHIS,
+						Constants.DEFAULT_VALUE_NUM_RESULTS_MORELIKETHIS);
+
+		if(this.numResultsMoreLikeThis < 1) {
+			this.numResultsMoreLikeThis = 1;
+		}
+
+		this.numMltRetries =
+				PropertyHelper.getIntProperty(
+						LOGGER,
+						properties,
+						Constants.Property.Panl.PANL_MLT_NUM_RETRIES,
+						Constants.DEFAULT_MLT_NUM_RETRIES);
+
+		if (this.numMltRetries < 1) {
+			this.numMltRetries = 1;
+		}
 
 		SolrPanlField uniqueKeySolrPanlField = solrFieldHolder.getUniqueKeySolrField();
 		if (null == uniqueKeySolrPanlField) {
@@ -446,26 +476,57 @@ public class MoreLikeThisHolder {
 		}
 	}
 
+	/**
+	 * <p>cache the /select query string - which is then re-used to build the Solr
+	 * query string.</p>
+	 *
+	 * @return the cache-able part of the /select query string
+	 */
 	private StringBuilder cacheSelectStringQuery() {
 		StringBuilder stringBuilder = new StringBuilder();
 		stringBuilder.append("{!mlt qf=")
 				.append(String.join(",", this.mltQueryFieldArray));
 
-		appendSelectParameterMltQuery(stringBuilder, "mintf", this.mltMinTermFrequency);
-		appendSelectParameterMltQuery(stringBuilder, "mindf", this.mltMinDocFrequency);
-		appendSelectParameterMltQuery(stringBuilder, "maxdf", this.mltMaxDocFrequency);
-		appendSelectParameterMltQuery(stringBuilder, "minwl", this.mltMinWordLength);
-		appendSelectParameterMltQuery(stringBuilder, "maxwl", this.mltMaxWordLength);
-		appendSelectParameterMltQuery(stringBuilder, "maxqt", this.mltMaxQueryTerms);
-		appendSelectParameterMltQuery(stringBuilder, "maxntp", this.mltMaxNumTokensParse);
-		appendSelectParameterMltQuery(stringBuilder, "boost", this.mltBoost);
+		appendSelectParameterMltQuery(stringBuilder, REQUEST_PROPERTY_MINTF, this.mltMinTermFrequency);
+		appendSelectParameterMltQuery(stringBuilder, REQUEST_PROPERTY_MINDF, this.mltMinDocFrequency);
+		appendSelectParameterMltQuery(stringBuilder, REQUEST_PROPERTY_MAXDF, this.mltMaxDocFrequency);
+		appendSelectParameterMltQuery(stringBuilder, REQUEST_PROPERTY_MINWL, this.mltMinWordLength);
+		appendSelectParameterMltQuery(stringBuilder, REQUEST_PROPERTY_MAXWL, this.mltMaxWordLength);
+		appendSelectParameterMltQuery(stringBuilder, REQUEST_PROPERTY_MAXQT, this.mltMaxQueryTerms);
+		appendSelectParameterMltQuery(stringBuilder, REQUEST_PROPERTY_MAXNTP, this.mltMaxNumTokensParse);
+		appendSelectParameterMltQuery(stringBuilder, REQUEST_PROPERTY_BOOST, this.mltBoost);
 
 		stringBuilder.append("}");
 
 		return(stringBuilder);
 	}
 
+	/**
+	 * <p>Helper method to append non-null queries to the query string.  This will
+	 * only append the key=value to the string buffer if the value part is not
+	 * null.</p>
+	 *
+	 * @param stringBuilder The string builder to append things to
+	 * @param key The key to use
+	 * @param value The value to use
+	 */
+	private void appendSelectParameterMltQuery(StringBuilder stringBuilder, String key, Object value) {
+		if(null != value) {
+			stringBuilder.append(" ")
+			             .append(key)
+			             .append("=")
+			             .append(value);
+		}
+	}
 
+
+	/**
+	 * <p>Apply the MLT /select query to the Solr query.</p>
+	 *
+	 * @param solrQuery The Solr Query to use
+	 * @param returnFields The list of fields to return with the documents
+	 * @param uniqueKeyValue The unique key value to perform the MLT on
+	 */
 	private void applyMltSelectQuery(SolrQuery solrQuery, List<String> returnFields, String uniqueKeyValue) {
 		String stringBuilder = selectQueryStringBuilder + uniqueKeyValue;
 
@@ -476,16 +537,13 @@ public class MoreLikeThisHolder {
 		solrQuery.setFields(returnFields.toArray(new String[]{}));
 	}
 
-
-	private void appendSelectParameterMltQuery(StringBuilder stringBuilder, String key, Object value) {
-		if(null != value) {
-			stringBuilder.append(" ")
-					.append(key)
-					.append("=")
-					.append(value);
-		}
-	}
-
+	/**
+	 * <p>Apply the MLT to the /mlt query handler.</p>
+	 *
+	 * @param solrQuery The Solr Query to use
+	 * @param returnFields The list of fields to return with the documents
+	 * @param uniqueKeyValue The unique key value to perform the MLT on
+	 */
 	private void applyMltHandlerQuery(SolrQuery solrQuery, List<String> returnFields, String uniqueKeyValue) {
 		solrQuery.setMoreLikeThis(true);
 		solrQuery.setRequestHandler(this.mltHandler);
@@ -568,5 +626,14 @@ public class MoreLikeThisHolder {
 	 */
 	public boolean getIsMltEnabled() {
 		return (this.mltEnabled);
+	}
+
+	/**
+	 * <p>Return the number of retires for the MLT</p>
+	 *
+	 * @return The number of retries to the MLT
+	 */
+	public int getNumMltRetries() {
+		return(this.numMltRetries);
 	}
 }

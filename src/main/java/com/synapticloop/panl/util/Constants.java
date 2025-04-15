@@ -48,6 +48,8 @@ public class Constants {
 	public static final String DEFAULT_MLT_TYPE_SELECT = "select";
 	public static final String DEFAULT_MLT_TYPE_MLT = "mlt";
 
+	public static final int DEFAULT_MLT_NUM_RETRIES = 6;
+
 	/**
 	 * <p>JSON Key Constants</p>
 	 */
@@ -334,6 +336,7 @@ public class Constants {
 			public static final String PANL_MLT_MINTF = "panl.mlt.mintf";
 			public static final String PANL_MLT_MINWL = "panl.mlt.minwl";
 			public static final String PANL_MLT_QF = "panl.mlt.qf";
+			public static final String PANL_MLT_NUM_RETRIES = "panl.mlt.numretries";
 		}
 
 		/**
