@@ -39,6 +39,28 @@ import java.util.*;
  * <p>This holds all 'More Like This' properties and can be used to apply the
  * parameters to the query.</p>
  *
+ * <p>To enable the MLT in Panl to use the Solr <strong>MoreLikeThis Query Parser</strong>
+ * you will need to configure the following properties which will enable More
+ * Like This queries.</p>
+ *
+ * <ul>
+ *   <li><code>panl.mlt.enable=true</code></li>
+ *   <li><code>panl.mlt.handler=/select</code></li>
+ *   <li><code>panl.mlt.type=select</code></li>
+ * </ul>
+ *
+ * <p>To enable the MLT in Panl to use the <strong>MoreLikeThis Request Handler</strong>
+ * (assuming that it is also configured in the Solr server), you will need to
+ * configure the following properties.
+ * </p>
+ *
+ * <ul>
+ *   <li><code>panl.mlt.enable=true</code></li>
+ *   <li><code>panl.mlt.handler=/mlt</code></li>
+ *   <li><code>panl.mlt.type=mlt</code></li>
+ *   <li><code>panl.mlt.numretries=6</code></li>
+ * </ul>
+ *
  * <p>The following table summarises what properties are available for each of
  * the handlers (either the 'select' or the 'mlt' handler).</p>
  *
@@ -48,6 +70,8 @@ import java.util.*;
  *  	</thead>
  * 		<tbody>
  * 			<tr><td><code>mlt.fl</code></td><td>NO (use <code>mlt.qf</code>)</td><td>YES</td></tr>
+ * 			<tr><td colspan="3">If you are using the '/select' handler, then you should set
+ * 		  the fields with the <code>mlt.qf</code></td></tr>
  * 			<tr><td><code>mlt.mintf</code></td><td>YES</td><td>YES</td></tr>
  * 			<tr><td><code>mlt.mindf</code></td><td>YES</td><td>YES</td></tr>
  * 			<tr><td><code>mlt.maxdf</code></td><td>YES</td><td>YES</td></tr>
@@ -57,15 +81,19 @@ import java.util.*;
  * 			<tr><td><code>mlt.maxqt</code></td><td>YES</td><td>YES</td></tr>
  * 			<tr><td><code>mlt.maxntp</code></td><td>YES</td><td>YES</td></tr>
  * 			<tr><td><code>mlt.boost</code></td><td>YES</td><td>YES</td></tr>
- * 			<tr><td><code>mlt.qf</code></td><td>YES</td><td>YES</td></tr>
+ * 			<tr><td><code>mlt.qf</code></td><td>YES</td><td>NO (use <code>mlt.fl</code>)</td></tr>
+ * 			<tr><td colspan="3">If you are using the '/mlt' handler, then you should set
+ * 		  the fields with the <code>mlt.fl</code>.  Whilst this is supported for '/mlt'
+ * 		  in Solr, it is unsupported in the Panl server.</td></tr>
  * 			<tr><td><code>mlt.interestingTerms</code></td><td>NO</td><td>YES</td></tr>
  * 			<tr><td><code>mlt.match.include</code></td><td>NO</td><td>YES</td></tr>
  * 			<tr><td><code>mlt.match.offset</code></td><td>NO</td><td>YES</td></tr>
  *   </tbody>
  * </table>
  *
- * @author Synapticloop
  * @see <a href="https://solr.apache.org/guide/solr/latest/query-guide/morelikethis.html">Apache Solr More Like This</a>
+ *
+ * @author Synapticloop
  */
 
 public class MoreLikeThisHolder {
@@ -222,6 +250,7 @@ public class MoreLikeThisHolder {
 
 		this.mltHandler = properties.getProperty(Constants.Property.Panl.PANL_MLT_HANDLER, Constants.DEFAULT_MLT_HANDLER);
 		this.mltType = properties.getProperty(Constants.Property.Panl.PANL_MLT_TYPE, Constants.DEFAULT_MLT_TYPE_SELECT);
+
 		if (!(this.mltType.equals(Constants.DEFAULT_MLT_TYPE_SELECT) ||
 				this.mltType.equals(Constants.DEFAULT_MLT_TYPE_MLT))) {
 			throw new PanlServerException("[ Solr/Panl '" +
@@ -261,84 +290,95 @@ public class MoreLikeThisHolder {
 
 		SolrPanlField uniqueKeySolrPanlField = solrFieldHolder.getUniqueKeySolrField();
 		if (null == uniqueKeySolrPanlField) {
-			throw new PanlServerException("[ Solr/Panl '" + solrFieldHolder.getSolrCollection() +
+			throw new PanlServerException("[ Solr/Panl '" +
+					solrFieldHolder.getSolrCollection() +
 					"/" +
 					solrFieldHolder.getPanlCollectionUri() +
 					"' ] Solr More Like This query handler requires a query of the " +
-					"Solr uniqueKey field, which has not been defined in the <panl_collection_url>.panl.properties file.  You " +
-					"must add ONE and ONLY one panl.uniquekey.<lpse_code>=true property to the file.");
+					"Solr uniqueKey field, which has not been defined in the " +
+					"<panl_collection_url>.panl.properties file.  You must add ONE and " +
+					"ONLY one panl.uniquekey.<lpse_code>=true property to the file.");
 		} else {
 			this.uniqueKeySolrFieldName = uniqueKeySolrPanlField.getSolrFieldName();
 		}
 
-		this.mltFl = PropertyHelper.getProperty(
-				properties,
-				Constants.Property.Panl.PANL_MLT_FL,
-				null);
-
-		// if the above is null - error
-		if (null == mltFl) {
-			throw new PanlServerException("The property '" +
-					Constants.Property.Panl.PANL_MLT_FL +
-					"' MUST be set to enable the Panl MLT.");
-		}
-
-		// now go through each of the fields and ensure that is it a valid field
-		this.mltFieldArray = this.mltFl.split(",");
-
+		// IMPORTANT - we need to know the mltType to determine which of the
+		// properties we will use for the field query - whilst in some instances it
+		// is valid to use both for the Solr query, The Panl server is going to
+		// ignore it.
 		int i = 0;
-		for (String solrFieldName : this.mltFieldArray) {
-			String trimmed = solrFieldName.trim();
-			if(trimmed.isEmpty()) {
-				continue;
-			}
-			if (!solrFieldHolder.getIsFieldOrFacet(trimmed)) {
-				throw new PanlServerException("[ Solr/Panl '" +
-						solrFieldHolder.getSolrCollection() +
-						"/" +
-						solrFieldHolder.getPanlCollectionUri() +
-						"' ] Attempting to define property '" +
-						Constants.Property.Panl.PANL_MLT_FL +
-						"' with a field value of '" +
-						trimmed +
-						"' which is not defined in the <panl_collection_url>.panl.properties file.");
-			}
 
-			this.mltFieldSet.add(trimmed);
-			this.mltFieldArray[i] = trimmed;
-			i++;
+		switch (this.mltType) {
+			case Constants.DEFAULT_MLT_TYPE_SELECT:
+				this.mltQueryFields = PropertyHelper.getProperty(
+						properties,
+						Constants.Property.Panl.PANL_MLT_QF,
+						"");
+
+				this.mltQueryFieldArray = this.mltQueryFields.split(",");
+
+				for(String solrFieldName : this.mltQueryFieldArray) {
+					String trimmed = solrFieldName.trim();
+					if(trimmed.isEmpty()) {
+						continue;
+					}
+
+					if (!solrFieldHolder.getIsFieldOrFacet(trimmed)) {
+						throw new PanlServerException("[ Solr/Panl '" +
+								solrFieldHolder.getSolrCollection() +
+								"/" +
+								solrFieldHolder.getPanlCollectionUri() +
+								"' ] Attempting to define property '" +
+								Constants.Property.Panl.PANL_MLT_QF +
+								"' with a field named '" +
+								trimmed +
+								"' which __MUST__ be defined in the property '" +
+								Constants.Property.Panl.PANL_MLT_FL +
+								"'.");
+					}
+
+					this.mltQueryFieldArray[i] = trimmed;
+					i++;
+				}
+				break;
+			case Constants.DEFAULT_MLT_TYPE_MLT:
+				this.mltFl = PropertyHelper.getProperty(
+						properties,
+						Constants.Property.Panl.PANL_MLT_FL,
+						null);
+				// if the above is null - error
+				if (null == mltFl) {
+					throw new PanlServerException("The property '" +
+							Constants.Property.Panl.PANL_MLT_FL +
+							"' MUST be set to enable the Panl MLT.");
+				}
+				// now go through each of the fields and ensure that is it a valid field
+				this.mltFieldArray = this.mltFl.split(",");
+
+				for (String solrFieldName : this.mltFieldArray) {
+					String trimmed = solrFieldName.trim();
+					if(trimmed.isEmpty()) {
+						continue;
+					}
+					if (!solrFieldHolder.getIsFieldOrFacet(trimmed)) {
+						throw new PanlServerException("[ Solr/Panl '" +
+								solrFieldHolder.getSolrCollection() +
+								"/" +
+								solrFieldHolder.getPanlCollectionUri() +
+								"' ] Attempting to define property '" +
+								Constants.Property.Panl.PANL_MLT_FL +
+								"' with a field value of '" +
+								trimmed +
+								"' which is not defined in the <panl_collection_url>.panl.properties file.");
+					}
+
+					this.mltFieldSet.add(trimmed);
+					this.mltFieldArray[i] = trimmed;
+					i++;
+				}
+				break;
 		}
 
-		this.mltQueryFields = PropertyHelper.getProperty(
-				properties,
-				Constants.Property.Panl.PANL_MLT_QF,
-				"");
-
-		i = 0;
-		this.mltQueryFieldArray = this.mltQueryFields.split(",");
-
-		for(String solrFieldName : this.mltQueryFieldArray) {
-			String trimmed = solrFieldName.trim();
-			if(trimmed.isEmpty()) {
-				continue;
-			}
-			if(!this.mltFieldSet.contains(trimmed)) {
-				throw new PanlServerException("[ Solr/Panl '" +
-						solrFieldHolder.getSolrCollection() +
-						"/" +
-						solrFieldHolder.getPanlCollectionUri() +
-						"' ] Attempting to define property '" +
-						Constants.Property.Panl.PANL_MLT_QF +
-						"' with a field named '" +
-						trimmed +
-						"' which __MUST__ be defined in the property '" +
-						Constants.Property.Panl.PANL_MLT_FL +
-						"'.");
-			}
-
-			this.mltQueryFieldArray[i] = trimmed;
-			i++;
-		}
 
 		this.mltMinTermFrequency = PropertyHelper.getIntProperty(
 				LOGGER,
@@ -615,7 +655,7 @@ public class MoreLikeThisHolder {
 		solrQuery.set(ShardParams.SHARDS_PREFERENCE, REPLICA_LOCATION_LOCAL);
 		solrQuery.setRows(this.numResultsMoreLikeThis);
 
-		solrQuery.set(MoreLikeThisParams.QF, this.mltQueryFieldArray);
+//		solrQuery.set(MoreLikeThisParams.QF, this.mltQueryFieldArray);
 		solrQuery.setFields(returnFields.toArray(new String[]{}));
 	}
 

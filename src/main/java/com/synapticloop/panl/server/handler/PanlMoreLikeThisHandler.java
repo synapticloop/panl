@@ -52,7 +52,6 @@ import java.util.*;
  * <p>This is the handler which will return more the 'More Like This' Solr
  * query.</p>
  *
- *
  * @author Synapticloop
  */
 public class PanlMoreLikeThisHandler extends BaseResponseHandler implements HttpRequestHandler {
@@ -134,7 +133,7 @@ public class PanlMoreLikeThisHandler extends BaseResponseHandler implements Http
 			return;
 		}
 
-		// at this point MLT is enabled, the Solr server is there and we are ready
+		// at this point MLT is enabled, the Solr server is there, and we are ready
 		// to serve the response
 
 		//                          !!! DO NOT DO THIS: !!!
@@ -157,15 +156,14 @@ public class PanlMoreLikeThisHandler extends BaseResponseHandler implements Http
 
 			LOGGER.debug(solrQuery.toString());
 
-			int numRetries = 1;
+			int numRetries = 0;
 			boolean hasSolrShardError = true;
 
 			JSONObject solrJsonObject = new JSONObject();
 			// TODO - whilst this is technically true - it is actually that Solr
-			// TODO - couldn't find the more like this handler query....
-			// TODO - Should probably do a code that indicates a retry
-			// TODO - For now it is an SC No Content error code (that will be weird...
-			// TODO - and probably not correct)
+			//   couldn't find the more like this handler query... Should probably do
+			//   a code that indicates a retry.  For now it is an SC No Content error
+			//   code (that will be weird... and probably not correct)
 			solrJsonObject.put(Constants.Json.Response.STATUS, HttpStatus.SC_NO_CONTENT);
 			solrJsonObject.put(Constants.Json.Response.ERROR, true);
 
@@ -180,12 +178,14 @@ public class PanlMoreLikeThisHandler extends BaseResponseHandler implements Http
 					solrJsonObject.put(Constants.Json.Response.ERROR, false);
 				}
 				panlJsonObject.put(Constants.Json.Panl.NUM_RETRIES, numRetries);
+
+				numRetries++;
+
 				if(hasSolrShardError) {
-					LOGGER.warn("Received invalid result from solr 'MLT' handler - invalid shard hit, request [{}/{}].",
+					LOGGER.warn("Received invalid result from Solr 'MLT' handler - invalid shard hit, request [{}/{}].",
 							numRetries,
 							moreLikeThisHolder.getNumMltRetries());
 				}
-				numRetries++;
 			}
 
 			timingsHelper.markSendOutboundRequestEnd();
