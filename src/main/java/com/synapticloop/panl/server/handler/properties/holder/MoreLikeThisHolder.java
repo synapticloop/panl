@@ -27,25 +27,45 @@ package com.synapticloop.panl.server.handler.properties.holder;
 import com.synapticloop.panl.exception.PanlServerException;
 import com.synapticloop.panl.server.handler.helper.PropertyHelper;
 import com.synapticloop.panl.util.Constants;
-import com.synapticloop.panl.util.PanlLPSEHelper;
 import org.apache.solr.client.solrj.SolrQuery;
 import org.apache.solr.common.params.MoreLikeThisParams;
 import org.apache.solr.common.params.ShardParams;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.net.URLEncoder;
-import java.nio.charset.StandardCharsets;
-import java.util.List;
-import java.util.Properties;
+import java.util.*;
 
 /**
  * <p>This holds all 'More Like This' properties and can be used to apply the
  * parameters to the query.</p>
  *
- * @see <a href="https://solr.apache.org/guide/solr/latest/query-guide/morelikethis.html">Apache Solr More Like This</a>
+ * <p>The following table summarises what properties are available for each of
+ * the handlers (either the 'select' or the 'mlt' handler).</p>
+ *
+ * <table>
+ *   <thead>
+ *     <tr><th>Property:</th><th>/select</th><th>/mlt</th></tr>
+ *  	</thead>
+ * 		<tbody>
+ * 			<tr><td><code>mlt.fl</code></td><td>NO (use <code>mlt.qf</code>)</td><td>YES</td></tr>
+ * 			<tr><td><code>mlt.mintf</code></td><td>YES</td><td>YES</td></tr>
+ * 			<tr><td><code>mlt.mindf</code></td><td>YES</td><td>YES</td></tr>
+ * 			<tr><td><code>mlt.maxdf</code></td><td>YES</td><td>YES</td></tr>
+ * 			<tr><td><code>mlt.maxdfpct</code></td><td>NO</td><td>YES</td></tr>
+ * 			<tr><td><code>mlt.minwl</code></td><td>YES</td><td>YES</td></tr>
+ * 			<tr><td><code>mlt.maxwl</code></td><td>YES</td><td>YES</td></tr>
+ * 			<tr><td><code>mlt.maxqt</code></td><td>YES</td><td>YES</td></tr>
+ * 			<tr><td><code>mlt.maxntp</code></td><td>YES</td><td>YES</td></tr>
+ * 			<tr><td><code>mlt.boost</code></td><td>YES</td><td>YES</td></tr>
+ * 			<tr><td><code>mlt.qf</code></td><td>YES</td><td>YES</td></tr>
+ * 			<tr><td><code>mlt.interestingTerms</code></td><td>NO</td><td>YES</td></tr>
+ * 			<tr><td><code>mlt.match.include</code></td><td>NO</td><td>YES</td></tr>
+ * 			<tr><td><code>mlt.match.offset</code></td><td>NO</td><td>YES</td></tr>
+ *   </tbody>
+ * </table>
  *
  * @author Synapticloop
+ * @see <a href="https://solr.apache.org/guide/solr/latest/query-guide/morelikethis.html">Apache Solr More Like This</a>
  */
 
 public class MoreLikeThisHolder {
@@ -53,11 +73,12 @@ public class MoreLikeThisHolder {
 
 	public static final String SHARD_1 = "shard1";
 	public static final String REPLICA_LEADER_TRUE = ShardParams.SHARDS_PREFERENCE_REPLICA_LEADER + ":true";
+	public static final String REPLICA_LOCATION_LOCAL = "replica.location:local";
 
 	/**
 	 * <p>The number of results returned for the more like this query</p>
 	 */
-	private int numResultsMoreLikeThis;
+	private final int numResultsMoreLikeThis;
 
 	/**
 	 * <p>Whether the More Like This functionality is enabled for this collection</p>
@@ -69,13 +90,23 @@ public class MoreLikeThisHolder {
 	 */
 	private String mltHandler = Constants.DEFAULT_MLT_HANDLER;
 
+	/**
+	 * <p>The type of the MLT that we are using - it must be either
+	 * 'select', or 'mlt' (without the quotes).</p>
+	 */
+	private String mltType = Constants.DEFAULT_MLT_TYPE_SELECT;
+
 	// (Required - Default: false) Specifies the fields to use for similarity. A
 	// list of fields can be provided separated by commas. If possible, the fields
 	// should have stored termVectors.
 	private String mltFl;  // maps to mlt.fl
 
 	// This is the parsed values of the mltFl member
-	private String[] mltFieldList;
+	private String[] mltFieldArray;
+
+	// this is a quick lookup for the field list which is then validated against
+	// the query fields
+	private Set<String> mltFieldSet = new HashSet<>();
 
 	// (Optional - Default: 2) Specifies the minimum frequency below which terms
 	// will be ignored in the source document.
@@ -121,6 +152,9 @@ public class MoreLikeThisHolder {
 	// in mlt.fl.
 	private String mltQueryFields = null;
 
+	// the query field array for adding to the solr query
+	private String[] mltQueryFieldArray = null;
+
 	// (Optional - Default: none) Adds a section in the response that shows the
 	// top terms (based on TF/IDF) used for the MoreLikeThis query. It supports
 	// three possible values:
@@ -146,17 +180,19 @@ public class MoreLikeThisHolder {
 	 * <p>The Solr Field Name that is the unique key</p>
 	 */
 	private String uniqueKeySolrFieldName = null;
+
+	private StringBuilder selectQueryStringBuilder = new StringBuilder();
+
 	/**
 	 * <p>Instantiate an MLT Holder and parse and process the properties to set
 	 * them.  This will only parse the property file if the property
 	 * <code>panl.mlt.enable</code> is set to <code>true</code> (case-sensitive)</p>
 	 *
-	 * @param properties The properties to use as a lookup
+	 * @param properties      The properties to use as a lookup
 	 * @param solrFieldHolder The field holder to interrogate to ensure that the
-	 *    field is valid when using MLT fields and MLT query fields
-	 *
+	 *                        field is valid when using MLT fields and MLT query fields
 	 * @throws PanlServerException If there was an error with one of the
-	 * properties
+	 *                             properties
 	 */
 	public MoreLikeThisHolder(
 			Properties properties,
@@ -172,18 +208,33 @@ public class MoreLikeThisHolder {
 		this.mltEnabled = properties.getProperty(Constants.Property.Panl.PANL_MLT_ENABLE,
 				Constants.BOOLEAN_FALSE_VALUE).equals(Constants.BOOLEAN_TRUE_VALUE);
 
-		if(!this.mltEnabled) {
+		if (!this.mltEnabled) {
 			return;
 		}
 
-		properties.getProperty(Constants.Property.Panl.PANL_MLT_HANDLER, Constants.DEFAULT_MLT_HANDLER);
+		this.mltHandler = properties.getProperty(Constants.Property.Panl.PANL_MLT_HANDLER, Constants.DEFAULT_MLT_HANDLER);
+		this.mltType = properties.getProperty(Constants.Property.Panl.PANL_MLT_TYPE, Constants.DEFAULT_MLT_TYPE_SELECT);
+		if (!(this.mltType.equals(Constants.DEFAULT_MLT_TYPE_SELECT) ||
+				this.mltType.equals(Constants.DEFAULT_MLT_TYPE_MLT))) {
+			throw new PanlServerException("[ Solr/Panl '" +
+					solrFieldHolder.getSolrCollection() +
+					"/" +
+					solrFieldHolder.getPanlCollectionUri() +
+					"' ] The property '" +
+					Constants.Property.Panl.PANL_MLT_TYPE +
+					"' MUST be one of '" +
+					Constants.DEFAULT_MLT_TYPE_SELECT + "' or '" +
+					Constants.DEFAULT_MLT_TYPE_MLT + "'.");
+		}
 
 		// at this point MLT is enabled so we should load the additional properties
 
 		SolrPanlField uniqueKeySolrPanlField = solrFieldHolder.getUniqueKeySolrField();
-		if(null == uniqueKeySolrPanlField) {
-			throw new PanlServerException("[ Solr/Panl '" + solrFieldHolder.getSolrCollection() + "/" +
-					solrFieldHolder.getPanlCollectionUri() +"' ] Solr More Like This query handler requires a query of the " +
+		if (null == uniqueKeySolrPanlField) {
+			throw new PanlServerException("[ Solr/Panl '" + solrFieldHolder.getSolrCollection() +
+					"/" +
+					solrFieldHolder.getPanlCollectionUri() +
+					"' ] Solr More Like This query handler requires a query of the " +
 					"Solr uniqueKey field, which has not been defined in the <panl_collection_url>.panl.properties file.  You " +
 					"must add ONE and ONLY one panl.uniquekey.<lpse_code>=true property to the file.");
 		} else {
@@ -196,30 +247,74 @@ public class MoreLikeThisHolder {
 				null);
 
 		// if the above is null - error
-		if(null == mltFl) {
-			throw new PanlServerException("The property '" + Constants.Property.Panl.PANL_MLT_FL + "' MUST " +
-					"be set to enable the Panl MLT");
+		if (null == mltFl) {
+			throw new PanlServerException("The property '" +
+					Constants.Property.Panl.PANL_MLT_FL +
+					"' MUST be set to enable the Panl MLT.");
 		}
 
-		// now go through
-		this.mltFieldList = this.mltFl.split(",");
-		for (String solrFieldName : this.mltFieldList) {
-			if (!solrFieldHolder.getIsFieldOrFacet(solrFieldName)) {
-				throw new PanlServerException("[ Solr/Panl '" + solrFieldHolder.getSolrCollection() + "/" +
-						solrFieldHolder.getPanlCollectionUri() +"' ]" +
-						" Attempting to define property '" +
+		// now go through each of the fields and ensure that is it a valid field
+		this.mltFieldArray = this.mltFl.split(",");
+
+		int i = 0;
+		for (String solrFieldName : this.mltFieldArray) {
+			String trimmed = solrFieldName.trim();
+			if(trimmed.isEmpty()) {
+				continue;
+			}
+			if (!solrFieldHolder.getIsFieldOrFacet(trimmed)) {
+				throw new PanlServerException("[ Solr/Panl '" +
+						solrFieldHolder.getSolrCollection() +
+						"/" +
+						solrFieldHolder.getPanlCollectionUri() +
+						"' ] Attempting to define property '" +
 						Constants.Property.Panl.PANL_MLT_FL +
 						"' with a field value of '" +
-						solrFieldName +
+						trimmed +
 						"' which is not defined in the <panl_collection_url>.panl.properties file.");
 			}
+
+			this.mltFieldSet.add(trimmed);
+			this.mltFieldArray[i] = trimmed;
+			i++;
+		}
+
+		this.mltQueryFields = PropertyHelper.getProperty(
+				properties,
+				Constants.Property.Panl.PANL_MLT_QF,
+				"");
+
+		i = 0;
+		this.mltQueryFieldArray = this.mltQueryFields.split(",");
+
+		for(String solrFieldName : this.mltQueryFieldArray) {
+			String trimmed = solrFieldName.trim();
+			if(trimmed.isEmpty()) {
+				continue;
+			}
+			if(!this.mltFieldSet.contains(trimmed)) {
+				throw new PanlServerException("[ Solr/Panl '" +
+						solrFieldHolder.getSolrCollection() +
+						"/" +
+						solrFieldHolder.getPanlCollectionUri() +
+						"' ] Attempting to define property '" +
+						Constants.Property.Panl.PANL_MLT_QF +
+						"' with a field named '" +
+						trimmed +
+						"' which __MUST__ be defined in the property '" +
+						Constants.Property.Panl.PANL_MLT_FL +
+						"'.");
+			}
+
+			this.mltQueryFieldArray[i] = trimmed;
+			i++;
 		}
 
 		this.mltMinTermFrequency = PropertyHelper.getIntProperty(
 				LOGGER,
 				properties,
 				Constants.Property.Panl.PANL_MLT_MINTF,
-			null);
+				null);
 
 		this.mltMinDocFrequency = PropertyHelper.getIntProperty(
 				LOGGER,
@@ -238,8 +333,8 @@ public class MoreLikeThisHolder {
 				properties,
 				Constants.Property.Panl.PANL_MLT_MAXDFPCT,
 				null);
-		if(null != this.mltMaxDocFreqPercentage) {
-			if(this.mltMaxDocFreqPercentage < 0 || this.mltMaxDocFreqPercentage > 100) {
+		if (null != this.mltMaxDocFreqPercentage) {
+			if (this.mltMaxDocFreqPercentage < 0 || this.mltMaxDocFreqPercentage > 100) {
 				throw new PanlServerException("The property '" + Constants.Property.Panl.PANL_MLT_MAXDFPCT + "' MUST be " +
 						"between 0 and 100 (inclusive)");
 			}
@@ -273,7 +368,7 @@ public class MoreLikeThisHolder {
 				properties,
 				Constants.Property.Panl.PANL_MLT_BOOST,
 				null);
-		if(null != mltBoostTemp) {
+		if (null != mltBoostTemp) {
 			this.mltBoost = Boolean.parseBoolean(mltBoostTemp);
 		}
 
@@ -287,8 +382,8 @@ public class MoreLikeThisHolder {
 				Constants.Property.Panl.PANL_MLT_INTERESTINGTERMS,
 				null);
 
-		if(null != this.mltInterestingTerms) {
-			switch(this.mltInterestingTerms) {
+		if (null != this.mltInterestingTerms) {
+			switch (this.mltInterestingTerms) {
 				case "list":
 				case "details":
 				case "none":
@@ -297,9 +392,10 @@ public class MoreLikeThisHolder {
 					this.mltInterestingTerms = null;
 					break;
 				default:
-					throw new PanlServerException("The property '" + Constants.Property.Panl.PANL_MLT_INTERESTINGTERMS + "' " +
-							"MUST be one of 'none', 'list', or 'details' (case-sensitive and without the single quotes).  Or you " +
-							"can leave it blank/empty string to default to 'none'");
+					throw new PanlServerException("The property '" +
+							Constants.Property.Panl.PANL_MLT_INTERESTINGTERMS +
+							"' __MUST__ be one of 'none', 'list', or 'details' (case-sensitive and without the single quotes).  " +
+							"Or you can leave it blank/empty string to default to 'none'");
 			}
 		}
 
@@ -307,7 +403,7 @@ public class MoreLikeThisHolder {
 				properties,
 				Constants.Property.Panl.PANL_MLT_MATCH_INCLUDE,
 				null);
-		if(null != mltMatchInclude) {
+		if (null != mltMatchInclude) {
 			this.mltMatchInclude = Boolean.parseBoolean(mltMatchInclude);
 		}
 
@@ -316,6 +412,12 @@ public class MoreLikeThisHolder {
 				properties,
 				Constants.Property.Panl.PANL_MLT_MATCH_OFFSET,
 				null);
+
+		// now we are going to add to the stringBuilder for caching
+		// purposes (if the type of the MLT is select
+		if(this.mltType.equals(Constants.DEFAULT_MLT_TYPE_SELECT)) {
+			this.selectQueryStringBuilder = cacheSelectStringQuery();
+		}
 	}
 
 	/**
@@ -323,61 +425,115 @@ public class MoreLikeThisHolder {
 	 * This should only be done if this is an MLT enabled for this collection,
 	 * otherwise an exception will be thrown.</p>
 	 *
-	 * @param solrQuery The Solr query to apply the MLT parameters to
+	 * @param solrQuery      The Solr query to apply the MLT parameters to
 	 * @param uniqueKeyValue The value for the unique key to base the More Like
-	 * This search on.
-	 *
+	 *                       This search on.
 	 * @throws PanlServerException if the Collection has not enabled the MLT
-	 * processor.
+	 *                             processor.
 	 */
 	public void applyMltToQuery(SolrQuery solrQuery, List<String> returnFields, String uniqueKeyValue) throws PanlServerException {
-		if(!this.mltEnabled) {
+		if (!this.mltEnabled) {
 			throw new PanlServerException("Attempting to retrieve an MLT query on a collection that hasn't enabled it.");
 		}
 
+		switch (this.mltType) {
+			case Constants.DEFAULT_MLT_TYPE_SELECT:
+				applyMltSelectQuery(solrQuery, returnFields, uniqueKeyValue);
+				break;
+			case Constants.DEFAULT_MLT_TYPE_MLT:
+				applyMltHandlerQuery(solrQuery, returnFields, uniqueKeyValue);
+				break;
+		}
+	}
+
+	private StringBuilder cacheSelectStringQuery() {
+		StringBuilder stringBuilder = new StringBuilder();
+		stringBuilder.append("{!mlt qf=")
+				.append(String.join(",", this.mltQueryFieldArray));
+
+		appendSelectParameterMltQuery(stringBuilder, "mintf", this.mltMinTermFrequency);
+		appendSelectParameterMltQuery(stringBuilder, "mindf", this.mltMinDocFrequency);
+		appendSelectParameterMltQuery(stringBuilder, "maxdf", this.mltMaxDocFrequency);
+		appendSelectParameterMltQuery(stringBuilder, "minwl", this.mltMinWordLength);
+		appendSelectParameterMltQuery(stringBuilder, "maxwl", this.mltMaxWordLength);
+		appendSelectParameterMltQuery(stringBuilder, "maxqt", this.mltMaxQueryTerms);
+		appendSelectParameterMltQuery(stringBuilder, "maxntp", this.mltMaxNumTokensParse);
+		appendSelectParameterMltQuery(stringBuilder, "boost", this.mltBoost);
+
+		stringBuilder.append("}");
+
+		return(stringBuilder);
+	}
+
+
+	private void applyMltSelectQuery(SolrQuery solrQuery, List<String> returnFields, String uniqueKeyValue) {
+		String stringBuilder = selectQueryStringBuilder + uniqueKeyValue;
+
+		solrQuery.setRequestHandler(this.mltHandler);
+		solrQuery.setQuery(stringBuilder);
+		solrQuery.setRows(this.numResultsMoreLikeThis);
+
+		solrQuery.setFields(returnFields.toArray(new String[]{}));
+	}
+
+
+	private void appendSelectParameterMltQuery(StringBuilder stringBuilder, String key, Object value) {
+		if(null != value) {
+			stringBuilder.append(" ")
+					.append(key)
+					.append("=")
+					.append(value);
+		}
+	}
+
+	private void applyMltHandlerQuery(SolrQuery solrQuery, List<String> returnFields, String uniqueKeyValue) {
 		solrQuery.setMoreLikeThis(true);
 		solrQuery.setRequestHandler(this.mltHandler);
-		solrQuery.setMoreLikeThisFields(this.mltFieldList);
+		solrQuery.setMoreLikeThisFields(this.mltFieldArray);
 
-		if(null != this.mltMinTermFrequency) {
+		if (null != this.mltMinTermFrequency) {
 			solrQuery.setMoreLikeThisMinTermFreq(this.mltMinTermFrequency);
 		}
 
-		if(null != this.mltMinDocFrequency) {
+		if (null != this.mltMinDocFrequency) {
 			solrQuery.setMoreLikeThisMinDocFreq(this.mltMinDocFrequency);
 		}
 
 		solrQuery.setQuery(uniqueKeySolrFieldName + ":" + uniqueKeyValue);
 
-		if(null != this.mltMaxDocFrequency) {
+		if (null != this.mltMaxDocFrequency) {
 			// for some unknown reason there is not a setter for this on the Solr
 			// query - very odd
 			solrQuery.set(MoreLikeThisParams.MAX_DOC_FREQ, this.mltMaxDocFrequency);
 		}
 
-		if(null != this.mltMaxDocFreqPercentage) {
+		if (null != this.mltMaxDocFreqPercentage) {
 			// for some unknown reason there is not a setter for this on the Solr
 			// query - very odd
 			solrQuery.set(MoreLikeThisParams.MAX_DOC_FREQ_PCT, this.mltMaxDocFreqPercentage);
 		}
 
-		if(null != this.mltMinWordLength) {
+		if (null != this.mltMinWordLength) {
 			solrQuery.setMoreLikeThisMinWordLen(this.mltMinWordLength);
 		}
 
-		if(null != this.mltMaxWordLength) {
+		if (null != this.mltMaxWordLength) {
 			solrQuery.setMoreLikeThisMaxWordLen(this.mltMaxWordLength);
 		}
 
-		if(null != this.mltMaxQueryTerms) {
+		if (null != this.mltBoost) {
 			solrQuery.setMoreLikeThisBoost(this.mltBoost);
 		}
 
-		if(null != this.mltMaxQueryTerms) {
+		if (null != this.mltMaxQueryTerms) {
 			solrQuery.setMoreLikeThisMaxQueryTerms(this.mltMaxQueryTerms);
 		}
 
-		if(null != this.mltInterestingTerms) {
+		if (null != this.mltMaxNumTokensParse) {
+			solrQuery.set(MoreLikeThisParams.MAX_NUM_TOKENS_PARSED, this.mltMaxNumTokensParse);
+		}
+
+		if (null != this.mltInterestingTerms) {
 			// for some unknown reason there is not a setter for this on the Solr
 			// query - very odd
 			solrQuery.set(MoreLikeThisParams.INTERESTING_TERMS, this.mltInterestingTerms);
@@ -385,11 +541,11 @@ public class MoreLikeThisHolder {
 
 		// for some unknown reason there are no setters for this on the Solr query
 		// for the following - very odd
-		if(null != this.mltMatchInclude) {
+		if (null != this.mltMatchInclude) {
 			solrQuery.set(MoreLikeThisParams.MATCH_INCLUDE, this.mltMatchInclude);
 		}
 
-		if(null != this.mltMatchOffset) {
+		if (null != this.mltMatchOffset) {
 			solrQuery.set(MoreLikeThisParams.MATCH_OFFSET, this.mltMatchOffset);
 		}
 
@@ -398,11 +554,11 @@ public class MoreLikeThisHolder {
 		// always attempt to hit shard 1
 		solrQuery.set(ShardParams.SHARDS, SHARD_1);
 		solrQuery.set(ShardParams.SHARDS_PREFERENCE, REPLICA_LEADER_TRUE);
-		solrQuery.set("shards.preference", "replica.location:local");
+		solrQuery.set(ShardParams.SHARDS_PREFERENCE, REPLICA_LOCATION_LOCAL);
 		solrQuery.setRows(this.numResultsMoreLikeThis);
 
-		// TODO set field list
-		solrQuery.setFields(returnFields.toArray(new String[] {}));
+		solrQuery.set(MoreLikeThisParams.QF, this.mltQueryFieldArray);
+		solrQuery.setFields(returnFields.toArray(new String[]{}));
 	}
 
 	/**
@@ -411,15 +567,6 @@ public class MoreLikeThisHolder {
 	 * @return Whether MLT is enabled for this collection.
 	 */
 	public boolean getIsMltEnabled() {
-		return(this.mltEnabled);
-	}
-
-	/**
-	 * <p>Return the MLT handler for Solr (default <code>/mlt</code>).</p>
-	 *
-	 * @return The MLT handler for Solr (default <code>/mlt</code>).
-	 */
-	public String getMltHandler() {
-		return mltHandler;
+		return (this.mltEnabled);
 	}
 }

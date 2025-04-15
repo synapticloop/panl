@@ -44,7 +44,9 @@ public class Constants {
 	public static final int DEFAULT_VALUE_NUM_RESULTS_PER_PAGE = 10;
 	public static final int DEFAULT_VALUE_SOLR_FACET_LIMIT = 100;
 
-	public static final String DEFAULT_MLT_HANDLER = "/mlt";
+	public static final String DEFAULT_MLT_HANDLER = "/select";
+	public static final String DEFAULT_MLT_TYPE_SELECT = "select";
+	public static final String DEFAULT_MLT_TYPE_MLT = "mlt";
 
 	/**
 	 * <p>JSON Key Constants</p>
@@ -316,6 +318,7 @@ public class Constants {
 
 			public static final String PANL_MLT_ENABLE = "panl.mlt.enable";
 			public static final String PANL_MLT_HANDLER = "panl.mlt.handler";
+			public static final String PANL_MLT_TYPE = "panl.mlt.type";
 
 			public static final String PANL_MLT_BOOST = "panl.mlt.boost";
 			public static final String PANL_MLT_FL = "panl.mlt.fl";
