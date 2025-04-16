@@ -43,10 +43,7 @@ import org.slf4j.LoggerFactory;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Enumeration;
-import java.util.List;
-import java.util.Properties;
+import java.util.*;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -59,6 +56,11 @@ import java.util.concurrent.TimeUnit;
  */
 public class PanlServer {
 	private static final Logger LOGGER = LoggerFactory.getLogger(PanlServer.class);
+
+	/**
+	 * <p>The look up set so that duplicate collections are not registered</p>
+	 */
+	private final Set<String> registeredCollections = new HashSet<>();
 
 	/**
 	 * <p>The location of the <code>panl.properties file</code>.
@@ -152,9 +154,18 @@ public class PanlServer {
 
 						String fileName = collectionPropertiesFile.getName();
 						// TODO - need a set to lookup so that there aren't multiple panl
-						// collection names bound
+						//   collection names bound
 
 						panlCollectionUri = fileName.substring(0, fileName.indexOf("."));
+						if(registeredCollections.contains(panlCollectionUri)) {
+							throw new PanlServerException("Collection '" + panlCollectionUri + "' is already registered.");
+						}
+						registeredCollections.add(panlCollectionUri);
+
+						if(panlCollectionUri.toLowerCase().startsWith("panl-")) {
+							throw new PanlServerException("Collection '" + panlCollectionUri + "' starts with the " +
+									"case-insensitive text 'panl-' which is disallowed.");
+						}
 
 						LOGGER.info("Found Solr collection named '{}' with properties file named '{}'.", solrCollection, fileName);
 
