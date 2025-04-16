@@ -685,6 +685,8 @@ bin/solr start -cloud -p 7574 -s "example/cloud/node2/solr" -z localhost:9983
     - `panl.mlt.handler` (default is '`/mlt`')
     - `panl.mlt.fields` (no default)
   - Added property `solr.numrows.morelikethis` to the collection (default is 5)
+  - Ensured that duplicate collections are not registered and that Panl 
+    collections are not 
 
 
 - **Bug Fixes**

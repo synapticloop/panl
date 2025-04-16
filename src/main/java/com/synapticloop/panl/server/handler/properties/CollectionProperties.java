@@ -911,6 +911,9 @@ public class CollectionProperties {
 					panlCollectionUri,
 					Constants.Property.Panl.PANL_LPSE_FACETORDER,
 					Constants.Property.Panl.PANL_LPSE_ORDER);
+			// TODO - this should really just be
+			//   this.panlLpseFacetOrder = properties.getProperty(Constants.Property.Panl.PANL_LPSE_ORDER);
+			//   without the malarky about checking it twice.
 
 			// no go through the LPSE ORDER, removing the META characters, we don't
 			// need to check for invalid LPSE codes as they were removed as part of
@@ -949,7 +952,13 @@ public class CollectionProperties {
 					}
 
 					if (!found) {
-						LOGGER.warn("Could not find the LPSE code '{}' for the facet order.", lpseCode);
+						// maybe it is a field
+						if(!LPSE_CODE_TO_FIELD_MAP.containsKey(lpseCode)) {
+							LOGGER.warn("[Solr/Panl '{}/{}'] Could not find the LPSE code '{}' for the facet order, ignoring",
+									solrCollection,
+									panlCollectionUri,
+									lpseCode);
+						}
 					}
 				}
 			}
@@ -998,7 +1007,12 @@ public class CollectionProperties {
 						}
 
 						if (!found) {
-							LOGGER.warn("Could not find the LPSE code '{}' for the facet order.", lpseCode);
+							if(!LPSE_CODE_TO_FIELD_MAP.containsKey(lpseCode)) {
+								LOGGER.warn("[Solr/Panl '{}/{}'] Could not find the LPSE code '{}' for the facet order, ignoring",
+										solrCollection,
+										panlCollectionUri,
+										lpseCode);
+							}
 						}
 					}
 

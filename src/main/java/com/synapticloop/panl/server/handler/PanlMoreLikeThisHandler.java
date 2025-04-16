@@ -108,7 +108,7 @@ public class PanlMoreLikeThisHandler extends BaseResponseHandler implements Http
 		}
 
 		CollectionRequestHandler collectionRequestHandler = validCollectionsMap.get(paths[2]);
-		String fieldSet = paths[3];
+		String fieldSetName = paths[3];
 		String uniqueKeyValue = paths[4];
 
 		if(null == collectionRequestHandler) {
@@ -116,9 +116,9 @@ public class PanlMoreLikeThisHandler extends BaseResponseHandler implements Http
 			return;
 		}
 
-		List<String> resultFieldsForFieldSet = collectionRequestHandler.getCollectionProperties().getResultFieldsForFieldSet(fieldSet);
+		List<String> returnFieldSet = collectionRequestHandler.getCollectionProperties().getResultFieldsForFieldSet(fieldSetName);
 
-		if(resultFieldsForFieldSet.isEmpty()) {
+		if(returnFieldSet.isEmpty()) {
 			set404ResponseMessage(response);
 			return;
 		}
@@ -144,7 +144,7 @@ public class PanlMoreLikeThisHandler extends BaseResponseHandler implements Http
 			SolrQuery solrQuery = new SolrQuery();
 
 			try {
-				moreLikeThisHolder.applyMltToQuery(solrQuery, resultFieldsForFieldSet, uniqueKeyValue);
+				moreLikeThisHolder.applyMltToQuery(solrQuery, returnFieldSet, uniqueKeyValue);
 				timingsHelper.markBuildOutboundRequestEnd();
 			} catch(PanlServerException ex) {
 				// the only time that this happens if the MLT is not enabled - this

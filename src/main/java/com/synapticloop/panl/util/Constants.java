@@ -38,6 +38,7 @@ public class Constants {
 	public static final String JSON_VALUE_NO_INFIX_REPLACEMENT = "~";
 
 	public static final String DEFAULT_VALUE_QUERY_RESPOND_TO = "q";
+
 	public static final int DEFAULT_VALUE_FACET_MIN_COUNT = 1;
 	public static final int DEFAULT_VALUE_NUM_RESULTS_LOOKAHEAD = 5;
 	public static final int DEFAULT_VALUE_NUM_RESULTS_MORELIKETHIS = 5;
@@ -356,7 +357,7 @@ public class Constants {
 	}
 
 	/**
-	 * <p>Constants for Strings that are in the URL</p>
+	 * <p>Constants for Strings that are in the CaFUP URL</p>
 	 */
 	public static class Url {
 		public static class Panl {
