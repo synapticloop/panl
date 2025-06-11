@@ -182,6 +182,7 @@ function populatePanlResults(panlJsonData) {
 	addPagination(panlJsonData.panl.pagination, panlJsonData.panl.extra);
 	addActiveFilters(panlJsonData.panl.active, panlJsonData.panl.sorting.remove_uri);
 	addAvailableFilters(panlJsonData.panl.available, panlJsonData.panl.active);
+	addMoreLikeThis(documents);
 }
 
 function addSearchFieldCheckboxes(searchJson) {
@@ -896,4 +897,53 @@ function updateDateRangeLink(facet) {
 			encodePanl(text) +
 			facet.uris.after
 	);
+}
+
+function addMoreLikeThis(documentsObject) {
+	if(documentsObject.length === 1) {
+		// we are going to attempt to do a more like this on it
+		if(documentsObject[0].id) {
+			var moreLikeThisUrl = "/panl-more-like-this" +
+					$("#collection").text() +
+					"/" +
+					documentsObject[0].id;
+
+
+			$.ajax({
+				url: moreLikeThisUrl,
+				success: function (panlJsonData) {
+					console.log("[ RETURNED MORE LIKE THIS JSON OBJECT ]")
+					console.log(panlJsonData);
+
+					// now go through the documents and print the more like this...
+					addMoreLikeThisDocuments(panlJsonData);
+				},
+				error: function(request, status, errorThrown) {
+					// do nothing
+				}
+			});
+
+		}
+	}
+}
+
+function addMoreLikeThisDocuments(panlJsonData) {
+	$("#morelikethis").append("<h1>More Like This</h1>")
+	let documents;
+	if (panlJsonData.response.docs !== undefined) {
+		documents = panlJsonData.response.docs;
+	} else {
+		// for version 8 anbd below
+		documents = panlJsonData.response;
+	}
+
+	for (const document of documents) {
+		var innerList = "";
+
+		for (const fieldName in document) {
+			innerList += "<dt>" + panlJsonData.panl.fields[fieldName] + " (" + fieldName + ")</dt>";
+			innerList += "<dd>" + document[fieldName] + "</dd>";
+		}
+		$("#morelikethis").append("<dl>" + innerList + "</dl>");
+	}
 }

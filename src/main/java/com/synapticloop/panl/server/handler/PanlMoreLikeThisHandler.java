@@ -27,6 +27,7 @@ package com.synapticloop.panl.server.handler;
 import com.synapticloop.panl.exception.PanlServerException;
 import com.synapticloop.panl.server.client.PanlClient;
 import com.synapticloop.panl.server.handler.helper.TimingsHelper;
+import com.synapticloop.panl.server.handler.processor.FieldsProcessor;
 import com.synapticloop.panl.server.handler.properties.PanlProperties;
 import com.synapticloop.panl.server.handler.properties.holder.MoreLikeThisHolder;
 import com.synapticloop.panl.server.handler.webapp.util.ResourceHelper;
@@ -178,6 +179,8 @@ public class PanlMoreLikeThisHandler extends BaseResponseHandler implements Http
 					solrJsonObject.put(Constants.Json.Response.ERROR, false);
 				}
 				panlJsonObject.put(Constants.Json.Panl.NUM_RETRIES, numRetries);
+				panlJsonObject.put(Constants.Json.Panl.FIELDS, new FieldsProcessor(collectionRequestHandler.getCollectionProperties()).processToObject(new HashMap<>(),
+										fieldSetName));
 
 				numRetries++;
 
