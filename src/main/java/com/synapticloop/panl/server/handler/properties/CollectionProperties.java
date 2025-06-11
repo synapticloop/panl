@@ -1632,6 +1632,8 @@ public class CollectionProperties {
 						jsonTemp +
 						"'.");
 			}
+		} else {
+			this.jsonExtraObject = serverObject;
 		}
 	}
 

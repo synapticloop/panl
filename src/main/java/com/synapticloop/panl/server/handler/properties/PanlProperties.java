@@ -144,7 +144,7 @@ public class PanlProperties {
 		String jsonTemp = properties.getProperty(Constants.Property.Panl.PANL_SERVER_EXTRA, "");
 		if(!jsonTemp.trim().isEmpty()) {
 			try {
-				jsonExtraObject = new JSONObject(jsonTemp);
+				this.jsonExtraObject = new JSONObject(jsonTemp);
 			} catch(JSONException ex) {
 				throw new PanlServerException("Could not parse the property '" +
 						Constants.Property.Panl.PANL_SERVER_EXTRA +

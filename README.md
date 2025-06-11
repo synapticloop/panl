@@ -193,7 +193,9 @@ parameters into concise and precise URL paths.
    through the search journey.
 
 1. **UNLESS facets** - Continue to show a facet unless another specified facet is
-   selected.  This can be thought of as the inverse of a hierarchical facet.
+   selected.  This can be thought of as the inverse of a hierarchical facet  and 
+   is useful when a facet no longer becomes relevant as the user goes through 
+   the search journey.
 
 1. **SORTED facets** - Each individual facet can be sorted by either the facet
    count (which is the default), or the facet value (e.g. alphabetic/numeric)
