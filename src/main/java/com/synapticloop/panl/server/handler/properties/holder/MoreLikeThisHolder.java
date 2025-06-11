@@ -399,18 +399,19 @@ public class MoreLikeThisHolder {
 					this.mltFieldArray[i] = trimmed;
 					i++;
 				}
+
+				if(this.mltFieldSet.isEmpty()) {
+					throw new PanlServerException("[ Solr/Panl '" +
+							solrFieldHolder.getSolrCollection() +
+							"/" +
+							solrFieldHolder.getPanlCollectionUri() +
+							"' ] Attempting to define property '" +
+							Constants.Property.Panl.PANL_MLT_FL +
+							"' with no valid field values");
+				}
 				break;
 		}
 
-		if(this.mltFieldSet.isEmpty()) {
-			throw new PanlServerException("[ Solr/Panl '" +
-					solrFieldHolder.getSolrCollection() +
-					"/" +
-					solrFieldHolder.getPanlCollectionUri() +
-					"' ] Attempting to define property '" +
-					Constants.Property.Panl.PANL_MLT_FL +
-					"' with no valid field values");
-		}
 
 		this.mltMinTermFrequency = PropertyHelper.getIntProperty(
 				properties,
