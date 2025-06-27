@@ -115,7 +115,7 @@
   <field name="id" type="string" stored="true" indexed="true" required="true" multiValued="false" />
 
   <field name="author" type="string" indexed="true" stored="true" multiValued="true" termVectors="true" />
-  <field name="title" type="text_general" indexed="true" stored="true" multiValued="false" termVectors="true" />
+  <field name="title" type="text_general" indexed="true" stored="true" multiValued="false" />
   <field name="description" type="text_general" indexed="true" stored="true" multiValued="false" />
   <field name="book_image" type="string" indexed="false" stored="true" multiValued="false" />
   <field name="buy_url" type="string" indexed="false" stored="true" multiValued="false" />
