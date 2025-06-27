@@ -324,11 +324,11 @@ public class CollectionRequestHandler {
 
 			return (parseResponse(
 					fieldSet,
-				lpseTokens,
-				solrQueryResponse,
-				parseRequestNanos,
-				buildRequestNanos,
-				sendAnReceiveNanos));
+					lpseTokens,
+					solrQueryResponse,
+					parseRequestNanos,
+					buildRequestNanos,
+					sendAnReceiveNanos));
 
 		} catch (Exception e) {
 			throw new PanlServerException("Could not query the Solr instance, message was: " + e.getMessage(), e);

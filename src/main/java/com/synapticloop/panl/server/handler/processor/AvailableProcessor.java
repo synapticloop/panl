@@ -110,12 +110,18 @@ public class AvailableProcessor extends Processor {
 			if (facetField.getValueCount() != 0) {
 				JSONObject facetObject = new JSONObject();
 				baseField.appendToAvailableFacetObject(facetObject);
+				List<FacetField.Count> facetFieldValues = facetField.getValues();
+
+				if(baseField.getIsFacetSortByIndexDesc()) {
+					Collections.reverse(facetFieldValues);
+				}
+
 				if(baseField.appendAvailableValues(
 						facetObject,
 						collectionProperties,
 						panlTokenMap,
 						panlLookupMap.getOrDefault(lpseCode, new HashSet<>()),
-						facetField.getValues(),
+						facetFieldValues,
 						numFound,
 						numFoundExact)) {
 

@@ -312,6 +312,7 @@ public class Constants {
 
 			public static final String SOLR_VALUE_COUNT = "count";
 			public static final String SOLR_VALUE_INDEX = "index";
+			public static final String SOLR_VALUE_INDEX_DESC = "indexdesc";
 
 			public static final String SOLRJ_CLIENT = "solrj.client";
 			public static final String SOLR_SEARCH_SERVER_URL = "solr.search.server.url";

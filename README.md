@@ -205,7 +205,7 @@ parameters into concise and precise URL paths.
 
 1. **RESULTS SORTING options** - Sort by any of the Solr fields, either
    ascending, or descending and with multiple sub-sorting available - e.g.
-   sorting by a brand name, than the model number.  Additionally Panl generates
+   sorting by a brand name, than the model number.  Additionally, Panl generates
    URLs for the inverse of the sorting without impacting any sub-sorting.
 
 1. **INTEGRATED TYPEAHEAD/LOOKAHEAD** - Retrieve results suggestions as you type
@@ -343,8 +343,8 @@ results._
    or sorting option from the results. If it is an active sorting filter, the
    <img src="src/main/resources/webapp/static/invert.png" alt="invert" /> 
    `Change to DESC` or <img src="src/main/resources/webapp/static/invert.png" alt="invert" /> 
-   `Change to ASC` links will invert the sorting
-   order without affecting any further sub-ordering.
+   `Change to ASC` links will invert the sorting order without affecting any 
+   further sub-ordering.
 
 1. **BOOLEAN Checkboxes** - any facets that have been defined as BOOLEAN 
    checkboxes, which allows the integrator to highlight one of the values 
@@ -362,7 +362,10 @@ results._
       - Previous 24 hours
 
 1. **Available filters** - additional facets that can further refine and limit
-   the Solr search results.
+   the Solr search results.  These facets can be sorted by the count 
+   descending (which is the default) and also by the index (or value) either 
+   ascending or descending. This may also display a link to load more facets if 
+   the returned number of facets is not the complete set.
 
 1. **Number of results found**, and whether this is an exact match.
 
@@ -689,6 +692,8 @@ bin/solr start -cloud -p 7574 -s "example/cloud/node2/solr" -z localhost:9983
   - Added property `solr.numrows.morelikethis` to the collection (default is 5)
   - Ensured that duplicate collections are not registered and that Panl 
     collections are not 
+  - Added `indexdesc` as a sorting option so that the facets can be sorted 
+    by index (ascending is the default) and now descending.
 
 
 - **Bug Fixes**

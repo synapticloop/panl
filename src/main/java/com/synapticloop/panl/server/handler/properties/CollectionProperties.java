@@ -116,6 +116,12 @@ public class CollectionProperties {
 	private final List<PanlFacetField> FACET_INDEX_SORT_FIELDS = new ArrayList<>();
 
 	/**
+	 * <p>This is the list of all facet fields that are registered with as sort
+	 * fields panl to be sorted in the index (i.e. the value), rather than the count of the facet</p>
+	 */
+	private final Set<String> FACET_INDEX_SORT_FIELD_SET = new HashSet<>();
+
+	/**
 	 * <p>This is the list of all fields that are registered with panl. Unlike
 	 * faceted fields, these may not be used as a facet, but will be able to be sorted.</p>
 	 */
@@ -1597,10 +1603,15 @@ public class CollectionProperties {
 		return (FACET_INDEX_SORT_FIELDS);
 	}
 
+	public boolean getIsFacetIndexSortField(String solrFieldName) {
+		return(FACET_INDEX_SORT_FIELD_SET.contains(solrFieldName));
+	}
+
 	private void parseFacetSortFields() {
 		for (PanlFacetField facetField : FACET_FIELDS) {
 			if (facetField.getIsFacetSortByIndex()) {
 				FACET_INDEX_SORT_FIELDS.add(facetField);
+				FACET_INDEX_SORT_FIELD_SET.add(facetField.getSolrFieldName());
 			}
 		}
 	}

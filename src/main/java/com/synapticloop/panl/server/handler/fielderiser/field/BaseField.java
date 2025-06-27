@@ -62,6 +62,7 @@ public abstract class BaseField {
 	protected String solrFieldName;
 	private String solrFieldType;
 	private boolean facetSortByIndex = false;
+	private boolean facetSortByIndexDesc = false;
 	protected boolean isMultiValue = false;
 	protected String valueSeparator = null;
 	protected boolean hasURIComponent = true;
@@ -141,9 +142,18 @@ public abstract class BaseField {
 		this.solrCollection = solrCollection;
 		this.panlCollectionUri = panlCollectionUri;
 		this.lpseLength = lpseLength;
-		this.facetSortByIndex = properties
-				.getProperty(Constants.Property.Panl.PANL_FACETSORT + this.lpseCode, Constants.Property.Panl.SOLR_VALUE_COUNT)
-				.equals(Constants.Property.Panl.SOLR_VALUE_INDEX);
+
+		// now for the facet sorting (either normal or descending)
+		String facetSorting = properties
+				.getProperty(Constants.Property.Panl.PANL_FACETSORT + this.lpseCode, Constants.Property.Panl.SOLR_VALUE_COUNT);
+		switch(facetSorting) {
+			case Constants.Property.Panl.SOLR_VALUE_INDEX_DESC:
+				this.facetSortByIndexDesc = true;
+				// yes, this falls through
+			case Constants.Property.Panl.SOLR_VALUE_INDEX:
+				this.facetSortByIndex = true;
+		}
+
 		this.isMultiValue = properties
 				.getProperty(Constants.Property.Panl.PANL_MULTIVALUE + this.lpseCode, Constants.BOOLEAN_FALSE_VALUE)
 				.equals(Constants.BOOLEAN_TRUE_VALUE);
@@ -822,7 +832,8 @@ public abstract class BaseField {
 	 * including the currently selected facet value).</p>
 	 *
 	 * <p>This will add to the JSON object <code>facetObject</code> the values
-	 * and links to filter with this facet value in addition to the currently selected facets and query.</p>
+	 * and links to filter with this facet value in addition to the currently
+	 * selected facets and query.</p>
 	 *
 	 * @param facetObject The facet object to append to
 	 * @param collectionProperties The collection properties
@@ -1030,7 +1041,18 @@ public abstract class BaseField {
 	 * @return whether to sort this facet by its index.
 	 */
 	public boolean getIsFacetSortByIndex() {
-		return (facetSortByIndex);
+		return(this.facetSortByIndex);
+	}
+
+	/**
+	 * <p>Return whether this facet is sorted by the index but in descending order
+	 * - i.e. the facet value rather than the count (which is the default).</p>
+	 *
+	 * @return whether to sort this facet by the index - but descending, rather
+	 * than ascending - which is normal
+	 */
+	public boolean getIsFacetSortByIndexDesc() {
+		return(this.facetSortByIndexDesc);
 	}
 
 	/**
