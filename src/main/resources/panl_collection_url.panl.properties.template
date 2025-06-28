@@ -232,8 +232,8 @@ panl.collection.extra=
 #
 #                            MoreLikeThis Query Parser
 #                            ============ ===== ======
-#    Use this query parser if you Solr is setup in cloud mode __AND__ there are
-#    more than one replica (the number of shards do not matter).
+#    Use this query parser if your Solr server is set up in cloud mode __AND__
+#    there are more than one replica (the number of shards do not matter).
 #
 #    Set the properties:
 #        panl.mlt.enable=true
@@ -242,16 +242,17 @@ panl.collection.extra=
 #
 #                          MoreLikeThis Request Handler
 #                          ============ ======= =======
-#    Use this query parser if you Solr is not setup in cloud mode and you wish
-#    to have a separate handler for the MLT.  Note that this handler is not
-#    cloud aware will only return nodes from the first replica.  Due to this
-#    Panl will attempt to retry the query against other nodes if no valid
+#    Use this query parser if your Solr server is not setup in cloud mode, and
+#    you wish to have a separate handler for the MLT.  Note that this handler
+#    is not cloud aware will only return nodes from the first replica.  Due to
+#    this Panl will attempt to retry the query against other nodes if no valid
 #    response was received.  This may still fail...
 #
 #    Set the properties:
 #        panl.mlt.enable=true
 #        panl.mlt.handler=/mlt
 #        panl.mlt.type=mlt
+#        panl.mlt.numretries=6
 #
 #   You will also need to add configuration to the solrconfig.xml file for this
 #   to work:
@@ -287,7 +288,7 @@ panl.collection.extra=
 #     not work in the Panl server
 #   - The panl.mlt.handler property MUST match the configured handler in the
 #     Solr configuration
-#   - The panl.mlt.fl MUST exist in the Solr collection
+#   - The fields listed in the panl.mlt.fl MUST exist in the Solr collection
 #
 #                                ~ ~ ~ * ~ ~ ~
 
