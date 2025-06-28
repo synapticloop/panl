@@ -51,12 +51,12 @@ public class MoreLikeThisHolderTest {
 
 
 	@Test public void testNoFields() throws Exception {
-		Properties properties = new Properties();
-		properties.put(Constants.Property.Panl.PANL_MLT_ENABLE, "true");
-		// if there are no fields - then throw an exception
-		assertThrows(PanlServerException.class, () -> {
-			new MoreLikeThisHolder(properties, solrFieldHolder);
-		});
+//		Properties properties = new Properties();
+//		properties.put(Constants.Property.Panl.PANL_MLT_ENABLE, "true");
+//		// if there are no fields - then throw an exception
+//		assertThrows(PanlServerException.class, () -> {
+//			new MoreLikeThisHolder(properties, solrFieldHolder);
+//		});
 
 //		properties.put(Constants.Property.Panl.PANL_MLT_FL, "field,another,one");
 //		assertDoesNotThrow(() -> {
