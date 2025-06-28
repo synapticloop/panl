@@ -162,6 +162,7 @@ $panl.param.passthrough.canonical
 #                                ~ ~ ~ * ~ ~ ~
 
 panl.form.query.respondto=search
+panl.form.query.operand=op
 
 
 #                      Whether To Include Single Facets
@@ -482,6 +483,16 @@ solr.highlight=false
 #              be returned with the results, and may be used as the facet
 #              header
 #
+# An additional property can be set
+#     panl.uniquekey.<code>=<Boolean>
+#
+# Which configures the field to be the Solr unique key for the Solr indexed
+# collection (as defined by the <uniqueKey /> XML element in the Solr managed
+# schema file.
+#
+# This is used with the More Like This handler and there can be __ONE__ and
+# __ONLY_ONE__ defined per file.  Additionally, this property __MUST__ be set
+# if the More Like This handler is to be used.
 #                                ~ ~ ~ * ~ ~ ~
 #
 # IMPORTANT: There are a plethora of properties that may be set, depending on
