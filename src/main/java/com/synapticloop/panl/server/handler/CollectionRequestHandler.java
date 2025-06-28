@@ -530,15 +530,21 @@ public class CollectionRequestHandler {
 
 		boolean hasQueryParam = false;
 		String queryParam = "";
+		String queryOperand = "-";
 
 		List<NameValuePair> parse = URLEncodedUtils.parse(query, StandardCharsets.UTF_8);
 		for (NameValuePair nameValuePair : parse) {
 			if (nameValuePair.getName().equals(collectionProperties.getFormQueryRespondTo())) {
 				hasQueryParam = true;
 				queryParam = nameValuePair.getValue();
-				break;
+				continue;
+			}
+			if (nameValuePair.getName().equals(collectionProperties.getFormQueryOperand())) {
+				queryOperand = nameValuePair.getValue();
 			}
 		}
+
+		// TODO - add in query operand
 
 		if (lpseUriPath.length > 3) {
 			String lpseEncoding = lpseUriPath[lpseUriPath.length - 1];

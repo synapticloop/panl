@@ -38,6 +38,7 @@ public class Constants {
 	public static final String JSON_VALUE_NO_INFIX_REPLACEMENT = "~";
 
 	public static final String DEFAULT_VALUE_QUERY_RESPOND_TO = "q";
+	public static final String DEFAULT_VALUE_QUERY_OPERAND = "op";
 
 	public static final int DEFAULT_VALUE_FACET_MIN_COUNT = 1;
 	public static final int DEFAULT_VALUE_NUM_RESULTS_LOOKAHEAD = 5;
@@ -254,6 +255,7 @@ public class Constants {
 			public static final String PANL_FACETSORT = "panl.facetsort.";
 			public static final String PANL_FIELD = "panl.field.";
 			public static final String PANL_FORM_QUERY_RESPONDTO = "panl.form.query.respondto";
+			public static final String PANL_FORM_QUERY_OPERAND = "panl.form.query.operand";
 			public static final String PANL_INCLUDE_SAME_NUMBER_FACETS = "panl.include.same.number.facets";
 			public static final String PANL_INCLUDE_SINGLE_FACETS = "panl.include.single.facets";
 			public static final String PANL_LPSE_FACETORDER = "panl.lpse.facetorder";

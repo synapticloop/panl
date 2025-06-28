@@ -218,6 +218,16 @@ public class CollectionProperties {
 	private String formQueryRespondTo;
 
 	/**
+	 * <p>The URL Parameter key that the Panl server will use for the query
+	 * operand for the keyword search.</p>
+	 *
+	 * <p><strong>Note:</strong>The values of this parameter can only be either
+	 * <code>+</code> for OR, or <code>-</code> for OR</p>
+	 *
+	 */
+	private String formQueryOperand;
+
+	/**
 	 * <p>The default Solr query operand to be set</p>
 	 */
 	private String solrDefaultQueryOperand;
@@ -449,6 +459,11 @@ public class CollectionProperties {
 				.getProperty(
 						Constants.Property.Panl.PANL_FORM_QUERY_RESPONDTO,
 						Constants.DEFAULT_VALUE_QUERY_RESPOND_TO);
+
+		this.formQueryOperand = properties
+				.getProperty(
+						Constants.Property.Panl.PANL_FORM_QUERY_OPERAND,
+						Constants.DEFAULT_VALUE_QUERY_OPERAND);
 
 		this.facetMinCount =
 				PropertyHelper.getIntProperty(
@@ -1539,6 +1554,10 @@ public class CollectionProperties {
 	 */
 	public String getFormQueryRespondTo() {
 		return (formQueryRespondTo);
+	}
+
+	public String getFormQueryOperand() {
+		return (formQueryOperand);
 	}
 
 	/**
