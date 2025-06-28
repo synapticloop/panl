@@ -4,14 +4,19 @@
 
 
 > **_Rapidly get up and running with a fully featured, SEO friendly, keyword
-searchable, faceted search engine with an in-built, search page to test it all
-out._**
+> searchable, faceted search engine with an in-built, search page to test it all
+> out._**
+
+> **_And, yes, there is full documentation available, almost 600 pages, 
+> 106,000 words so that you can get the most out of your Solr and Panl 
+> experience._**
+
 
 # Development Information 
 
-| Release<br />Tag                                                   | Latest<br />Release                                                         | Development Branch (version)                                                                               |
-|---------------------------------------------------------------------|------------------------------------------------------------------------------|------------------------------------------------------------------------------------------------------------|
-| ![GitHub Tag](https://img.shields.io/github/v/tag/synapticloop/panl) | ![GitHub Release](https://img.shields.io/github/v/release/synapticloop/panl) | `hidden-summer` [See Branch](https://github.com/synapticloop/panl/tree/hidden-summer) (2.1.0) |
+| Latest<br />Release                                                         | Development Branch (version)                                                                               |
+|------------------------------------------------------------------------------|------------------------------------------------------------------------------------------------------------|
+| ![GitHub Release](https://img.shields.io/github/v/release/synapticloop/panl) | `hidden-summer` [See Branch](https://github.com/synapticloop/panl/tree/hidden-summer) (2.1.0) |
 
 
 **Major branch release status:**
@@ -273,7 +278,8 @@ handler_.
   HTML): [https://synapticloop.github.io/panl/](https://synapticloop.github.io/panl/)
 - Offline book (
   PDF): [Getting Started With Synapticloop Panl.pdf](https://github.com/synapticloop/panl/blob/main/src/dist/book/Getting%20Started%20With%20Synapticloop%20Panl.pdf)
-  _(over 500 pages of documentation, written with you, the integrator, in mind)_
+  _(almost 600 pages of documentation, written with you, the integrator, in 
+  mind)_
 
 Both of the book links above refer to Solr Panl integration 9 with instructions
 for setting up and running earlier versions of Solr.
@@ -720,6 +726,8 @@ bin/solr start -cloud -p 7574 -s "example/cloud/node2/solr" -z localhost:9983
   - Added in new keys and descriptions
   - Spelling and grammar updates
   - Added in more detail for the `TODO` tags
+
+!! The included PDF is now almost **600** pages and over **105,000** words !!
 
 [View the code for this release](https://github.com/synapticloop/panl/tree/2.1.0)
 
