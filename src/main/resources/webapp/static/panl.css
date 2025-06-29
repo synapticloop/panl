@@ -43,7 +43,7 @@ div#content { float: right; width: 700px; }
 
 /* navigation */
 div#navigation li { list-style: none; }
-div#navigation li.heading { border-top: 2px dotted dimgray; padding: 10px 0 10px 0; }
+div#navigation li.heading { border-top: 2px dotted dimgray; padding: 10px 0 10px 5px; }
 div#navigation li.heading:nth-child(odd) { background-color: #fafafa; }
 .navheading { background-color: #efefef; border-left: 6px solid black; }
 
