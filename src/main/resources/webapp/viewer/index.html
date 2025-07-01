@@ -50,8 +50,19 @@
 				<p class="navheading"><strong>Search Query</strong></p>
 				<form method="GET">
 					<label><input id="searchfield" type="text" name="search" disabled="disabled"/></label>
-					<button id="searchbutton" type="submit" disabled="disabled">Search</button>
+					<div id="qop">
+						<p>Search for:</p>
+						<div>
+							<input type="radio" id="op_AND" name="op" value="+">
+							<label for="op_AND">All the words (AND)</label>
+						</div>
+						<div>
+							<input type="radio" id="op_OR" name="op" value="-">
+							<label for="op_OR">Any of the words (<code>q.op</code>OR)</label>
+						</div>
+					</div>
 					<div id="search-checkboxes"></div>
+					<br/><button id="searchbutton" type="submit" disabled="disabled">Search</button>
 				</form>
 
 				<p class="navheading"><strong>Active Filters</strong></p>

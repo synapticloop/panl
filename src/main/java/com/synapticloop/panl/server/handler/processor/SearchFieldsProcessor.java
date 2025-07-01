@@ -27,6 +27,7 @@ package com.synapticloop.panl.server.handler.processor;
 import com.synapticloop.panl.server.handler.properties.CollectionProperties;
 import com.synapticloop.panl.server.handler.tokeniser.token.LpseToken;
 import com.synapticloop.panl.server.handler.tokeniser.token.param.QueryLpseToken;
+import com.synapticloop.panl.server.handler.tokeniser.token.param.QueryOperandLpseToken;
 import com.synapticloop.panl.util.Constants;
 import org.apache.solr.client.solrj.response.QueryResponse;
 import org.json.JSONArray;
@@ -71,6 +72,14 @@ public class SearchFieldsProcessor extends Processor {
 			keyword = queryLpseToken.getValue();
 		}
 
+		String panlParamQueryOperand = collectionProperties.getPanlParamQueryOperand();
+		String operand = collectionProperties.getDefaultQueryOperand();
+
+		if(panlTokenMap.containsKey(panlParamQueryOperand)) {
+			QueryOperandLpseToken queryOperandLpseToken = (QueryOperandLpseToken)panlTokenMap.get(panlParamQueryOperand).get(0);
+			operand = queryOperandLpseToken.getValue();
+		}
+
 		if(!searchCodesMap.isEmpty()) {
 			for (String panlCode : searchCodesMap.keySet()) {
 				String value = searchCodesMap.get(panlCode);
@@ -88,6 +97,11 @@ public class SearchFieldsProcessor extends Processor {
 		}
 
 		jsonObject.put(Constants.Json.Panl.QUERY_RESPOND_TO, collectionProperties.getFormQueryRespondTo());
+		jsonObject.put(Constants.Json.Panl.QUERY_OPERAND_RESPOND_TO, collectionProperties.getFormQueryOperand());
+
+		// determine whether we have a query operand - else pass through the default
+
+		jsonObject.put(Constants.Json.Panl.QUERY_OPERAND_SELECTED, operand);
 		jsonObject.put(Constants.Json.Panl.KEYWORD, keyword);
 
 		return jsonObject;

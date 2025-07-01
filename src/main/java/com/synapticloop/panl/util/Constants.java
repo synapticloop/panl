@@ -154,6 +154,8 @@ public class Constants {
 			public static final String PREVIOUS_NEXT = "previous_next";
 			public static final String QUERY_OPERAND = "query_operand";
 			public static final String QUERY_RESPOND_TO = "query_respond_to";
+			public static final String QUERY_OPERAND_RESPOND_TO = "query_operand_respond_to";
+			public static final String QUERY_OPERAND_SELECTED = "query_operand_selected";
 			public static final String RANGE_FACETS = "range_facets";
 			public static final String RANGE_MAX_VALUE = "range_max_value";
 			public static final String RANGE_MIN_VALUE = "range_min_value";
@@ -255,7 +257,7 @@ public class Constants {
 			public static final String PANL_FACETSORT = "panl.facetsort.";
 			public static final String PANL_FIELD = "panl.field.";
 			public static final String PANL_FORM_QUERY_RESPONDTO = "panl.form.query.respondto";
-			public static final String PANL_FORM_QUERY_OPERAND = "panl.form.query.operand";
+			public static final String PANL_FORM_QUERY_OPERAND_RESPONDTO = "panl.form.query.operand.respondto";
 			public static final String PANL_INCLUDE_SAME_NUMBER_FACETS = "panl.include.same.number.facets";
 			public static final String PANL_INCLUDE_SINGLE_FACETS = "panl.include.single.facets";
 			public static final String PANL_LPSE_FACETORDER = "panl.lpse.facetorder";

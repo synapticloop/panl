@@ -143,18 +143,27 @@ $panl.param.query.operand
 $panl.param.passthrough
 $panl.param.passthrough.canonical
 
-#                        The Form Query To Respond To
-#                        --- ---- ----- -- ------- --
-# In the below HTML form definition, the 'q' named parameter is passed through
-# to the Panl server, which is then parsed and send through to the Solr search
-# sever as the Solr Query 'q' parameter.
+#                  The Form Query URL Parameters To Respond To
+#                  --- ---- ----- --- ---------- -- ------- --
+# In the below HTML form definition, the 'search' named parameter is passed
+# through to the Panl server, which is then parsed and send through to the Solr
+# search sever as the Solr Query 'q' parameter.
+#
+# The radio buttons use the 'op' named parameter and is passed through to the
+# Solr server as the 'q.op' query parameter.
 #
 # <form method="GET">
-#   <label><input type="text" name="q" /></label>
+#   <label><input type="text" name="search" /></label>
+#   <p>Search for:</p>
+#   <input type="radio" id="op_AND" name="op" value="+">
+#   <label for="op_AND">All the words</label>
+#   <input type="radio" id="op_OR" name="op" value="-">
+#   <label for="op_OR">Any of the words</label>
 #   <button type="submit">Search</button>
 # </form>
 #
-# You may wish to set this to something else - e.g. search, or find.
+# You may wish to set this to something else - e.g. search, or find, and the
+# operator as something else.
 #
 # If this property is not included, then the default value for this is 'q'
 # (without the quotes)
@@ -162,7 +171,7 @@ $panl.param.passthrough.canonical
 #                                ~ ~ ~ * ~ ~ ~
 
 panl.form.query.respondto=search
-panl.form.query.operand=op
+panl.form.query.operand.respondto=op
 
 
 #                      Whether To Include Single Facets

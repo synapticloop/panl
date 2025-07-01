@@ -44,6 +44,23 @@ public class QueryOperandLpseToken extends LpseToken {
 
 	private final String queryOperand;
 
+	public QueryOperandLpseToken(
+			CollectionProperties collectionProperties,
+			String lpseCode,
+			String value) {
+		super(lpseCode, collectionProperties);
+
+		this.queryOperand = collectionProperties.getDefaultQueryOperand();
+
+		if (!(value.equals(QUERY_OPERAND_URI_KEY_AND) || value.equals(QUERY_OPERAND_URI_KEY_OR))) {
+			isValid = false;
+		}
+
+		if(isValid) {
+			this.value = value;
+		}
+	}
+
 	/**
 	 * <p>Instantiate a query operand token</p>
 	 *

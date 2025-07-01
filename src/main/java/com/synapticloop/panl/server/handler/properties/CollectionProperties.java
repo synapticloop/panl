@@ -462,7 +462,7 @@ public class CollectionProperties {
 
 		this.formQueryOperand = properties
 				.getProperty(
-						Constants.Property.Panl.PANL_FORM_QUERY_OPERAND,
+						Constants.Property.Panl.PANL_FORM_QUERY_OPERAND_RESPONDTO,
 						Constants.DEFAULT_VALUE_QUERY_OPERAND);
 
 		this.facetMinCount =
@@ -525,7 +525,7 @@ public class CollectionProperties {
 		}
 
 		// TODO - check whether this is the best possible default to get the most amount of results...
-		this.solrDefaultQueryOperand = properties.getProperty(Constants.Property.Solr.SOLR_DEFAULT_QUERY_OPERAND, "+");
+		this.solrDefaultQueryOperand = properties.getProperty(Constants.Property.Solr.SOLR_DEFAULT_QUERY_OPERAND, "-");
 		if (!(this.solrDefaultQueryOperand.equals("+") || this.solrDefaultQueryOperand.equals("-"))) {
 			throw new PanlServerException("Property solr.default.query.operand __MUST__ be one of '+', or '-'.");
 		}

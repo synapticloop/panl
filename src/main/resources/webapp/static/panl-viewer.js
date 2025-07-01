@@ -191,6 +191,13 @@ function addSearchFieldCheckboxes(searchJson) {
 
 	$("#searchfield").val(searchJson.keyword);
 
+	// now add the radio box selection
+	if(searchJson.query_operand_selected === "-") {
+		$("#op_OR").prop("checked", true);
+	} else {
+		$("#op_AND").prop("checked", true);
+	}
+
 	if(searchJson.fields !== undefined) {
 		let first = true;
 		for(const searchField of searchJson.fields) {

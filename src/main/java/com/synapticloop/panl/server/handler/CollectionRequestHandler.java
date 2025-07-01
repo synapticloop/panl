@@ -31,6 +31,7 @@ import com.synapticloop.panl.server.handler.fielderiser.field.facet.PanlFacetFie
 import com.synapticloop.panl.server.handler.fielderiser.field.facet.PanlRangeFacetField;
 import com.synapticloop.panl.server.handler.helper.CollectionHelper;
 import com.synapticloop.panl.server.handler.processor.*;
+import com.synapticloop.panl.server.handler.tokeniser.token.param.QueryOperandLpseToken;
 import com.synapticloop.panl.server.handler.webapp.util.ResourceHelper;
 import com.synapticloop.panl.server.handler.properties.CollectionProperties;
 import com.synapticloop.panl.server.handler.properties.PanlProperties;
@@ -530,7 +531,7 @@ public class CollectionRequestHandler {
 
 		boolean hasQueryParam = false;
 		String queryParam = "";
-		String queryOperand = "-";
+		String queryOperand = null;
 
 		List<NameValuePair> parse = URLEncodedUtils.parse(query, StandardCharsets.UTF_8);
 		for (NameValuePair nameValuePair : parse) {
@@ -539,6 +540,7 @@ public class CollectionRequestHandler {
 				queryParam = nameValuePair.getValue();
 				continue;
 			}
+
 			if (nameValuePair.getName().equals(collectionProperties.getFormQueryOperand())) {
 				queryOperand = nameValuePair.getValue();
 			}
@@ -589,6 +591,9 @@ public class CollectionRequestHandler {
 
 		if (hasQueryParam && !queryParam.isBlank()) {
 			lpseTokens.add(new QueryLpseToken(collectionProperties, query, collectionProperties.getPanlParamQuery()));
+			if(null != queryOperand) {
+				lpseTokens.add(new QueryOperandLpseToken(collectionProperties, collectionProperties.getPanlParamQueryOperand(), queryOperand));
+			}
 		}
 
 		for (LpseToken lpseToken : lpseTokens) {
