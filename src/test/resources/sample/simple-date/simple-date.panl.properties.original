@@ -132,18 +132,27 @@ panl.param.query.operand=o
 panl.param.passthrough=z
 panl.param.passthrough.canonical=false
 
-#                        The Form Query To Respond To
-#                        --- ---- ----- -- ------- --
-# In the below HTML form definition, the 'q' named parameter is passed through
-# to the Panl server, which is then parsed and send through to the Solr search
-# sever as the Solr Query 'q' parameter.
+#                  The Form Query URL Parameters To Respond To
+#                  --- ---- ----- --- ---------- -- ------- --
+# In the below HTML form definition, the 'search' named parameter is passed
+# through to the Panl server, which is then parsed and send through to the Solr
+# search sever as the Solr Query 'q' parameter.
+#
+# The radio buttons use the 'op' named parameter and is passed through to the
+# Solr server as the 'q.op' query parameter.
 #
 # <form method="GET">
-#   <label><input type="text" name="q" /></label>
+#   <label><input type="text" name="search" /></label>
+#   <p>Search for:</p>
+#   <input type="radio" id="op_AND" name="op" value="+">
+#   <label for="op_AND">All the words</label>
+#   <input type="radio" id="op_OR" name="op" value="-">
+#   <label for="op_OR">Any of the words</label>
 #   <button type="submit">Search</button>
 # </form>
 #
-# You may wish to set this to something else - e.g. search, or find.
+# You may wish to set this to something else - e.g. search, or find, and the
+# operator as something else.
 #
 # If this property is not included, then the default value for this is 'q'
 # (without the quotes)
@@ -151,6 +160,7 @@ panl.param.passthrough.canonical=false
 #                                ~ ~ ~ * ~ ~ ~
 
 panl.form.query.respondto=search
+panl.form.query.operand.respondto=op
 
 
 #                      Whether To Include Single Facets
@@ -220,8 +230,8 @@ panl.collection.extra=
 #
 #                            MoreLikeThis Query Parser
 #                            ============ ===== ======
-#    Use this query parser if you Solr is setup in cloud mode __AND__ there are
-#    more than one replica (the number of shards do not matter).
+#    Use this query parser if your Solr server is set up in cloud mode __AND__
+#    there are more than one replica (the number of shards do not matter).
 #
 #    Set the properties:
 #        panl.mlt.enable=true
@@ -230,16 +240,17 @@ panl.collection.extra=
 #
 #                          MoreLikeThis Request Handler
 #                          ============ ======= =======
-#    Use this query parser if you Solr is not setup in cloud mode and you wish
-#    to have a separate handler for the MLT.  Note that this handler is not
-#    cloud aware will only return nodes from the first replica.  Due to this
-#    Panl will attempt to retry the query against other nodes if no valid
+#    Use this query parser if your Solr server is not setup in cloud mode, and
+#    you wish to have a separate handler for the MLT.  Note that this handler
+#    is not cloud aware will only return nodes from the first replica.  Due to
+#    this Panl will attempt to retry the query against other nodes if no valid
 #    response was received.  This may still fail...
 #
 #    Set the properties:
 #        panl.mlt.enable=true
 #        panl.mlt.handler=/mlt
 #        panl.mlt.type=mlt
+#        panl.mlt.numretries=6
 #
 #   You will also need to add configuration to the solrconfig.xml file for this
 #   to work:
@@ -275,7 +286,7 @@ panl.collection.extra=
 #     not work in the Panl server
 #   - The panl.mlt.handler property MUST match the configured handler in the
 #     Solr configuration
-#   - The panl.mlt.fl MUST exist in the Solr collection
+#   - The fields listed in the panl.mlt.fl MUST exist in the Solr collection
 #
 #                                ~ ~ ~ * ~ ~ ~
 
@@ -471,6 +482,16 @@ solr.highlight=false
 #              be returned with the results, and may be used as the facet
 #              header
 #
+# An additional property can be set
+#     panl.uniquekey.<code>=<Boolean>
+#
+# Which configures the field to be the Solr unique key for the Solr indexed
+# collection (as defined by the <uniqueKey /> XML element in the Solr managed
+# schema file.
+#
+# This is used with the More Like This handler and there can be __ONE__ and
+# __ONLY_ONE__ defined per file.  Additionally, this property __MUST__ be set
+# if the More Like This handler is to be used.
 #                                ~ ~ ~ * ~ ~ ~
 #
 # IMPORTANT: There are a plethora of properties that may be set, depending on

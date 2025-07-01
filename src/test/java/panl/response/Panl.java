@@ -65,6 +65,7 @@ public class Panl {
 
 	public Available available;
 	public Map<String, String> fields;
+	public Map<String, String> extra;
 	public Search search;
 
 	public Active active;
