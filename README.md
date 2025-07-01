@@ -32,6 +32,10 @@
 > We _always_ recommend that you use the most recently available release which
 > contains bug fixes and new functionality and is _generally_ backwards
 > compatible.
+> 
+> We do not keep previous individual Panl branches available for Solr version 8 
+> and version 7 - i.e. there is no branch available for SOLR PANL 8 - which 
+> is not the 2.0.0 branch.
 
 **Branches/Release:**
 
