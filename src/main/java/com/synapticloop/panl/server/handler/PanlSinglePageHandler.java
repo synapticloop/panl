@@ -100,6 +100,7 @@ public class PanlSinglePageHandler extends BaseResponseHandler implements HttpRe
 				jsonObject.remove(Constants.Json.Solr.RESPONSE_HEADER);
 				jsonObject.remove(Constants.Json.Solr.RESPONSE);
 				jsonObject.remove(Constants.Json.Solr.FACET_COUNTS);
+				jsonObject.remove(Constants.Json.Solr.FACET_UNDER_COUNTS);
 
 				JSONObject panlJsonObject = jsonObject.getJSONObject(Constants.Json.Panl.PANL);
 
@@ -144,7 +145,7 @@ public class PanlSinglePageHandler extends BaseResponseHandler implements HttpRe
 					if(null != panlCode) {
 						int lpseOrder = lpseLookupObject.optInt(panlCode, -1);
 						if(lpseOrder != -1) {
-							rangeFacetObject.put(Constants.Json.Panl.IS_RANGE_FACETS, true);
+							rangeFacetObject.put(Constants.Json.Panl.IS_RANGE_FACET, true);
 							panlJsonObject.getJSONArray(Constants.Json.Panl.LPSE_ORDER).put(lpseOrder, rangeFacetObject);
 						}
 					}
@@ -167,6 +168,9 @@ public class PanlSinglePageHandler extends BaseResponseHandler implements HttpRe
 				panlJsonObject.remove(Constants.Json.Panl.SORTING);
 				panlJsonObject.remove(Constants.Json.Panl.AVAILABLE);
 				panlJsonObject.remove(Constants.Json.Panl.FIELDS);
+
+				// we remove the facet order
+				panlJsonObject.remove(Constants.Json.Panl.FACETORDER);
 
 				timingsHelper.markBuildInboundResponseEnd();
 				timingsHelper.addTimings(panlJsonObject);
