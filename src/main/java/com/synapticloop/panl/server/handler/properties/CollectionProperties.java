@@ -372,6 +372,7 @@ public class CollectionProperties {
 		}
 
 		for (PanlField field : NON_FACET_FIELDS) {
+			System.out.println(field.getSolrFieldName() + ":" + field.getPanlFieldName());
 			solrFieldToPanlNameLookup.put(field.getSolrFieldName(), field.getPanlFieldName());
 		}
 
@@ -463,7 +464,7 @@ public class CollectionProperties {
 		this.formQueryOperand = properties
 				.getProperty(
 						Constants.Property.Panl.PANL_FORM_QUERY_OPERAND_RESPONDTO,
-						Constants.DEFAULT_VALUE_QUERY_OPERAND);
+						Constants.DEFAULT_VALUE_QUERY_OPERAND_RESPONDTO);
 
 		this.facetMinCount =
 				PropertyHelper.getIntProperty(

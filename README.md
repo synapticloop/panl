@@ -704,6 +704,12 @@ bin/solr start -cloud -p 7574 -s "example/cloud/node2/solr" -z localhost:9983
     collections are not 
   - Added `indexdesc` as a sorting option so that the facets can be sorted 
     by index (ascending is the default) and now descending.
+  - Updated generator to:
+    - Include the uniquekey property for the correct Solr field
+    - Keep - or at least attempt to keep - facet and field LPSE codes from 
+      an existing file
+    - Updated the commenting for  Solr fields that are analysed with a 
+      warning that it probably shouldn't be a facet.
 
 
 - **Bug Fixes**

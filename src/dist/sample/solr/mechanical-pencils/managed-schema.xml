@@ -112,7 +112,7 @@
 
 	<field name="_version_" type="plong" indexed="false" stored="false" />
 
-  <field name="id" type="string" stored="true" required="true" multiValued="false" />
+  <field name="id" indexed="true" type="string" stored="true" required="true" multiValued="false" />
 
 	<field name="brand" type="string" indexed="true" stored="true" multiValued="false" />
 	<field name="name" type="string" indexed="true" stored="true" multiValued="false" />

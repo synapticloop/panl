@@ -38,7 +38,7 @@ public class Constants {
 	public static final String JSON_VALUE_NO_INFIX_REPLACEMENT = "~";
 
 	public static final String DEFAULT_VALUE_QUERY_RESPOND_TO = "q";
-	public static final String DEFAULT_VALUE_QUERY_OPERAND = "op";
+	public static final String DEFAULT_VALUE_QUERY_OPERAND_RESPONDTO = "o";
 
 	public static final int DEFAULT_VALUE_FACET_MIN_COUNT = 1;
 	public static final int DEFAULT_VALUE_NUM_RESULTS_LOOKAHEAD = 5;

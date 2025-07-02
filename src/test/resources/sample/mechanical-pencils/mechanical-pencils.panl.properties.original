@@ -142,11 +142,11 @@ panl.param.passthrough.canonical=false
 # Solr server as the 'q.op' query parameter.
 #
 # <form method="GET">
-#   <label><input type="text" name="search" /></label>
+#   <label><input type="text" name="q" /></label>
 #   <p>Search for:</p>
-#   <input type="radio" id="op_AND" name="op" value="+">
+#   <input type="radio" id="op_AND" name="o" value="+">
 #   <label for="op_AND">All the words</label>
-#   <input type="radio" id="op_OR" name="op" value="-">
+#   <input type="radio" id="op_OR" name="o" value="-">
 #   <label for="op_OR">Any of the words</label>
 #   <button type="submit">Search</button>
 # </form>
@@ -154,13 +154,16 @@ panl.param.passthrough.canonical=false
 # You may wish to set this to something else - e.g. search, or find, and the
 # operator as something else.
 #
-# If this property is not included, then the default value for this is 'q'
-# (without the quotes)
+# If the panl.form.query.respondto property is not included, then the default
+# value for this is 'q' (without the quotes)
+#
+# If the panl.form.query.operand.respondto property is not included, then the
+# default value for this is 'o' (without the quotes)
 #
 #                                ~ ~ ~ * ~ ~ ~
 
-panl.form.query.respondto=search
-panl.form.query.operand.respondto=op
+panl.form.query.respondto=q
+panl.form.query.operand.respondto=o
 
 
 #                      Whether To Include Single Facets
