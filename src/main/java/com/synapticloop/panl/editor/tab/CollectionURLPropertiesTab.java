@@ -38,6 +38,7 @@ import java.util.Vector;
 
 public class CollectionURLPropertiesTab extends PropertiesTab {
 	private final File collectionUrlPropertiesFile;
+	private JButton buttonSaveFile = null;
 	private final Vector<String> alphaProperties = new Vector<>(
 		Arrays.asList("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789".split("(?<=\\G.{1})")));
 	private final Vector<String> plusMinus = new Vector<>(Arrays.asList(new String[]{"+", "-"}));
@@ -153,7 +154,8 @@ public class CollectionURLPropertiesTab extends PropertiesTab {
 			getCheckbox(
 				"panl.param.passthrough.canonical",
 				"Whether to display the passthrough parameter in the canonical URL",
-				true
+				true,
+					buttonSaveFile
 			));
 		canonicalHorizontalBox.add(Box.createHorizontalGlue());
 		canonicalHorizontalBox.add(canonicalVerticalBox);
@@ -168,14 +170,16 @@ public class CollectionURLPropertiesTab extends PropertiesTab {
 			getCheckbox(
 				"panl.include.single.facets",
 				"Whether to include facets with only a single value",
-				true
+				true,
+					buttonSaveFile
 			));
 
 		optionsBox.add(
 			getCheckbox(
 				"panl.include.same.number.facets",
 				"Whether to include facets with have the same count as the number of documents",
-				true
+				true,
+					buttonSaveFile
 			));
 		optionsBox.add(Box.createRigidArea(new Dimension(1, 12)));
 
@@ -190,14 +194,16 @@ public class CollectionURLPropertiesTab extends PropertiesTab {
 		optionsBox.add(getCheckbox(
 			"solr.highlight",
 			"Whether to include the highlight results from the Solr server",
-			true));
+			true,
+				buttonSaveFile));
 
 		optionsBox.add(getLabel("Output options"));
 		optionsBox.add(getHorizontalSeparator());
 		optionsBox.add(getCheckbox(
 			PROPERTY_INCLUDE_COMMENTS,
 			"Whether to include comments in the output",
-			true));
+			true,
+				buttonSaveFile));
 		return optionsBox;
 	}
 

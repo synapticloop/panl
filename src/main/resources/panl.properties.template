@@ -148,7 +148,7 @@ $panl.decimal.point
 #
 #                                ~ ~ ~ * ~ ~ ~
 
-panl.remove.solr.json.keys=false
+$panl.remove.solr.json.keys
 
 #                Add 'extra' Information To Every Response
 #                --- ------- ----------- -- ----- --------

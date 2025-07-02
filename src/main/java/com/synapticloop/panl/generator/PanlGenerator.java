@@ -110,6 +110,8 @@ public class PanlGenerator {
 		panlReplacementPropertyMap.put("panl.status.500.verbose", "true");
 		panlReplacementPropertyMap.put("panl.decimal.point", "true");
 		panlReplacementPropertyMap.put("panl.param.passthrough.canonical", "false");
+		panlReplacementPropertyMap.put("panl.remove.solr.json.keys", "false");
+		panlReplacementPropertyMap.put("panl.server.extra", "{}");
 
 	}
 
