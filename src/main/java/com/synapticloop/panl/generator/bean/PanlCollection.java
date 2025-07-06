@@ -42,6 +42,8 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.util.*;
 
+import static com.synapticloop.panl.util.Constants.Property.Panl.*;
+
 /**
  * <p></p>
  *
@@ -66,11 +68,11 @@ public class PanlCollection {
 	private static final Set<String> SUPPORTED_SOLR_FIELD_TYPES = new HashSet<>();
 
 	private static final String[] LPSE_ORDER_PARAMS = {
-			PanlGenerator.PANL_PARAM_QUERY,
-			PanlGenerator.PANL_PARAM_PAGE,
-			PanlGenerator.PANL_PARAM_NUMROWS,
-			PanlGenerator.PANL_PARAM_SORT,
-			PanlGenerator.PANL_PARAM_QUERY_OPERAND
+			PANL_PARAM_QUERY,
+			PANL_PARAM_PAGE,
+			PANL_PARAM_NUMROWS,
+			PANL_PARAM_SORT,
+			PANL_PARAM_QUERY_OPERAND
 	};
 
 	static {
@@ -204,12 +206,12 @@ public class PanlCollection {
 		StringBuilder panlLpseOrder = new StringBuilder();
 		StringBuilder panlLpseFacetOrder = new StringBuilder();
 		// we are going to put the passthrough parameter first
-		String panlParamPassthrough = panlReplacementPropertyMap.get(PanlGenerator.PANL_PARAM_PASSTHROUGH);
+		String panlParamPassthrough = panlReplacementPropertyMap.get(PANL_PARAM_PASSTHROUGH);
 		panlLpseOrder.append(
 				             panlParamPassthrough)
 		             .append(",\\\n");
 
-		panlReplacementPropertyMap.remove(PanlGenerator.PANL_PARAM_PASSTHROUGH);
+		panlReplacementPropertyMap.remove(PANL_PARAM_PASSTHROUGH);
 
 		// last but not least, we need to put the lpse order
 		StringBuilder panlLpseFields = new StringBuilder();
@@ -237,7 +239,7 @@ public class PanlCollection {
 		panlLpseOrder.setLength(panlLpseOrder.length() - 3);
 
 		// put the passthrough back
-		panlReplacementPropertyMap.put(PanlGenerator.PANL_PARAM_PASSTHROUGH, panlParamPassthrough);
+		panlReplacementPropertyMap.put(PANL_PARAM_PASSTHROUGH, panlParamPassthrough);
 
 		PANL_PROPERTIES.put("panl.lpse.order", panlLpseOrder.toString());
 		PANL_PROPERTIES.put("panl.lpse.facetorder", panlLpseFacetOrder.toString());

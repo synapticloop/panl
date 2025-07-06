@@ -30,6 +30,7 @@ import com.synapticloop.panl.server.handler.properties.CollectionProperties;
 import com.synapticloop.panl.server.handler.tokeniser.LpseTokeniser;
 import com.synapticloop.panl.server.handler.tokeniser.token.LpseToken;
 import com.synapticloop.panl.server.handler.tokeniser.token.param.PassThroughLpseToken;
+import com.synapticloop.panl.util.Constants;
 import org.apache.solr.client.solrj.SolrQuery;
 import org.json.JSONObject;
 import org.slf4j.Logger;
@@ -37,15 +38,18 @@ import org.slf4j.LoggerFactory;
 
 import java.util.*;
 
+import static com.synapticloop.panl.util.Constants.Property.Panl.PANL_PARAM_PASSTHROUGH_CANONICAL;
+
 public class PanlPassThroughField extends BaseField {
 	private static final Logger LOGGER = LoggerFactory.getLogger(PanlPassThroughField.class);
-	public static final String PROPERTY_KEY_PANL_PARAM_PASSTHROUGH_CANONICAL = "panl.param.passthrough.canonical";
+
 	private final boolean panlParamPassThroughCanonical;
 
 	public PanlPassThroughField(String lpseCode, String propertyKey, Properties properties, String solrCollection, String panlCollectionUri) throws PanlServerException {
 		super(lpseCode, properties, propertyKey, solrCollection, panlCollectionUri);
 
-		this.panlParamPassThroughCanonical = properties.getProperty(PROPERTY_KEY_PANL_PARAM_PASSTHROUGH_CANONICAL, "false").equals("true");
+		this.panlParamPassThroughCanonical =
+				properties.getProperty(PANL_PARAM_PASSTHROUGH_CANONICAL, "false").equals("true");
 	}
 
 	@Override

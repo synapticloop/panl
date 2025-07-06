@@ -273,6 +273,7 @@ public class Constants {
 			public static final String PANL_PARAM_NUMROWS = "panl.param.numrows";
 			public static final String PANL_PARAM_PAGE = "panl.param.page";
 			public static final String PANL_PARAM_PASSTHROUGH = "panl.param.passthrough";
+			public static final String PANL_PARAM_PASSTHROUGH_CANONICAL = "panl.param.passthrough.canonical";
 			public static final String PANL_PARAM_QUERY = "panl.param.query";
 			public static final String PANL_PARAM_QUERY_OPERAND = "panl.param.query.operand";
 			public static final String PANL_PARAM_SORT = "panl.param.sort";
