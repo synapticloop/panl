@@ -207,15 +207,16 @@ public class PanlCollection {
 		StringBuilder panlLpseFacetOrder = new StringBuilder();
 		// we are going to put the passthrough parameter first
 		String panlParamPassthrough = panlReplacementPropertyMap.get(PANL_PARAM_PASSTHROUGH);
-		panlLpseOrder.append(
-				             panlParamPassthrough)
-		             .append(",\\\n");
+		panlLpseOrder
+				.append(panlParamPassthrough)
+				.append(",\\\n");
 
 		panlReplacementPropertyMap.remove(PANL_PARAM_PASSTHROUGH);
 
 		// last but not least, we need to put the lpse order
 		StringBuilder panlLpseFields = new StringBuilder();
 		for (BasePanlField basePanlField : basePanlFields) {
+			// we are going to use the Solr field name because it is nicer.
 			panlLpseOrder.append(basePanlField.getLpseCode());
 			panlLpseOrder.append(",\\\n");
 			panlLpseFields.append(basePanlField.toProperties());
