@@ -126,6 +126,8 @@ public class PanlProperties {
 			LOGGER.warn("Property '{}' could not be found, defaulting to '{}'", Constants.Property.Panl.SOLR_SEARCH_SERVER_URL,
 				Constants.Property.Panl.DEFAULT_SOLR_URL);
 			solrSearchServerUrlTemp = Constants.Property.Panl.DEFAULT_SOLR_URL;
+		} else {
+			LOGGER.info("Setting '{}' to {}", Constants.Property.Panl.SOLR_SEARCH_SERVER_URL, solrSearchServerUrlTemp);
 		}
 
 		this.solrSearchServerUrl = solrSearchServerUrlTemp;

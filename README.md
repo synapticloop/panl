@@ -7,9 +7,9 @@
 > searchable, faceted search engine with an in-built, search page to test it all
 > out._**
 
-> **_And, yes, there is full documentation available, almost 600 pages, 
-> 106,000 words so that you can get the most out of your Solr and Panl 
-> experience._**
+> **_And, yes, there is full documentation available, over 600 pages, 
+> covering all aspects of the configuration of the Panl server so that you 
+> can get the most out of your Solr and Panl experience._**
 
 
 # Development Information 
@@ -166,7 +166,7 @@ parameters into concise and precise URL paths.
    when deselected, the BOOLEAN facet is in a don't care start - the facet value
    can be either of the values.
 
-1. **CONDENSE multiple field values** - Rather than having a forward slash URL
+1. **CONDENSED multiple field values** - Rather than having a forward slash URL
    path separator for multiple values of the same facet (used in OR Facets and
    Multi-valued REGULAR facets), Panl can be configured to condense these values
    into a single path part, saving URL characters, and reducing URL length, and
@@ -176,11 +176,14 @@ parameters into concise and precise URL paths.
 
    `/Manufactured by Koh-i-Noor/Manufactured by Faber-Castell/bb/`,
 
-   with condensed multiple field values - this could be configured to become
+   with condensed multiple field values - this could be configured (with a 
+   value separator configured to be `, or `) to become
 
    `/Manufactured by Koh-i-Noor, or Faber-Castell Co./b/`
 
-   (with a value separator configured to be `, or `).
+   Saving 15 characters in the URL, the more multivalued fields values that 
+   are selected, the more URL space is saved (In the example, with 3 values 
+   selected, the saving becomes 30 characters).
 
 1. **SEARCH ALL OR SPECIFIC SOLR FIELDS** - Any Solr field that is analysed can
    be selected to be searched on, for example, in the Book Store Walkthrough,
@@ -191,11 +194,13 @@ parameters into concise and precise URL paths.
    with your specific query, with the ability to configure the Solr query 
    operands on the fly.
 
-1. **FIELD VALUE validation** - By default, Solr can error when an invalid value
-   is passed through - for example, if Solr is expecting a numeric value and it
-   could not be parsed. Panl can protect against this, by attempting to parse
-   the value as best it can, and silently dropping the parameter if it cannot be
-   sensibly parsed.
+1. **FIELD VALUE validation** - By default, Solr will error (or give an 
+   erroneous result) when an invalid value is passed through - for example, 
+   if Solr is expecting a numeric value and it could not parse the passed in 
+   value, it will throw an exception.  Panl protects against this by 
+   attempting to parse the value as best it can, and silently dropping the 
+   parameter if it cannot be sensibly parsed. This is done for numeric types 
+   (integer, long, float, and double) and boolean values.
 
 1. **HIERARCHICAL facets** - Only show facets if a parent facet is currently
    selected, allowing you to narrow down the facet results and lead users
@@ -206,11 +211,15 @@ parameters into concise and precise URL paths.
    is useful when a facet no longer becomes relevant as the user goes through 
    the search journey.
 
-1. **SORTED facets** - Each individual facet can be sorted by either the facet
-   count (which is the default), or the facet value (e.g. alphabetic/numeric)
+1. **SORTED facets** - Each facet can be individually configured to order 
+   the facet results by either the facet count in descending order (which is 
+   the default), or the facet value (e.g. alphabetic/numeric based on the 
+   value of the facet - in either ascending or descending).
 
-1. **MORE facets** - Request more facets where the number of facets return does
-   not contain the full set.
+1. **MORE facets** - Solr (and Panl) configures a limit for the maximum 
+   number of facet values that are returned, this functionality enables you 
+   to dynamically load additional facet values if they are available but 
+   weren't returned with the results by default.
 
 1. **RESULTS SORTING options** - Sort by any of the Solr fields, either
    ascending, or descending and with multiple sub-sorting available - e.g.
@@ -221,7 +230,13 @@ parameters into concise and precise URL paths.
    in the query search box.
 
 1. **PAGINATION** - All the data to easily generate pagination URL paths giving
-   you options and control over your own implementation.
+   you options and control over your own implementation.  The returned 
+   information includes:
+   1. the number of pages of results,
+   1. the number of results per page,
+   1. the total number of results,
+   1. the current page number, and
+   1. whether the returned results are an exact number.
 
 1. **STATIC SITE GENERATION** - With the exception of a query parameter, all
    available links for every conceivable URI path can be statically generated
@@ -231,15 +246,18 @@ parameters into concise and precise URL paths.
 
 1. **STATELESS** - No state is stored in the Panl server, all state is from the
    URL path part that is passed through. No sessions, no memory, nothing to
-   backup, easy to update and quick to start and restart.
+   backup or replicate across servers, easy to update and quick to start and 
+   restart.
 
-1. **CACHEABLE** - Unless the underlying Solr search document index changes,
+1. **CACHE-ABLE** - Unless the underlying Solr search document index changes,
    each Solr request is able to be cached.
 
-1. **TEXT CONFIGURATION** - All configuration for Panl is based on text files
-   (Java .properties) files so they can be stored in a source code management
-   system. Additionally, upgrades to the Panl server are easy and with quick
-   startup times, any configuration changes will be seen instantly.
+1. **100% TEXT CONFIGURATION** - All configuration for Panl is based on text 
+   files (Java `.properties`) files so they can be stored in a source code 
+   management system.  Additionally, upgrades to the Panl server are easy - 
+   just drop in the new Panl release package, use your existing 
+   configuration, and it will just work.  And with quick restart times, the 
+   configuration changes will be seen in an instant.
 
 
 
@@ -282,7 +300,7 @@ handler_.
   HTML): [https://synapticloop.github.io/panl/](https://synapticloop.github.io/panl/)
 - Offline book (
   PDF): [Getting Started With Synapticloop Panl.pdf](https://github.com/synapticloop/panl/blob/main/src/dist/book/Getting%20Started%20With%20Synapticloop%20Panl.pdf)
-  _(almost 600 pages of documentation, written with you, the integrator, in 
+  _(over 600 pages of documentation, written with you, the integrator, in 
   mind)_
 
 Both of the book links above refer to Solr Panl integration 9 with instructions
@@ -343,9 +361,9 @@ results._
    been used to refine the search results.
 
 1. **Active BOOLEAN filters** - if the selected facet is a BOOLEAN facet (i.e.
-   either true/false) then a link (<img src="src/main/resources/webapp/static/invert.png" alt="invert" />) can be included to invert this
-   selection (i.e. change the value from true if currently false and vice
-   versa).
+   either true/false) then a link (<img src="src/main/resources/webapp/static/invert.png" alt="invert" />) 
+   can be included to invert this selection (i.e. change the value from true if 
+   currently false and vice versa).
 
 1. **Active sorting** - sorting options that are currently ordering the
    results - the <img src="src/main/resources/webapp/static/remove.png" alt="remove" /> link 
@@ -539,7 +557,7 @@ Command(s)
 ```shell
 cd SOLR_INSTALL_DIRECTORY
 
-bin/solr start -e cloud --no-prompt
+bin\solr start -e cloud --no-prompt
 ```
 
 ## 2. Create the mechanical pencils collection
@@ -551,7 +569,7 @@ Command(s)
 ```shell
 cd SOLR_INSTALL_DIRECTORY
 
-bin/solr create -c mechanical-pencils -d PANL_INSTALL_DIRECTORY/sample/solr/mechanical-pencils/ --shards 2 -rf 2
+bin\solr create -c mechanical-pencils -d PANL_INSTALL_DIRECTORY\sample\solr\mechanical-pencils\ --shards 2 -rf 2
 ```
 
 ## 3. Index the mechanical pencils data
@@ -562,7 +580,7 @@ Command(s)
 ```shell
 cd SOLR_INSTALL_DIRECTORY
 
-bin/solr post -c mechanical-pencils PANL_INSTALL_DIRECTORY/sample/data/mechanical-pencils.json
+bin\solr post -c mechanical-pencils PANL_INSTALL_DIRECTORY\sample\data\mechanical-pencils.json
 ```
 
 ## 4. Start the Panl server
@@ -737,7 +755,8 @@ bin/solr start -cloud -p 7574 -s "example/cloud/node2/solr" -z localhost:9983
   - Spelling and grammar updates
   - Added in more detail for the `TODO` tags
 
-!! The included PDF is now almost **600** pages and over **105,000** words !!
+!! The included PDF contains over **600** pages of documentation for every 
+part of the Panl server. !!
 
 [View the code for this release](https://github.com/synapticloop/panl/tree/2.1.0)
 
