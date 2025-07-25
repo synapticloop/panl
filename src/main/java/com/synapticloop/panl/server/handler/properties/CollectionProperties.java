@@ -25,9 +25,6 @@ package com.synapticloop.panl.server.handler.properties;
  */
 
 import com.synapticloop.panl.exception.PanlServerException;
-//import com.synapticloop.panl.server.handler.field.BaseField;
-//import com.synapticloop.panl.server.handler.field.FacetField;
-//import com.synapticloop.panl.server.handler.field.MetaDataField;
 import com.synapticloop.panl.server.handler.fielderiser.field.*;
 import com.synapticloop.panl.server.handler.fielderiser.field.facet.*;
 import com.synapticloop.panl.server.handler.fielderiser.field.param.*;
@@ -139,6 +136,8 @@ public class CollectionProperties {
 	private final Map<String, PanlDateRangeFacetField> LPSE_CODE_DATE_RANGE_FACET_MAP = new HashMap<>();
 	private final Map<String, PanlRangeFacetField> LPSE_CODE_RANGE_FACET_MAP = new HashMap<>();
 	private final Map<String, PanlBooleanFacetField> LPSE_CODE_BOOLEAN_FACET_MAP = new HashMap<>();
+
+	private final Set<String> SOLR_FIELD_NAMES = new HashSet<>();
 
 	private final Map<String, Set<String>> LPSE_CODE_WHEN_MAP = new HashMap<>();
 	/**
@@ -756,6 +755,7 @@ public class CollectionProperties {
 
 			FACET_FIELDS.add(facetField);
 			LPSE_FACET_FIELDS.add(facetField.getLpseCode());
+			SOLR_FIELD_NAMES.add(facetField.getSolrFieldName());
 
 			lpseFieldLookup.put(lpseCode, facetField);
 
@@ -867,6 +867,7 @@ public class CollectionProperties {
 
 			LPSE_CODE_TO_FIELD_MAP.put(field.getLpseCode(), field);
 			SOLR_NAME_TO_FIELD_MAP.put(field.getSolrFieldName(), field);
+			SOLR_FIELD_NAMES.add(field.getSolrFieldName());
 		}
 	}
 
@@ -1124,20 +1125,20 @@ public class CollectionProperties {
 
 		List<String> fields = new ArrayList<>();
 		for (String resultField : resultFields.split(",")) {
-			fields.add(resultField.trim());
-			//			String resultFieldTrim = resultField.trim();
-			//			// now look up to see whether we have this field
-			//			// TODO - FIX THIS - need to only add the fields which exist
-			//			if(SOLR_NAME_TO_LPSE_CODE_MAP.containsKey(resultFieldTrim)) {
-			//				fields.add(resultFieldTrim);
-			//			} else {
-			//				LOGGER.warn("[ Solr/Panl '{}/{}' ] Cannot find field/facet definition for Solr field '{}'." +
-			//								"This will not be added to the fieldSet '{}'.",
-			//						solrCollection,
-			//						panlCollectionUri,
-			//						resultFieldTrim,
-			//						resultFieldsName);
-			//			}
+
+			String resultFieldTrim = resultField.trim();
+			// now look up to see whether we have this field
+			// TODO - FIX THIS - need to only add the fields which exist
+			if(SOLR_FIELD_NAMES.contains(resultFieldTrim)) {
+				fields.add(resultFieldTrim);
+			} else {
+				LOGGER.warn("[ Solr/Panl '{}/{}' ] Cannot find field/facet definition for Solr field '{}'." +
+								"This will not be added to the fieldSet '{}'.",
+						solrCollection,
+						panlCollectionUri,
+						resultFieldTrim,
+						resultFieldsName);
+			}
 		}
 
 		resultFieldsMap.put(resultFieldsName, fields);
