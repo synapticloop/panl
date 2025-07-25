@@ -371,7 +371,8 @@ public class CollectionProperties {
 		}
 
 		for (PanlField field : NON_FACET_FIELDS) {
-			System.out.println(field.getSolrFieldName() + ":" + field.getPanlFieldName());
+
+//			System.out.println(field.getSolrFieldName() + ":" + field.getPanlFieldName());
 			solrFieldToPanlNameLookup.put(field.getSolrFieldName(), field.getPanlFieldName());
 		}
 
@@ -882,8 +883,17 @@ public class CollectionProperties {
 			throw new PanlServerException("Could not find the MANDATORY property " + Constants.Property.Panl.PANL_LPSE_ORDER);
 		}
 
+		// at this point - it may be either a LPSE code (or metadata) and we now
+		// allow the full solr Field name to be added into the lpse codes
 		for (String lpseCode : panlLpseOrder.split(",")) {
 			lpseCode = lpseCode.trim();
+			// this may be a Panl metadata thing - so
+			// look it up. - this may be dangerous as there may be a single letter
+			// Solr field map
+			if(!LPSE_METADATA.contains(lpseCode) && SOLR_NAME_TO_LPSE_CODE_MAP.containsKey(lpseCode)) {
+				lpseCode = SOLR_NAME_TO_LPSE_CODE_MAP.get(lpseCode);
+			}
+
 			if (lpseFieldLookup.containsKey(lpseCode)) {
 				lpseFields.add(lpseFieldLookup.get(lpseCode));
 				LPSE_URI_CODES.add(lpseCode);
@@ -942,7 +952,6 @@ public class CollectionProperties {
 			// need to check for invalid LPSE codes as they were removed as part of
 			// the parseLpseOrder() call
 			for (String lpseCode : panlLpseOrderList) {
-
 				if (!LPSE_METADATA.contains(lpseCode)) {
 					boolean found = false;
 					if (LPSE_CODE_TO_FACET_FIELD_MAP.containsKey(lpseCode)) {
@@ -996,6 +1005,9 @@ public class CollectionProperties {
 
 			for (String lpseCode : panlLpseFacetOrder.split(",")) {
 				lpseCode = lpseCode.trim();
+				if(SOLR_NAME_TO_LPSE_CODE_MAP.containsKey(lpseCode)) {
+					lpseCode = SOLR_NAME_TO_LPSE_CODE_MAP.get(lpseCode);
+				}
 				if (allFacetLPSECodes.contains(lpseCode)) {
 
 					if (!LPSE_METADATA.contains(lpseCode)) {
@@ -1047,7 +1059,6 @@ public class CollectionProperties {
 							lpseCode,
 							Constants.Property.Panl.PANL_LPSE_FACETORDER,
 							Constants.Property.Panl.PANL_LPSE_ORDER);
-
 				}
 			}
 			// now just add all other LPSE code
@@ -1711,6 +1722,9 @@ public class CollectionProperties {
 		return (SEARCH_LPSE_CODE_TO_SOLR_FIELD_MAP.get(lpseCode));
 	}
 
+	public boolean getIsMetaData(String lpseCode) {
+		return(LPSE_METADATA.contains(lpseCode));
+	}
 	public boolean getIsASearchField(String solrFieldName) {
 		return (SEARCH_FIELDS_MAP.containsKey(solrFieldName));
 	}
