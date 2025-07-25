@@ -697,7 +697,7 @@ bin/solr start -cloud -p 7574 -s "example/cloud/node2/solr" -z localhost:9983
 
 # Version History
 
-## 2.1.0 Internal niceties  (codename `hidden-summer`)  **UNDER DEVELOPMENT**
+## 2.1.0 Internal Niceties and Wanted Functionality (codename `hidden-summer`)  **UNDER DEVELOPMENT**
 
 - **New Features**
   - Added in `is_multivalue` JSON key to the active facets
@@ -726,8 +726,11 @@ bin/solr start -cloud -p 7574 -s "example/cloud/node2/solr" -z localhost:9983
     - Include the uniquekey property for the correct Solr field
     - Keep - or at least attempt to keep - facet and field LPSE codes from 
       an existing file
-    - Updated the commenting for  Solr fields that are analysed with a 
+    - Updated the commenting for Solr fields that are analysed with a 
       warning that it probably shouldn't be a facet.
+    - Instead of using LPSE codes for the `panl.lpse.order`, 
+      `panl.lpse.facetorder`, `panl.lpse.ignore`, the Solr field name can be 
+      used which makes it easier to understand the ordering and ignore codes.
 
 
 - **Bug Fixes**
@@ -740,6 +743,8 @@ bin/solr start -cloud -p 7574 -s "example/cloud/node2/solr" -z localhost:9983
   - Fixed bug with 'extra' JSON object not correctly overriding parent object
   - Fixed connection reset when attempting to get the SolrJ client - now 
     returns a 503 status message
+  - Removed unregistered fields that weren't defined in the field list
+
 
 - **Code Changes**
     - Fixed output formatting for explanation of tokens

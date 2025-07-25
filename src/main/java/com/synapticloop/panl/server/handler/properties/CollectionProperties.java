@@ -1093,6 +1093,11 @@ public class CollectionProperties {
 				continue;
 			}
 
+			if(SOLR_NAME_TO_LPSE_CODE_MAP.containsKey(trimmed)) {
+				trimmed = SOLR_NAME_TO_LPSE_CODE_MAP.get(trimmed);
+			}
+
+
 			if (LPSE_URI_CODES.contains(trimmed)) {
 				LPSE_IGNORED_URI_CODES.add(trimmed);
 			} else {
