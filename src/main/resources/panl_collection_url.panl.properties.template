@@ -667,6 +667,8 @@ $panl.lpse.fields
 #     panl.param.passthrough
 #
 #   ... all the other LPSE codes ...
+#             ~ OR ~
+#   ... you can use the Solr field name for easier reference ...
 #
 #     panl.param.query
 #     panl.param.page
@@ -684,11 +686,13 @@ $panl.lpse.order
 #                        ---- ----- ----- -------------
 # This is the order in which the facets will be returned in the Panl JSON
 # response.  This differs from the above property, which controls the order of
-# facets values in the URL.
+# facets values in the URL.  The comma separated values may be either the LPSE
+# code or the Solr facet field name.
 #
-# NOTE: The panl.param.* LPSE codes are not included in the following list, if
-#       any of the defined facets are not included in the list, then they will
-#       automatically be appended to the order.
+# NOTES:
+#       - The panl.param.* LPSE codes are not included in the following list.
+#       - If any of the defined facets are not included in the list, then they
+#       - will automatically be appended to the order.
 #
 # This will be returned in the Panl JSON response object with the key:
 #
