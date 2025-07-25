@@ -876,15 +876,15 @@ panl.multivalue.T=true
 #                                ~ ~ ~ * ~ ~ ~
 
 panl.lpse.order=z,\
-i,\
-S,\
-t,\
-y,\
-d,\
-m,\
-D,\
-w,\
-T,\
+id,\
+solr_date,\
+text_date,\
+year,\
+decade,\
+month,\
+day,\
+week_day,\
+text,\
 q,\
 p,\
 n,\

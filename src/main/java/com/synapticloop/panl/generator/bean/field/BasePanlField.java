@@ -167,4 +167,13 @@ public abstract class BasePanlField {
 	public String getLpseCode() {
 		return lpseCode;
 	}
+
+	/**
+	 * Return the Solr field name for this PanlField
+	 *
+	 * @return the Solr field name.
+	 */
+	public String getSolrFieldName() {
+		return(solrFieldName);
+	}
 }

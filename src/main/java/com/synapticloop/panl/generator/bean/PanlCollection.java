@@ -217,7 +217,8 @@ public class PanlCollection {
 		StringBuilder panlLpseFields = new StringBuilder();
 		for (BasePanlField basePanlField : basePanlFields) {
 			// we are going to use the Solr field name because it is nicer.
-			panlLpseOrder.append(basePanlField.getLpseCode());
+//			panlLpseOrder.append(basePanlField.getLpseCode());
+			panlLpseOrder.append(basePanlField.getSolrFieldName());
 			panlLpseOrder.append(",\\\n");
 			panlLpseFields.append(basePanlField.toProperties());
 
