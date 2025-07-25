@@ -242,7 +242,11 @@ public class PanlResultsExplainerExplainHandler implements HttpRequestHandler {
 			}
 
 		} else {
-			sb.append(" Not mapped to a Solr field.");
+			if(collectionProperties.getIsMetaData(lpseCode)) {
+				sb.append(" Panl metadata LPSE code (operand or parameter).");
+			} else {
+				sb.append(" Not mapped to a Solr field.");
+			}
 		}
 
 		return(sb.toString());
