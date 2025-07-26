@@ -55,7 +55,11 @@ public class PropertiesMerger {
 						// ignore this line - don't output it - these are just notes in the
 						// file explaining the '$' character and what it is used for
 					} else if (line.startsWith("$")) {
-						if (line.startsWith("$panl.collections")) {
+						if (line.startsWith("$panl.lpse.fields")) {
+							outputString
+									.append(values.get("panl.lpse.fields").toString())
+									.append("\n");
+						} else if (line.startsWith("$panl.collections")) {
 							outputString
 								.append(values.get("panl.collections").toString())
 								.append("\n");

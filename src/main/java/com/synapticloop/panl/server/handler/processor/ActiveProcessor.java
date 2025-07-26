@@ -30,6 +30,7 @@ import com.synapticloop.panl.server.handler.fielderiser.field.BaseField;
 import com.synapticloop.panl.server.handler.tokeniser.token.facet.BooleanFacetLpseToken;
 import com.synapticloop.panl.server.handler.tokeniser.token.LpseToken;
 import com.synapticloop.panl.server.handler.tokeniser.token.param.SortLpseToken;
+import com.synapticloop.panl.util.Constants;
 import com.synapticloop.panl.util.PanlLPSEHelper;
 import org.apache.solr.client.solrj.response.QueryResponse;
 import org.json.JSONArray;
@@ -44,8 +45,6 @@ import java.util.*;
  * @author synapticloop
  */
 public class ActiveProcessor extends Processor {
-
-	public static final String JSON_KEY_SORT_FIELDS = "sort_fields";
 
 	public ActiveProcessor(CollectionProperties collectionProperties) {
 		super(collectionProperties);
@@ -97,15 +96,15 @@ public class ActiveProcessor extends Processor {
 			JSONObject removeObject = new JSONObject();
 
 
-			removeObject.put(JSON_KEY_VALUE, lpseToken.getValue());
+			removeObject.put(Constants.Json.Panl.VALUE, lpseToken.getValue());
 
-			removeObject.put(JSON_KEY_REMOVE_URI, getRemoveURIFromPath(
+			removeObject.put(Constants.Json.Panl.REMOVE_URI, getRemoveURIFromPath(
 					skipNumber,
 					lpseTokens,
 					lpseComponents,
 					collectionProperties));
 
-			removeObject.put(JSON_KEY_PANL_CODE, lpseCode);
+			removeObject.put(Constants.Json.Panl.PANL_CODE, lpseCode);
 
 			// add any additional keys that are required by the children of the base
 			// fields
@@ -119,16 +118,16 @@ public class ActiveProcessor extends Processor {
 				String solrFacetField = sortLpseToken.getSolrFacetField();
 				String panlNameFromSolrFieldName = collectionProperties.getPanlNameFromSolrFieldName(solrFacetField);
 				if (null != solrFacetField) {
-					removeObject.put(JSON_KEY_FACET_NAME, solrFacetField);
-					removeObject.put(JSON_KEY_NAME, panlNameFromSolrFieldName);
+					removeObject.put(Constants.Json.Panl.FACET_NAME, solrFacetField);
+					removeObject.put(Constants.Json.Panl.NAME, panlNameFromSolrFieldName);
 
-					removeObject.put(JSON_KEY_IS_DESCENDING,
+					removeObject.put(Constants.Json.Panl.IS_DESCENDING,
 							sortLpseToken.getSortOrderUriKey().equals(SortLpseToken.SORT_ORDER_URI_KEY_DESCENDING));
 
-					removeObject.put(JSON_KEY_ENCODED,
+					removeObject.put(Constants.Json.Panl.ENCODED,
 							PanlLPSEHelper.encodeURIPath(panlNameFromSolrFieldName));
 
-					removeObject.put(JSON_KEY_INVERSE_URI,
+					removeObject.put(Constants.Json.Panl.INVERSE_URI,
 							getSortInverseURI(
 									sortLpseToken,
 									lpseTokens,
@@ -143,20 +142,24 @@ public class ActiveProcessor extends Processor {
 			} else if (lpseToken instanceof BooleanFacetLpseToken) {
 				BooleanFacetLpseToken booleanFacetLpseToken = (BooleanFacetLpseToken) lpseToken;
 
-				removeObject.put(JSON_KEY_INVERSE_URI,
+				removeObject.put(Constants.Json.Panl.INVERSE_URI,
 						getBooleanInverseURI(booleanFacetLpseToken, lpseTokens, lpseComponents, collectionProperties));
 
 
-				removeObject.put(JSON_KEY_FACET_NAME, collectionProperties.getSolrFieldNameFromLpseCode(lpseCode));
+				removeObject.put(Constants.Json.Panl.FACET_NAME, collectionProperties.getSolrFieldNameFromLpseCode(lpseCode));
 
-				removeObject.put(JSON_KEY_NAME, collectionProperties.getPanlNameFromPanlCode(lpseCode));
+				removeObject.put(Constants.Json.Panl.NAME, collectionProperties.getPanlNameFromPanlCode(lpseCode));
 
-				removeObject.put(JSON_KEY_ENCODED, lpseField.getEncodedPanlValue(lpseToken));
+				removeObject.put(Constants.Json.Panl.ENCODED, lpseField.getEncodedPanlValue(lpseToken));
 
 			} else {
-				removeObject.put(JSON_KEY_FACET_NAME, collectionProperties.getSolrFieldNameFromLpseCode(lpseCode));
-				removeObject.put(JSON_KEY_NAME, collectionProperties.getPanlNameFromPanlCode(lpseCode));
-				removeObject.put(JSON_KEY_ENCODED, lpseField.getEncodedPanlValue(lpseToken));
+				removeObject.put(Constants.Json.Panl.FACET_NAME, collectionProperties.getSolrFieldNameFromLpseCode(lpseCode));
+				removeObject.put(Constants.Json.Panl.NAME, collectionProperties.getPanlNameFromPanlCode(lpseCode));
+				removeObject.put(Constants.Json.Panl.ENCODED, lpseField.getEncodedPanlValue(lpseToken));
+
+				// add in the 'extra' JSON object
+				removeObject.put(Constants.Json.Panl.EXTRA, lpseField.getExtraJSONObject());
+
 			}
 
 
@@ -167,7 +170,7 @@ public class ActiveProcessor extends Processor {
 			skipNumber++;
 
 			if (!activeSortObject.isEmpty()) {
-				jsonObject.put(JSON_KEY_SORT_FIELDS, activeSortObject);
+				jsonObject.put(Constants.Json.Panl.SORT_FIELDS, activeSortObject);
 			}
 
 			if (lpseToken.getCanHaveMultiple()) {
@@ -426,7 +429,7 @@ public class ActiveProcessor extends Processor {
 			CollectionProperties collectionProperties) {
 
 		String booleanLpseCode = booleanFacetLpseToken.getLpseCode();
-		String inverseBooleanValue = booleanFacetLpseToken.getInverseBooleanValue(booleanFacetLpseToken);
+		String inverseBooleanValue = booleanFacetLpseToken.getInverseBooleanValue();
 
 		StringBuilder uri = new StringBuilder();
 		StringBuilder lpse = new StringBuilder();

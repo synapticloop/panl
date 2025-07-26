@@ -3,6 +3,7 @@ package com.synapticloop.panl.server.handler.processor;
 import com.synapticloop.panl.FacetCountBean;
 import com.synapticloop.panl.TestHelper;
 import com.synapticloop.panl.exception.PanlServerException;
+import com.synapticloop.panl.util.Constants;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.junit.jupiter.api.Test;
@@ -33,30 +34,30 @@ public class AvailableProcessorTest {
 				false);
 
 		System.out.println(jsonObject.toString(2));
-		JSONArray availableFacets = jsonObject.getJSONArray(Processor.JSON_KEY_FACETS);
+		JSONArray availableFacets = jsonObject.getJSONArray(Constants.Json.Panl.FACETS);
 		assertEquals(WEIGHT_NAME_FACETS.size(), availableFacets.length());
 		for(int i = 0; i < availableFacets.length(); i++) {
 			JSONObject facetObject = availableFacets.getJSONObject(i);
-			JSONObject urisObject = facetObject.getJSONObject(Processor.JSON_KEY_URIS);
+			JSONObject urisObject = facetObject.getJSONObject(Constants.Json.Panl.URIS);
 
-			assertEquals("/", urisObject.getString(Processor.JSON_KEY_BEFORE));
+			assertEquals("/", urisObject.getString(Constants.Json.Panl.BEFORE));
 			assertEquals("/brand/" +
-					facetObject.getString(Processor.JSON_KEY_PANL_CODE) +
-					"b/", urisObject.getString(Processor.JSON_KEY_AFTER));
+					facetObject.getString(Constants.Json.Panl.PANL_CODE) +
+					"b/", urisObject.getString(Constants.Json.Panl.AFTER));
 
 		}
 
-		JSONArray rangeFacets = jsonObject.getJSONArray(Processor.JSON_KEY_RANGE_FACETS);
+		JSONArray rangeFacets = jsonObject.getJSONArray(Constants.Json.Panl.RANGE_FACETS);
 		for(int i = 0; i < rangeFacets.length(); i++) {
 			JSONObject facetObject = rangeFacets.getJSONObject(i);
-			JSONObject urisObject = facetObject.getJSONObject(Processor.JSON_KEY_URIS);
+			JSONObject urisObject = facetObject.getJSONObject(Constants.Json.Panl.URIS);
 
-			assertEquals("/", urisObject.getString(Processor.JSON_KEY_BEFORE));
-			String lpseCode = facetObject.getString(Processor.JSON_KEY_PANL_CODE);
+			assertEquals("/", urisObject.getString(Constants.Json.Panl.BEFORE));
+			String lpseCode = facetObject.getString(Constants.Json.Panl.PANL_CODE);
 			assertEquals("/brand/" +
 					lpseCode +
 					"+" +
-					"b/", urisObject.getString(Processor.JSON_KEY_AFTER));
+					"b/", urisObject.getString(Constants.Json.Panl.AFTER));
 
 		}
 	}
@@ -70,30 +71,30 @@ public class AvailableProcessorTest {
 				false);
 
 		System.out.println(jsonObject.toString(2));
-		JSONArray availableFacets = jsonObject.getJSONArray(Processor.JSON_KEY_FACETS);
+		JSONArray availableFacets = jsonObject.getJSONArray(Constants.Json.Panl.FACETS);
 		assertEquals(WEIGHT_NAME_FACETS.size(), availableFacets.length());
 		for(int i = 0; i < availableFacets.length(); i++) {
 			JSONObject facetObject = availableFacets.getJSONObject(i);
-			JSONObject urisObject = facetObject.getJSONObject(Processor.JSON_KEY_URIS);
+			JSONObject urisObject = facetObject.getJSONObject(Constants.Json.Panl.URIS);
 
-			assertEquals("/", urisObject.getString(Processor.JSON_KEY_BEFORE));
+			assertEquals("/", urisObject.getString(Constants.Json.Panl.BEFORE));
 			assertEquals("/" +
-					facetObject.getString(Processor.JSON_KEY_PANL_CODE) +
-					"sb-sm+/", urisObject.getString(Processor.JSON_KEY_AFTER));
+					facetObject.getString(Constants.Json.Panl.PANL_CODE) +
+					"sb-sm+/", urisObject.getString(Constants.Json.Panl.AFTER));
 
 		}
 
-		JSONArray rageFacets = jsonObject.getJSONArray(Processor.JSON_KEY_RANGE_FACETS);
+		JSONArray rageFacets = jsonObject.getJSONArray(Constants.Json.Panl.RANGE_FACETS);
 		for(int i = 0; i < rageFacets.length(); i++) {
 			JSONObject facetObject = rageFacets.getJSONObject(i);
-			JSONObject urisObject = facetObject.getJSONObject(Processor.JSON_KEY_URIS);
+			JSONObject urisObject = facetObject.getJSONObject(Constants.Json.Panl.URIS);
 
-			assertEquals("/", urisObject.getString(Processor.JSON_KEY_BEFORE));
-			String lpseCode = facetObject.getString(Processor.JSON_KEY_PANL_CODE);
+			assertEquals("/", urisObject.getString(Constants.Json.Panl.BEFORE));
+			String lpseCode = facetObject.getString(Constants.Json.Panl.PANL_CODE);
 			assertEquals("/" +
 					lpseCode +
 					"+" +
-					"sb-sm+/", urisObject.getString(Processor.JSON_KEY_AFTER));
+					"sb-sm+/", urisObject.getString(Constants.Json.Panl.AFTER));
 
 		}
 	}

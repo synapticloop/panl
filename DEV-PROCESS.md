@@ -9,12 +9,11 @@
 Find a suitable name for the new version and branch - an example site is the 
 [Release name generator](https://codesandbox.io/p/sandbox/release-name-generator-5ow5w?file=%2Fsrc%2Findex.js) 
 which somehow (_sort-of_) relates to the release.  The next release may very 
-well be called `hidden-summer` as there may be some boost terms added to 
+well be called `bitter-shadow` as there may be some boost terms added to 
 queries.
 
 Other possible version names:
 
-- `bitter-shadow`
 - `raspy-pine`
 - `twilight-truth`
 - `quiet-paper`
@@ -23,7 +22,7 @@ Other possible version names:
 
 ## 2. Create a branch 
 
-Create a branch from the `main` branch with the above name i.e. `hidden-summer`.
+Create a branch from the `main` branch with the above name i.e. `bitter-shadow`.
 
 ## 3. Work, work, work
 
@@ -31,8 +30,17 @@ Do the work, run the tests, but don't forget the following:
 
 ### a. Update the version
 
-See the file `src/main/resources/gradle.properties` and update the following 
-properties:
+Gradle looks in the file `src/main/resources/gradle.properties` for the Panl
+release version number and the Solr version number that Panl will integrate 
+with.
+
+The two properties are:
+
+- `panl.version` - the release version
+- `panl.solr.version` - the Solr version for integration
+
+Both of these properties are used to generate the distributable file versions
+and are used within the code when generating startup output.
 
 The Synapticloop Panl project uses `major.minor.micro` versioning, the meaning 
 of which:

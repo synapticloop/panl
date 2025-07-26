@@ -26,13 +26,11 @@ package com.synapticloop.panl.server.handler.webapp.viewer;
 
 import com.synapticloop.panl.server.handler.CollectionRequestHandler;
 import com.synapticloop.panl.server.handler.webapp.util.ResourceHelper;
-import org.apache.http.HttpException;
 import org.apache.http.HttpRequest;
 import org.apache.http.HttpResponse;
 import org.apache.http.protocol.HttpContext;
 import org.apache.http.protocol.HttpRequestHandler;
 
-import java.io.IOException;
 import java.util.List;
 
 /**

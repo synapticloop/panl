@@ -248,4 +248,9 @@ public class PanlPageNumField extends BasePrefixSuffixField {
 				panlCollectionUri,
 				lpseCode);
 	}
+
+	@Override public String getPanlFieldType() {
+		return("PAGE NUM");
+	}
+
 }

@@ -126,7 +126,7 @@ public class PanlProjectLauncher {
 		jMenuBar.add(Box.createGlue());
 
 		jMenuBar.add(new JLabel("       "));
-		buttonPresentationMode = new JButton("Dark mode", ICON_MOON);
+		buttonPresentationMode = new JButton("View in 'Dark mode'", ICON_MOON);
 		jMenuBar.add(buttonPresentationMode);
 		buttonPresentationMode.addActionListener(e -> {
 			isDarkUI = !isDarkUI;
@@ -141,13 +141,13 @@ public class PanlProjectLauncher {
 			if (!isDarkUI) {
 				UIManager.setLookAndFeel(new FlatLightLaf());
 				SwingUtilities.updateComponentTreeUI(mainWindowFrame);
-				buttonPresentationMode.setText("Dark mode");
+				buttonPresentationMode.setText("View in 'Dark mode'");
 				buttonPresentationMode.setIcon(ICON_MOON);
 				quitMenuItem.setIcon(ICON_QUIT);
 			} else {
 				UIManager.setLookAndFeel(new FlatDarkLaf());
 				SwingUtilities.updateComponentTreeUI(mainWindowFrame);
-				buttonPresentationMode.setText("Light mode");
+				buttonPresentationMode.setText("View in 'Light mode'");
 				buttonPresentationMode.setIcon(ICON_SUN);
 				quitMenuItem.setIcon(ICON_QUIT_WHITE);
 			}

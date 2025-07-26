@@ -42,6 +42,8 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.util.*;
 
+import static com.synapticloop.panl.util.Constants.Property.Panl.*;
+
 /**
  * <p></p>
  *
@@ -62,15 +64,16 @@ public class PanlCollection {
 	private static final Map<String, String> PANL_PROPERTIES = new HashMap<>();
 	private static final Map<String, String> SOLR_FIELD_TYPE_NAME_TO_SOLR_CLASS = new HashMap<>();
 	private static final Map<String, String> SOLR_FIELD_NAME_TO_SOLR_FIELD_TYPE = new HashMap<>();
+	private static String uniqueKeyField = "";
 
 	private static final Set<String> SUPPORTED_SOLR_FIELD_TYPES = new HashSet<>();
 
 	private static final String[] LPSE_ORDER_PARAMS = {
-		PanlGenerator.PANL_PARAM_QUERY,
-		PanlGenerator.PANL_PARAM_PAGE,
-		PanlGenerator.PANL_PARAM_NUMROWS,
-		PanlGenerator.PANL_PARAM_SORT,
-		PanlGenerator.PANL_PARAM_QUERY_OPERAND
+			PANL_PARAM_QUERY,
+			PANL_PARAM_PAGE,
+			PANL_PARAM_NUMROWS,
+			PANL_PARAM_SORT,
+			PANL_PARAM_QUERY_OPERAND
 	};
 
 	static {
@@ -144,12 +147,13 @@ public class PanlCollection {
 			if (CODES_AVAILABLE.contains(possibleCode)) {
 
 				basePanlFields.add(BasePanlField.getPanlField(
-					possibleCode,
-					fieldName,
-					SOLR_FIELD_TYPE_NAME_TO_SOLR_CLASS.get(SOLR_FIELD_NAME_TO_SOLR_FIELD_TYPE.get(fieldName)),
-					fieldXmlMap.get(fieldName),
-					solrField.getIsFacetable(),
-					solrField.getIsMultiValued()));
+						possibleCode,
+						fieldName,
+						SOLR_FIELD_TYPE_NAME_TO_SOLR_CLASS.get(SOLR_FIELD_NAME_TO_SOLR_FIELD_TYPE.get(fieldName)),
+						fieldXmlMap.get(fieldName),
+						solrField.getIsFacetable(),
+						solrField.getIsMultiValued(),
+						fieldName.equals(uniqueKeyField)));
 
 				LOGGER.info("Assigned field '{}' to panl code '{}'", fieldName, possibleCode);
 
@@ -157,17 +161,18 @@ public class PanlCollection {
 			} else if (CODES_AVAILABLE.contains(possibleCode.toUpperCase())) {
 				String nextPossibleCode = possibleCode.toUpperCase();
 				basePanlFields.add(BasePanlField.getPanlField(
-					nextPossibleCode,
-					fieldName,
-					SOLR_FIELD_TYPE_NAME_TO_SOLR_CLASS.get(SOLR_FIELD_NAME_TO_SOLR_FIELD_TYPE.get(fieldName)),
-					fieldXmlMap.get(fieldName),
-					solrField.getIsFacetable(),
-					solrField.getIsMultiValued()));
+						nextPossibleCode,
+						fieldName,
+						SOLR_FIELD_TYPE_NAME_TO_SOLR_CLASS.get(SOLR_FIELD_NAME_TO_SOLR_FIELD_TYPE.get(fieldName)),
+						fieldXmlMap.get(fieldName),
+						solrField.getIsFacetable(),
+						solrField.getIsMultiValued(),
+						fieldName.equals(uniqueKeyField)));
 				LOGGER.info("Assigned field '{}' to panl code '{}'", fieldName, nextPossibleCode);
 				CODES_AVAILABLE.remove(nextPossibleCode);
 			} else {
 				LOGGER.warn("No nice panl code for field '{}', '{}' and '{}' already taken", fieldName, possibleCode,
-					possibleCode.toUpperCase());
+						possibleCode.toUpperCase());
 				unassignedSolrFields.add(solrField);
 			}
 		}
@@ -185,12 +190,13 @@ public class PanlCollection {
 
 					String fieldName = solrField.getName();
 					basePanlFields.add(BasePanlField.getPanlField(
-						assignedCode,
-						fieldName,
-						SOLR_FIELD_TYPE_NAME_TO_SOLR_CLASS.get(SOLR_FIELD_NAME_TO_SOLR_FIELD_TYPE.get(fieldName)),
-						fieldXmlMap.get(fieldName),
-						solrField.getIsFacetable(),
-						solrField.getIsMultiValued()));
+							assignedCode,
+							fieldName,
+							SOLR_FIELD_TYPE_NAME_TO_SOLR_CLASS.get(SOLR_FIELD_NAME_TO_SOLR_FIELD_TYPE.get(fieldName)),
+							fieldXmlMap.get(fieldName),
+							solrField.getIsFacetable(),
+							solrField.getIsMultiValued(),
+							fieldName.equals(uniqueKeyField)));
 
 					LOGGER.info("Assigned field '{}' to RANDOM panl code '{}'", fieldName, assignedCode);
 					break;
@@ -202,25 +208,35 @@ public class PanlCollection {
 
 
 		StringBuilder panlLpseOrder = new StringBuilder();
+		StringBuilder panlLpseFacetOrder = new StringBuilder();
 		// we are going to put the passthrough parameter first
-		String panlParamPassthrough = panlReplacementPropertyMap.get(PanlGenerator.PANL_PARAM_PASSTHROUGH);
-		panlLpseOrder.append(
-			             panlParamPassthrough)
-		             .append(",\\\n");
+		String panlParamPassthrough = panlReplacementPropertyMap.get(PANL_PARAM_PASSTHROUGH);
+		panlLpseOrder
+				.append(panlParamPassthrough)
+				.append(",\\\n");
 
-		panlReplacementPropertyMap.remove(PanlGenerator.PANL_PARAM_PASSTHROUGH);
+		panlReplacementPropertyMap.remove(PANL_PARAM_PASSTHROUGH);
 
 		// last but not least, we need to put the lpse order
 		StringBuilder panlLpseFields = new StringBuilder();
 		for (BasePanlField basePanlField : basePanlFields) {
-			panlLpseOrder.append(basePanlField.getLpseCode());
-			panlLpseOrder.append(",\\\n");
+			// we are going to use the Solr field name because it is nicer.
+			panlLpseOrder.append(basePanlField.getSolrFieldName())
+					.append(",\\\n");
+
 			panlLpseFields.append(basePanlField.toProperties());
+
+			panlLpseFacetOrder.append(basePanlField.getSolrFieldName())
+					.append(",\\\n");
 		}
+
+		// there will be a trailing comma and newline on the panlLpseFacetOrder, remove it
+
+		panlLpseFacetOrder.delete(panlLpseFacetOrder.length() -3, panlLpseFacetOrder.length());
 
 		// put in the other parameters (query etc)
 
-		for(String key: LPSE_ORDER_PARAMS) {
+		for (String key : LPSE_ORDER_PARAMS) {
 			panlLpseOrder.append(panlReplacementPropertyMap.get(key))
 			             .append(",\\\n");
 		}
@@ -229,9 +245,10 @@ public class PanlCollection {
 		panlLpseOrder.setLength(panlLpseOrder.length() - 3);
 
 		// put the passthrough back
-		panlReplacementPropertyMap.put(PanlGenerator.PANL_PARAM_PASSTHROUGH, panlParamPassthrough);
+		panlReplacementPropertyMap.put(PANL_PARAM_PASSTHROUGH, panlParamPassthrough);
 
 		PANL_PROPERTIES.put("panl.lpse.order", panlLpseOrder.toString());
+		PANL_PROPERTIES.put("panl.lpse.facetorder", panlLpseFacetOrder.toString());
 		PANL_PROPERTIES.put("panl.lpse.fields", panlLpseFields.toString());
 
 		StringBuilder panlResultsFieldsDefault = new StringBuilder();
@@ -359,12 +376,26 @@ public class PanlCollection {
 								LOGGER.info("NOT Adding field name '{}' as it is neither indexed nor stored.", name);
 							}
 							break;
+						case "uniqueKey":
+							StringBuilder uniqueKey = new StringBuilder();
+							while(true) {
+								XMLEvent xmlEvent = reader.nextEvent();
+								if(xmlEvent.isCharacters()) {
+									uniqueKey.append(xmlEvent.asCharacters().getData());
+								}
+								if(xmlEvent.isEndElement()) {
+									break;
+								}
+							}
+							uniqueKeyField = uniqueKey.toString();
+							break;
+
 					}
 				}
 			}
 		} catch (XMLStreamException | FileNotFoundException e) {
 			throw new PanlGenerateException(
-				"Could not adequately parse the '" + schema.getAbsolutePath() + "' solr schema file.");
+					"Could not adequately parse the '" + schema.getAbsolutePath() + "' solr schema file, sorry...");
 		}
 	}
 
@@ -377,7 +408,7 @@ public class PanlCollection {
 	 * @return The replacement property, or an empty string if one could not be found
 	 */
 	public String getPanlProperty(String key) {
-		return(PANL_PROPERTIES.getOrDefault(key, ""));
+		return (PANL_PROPERTIES.getOrDefault(key, ""));
 	}
 
 	/**

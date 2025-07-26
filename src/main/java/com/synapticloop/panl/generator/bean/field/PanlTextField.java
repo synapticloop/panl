@@ -26,13 +26,14 @@ package com.synapticloop.panl.generator.bean.field;
 
 public class PanlTextField extends BasePanlField {
 	protected PanlTextField(String lpseCode,
-		String solrFieldName,
-		String solrFieldType,
-		String schemaXmlLine,
-		boolean isFacet,
-		boolean isMultiValued) {
+			String solrFieldName,
+			String solrFieldType,
+			String schemaXmlLine,
+			boolean isFacet,
+			boolean isMultiValued,
+			boolean isUniqueKey) {
 
-		super(lpseCode, solrFieldName, solrFieldType, schemaXmlLine, isFacet, isMultiValued);
+		super(lpseCode, solrFieldName, solrFieldType, schemaXmlLine, isFacet, isMultiValued, isUniqueKey);
 	}
 
 	@Override public String getAdditionalProperties() {

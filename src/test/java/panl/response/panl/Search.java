@@ -29,5 +29,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 public class Search {
 	public String query_respond_to;
 	public String keyword;
+	public String query_operand_selected;
+	public String query_operand_respond_to;
 	@JsonIgnore public Object[] fields;
 }

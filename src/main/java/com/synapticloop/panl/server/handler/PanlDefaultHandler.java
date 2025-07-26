@@ -25,6 +25,7 @@ package com.synapticloop.panl.server.handler;
  */
 
 import com.synapticloop.panl.server.handler.properties.PanlProperties;
+import com.synapticloop.panl.util.Constants;
 import org.apache.http.HttpRequest;
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
@@ -75,19 +76,19 @@ public class PanlDefaultHandler implements HttpRequestHandler {
 	 */
 	public PanlDefaultHandler(PanlProperties panlProperties, List<CollectionRequestHandler> collectionRequestHandlers) {
 		JSONObject jsonObject = new JSONObject();
-		jsonObject.put(JSON_KEY_ERROR, true);
-		jsonObject.put(JSON_KEY_STATUS, HttpStatus.SC_NOT_FOUND);
+		jsonObject.put(Constants.Json.Response.ERROR, true);
+		jsonObject.put(Constants.Json.Response.STATUS, HttpStatus.SC_NOT_FOUND);
 
 		// do we want verbose messaging for 404 http status codes
 		if (panlProperties.getUseVerbose404Messages()) {
-			jsonObject.put(JSON_KEY_MESSAGE, JSON_VALUE_MESSAGE);
+			jsonObject.put(Constants.Json.Response.MESSAGE, JSON_VALUE_MESSAGE);
 			JSONArray validUrls = new JSONArray();
 			for (CollectionRequestHandler collectionRequestHandler : collectionRequestHandlers) {
 				validUrls.put("/" + collectionRequestHandler.getPanlCollectionUri() + "/*");
 			}
-			jsonObject.put(JSON_KEY_VALID_URLS, validUrls);
+			jsonObject.put(Constants.Json.Response.VALID_URLS, validUrls);
 		} else {
-			jsonObject.put(JSON_KEY_MESSAGE, JSON_VALUE_MESSAGE_404);
+			jsonObject.put(Constants.Json.Response.MESSAGE, Constants.Json.Response.JSON_VALUE_MESSAGE_404);
 		}
 
 		json404ErrorString = jsonObject.toString();
