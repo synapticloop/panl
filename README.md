@@ -11,12 +11,18 @@
 > covering all aspects of the configuration of the Panl server so that you 
 > can get the most out of your Solr and Panl experience._**
 
+# IMPORTANT:
+
+Apache®, Solr® the names of Apache projects, and the multicolor feather logo are registered trademarks or trademarks of the Apache Software Foundation in the United States and/or other countries.  
+
+The mention and references of any Apache projects, sub-projects, or resources in no way constitutes an endorsement for the Synapticloop Panl project.
+
 
 # Development Information 
 
-| Latest<br />Release                                                         | Development Branch (version)                                                                               |
-|------------------------------------------------------------------------------|------------------------------------------------------------------------------------------------------------|
-| ![GitHub Release](https://img.shields.io/github/v/release/synapticloop/panl) | `hidden-summer` [See Branch](https://github.com/synapticloop/panl/tree/hidden-summer) (2.1.0) |
+| Latest<br />Release                                                          | Latest Book Release                                                | Development Branch (version)                                             | 
+|------------------------------------------------------------------------------|--------------------------------------------------------------------|--------------------------------------------------------------------------|
+| ![GitHub Release](https://img.shields.io/github/v/release/synapticloop/panl) | Synapticloop - Getting Started With Panl version 2.1.0 (release 1) | `hidden-summer` [See Branch](https://github.com/synapticloop/panl/tree/hidden-summer) (2.1.0) |
 
 
 **Major branch release status:**
