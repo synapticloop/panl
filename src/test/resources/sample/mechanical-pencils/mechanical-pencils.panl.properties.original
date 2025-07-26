@@ -647,6 +647,7 @@ solr.highlight=false
 panl.field.i=id
 panl.name.i=Id
 panl.type.i=solr.StrField
+panl.uniquekey.i=true
 
 # <field "indexed"="true" "stored"="true" "name"="brand" "type"="string" "multiValued"="false" />
 # This configuration can be either a field or a facet as it is indexed in Solr
@@ -1189,26 +1190,26 @@ o
 #
 #                                ~ ~ ~ * ~ ~ ~
 
-panl.lpse.facetorder=i,\
-b,\
-N,\
-m,\
-B,\
-g,\
-G,\
-c,\
-C,\
-l,\
-r,\
-d,\
-w,\
-R,\
-L,\
-D,\
-h,\
-I,\
-v,\
-t
+panl.lpse.facetorder=id,\
+brand,\
+name,\
+mechanism_type,\
+body_shape,\
+grip_type,\
+grip_shape,\
+cap_shape,\
+category,\
+length,\
+relative_length,\
+diameter,\
+weight,\
+relative_weight,\
+lead_length,\
+disassemble,\
+hardness_indicator,\
+in_built_eraser,\
+variants,\
+text
 
 
 #                       Panl LPSE Ignore Configuration

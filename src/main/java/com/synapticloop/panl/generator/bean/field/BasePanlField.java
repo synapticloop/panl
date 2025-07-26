@@ -33,42 +33,45 @@ public abstract class BasePanlField {
 	protected final String solrFieldType;
 	protected final boolean isFacetable;
 	protected final boolean isMultiValued;
+	protected final boolean isUniqueKey;
 
 	public static BasePanlField getPanlField(
-		String lpseCode,
-		String solrFieldName,
-		String solrFieldType,
-		String schemaXmlLine,
-		boolean isFacetable,
-		boolean isMultiValued) {
+			String lpseCode,
+			String solrFieldName,
+			String solrFieldType,
+			String schemaXmlLine,
+			boolean isFacetable,
+			boolean isMultiValued,
+			boolean isUniqueKey) {
 
 		switch (solrFieldType) {
 			case "solr.BoolField":
-				return (new PanlBoolField(lpseCode, solrFieldName, solrFieldType, schemaXmlLine, isFacetable, isMultiValued));
+				return (new PanlBoolField(lpseCode, solrFieldName, solrFieldType, schemaXmlLine, isFacetable, isMultiValued, isUniqueKey));
 			case "solr.TextField":
 			case "solr.StrField":
 			case "solr.UUIDField":
-				return (new PanlTextField(lpseCode, solrFieldName, solrFieldType, schemaXmlLine, isFacetable, isMultiValued));
+				return (new PanlTextField(lpseCode, solrFieldName, solrFieldType, schemaXmlLine, isFacetable, isMultiValued, isUniqueKey));
 			case "solr.IntPointField":
 			case "solr.FloatPointField":
 			case "solr.LongPointField":
 			case "solr.DoublePointField":
-				return (new PanlRangeField(lpseCode, solrFieldName, solrFieldType, schemaXmlLine, isFacetable, isMultiValued));
+				return (new PanlRangeField(lpseCode, solrFieldName, solrFieldType, schemaXmlLine, isFacetable, isMultiValued, isUniqueKey));
 			case "solr.DatePointField":
 				return (new PanlDateRangeField(lpseCode, solrFieldName, solrFieldType, schemaXmlLine, isFacetable,
-					isMultiValued));
+					isMultiValued, isUniqueKey));
 		}
 
 		return (new PanlUnsupportedField(lpseCode, solrFieldName, solrFieldType, schemaXmlLine, isFacetable,
-			isMultiValued));
+			isMultiValued, isUniqueKey));
 	}
 
 	protected BasePanlField(String lpseCode,
-		String solrFieldName,
-		String solrFieldType,
-		String schemaXmlLine,
-		boolean isFacetable,
-		boolean isMultiValued) {
+			String solrFieldName,
+			String solrFieldType,
+			String schemaXmlLine,
+			boolean isFacetable,
+			boolean isMultiValued,
+			boolean isUniqueKey) {
 
 		this.lpseCode = lpseCode;
 		this.solrFieldName = solrFieldName;
@@ -76,6 +79,7 @@ public abstract class BasePanlField {
 		this.schemaXmlLine = schemaXmlLine;
 		this.isFacetable = isFacetable;
 		this.isMultiValued = isMultiValued;
+		this.isUniqueKey = isUniqueKey;
 	}
 
 	private String getPrettyName(String name) {
@@ -108,17 +112,22 @@ public abstract class BasePanlField {
 			stringBuilder.append("# This configuration can __ONLY__ ever be a field as it is not indexed in Solr\n");
 		}
 
-		stringBuilder.append(String.format("panl.%s.%s=%s\n", (isFacetable ? "facet" : "field"), lpseCode, solrFieldName))
-		             .append(String.format("panl.name.%s=%s\n", lpseCode, getPrettyName(solrFieldName)))
-		             .append(String.format("panl.type.%s=%s\n", lpseCode, solrFieldType));
+		stringBuilder
+				.append(String.format("panl.%s.%s=%s\n", (isFacetable ? "facet" : "field"), lpseCode, solrFieldName))
+				.append(String.format("panl.name.%s=%s\n", lpseCode, getPrettyName(solrFieldName)))
+				.append(String.format("panl.type.%s=%s\n", lpseCode, solrFieldType));
+
+		if(isUniqueKey) {
+			stringBuilder.append(String.format("panl.uniquekey.%s=true\n", lpseCode));
+		}
 
 		if (isFacetable) {
 			if (isMultiValued) {
 				stringBuilder
 						.append("# This Solr field is configured as multiValued, and is added as a property for the\n")
-				    .append("# so that single page search can be generated properly.  You __SHOULD_NOT___\n")
-				    .append("# change this unless the underlying Solr schema changes\n")
-				    .append(String.format("panl.multivalue.%s=%b\n", lpseCode, isMultiValued))
+						.append("# so that single page search can be generated properly.  You __SHOULD_NOT___\n")
+						.append("# change this unless the underlying Solr schema changes\n")
+						.append(String.format("panl.multivalue.%s=%b\n", lpseCode, isMultiValued))
 						.append("# If you want to have a multi-value separator enabled, uncomment the following\n")
 						.append("# property and set it to any string.\n")
 						.append(String.format("#panl.multivalue.separator.%s=,\n", lpseCode))
@@ -127,17 +136,17 @@ public abstract class BasePanlField {
 				// this is a good candidate for an OR facet - but not a date
 				if(!(this instanceof PanlDateRangeField) && !(this instanceof PanlBoolField)) {
 					stringBuilder.append("# This field is a candidate for an OR facet, you may wish to configure the\n")
-					             .append("# following properties\n")
-					             .append(String.format("#panl.or.facet.%s=true\n", lpseCode))
-					             .append(String.format("#panl.or.always.%s=true\n", lpseCode));
+							.append("# following properties\n")
+							.append(String.format("#panl.or.facet.%s=true\n", lpseCode))
+							.append(String.format("#panl.or.always.%s=true\n", lpseCode));
 				}
 			}
 
 			stringBuilder.append(getAdditionalProperties());
 
 			stringBuilder.append("# If you want this facet to only appear if another facet has already been\n")
-			             .append("# passed through then add the LPSE code(s) in a comma separated list below\n")
-			             .append(String.format("#panl.when.%s=\n", lpseCode));
+					.append("# passed through then add the LPSE code(s) in a comma separated list below\n")
+					.append(String.format("#panl.when.%s=\n", lpseCode));
 		}
 
 

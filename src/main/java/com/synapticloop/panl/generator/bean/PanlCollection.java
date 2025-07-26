@@ -64,6 +64,7 @@ public class PanlCollection {
 	private static final Map<String, String> PANL_PROPERTIES = new HashMap<>();
 	private static final Map<String, String> SOLR_FIELD_TYPE_NAME_TO_SOLR_CLASS = new HashMap<>();
 	private static final Map<String, String> SOLR_FIELD_NAME_TO_SOLR_FIELD_TYPE = new HashMap<>();
+	private static String uniqueKeyField = "";
 
 	private static final Set<String> SUPPORTED_SOLR_FIELD_TYPES = new HashSet<>();
 
@@ -151,7 +152,8 @@ public class PanlCollection {
 						SOLR_FIELD_TYPE_NAME_TO_SOLR_CLASS.get(SOLR_FIELD_NAME_TO_SOLR_FIELD_TYPE.get(fieldName)),
 						fieldXmlMap.get(fieldName),
 						solrField.getIsFacetable(),
-						solrField.getIsMultiValued()));
+						solrField.getIsMultiValued(),
+						fieldName.equals(uniqueKeyField)));
 
 				LOGGER.info("Assigned field '{}' to panl code '{}'", fieldName, possibleCode);
 
@@ -164,7 +166,8 @@ public class PanlCollection {
 						SOLR_FIELD_TYPE_NAME_TO_SOLR_CLASS.get(SOLR_FIELD_NAME_TO_SOLR_FIELD_TYPE.get(fieldName)),
 						fieldXmlMap.get(fieldName),
 						solrField.getIsFacetable(),
-						solrField.getIsMultiValued()));
+						solrField.getIsMultiValued(),
+						fieldName.equals(uniqueKeyField)));
 				LOGGER.info("Assigned field '{}' to panl code '{}'", fieldName, nextPossibleCode);
 				CODES_AVAILABLE.remove(nextPossibleCode);
 			} else {
@@ -192,7 +195,8 @@ public class PanlCollection {
 							SOLR_FIELD_TYPE_NAME_TO_SOLR_CLASS.get(SOLR_FIELD_NAME_TO_SOLR_FIELD_TYPE.get(fieldName)),
 							fieldXmlMap.get(fieldName),
 							solrField.getIsFacetable(),
-							solrField.getIsMultiValued()));
+							solrField.getIsMultiValued(),
+							fieldName.equals(uniqueKeyField)));
 
 					LOGGER.info("Assigned field '{}' to RANDOM panl code '{}'", fieldName, assignedCode);
 					break;
@@ -217,13 +221,13 @@ public class PanlCollection {
 		StringBuilder panlLpseFields = new StringBuilder();
 		for (BasePanlField basePanlField : basePanlFields) {
 			// we are going to use the Solr field name because it is nicer.
-//			panlLpseOrder.append(basePanlField.getLpseCode());
-			panlLpseOrder.append(basePanlField.getSolrFieldName());
-			panlLpseOrder.append(",\\\n");
+			panlLpseOrder.append(basePanlField.getSolrFieldName())
+					.append(",\\\n");
+
 			panlLpseFields.append(basePanlField.toProperties());
 
-			panlLpseFacetOrder.append(basePanlField.getLpseCode())
-			                  .append(",\\\n");
+			panlLpseFacetOrder.append(basePanlField.getSolrFieldName())
+					.append(",\\\n");
 		}
 
 		// there will be a trailing comma and newline on the panlLpseFacetOrder, remove it
@@ -372,12 +376,26 @@ public class PanlCollection {
 								LOGGER.info("NOT Adding field name '{}' as it is neither indexed nor stored.", name);
 							}
 							break;
+						case "uniqueKey":
+							StringBuilder uniqueKey = new StringBuilder();
+							while(true) {
+								XMLEvent xmlEvent = reader.nextEvent();
+								if(xmlEvent.isCharacters()) {
+									uniqueKey.append(xmlEvent.asCharacters().getData());
+								}
+								if(xmlEvent.isEndElement()) {
+									break;
+								}
+							}
+							uniqueKeyField = uniqueKey.toString();
+							break;
+
 					}
 				}
 			}
 		} catch (XMLStreamException | FileNotFoundException e) {
 			throw new PanlGenerateException(
-					"Could not adequately parse the '" + schema.getAbsolutePath() + "' solr schema file.");
+					"Could not adequately parse the '" + schema.getAbsolutePath() + "' solr schema file, sorry...");
 		}
 	}
 
