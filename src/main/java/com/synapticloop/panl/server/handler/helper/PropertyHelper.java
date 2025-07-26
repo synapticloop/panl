@@ -59,8 +59,10 @@ public class PropertyHelper {
 	}
 
 	/**
-	 * <p>Return an integer value for the property.  If the property does not
-	 * exist or cannot be parsed to an int value, then the default is returned.</p>
+	 * <p>Return an integer value (or the default) for the property and output
+	 * logging if the value couldn't be parsed, or the default is used.  If the
+	 * property does not exist or cannot be parsed to an int value, then the
+	 * default is returned.</p>
 	 *
 	 * @param logger the logger to warn if there was an error
 	 * @param properties The properties file to look up the key in
@@ -74,7 +76,7 @@ public class PropertyHelper {
 		String property = null;
 		try {
 			property = properties.getProperty(key, null);
-			if (null == property) {
+			if (null == property || property.isEmpty()) {
 				logger.warn("Could not find the property with key '{}', setting it to the default value of '{}'", key, defaultValue);
 				return (defaultValue);
 			}
@@ -86,6 +88,50 @@ public class PropertyHelper {
 				property,
 				defaultValue);
 			return (defaultValue);
+		}
+	}
+
+	/**
+	 * <p>Return an integer value Return an integer value (or the default) for the
+	 * property.  If the property does not exist or cannot be parsed to an int
+	 * value, then the default is returned.</p>
+	 *
+	 * @param properties The properties file to look up the key in
+	 * @param key The key to look up
+	 * @param defaultValue The default value
+	 *
+	 * @return The parsed property (if it exists), or the default value if it
+	 * 		does not exist, or it cannot be parsed.
+	 */
+	public static Integer getIntProperty(Properties properties, String key, Integer defaultValue) {
+		String property = null;
+		try {
+			property = properties.getProperty(key, null);
+			if (null == property || property.isEmpty()) {
+				return (defaultValue);
+			}
+
+			return (Integer.parseInt(properties.getProperty(key)));
+		} catch (NumberFormatException e) {
+			return (defaultValue);
+		}
+	}
+	/**
+	 * <p>Get the property </p>
+	 *
+	 * @param properties The properties to look at
+	 * @param key The key to look up
+	 * @param defaultValue the default if the property is not set, or is empty
+	 *
+	 * @return the property value, or the default value if the value does not
+	 * exist, or is empty.
+	 */
+	public static String getProperty(Properties properties, String key, String defaultValue) {
+		String property = properties.getProperty(key, null);
+		if (null == property || property.isEmpty()) {
+			return(defaultValue);
+		} else {
+			return(property);
 		}
 	}
 }

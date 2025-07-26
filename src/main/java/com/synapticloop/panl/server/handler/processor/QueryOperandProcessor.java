@@ -27,23 +27,44 @@ package com.synapticloop.panl.server.handler.processor;
 import com.synapticloop.panl.server.handler.properties.CollectionProperties;
 import com.synapticloop.panl.server.handler.fielderiser.field.BaseField;
 import com.synapticloop.panl.server.handler.tokeniser.token.LpseToken;
+import com.synapticloop.panl.util.Constants;
 import org.apache.solr.client.solrj.response.QueryResponse;
 import org.json.JSONObject;
 import java.util.Map;
 import java.util.List;
 
+/**
+ * <p>This process is used for the Query Operand processing it to the response
+ * Panl object.</p>
+ *
+ * @author Synapticloop
+ */
 public class QueryOperandProcessor extends Processor {
 
+	/**
+	 * <p>Instantiate the Query Operand Processor</p>
+	 *
+	 * @param collectionProperties The collection properties for this processor
+	 */
 	public QueryOperandProcessor(CollectionProperties collectionProperties) {
 		super(collectionProperties);
 	}
 
+	/**
+	 * <p>Process the Query Operand to a JSON object which will include everything
+	 * that is required to generate the links for the query operand.</p>
+	 *
+	 * @param panlTokenMap The map of LPSE codes to the list of tokens
+	 * @param queryResponse The Solr query response
+	 *
+	 * @return The JSONObject which contains the links for the Panl object
+	 */
 	public JSONObject processToObject(Map<String, List<LpseToken>> panlTokenMap, QueryResponse queryResponse) {
 		String before = "";
 		String panlParamQueryOperand = collectionProperties.getPanlParamQueryOperand();
 
 		JSONObject jsonObject = new JSONObject();
-		StringBuilder lpseUri = new StringBuilder(FORWARD_SLASH);
+		StringBuilder lpseUri = new StringBuilder(Constants.FORWARD_SLASH);
 		StringBuilder lpseCode = new StringBuilder();
 
 		for (BaseField lpseField : collectionProperties.getLpseFields()) {
@@ -56,12 +77,12 @@ public class QueryOperandProcessor extends Processor {
 			}
 		}
 
-		lpseCode.append(FORWARD_SLASH);
+		lpseCode.append(Constants.FORWARD_SLASH);
 
 		String finalBefore = lpseUri + before + collectionProperties.getPanlParamQueryOperand();
 
-		jsonObject.put(JSON_KEY_OR, finalBefore + "-" + lpseCode);
-		jsonObject.put(JSON_KEY_AND, finalBefore + "+" + lpseCode);
+		jsonObject.put(Constants.Json.Panl.OR, finalBefore + "-" + lpseCode);
+		jsonObject.put(Constants.Json.Panl.AND, finalBefore + "+" + lpseCode);
 
 		return (jsonObject);
 	}

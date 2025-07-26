@@ -26,6 +26,7 @@ package com.synapticloop.panl.server.handler;
 
 import com.synapticloop.panl.server.handler.properties.PanlProperties;
 import com.synapticloop.panl.server.handler.webapp.util.ResourceHelper;
+import com.synapticloop.panl.util.Constants;
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
 import org.apache.http.entity.StringEntity;
@@ -33,11 +34,20 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 import org.slf4j.Logger;
 
-import static com.synapticloop.panl.server.handler.webapp.util.ResourceHelper.*;
-
+/**
+ * <p>The base response handler for all incoming requests to Panl</p>
+ *
+ * @author Synapticloop
+ */
 public abstract class BaseResponseHandler {
 
+	/**
+	 * <p>The Panl properties driving the responses</p>
+	 */
 	protected final PanlProperties panlProperties;
+	/**
+	 * <p>Pre-built valid URLs object</p>
+	 */
 	protected JSONArray validUrls = new JSONArray();
 
 	/**
@@ -72,24 +82,24 @@ public abstract class BaseResponseHandler {
 		getLogger().error("Internal server error, message was '{}'", exception.getMessage(), exception);
 		response.setStatusCode(HttpStatus.SC_INTERNAL_SERVER_ERROR);
 		JSONObject jsonObject = new JSONObject();
-		jsonObject.put(JSON_KEY_ERROR, true);
-		jsonObject.put(JSON_KEY_STATUS, HttpStatus.SC_INTERNAL_SERVER_ERROR);
+		jsonObject.put(Constants.Json.Response.ERROR, true);
+		jsonObject.put(Constants.Json.Response.STATUS, HttpStatus.SC_INTERNAL_SERVER_ERROR);
 		if (panlProperties.getUseVerbose500Messages()) {
-			jsonObject.put(JSON_KEY_MESSAGE,
+			jsonObject.put(Constants.Json.Response.MESSAGE,
 				String.format("Class: %s, message: %s.",
 					exception.getClass().getCanonicalName(),
 					exception.getMessage()));
 
 			response.setEntity(new StringEntity(jsonObject.toString(), ResourceHelper.CONTENT_TYPE_JSON));
 		} else {
-			jsonObject.put(JSON_KEY_MESSAGE, JSON_VALUE_MESSAGE_500);
+			jsonObject.put(Constants.Json.Response.MESSAGE, Constants.Json.Response.JSON_VALUE_MESSAGE_500);
 		}
 	}
 
 	/**
 	 * <p>Set the response as a 404 status code, also checking to see whether
-	 * verbose messaging is set.  If so, it will add in the <code>valid_urls</code> JSON object to the response as
-	 * well.</p>
+	 * verbose messaging is set.  If so, it will add in the <code>valid_urls</code>
+	 * JSON object to the response as well.</p>
 	 *
 	 * <p><strong>NOTE:</strong> This will set the response code and body, but not
 	 * return it.</p>
@@ -101,17 +111,39 @@ public abstract class BaseResponseHandler {
 
 		JSONObject jsonObject = new JSONObject();
 
-		jsonObject.put(JSON_KEY_ERROR, true);
-		jsonObject.put(JSON_KEY_STATUS, HttpStatus.SC_NOT_FOUND);
+		jsonObject.put(Constants.Json.Response.ERROR, true);
+		jsonObject.put(Constants.Json.Response.STATUS, HttpStatus.SC_NOT_FOUND);
 		if (panlProperties.getUseVerbose404Messages()) {
-			jsonObject.put(JSON_KEY_MESSAGE, PanlDefaultHandler.JSON_VALUE_MESSAGE);
-			jsonObject.put(JSON_KEY_VALID_URLS, validUrls);
+			jsonObject.put(Constants.Json.Response.MESSAGE, PanlDefaultHandler.JSON_VALUE_MESSAGE);
+			jsonObject.put(Constants.Json.Response.VALID_URLS, validUrls);
 		} else {
-			jsonObject.put(JSON_KEY_MESSAGE, JSON_VALUE_MESSAGE_404);
+			jsonObject.put(Constants.Json.Response.MESSAGE, Constants.Json.Response.JSON_VALUE_MESSAGE_404);
 		}
 
 		response.setEntity(
 			new StringEntity(jsonObject.toString(),
 				ResourceHelper.CONTENT_TYPE_JSON));
+	}
+
+	/**
+	 * <p>Set the response as a 503 status code, there is no verbose messaging
+	 * flag for this as the Solr server has gone away :(</p>
+	 *
+	 * <p><strong>NOTE:</strong> This will set the response code and body, but not
+	 * return it.</p>
+	 *
+	 * @param response The response object
+	 */
+	protected void set503ResponseMessage(HttpResponse response) {
+		response.setStatusCode(HttpStatus.SC_SERVICE_UNAVAILABLE);
+
+		JSONObject jsonObject = new JSONObject();
+
+		jsonObject.put(Constants.Json.Response.ERROR, true);
+		jsonObject.put(Constants.Json.Response.STATUS, HttpStatus.SC_SERVICE_UNAVAILABLE);
+
+		response.setEntity(
+				new StringEntity(jsonObject.toString(),
+						ResourceHelper.CONTENT_TYPE_JSON));
 	}
 }

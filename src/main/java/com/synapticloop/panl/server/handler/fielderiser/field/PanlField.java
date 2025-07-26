@@ -115,11 +115,18 @@ public class PanlField extends BaseField {
 	}
 
 	@Override protected void logDetails() {
-		getLogger().info("[ Solr/Panl '{}/{}' ] Mapping Solr field name '{}' to panl key '{}', LPSE length {}",
+		getLogger().info("[ Solr/Panl '{}/{}' ] Mapping Solr field name '{}' to Panl type '{}', lpse code '{}', LPSE " +
+						"length {}",
 				solrCollection,
 				panlCollectionUri,
 				solrFieldName,
+				getPanlFieldType(),
 				lpseCode,
 				lpseLength);
 	}
+
+	@Override public String getPanlFieldType() {
+		return("FIELD");
+	}
+
 }

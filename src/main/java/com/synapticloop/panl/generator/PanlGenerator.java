@@ -26,8 +26,9 @@ package com.synapticloop.panl.generator;
 
 import com.synapticloop.panl.exception.PanlGenerateException;
 import com.synapticloop.panl.generator.bean.PanlCollection;
+import com.synapticloop.panl.generator.bean.field.BasePanlField;
 import com.synapticloop.panl.generator.util.PropertiesMerger;
-import com.synapticloop.panl.server.handler.properties.PanlProperties;
+import com.synapticloop.panl.util.Constants;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -35,6 +36,8 @@ import java.io.*;
 import java.nio.file.FileSystems;
 import java.nio.file.Files;
 import java.util.*;
+
+import static com.synapticloop.panl.util.Constants.Property.Panl.*;
 
 /**
  * <p>This is the generator for both the panl.properties configuration file
@@ -46,26 +49,18 @@ import java.util.*;
 public class PanlGenerator {
 	private static final Logger LOGGER = LoggerFactory.getLogger(PanlGenerator.class);
 
-	public static final String TEMPLATE_LOCATION_COLLECTION_PANL_PROPERTIES = "/panl_collection_url.panl.properties" +
-		".template";
+	public static final String TEMPLATE_LOCATION_COLLECTION_PANL_PROPERTIES = "/panl_collection_url.panl.properties.template";
 	public static final String TEMPLATE_LOCATION_PANL_PROPERTIES = "/panl.properties.template";
 
-	public static final String PANL_PARAM_QUERY = "panl.param.query";
-	public static final String PANL_PARAM_SORT = "panl.param.sort";
-	public static final String PANL_PARAM_PAGE = "panl.param.page";
-	public static final String PANL_PARAM_NUMROWS = "panl.param.numrows";
-	public static final String PANL_PARAM_QUERY_OPERAND = "panl.param.query.operand";
-	public static final String PANL_PARAM_PASSTHROUGH = "panl.param.passthrough";
-
 	private final String propertiesFileLocation;
-	private final String schemaFileLocations;
+	private final String schemaFileLocation;
 	private final String collectionPropertiesOutputDirectory;
 
 	/**
 	 * <p>The list of schemas to parse and add to the panl.properties file which
 	 * will be output to the '$panl.panlCollections' property.</p>
 	 */
-	private final List<File> schemasToParse = new ArrayList<>();
+	private File schemaToParse;
 	/**
 	 * <p>The list of panlCollections (parsed from the Solr schemas) to convert.</p>
 	 */
@@ -78,74 +73,112 @@ public class PanlGenerator {
 	 * <p>A map of Panl params, keyed on param property:param code.</p>
 	 */
 	private final Map<String, String> panlReplacementPropertyMap = new LinkedHashMap<>();
-
+	/**
+	 * <p>A map of currently registered solr fields names and their Panl LPSE codes
+	 * (if a previous file was found)  key:value is solr_field_name:base_panl_field</p>
+	 */
+	private final Map<String, BasePanlField> existingSolrMappings = new HashMap<>();
 	/**
 	 * <p>Instantiate the Panl generator.</p>
 	 *
-	 * @param propertiesFileLocation The location of the output for the properties file
-	 * @param schemaFileLocations The comma separated list of Solr schema file locations
-	 * @param shouldOverwrite If true, this will overwrite the panl.properties file and the collection.panl.properties
-	 * 	file
+	 * @param propertiesFileLocation The location of the output for the properties
+	 *   file
+	 * @param schemaFileLocation The comma separated list of Solr schema file
+	 *   locations
+	 * @param shouldOverwrite If true, this will overwrite the panl.properties
+	 *   file and the collection.panl.properties 	file
 	 *
-	 * @throws PanlGenerateException If there was a problem finding the files to parse, generating the files
+	 * @throws PanlGenerateException If there was a problem finding the files to
+	 *   parse, generating the files
 	 */
 	public PanlGenerator(
 		String propertiesFileLocation,
-		String schemaFileLocations,
+		String schemaFileLocation,
 		boolean shouldOverwrite) throws PanlGenerateException {
 		this.propertiesFileLocation = propertiesFileLocation;
-		this.schemaFileLocations = schemaFileLocations;
+		this.schemaFileLocation = schemaFileLocation;
 
-		if (!shouldOverwrite) {
-			checkPropertiesFileLocation();
+
+		// load up the defaults
+		// TODO - this should all be done either with a properties file or not...
+		panlReplacementPropertyMap.put(SOLRJ_CLIENT, "CloudSolrClient");
+		panlReplacementPropertyMap.put(SOLR_SEARCH_SERVER_URL, "http://localhost:8983/solr,http://localhost:7574/solr");
+		panlReplacementPropertyMap.put(PANL_RESULTS_TESTING_URLS, "true");
+		panlReplacementPropertyMap.put(PANL_STATUS_404_VERBOSE, "true");
+		panlReplacementPropertyMap.put(PANL_STATUS_500_VERBOSE, "true");
+		panlReplacementPropertyMap.put(PANL_DECIMAL_POINT, "true");
+		panlReplacementPropertyMap.put(PANL_PARAM_PASSTHROUGH_CANONICAL, "false");
+		panlReplacementPropertyMap.put(PANL_REMOVE_SOLR_JSON_KEYS, "false");
+		panlReplacementPropertyMap.put(PANL_SERVER_EXTRA, "{}");
+
+
+		File propertiesFile = new File(propertiesFileLocation);
+		if (propertiesFile.exists()) {
+			if(!shouldOverwrite) {
+				throw new PanlGenerateException(
+						"Properties file '" +
+								this.propertiesFileLocation +
+								"' exists, and we are not overwriting.  " +
+								"Use the '-overwrite true' command line option to overwrite this file.");
+			}
 		}
+
+		// load up the properties file - override any default properties
+		Properties properties = new Properties();
+		try {
+			properties.load(new BufferedReader(new FileReader(propertiesFile)));
+		} catch(IOException ignored) {
+		}
+
+
+		// now override the properties
+		overrideDefaultProperty(properties, SOLRJ_CLIENT, "CloudSolrClient");
+		overrideDefaultProperty(properties, SOLR_SEARCH_SERVER_URL, "http://localhost:8983/solr,http://localhost:7574/solr");
+		overrideDefaultProperty(properties, PANL_RESULTS_TESTING_URLS, "true");
+		overrideDefaultProperty(properties, PANL_STATUS_404_VERBOSE, "true");
+		overrideDefaultProperty(properties, PANL_STATUS_500_VERBOSE, "true");
+		overrideDefaultProperty(properties, PANL_DECIMAL_POINT, "true");
+		overrideDefaultProperty(properties, PANL_PARAM_PASSTHROUGH_CANONICAL, "false");
+		overrideDefaultProperty(properties, PANL_REMOVE_SOLR_JSON_KEYS, "false");
+		overrideDefaultProperty(properties, PANL_SERVER_EXTRA, "{}");
+
 		File file = new File(propertiesFileLocation);
 		this.collectionPropertiesOutputDirectory = file.getParentFile().getAbsolutePath();
 		checkSchemaFileLocations();
-
-		panlReplacementPropertyMap.put("solrj.client", "CloudSolrClient");
-		panlReplacementPropertyMap.put("solr.search.server.url", "http://localhost:8983/solr,http://localhost:7574/solr");
-		panlReplacementPropertyMap.put("panl.results.testing.urls", "true");
-		panlReplacementPropertyMap.put("panl.status.404.verbose", "true");
-		panlReplacementPropertyMap.put("panl.status.500.verbose", "true");
-		panlReplacementPropertyMap.put("panl.decimal.point", "true");
-		panlReplacementPropertyMap.put("panl.param.passthrough.canonical", "false");
-
 	}
 
+	private void overrideDefaultProperty(Properties properties, String key, String defaultValue) {
+		String property = properties.getProperty(key, null);
+		if(null != property) {
+			System.out.println(
+					"Found an existing property for  key '" +
+							key +
+							"' with value '" +
+							property +
+							"', overriding" +
+							" default of '" +
+							defaultValue +
+							"'."
+					);
+			panlReplacementPropertyMap.put(key, properties.getProperty(key, defaultValue));
+		} else {
+			System.out.println("Could not find default property for key '" + key + "', using '" + defaultValue +"'.");
+		}
+	}
 	/**
 	 * <p>Check the location of the schema file.</p>
 	 *
 	 * @throws PanlGenerateException If the schema file does not exist, or cannot be read
 	 */
 	private void checkSchemaFileLocations() throws PanlGenerateException {
-		for (String schemaFileLocation : this.schemaFileLocations.split(",")) {
-			File schemaFile = new File(schemaFileLocation);
-			if (!schemaFile.exists() & !schemaFile.canRead()) {
-				throw new PanlGenerateException(
-					"Could not find or read the '" +
-						schemaFile.getAbsolutePath() +
-						"' file, exiting...");
-			} else {
-				schemasToParse.add(schemaFile);
-			}
-		}
-	}
-
-	/**
-	 * <p>Check for the location of the properties file to ensure that it does
-	 * not exist.</p>
-	 *
-	 * @throws PanlGenerateException If the properties file exists
-	 */
-	private void checkPropertiesFileLocation() throws PanlGenerateException {
-		File propertiesFile = new File(propertiesFileLocation);
-		if (propertiesFile.exists()) {
+		File schemaFile = new File(schemaFileLocation);
+		if (!schemaFile.exists() & !schemaFile.canRead()) {
 			throw new PanlGenerateException(
-				"Properties file '" +
-					this.propertiesFileLocation +
-					"' exists, and we are not overwriting.  " +
-					"Use the '-overwrite true' command line option to overwrite this file.");
+				"Could not find or read the '" +
+					schemaFile.getAbsolutePath() +
+					"' file, exiting...");
+		} else {
+			schemaToParse = schemaFile;
 		}
 	}
 
@@ -194,14 +227,13 @@ public class PanlGenerator {
 		getAndValidateParameterInput("The URI path passthrough", PANL_PARAM_PASSTHROUGH, "z", null);
 
 
-		for (File schema : schemasToParse) {
-			panlCollections.add(new PanlCollection(schema, panlReplacementPropertyMap));
-		}
+		panlCollections.add(new PanlCollection(schemaToParse, panlReplacementPropertyMap));
 
 		// now we have all panlCollections parsed
 		// time to go through them and generate the panl.properties file
 
 		generatePanlDotProperties();
+
 		for (PanlCollection panlCollection : panlCollections) {
 			generateCollectionDotPanlDotProperties(panlCollection);
 		}
@@ -227,11 +259,16 @@ public class PanlGenerator {
 	 *
 	 * @return The inputted parameter
 	 */
-	private String getAndValidateParameterInput(String description, String panlParamProperty, String defaultValue,
-		String errorPrompt) {
+	private String getAndValidateParameterInput(
+			String description,
+			String panlParamProperty,
+			String defaultValue,
+			String errorPrompt) {
+
 		if (null != errorPrompt) {
 			System.out.printf("Invalid value. %s Please try again.\n", errorPrompt);
 		}
+
 		System.out.printf(
 			"Enter the 1 character property value for '%s' (%s), default [%s]: ",
 			panlParamProperty,
@@ -288,7 +325,7 @@ public class PanlGenerator {
 		for (PanlCollection panlCollection : panlCollections) {
 			String niceCollectionName = panlCollection.getCollectionName().toLowerCase().replaceAll("[^a-z0-9]", "-");
 			collectionPropertyFiles
-				.append(PanlProperties.PROPERTY_KEY_PREFIX_PANL_COLLECTION)
+				.append(Constants.Property.Panl.PANL_COLLECTION)
 				.append(niceCollectionName)
 				.append("=")
 				.append(niceCollectionName)
@@ -321,7 +358,8 @@ public class PanlGenerator {
 	}
 
 	/**
-	 * <p>Generate the collection_uri.panl.properties file.</p>
+	 * <p>Generate the <code>&lt;panl_collection_url&gt;.panl.properties</code>
+	 * file.</p>
 	 *
 	 * @param panlCollection The panl collection object to generate the file with
 	 */
@@ -338,7 +376,10 @@ public class PanlGenerator {
 
 			panlReplacementPropertyMap.put("panl.lpse.length", panlCollection.getLpseLength() + "");
 			panlReplacementPropertyMap.put("panl.lpse.fields", panlCollection.getPanlProperty("panl.lpse.fields"));
+
 			panlReplacementPropertyMap.put("panl.lpse.order", panlCollection.getPanlProperty("panl.lpse.order"));
+			panlReplacementPropertyMap.put("panl.lpse.facetorder", panlCollection.getPanlProperty("panl.lpse.facetorder"));
+
 			panlReplacementPropertyMap.put("panl.results.fields.default", panlCollection.getPanlProperty("panl.results.fields.default"));
 			panlReplacementPropertyMap.put("panl.results.fields.firstfive", panlCollection.getPanlProperty("panl.results.fields.firstfive"));
 			panlReplacementPropertyMap.put("panl.collections", panlCollection.getPanlProperty("panl.collections"));

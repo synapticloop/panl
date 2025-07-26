@@ -104,4 +104,9 @@ public class PanlNumRowsField extends BasePrefixSuffixField {
 				panlCollectionUri,
 				lpseCode);
 	}
+
+	@Override public String getPanlFieldType() {
+		return("NUM ROWS");
+	}
+
 }

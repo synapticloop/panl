@@ -21,6 +21,9 @@ $(document).ready(function () {
 	}
 
 	availableCollections.append("<br />")
+	$("#collection_toggle").on("click", function (event) {
+		$("#collection_holder").toggle();
+	});
 
 	// test to see whether we are ready to invoke the panl search service
 	var uris = window.location.pathname.split("/");
@@ -176,9 +179,10 @@ function populatePanlResults(panlJsonData) {
 	addSearchFieldCheckboxes(panlJsonData.panl.search)
 	addQueryOperand(panlJsonData.panl.query_operand);
 	addSortingOptions(panlJsonData.panl.sorting, panlJsonData.panl.active);
-	addPagination(panlJsonData.panl.pagination);
+	addPagination(panlJsonData.panl.pagination, panlJsonData.panl.extra);
 	addActiveFilters(panlJsonData.panl.active, panlJsonData.panl.sorting.remove_uri);
 	addAvailableFilters(panlJsonData.panl.available, panlJsonData.panl.active);
+	addMoreLikeThis(documents);
 }
 
 function addSearchFieldCheckboxes(searchJson) {
@@ -186,6 +190,13 @@ function addSearchFieldCheckboxes(searchJson) {
 	console.log(searchJson);
 
 	$("#searchfield").val(searchJson.keyword);
+
+	// now add the radio box selection
+	if(searchJson.query_operand_selected === "-") {
+		$("#op_OR").prop("checked", true);
+	} else {
+		$("#op_AND").prop("checked", true);
+	}
 
 	if(searchJson.fields !== undefined) {
 		let first = true;
@@ -335,7 +346,7 @@ function addSortingOptions(sortingObject, activeObject) {
 	}
 }
 
-function addPagination(paginationObject) {
+function addPagination(paginationObject, extraObject) {
 	console.log("[ RETURNED PANL PAGINATION JSON OBJECT ]")
 	console.log(paginationObject);
 	$("#page_num").append(paginationObject.page_num);
@@ -365,10 +376,24 @@ function addPagination(paginationObject) {
 		$("#previous").append("&laquo; PREV");
 	}
 
-	// now for the per_page_uris
-	addPerPage(paginationObject, "3");
-	addPerPage(paginationObject, "5");
-	addPerPage(paginationObject, "10");
+	var foundExtra = false;
+	if(undefined !== extraObject) {
+		// we will look into the num_per_page object
+		if(extraObject.num_per_page !== undefined) {
+			for (const index in extraObject.num_per_page) {
+
+				addPerPage(paginationObject, extraObject.num_per_page[index]);
+			}
+			foundExtra = true;
+		}
+	}
+
+	if(!foundExtra) {
+		// now for the per_page_uris
+		addPerPage(paginationObject, "3");
+		addPerPage(paginationObject, "5");
+		addPerPage(paginationObject, "10");
+	}
 }
 
 function addPerPage(paginationObject, number) {
@@ -392,9 +417,9 @@ function addActiveFilters(activeObject, removeUri) {
 		active.append("<li><a href=\"" + panlResultsViewerUrl +
 				$("#collection").text() +
 				activeObject.query.remove_uri +
-				"\"><img class=\"remove\" src=\"/webapp/static/remove.png\" title=\"Remove this facet\"></a>&nbsp;" +
+				"\"><img class=\"remove\" src=\"/webapp/static/remove.png\" title=\"Remove this facet\">&nbsp;" +
 				activeObject.query.value +
-				"</li><li><hr /></li>");
+				"</a></li><li><hr /></li>");
 	}
 
 	// now for the facets
@@ -461,7 +486,8 @@ function addActiveFacets(facets) {
 					$("#collection").text() +
 					facet.remove_uri +
 					"\"><img class=\"remove\" src=\"/webapp/static/remove.png\" title=\"Remove this facet\"/>" +
-					decodePanl(facet.encoded) +
+					(facet.extra !== undefined && facet.extra.swatch === true ? "<img class='add' src='/webapp/static/swatches/" + facet.value + ".png'/>": "") +
+					(facet.extra !== undefined && facet.extra.short_value === true ? facet.value : decodePanl(facet.encoded)) +
 					"</a></li>");
 
 			if (facet.is_boolean_facet) {
@@ -816,8 +842,16 @@ function generateFacetHTML(facet) {
 				facet.uris.before +
 				((facet.value_separator !== undefined) ? value.encoded_multi : value.encoded) +
 				facet.uris.after +
-				"\"><img class=\"add\" src=\"/webapp/static/add.png\" title=\"Add facet\">" +
-				(facet.is_multivalue && value.encoded_multi !== undefined ? decodePanl(value.encoded_multi) : decodePanl(value.encoded)) +"</a>";
+				"\"><img class=\"add\" src=\"/webapp/static/add.png\" title=\"Add facet\"/>" +
+				(facet.extra !== undefined && facet.extra.swatch === true ? "<img class='add' src='/webapp/static/swatches/" + value.value + ".png'/>": "") +
+				(
+						facet.extra !== undefined && facet.extra.short_value === true ?
+								value.value : (
+										facet.is_multivalue && value.encoded_multi !== undefined ?
+												decodePanl(value.encoded_multi) :
+												decodePanl(value.encoded)
+								)
+				) + "</a>";
 
 		if (!facet.is_or_facet) {
 			innerUl += "&nbsp;(" + value.count + ")";
@@ -870,4 +904,53 @@ function updateDateRangeLink(facet) {
 			encodePanl(text) +
 			facet.uris.after
 	);
+}
+
+function addMoreLikeThis(documentsObject) {
+	if(documentsObject.length === 1) {
+		// we are going to attempt to do a more like this on it
+		if(documentsObject[0].id) {
+			var moreLikeThisUrl = "/panl-more-like-this" +
+					$("#collection").text() +
+					"/" +
+					documentsObject[0].id;
+
+
+			$.ajax({
+				url: moreLikeThisUrl,
+				success: function (panlJsonData) {
+					console.log("[ RETURNED MORE LIKE THIS JSON OBJECT ]")
+					console.log(panlJsonData);
+
+					// now go through the documents and print the more like this...
+					addMoreLikeThisDocuments(panlJsonData);
+				},
+				error: function(request, status, errorThrown) {
+					// do nothing
+				}
+			});
+
+		}
+	}
+}
+
+function addMoreLikeThisDocuments(panlJsonData) {
+	$("#morelikethis").append("<h1>More Like This</h1>")
+	let documents;
+	if (panlJsonData.response.docs !== undefined) {
+		documents = panlJsonData.response.docs;
+	} else {
+		// for version 8 anbd below
+		documents = panlJsonData.response;
+	}
+
+	for (const document of documents) {
+		var innerList = "";
+
+		for (const fieldName in document) {
+			innerList += "<dt>" + panlJsonData.panl.fields[fieldName] + " (" + fieldName + ")</dt>";
+			innerList += "<dd>" + document[fieldName] + "</dd>";
+		}
+		$("#morelikethis").append("<dl>" + innerList + "</dl>");
+	}
 }

@@ -9,8 +9,12 @@ a:link, a:visited, a:hover, a:active { color: blue; }
 img.add, img.remove, img.invert { margin-bottom: -6px;}
 a.invert { color: #070a9b; text-decoration: none; background: #070a9b2e; padding: 2px 4px; border-radius: 6px; margin: 2px; }
 a img { padding-right: 4px; }
-
+#heading { background-color: #efefef; border-bottom: 1px solid #afafaf; padding: 6px 0;}
 ul#active li strong { margin: 15px 0 4px 0; border: 1px solid lightgray; border-left: 6px solid lightgray; display: block; padding-left: 4px; background-color: #efefef80; }
+ul#available li ul { max-height: 240px; overflow: auto; border-top: 1px solid #a5a5a5; margin-top: 4px; padding-top: 6px;
+}
+
+#collection_holder { display: none; }
 
 dt em, dd em { font-style: normal; border: 2px solid black; padding: 0 4px; margin: 4px; background-color: #000; color: #fff; border-radius: 8px; }
 p { line-height: 1.8; text-align:justify; text-justify:auto; }
@@ -38,15 +42,23 @@ div#container { width: 1024px; margin: 0 auto; }
 div#content { float: right; width: 700px; }
 
 /* navigation */
-div#navigation { margin-bottom: 104px; float: left; width: 300px; }
 div#navigation li { list-style: none; }
-div#navigation li.heading { border-top: 2px dotted dimgray; padding: 10px 0 10px 0; }
+div#navigation li.heading { border-top: 2px dotted dimgray; padding: 10px 0 10px 5px; }
 div#navigation li.heading:nth-child(odd) { background-color: #fafafa; }
 .navheading { background-color: #efefef; border-left: 6px solid black; }
 
-#search-checkboxes { padding-top: 10px; }
-#search-checkboxes p { padding: 0; margin: 0; }
-
+#qop, #search-checkboxes {
+    margin-top: 8px;
+    padding-left: 6px;
+    border-left: 4px double black;
+}
+#qop p, #search-checkboxes p {
+    font-weight: bold;
+    padding-left: 0;
+    margin-bottom: 4px;
+    margin-top: 4px;
+}
+.Cell:first-child {padding-right: 12px; }
 /* document (i.e. results) list */
 #documents dl:nth-child(odd) { background-color: #efefef; }
 #documents { margin-bottom: 12px; }
@@ -66,7 +78,7 @@ div#footer p { text-align: center; text-justify: unset; }
 #timings { padding-top: 12px; border-top: 1px solid #efefef; }
 
 /* inputs */
-input#searchfield { width: 50%; }
+input#searchfield { width: 80%; }
 input, button, select { font-family: "Libre Baskerville", serif; padding: 4px; }
 input.date_number { width: 10%; margin: 0 8px; text-align: right; }
 

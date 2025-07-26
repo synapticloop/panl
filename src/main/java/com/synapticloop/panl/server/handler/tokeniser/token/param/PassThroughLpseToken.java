@@ -31,6 +31,10 @@ import java.net.URLDecoder;
 import java.nio.charset.StandardCharsets;
 import java.util.StringTokenizer;
 
+/**
+ *
+ * @author Synapticloop
+ */
 public class PassThroughLpseToken extends LpseToken {
 	public PassThroughLpseToken(
 			CollectionProperties collectionProperties,
@@ -46,7 +50,8 @@ public class PassThroughLpseToken extends LpseToken {
 	}
 
 	@Override public String explain() {
-		return ("PANL [  VALID  ] <passthrough>     LPSE code '" +
+		return ("PANL [  VALID  ]" +
+				" <passthrough>        LPSE code '" +
 				this.lpseCode +
 				"' with value '" +
 				value +

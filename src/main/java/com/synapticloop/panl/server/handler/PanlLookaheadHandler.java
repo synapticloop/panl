@@ -26,9 +26,11 @@ package com.synapticloop.panl.server.handler;
 
 import com.synapticloop.panl.server.client.PanlClient;
 import com.synapticloop.panl.server.handler.fielderiser.field.param.PanlQueryField;
+import com.synapticloop.panl.server.handler.helper.TimingsHelper;
 import com.synapticloop.panl.server.handler.properties.CollectionProperties;
 import com.synapticloop.panl.server.handler.properties.PanlProperties;
 import com.synapticloop.panl.server.handler.webapp.util.ResourceHelper;
+import com.synapticloop.panl.util.Constants;
 import org.apache.http.HttpRequest;
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
@@ -112,6 +114,7 @@ public class PanlLookaheadHandler extends BaseResponseHandler implements HttpReq
 
 		// now check the CaFUP
 		String[] paths = uri.split("/");
+		// TODO - this may be a array index out of bounds.... need to check first...
 		CollectionRequestHandler collectionRequestHandler = validCollectionsMap.get(paths[2]);
 		if(paths.length < 4 || null == collectionRequestHandler) {
 			set404ResponseMessage(response);
@@ -202,7 +205,7 @@ public class PanlLookaheadHandler extends BaseResponseHandler implements HttpReq
 			solrQuery.setQuery(thisQuery);
 
 			// add in the default query operation
-			solrQuery.setParam(SOLR_PARAM_Q_OP, collectionProperties.getSolrDefaultQueryOperand());
+			solrQuery.setParam(Constants.Parameter.Solr.Q_OP, collectionProperties.getSolrDefaultQueryOperand());
 
 			List<String> resultFieldsForName = collectionProperties.getResultFieldsForFieldSet(fieldSet);
 			if(null != resultFieldsForName) {
@@ -221,27 +224,27 @@ public class PanlLookaheadHandler extends BaseResponseHandler implements HttpReq
 			JSONObject panlObject = new JSONObject();
 			JSONObject timingsObject = new JSONObject();
 
-			solrJsonObject.remove(JSON_KEY_SOLR_RESPONSE_HEADER);
+			solrJsonObject.remove(Constants.Json.Solr.RESPONSE_HEADER);
 
 			long sendAndReceiveNanos = System.nanoTime() - startNanos - parseRequestNanos - buildRequestNanos;
 
 			long buildResponseTime = System.nanoTime() - startNanos;
 
 			// add in some statistics
-			timingsObject.put(JSON_KEY_PANL_PARSE_REQUEST_TIME, TimeUnit.NANOSECONDS.toMillis(parseRequestNanos));
-			timingsObject.put(JSON_KEY_PANL_BUILD_REQUEST_TIME, TimeUnit.NANOSECONDS.toMillis(buildRequestNanos));
-			timingsObject.put(JSON_KEY_PANL_SEND_REQUEST_TIME, TimeUnit.NANOSECONDS.toMillis(sendAndReceiveNanos));
+			timingsObject.put(Constants.Json.Panl.PARSE_REQUEST_TIME, TimeUnit.NANOSECONDS.toMillis(parseRequestNanos));
+			timingsObject.put(Constants.Json.Panl.BUILD_REQUEST_TIME, TimeUnit.NANOSECONDS.toMillis(buildRequestNanos));
+			timingsObject.put(Constants.Json.Panl.SEND_REQUEST_TIME, TimeUnit.NANOSECONDS.toMillis(sendAndReceiveNanos));
 
-			timingsObject.put(JSON_KEY_PANL_BUILD_RESPONSE_TIME, TimeUnit.NANOSECONDS.toMillis(buildResponseTime));
-			timingsObject.put(JSON_KEY_PANL_TOTAL_TIME, TimeUnit.NANOSECONDS.toMillis(
+			timingsObject.put(Constants.Json.Panl.BUILD_RESPONSE_TIME, TimeUnit.NANOSECONDS.toMillis(buildResponseTime));
+			timingsObject.put(Constants.Json.Panl.TOTAL_TIME, TimeUnit.NANOSECONDS.toMillis(
 				parseRequestNanos +
 					buildRequestNanos +
 					sendAndReceiveNanos +
 					buildResponseTime
 			));
 
-			panlObject.put(JSON_KEY_TIMINGS, timingsObject);
-			solrJsonObject.put(JSON_KEY_PANL, panlObject);
+			panlObject.put(Constants.Json.Panl.TIMINGS, timingsObject);
+			solrJsonObject.put(Constants.Json.Panl.PANL, panlObject);
 
 			response.setEntity(new StringEntity(solrJsonObject.toString(), ResourceHelper.CONTENT_TYPE_JSON));
 

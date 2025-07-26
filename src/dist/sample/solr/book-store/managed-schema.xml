@@ -114,17 +114,17 @@
 
   <field name="id" type="string" stored="true" indexed="true" required="true" multiValued="false" />
 
-  <field name="author" type="string" indexed="true" stored="true" multiValued="true" />
+  <field name="author" type="string" indexed="true" stored="true" multiValued="true" termVectors="true" />
   <field name="title" type="text_general" indexed="true" stored="true" multiValued="false" />
   <field name="description" type="text_general" indexed="true" stored="true" multiValued="false" />
   <field name="book_image" type="string" indexed="false" stored="true" multiValued="false" />
   <field name="buy_url" type="string" indexed="false" stored="true" multiValued="false" />
-  <field name="genre" type="string" indexed="true" stored="true" multiValued="true" />
+  <field name="genre" type="string" indexed="true" stored="true" multiValued="true" termVectors="true" />
   <field name="num_pages" type="pint" indexed="false" stored="true" multiValued="false" />
   <field name="first_published_year" type="pint" indexed="true" stored="true" multiValued="false" />
   <field name="language" type="string" indexed="true" stored="true" multiValued="false" />
   <field name="is_paperback" type="boolean" indexed="true" stored="true" multiValued="false" />
-  <field name="series" type="string" indexed="true" stored="true" multiValued="false" />
+  <field name="series" type="string" indexed="true" stored="true" multiValued="false" termVectors="true" />
   <field name="price" type="pfloat" indexed="true" stored="true" multiValued="false" />
   <field name="on_backorder" type="boolean" indexed="true" stored="true" multiValued="false" />
   <field name="speedy_delivery" type="boolean" indexed="true" stored="true" multiValued="false" />

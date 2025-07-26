@@ -32,6 +32,11 @@ import org.apache.solr.client.solrj.impl.CloudHttp2SolrClient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+/**
+ * <p>This class deals with connection the Panl Collection to the Solr Collection</p>
+ *
+ * @author Synapticloop
+ */
 public class CollectionHelper {
 	private static final Logger LOGGER = LoggerFactory.getLogger(CollectionHelper.class);
 
