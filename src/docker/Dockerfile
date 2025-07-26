@@ -30,7 +30,7 @@ RUN mkdir /archives/
 # ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~
 #   Download the Solr server and the Panl server from the local disk
 # ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~
-ADD https://www.apache.org/dyn/closer.lua/solr/solr/9.8.1/solr-9.8.1-slim.tgz?action=download /archives/solr-9.8.1-slim.tgz
+ADD https://www.apache.org/dyn/closer.lua/solr/solr/9.9.0/solr-9.9.0-slim.tgz?action=download /archives/solr-9.9.0-slim.tgz
 ADD build/distributions/${TAG}.tar /java-servers/
 
 
@@ -38,7 +38,7 @@ ADD build/distributions/${TAG}.tar /java-servers/
 #   Extract the Solr server (The Panl server is automatically extracted by the
 #    ADD command above
 # ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~
-RUN tar -xzvf /archives/solr-9.8.1-slim.tgz -C /java-servers/
+RUN tar -xzvf /archives/solr-9.9.0-slim.tgz -C /java-servers/
 
 # ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~
 #   1. Set up the linking for the Solr and Panl installation
@@ -48,7 +48,7 @@ RUN tar -xzvf /archives/solr-9.8.1-slim.tgz -C /java-servers/
 # ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~
 WORKDIR /java-servers/
 
-RUN ln -s solr-9.8.1-slim solr
+RUN ln -s solr-9.9.0-slim solr
 RUN ln -s ${TAG} panl
 
 RUN mkdir /java-servers/solr/mechanical-pencils/

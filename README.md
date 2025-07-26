@@ -510,7 +510,7 @@ Download the latest release of Synapticloop Panl
 
 [https://github.com/synapticloop/panl/releases](https://github.com/synapticloop/panl/releases)
 
-Download the latest version of Apache Solr - this book is using the `9.8.1-slim`
+Download the latest version of Apache Solr - this book is using the `9.9.0-slim`
 version
 
 [https://solr.apache.org/downloads.html](https://solr.apache.org/downloads.html)
