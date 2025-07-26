@@ -55,8 +55,8 @@ configurations {
 
 dependencies {
 	// solrj
-	implementation 'org.apache.solr:solr-solrj:9.8.0'
-	implementation 'org.apache.solr:solr-solrj-zookeeper:9.8.0'
+	implementation 'org.apache.solr:solr-solrj:9.9.0'
+	implementation 'org.apache.solr:solr-solrj-zookeeper:9.9.0'
 
 	// HTTP server
 	implementation 'org.eclipse.jetty.http2:http2-server:10.0.22'
@@ -84,7 +84,7 @@ dependencies {
 
 	// for the panl editor
 	implementation "com.formdev:flatlaf:3.5.1"
-	implementation 'org.apache.commons:commons-lang3:3.17.0'
+	implementation 'org.apache.commons:commons-lang3:3.18.0'
 
 
 	// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -177,8 +177,28 @@ tasks.register('copyLoggingFile') {
 	}
 }
 
+tasks.register('dockerWindows', Exec) {
+	commandLine "cmd.exe", "/C", "build-docker", "solr-panl-" + properties.getProperty("panl.solr.version") + "-" + properties.getProperty("panl.version")
+	dependsOn tasks.distTar
+}
+
+tasks.register('dockerLinux', Exec) {
+	commandLine "./build-docker.sh", "solr-panl-" + properties.getProperty("panl.solr.version") + "-" + properties.getProperty("panl.version")
+	dependsOn tasks.distTar
+}
+
 tasks.withType(Copy).configureEach {
 	duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+}
+
+import org.apache.tools.ant.taskdefs.condition.Os
+
+tasks.register('docker') {
+	if (Os.isFamily(Os.FAMILY_WINDOWS)) {
+		dependsOn('dockerWindows')
+	} else {
+		dependsOn('dockerLinux')
+	}
 }
 
 test {

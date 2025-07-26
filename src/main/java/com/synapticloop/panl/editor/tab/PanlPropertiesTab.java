@@ -31,6 +31,7 @@ import com.synapticloop.panl.editor.util.DialogHelper;
 import com.synapticloop.panl.generator.PanlGenerator;
 import com.synapticloop.panl.generator.util.PropertiesMerger;
 import com.synapticloop.panl.server.handler.properties.PanlProperties;
+import com.synapticloop.panl.util.Constants;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.StringUtils;
 
@@ -52,6 +53,7 @@ public class PanlPropertiesTab extends PropertiesTab {
 	private JButton buttonRemoveUrl;
 	private JButton buttonEditUrl;
 	private JButton buttonAddUrl;
+	private JButton buttonSaveFile = new JButton("Save file");
 	private JComboBox<String> comboBoxSolrJConnectors;
 	private JTextArea textAreaOriginal;
 	private JTextArea textAreaGenerated;
@@ -120,7 +122,7 @@ public class PanlPropertiesTab extends PropertiesTab {
 			if (returnVal == JOptionPane.OK_OPTION) {
 				solrUrlConnectionStrings.remove(listSolrURLs.getSelectedIndex());
 				listSolrURLs.repaint();
-				panlEditor.setIsEdited(true);
+				panlEditor.setIsEdited(true, buttonSaveFile);
 				generatePreview();
 			}
 		});
@@ -153,28 +155,46 @@ public class PanlPropertiesTab extends PropertiesTab {
 		optionsBox.add(getCheckbox(
 			"panl.results.testing.urls",
 			"Select this to enable the in-built testing URLs",
-			panlProperties.getHasPanlResultsTestingUrls()));
+			panlProperties.getHasPanlResultsTestingUrls(),
+			buttonSaveFile));
 		optionsBox.add(getCheckbox(
 			"panl.status.404.verbose",
 			"Select this to enable verbose 404 error messages",
-			panlProperties.getUseVerbose404Messages()));
+			panlProperties.getUseVerbose404Messages(),
+				buttonSaveFile));
 		optionsBox.add(getCheckbox(
 			"panl.status.500.verbose",
 			"Select this to enable verbose 500 error messages",
-			panlProperties.getUseVerbose500Messages()));
+			panlProperties.getUseVerbose500Messages(),
+				buttonSaveFile));
+
 		optionsBox.add(getCheckbox(
 			"panl.decimal.point",
 			"Select this to use the decimal point as a separator between the integer and fractional part",
-			PanlProperties.getIsDecimalPoint()));
+			PanlProperties.getIsDecimalPoint(),
+				buttonSaveFile));
+
+		optionsBox.add(getCheckbox(
+				"panl.remove.solr.json.keys",
+				"Select this to remove un-necessary or duplicated Solr JSON keys",
+				panlProperties.getRemoveSolrJsonKeys(),
+				buttonSaveFile));
 
 		optionsBox.add(getLabel("Output options"));
 		optionsBox.add(getHorizontalSeparator());
 		optionsBox.add(getCheckbox(
 			PROPERTY_INCLUDE_COMMENTS,
 			"Whether to include comments in the output",
-			true));
+			true,
+				buttonSaveFile));
 
 		optionsBox.add(Box.createRigidArea(new Dimension(10, 20)));
+//		buttonSaveFile.addActionListener(e -> {
+//			String newSolrUrl = DialogHelper.showTextEntryDialog("Enter Solr URL");
+//			addIfValidSolrURL(newSolrUrl);
+//		});
+		buttonSaveFile.setEnabled(false);
+		optionsBox.add(buttonSaveFile);
 		optionsBox.add(Box.createVerticalGlue());
 
 		optionsBox.add(Box.createVerticalGlue());
@@ -196,7 +216,7 @@ public class PanlPropertiesTab extends PropertiesTab {
 		Map<String, List<String>> panlCollectionsMap = panlEditor.getPanlProperties().getPanlCollectionsMap();
 		for (String key : panlCollectionsMap.keySet()) {
 			panlCollectionsProperty
-				.append(PanlProperties.PROPERTY_KEY_PREFIX_PANL_COLLECTION)
+				.append(Constants.Property.Panl.PANL_COLLECTION)
 				.append(key)
 				.append("=")
 				.append(StringUtils.join(panlCollectionsMap.get(key), ",\\\n    "))
@@ -241,7 +261,7 @@ public class PanlPropertiesTab extends PropertiesTab {
 				solrUrlConnectionStrings.add(newSolrUrl);
 				listSolrURLs.removeAll();
 				listSolrURLs.setListData(solrUrlConnectionStrings);
-				panlEditor.setIsEdited(true);
+				panlEditor.setIsEdited(true, buttonSaveFile);
 				generatePreview();
 			}
 		}

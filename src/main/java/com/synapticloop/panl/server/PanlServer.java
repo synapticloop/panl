@@ -34,6 +34,7 @@ import com.synapticloop.panl.server.handler.webapp.PanlResultsStaticHandler;
 import com.synapticloop.panl.server.handler.webapp.viewer.PanlResultsViewerHandler;
 import com.synapticloop.panl.server.handler.properties.PanlProperties;
 import com.synapticloop.panl.server.handler.properties.CollectionProperties;
+import com.synapticloop.panl.util.Constants;
 import org.apache.http.impl.bootstrap.HttpServer;
 import org.apache.http.impl.bootstrap.ServerBootstrap;
 import org.slf4j.Logger;
@@ -42,24 +43,24 @@ import org.slf4j.LoggerFactory;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Enumeration;
-import java.util.List;
-import java.util.Properties;
+import java.util.*;
 import java.util.concurrent.TimeUnit;
 
 /**
  * <p>This is the PANL server which parses the <code>panl.properties</code> file,
- * loads all the <code>collection.panl.properties</code> files.  If there are
- * any errors with either of the files, a PanlServerException will be thrown and
- * the server will refuse to start.</p>
+ * loads all the <code>&lt;panl_collection_url>.panl.properties</code> files.  If
+ * there are any errors with either of the files, a PanlServerException will be
+ * thrown and the server will refuse to start.</p>
  *
  * @author synapticloop
  */
 public class PanlServer {
 	private static final Logger LOGGER = LoggerFactory.getLogger(PanlServer.class);
 
-	public static final String PROPERTY_KEY_PANL_COLLECTION = "panl.collection.";
+	/**
+	 * <p>The look up set so that duplicate collections are not registered</p>
+	 */
+	private final Set<String> registeredCollections = new HashSet<>();
 
 	/**
 	 * <p>The location of the <code>panl.properties file</code>.
@@ -139,9 +140,9 @@ public class PanlServer {
 		Enumeration<Object> keys = properties.keys();
 		while (keys.hasMoreElements()) {
 			String key = (String) keys.nextElement();
-			if (key.startsWith(PROPERTY_KEY_PANL_COLLECTION)) {
+			if (key.startsWith(Constants.Property.Panl.PANL_COLLECTION)) {
 				// we have found a new collection
-				String solrCollection = key.substring(PROPERTY_KEY_PANL_COLLECTION.length());
+				String solrCollection = key.substring(Constants.Property.Panl.PANL_COLLECTION.length());
 
 				for (String propertyFileName : properties.getProperty(key).split(",")) {
 					Properties propertiesCollectionProperties = new Properties();
@@ -153,9 +154,18 @@ public class PanlServer {
 
 						String fileName = collectionPropertiesFile.getName();
 						// TODO - need a set to lookup so that there aren't multiple panl
-						// collection names bound
+						//   collection names bound
 
 						panlCollectionUri = fileName.substring(0, fileName.indexOf("."));
+						if(registeredCollections.contains(panlCollectionUri)) {
+							throw new PanlServerException("Collection '" + panlCollectionUri + "' is already registered.");
+						}
+						registeredCollections.add(panlCollectionUri);
+
+						if(panlCollectionUri.toLowerCase().startsWith("panl-")) {
+							throw new PanlServerException("Collection '" + panlCollectionUri + "' starts with the " +
+									"case-insensitive text 'panl-' which is disallowed.");
+						}
 
 						LOGGER.info("Found Solr collection named '{}' with properties file named '{}'.", solrCollection, fileName);
 
@@ -164,7 +174,8 @@ public class PanlServer {
 						collectionProperties = new CollectionProperties(
 								solrCollection,
 								panlCollectionUri,
-								propertiesCollectionProperties);
+								propertiesCollectionProperties,
+								panlProperties.getExtraJsonObject());
 
 
 						collectionPropertiesList.add(collectionProperties);
@@ -246,6 +257,7 @@ public class PanlServer {
 
 		if (panlProperties.getHasPanlResultsTestingUrls()) {
 			LOGGER.info("Panl testing URLs are active, binding the following:");
+
 			bootstrap.registerHandler("/webapp/static/*", new PanlResultsStaticHandler());
 			LOGGER.info("Binding testing URL: /webapp/static/*");
 
@@ -286,6 +298,13 @@ public class PanlServer {
 			new PanlLookaheadHandler(
 				panlProperties,
 				collectionRequestHandlers));
+
+		LOGGER.info("Binding More Like This (MLT) handler to URI path {}*", PanlMoreLikeThisHandler.PANL_URL_BINDING_MORE_LIKE_THIS);
+		bootstrap.registerHandler(
+				PanlMoreLikeThisHandler.PANL_URL_BINDING_MORE_LIKE_THIS + "*",
+				new PanlMoreLikeThisHandler(
+						panlProperties,
+						collectionRequestHandlers));
 
 
 		// finally register the collection and singlepagesearch handlers

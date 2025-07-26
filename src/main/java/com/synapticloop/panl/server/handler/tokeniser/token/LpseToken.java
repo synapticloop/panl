@@ -76,6 +76,10 @@ public abstract class LpseToken {
 	 */
 	protected String lpseCode;
 	/**
+	 * <p>The Solr field that this maps to</p>
+	 */
+	protected String solrField = null;
+	/**
 	 * <p>The original value </p>
 	 */
 	protected String originalValue;
@@ -229,17 +233,30 @@ public abstract class LpseToken {
 	 *   <li>Operand Tokens - only one operand is allowed.</li>
 	 *   <li>Page Number Tokens - the page number is ignored.</li>
 	 *   <li>Number Per Page Tokens - The number per page value is ignored.</li>
+	 *   <li>BOOLEAN Facet Tokens - you may only have one boolean value and the
+	 *       value is ignored.</li>
 	 * </ul>
+	 *
+	 * <p>In the above cases, the equivalence value will be:
+	 * <code>&lt;lpse_code&gt;/</code>.  You will need to reference the over-riding
+	 * methods in the subclasses to see the return value.</p>
 	 *
 	 * @return The equivalence token
 	 */
 	public String getEquivalenceValue() {
-		return (lpseCode + "/" + this.value);
+		if(getCanHaveMultiple()) {
+			return (lpseCode + "/" + this.value);
+		} else {
+			// as there cannot be multiple, the equivalence value is just the lpse
+			// code with a forward slash
+			return(lpseCode + "/");
+		}
 	}
 
 
 	/**
-	 * <p>Set whether this token is valid</p>
+	 * <p>Set whether this token is valid.  If the token is valid then it will be
+	 * passed through to the SOlr server.</p>
 	 *
 	 * @param isValid Whether this token is valid
 	 */

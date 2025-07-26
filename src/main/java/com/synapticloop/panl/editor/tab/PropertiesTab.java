@@ -50,7 +50,7 @@ public abstract class PropertiesTab {
 	}
 
 
-	protected JCheckBox getCheckbox(String propertyName, String tooltip, boolean selected) {
+	protected JCheckBox getCheckbox(String propertyName, String tooltip, boolean selected, JButton buttonSaveFile) {
 		JCheckBox jCheckBox = new JCheckBox(propertyName);
 		jCheckBox.setFont(FlatUIUtils.nonUIResource(UIManager.getFont("large.font")));
 		jCheckBox.putClientProperty(FLAT_LAF_STYLE_CLASS, "monospaced");
@@ -59,7 +59,7 @@ public abstract class PropertiesTab {
 		jCheckBox.setSelected(selected);
 		formValues.put(propertyName, selected);
 		jCheckBox.addItemListener(e -> {
-			panlEditor.setIsEdited(true);
+			panlEditor.setIsEdited(true, buttonSaveFile);
 			formValues.put(propertyName, jCheckBox.isSelected());
 			if(jCheckBox.getName().equals(PROPERTY_INCLUDE_COMMENTS)) {
 				Settings.setIncludeComments(panlEditor.getPanlDotPropertiesFile(), jCheckBox.isSelected());

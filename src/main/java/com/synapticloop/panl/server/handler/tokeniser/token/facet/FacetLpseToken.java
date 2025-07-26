@@ -74,8 +74,6 @@ import java.util.StringTokenizer;
 public class FacetLpseToken extends LpseToken {
 	public static final String TOKEN_TYPE = "facet";
 
-	private String solrField = null;
-	private String toValue = null;
 	protected boolean isRangeToken = false;
 	protected boolean hasInfix = false;
 	private boolean hasMultivalueSeparator = false;
@@ -157,12 +155,10 @@ public class FacetLpseToken extends LpseToken {
 		return (lpseTokens);
 	}
 
-	// TODO - update for range facets
 	@Override public String explain() {
 		return ("PANL " +
 				(this.isValid ? "[  VALID  ]" : "[ INVALID ]") +
-				(this.hasMultivalueSeparator ? " <facet (multi SEP)> LPSE code '" : " <facet>             LPSE code '") +
-				" <facet>             LPSE code '" +
+				(this.hasMultivalueSeparator ? " <facet (multi SEP)>  LPSE code '" : " <facet>              LPSE code '") +
 				this.lpseCode +
 				"' (solr field '" +
 				this.solrField +

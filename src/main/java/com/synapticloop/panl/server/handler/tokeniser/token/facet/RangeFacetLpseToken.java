@@ -74,7 +74,6 @@ import java.util.StringTokenizer;
 public class RangeFacetLpseToken extends LpseToken {
 	public static final String TOKEN_TYPE = "facet";
 
-	private String solrField = null;
 	private String toValue = null;
 	protected boolean hasInfix = false;
 	protected boolean isRangeToken = false;
@@ -166,18 +165,17 @@ public class RangeFacetLpseToken extends LpseToken {
 		}
 	}
 
-	// TODO - update for range facets
 	@Override public String explain() {
 		return ("PANL " +
 				(this.isValid ? "[  VALID  ]" : "[ INVALID ]") +
-				" <facet (RANGE)>     LPSE code '" +
+				(isRangeToken ? " <facet (RANGE)>      LPSE code '" : " <facet (RANGE UNIQ)> LPSE code '") +
 				this.lpseCode +
 				"' (solr field '" +
 				this.solrField +
-				"') incoming value '" +
-				this.originalValue +
-				"', parsed value '" +
+				"') with parsed value '" +
 				("RANGE(" + value + ":" + toValue + ") " + (hasInfix ? "with" : "without") + " infix" ) +
+				"', incoming value '" +
+				this.originalValue +
 				"'.");
 	}
 

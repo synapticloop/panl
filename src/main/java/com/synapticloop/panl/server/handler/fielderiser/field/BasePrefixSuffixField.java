@@ -27,6 +27,7 @@ package com.synapticloop.panl.server.handler.fielderiser.field;
 import com.synapticloop.panl.exception.PanlServerException;
 import com.synapticloop.panl.server.handler.properties.CollectionProperties;
 import com.synapticloop.panl.server.handler.tokeniser.token.LpseToken;
+import com.synapticloop.panl.util.Constants;
 import com.synapticloop.panl.util.PanlLPSEHelper;
 import org.json.JSONObject;
 
@@ -34,16 +35,13 @@ import java.net.URLDecoder;
 import java.nio.charset.StandardCharsets;
 import java.util.*;
 
-import static com.synapticloop.panl.server.handler.processor.Processor.*;
-import static com.synapticloop.panl.server.handler.processor.Processor.FORWARD_SLASH;
+import static com.synapticloop.panl.util.Constants.FORWARD_SLASH;
 
 /**
  * <p>The abstract <code>BasePrefixSuffixField</code> is the parent object for
  * any parameter, operand, or facet that allows a prefix and/or suffix.</p>
  */
 public abstract class BasePrefixSuffixField extends BaseField {
-	public static final String PROPERTY_KEY_SUFFIX_PREFIX = ".prefix";
-	public static final String PROPERTY_KEY_SUFFIX_SUFFIX = ".suffix";
 
 	protected boolean hasValuePrefix = false;
 	protected boolean hasValueSuffix = false;
@@ -98,9 +96,9 @@ public abstract class BasePrefixSuffixField extends BaseField {
 	 * @param propertyKey The property key to look up
 	 */
 	protected void populateParamSuffixAndPrefix(String propertyKey) {
-		this.valuePrefix = properties.getProperty(propertyKey + PROPERTY_KEY_SUFFIX_PREFIX);
+		this.valuePrefix = properties.getProperty(propertyKey + Constants.Property.Panl.SUFFIX_PREFIX);
 
-		this.valueSuffix = properties.getProperty(propertyKey + PROPERTY_KEY_SUFFIX_SUFFIX);
+		this.valueSuffix = properties.getProperty(propertyKey + Constants.Property.Panl.SUFFIX_SUFFIX);
 
 		checkPrefixSuffix();
 	}
@@ -110,9 +108,9 @@ public abstract class BasePrefixSuffixField extends BaseField {
 	 * file if they exist.</p>
 	 */
 	protected void populateSuffixAndPrefix() {
-		this.valuePrefix = properties.getProperty(PROPERTY_KEY_PANL_PREFIX + lpseCode);
+		this.valuePrefix = properties.getProperty(Constants.Property.Panl.PANL_PREFIX + lpseCode);
 
-		this.valueSuffix = properties.getProperty(PROPERTY_KEY_PANL_SUFFIX + lpseCode);
+		this.valueSuffix = properties.getProperty(Constants.Property.Panl.PANL_SUFFIX + lpseCode);
 
 		checkPrefixSuffix();
 	}
@@ -266,7 +264,7 @@ public abstract class BasePrefixSuffixField extends BaseField {
 	 */
 	@Override protected void appendToAvailableObjectInternal(JSONObject jsonObject) {
 		if (null != valueSeparator) {
-			jsonObject.put(JSON_KEY_VALUE_SEPARATOR, valueSeparator);
+			jsonObject.put(Constants.Json.Panl.VALUE_SEPARATOR, valueSeparator);
 		}
 	}
 
@@ -372,13 +370,13 @@ public abstract class BasePrefixSuffixField extends BaseField {
 			}
 		}
 
-		additionObject.put(JSON_KEY_BEFORE, lpseUriBefore.toString());
+		additionObject.put(Constants.Json.Panl.BEFORE, lpseUriBefore.toString());
 
 		// if we have an or separator, we have already added the forward slash
 		if (valueSeparator != null) {
-			additionObject.put(JSON_KEY_AFTER, lpseUri.toString() + lpseUriCode + FORWARD_SLASH);
+			additionObject.put(Constants.Json.Panl.AFTER, lpseUri.toString() + lpseUriCode + FORWARD_SLASH);
 		} else {
-			additionObject.put(JSON_KEY_AFTER, FORWARD_SLASH + lpseUri + lpseUriCode + FORWARD_SLASH);
+			additionObject.put(Constants.Json.Panl.AFTER, FORWARD_SLASH + lpseUri + lpseUriCode + FORWARD_SLASH);
 		}
 
 		return (additionObject);
@@ -439,5 +437,4 @@ public abstract class BasePrefixSuffixField extends BaseField {
 		}
 		return (sb.toString());
 	}
-
 }

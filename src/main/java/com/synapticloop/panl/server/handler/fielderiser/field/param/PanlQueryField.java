@@ -272,4 +272,9 @@ public class PanlQueryField extends BaseField {
 		temp.addAll(WARNING_MESSAGES);
 		return(temp);
 	}
+
+	@Override public String getPanlFieldType() {
+		return("QUERY");
+	}
+
 }
