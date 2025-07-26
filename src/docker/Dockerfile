@@ -43,7 +43,8 @@ RUN tar -xzvf /archives/solr-9.8.1-slim.tgz -C /java-servers/
 # ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~
 #   1. Set up the linking for the Solr and Panl installation
 #   2. Copy the Solr configuration files for the standalone Solr server
-#   3. Copy over the Panl configuration for thge standalone connection
+#   3. Copy the override shell script so that Solr accepts all connections
+#   4. Copy over the Panl configuration for thge standalone connection
 # ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~
 WORKDIR /java-servers/
 
@@ -55,6 +56,8 @@ RUN mkdir /java-servers/solr/server/solr/mechanical-pencils/
 RUN cp -R /java-servers/panl/sample/solr/mechanical-pencils/* /java-servers/solr/server/solr/mechanical-pencils/
 
 WORKDIR /
+COPY src/docker/solr.in.sh /java-servers/solr/bin/
+RUN chmod a+x /java-servers/solr/bin/solr.in.sh
 
 COPY src/docker/panl.properties /java-servers/panl/sample/panl/mechanical-pencils/panl.properties
 
@@ -77,9 +80,10 @@ COPY src/docker/startup.sh /
 RUN chmod a+x /startup.sh
 
 # ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~
-#   Expose the Panl server port
+#   Expose the Solr and Panl server ports
 # ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~
 EXPOSE 8181/tcp
+EXPOSE 8983/tcp
 
 
 # ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~

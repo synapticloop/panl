@@ -761,17 +761,18 @@ gradlew dockerLinux
 
 And to run the container
 
-### _WINDOWS_
+### _ANY OS - WINDOWS/*NIX_
 
 ```shell
-docker run -p 8181:8181 synapticloop:solr-panl-9-2.1.0
+docker run -p 8181:8181 -p 8983:8983 synapticloop:solr-panl-9-2.1.0
 ```
 
-### _*NIX_
+This will expose the ports for both the Panl server (port 8181) and the Solr 
+server (port 8983) so that it can be viewed:
 
-```shell
-docker run -p 8181:8181 synapticloop:solr-panl-9-2.1.0
-```
+ - SOLR: [http://localhost:8983/solr/](http://localhost:8983/solr/)
+ - PANL: [http://localhost:8181/panl-results-viewer/](http://localhost:8181/panl-results-viewer/)
+
 
 # Version History
 
