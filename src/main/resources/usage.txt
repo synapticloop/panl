@@ -62,8 +62,8 @@ available:
   [-properties panl_properties_file_location] (optional - default
     panl.properties) the base properties file to write the generated
     configuration out to. If this property is not included, the default
-    panl.properties filename will be used with each collection file that is
-    generated named:
+    panl.properties filename will be used prepended with the Solr collection
+    name (from the managed schema file):
 
       <panl_collection_url>.panl.properties
 
@@ -77,7 +77,7 @@ available:
   [-overwrite true_or_false] (optional - default false) - whether to overwrite
     the file if it exists
 
-  -schema solr_schema_location(s) (mandatory) the managed-schema.xml
-    configuration file(s) to read and generate the panl.properties file from.
+  -schema solr_schema_location (mandatory) the managed-schema.xml
+    configuration file to read and generate the panl.properties file from.
 
                                  ~ ~ ~ * ~ ~ ~

@@ -53,14 +53,14 @@ public class PanlGenerator {
 	public static final String TEMPLATE_LOCATION_PANL_PROPERTIES = "/panl.properties.template";
 
 	private final String propertiesFileLocation;
-	private final String schemaFileLocations;
+	private final String schemaFileLocation;
 	private final String collectionPropertiesOutputDirectory;
 
 	/**
 	 * <p>The list of schemas to parse and add to the panl.properties file which
 	 * will be output to the '$panl.panlCollections' property.</p>
 	 */
-	private final List<File> schemasToParse = new ArrayList<>();
+	private File schemaToParse;
 	/**
 	 * <p>The list of panlCollections (parsed from the Solr schemas) to convert.</p>
 	 */
@@ -83,7 +83,7 @@ public class PanlGenerator {
 	 *
 	 * @param propertiesFileLocation The location of the output for the properties
 	 *   file
-	 * @param schemaFileLocations The comma separated list of Solr schema file
+	 * @param schemaFileLocation The comma separated list of Solr schema file
 	 *   locations
 	 * @param shouldOverwrite If true, this will overwrite the panl.properties
 	 *   file and the collection.panl.properties 	file
@@ -93,10 +93,10 @@ public class PanlGenerator {
 	 */
 	public PanlGenerator(
 		String propertiesFileLocation,
-		String schemaFileLocations,
+		String schemaFileLocation,
 		boolean shouldOverwrite) throws PanlGenerateException {
 		this.propertiesFileLocation = propertiesFileLocation;
-		this.schemaFileLocations = schemaFileLocations;
+		this.schemaFileLocation = schemaFileLocation;
 
 
 		// load up the defaults
@@ -171,16 +171,14 @@ public class PanlGenerator {
 	 * @throws PanlGenerateException If the schema file does not exist, or cannot be read
 	 */
 	private void checkSchemaFileLocations() throws PanlGenerateException {
-		for (String schemaFileLocation : this.schemaFileLocations.split(",")) {
-			File schemaFile = new File(schemaFileLocation);
-			if (!schemaFile.exists() & !schemaFile.canRead()) {
-				throw new PanlGenerateException(
-					"Could not find or read the '" +
-						schemaFile.getAbsolutePath() +
-						"' file, exiting...");
-			} else {
-				schemasToParse.add(schemaFile);
-			}
+		File schemaFile = new File(schemaFileLocation);
+		if (!schemaFile.exists() & !schemaFile.canRead()) {
+			throw new PanlGenerateException(
+				"Could not find or read the '" +
+					schemaFile.getAbsolutePath() +
+					"' file, exiting...");
+		} else {
+			schemaToParse = schemaFile;
 		}
 	}
 
@@ -229,9 +227,7 @@ public class PanlGenerator {
 		getAndValidateParameterInput("The URI path passthrough", PANL_PARAM_PASSTHROUGH, "z", null);
 
 
-		for (File schema : schemasToParse) {
-			panlCollections.add(new PanlCollection(schema, panlReplacementPropertyMap));
-		}
+		panlCollections.add(new PanlCollection(schemaToParse, panlReplacementPropertyMap));
 
 		// now we have all panlCollections parsed
 		// time to go through them and generate the panl.properties file
