@@ -664,6 +664,54 @@ in your favourite browser.
 Choose a collection/fieldset and search, facet, sort, paginate and view the
 results.
 
+# Build/Development Related Tasks
+
+See the `DEV-PROCESS.md` file in this repository for building and testing
+the code.
+
+## Building the Code
+
+This will build, test, and assemble the distributable
+
+### _Windows_
+
+```shell
+gradlew.bat build
+```
+
+### _*NIX_
+
+```shell
+./gradlew build
+```
+
+## Assembling the Distributable
+
+This will assemble the distribution
+
+### _Windows_
+
+```shell
+gradlew.bat assemble
+```
+
+### _*NIX_
+
+```shell
+./gradlew assemble
+```
+
+The distributions (both a `.zip` and a `.tar` file) will be created in the build
+distributions directory.
+
+I.e.
+
+- `./build/distributions` (*NIX), or
+- `.\build\distributions` (Windows)
+
+with the release files named `solr-panl-9-x.x.x` where `x.x.x` is the version
+number.
+
 # Quick Info
 
 ## Starting up the example cloud
@@ -693,7 +741,37 @@ bin/solr start -cloud -p 8983 -s "example/cloud/node1/solr"
 bin/solr start -cloud -p 7574 -s "example/cloud/node2/solr" -z localhost:9983
 ```
 
+## Docker Building
 
+There is an in-built task to build a docker container in gradle
+
+### _WINDOWS_
+
+```shell
+gradlew dockerWindows
+```
+
+### _*NIX_
+
+```shell
+gradlew dockerLinux
+```
+
+---
+
+And to run the container
+
+### _WINDOWS_
+
+```shell
+docker run -p 8181:8181 synapticloop:solr-panl-9-2.1.0
+```
+
+### _*NIX_
+
+```shell
+docker run -p 8181:8181 synapticloop:solr-panl-9-2.1.0
+```
 
 # Version History
 
@@ -731,6 +809,7 @@ bin/solr start -cloud -p 7574 -s "example/cloud/node2/solr" -z localhost:9983
     - Instead of using LPSE codes for the `panl.lpse.order`, 
       `panl.lpse.facetorder`, `panl.lpse.ignore`, the Solr field name can be 
       used which makes it easier to understand the ordering and ignore codes.
+  - Added in a docker build for testing
 
 
 - **Bug Fixes**
@@ -921,55 +1000,6 @@ part of the Panl server. !!
 
 [See all releases](https://github.com/synapticloop/panl/releases/)
 
-
-
-# Build/Development Related Tasks
-
-See the `DEV-PROCESS.md` file in this repository for building and testing 
-the code.
-
-## Building the Code
-
-This will build, test, and assemble the distributable
-
-### _Windows_
-
-```shell
-gradlew.bat build
-```
-
-### _*NIX_
-
-```shell
-./gradlew build
-```
-
-## Assembling the Distributable
-
-This will assemble the distribution
-
-### _Windows_
-
-```shell
-gradlew.bat assemble
-```
-
-### _*NIX_
-
-```shell
-./gradlew assemble
-```
-
-The distributions (both a `.zip` and a `.tar` file) will be created in the build
-distributions directory.
-
-I.e.
-
-- `./build/distributions` (*NIX), or
-- `.\build\distributions` (Windows)
-
-with the release files named `solr-panl-9-x.x.x` where `x.x.x` is the version
-number.
 
 
 # End Plate 

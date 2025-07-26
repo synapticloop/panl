@@ -177,6 +177,16 @@ tasks.register('copyLoggingFile') {
 	}
 }
 
+tasks.register('dockerWindows', Exec) {
+	commandLine "cmd.exe", "/C", "build-docker", "solr-panl-" + properties.getProperty("panl.solr.version") + "-" + properties.getProperty("panl.version")
+	dependsOn tasks.distZip
+}
+
+tasks.register('dockerLinux', Exec) {
+	commandLine "build-docker.sh", "solr-panl-" + properties.getProperty("panl.solr.version") + "-" + properties.getProperty("panl.version")
+	dependsOn tasks.distZip
+}
+
 tasks.withType(Copy).configureEach {
 	duplicatesStrategy = DuplicatesStrategy.EXCLUDE
 }
