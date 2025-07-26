@@ -766,6 +766,8 @@ And to run the container
 ```shell
 docker run -p 8181:8181 -p 8983:8983 synapticloop:solr-panl-9-2.1.0
 ```
+_**NOTE:** You do not need to pass through the `-p 8983:8983` command line 
+argument if you do not need to view the underlying Solr server._ 
 
 This will expose the ports for both the Panl server (port 8181) and the Solr 
 server (port 8983) so that it can be viewed:
