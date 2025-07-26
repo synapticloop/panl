@@ -846,158 +846,18 @@ part of the Panl server. !!
 
 [See all releases](https://github.com/synapticloop/panl/releases/)
 
-## 2.0.0 - fluffy stuff (codename `billowing-feather`)
 
-> This is a breaking change for the LPSE URL path part
+| Release<br />Number   | Short note           | Codename            | Release Date       | 
+|-----------------------|----------------------|---------------------|--------------------|
+| 2.1.0                 | niceties/want-it-ies | `hidden-summer`     | TBA                |
+| 2.0.0                 | fluffy stuff         | `billowing-feather` | February 28, 2025  |
+| -- breaking change -- | -------------------- | ------------------- | ------------------ |
+| 1.2.0                 | more like this       | `needy-phanton`     | October 30, 2024   |
+| 1.1.1                 | the fly spray        | `grizzled-pebble`   | September 24, 2024 |
+| 1.1.0                 | the better update    | `broad-firefly`     | September 19, 2024 |
+| 1.0.0                 | the initial release  | `bright-wildflower` | September 04, 2024 |
 
-- **Breaking Changes**
-    - **[BREAKING CHANGE]** Changed range facets LPSE codes from `w-w` to `w-`
-      and `w+w` to `w+` (i.e. removed the trailing LPSE code)
-
-
-- **New Features**
-    - Added in lookahead query handler for Solr panl including panl results
-      viewer lookahead
-    - Added in `OR SEPARATOR` facets so that `OR` facets can be separated with a
-      string and only have one LPSE code.
-    - Added in `solr.numrows.maximum` property so that this will always be the
-      limit to the number of results returned, this will default to
-      `solr.numrows.default`
-    - Added in BOOLEAN checkbox functionality
-    - Ability to select specific search fields added.
-    - Added `panl.unless.<lpse_code>` fields
-    - 'Fixed' the keyword search for multiple word so that they use the defined
-      `q.op` parameter for both default and Specific Solr Search Fields.
-
-
-- **Bug Fixes**
-    - Bug where Panl client will always look for the '`q`' parameter for the
-      query, changed to ensure that the correct configured
-      `panl.form.query.respondto` is used instead
-    - Always reset the page to 1 if there is a `panl.form.query.respondto` URL
-      parameter
-    - (Maybe this was a feature?) Updated Single Page search to allow multiple
-      selections for Facets which are multivalued (as opposed to OR Facets)
-    - Fixed where a single value LPSE code for a RANGE facet was the first
-      selected item, and other selections would erroneously add an infix
-      designator.
-    - Fixed the URL path encoding
-    - Fixed bug in lookahead handler with not properly encoding queries
-
-
-- **Code Changes**
-    - Fixed the overriding query respond to parameter
-    - Added in Testing for the Panl Generator and refactored how it is being
-      done.
-    - Refactored PanlFields for the generator to output better comments and
-      helpful information rather than more comments than necessary
-    - General code cleanup and refactorings
-    - Updated the look and feel for the Panl Simple Results Viewer Web App 
-      (including images)
-    - Modularised the JavaScript for common functions.
-
-
-- **Documentation Update**
-    - Added in keyword search integration and 'search within results'
-      integration notes
-    - Changed the `panl.form.query.respondto` documentation to point to `search`
-      rather than the previously defined `q` to reduce confusion
-    - General spelling and grammatical mistake updates
-    - Addition of new functionality and configuration properties pushing the 
-      book to be over 400 pages.
-
-[View the code for this release](https://github.com/synapticloop/panl/tree/2.0.0)
-
-[Download the release packages](https://github.com/synapticloop/panl/releases/tag/2.0.0)
-
-[See all releases](https://github.com/synapticloop/panl/releases/)
-
-## 1.2.0 - more like this (codename `needy-phanton`)
-
-- **Bug Fixes**
-    - Fixed JavaScript in Single Page Search results in-built web app to take
-      into account range facets
-    - Fixed serving in-built panl testing URLs when run from the script
-
-
-- **Code Changes**
-    - Retrieval of more facets functionality added:
-        - Added in `facet_limit` JSON key for retrieving more facet results
-        - Added in handler for retrieving more facets for a specific search
-          field
-    - Better output for testing URLs
-    - Added Always on OR facets and `panl.or.always.<lpse_code>` property
-    - Moved log4j out of the jar file so that user's con configure their own
-      logging
-
-
-- **Breaking Changes** - _(which is OK as nobody is using it at the moment :) )_
-    - Changed the single page search URL binding from `/panl-configuration/` to
-      `/panl-single-page/` as it makes more sense
-
-
-- **Documentation Updates**
-    - General spelling and grammatical mistake updates
-    - Update to new functionality and configuration properties
-    - Added in the `pagination` returned JSON Object implementation details
-    - Added in URLs bound by the Panl server in the Appendices
-
-[View the code for this release](https://github.com/synapticloop/panl/tree/1.2.0)
-
-[Download the release packages](https://github.com/synapticloop/panl/releases/tag/1.2.0)
-
-[See all releases](https://github.com/synapticloop/panl/releases/)
-
-## 1.1.1 - the fly spray (codename `grizzled-pebble`)
-
-- **Bug Fixes**
-    - Fixed 'OR' facet `before` and `after` URL values in the JSON response
-      where a range facet has already been selected
-
-
-- **Code Cleanup**
-    - Updated explanation for DATE Range and RANGE facets
-
-[View the code for this release](https://github.com/synapticloop/panl/tree/1.1.1)
-
-[Download the release packages](https://github.com/synapticloop/panl/releases/tag/1.1.1)
-
-[See all releases](https://github.com/synapticloop/panl/releases/)
-
-## 1.1.0 - the better update (codename `broad-firefly`)
-
-- Added in `empty` FieldSet to return no documents
-- Added in Single Search Page functionality
-- Update Mechanical Pencils
-    - Added in hierarchy for the Pencil Model example
-- Dynamic range functionality - pulling actual values for the facet
-- Suppress facet values for ranges, so that the user may only select from the
-  range UI, and the individual range facet values do not appear
-
-
-- **Documentation Update**
-    - New documentation for additional features and functionality
-    - Fixed general spelling and grammar errors
-    - Updated mechanical pencils introductory dataset explanations
-    - Added in documentation for Fields
-    - Panl cookbook
-
-[View the code for this release](https://github.com/synapticloop/panl/tree/1.1.0)
-
-[Download the release packages](https://github.com/synapticloop/panl/releases/tag/1.1.0)
-
-[See all releases](https://github.com/synapticloop/panl/releases/)
-
-## 1.0.0 - the initial release (codename `bright-wildflower`)
-
-- Initial release with base functionality
-
-[View the code for this release](https://github.com/synapticloop/panl/tree/1.0.0)
-
-[Download the release packages](https://github.com/synapticloop/panl/releases/tag/1.0.0)
-
-[See all releases](https://github.com/synapticloop/panl/releases/)
-
+For full release notes for previous versions, see the [releases page](https://github.com/synapticloop/panl/releases/).
 
 
 # End Plate 
