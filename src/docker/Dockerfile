@@ -32,6 +32,10 @@ RUN cp -R /java-servers/panl/sample/solr/mechanical-pencils/* /java-servers/solr
 WORKDIR /
 
 COPY src/docker/panl.properties /java-servers/panl/sample/panl/mechanical-pencils/panl.properties
+COPY src/docker/index-collection.sh /
+RUN chmod a+x /index-collection.sh
+RUN /index-collection.sh
+
 COPY src/docker/startup.sh /
 RUN chmod a+x /startup.sh
 

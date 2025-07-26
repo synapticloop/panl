@@ -84,7 +84,7 @@ dependencies {
 
 	// for the panl editor
 	implementation "com.formdev:flatlaf:3.5.1"
-	implementation 'org.apache.commons:commons-lang3:3.17.0'
+	implementation 'org.apache.commons:commons-lang3:3.18.0'
 
 
 	// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
