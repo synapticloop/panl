@@ -745,16 +745,10 @@ bin/solr start -cloud -p 7574 -s "example/cloud/node2/solr" -z localhost:9983
 
 There is an in-built task to build a docker container in gradle
 
-### _WINDOWS_
+### _ANY OS - WINDOWS/*NIX_
 
 ```shell
-gradlew dockerWindows
-```
-
-### _*NIX_
-
-```shell
-gradlew dockerLinux
+gradlew docker
 ```
 
 ---
@@ -766,6 +760,7 @@ And to run the container
 ```shell
 docker run -p 8181:8181 -p 8983:8983 synapticloop:solr-panl-9-2.1.0
 ```
+
 _**NOTE:** You do not need to pass through the `-p 8983:8983` command line 
 argument if you do not need to view the underlying Solr server._ 
 

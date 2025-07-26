@@ -4,4 +4,4 @@ if [ -z "$1" ]
     exit
 fi
 
-docker build --build-arg TAG=$1 -f src/docker/Dockerfile -t $1 .
+docker build --build-arg TAG=$1 -f src/docker/Dockerfile -t synapticloop:$1 .

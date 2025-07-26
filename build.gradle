@@ -191,6 +191,16 @@ tasks.withType(Copy).configureEach {
 	duplicatesStrategy = DuplicatesStrategy.EXCLUDE
 }
 
+import org.apache.tools.ant.taskdefs.condition.Os
+
+tasks.register('docker') {
+	if (Os.isFamily(Os.FAMILY_WINDOWS)) {
+		dependsOn('dockerWindows')
+	} else {
+		dependsOn('dockerLinux')
+	}
+}
+
 test {
 	useJUnitPlatform()
 	finalizedBy jacocoTestReport
