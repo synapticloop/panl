@@ -626,6 +626,11 @@
     </lst>
   </requestHandler>
 
+  <!-- A request handler that returns The More Like This Handler -->
+  <requestHandler name="/mlt" class="solr.MoreLikeThisHandler">
+    <str name="mlt.fl">text</str>
+  </requestHandler>
+
   <!-- Shared parameters for multiple Request Handlers -->
   <initParams path="/update/**,/query,/select,/spell">
     <lst name="defaults">
@@ -904,7 +909,7 @@
       <str name="fieldType">pdoubles</str>
     </lst>
   </updateProcessor>
-  
+
 
   <!-- The update.autoCreateFields property can be turned to false to disable schemaless mode -->
   <updateRequestProcessorChain name="add-unknown-fields-to-the-schema" default="${update.autoCreateFields:true}"
