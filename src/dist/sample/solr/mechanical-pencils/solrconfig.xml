@@ -862,10 +862,6 @@
     <str name="pattern">[^\w-\.]</str>
     <str name="replacement">_</str>
   </updateProcessor>
-  <updateProcessor class="solr.NumFieldLimitingUpdateRequestProcessorFactory" name="max-fields">
-    <int name="maxFields">1000</int>
-    <bool name="warnOnly">true</bool>
-  </updateProcessor>
   <updateProcessor class="solr.ParseBooleanFieldUpdateProcessorFactory" name="parse-boolean"/>
   <updateProcessor class="solr.ParseLongFieldUpdateProcessorFactory" name="parse-long"/>
   <updateProcessor class="solr.ParseDoubleFieldUpdateProcessorFactory" name="parse-double"/>
