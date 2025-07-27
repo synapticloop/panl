@@ -72,7 +72,7 @@ public class PaginationProcessor extends Processor {
 
 		JSONObject paginationObject = new JSONObject();
 		paginationObject.put(Constants.Json.Panl.NUM_RESULTS, numFound);
-		paginationObject.put(JSON_KEY_NUM_RESULTS_EXACT, true);
+		paginationObject.put(Constants.Json.Panl.NUM_RESULTS_EXACT, true);
 		paginationObject.put(Constants.Json.Panl.NUM_PER_PAGE, numPerPage);
 		paginationObject.put(Constants.Json.Panl.PAGE_NUM, pageNumber);
 		long numPages = numFound / numPerPage;

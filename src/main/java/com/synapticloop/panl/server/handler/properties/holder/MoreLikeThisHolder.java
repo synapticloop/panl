@@ -98,7 +98,6 @@ public class MoreLikeThisHolder {
 	private static final Logger LOGGER = LoggerFactory.getLogger(MoreLikeThisHolder.class);
 
 	public static final String SHARD_1 = "shard1";
-	public static final String REPLICA_LEADER_TRUE = ShardParams.SHARDS_PREFERENCE_REPLICA_LEADER + ":true";
 	public static final String REPLICA_LOCATION_LOCAL = "replica.location:local";
 
 	public static final String REQUEST_PROPERTY_MINTF = "mintf";
@@ -690,7 +689,6 @@ public class MoreLikeThisHolder {
 		// This __MAY__ help getting the correct results...
 		// always attempt to hit shard 1
 		solrQuery.set(ShardParams.SHARDS, SHARD_1);
-		solrQuery.set(ShardParams.SHARDS_PREFERENCE, REPLICA_LEADER_TRUE);
 		solrQuery.set(ShardParams.SHARDS_PREFERENCE, REPLICA_LOCATION_LOCAL);
 
 		solrQuery.setRows(this.numResultsMoreLikeThis);
