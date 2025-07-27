@@ -38,10 +38,10 @@
     catchall "text" field, and use that for searching.
 -->
 
-<schema name="mechanical-pencils" version="1.6">
-    <!-- attribute "name" is the name of this schema and is only used for display purposes.
-       version="x.y" is Solr's version number for the schema syntax and
-       semantics.  It should not normally be changed by applications.
+<schema name="simple-date" version="1.6">
+  <!-- attribute "name" is the name of this schema and is only used for display purposes.
+		 version="x.y" is Solr's version number for the schema syntax and
+		 semantics.  It should not normally be changed by applications.
 
 		 1.0: multiValued attribute did not exist, all fields are multiValued
 					by nature
@@ -110,75 +110,24 @@
 			 If you don't need it, consider removing it and the corresponding copyField directive.
 	-->
 
-	<field name="_version_" type="plong" indexed="false" stored="false" />
+  <field name="_version_" type="plong" indexed="false" stored="false" docValues="true"/>
 
-  <field name="id" indexed="true" type="string" stored="true" required="true" multiValued="false" />
+	<field name="id" type="string" stored="true" required="true" multiValued="false" />
 
-	<field name="brand" type="string" indexed="true" stored="true" multiValued="false" />
-	<field name="name" type="string" indexed="true" stored="true" multiValued="false" />
+	<field name="solr_date" type="pdate" indexed="true" stored="true" multiValued="false" />
+	<field name="text_date" type="string" indexed="true" stored="true" multiValued="false" />
+	<field name="year" type="pint" indexed="true" stored="true" multiValued="false" />
+	<field name="decade" type="pint" indexed="true" stored="true" multiValued="false" />
+	<field name="month" type="string" indexed="true" stored="true" multiValued="false" />
+	<field name="day" type="pint" indexed="true" stored="true" multiValued="false" />
+	<field name="day_of_week" type="string" indexed="true" stored="true" multiValued="false" />
 
-	<field name="mechanism_type" type="string" indexed="true" stored="true" multiValued="false" />
-
-	<field name="nib_shape" type="string" indexed="true" stored="true" multiValued="false" />
-	<field name="body_shape" type="string" indexed="true" stored="true" multiValued="false" />
-	<field name="grip_type" type="string" indexed="true" stored="true" multiValued="false" />
-	<field name="grip_shape" type="string" indexed="true" stored="true" multiValued="false" />
-	<field name="cap_shape" type="string" indexed="true" stored="true" multiValued="false" />
-
-	<field name="category" type="string" indexed="true" stored="true" multiValued="false" />
-
-	<field name="length" type="pint" indexed="true" stored="true" multiValued="false" />
-	<field name="relative_length" type="pint" indexed="true" stored="true" multiValued="false" />
-	<field name="diameter" type="pint" indexed="true" stored="true" multiValued="false" />
-	<field name="weight" type="pint" indexed="true" stored="true" multiValued="false" />
-	<field name="relative_weight" type="pint" indexed="true" stored="true" multiValued="false" />
-	<field name="lead_length" type="pint" indexed="true" stored="true" multiValued="false" />
-
-	<field name="disassemble" type="boolean" indexed="true" stored="true" multiValued="false" />
-
-	<field name="nib_material" type="string" indexed="true" stored="true" multiValued="false" />
-	<field name="mechanism_material" type="string" indexed="true" stored="true" multiValued="false" />
-	<field name="grip_material" type="string" indexed="true" stored="true" multiValued="false" />
-	<field name="body_material" type="string" indexed="true" stored="true" multiValued="false" />
-	<field name="tubing_material" type="string" indexed="true" stored="true" multiValued="false" />
-	<field name="clip_material" type="string" indexed="true" stored="true" multiValued="false" />
-	<field name="cap_material" type="string" indexed="true" stored="true" multiValued="false" />
-
-	<field name="hardness_indicator" type="string" indexed="true" stored="true" multiValued="false" />
-	<field name="lead_grade_indicator" type="string" indexed="true" stored="true" multiValued="false" />
-	<field name="lead_size_indicator" type="string" indexed="true" stored="true" multiValued="false" />
-
-	<field name="in_built_eraser" type="boolean" indexed="true" stored="false" multiValued="false" />
-	<field name="in_built_sharpener" type="boolean" indexed="true" stored="false" multiValued="false" />
-
-	<field name="colours" type="string" indexed="true" stored="true" multiValued="true" />
-	<field name="variants" type="string" stored="true" multiValued="true" />
-
-	<field name="description" type="text_general" indexed="true" stored="true" multiValued="false"/>
-	<field name="images" type="string" stored="true" multiValued="true" />
 	<field name="text" type="text_general" indexed="true" stored="true" multiValued="true"/>
 
 	<uniqueKey>id</uniqueKey>
 
-	<copyField source="brand" dest="text" />
-	<copyField source="name" dest="text" />
-	<copyField source="mechanism_type" dest="text" />
-	<copyField source="nib_shape" dest="text" />
-	<copyField source="body_shape" dest="text" />
-	<copyField source="grip_type" dest="text" />
-	<copyField source="grip_shape" dest="text" />
-	<copyField source="cap_shape" dest="text" />
-	<copyField source="category" dest="text" />
-	<copyField source="nib_material" dest="text" />
-	<copyField source="mechanism_material" dest="text" />
-	<copyField source="grip_material" dest="text" />
-	<copyField source="body_material" dest="text" />
-	<copyField source="tubing_material" dest="text" />
-	<copyField source="clip_material" dest="text" />
-	<copyField source="cap_material" dest="text" />
-	<copyField source="colours" dest="text" />
-	<copyField source="variants" dest="text" />
-	<copyField source="description" dest="text" />
+	<copyField source="text_date" dest="text" />
+
 
   <!-- field type definitions. The "name" attribute is
 		 just a label to be used by field definitions.  The "class"

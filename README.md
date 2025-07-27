@@ -807,8 +807,6 @@ server (port 8983) so that it can be viewed:
     by index (ascending is the default) and now descending.
   - Updated generator to:
     - Include the uniquekey property for the correct Solr field
-    - Keep - or at least attempt to keep - facet and field LPSE codes from 
-      an existing file
     - Updated the commenting for Solr fields that are analysed with a 
       warning that it probably shouldn't be a facet.
     - Instead of using LPSE codes for the `panl.lpse.order`, 
