@@ -17,7 +17,7 @@ ARG TAG
 #     openjdk21 - The Open JDK to run the Solr and Panl servers
 # ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~
 RUN apk update && apk upgrade
-RUN apk add lsof bash procps openjdk21
+RUN apk add lsof bash procps openjdk8
 
 
 # ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~
@@ -51,9 +51,10 @@ WORKDIR /java-servers/
 RUN ln -s solr-7.7.3 solr
 RUN ln -s ${TAG} panl
 
-RUN mkdir /java-servers/solr/mechanical-pencils/
-RUN mkdir /java-servers/solr/server/solr/mechanical-pencils/
-RUN cp -R /java-servers/panl/sample/solr/mechanical-pencils/* /java-servers/solr/server/solr/mechanical-pencils/
+RUN mkdir -p /java-servers/solr/mechanical-pencils/conf/
+RUN mkdir -p /java-servers/solr/server/solr/mechanical-pencils/conf/
+RUN cp -R /java-servers/panl/sample/solr/mechanical-pencils/* /java-servers/solr/mechanical-pencils/conf
+RUN cp -R /java-servers/panl/sample/solr/mechanical-pencils/* /java-servers/solr/server/solr/mechanical-pencils
 
 WORKDIR /
 COPY src/docker/solr.in.sh /java-servers/solr/bin/
@@ -70,23 +71,23 @@ COPY src/docker/panl.properties /java-servers/panl/sample/panl/mechanical-pencil
 # ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~
 COPY src/docker/index-collection.sh /
 RUN chmod a+x /index-collection.sh
-RUN /index-collection.sh
-
-# ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~
-#   Copy the startup script over, make it executable.  This startup script will
-#   Start the Panl server
-# ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~
-COPY src/docker/startup.sh /
-RUN chmod a+x /startup.sh
-
-# ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~
-#   Expose the Solr and Panl server ports
-# ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~
-EXPOSE 8181/tcp
-EXPOSE 8983/tcp
+#RUN /index-collection.sh
+#
+## ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~
+##   Copy the startup script over, make it executable.  This startup script will
+##   Start the Panl server
+## ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~
+#COPY src/docker/startup.sh /
+#RUN chmod a+x /startup.sh
+#
+## ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~
+##   Expose the Solr and Panl server ports
+## ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~
+#EXPOSE 8181/tcp
+#EXPOSE 8983/tcp
 
 
 # ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~
 #   Run the startup script on container run.
 # ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~
-CMD [ "/startup.sh" ]
+CMD [ "/bin/bash" ]
