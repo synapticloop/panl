@@ -35,7 +35,7 @@
        that you fully re-index after changing this setting as it can
        affect both how text is indexed and queried.
   -->
-  <luceneMatchVersion>9.11</luceneMatchVersion>
+  <luceneMatchVersion>9.12</luceneMatchVersion>
 
   <!-- Data Directory
 
@@ -624,11 +624,6 @@
       <str name="wt">json</str>
       <str name="indent">true</str>
     </lst>
-  </requestHandler>
-
-  <!-- A request handler that returns The More Like This Handler -->
-  <requestHandler name="/mlt" class="solr.MoreLikeThisHandler">
-    <str name="mlt.fl">text</str>
   </requestHandler>
 
   <!-- Shared parameters for multiple Request Handlers -->

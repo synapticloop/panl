@@ -1,7 +1,7 @@
 package com.synapticloop.panl.server.client;
 
 /*
- * Copyright (c) 2008-2025 synapticloop.
+ * Copyright (c) 2008-2024 synapticloop.
  *
  * https://github.com/synapticloop/panl
  *
@@ -25,24 +25,40 @@ package com.synapticloop.panl.server.client;
  */
 
 import com.synapticloop.panl.exception.PanlServerException;
-import com.synapticloop.panl.server.handler.properties.PanlProperties;
 import com.synapticloop.panl.server.handler.properties.CollectionProperties;
+import com.synapticloop.panl.server.handler.properties.PanlProperties;
 import org.apache.solr.client.solrj.SolrClient;
-import org.apache.solr.client.solrj.impl.Http2SolrClient;
-import org.apache.solr.client.solrj.impl.LBHttp2SolrClient;
-import org.apache.solr.client.solrj.impl.LBHttpSolrClient;
+import org.apache.solr.client.solrj.impl.CloudHttp2SolrClient;
 
-public class PanlLBHttp2SolrClient extends PanlClient {
-	public PanlLBHttp2SolrClient(String solrCollection, PanlProperties panlProperties, CollectionProperties collectionProperties) throws PanlServerException {
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+
+public class PanlCloudHttp2SolrClient extends PanlClient {
+	public static final String PREFIX_ZOOKEEPER = "zookeeper:";
+	private final List<String> solrUrls = new ArrayList<>();
+	private boolean hasZookeeper = false;
+
+	public PanlCloudHttp2SolrClient(String solrCollection, PanlProperties panlProperties, CollectionProperties collectionProperties) throws PanlServerException {
 		super(solrCollection, panlProperties, collectionProperties);
+
+		String[] urls = panlProperties.getSolrSearchServerUrl().split(",");
+		for (String url : urls) {
+			if (url.toLowerCase().startsWith(PREFIX_ZOOKEEPER)) {
+				hasZookeeper = true;
+				solrUrls.add(url.substring(PREFIX_ZOOKEEPER.length()));
+			} else {
+				solrUrls.add(url);
+			}
+		}
 	}
 
 	@Override
 	public SolrClient getClient() {
-		return (new LBHttp2SolrClient(
-				new Http2SolrClient.Builder(
-						panlProperties.getSolrSearchServerUrl())
-						.build(),
-				panlProperties.getSolrSearchServerUrl()));
+		if (hasZookeeper) {
+			return (new CloudHttp2SolrClient.Builder(solrUrls, Optional.empty()).build());
+		} else {
+			return (new CloudHttp2SolrClient.Builder(solrUrls).build());
+		}
 	}
 }

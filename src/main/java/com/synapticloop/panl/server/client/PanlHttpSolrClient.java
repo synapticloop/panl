@@ -28,15 +28,15 @@ import com.synapticloop.panl.exception.PanlServerException;
 import com.synapticloop.panl.server.handler.properties.PanlProperties;
 import com.synapticloop.panl.server.handler.properties.CollectionProperties;
 import org.apache.solr.client.solrj.SolrClient;
-import org.apache.solr.client.solrj.impl.HttpJdkSolrClient;
+import org.apache.solr.client.solrj.impl.HttpSolrClient;
 
-public class PanlHttpJdkSolrClient extends PanlClient {
-	public PanlHttpJdkSolrClient(String solrCollection, PanlProperties panlProperties, CollectionProperties collectionProperties) throws PanlServerException {
+public class PanlHttpSolrClient extends PanlClient {
+	public PanlHttpSolrClient(String solrCollection, PanlProperties panlProperties, CollectionProperties collectionProperties) throws PanlServerException {
 		super(solrCollection, panlProperties, collectionProperties);
 	}
 
 	@Override
 	public SolrClient getClient() {
-		return(new HttpJdkSolrClient.Builder(panlProperties.getSolrSearchServerUrl()).build());
+		return(new HttpSolrClient.Builder(panlProperties.getSolrSearchServerUrl()).build());
 	}
 }

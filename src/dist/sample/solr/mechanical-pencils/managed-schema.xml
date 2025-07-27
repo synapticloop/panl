@@ -1,5 +1,29 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!--
+  ~ Copyright (c) 2008-2025 synapticloop.
+  ~
+  ~ https://github.com/synapticloop/panl
+  ~
+  ~ Permission is hereby granted, free of charge, to any person obtaining a copy
+  ~ of this software and associated documentation files (the "Software"), to
+  ~ deal in the Software without restriction, including without limitation the
+  ~ rights to use, copy, modify, merge, publish, distribute, sublicense, and/or
+  ~ sell copies of the Software, and to permit persons to whom the Software is
+  ~ furnished to do so, subject to the following conditions:
+  ~
+  ~ The above copyright notice and this permission notice shall be included in
+  ~ all copies or substantial portions of the Software.
+  ~
+  ~ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+  ~ IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+  ~ FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+  ~ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+  ~ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+  ~ FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
+  ~ IN THE SOFTWARE.
+  -->
+
+<!--
  Licensed to the Apache Software Foundation (ASF) under one or more
  contributor license agreements.  See the NOTICE file distributed with
  this work for additional information regarding copyright ownership.
@@ -39,25 +63,25 @@
 -->
 
 <schema name="mechanical-pencils" version="1.6">
-    <!-- attribute "name" is the name of this schema and is only used for display purposes.
-       version="x.y" is Solr's version number for the schema syntax and
-       semantics.  It should not normally be changed by applications.
+	<!-- attribute "name" is the name of this schema and is only used for display purposes.
+		 version="x.y" is Solr's version number for the schema syntax and
+		 semantics.  It should not normally be changed by applications.
 
-		 1.0: multiValued attribute did not exist, all fields are multiValued
-					by nature
-		 1.1: multiValued attribute introduced, false by default
-		 1.2: omitTermFreqAndPositions attribute introduced, true by default
-					except for text fields.
-		 1.3: removed optional field compress feature
-		 1.4: autoGeneratePhraseQueries attribute introduced to drive QueryParser
-					behavior when a single string produces multiple tokens.  Defaults
-					to off for version >= 1.4
-		 1.5: omitNorms defaults to true for primitive field types
-					(int, float, boolean, string...)
-		 1.6: useDocValuesAsStored defaults to true.
-	-->
+	 1.0: multiValued attribute did not exist, all fields are multiValued
+				by nature
+	 1.1: multiValued attribute introduced, false by default
+	 1.2: omitTermFreqAndPositions attribute introduced, true by default
+				except for text fields.
+	 1.3: removed optional field compress feature
+	 1.4: autoGeneratePhraseQueries attribute introduced to drive QueryParser
+				behavior when a single string produces multiple tokens.  Defaults
+				to off for version >= 1.4
+	 1.5: omitNorms defaults to true for primitive field types
+				(int, float, boolean, string...)
+	 1.6: useDocValuesAsStored defaults to true.
+-->
 
-  <!-- Valid attributes for fields:
+	<!-- Valid attributes for fields:
 	 name: mandatory - the name for the field
 	 type: mandatory - the name of a field type from the
 		 fieldTypes section
@@ -92,14 +116,14 @@
 		 when adding a document.
 	-->
 
-  <!-- field names should consist of alphanumeric or underscore characters only and
+	<!-- field names should consist of alphanumeric or underscore characters only and
 		not start with a digit.  This is not currently strictly enforced,
 		but other field names will not have first class support from all components
 		and back compatibility is not guaranteed.  Names with both leading and
 		trailing underscores (e.g. _version_) are reserved.
 	-->
 
-  <!-- In this _default configset, only four fields are pre-declared:
+	<!-- In this _default configset, only four fields are pre-declared:
 			 id, _version_, and _text_ and _root_. All other fields will be type guessed and added via the
 			 "add-unknown-fields-to-the-schema" update request processor chain declared in solrconfig.xml.
 
@@ -112,7 +136,7 @@
 
 	<field name="_version_" type="plong" indexed="false" stored="false" />
 
-  <field name="id" indexed="true" type="string" stored="true" required="true" multiValued="false" />
+	<field name="id" indexed="true" type="string" stored="true" required="true" multiValued="false" />
 
 	<field name="brand" type="string" indexed="true" stored="true" multiValued="false" />
 	<field name="name" type="string" indexed="true" stored="true" multiValued="false" />
@@ -180,7 +204,7 @@
 	<copyField source="variants" dest="text" />
 	<copyField source="description" dest="text" />
 
-  <!-- field type definitions. The "name" attribute is
+	<!-- field type definitions. The "name" attribute is
 		 just a label to be used by field definitions.  The "class"
 		 attribute and any other attributes determine the real
 		 behavior of the fieldType.
@@ -188,7 +212,7 @@
 		 standard package such as org.apache.solr.analysis
 	-->
 
-  <!-- sortMissingLast and sortMissingFirst attributes are optional attributes are
+	<!-- sortMissingLast and sortMissingFirst attributes are optional attributes are
 			 currently supported on types that are sorted internally as strings
 			 and on numeric types.
 		 This includes "string", "boolean", "pint", "pfloat", "plong", "pdate", "pdouble".
@@ -203,34 +227,34 @@
 			 field first in an ascending sort and last in a descending sort.
 	-->
 
-  <!-- The StrField type is not analyzed, but indexed/stored verbatim. -->
-  <fieldType name="string" class="solr.StrField" sortMissingLast="true" docValues="true" />
-  <fieldType name="strings" class="solr.StrField" sortMissingLast="true" multiValued="true" docValues="true" />
+	<!-- The StrField type is not analyzed, but indexed/stored verbatim. -->
+	<fieldType name="string" class="solr.StrField" sortMissingLast="true" docValues="true" />
+	<fieldType name="strings" class="solr.StrField" sortMissingLast="true" multiValued="true" docValues="true" />
 
-  <!-- boolean type: "true" or "false" -->
-  <fieldType name="boolean" class="solr.BoolField" sortMissingLast="true"/>
-  <fieldType name="booleans" class="solr.BoolField" sortMissingLast="true" multiValued="true"/>
+	<!-- boolean type: "true" or "false" -->
+	<fieldType name="boolean" class="solr.BoolField" sortMissingLast="true"/>
+	<fieldType name="booleans" class="solr.BoolField" sortMissingLast="true" multiValued="true"/>
 
-  <!--
+	<!--
 		Numeric field types that index values using KD-trees.
 		Point fields don't support FieldCache, so they must have docValues="true" if needed for sorting, faceting, functions, etc.
 	-->
-  <fieldType name="pint" class="solr.IntPointField" docValues="true"/>
-  <fieldType name="pfloat" class="solr.FloatPointField" docValues="true"/>
-  <fieldType name="plong" class="solr.LongPointField" docValues="true"/>
-  <fieldType name="pdouble" class="solr.DoublePointField" docValues="true"/>
+	<fieldType name="pint" class="solr.IntPointField" docValues="true"/>
+	<fieldType name="pfloat" class="solr.FloatPointField" docValues="true"/>
+	<fieldType name="plong" class="solr.LongPointField" docValues="true"/>
+	<fieldType name="pdouble" class="solr.DoublePointField" docValues="true"/>
 
-  <fieldType name="pints" class="solr.IntPointField" docValues="true" multiValued="true"/>
-  <fieldType name="pfloats" class="solr.FloatPointField" docValues="true" multiValued="true"/>
-  <fieldType name="plongs" class="solr.LongPointField" docValues="true" multiValued="true"/>
-  <fieldType name="pdoubles" class="solr.DoublePointField" docValues="true" multiValued="true"/>
-  <fieldType name="random" class="solr.RandomSortField" indexed="true"/>
+	<fieldType name="pints" class="solr.IntPointField" docValues="true" multiValued="true"/>
+	<fieldType name="pfloats" class="solr.FloatPointField" docValues="true" multiValued="true"/>
+	<fieldType name="plongs" class="solr.LongPointField" docValues="true" multiValued="true"/>
+	<fieldType name="pdoubles" class="solr.DoublePointField" docValues="true" multiValued="true"/>
+	<fieldType name="random" class="solr.RandomSortField" indexed="true"/>
 
-  <!-- since fields of this type are by default not stored or indexed,
+	<!-- since fields of this type are by default not stored or indexed,
 		 any data added to them will be ignored outright.  -->
-  <fieldType name="ignored" stored="false" indexed="false" multiValued="true" class="solr.StrField" />
+	<fieldType name="ignored" stored="false" indexed="false" multiValued="true" class="solr.StrField" />
 
-  <!-- The format for this date field is of the form 1995-12-31T23:59:59Z, and
+	<!-- The format for this date field is of the form 1995-12-31T23:59:59Z, and
 			 is a more restricted form of the canonical representation of dateTime
 			 http://www.w3.org/TR/xmlschema-2/#dateTime
 			 The trailing "Z" designates UTC time and is mandatory.
@@ -249,21 +273,21 @@
 										the current day
 
 		-->
-  <!-- KD-tree versions of date fields -->
-  <fieldType name="pdate" class="solr.DatePointField" docValues="true"/>
-  <fieldType name="pdates" class="solr.DatePointField" docValues="true" multiValued="true"/>
+	<!-- KD-tree versions of date fields -->
+	<fieldType name="pdate" class="solr.DatePointField" docValues="true"/>
+	<fieldType name="pdates" class="solr.DatePointField" docValues="true" multiValued="true"/>
 
-  <!--Binary data type. The data should be sent/retrieved in as Base64 encoded Strings -->
-  <fieldType name="binary" class="solr.BinaryField"/>
+	<!--Binary data type. The data should be sent/retrieved in as Base64 encoded Strings -->
+	<fieldType name="binary" class="solr.BinaryField"/>
 
-  <!--
+	<!--
 	RankFields can be used to store scoring factors to improve document ranking. They should be used
 	in combination with RankQParserPlugin.
 	(experimental)
 	-->
-  <fieldType name="rank" class="solr.RankField"/>
+	<fieldType name="rank" class="solr.RankField"/>
 
-  <!-- solr.TextField allows the specification of custom text analyzers
+	<!-- solr.TextField allows the specification of custom text analyzers
 			 specified as a tokenizer and a list of token filters. Different
 			 analyzers may be specified for indexing and querying.
 
@@ -275,7 +299,7 @@
 			 https://solr.apache.org/guide/solr/latest/indexing-guide/document-analysis.html#using-analyzers-tokenizers-and-filters
 	 -->
 
-  <!-- One can also specify an existing Analyzer class that has a
+	<!-- One can also specify an existing Analyzer class that has a
 			 default constructor via the class attribute on the analyzer element.
 			 Example:
 	<fieldType name="text_greek" class="solr.TextField">
@@ -283,40 +307,40 @@
 	</fieldType>
 	-->
 
-  <!-- A text field that only splits on whitespace for exact matching of words -->
-  <dynamicField name="*_ws" type="text_ws"  indexed="true"  stored="true"/>
-  <fieldType name="text_ws" class="solr.TextField" positionIncrementGap="100">
-    <analyzer>
-      <tokenizer name="whitespace"/>
-    </analyzer>
-  </fieldType>
+	<!-- A text field that only splits on whitespace for exact matching of words -->
+	<dynamicField name="*_ws" type="text_ws"  indexed="true"  stored="true"/>
+	<fieldType name="text_ws" class="solr.TextField" positionIncrementGap="100">
+		<analyzer>
+			<tokenizer name="whitespace"/>
+		</analyzer>
+	</fieldType>
 
-  <!-- A general text field that has reasonable, generic
+	<!-- A general text field that has reasonable, generic
 			 cross-language defaults: it tokenizes with StandardTokenizer,
 			 removes stop words from case-insensitive "stopwords.txt"
 			 (empty by default), and down cases.  At query time only, it
 			 also applies synonyms.
 	-->
-  <fieldType name="text_general" class="solr.TextField" positionIncrementGap="100" multiValued="true">
-    <analyzer type="index">
-      <tokenizer name="standard"/>
-      <filter name="stop" ignoreCase="true" words="stopwords.txt" />
-      <!-- in this example, we will only use synonyms at query time
+	<fieldType name="text_general" class="solr.TextField" positionIncrementGap="100" multiValued="true">
+		<analyzer type="index">
+			<tokenizer name="standard"/>
+			<filter name="stop" ignoreCase="true" words="stopwords.txt" />
+			<!-- in this example, we will only use synonyms at query time
 			<filter name="synonymGraph" synonyms="index_synonyms.txt" ignoreCase="true" expand="false"/>
 			<filter name="flattenGraph"/>
 			-->
-      <filter name="lowercase"/>
-    </analyzer>
-    <analyzer type="query">
-      <tokenizer name="standard"/>
-      <filter name="stop" ignoreCase="true" words="stopwords.txt" />
-      <filter name="synonymGraph" synonyms="synonyms.txt" ignoreCase="true" expand="true"/>
-      <filter name="lowercase"/>
-    </analyzer>
-  </fieldType>
+			<filter name="lowercase"/>
+		</analyzer>
+		<analyzer type="query">
+			<tokenizer name="standard"/>
+			<filter name="stop" ignoreCase="true" words="stopwords.txt" />
+			<filter name="synonymGraph" synonyms="synonyms.txt" ignoreCase="true" expand="true"/>
+			<filter name="lowercase"/>
+		</analyzer>
+	</fieldType>
 
 
-  <!-- SortableTextField generaly functions exactly like TextField,
+	<!-- SortableTextField generaly functions exactly like TextField,
 			 except that it supports, and by default uses, docValues for sorting (or faceting)
 			 on the first 1024 characters of the original field values (which is configurable).
 
@@ -324,68 +348,68 @@
 			 is that it takes up more space on disk; which is why it's not used in place of TextField
 			 for every fieldType in this _default schema.
 	-->
-  <dynamicField name="*_t_sort" type="text_gen_sort" indexed="true" stored="true" multiValued="false"/>
-  <dynamicField name="*_txt_sort" type="text_gen_sort" indexed="true" stored="true"/>
-  <fieldType name="text_gen_sort" class="solr.SortableTextField" positionIncrementGap="100" multiValued="true">
-    <analyzer type="index">
-      <tokenizer name="standard"/>
-      <filter name="stop" ignoreCase="true" words="stopwords.txt" />
-      <filter name="lowercase"/>
-    </analyzer>
-    <analyzer type="query">
-      <tokenizer name="standard"/>
-      <filter name="stop" ignoreCase="true" words="stopwords.txt" />
-      <filter name="synonymGraph" synonyms="synonyms.txt" ignoreCase="true" expand="true"/>
-      <filter name="lowercase"/>
-    </analyzer>
-  </fieldType>
+	<dynamicField name="*_t_sort" type="text_gen_sort" indexed="true" stored="true" multiValued="false"/>
+	<dynamicField name="*_txt_sort" type="text_gen_sort" indexed="true" stored="true"/>
+	<fieldType name="text_gen_sort" class="solr.SortableTextField" positionIncrementGap="100" multiValued="true">
+		<analyzer type="index">
+			<tokenizer name="standard"/>
+			<filter name="stop" ignoreCase="true" words="stopwords.txt" />
+			<filter name="lowercase"/>
+		</analyzer>
+		<analyzer type="query">
+			<tokenizer name="standard"/>
+			<filter name="stop" ignoreCase="true" words="stopwords.txt" />
+			<filter name="synonymGraph" synonyms="synonyms.txt" ignoreCase="true" expand="true"/>
+			<filter name="lowercase"/>
+		</analyzer>
+	</fieldType>
 
-  <dynamicField name="*_phon_en" type="phonetic_en"  indexed="true"  stored="true"/>
-  <fieldType name="phonetic_en" stored="false" indexed="true" class="solr.TextField" >
-    <analyzer>
-      <tokenizer name="standard"/>
-      <filter name="doubleMetaphone" inject="false"/>
-    </analyzer>
-  </fieldType>
+	<dynamicField name="*_phon_en" type="phonetic_en"  indexed="true"  stored="true"/>
+	<fieldType name="phonetic_en" stored="false" indexed="true" class="solr.TextField" >
+		<analyzer>
+			<tokenizer name="standard"/>
+			<filter name="doubleMetaphone" inject="false"/>
+		</analyzer>
+	</fieldType>
 
-  <!-- lowercases the entire field value, keeping it as a single token.  -->
-  <dynamicField name="*_s_lower" type="lowercase"  indexed="true"  stored="true"/>
-  <fieldType name="lowercase" class="solr.TextField" positionIncrementGap="100">
-    <analyzer>
-      <tokenizer name="keyword"/>
-      <filter name="lowercase" />
-    </analyzer>
-  </fieldType>
+	<!-- lowercases the entire field value, keeping it as a single token.  -->
+	<dynamicField name="*_s_lower" type="lowercase"  indexed="true"  stored="true"/>
+	<fieldType name="lowercase" class="solr.TextField" positionIncrementGap="100">
+		<analyzer>
+			<tokenizer name="keyword"/>
+			<filter name="lowercase" />
+		</analyzer>
+	</fieldType>
 
-  <!--
+	<!--
 		Example of using PathHierarchyTokenizerFactory at index time, so
 		queries for paths match documents at that path, or in descendent paths
 	-->
-  <dynamicField name="*_descendent_path" type="descendent_path"  indexed="true"  stored="true"/>
-  <fieldType name="descendent_path" class="solr.TextField">
-    <analyzer type="index">
-      <tokenizer name="pathHierarchy" delimiter="/" />
-    </analyzer>
-    <analyzer type="query">
-      <tokenizer name="keyword" />
-    </analyzer>
-  </fieldType>
+	<dynamicField name="*_descendent_path" type="descendent_path"  indexed="true"  stored="true"/>
+	<fieldType name="descendent_path" class="solr.TextField">
+		<analyzer type="index">
+			<tokenizer name="pathHierarchy" delimiter="/" />
+		</analyzer>
+		<analyzer type="query">
+			<tokenizer name="keyword" />
+		</analyzer>
+	</fieldType>
 
-  <!--
+	<!--
 		Example of using PathHierarchyTokenizerFactory at query time, so
 		queries for paths match documents at that path, or in ancestor paths
 	-->
-  <dynamicField name="*_ancestor_path" type="ancestor_path"  indexed="true"  stored="true"/>
-  <fieldType name="ancestor_path" class="solr.TextField">
-    <analyzer type="index">
-      <tokenizer name="keyword" />
-    </analyzer>
-    <analyzer type="query">
-      <tokenizer name="pathHierarchy" delimiter="/" />
-    </analyzer>
-  </fieldType>
+	<dynamicField name="*_ancestor_path" type="ancestor_path"  indexed="true"  stored="true"/>
+	<fieldType name="ancestor_path" class="solr.TextField">
+		<analyzer type="index">
+			<tokenizer name="keyword" />
+		</analyzer>
+		<analyzer type="query">
+			<tokenizer name="pathHierarchy" delimiter="/" />
+		</analyzer>
+	</fieldType>
 
-  <!-- This point type indexes the coordinates as separate fields (subFields)
+	<!-- This point type indexes the coordinates as separate fields (subFields)
 		If subFieldType is defined, it references a type, and a dynamic field
 		definition is created matching *___<typename>.  Alternately, if
 		subFieldSuffix is defined, that is used to create the subFields.
@@ -396,37 +420,37 @@
 		The subFields are an implementation detail of the fieldType, and end
 		users normally should not need to know about them.
 	 -->
-  <dynamicField name="*_point" type="point"  indexed="true"  stored="true"/>
-  <fieldType name="point" class="solr.PointType" dimension="2" subFieldSuffix="_d"/>
+	<dynamicField name="*_point" type="point"  indexed="true"  stored="true"/>
+	<fieldType name="point" class="solr.PointType" dimension="2" subFieldSuffix="_d"/>
 
-  <!-- A specialized field for geospatial search filters and distance sorting. -->
-  <fieldType name="location" class="solr.LatLonPointSpatialField" docValues="true"/>
+	<!-- A specialized field for geospatial search filters and distance sorting. -->
+	<fieldType name="location" class="solr.LatLonPointSpatialField" docValues="true"/>
 
-  <!-- A geospatial field type that supports multiValued and polygon shapes.
+	<!-- A geospatial field type that supports multiValued and polygon shapes.
 		For more information about this and other spatial fields see:
 		https://solr.apache.org/guide/solr/latest/query-guide/spatial-search.html
 	-->
-  <fieldType name="location_rpt" class="solr.SpatialRecursivePrefixTreeFieldType"
-             geo="true" distErrPct="0.025" maxDistErr="0.001" distanceUnits="kilometers" />
+	<fieldType name="location_rpt" class="solr.SpatialRecursivePrefixTreeFieldType"
+						 geo="true" distErrPct="0.025" maxDistErr="0.001" distanceUnits="kilometers" />
 
-  <!-- Payloaded field types -->
-  <fieldType name="delimited_payloads_float" stored="false" indexed="true" class="solr.TextField">
-    <analyzer>
-      <tokenizer name="whitespace"/>
-      <filter name="delimitedPayload" encoder="float"/>
-    </analyzer>
-  </fieldType>
-  <fieldType name="delimited_payloads_int" stored="false" indexed="true" class="solr.TextField">
-    <analyzer>
-      <tokenizer name="whitespace"/>
-      <filter name="delimitedPayload" encoder="integer"/>
-    </analyzer>
-  </fieldType>
-  <fieldType name="delimited_payloads_string" stored="false" indexed="true" class="solr.TextField">
-    <analyzer>
-      <tokenizer name="whitespace"/>
-      <filter name="delimitedPayload" encoder="identity"/>
-    </analyzer>
-  </fieldType>
+	<!-- Payloaded field types -->
+	<fieldType name="delimited_payloads_float" stored="false" indexed="true" class="solr.TextField">
+		<analyzer>
+			<tokenizer name="whitespace"/>
+			<filter name="delimitedPayload" encoder="float"/>
+		</analyzer>
+	</fieldType>
+	<fieldType name="delimited_payloads_int" stored="false" indexed="true" class="solr.TextField">
+		<analyzer>
+			<tokenizer name="whitespace"/>
+			<filter name="delimitedPayload" encoder="integer"/>
+		</analyzer>
+	</fieldType>
+	<fieldType name="delimited_payloads_string" stored="false" indexed="true" class="solr.TextField">
+		<analyzer>
+			<tokenizer name="whitespace"/>
+			<filter name="delimitedPayload" encoder="identity"/>
+		</analyzer>
+	</fieldType>
 
 </schema>
