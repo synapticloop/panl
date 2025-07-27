@@ -35,7 +35,7 @@
        that you fully re-index after changing this setting as it can
        affect both how text is indexed and queried.
   -->
-  <luceneMatchVersion>9.11</luceneMatchVersion>
+  <luceneMatchVersion>9.12</luceneMatchVersion>
 
   <!-- Data Directory
 
@@ -626,11 +626,6 @@
     </lst>
   </requestHandler>
 
-  <!-- A request handler that returns The More Like This Handler -->
-  <requestHandler name="/mlt" class="solr.MoreLikeThisHandler">
-    <str name="mlt.fl">text</str>
-  </requestHandler>
-
   <!-- Shared parameters for multiple Request Handlers -->
   <initParams path="/update/**,/query,/select,/spell">
     <lst name="defaults">
@@ -862,6 +857,10 @@
     <str name="pattern">[^\w-\.]</str>
     <str name="replacement">_</str>
   </updateProcessor>
+  <updateProcessor class="solr.NumFieldLimitingUpdateRequestProcessorFactory" name="max-fields">
+    <int name="maxFields">1000</int>
+    <bool name="warnOnly">true</bool>
+  </updateProcessor>
   <updateProcessor class="solr.ParseBooleanFieldUpdateProcessorFactory" name="parse-boolean"/>
   <updateProcessor class="solr.ParseLongFieldUpdateProcessorFactory" name="parse-long"/>
   <updateProcessor class="solr.ParseDoubleFieldUpdateProcessorFactory" name="parse-double"/>
@@ -905,7 +904,7 @@
       <str name="fieldType">pdoubles</str>
     </lst>
   </updateProcessor>
-
+  
 
   <!-- The update.autoCreateFields property can be turned to false to disable schemaless mode -->
   <updateRequestProcessorChain name="add-unknown-fields-to-the-schema" default="${update.autoCreateFields:true}"
