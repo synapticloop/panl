@@ -47,7 +47,7 @@ public class RangeTest extends TestBase {
 	@Test public void testDefault() throws Exception {
 		Root root = mapper.readValue(new URL(BASE_URL), Root.class);
 		assertFalse(root.error);
-		assertEquals(55L, root.response.numFound);
+		assertEquals(55L, root.panl.pagination.num_results);
 
 		// now test the adding and removing - there is only one
 		RangeFacet rangeFacet = root.panl.available.range_facets[0];
@@ -65,7 +65,7 @@ public class RangeTest extends TestBase {
 		// first up test the min and max value replacement
 		root = mapper.readValue(new URL(BASE_URL + beforeMinValue + during + afterMaxValue), Root.class);
 		assertFalse(root.error);
-		assertEquals(55L, root.response.numFound);
+		assertEquals(55L, root.panl.pagination.num_results);
 		assertEquals(1, root.panl.active.facet.length);
 
 		assertEquals("from%20light%20to%20heavy%20pencils", root.panl.active.facet[0].encoded);
@@ -75,7 +75,7 @@ public class RangeTest extends TestBase {
 		// Now test to ensure that min and max value replacements are made
 		root = mapper.readValue(new URL(BASE_URL + before + min + during + max + after), Root.class);
 		assertFalse(root.error);
-		assertEquals(55L, root.response.numFound);
+		assertEquals(55L, root.panl.pagination.num_results);
 		assertEquals(1, root.panl.active.facet.length);
 
 		assertEquals("from%20light%20to%20heavy%20pencils", root.panl.active.facet[0].encoded);
@@ -84,7 +84,7 @@ public class RangeTest extends TestBase {
 
 		root = mapper.readValue(new URL(BASE_URL + before + (min + 1) + during + (max - 1) + after), Root.class);
 		assertFalse(root.error);
-		assertEquals(48L, root.response.numFound);
+		assertEquals(48L, root.panl.pagination.num_results);
 		assertEquals(1, root.panl.active.facet.length);
 
 		assertEquals("weighing%20from%20" + (min + 1) + "%20grams%20to%20" + (max-1) +"%20grams", root.panl.active.facet[0].encoded);
