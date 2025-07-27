@@ -191,10 +191,6 @@ tasks.register('dockerLinux', Exec) {
 	dependsOn tasks.distTar
 }
 
-tasks.withType(Copy).configureEach {
-	duplicatesStrategy = DuplicatesStrategy.EXCLUDE
-}
-
 import org.apache.tools.ant.taskdefs.condition.Os
 
 tasks.register('docker') {
@@ -204,6 +200,11 @@ tasks.register('docker') {
 		dependsOn('dockerLinux')
 	}
 }
+
+tasks.withType(Copy).configureEach {
+	duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+}
+
 
 test {
 	useJUnitPlatform()
