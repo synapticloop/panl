@@ -49,12 +49,15 @@
 package panl.response.panl;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import panl.response.panl.response.Doc;
 
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class Response {
 	@JsonIgnore public Doc[] docs;
-	public long numFound;
-	public long start;
-	public long maxScore;
-	public boolean numFoundExact;
+	@JsonIgnore public long numFound;
+	@JsonIgnore public long start;
+	@JsonIgnore public long maxScore;
+	@JsonIgnore public boolean numFoundExact;
+	@JsonIgnore public String name;
 }

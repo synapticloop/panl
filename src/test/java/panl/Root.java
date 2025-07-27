@@ -83,7 +83,7 @@ public class Root {
 	@JsonIgnore public Object configuration;
 	@JsonIgnore public Object parameters;
 
-	public Response response;
+	public Response[] response;
 	public Panl panl;
 	public boolean error;
 
@@ -128,7 +128,7 @@ public class Root {
 	 *
 	 * @return the response
 	 */
-	public Response getResponse() {
+	public Response[] getResponse() {
 		return response;
 	}
 	/**
@@ -137,7 +137,7 @@ public class Root {
 	 * @param response the response to set
 	 */
 	public void setResponse(
-			Response response) {
+			Response[] response) {
 		this.response = response;
 	}
 	
