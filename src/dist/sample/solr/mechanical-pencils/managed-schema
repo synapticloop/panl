@@ -124,7 +124,7 @@
 	<field name="grip_type" type="string" indexed="true" stored="true" multiValued="false" />
 	<field name="grip_shape" type="string" indexed="true" stored="true" multiValued="false" />
 	<field name="cap_shape" type="string" indexed="true" stored="true" multiValued="false" />
-
+   
 	<field name="category" type="string" indexed="true" stored="true" multiValued="false" />
 
 	<field name="length" type="pint" indexed="true" stored="true" multiValued="false" />
@@ -133,7 +133,7 @@
 	<field name="weight" type="pint" indexed="true" stored="true" multiValued="false" />
 	<field name="relative_weight" type="pint" indexed="true" stored="true" multiValued="false" />
 	<field name="lead_length" type="pint" indexed="true" stored="true" multiValued="false" />
-   
+
 	<field name="disassemble" type="boolean" indexed="true" stored="true" multiValued="false" />
 
 	<field name="nib_material" type="string" indexed="true" stored="true" multiValued="false" />
