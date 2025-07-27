@@ -212,6 +212,11 @@ tasks.register('testIntegrationSpider', Test) {
 	outputs.upToDateWhen { false }
 }
 
+tasks.named('distTar', Tar) {
+	// Example: Change the compression to GZIP (if it wasn't already)
+	compression = Compression.GZIP
+}
+
 jacocoTestReport {
 	dependsOn test
 }
