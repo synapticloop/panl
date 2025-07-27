@@ -26,20 +26,19 @@ The mention and references of any Apache projects, sub-projects, or resources in
 
 # Development Information 
 
-| Latest<br />Release                                                          | Latest Book Release                                                | Development Branch (version)                                             | 
-|------------------------------------------------------------------------------|--------------------------------------------------------------------|--------------------------------------------------------------------------|
-| ![GitHub Release](https://img.shields.io/github/v/release/synapticloop/panl) | Synapticloop - Getting Started With Panl version 2.1.0 (release 1) | `hidden-summer` [See Branch](https://github.com/synapticloop/panl/tree/hidden-summer) (2.1.0) |
+| Latest<br />Release                                                          | Latest Book Release                                                | Development Branch (version) | 
+|------------------------------------------------------------------------------|--------------------------------------------------------------------|------------------------------|
+| ![GitHub Release](https://img.shields.io/github/v/release/synapticloop/panl) | Synapticloop - Getting Started With Panl version 2.1.0 (release 1) | none yet :)                  |
 
 
 **Major branch release status:**
 
 | BRANCH          | STATUS   | VERSION | TYPE                                    | LATEST SOLR<br />VERSION TESTED |
 |-----------------|----------|---------|-----------------------------------------|---------------------------------|
-| `MAIN`          | [![CircleCI](https://dl.circleci.com/status-badge/img/circleci/3Y1eqqe4mcvtSZuzJnQ3tJ/DyFKUm7c7AoLa1wHmRjAnf/tree/main.svg?style=shield)](https://dl.circleci.com/status-badge/redirect/circleci/3Y1eqqe4mcvtSZuzJnQ3tJ/DyFKUm7c7AoLa1wHmRjAnf/tree/main)           | `2.0.0` | Trunk - integration with Solr version 9 | `9.6.1`                         |
-| `SOLR PANL 9`   | [![CircleCI](https://dl.circleci.com/status-badge/img/circleci/3Y1eqqe4mcvtSZuzJnQ3tJ/DyFKUm7c7AoLa1wHmRjAnf/tree/solr-panl-9.svg?style=shield)](https://dl.circleci.com/status-badge/redirect/circleci/3Y1eqqe4mcvtSZuzJnQ3tJ/DyFKUm7c7AoLa1wHmRjAnf/tree/solr-panl-9)           | `2.0.0` | Panl integration with Solr version 9    | `9.6.1`                         |
-| `SOLR PANL 8`   | [![CircleCI](https://dl.circleci.com/status-badge/img/circleci/3Y1eqqe4mcvtSZuzJnQ3tJ/DyFKUm7c7AoLa1wHmRjAnf/tree/solr-panl-8.svg?style=shield)](https://dl.circleci.com/status-badge/redirect/circleci/3Y1eqqe4mcvtSZuzJnQ3tJ/DyFKUm7c7AoLa1wHmRjAnf/tree/solr-panl-8)           | `2.0.0` | Panl integration with Solr version 8    | `8.11.4`                        |
-| `SOLR PANL 7`   | [![CircleCI](https://dl.circleci.com/status-badge/img/circleci/3Y1eqqe4mcvtSZuzJnQ3tJ/DyFKUm7c7AoLa1wHmRjAnf/tree/solr-panl-7.svg?style=shield)](https://dl.circleci.com/status-badge/redirect/circleci/3Y1eqqe4mcvtSZuzJnQ3tJ/DyFKUm7c7AoLa1wHmRjAnf/tree/solr-panl-7)           | `2.0.0` | Panl integration with Solr version 7    | `7.7.3`                         |
-| `hidden-summer` | [![CircleCI](https://dl.circleci.com/status-badge/img/circleci/3Y1eqqe4mcvtSZuzJnQ3tJ/DyFKUm7c7AoLa1wHmRjAnf/tree/hidden-summer.svg?style=shield)](https://dl.circleci.com/status-badge/redirect/circleci/3Y1eqqe4mcvtSZuzJnQ3tJ/DyFKUm7c7AoLa1wHmRjAnf/tree/hidden-summer) | `2.1.0` | Panl development release version 2.1.0  | `9.9.0`                         |
+| `MAIN`          | [![CircleCI](https://dl.circleci.com/status-badge/img/circleci/3Y1eqqe4mcvtSZuzJnQ3tJ/DyFKUm7c7AoLa1wHmRjAnf/tree/main.svg?style=shield)](https://dl.circleci.com/status-badge/redirect/circleci/3Y1eqqe4mcvtSZuzJnQ3tJ/DyFKUm7c7AoLa1wHmRjAnf/tree/main)           | `2.1.0` | Trunk - integration with Solr version 9 | `9.9.0`                         |
+| `SOLR PANL 9`   | [![CircleCI](https://dl.circleci.com/status-badge/img/circleci/3Y1eqqe4mcvtSZuzJnQ3tJ/DyFKUm7c7AoLa1wHmRjAnf/tree/solr-panl-9.svg?style=shield)](https://dl.circleci.com/status-badge/redirect/circleci/3Y1eqqe4mcvtSZuzJnQ3tJ/DyFKUm7c7AoLa1wHmRjAnf/tree/solr-panl-9)           | `2.1.0` | Panl integration with Solr version 9    | `9.9.0`                         |
+| `SOLR PANL 8`   | [![CircleCI](https://dl.circleci.com/status-badge/img/circleci/3Y1eqqe4mcvtSZuzJnQ3tJ/DyFKUm7c7AoLa1wHmRjAnf/tree/solr-panl-8.svg?style=shield)](https://dl.circleci.com/status-badge/redirect/circleci/3Y1eqqe4mcvtSZuzJnQ3tJ/DyFKUm7c7AoLa1wHmRjAnf/tree/solr-panl-8)           | `2.1.0` | Panl integration with Solr version 8    | `8.11.4`                        |
+| `SOLR PANL 7`   | [![CircleCI](https://dl.circleci.com/status-badge/img/circleci/3Y1eqqe4mcvtSZuzJnQ3tJ/DyFKUm7c7AoLa1wHmRjAnf/tree/solr-panl-7.svg?style=shield)](https://dl.circleci.com/status-badge/redirect/circleci/3Y1eqqe4mcvtSZuzJnQ3tJ/DyFKUm7c7AoLa1wHmRjAnf/tree/solr-panl-7)           | `2.1.0` | Panl integration with Solr version 7    | `7.7.3`                         |
 
 > We _always_ recommend that you use the most recently available release which
 > contains bug fixes and new functionality and is _generally_ backwards
