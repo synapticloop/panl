@@ -25,6 +25,10 @@ package com.synapticloop.panl.server.handler.properties;
  */
 
 import com.formdev.flatlaf.util.StringUtils;
+import com.synapticloop.panl.exception.PanlServerException;
+import com.synapticloop.panl.util.Constants;
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -39,23 +43,11 @@ import java.util.*;
 public class PanlProperties {
 	private static final Logger LOGGER = LoggerFactory.getLogger(PanlProperties.class);
 
-	public static final String PROPERTY_KEY_PANL_RESULTS_TESTING_URLS = "panl.results.testing.urls";
-	public static final String PROPERTY_KEY_SOLRJ_CLIENT = "solrj.client";
-	public static final String PROPERTY_KEY_SOLR_SEARCH_SERVER_URL = "solr.search.server.url";
-	public static final String PROPERTY_KEY_PANL_STATUS_404_VERBOSE = "panl.status.404.verbose";
-	public static final String PROPERTY_KEY_PANL_STATUS_500_VERBOSE = "panl.status.500.verbose";
-	public static final String PROPERTY_KEY_PANL_DECIMAL_POINT = "panl.decimal.point";
-
-	public static final String DEFAULT_CLOUD_SOLR_CLIENT = "CloudSolrClient";
-	public static final String DEFAULT_SOLR_URL = "http://localhost:8983/solr";
-	public static final String DEFAULT_FALSE = "false";
-	public static final String DEFAULT_TRUE = "true";
-	public static final String PROPERTY_KEY_PREFIX_PANL_COLLECTION = "panl.collection.";
-
 	/**
 	 * <p>The SolrJ client to use.</p>
 	 */
 	private final String solrjClient;
+
 	/**
 	 * <p>The Solr search server URL(s) to use, which may include a zookeeper
 	 * prfix</p>
@@ -66,23 +58,37 @@ public class PanlProperties {
 	 * <p>Whether the testing URLs are enabled.</p>
 	 */
 	private final boolean hasPanlResultsTestingUrls;
+
 	/**
 	 * <p>Whether the testing URLs are enabled.</p>
 	 */
 	private final boolean panlStatus404Verbose;
+
 	/**
 	 * <p>Whether the testing URLs are enabled.</p>
 	 */
 	private final boolean panlStatus500Verbose;
+
 	/**
 	 * <p>Whether to use a decimal point as the delimiter between the integer and
 	 * fractional parts.  (Used for internationalisation)</p>
 	 */
 	private static boolean isDecimalPoint = true;
+
+	/**
+	 * <p>Remove the Solr response keys that are duplicated in the panl response.</p>
+	 */
+	private final boolean removeSolrJsonKeys;
+
 	/**
 	 * <p>A map of the </p>
 	 */
 	private final Map<String, List<String>> panlCollections = new HashMap<>();
+
+	/**
+	 * <p>The extra information as a JSON Object</p>
+	 */
+	private JSONObject jsonExtraObject = null;
 
 	/**
 	 * <p>Instantiate the Panl properties which defines what Solr server to
@@ -92,48 +98,68 @@ public class PanlProperties {
 	 *
 	 * @param properties The properties file
 	 */
-	public PanlProperties(Properties properties) {
+	public PanlProperties(Properties properties) throws PanlServerException {
 		this.hasPanlResultsTestingUrls =
 			properties
-				.getProperty(PROPERTY_KEY_PANL_RESULTS_TESTING_URLS, DEFAULT_FALSE)
-				.equals(DEFAULT_TRUE);
+				.getProperty(Constants.Property.Panl.PANL_RESULTS_TESTING_URLS, Constants.BOOLEAN_FALSE_VALUE)
+				.equals(Constants.BOOLEAN_TRUE_VALUE);
 
 		PanlProperties.isDecimalPoint = properties
-			.getProperty(PROPERTY_KEY_PANL_DECIMAL_POINT, DEFAULT_FALSE)
-			.equals(DEFAULT_TRUE);
+			.getProperty(Constants.Property.Panl.PANL_DECIMAL_POINT, Constants.BOOLEAN_FALSE_VALUE)
+			.equals(Constants.BOOLEAN_TRUE_VALUE);
 
 		String solrjClientTemp;
-		solrjClientTemp = properties.getProperty(PROPERTY_KEY_SOLRJ_CLIENT, null);
+		solrjClientTemp = properties.getProperty(Constants.Property.Panl.SOLRJ_CLIENT, null);
 		if (solrjClientTemp == null) {
 			LOGGER.warn(
 				"Property '{}' could not be found, defaulting to '{}'",
-				PROPERTY_KEY_SOLRJ_CLIENT,
-				DEFAULT_CLOUD_SOLR_CLIENT);
-			solrjClientTemp = DEFAULT_CLOUD_SOLR_CLIENT;
+				Constants.Property.Panl.SOLRJ_CLIENT,
+				Constants.Property.Panl.DEFAULT_CLOUD_SOLR_CLIENT);
+			solrjClientTemp = Constants.Property.Panl.DEFAULT_CLOUD_SOLR_CLIENT;
 		}
 
 		this.solrjClient = solrjClientTemp;
 
 		String solrSearchServerUrlTemp;
-		solrSearchServerUrlTemp = properties.getProperty(PROPERTY_KEY_SOLR_SEARCH_SERVER_URL, null);
+		solrSearchServerUrlTemp = properties.getProperty(Constants.Property.Panl.SOLR_SEARCH_SERVER_URL, null);
 		if (solrSearchServerUrlTemp == null) {
-			LOGGER.warn("Property '{}' could not be found, defaulting to '{}'", PROPERTY_KEY_SOLR_SEARCH_SERVER_URL,
-				DEFAULT_SOLR_URL);
-			solrSearchServerUrlTemp = DEFAULT_SOLR_URL;
+			LOGGER.warn("Property '{}' could not be found, defaulting to '{}'", Constants.Property.Panl.SOLR_SEARCH_SERVER_URL,
+				Constants.Property.Panl.DEFAULT_SOLR_URL);
+			solrSearchServerUrlTemp = Constants.Property.Panl.DEFAULT_SOLR_URL;
+		} else {
+			LOGGER.info("Setting '{}' to {}", Constants.Property.Panl.SOLR_SEARCH_SERVER_URL, solrSearchServerUrlTemp);
 		}
 
 		this.solrSearchServerUrl = solrSearchServerUrlTemp;
 
 		this.panlStatus404Verbose = properties
-			.getProperty(PROPERTY_KEY_PANL_STATUS_404_VERBOSE, DEFAULT_FALSE)
-			.equals(DEFAULT_TRUE);
+			.getProperty(Constants.Property.Panl.PANL_STATUS_404_VERBOSE, Constants.BOOLEAN_FALSE_VALUE)
+			.equals(Constants.BOOLEAN_TRUE_VALUE);
 		this.panlStatus500Verbose = properties
-			.getProperty(PROPERTY_KEY_PANL_STATUS_500_VERBOSE, DEFAULT_FALSE)
-			.equals(DEFAULT_TRUE);
+			.getProperty(Constants.Property.Panl.PANL_STATUS_500_VERBOSE, Constants.BOOLEAN_FALSE_VALUE)
+			.equals(Constants.BOOLEAN_TRUE_VALUE);
+
+		this.removeSolrJsonKeys = properties
+				.getProperty(Constants.Property.Panl.PANL_REMOVE_SOLR_JSON_KEYS, Constants.BOOLEAN_FALSE_VALUE)
+				.equals(Constants.BOOLEAN_TRUE_VALUE);
+
+		String jsonTemp = properties.getProperty(Constants.Property.Panl.PANL_SERVER_EXTRA, "");
+		if(!jsonTemp.trim().isEmpty()) {
+			try {
+				this.jsonExtraObject = new JSONObject(jsonTemp);
+			} catch(JSONException ex) {
+				throw new PanlServerException("Could not parse the property '" +
+						Constants.Property.Panl.PANL_SERVER_EXTRA +
+						"' which __MUST__ be a valid JSON Object.  value was '" +
+						jsonTemp +
+						"'.");
+			}
+		}
 
 		for (String stringPropertyName : properties.stringPropertyNames()) {
-			if (stringPropertyName.startsWith(PROPERTY_KEY_PREFIX_PANL_COLLECTION)) {
-				String panlCollection = stringPropertyName.substring(PROPERTY_KEY_PREFIX_PANL_COLLECTION.length());
+			if (stringPropertyName.startsWith(Constants.Property.Panl.PANL_COLLECTION)) {
+				String panlCollection = stringPropertyName.substring(
+						Constants.Property.Panl.PANL_COLLECTION.length());
 				String collectionPropertyFiles = properties.getProperty(stringPropertyName);
 				List<String> tempList = StringUtils.split(collectionPropertyFiles, ',');
 				List<String> finalList = new ArrayList<>();
@@ -233,6 +259,26 @@ public class PanlProperties {
 	 */
 	public Map<String, List<String>> getPanlCollectionsMap() {
 		return panlCollections;
+	}
+
+	/**
+	 * <p>Return whether to remove the Solr JSON keys that are duplicated by the
+	 * Panl response.</p>
+	 *
+	 * @return whether to remove the Solr JSON keys that are duplicated.
+	 */
+	public boolean getRemoveSolrJsonKeys() {
+		return(removeSolrJsonKeys);
+	}
+
+	/**
+	 * <p>Get the 'extra' information JSON Object (if set) - will return null if
+	 * it is not set.</p>
+	 *
+	 * @return The 'extra' JSON Object - will return null if not set.
+	 */
+	public JSONObject getExtraJsonObject() {
+		return(jsonExtraObject);
 	}
 }
 

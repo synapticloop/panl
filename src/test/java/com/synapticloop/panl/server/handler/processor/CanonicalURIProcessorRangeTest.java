@@ -13,7 +13,8 @@ public class CanonicalURIProcessorRangeTest {
 		TestHelper.assertCanonicalURI("/test/default/11/brand-name/wb/", "/11/1/10/brand-name/wpnb/");
 		TestHelper.assertCanonicalURI("/test/default/brand-name/11/bw/", "/11/1/10/brand-name/wpnb/");
 
-		TestHelper.assertCanonicalURI("/test/default/11/brand-name/ws+o-b/", "/11/1/10/brand-name/wpno-b/");
+		TestHelper.assertCanonicalURI("/test/default/11/brand-name/ws+o+b/", "/11/1/10/brand-name/wpno+b/");
+		TestHelper.assertCanonicalURI("/test/default/11/brand-name/ws+o-b/", "/11/1/10/brand-name/wpnb/");
 
 		TestHelper.assertCanonicalURI("/test/default/11/brand-name/3/7/wbpn/", "/11/3/7/brand-name/wpnb/");
 	}

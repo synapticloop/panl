@@ -90,7 +90,9 @@ public class PanlEditor {
 		mainWindowFrame = new JFrame("Panl Configuration Editor");
 		mainWindowFrame.setIconImage(ICON_APP.getImage());
 
-		mainWindowFrame.setResizable(false);
+		mainWindowFrame.setResizable(true);
+		mainWindowFrame.setMinimumSize(new Dimension(900, 800));
+		mainWindowFrame.setPreferredSize(new Dimension(900, 800));
 		mainWindowFrame.addWindowListener(new WindowAdapter() {
 			@Override public void windowClosing(WindowEvent e) {
 				if(actionOnWindowClosing()) {
@@ -103,7 +105,7 @@ public class PanlEditor {
 
 		mainWindowFrame.setJMenuBar(createJMenuBar(mainWindowFrame));
 
-		JTabbedPane jTabbedPane = new JTabbedPane();
+		JTabbedPane jTabbedPane = new JTabbedPane(SwingConstants.TOP, JTabbedPane.SCROLL_TAB_LAYOUT);
 		jTabbedPane.putClientProperty( "FlatLaf.style", "font: bold" );
 		Component newCollection = NewCollectionTab.createNewCollection();
 		jTabbedPane.add(TAB_TITLE_ADD, newCollection);
@@ -264,10 +266,18 @@ public class PanlEditor {
 		return panlProperties;
 	}
 
+	@Deprecated
 	public void setIsEdited(boolean isEdited) {
+		setIsEdited(isEdited, null);
+	}
+
+	public void setIsEdited(boolean isEdited, JButton saveButton) {
 		this.isEdited = isEdited;
 		if(isEdited) {
 			labelEdited.setText("[edited]");
+			if(null != saveButton) {
+				saveButton.setEnabled(true);
+			}
 		} else {
 			labelEdited.setText("");
 		}

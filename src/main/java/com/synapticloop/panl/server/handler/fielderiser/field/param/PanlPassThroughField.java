@@ -30,6 +30,7 @@ import com.synapticloop.panl.server.handler.properties.CollectionProperties;
 import com.synapticloop.panl.server.handler.tokeniser.LpseTokeniser;
 import com.synapticloop.panl.server.handler.tokeniser.token.LpseToken;
 import com.synapticloop.panl.server.handler.tokeniser.token.param.PassThroughLpseToken;
+import com.synapticloop.panl.util.Constants;
 import org.apache.solr.client.solrj.SolrQuery;
 import org.json.JSONObject;
 import org.slf4j.Logger;
@@ -37,15 +38,18 @@ import org.slf4j.LoggerFactory;
 
 import java.util.*;
 
+import static com.synapticloop.panl.util.Constants.Property.Panl.PANL_PARAM_PASSTHROUGH_CANONICAL;
+
 public class PanlPassThroughField extends BaseField {
 	private static final Logger LOGGER = LoggerFactory.getLogger(PanlPassThroughField.class);
-	public static final String PROPERTY_KEY_PANL_PARAM_PASSTHROUGH_CANONICAL = "panl.param.passthrough.canonical";
+
 	private final boolean panlParamPassThroughCanonical;
 
 	public PanlPassThroughField(String lpseCode, String propertyKey, Properties properties, String solrCollection, String panlCollectionUri) throws PanlServerException {
 		super(lpseCode, properties, propertyKey, solrCollection, panlCollectionUri);
 
-		this.panlParamPassThroughCanonical = properties.getProperty(PROPERTY_KEY_PANL_PARAM_PASSTHROUGH_CANONICAL, "false").equals("true");
+		this.panlParamPassThroughCanonical =
+				properties.getProperty(PANL_PARAM_PASSTHROUGH_CANONICAL, "false").equals("true");
 	}
 
 	@Override
@@ -66,9 +70,19 @@ public class PanlPassThroughField extends BaseField {
 		}
 	}
 
+	/**
+	 * <p>Get the LPSE code for the canonical URL, which will only return a value
+	 * if the passthrough value has been set.</p>
+	 *
+	 * @param panlTokenMap The panl Token Map
+	 * @param collectionProperties the collection properties
+	 *
+	 * @return the canonical LPSe code (or an empty string if no canonical value
+	 * has been passed through.
+	 */
 	@Override
 	public String getCanonicalLpseCode(Map<String, List<LpseToken>> panlTokenMap, CollectionProperties collectionProperties) {
-		if(this.panlParamPassThroughCanonical) {
+		if(this.panlParamPassThroughCanonical && panlTokenMap.containsKey(lpseCode)) {
 			return(this.lpseCode);
 		} else {
 			return ("");
@@ -114,4 +128,9 @@ public class PanlPassThroughField extends BaseField {
 				panlCollectionUri,
 				lpseCode);
 	}
+
+	@Override public String getPanlFieldType() {
+		return("PASSTHROUGH");
+	}
+
 }

@@ -48,7 +48,10 @@
 
 package panl.response.panl.available;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 public class Facet {
+	@JsonIgnore public Object extra;
 	public Uri uris;
 	public Value[] values;
 	public String facet_name;

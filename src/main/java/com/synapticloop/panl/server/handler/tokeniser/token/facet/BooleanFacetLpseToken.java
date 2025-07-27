@@ -28,6 +28,7 @@ import com.synapticloop.panl.server.handler.fielderiser.field.facet.PanlBooleanF
 import com.synapticloop.panl.server.handler.properties.CollectionProperties;
 import com.synapticloop.panl.server.handler.tokeniser.LpseTokeniser;
 import com.synapticloop.panl.server.handler.tokeniser.token.LpseToken;
+import com.synapticloop.panl.util.Constants;
 
 import java.util.StringTokenizer;
 
@@ -39,7 +40,7 @@ import java.util.StringTokenizer;
  *   <li><code>false</code></li>
  * </ul>
  *
- * <p>BOOLEAN facets can have a prefix, a suffix, neither, or both as well as a
+ * <p>BOOLEAN facets can have a prefix, a suffix, neither, or both, as well as a
  * true/false value replacement.</p>
  *
  * @author syanapticloop
@@ -47,8 +48,14 @@ import java.util.StringTokenizer;
 public class BooleanFacetLpseToken extends LpseToken {
 	public static final String TOKEN_TYPE = "facet";
 
-	private String solrField = null;
-
+	/**
+	 * <p>Instantiate a BOOLEAN Facet LPSE Token.</p>
+	 *
+	 * @param collectionProperties The Collection that this belongs to
+	 * @param lpseCode The LPSE code
+	 * @param lpseTokeniser The LPSE tokeniser
+	 * @param valueTokeniser The value tokeniser
+	 */
 	public BooleanFacetLpseToken(
 			CollectionProperties collectionProperties,
 			String lpseCode,
@@ -89,13 +96,12 @@ public class BooleanFacetLpseToken extends LpseToken {
 		} else {
 			this.isValid = false;
 		}
-
 	}
 
 	@Override public String explain() {
 		return ("PANL " +
 				(this.isValid ? "[  VALID  ]" : "[ INVALID ]") +
-				" <facet (BOOLEAN)>   LPSE code '" +
+				" <facet (BOOLEAN)>    LPSE code '" +
 				this.lpseCode +
 				"' (solr field '" +
 				this.solrField +
@@ -106,12 +112,19 @@ public class BooleanFacetLpseToken extends LpseToken {
 				"'.");
 	}
 
-	public String getInverseBooleanValue(LpseToken lpseToken) {
+
+	/**
+	 * <p>Return the inverse BOOLEAN value for the token, which will be encoded
+	 * if there is a true/false/value replacement.</p>
+	 *
+	 * @return The inverse (and encoded) BOOLEAN value.
+	 */
+	public String getInverseBooleanValue() {
 		PanlBooleanFacetField lpseField = (PanlBooleanFacetField) collectionProperties.getLpseField(this.lpseCode);
-		if(value.equals("true")) {
-			return(lpseField.getEncodedPanlValue("false"));
+		if(value.equals(Constants.BOOLEAN_TRUE_VALUE)) {
+			return(lpseField.getEncodedPanlValue(Constants.BOOLEAN_FALSE_VALUE));
 		} else {
-			return(lpseField.getEncodedPanlValue("true"));
+			return(lpseField.getEncodedPanlValue(Constants.BOOLEAN_TRUE_VALUE));
 		}
 
 	}
@@ -120,11 +133,41 @@ public class BooleanFacetLpseToken extends LpseToken {
 		return TOKEN_TYPE;
 	}
 
+	/**
+	 * <p>Return the Solr field name for this token</p>
+	 *
+	 * @return The Solr field name for this token.
+	 */
 	public String getSolrField() {
 		return solrField;
 	}
 
+	/**
+	 * <p>A BOOLEAN facet cannot have multiple, it will either be a true or false
+	 * value, however, physically you can have more than one value passed through,
+	 * it is the further values that will be marked as invalid.</p>
+	 *
+	 * <p>I.e. logically, you cannot have two BOOLEAN values passed through,
+	 * in reality you could pass through as many as you want.</p>
+	 *
+	 * @return ALWAYS 'true', although any further values will be ignored by Panl
+	 *    and marked as 'INVALID'
+	 */
 	@Override public boolean getCanHaveMultiple() {
 		return (true);
 	}
+
+	/**
+	 * <p>Get the equivalence value, which will only return the LPSE code with a
+	 * forward slash, as it doesn't matter whether it is true or false, you may
+	 * only have one LPSE token value for this token.</p>
+	 *
+	 * @return The equivalence value
+	 */
+	public String getEquivalenceValue() {
+		// as there cannot be multiple, the equivalence value is just the lpse
+		// code with a forward slash
+		return(lpseCode + "/");
+	}
+
 }

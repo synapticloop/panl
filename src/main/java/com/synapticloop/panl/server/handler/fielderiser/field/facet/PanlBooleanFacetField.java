@@ -29,21 +29,19 @@ import com.synapticloop.panl.server.handler.properties.CollectionProperties;
 import com.synapticloop.panl.server.handler.tokeniser.LpseTokeniser;
 import com.synapticloop.panl.server.handler.tokeniser.token.LpseToken;
 import com.synapticloop.panl.server.handler.tokeniser.token.facet.BooleanFacetLpseToken;
+import com.synapticloop.panl.util.Constants;
 import com.synapticloop.panl.util.PanlLPSEHelper;
 import org.apache.solr.client.solrj.SolrQuery;
 import org.json.JSONObject;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.net.URLDecoder;
 import java.nio.charset.StandardCharsets;
 import java.util.*;
 
-import static com.synapticloop.panl.server.handler.processor.Processor.*;
-
 public class PanlBooleanFacetField extends PanlFacetField {
-	public static final String BOOLEAN_TRUE_VALUE = "true";
-	public static final String BOOLEAN_FALSE_VALUE = "false";
-	public static final String JSON_KEY_IS_BOOLEAN_FACET = "is_boolean_facet";
-	public static final String JSON_KEY_CHECKBOX_VALUE = "checkbox_value";
+	private static final Logger LOGGER = LoggerFactory.getLogger(PanlBooleanFacetField.class);
 
 	// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - //
 	//                         BOOLEAN Facet properties                        //
@@ -63,17 +61,19 @@ public class PanlBooleanFacetField extends PanlFacetField {
 	 * @param propertyKey The property key from the properties file
 	 * @param properties The properties to look up
 	 * @param solrCollection The Solr collection that this will connect to (this
-	 * 		is used for debugging and logging output)
+	 *    is used for debugging and logging output)
 	 * @param panlCollectionUri The Panl collection URI that this is bound to
-	 * 		(this is used for debugging and logging output)
+	 *    (this is used for debugging and logging output)
 	 * @param lpseLength The length of the LPSE code
 	 *
 	 * @throws PanlServerException If there was an error parsing/decoding the
-	 * 		token
+	 *    token
 	 */
 	public PanlBooleanFacetField(String lpseCode, String propertyKey, Properties properties, String solrCollection,
-				String panlCollectionUri, int lpseLength) throws PanlServerException {
+			String panlCollectionUri, int lpseLength) throws PanlServerException {
+
 		super(lpseCode, propertyKey, properties, solrCollection, panlCollectionUri, lpseLength);
+
 		validateProperties();
 
 		populateBooleanReplacements();
@@ -82,9 +82,8 @@ public class PanlBooleanFacetField extends PanlFacetField {
 		populateSolrFieldTypeValidation();
 		populatePanlAndSolrFieldNames();
 
-		logWarnProperties(this.lpseCode, PROPERTY_KEY_PANL_OR_FACET + this.lpseCode);
-		logWarnProperties(this.lpseCode, PROPERTY_KEY_PANL_RANGE_FACET + this.lpseCode);
-		logDetails();
+		logWarnProperties(this.lpseCode, Constants.Property.Panl.PANL_OR_FACET + this.lpseCode);
+		logWarnProperties(this.lpseCode, Constants.Property.Panl.PANL_RANGE_FACET + this.lpseCode);
 	}
 
 	/**
@@ -100,18 +99,28 @@ public class PanlBooleanFacetField extends PanlFacetField {
 		populateSolrFieldTypeValidation();
 
 		if (null != solrFieldType && solrFieldType.equals(TYPE_SOLR_BOOL_FIELD)) {
-			this.booleanTrueReplacement = properties.getProperty("panl.bool." + this.lpseCode + ".true", null);
+			this.booleanTrueReplacement = properties.getProperty(
+					Constants.Property.Panl.PANL_BOOL +
+							this.lpseCode +
+							Constants.Property.Panl.SUFFIX_TRUE,
+					null);
+
 			if (null != this.booleanTrueReplacement) {
 				hasBooleanTrueReplacement = true;
 			} else {
-				this.booleanTrueReplacement = BOOLEAN_TRUE_VALUE;
+				this.booleanTrueReplacement = Constants.BOOLEAN_TRUE_VALUE;
 			}
 
-			this.booleanFalseReplacement = properties.getProperty("panl.bool." + this.lpseCode + ".false", null);
+			this.booleanFalseReplacement = properties.getProperty(
+					Constants.Property.Panl.PANL_BOOL +
+							this.lpseCode +
+							Constants.Property.Panl.SUFFIX_FALSE,
+					null);
+
 			if (null != this.booleanFalseReplacement) {
 				hasBooleanFalseReplacement = true;
 			} else {
-				this.booleanFalseReplacement = BOOLEAN_FALSE_VALUE;
+				this.booleanFalseReplacement = Constants.BOOLEAN_FALSE_VALUE;
 			}
 		} else {
 			this.booleanTrueReplacement = null;
@@ -120,9 +129,9 @@ public class PanlBooleanFacetField extends PanlFacetField {
 	}
 
 	private void populateBooleanCheckbox() {
-		String checkboxProperty = properties.getProperty("panl.bool.checkbox." + this.lpseCode, null);
+		String checkboxProperty = properties.getProperty(Constants.Property.Panl.PANL_BOOL_CHECKBOX + this.lpseCode, null);
 		this.isCheckbox = null != checkboxProperty;
-		if(this.isCheckbox) {
+		if (this.isCheckbox) {
 			this.checkboxValue = Boolean.parseBoolean(checkboxProperty);
 		}
 	}
@@ -138,7 +147,7 @@ public class PanlBooleanFacetField extends PanlFacetField {
 			sb.append(valuePrefix);
 		}
 
-		if ("true".equals(value) && hasBooleanTrueReplacement) {
+		if (Constants.BOOLEAN_TRUE_VALUE.equals(value) && hasBooleanTrueReplacement) {
 			sb.append(booleanTrueReplacement);
 		} else if (hasBooleanFalseReplacement) {
 			sb.append(booleanFalseReplacement);
@@ -173,18 +182,18 @@ public class PanlBooleanFacetField extends PanlFacetField {
 		}
 
 		if (hasBooleanTrueReplacement && booleanTrueReplacement.equals(decodedValue)) {
-			return BOOLEAN_TRUE_VALUE;
+			return Constants.BOOLEAN_TRUE_VALUE;
 		}
 
 		if (hasBooleanFalseReplacement && booleanFalseReplacement.equals(decodedValue)) {
-			return BOOLEAN_FALSE_VALUE;
+			return Constants.BOOLEAN_FALSE_VALUE;
 		}
 
 		// if we get to this point, and we cannot determine whether it is true or false
-		if (BOOLEAN_TRUE_VALUE.equalsIgnoreCase(value)) {
-			return (BOOLEAN_TRUE_VALUE);
-		} else if (BOOLEAN_FALSE_VALUE.equalsIgnoreCase(value)) {
-			return (BOOLEAN_FALSE_VALUE);
+		if (Constants.BOOLEAN_TRUE_VALUE.equalsIgnoreCase(value)) {
+			return (Constants.BOOLEAN_TRUE_VALUE);
+		} else if (Constants.BOOLEAN_FALSE_VALUE.equalsIgnoreCase(value)) {
+			return (Constants.BOOLEAN_FALSE_VALUE);
 		} else {
 			return (null);
 		}
@@ -204,7 +213,7 @@ public class PanlBooleanFacetField extends PanlFacetField {
 			return ("");
 		}
 
-		for(LpseToken lpseToken : panlTokenMap.get(lpseCode)) {
+		for (LpseToken lpseToken : panlTokenMap.get(lpseCode)) {
 			if (!lpseToken.getIsValid()) {
 				// not a valid token - keep going
 				continue;
@@ -224,17 +233,17 @@ public class PanlBooleanFacetField extends PanlFacetField {
 			sb.append(valuePrefix);
 		}
 
-		if (decoded.equals(BOOLEAN_TRUE_VALUE)) {
+		if (decoded.equals(Constants.BOOLEAN_TRUE_VALUE)) {
 			if (hasBooleanTrueReplacement) {
 				sb.append(booleanTrueReplacement);
 			} else {
-				sb.append(BOOLEAN_TRUE_VALUE);
+				sb.append(Constants.BOOLEAN_TRUE_VALUE);
 			}
 		} else {
 			if (hasBooleanFalseReplacement) {
 				sb.append(booleanFalseReplacement);
 			} else {
-				sb.append(BOOLEAN_FALSE_VALUE);
+				sb.append(Constants.BOOLEAN_FALSE_VALUE);
 			}
 		}
 
@@ -245,40 +254,41 @@ public class PanlBooleanFacetField extends PanlFacetField {
 		return (PanlLPSEHelper.encodeURIPath(sb.toString()) + "/");
 	}
 
-	protected void applyToQueryInternal(SolrQuery solrQuery, List<LpseToken> lpseTokenList, CollectionProperties collectionProperties) {
+	protected void applyToQueryInternal(SolrQuery solrQuery, List<LpseToken> lpseTokenList,
+			CollectionProperties collectionProperties) {
 		// we are only going to do the first one
-		for(LpseToken lpseToken : lpseTokenList) {
+		for (LpseToken lpseToken : lpseTokenList) {
 			BooleanFacetLpseToken booleanFacetLpseToken = (BooleanFacetLpseToken) lpseToken;
 			solrQuery.addFilterQuery(
-						booleanFacetLpseToken.getSolrField() +
-									":\"" +
-									booleanFacetLpseToken.getValue() + "\"");
+					booleanFacetLpseToken.getSolrField() +
+							":\"" +
+							booleanFacetLpseToken.getValue() + "\"");
 			return;
 		}
 	}
 
 	public List<LpseToken> instantiateTokens(CollectionProperties collectionProperties, String lpseCode, String query,
-				StringTokenizer valueTokeniser, LpseTokeniser lpseTokeniser) {
+			StringTokenizer valueTokeniser, LpseTokeniser lpseTokeniser) {
 		return (List.of(new BooleanFacetLpseToken(collectionProperties, this.lpseCode, lpseTokeniser, valueTokeniser)));
 	}
 
 	@Override public void appendToAvailableObjectInternal(JSONObject jsonObject) {
-		jsonObject.put(JSON_KEY_IS_BOOLEAN_FACET, true);
-		if(this.isCheckbox) {
-			jsonObject.put(JSON_KEY_CHECKBOX_VALUE, this.checkboxValue);
+		jsonObject.put(Constants.Json.Panl.IS_BOOLEAN_FACET, true);
+		if (this.isCheckbox) {
+			jsonObject.put(Constants.Json.Panl.CHECKBOX_VALUE, this.checkboxValue);
 		}
 	}
 
 	@Override public void addToRemoveObject(JSONObject removeObject, LpseToken lpseToken) {
-		removeObject.put(JSON_KEY_IS_BOOLEAN_FACET, true);
+		removeObject.put(Constants.Json.Panl.IS_BOOLEAN_FACET, true);
 		BooleanFacetLpseToken booleanFacetLpseToken = (BooleanFacetLpseToken) lpseToken;
 
 		if (lpseToken.getIsValid()) {
 			// now we need to put in the inverse URI
-			removeObject.put(JSON_KEY_INVERSE_ENCODED, booleanFacetLpseToken.getInverseBooleanValue(lpseToken));
+			removeObject.put(Constants.Json.Panl.INVERSE_ENCODED, booleanFacetLpseToken.getInverseBooleanValue());
 
-			if(this.isCheckbox) {
-				removeObject.put(JSON_KEY_CHECKBOX_VALUE, this.checkboxValue);
+			if (this.isCheckbox) {
+				removeObject.put(Constants.Json.Panl.CHECKBOX_VALUE, this.checkboxValue);
 			}
 		}
 
@@ -300,10 +310,19 @@ public class PanlBooleanFacetField extends PanlFacetField {
 			explanations.add("Will not replace boolean 'false' values.");
 		}
 
-		if(this.isCheckbox) {
+		if (this.isCheckbox) {
 			explanations.add("Has a checkbox with for '" + this.checkboxValue + "' values.");
 		}
 
 		return (explanations);
 	}
+
+	@Override public Logger getLogger() {
+		return(LOGGER);
+	}
+
+	@Override public String getPanlFieldType() {
+		return("BOOLEAN");
+	}
+
 }

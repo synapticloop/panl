@@ -25,6 +25,7 @@ package com.synapticloop.panl;
  */
 
 //import com.synapticloop.panl.editor.PanlProjectLauncher;
+import com.synapticloop.panl.editor.PanlProjectLauncher;
 import com.synapticloop.panl.exception.CommandLineOptionException;
 import com.synapticloop.panl.exception.PanlGenerateException;
 import com.synapticloop.panl.exception.PanlServerException;
@@ -36,6 +37,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 //import javax.swing.*;
+import javax.swing.*;
 import java.io.*;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -88,7 +90,7 @@ public class Main {
 
 	public static final String CMD_VALUE_SERVER = "server";
 	public static final String CMD_VALUE_GENERATE = "generate";
-//	public static final String CMD_VALUE_EDITOR = "editor";
+	public static final String CMD_VALUE_EDITOR = "editor";
 
 	private static final Set<String> ALLOWABLE_COMMANDS = new HashSet<>();
 
@@ -322,7 +324,7 @@ public class Main {
 		try {
 			main.parseAndExecuteCommandLine();
 		} catch (PanlServerException | CommandLineOptionException | PanlGenerateException e) {
-			LOGGER.error("FAILURE to start, message was: {}", e.getMessage(), e);
+			LOGGER.error("FAILURE to start, message was: {}", e.getMessage());
 		}
 	}
 }

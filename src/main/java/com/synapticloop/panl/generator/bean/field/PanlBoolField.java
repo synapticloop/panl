@@ -30,9 +30,10 @@ public class PanlBoolField extends BasePanlField {
 			String solrFieldType,
 			String schemaXmlLine,
 			boolean isFacet,
-			boolean isMultiValued) {
+			boolean isMultiValued,
+			boolean isUniqueKey) {
 
-		super(lpseCode, solrFieldName, solrFieldType, schemaXmlLine, isFacet, isMultiValued);
+		super(lpseCode, solrFieldName, solrFieldType, schemaXmlLine, isFacet, isMultiValued, isUniqueKey);
 	}
 
 	@Override public String getAdditionalProperties() {

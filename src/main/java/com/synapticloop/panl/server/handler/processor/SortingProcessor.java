@@ -28,6 +28,7 @@ import com.synapticloop.panl.server.handler.properties.CollectionProperties;
 import com.synapticloop.panl.server.handler.fielderiser.field.BaseField;
 import com.synapticloop.panl.server.handler.tokeniser.token.LpseToken;
 import com.synapticloop.panl.server.handler.tokeniser.token.param.SortLpseToken;
+import com.synapticloop.panl.util.Constants;
 import org.apache.solr.client.solrj.response.QueryResponse;
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -37,12 +38,10 @@ import java.util.*;
 /**
  * <p>The Sorting processor adds in the sorting options that are available for
  * the Panl JSON return object.</p>
+ *
+ * @author Synapticloop
  */
 public class SortingProcessor extends Processor {
-
-
-	public static final String SORTING_OPTION_DESC = "-";
-	public static final String SORTING_OPTION_ASC = "+";
 
 	public SortingProcessor(CollectionProperties collectionProperties) {
 		super(collectionProperties);
@@ -50,8 +49,8 @@ public class SortingProcessor extends Processor {
 
 	/**
 	 * <p>There are two Sorting URIs - An additive URI, and a replacement URI,
-	 * unlike other LPSE codes - these are a finite, set number of sort fields which are defined by the
-	 * <code>panl.sort.fields</code> property.</p>
+	 * unlike other LPSE codes - these are a finite, set number of sort fields
+	 * which are defined by the <code>panl.sort.fields</code> property.</p>
 	 *
 	 * @param panlTokenMap the map of LPSE codes to list of panl tokens
 	 *
@@ -63,7 +62,7 @@ public class SortingProcessor extends Processor {
 
 		// Run through the sorting order
 		JSONObject jsonObject = new JSONObject();
-		StringBuilder replaceLpseUri = new StringBuilder(FORWARD_SLASH);
+		StringBuilder replaceLpseUri = new StringBuilder(Constants.FORWARD_SLASH);
 		StringBuilder lpseCode = new StringBuilder();
 
 		for (BaseField lpseField : collectionProperties.getLpseFields()) {
@@ -79,16 +78,16 @@ public class SortingProcessor extends Processor {
 			}
 		}
 
-		lpseCode.append(FORWARD_SLASH);
+		lpseCode.append(Constants.FORWARD_SLASH);
 
 		// This is the reset URI link (i.e. remove all sort orders and go back to
 		// sorting by relevance descending)
 		String finalBefore = replaceLpseUri + before;
 		if (finalBefore.length() + lpseCode.length() == 2) {
 			// we have nothing in the URI - i.e. the URI is "//"
-			jsonObject.put(JSON_KEY_REMOVE_URI, FORWARD_SLASH);
+			jsonObject.put(Constants.Json.Panl.REMOVE_URI, Constants.FORWARD_SLASH);
 		} else {
-			jsonObject.put(JSON_KEY_REMOVE_URI, finalBefore + lpseCode);
+			jsonObject.put(Constants.Json.Panl.REMOVE_URI, finalBefore + lpseCode);
 		}
 
 		// These are the available sort fields
@@ -118,12 +117,12 @@ public class SortingProcessor extends Processor {
 			if (null != sortFieldName) {
 				JSONObject sortObject = new JSONObject();
 
-				sortObject.put(JSON_KEY_NAME, collectionProperties.getPanlNameFromPanlCode(sortFieldLpseCode));
-				sortObject.put(JSON_KEY_FACET_NAME, collectionProperties.getSolrFieldNameFromLpseCode(sortFieldLpseCode));
-				sortObject.put(JSON_KEY_SET_URI_DESC,
-					finalBefore + panlParamSortLpseKey + sortFieldLpseCode + SORTING_OPTION_DESC + lpseCode);
-				sortObject.put(JSON_KEY_SET_URI_ASC,
-					finalBefore + panlParamSortLpseKey + sortFieldLpseCode + SORTING_OPTION_ASC + lpseCode);
+				sortObject.put(Constants.Json.Panl.NAME, collectionProperties.getPanlNameFromPanlCode(sortFieldLpseCode));
+				sortObject.put(Constants.Json.Panl.FACET_NAME, collectionProperties.getSolrFieldNameFromLpseCode(sortFieldLpseCode));
+				sortObject.put(Constants.Json.Panl.SET_URI_DESC,
+					finalBefore + panlParamSortLpseKey + sortFieldLpseCode + Constants.Url.Panl.SORTING_OPTION_DESC + lpseCode);
+				sortObject.put(Constants.Json.Panl.SET_URI_ASC,
+					finalBefore + panlParamSortLpseKey + sortFieldLpseCode + Constants.Url.Panl.SORTING_OPTION_ASC + lpseCode);
 
 
 				// Now for the add fields
@@ -131,27 +130,27 @@ public class SortingProcessor extends Processor {
 					// at this point we need to know the ordering of the lpseCode fields,
 					// whether we are before, or after the selected index
 
-					sortObject.put(JSON_KEY_ADD_URI_DESC,
+					sortObject.put(Constants.Json.Panl.ADD_URI_DESC,
 						finalBefore +
 							sortBefore +
 							panlParamSortLpseKey +
 							sortFieldLpseCode +
-							SORTING_OPTION_DESC +
+							Constants.Url.Panl.SORTING_OPTION_DESC +
 							lpseCode);
 
-					sortObject.put(JSON_KEY_ADD_URI_ASC,
+					sortObject.put(Constants.Json.Panl.ADD_URI_ASC,
 						finalBefore +
 							sortBefore +
 							panlParamSortLpseKey +
 							sortFieldLpseCode +
-							SORTING_OPTION_ASC +
+							Constants.Url.Panl.SORTING_OPTION_ASC +
 							lpseCode);
 				}
 				sortFieldsArray.put(sortObject);
 			}
 		}
 
-		jsonObject.put(JSON_KEY_FIELDS, sortFieldsArray);
+		jsonObject.put(Constants.Json.Panl.FIELDS, sortFieldsArray);
 
 		return (jsonObject);
 	}

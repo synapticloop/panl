@@ -48,7 +48,10 @@
 
 package panl.response.panl.active;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 public class Facet {
+	@JsonIgnore public Object extra;
 	public String remove_uri;
 	public String facet_name;
 	public String name;
@@ -62,6 +65,7 @@ public class Facet {
 	public boolean is_boolean_facet = false;
 	public boolean is_or_facet = false;
 	public boolean has_infix = false;
+	public boolean is_multivalue = false;
 	public String inverse_encoded;
 }
 

@@ -148,4 +148,9 @@ public class PanlSortField extends BaseField {
 				panlCollectionUri,
 				lpseCode);
 	}
+
+	@Override public String getPanlFieldType() {
+		return("SORT");
+	}
+
 }
