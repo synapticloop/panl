@@ -10,18 +10,18 @@
 > searchable, faceted search engine with an in-built, search page to test it all
 > out._**
 
-> **_And, yes, there is full documentation available, over 600 pages,
-> covering all aspects of the configuration of the Panl server so that you
+> **_And, yes, there is full documentation available, over 600 pages, 
+> covering all aspects of the configuration of the Panl server so that you 
 > can get the most out of your Solr and Panl experience._**
 
 # IMPORTANT:
 
-Apache®, Solr® the names of Apache projects, and the multicolor feather logo are registered trademarks or trademarks of the Apache Software Foundation in the United States and/or other countries.
+Apache®, Solr® the names of Apache projects, and the multicolor feather logo are registered trademarks or trademarks of the Apache Software Foundation in the United States and/or other countries.  
 
 The mention and references of any Apache projects, sub-projects, or resources in no way constitutes an endorsement for the Synapticloop Panl project.
 
 
-# Development Information
+# Development Information 
 
 | Latest<br />Release                                                          | Latest Book Release                                                | Development Branch (version) | 
 |------------------------------------------------------------------------------|--------------------------------------------------------------------|------------------------------|
@@ -40,9 +40,9 @@ The mention and references of any Apache projects, sub-projects, or resources in
 > We _always_ recommend that you use the most recently available release which
 > contains bug fixes and new functionality and is _generally_ backwards
 > compatible.
->
-> We do not keep previous individual Panl branches available for Solr version 8
-> and version 7 - i.e. there is no branch available for SOLR PANL 8 - which
+> 
+> We do not keep previous individual Panl branches available for Solr version 8 
+> and version 7 - i.e. there is no branch available for SOLR PANL 8 - which 
 > is not the 2.0.0 branch.
 
 **Branches/Release:**
@@ -81,7 +81,7 @@ The book version matches the version of the Synapticloop Project version. Any
 changes to the book without any changes to the codebase will be updated on the
 `main` branch and the `ghpages` based website will be updated.
 
-Any out-of-band book updates will not be reflected in the panl code release
+Any out-of-band book updates will not be reflected in the panl code release 
 updates.
 
 
@@ -130,9 +130,9 @@ parameters into concise and precise URL paths.
   single Solr collection should be able to serve up different fields and facets
   from the result documents without any back-end logic.
 
-- **Have a configuration file drive the generation of the UI as much as
+- **Have a configuration file drive the generation of the UI as much as 
   possible** - Rather than hard-coding facets and then determining how to  
-  display them, being able to have a returned JSON response which can be
+  display them, being able to have a returned JSON response which can be 
   interrogated to determine how the facets should be displayed.
 
 ## Additional Panl Niceties
@@ -183,13 +183,13 @@ parameters into concise and precise URL paths.
 
    `/Manufactured by Koh-i-Noor/Manufactured by Faber-Castell/bb/`,
 
-   with condensed multiple field values - this could be configured (with a
+   with condensed multiple field values - this could be configured (with a 
    value separator configured to be `, or `) to become
 
    `/Manufactured by Koh-i-Noor, or Faber-Castell Co./b/`
 
-   Saving 15 characters in the URL, the more multivalued fields values that
-   are selected, the more URL space is saved (In the example, with 3 values
+   Saving 15 characters in the URL, the more multivalued fields values that 
+   are selected, the more URL space is saved (In the example, with 3 values 
    selected, the saving becomes 30 characters).
 
 1. **SEARCH ALL OR SPECIFIC SOLR FIELDS** - Any Solr field that is analysed can
@@ -197,16 +197,16 @@ parameters into concise and precise URL paths.
    the user can select to search within the title, the author, the description,
    or all of them. **Also configure the query time boost.**
 
-1. **MORE LIKE THIS** - Return 'More Like This' results from the Solr server
-   with your specific query, with the ability to configure the Solr query
+1. **MORE LIKE THIS** - Return 'More Like This' results from the Solr server 
+   with your specific query, with the ability to configure the Solr query 
    operands on the fly.
 
-1. **FIELD VALUE validation** - By default, Solr will error (or give an
-   erroneous result) when an invalid value is passed through - for example,
-   if Solr is expecting a numeric value and it could not parse the passed in
-   value, it will throw an exception.  Panl protects against this by
-   attempting to parse the value as best it can, and silently dropping the
-   parameter if it cannot be sensibly parsed. This is done for numeric types
+1. **FIELD VALUE validation** - By default, Solr will error (or give an 
+   erroneous result) when an invalid value is passed through - for example, 
+   if Solr is expecting a numeric value and it could not parse the passed in 
+   value, it will throw an exception.  Panl protects against this by 
+   attempting to parse the value as best it can, and silently dropping the 
+   parameter if it cannot be sensibly parsed. This is done for numeric types 
    (integer, long, float, and double) and boolean values.
 
 1. **HIERARCHICAL facets** - Only show facets if a parent facet is currently
@@ -214,18 +214,18 @@ parameters into concise and precise URL paths.
    through the search journey.
 
 1. **UNLESS facets** - Continue to show a facet unless another specified facet is
-   selected.  This can be thought of as the inverse of a hierarchical facet  and
-   is useful when a facet no longer becomes relevant as the user goes through
+   selected.  This can be thought of as the inverse of a hierarchical facet  and 
+   is useful when a facet no longer becomes relevant as the user goes through 
    the search journey.
 
-1. **SORTED facets** - Each facet can be individually configured to order
-   the facet results by either the facet count in descending order (which is
-   the default), or the facet value (e.g. alphabetic/numeric based on the
+1. **SORTED facets** - Each facet can be individually configured to order 
+   the facet results by either the facet count in descending order (which is 
+   the default), or the facet value (e.g. alphabetic/numeric based on the 
    value of the facet - in either ascending or descending).
 
-1. **MORE facets** - Solr (and Panl) configures a limit for the maximum
-   number of facet values that are returned, this functionality enables you
-   to dynamically load additional facet values if they are available but
+1. **MORE facets** - Solr (and Panl) configures a limit for the maximum 
+   number of facet values that are returned, this functionality enables you 
+   to dynamically load additional facet values if they are available but 
    weren't returned with the results by default.
 
 1. **RESULTS SORTING options** - Sort by any of the Solr fields, either
@@ -237,13 +237,13 @@ parameters into concise and precise URL paths.
    in the query search box.
 
 1. **PAGINATION** - All the data to easily generate pagination URL paths giving
-   you options and control over your own implementation.  The returned
+   you options and control over your own implementation.  The returned 
    information includes:
-    1. the number of pages of results,
-    1. the number of results per page,
-    1. the total number of results,
-    1. the current page number, and
-    1. whether the returned results are an exact number.
+   1. the number of pages of results,
+   1. the number of results per page,
+   1. the total number of results,
+   1. the current page number, and
+   1. whether the returned results are an exact number.
 
 1. **STATIC SITE GENERATION** - With the exception of a query parameter, all
    available links for every conceivable URI path can be statically generated
@@ -253,17 +253,17 @@ parameters into concise and precise URL paths.
 
 1. **STATELESS** - No state is stored in the Panl server, all state is from the
    URL path part that is passed through. No sessions, no memory, nothing to
-   backup or replicate across servers, easy to update and quick to start and
+   backup or replicate across servers, easy to update and quick to start and 
    restart.
 
 1. **CACHE-ABLE** - Unless the underlying Solr search document index changes,
    each Solr request is able to be cached.
 
-1. **100% TEXT CONFIGURATION** - All configuration for Panl is based on text
-   files (Java `.properties`) files so they can be stored in a source code
-   management system.  Additionally, upgrades to the Panl server are easy -
-   just drop in the new Panl release package, use your existing
-   configuration, and it will just work.  And with quick restart times, the
+1. **100% TEXT CONFIGURATION** - All configuration for Panl is based on text 
+   files (Java `.properties`) files so they can be stored in a source code 
+   management system.  Additionally, upgrades to the Panl server are easy - 
+   just drop in the new Panl release package, use your existing 
+   configuration, and it will just work.  And with quick restart times, the 
    configuration changes will be seen in an instant.
 
 
@@ -278,15 +278,15 @@ parameters into concise and precise URL paths.
 
 ## Upgrading the Panl Server Release
 
-> **IMPORTANT !!!**
->
+> **IMPORTANT !!!** 
+> 
 > Version 2.\*.\* is a breaking change with version 1.\*.\*,
->
+> 
 > Both the LPSE URL and the JSON response have changes.
 
 
 Panl is designed to be a drop in replacement for your current version. Although
-backwards compatibility is always the highest priority, do keep an eye out
+backwards compatibility is always the highest priority, do keep an eye out 
 in the release notes for any breaking features.
 
 Your existing configuration files _should_ just work with the downloaded release
@@ -294,11 +294,11 @@ package.
 
 ### Some important notes on upgrading
 
-With the release of Panl version 2.1.0 the addition of the 'More Like This'
-functionality will require additional configuration in the `solrconfig.xml`
-file in order for this to work.  This configuration is _not_ included by
-default in the Apache Solr distributions.  Unless you are starting from a
-fresh install, you _will need to reconfigure your Solr server with a new
+With the release of Panl version 2.1.0 the addition of the 'More Like This' 
+functionality will require additional configuration in the `solrconfig.xml` 
+file in order for this to work.  This configuration is _not_ included by 
+default in the Apache Solr distributions.  Unless you are starting from a 
+fresh install, you _will need to reconfigure your Solr server with a new 
 handler_.
 
 ## Read the Documentation
@@ -307,7 +307,7 @@ handler_.
   HTML): [https://synapticloop.github.io/panl/](https://synapticloop.github.io/panl/)
 - Offline book (
   PDF): [Getting Started With Synapticloop Panl.pdf](https://github.com/synapticloop/panl/blob/main/src/dist/book/Getting%20Started%20With%20Synapticloop%20Panl.pdf)
-  _(over 600 pages of documentation, written with you, the integrator, in
+  _(over 600 pages of documentation, written with you, the integrator, in 
   mind)_
 
 Both of the book links above refer to Solr Panl integration 9 with instructions
@@ -352,7 +352,7 @@ results._
    name as The Solr server - i.e. 'q'. This can be configured to be a different
    value should you choose.
 
-   **Specific Search Fields (not shown)** If multiple fields are configured
+   **Specific Search Fields (not shown)** If multiple fields are configured 
    to be searchable, display the fields that are available to search within, and
    allow the user to select within the field.
 
@@ -368,38 +368,38 @@ results._
    been used to refine the search results.
 
 1. **Active BOOLEAN filters** - if the selected facet is a BOOLEAN facet (i.e.
-   either true/false) then a link (<img src="src/main/resources/webapp/static/invert.png" alt="invert" />)
-   can be included to invert this selection (i.e. change the value from true if
+   either true/false) then a link (<img src="src/main/resources/webapp/static/invert.png" alt="invert" />) 
+   can be included to invert this selection (i.e. change the value from true if 
    currently false and vice versa).
 
 1. **Active sorting** - sorting options that are currently ordering the
-   results - the <img src="src/main/resources/webapp/static/remove.png" alt="remove" /> link
+   results - the <img src="src/main/resources/webapp/static/remove.png" alt="remove" /> link 
    is the URI path that will remove this query, facet,
    or sorting option from the results. If it is an active sorting filter, the
-   <img src="src/main/resources/webapp/static/invert.png" alt="invert" />
-   `Change to DESC` or <img src="src/main/resources/webapp/static/invert.png" alt="invert" />
-   `Change to ASC` links will invert the sorting order without affecting any
+   <img src="src/main/resources/webapp/static/invert.png" alt="invert" /> 
+   `Change to DESC` or <img src="src/main/resources/webapp/static/invert.png" alt="invert" /> 
+   `Change to ASC` links will invert the sorting order without affecting any 
    further sub-ordering.
 
-1. **BOOLEAN Checkboxes** - any facets that have been defined as BOOLEAN
-   checkboxes, which allows the integrator to highlight one of the values
+1. **BOOLEAN Checkboxes** - any facets that have been defined as BOOLEAN 
+   checkboxes, which allows the integrator to highlight one of the values 
    (either true or false).
 
 1. **RANGE filters** - for facets that are defined as ranges - allowing
    end-users to select a range of values - the values are inclusive (i.e.
    include the minimum and maximum values).
 
-   **DATE Range filters (not shown)** - Enabling searching on a range of dates
+   **DATE Range filters (not shown)** - Enabling searching on a range of dates 
    (but not a specific date) in the form of:
    next/previous <any_integer> hours/days/months/years.
     - For example:
-        - Last 30 days
-        - Previous 24 hours
+      - Last 30 days
+      - Previous 24 hours
 
 1. **Available filters** - additional facets that can further refine and limit
-   the Solr search results.  These facets can be sorted by the count
-   descending (which is the default) and also by the index (or value) either
-   ascending or descending. This may also display a link to load more facets if
+   the Solr search results.  These facets can be sorted by the count 
+   descending (which is the default) and also by the index (or value) either 
+   ascending or descending. This may also display a link to load more facets if 
    the returned number of facets is not the complete set.
 
 1. **Number of results found**, and whether this is an exact match.
@@ -524,11 +524,11 @@ section for a more in-depth explanation and approach.**
 
 ---
 
-> **WARNING:** The Solr Release version before `9.8.0` has different command
-> line options for creating a new example cloud.  For these versions the
+> **WARNING:** The Solr Release version before `9.8.0` has different command 
+> line options for creating a new example cloud.  For these versions the 
 > command line option should be `-noprompt` rather than `--no-prompt`.
->
-> Additionally, when creating the collection, the options should be changed
+> 
+> Additionally, when creating the collection, the options should be changed 
 > from `--shards` to `-s`.
 >
 > All other commands remain the same
@@ -768,14 +768,14 @@ And to run the container
 docker run -p 8181:8181 -p 8983:8983 synapticloop:solr-panl-9-2.1.0
 ```
 
-_**NOTE:** You do not need to pass through the `-p 8983:8983` command line
-argument if you do not need to view the underlying Solr server._
+_**NOTE:** You do not need to pass through the `-p 8983:8983` command line 
+argument if you do not need to view the underlying Solr server._ 
 
-This will expose the ports for both the Panl server (port 8181) and the Solr
+This will expose the ports for both the Panl server (port 8181) and the Solr 
 server (port 8983) so that it can be viewed:
 
-- SOLR: [http://localhost:8983/solr/](http://localhost:8983/solr/)
-- PANL: [http://localhost:8181/panl-results-viewer/](http://localhost:8181/panl-results-viewer/)
+ - SOLR: [http://localhost:8983/solr/](http://localhost:8983/solr/)
+ - PANL: [http://localhost:8181/panl-results-viewer/](http://localhost:8181/panl-results-viewer/)
 
 
 # Version History
@@ -783,51 +783,49 @@ server (port 8983) so that it can be viewed:
 ## 2.1.0 Internal Niceties and Wanted Functionality (codename `hidden-summer`)
 
 - **New Features**
-    - Added in `is_multivalue` JSON key to the active facets
-    - Added in `panl.extra.<lpse_code>` to add a JSON object keyed on `extra` to
-      the returned active and available facets.
-    - Added in `panl.server.extra` to add a JSON object keyed on `extra` to
-      the server with every response.
-    - Added in `panl.collection.extra` to add a JSON object keyed on `extra` to
-      every returned response for the collection (this will overwrite any
-      duplicate keys in the server response above).
-    - Added `panl.remove.solr.json.keys` which will removed duplicated information
-      and un-needed information in the returned Solr response.
-    - Added `panl.lpse.facetorder` to the Panl response object so that the
-      ordering may be different from the LPSE URL order.
-    - Added 'More Like This' Solr functionality, including handler and
-      additional properties:
-        - `panl.mlt.enable` (default is '`false`')
-        - `panl.mlt.handler` (default is '`/mlt`')
-        - `panl.mlt.fields` (no default)
-    - Added property `solr.numrows.morelikethis` to the collection (default is 5)
-    - Ensured that duplicate collections are not registered and that Panl
-      collections are not
-    - Added `indexdesc` as a sorting option so that the facets can be sorted
-      by index (ascending is the default) and now descending.
-    - Updated generator to:
-        - Include the uniquekey property for the correct Solr field
-        - Keep - or at least attempt to keep - facet and field LPSE codes from
-          an existing file
-        - Updated the commenting for Solr fields that are analysed with a
-          warning that it probably shouldn't be a facet.
-        - Instead of using LPSE codes for the `panl.lpse.order`,
-          `panl.lpse.facetorder`, `panl.lpse.ignore`, the Solr field name can be
-          used which makes it easier to understand the ordering and ignore codes.
-    - Added in a docker build for testing
+  - Added in `is_multivalue` JSON key to the active facets
+  - Added in `panl.extra.<lpse_code>` to add a JSON object keyed on `extra` to
+    the returned active and available facets.
+  - Added in `panl.server.extra` to add a JSON object keyed on `extra` to 
+    the server with every response.
+  - Added in `panl.collection.extra` to add a JSON object keyed on `extra` to
+    every returned response for the collection (this will overwrite any 
+    duplicate keys in the server response above).
+  - Added `panl.remove.solr.json.keys` which will removed duplicated information
+    and un-needed information in the returned Solr response.
+  - Added `panl.lpse.facetorder` to the Panl response object so that the 
+    ordering may be different from the LPSE URL order.
+  - Added 'More Like This' Solr functionality, including handler and 
+    additional properties:
+    - `panl.mlt.enable` (default is '`false`')
+    - `panl.mlt.handler` (default is '`/mlt`')
+    - `panl.mlt.fields` (no default)
+  - Added property `solr.numrows.morelikethis` to the collection (default is 5)
+  - Ensured that duplicate collections are not registered and that Panl 
+    collections are not 
+  - Added `indexdesc` as a sorting option so that the facets can be sorted 
+    by index (ascending is the default) and now descending.
+  - Updated generator to:
+    - Include the uniquekey property for the correct Solr field
+    - Updated the commenting for Solr fields that are analysed with a 
+      warning that it probably shouldn't be a facet.
+    - Instead of using LPSE codes for the `panl.lpse.order`, 
+      `panl.lpse.facetorder`, `panl.lpse.ignore`, the Solr field name can be 
+      used which makes it easier to understand the ordering and ignore codes.
+  - Added in a docker build for testing
 
 
 - **Bug Fixes**
-    - Fixed generator where it would leave an empty (and ignored) property of
-      `panl.lpse.fields` in the properties file
-    - Fixed bug where BOOLEAN facets were allowed to have multiple values - which
-      it shouldn't.
-    - Fixed passing through the LPSE code for the passthrough parameter if there
-      wasn't a passthrough value sent through.
-    - Fixed bug with 'extra' JSON object not correctly overriding parent object
-    - Fixed connection reset when attempting to get the SolrJ client - now
-      returns a 503 status message
-    - Removed unregistered fields that weren't defined in the field list
+  - Fixed generator where it would leave an empty (and ignored) property of
+    `panl.lpse.fields` in the properties file 
+  - Fixed bug where BOOLEAN facets were allowed to have multiple values - which 
+    it shouldn't.
+  - Fixed passing through the LPSE code for the passthrough parameter if there 
+    wasn't a passthrough value sent through.
+  - Fixed bug with 'extra' JSON object not correctly overriding parent object
+  - Fixed connection reset when attempting to get the SolrJ client - now 
+    returns a 503 status message
+  - Removed unregistered fields that weren't defined in the field list
 
 
 - **Code Changes**
@@ -836,15 +834,15 @@ server (port 8983) so that it can be viewed:
 
 
 - **Documentation Update**
-    - Added in documentation for new features
-    - Larger documentation update for:
-        - 'More Like This' functionality
-        - Panl Cookbook
-    - Added in new keys and descriptions
-    - Spelling and grammar updates
-    - Added in more detail for the `TODO` tags
+  - Added in documentation for new features
+  - Larger documentation update for:
+    - 'More Like This' functionality
+    - Panl Cookbook
+  - Added in new keys and descriptions
+  - Spelling and grammar updates
+  - Added in more detail for the `TODO` tags
 
-!! The included PDF contains over **600** pages of documentation for every
+!! The included PDF contains over **600** pages of documentation for every 
 part of the Panl server. !!
 
 [View the code for this release](https://github.com/synapticloop/panl/tree/2.1.0)
@@ -867,7 +865,7 @@ part of the Panl server. !!
 For full release notes for previous versions, see the [releases page](https://github.com/synapticloop/panl/releases/).
 
 
-# End Plate
+# End Plate 
 
 ```
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
