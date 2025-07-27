@@ -41,7 +41,7 @@ public class DateRangeTest extends TestBase {
 	@Test public void testDefault() throws Exception {
 		Root root = mapper.readValue(new URL(BASE_URL), Root.class);
 		assertFalse(root.error);
-		assertEquals(1000L, root.response.numFound);
+		assertEquals(1000L, root.panl.pagination.num_results);
 
 		// now test the adding and removing - there is only one
 		DateRangeFacet dateRangeFacet = root.panl.available.date_range_facets[0];
