@@ -55,6 +55,7 @@ public class PanlGenerator {
 	private final String schemaFileLocation;
 	private final String propertiesFileLocation;
 	private final String collectionPropertiesOutputDirectory;
+	private final boolean noPrompt;
 
 	/**
 	 * <p>The list of schemas to parse and add to the panl.properties file which
@@ -86,21 +87,25 @@ public class PanlGenerator {
 	 * <p>Instantiate the Panl generator.</p>
 	 *
 	 * @param propertiesFileLocation The location of the output for the properties
-	 *   file
+	 * 		file
 	 * @param schemaFileLocation The comma separated list of Solr schema file
-	 *   locations
+	 * 		locations
 	 * @param shouldOverwrite If true, this will overwrite the panl.properties
-	 *   file and the collection.panl.properties 	file
+	 * 		file and the collection.panl.properties 	file
+	 * @param noPrompt
 	 *
 	 * @throws PanlGenerateException If there was a problem finding the files to
-	 *   parse, generating the files
+	 * 		parse, generating the files
 	 */
 	public PanlGenerator(
-		String propertiesFileLocation,
-		String schemaFileLocation,
-		boolean shouldOverwrite) throws PanlGenerateException {
+			String propertiesFileLocation,
+			String schemaFileLocation,
+			boolean shouldOverwrite,
+			boolean noPrompt) throws PanlGenerateException {
+
 		this.propertiesFileLocation = propertiesFileLocation;
 		this.schemaFileLocation = schemaFileLocation;
+		this.noPrompt = noPrompt;
 
 
 		// load up the defaults
@@ -154,7 +159,7 @@ public class PanlGenerator {
 		String property = properties.getProperty(key, null);
 		if(null != property) {
 			System.out.println(
-					"Found an existing property for  key '" +
+					"Found an existing property for key '" +
 							key +
 							"' with value '" +
 							property +
@@ -267,15 +272,22 @@ public class PanlGenerator {
 			String defaultValue,
 			String errorPrompt) {
 
+		if(this.noPrompt) {
+			System.out.printf("Property '%s' set to default value of '%s'\n", panlParamProperty, defaultValue);
+			panlParamMap.put(defaultValue, panlParamProperty);
+			panlReplacementPropertyMap.put(panlParamProperty, defaultValue);
+			return(defaultValue);
+		}
+
 		if (null != errorPrompt) {
 			System.out.printf("Invalid value. %s Please try again.\n", errorPrompt);
 		}
 
 		System.out.printf(
-			"Enter the 1 character property value for '%s' (%s), default [%s]: ",
-			panlParamProperty,
-			description,
-			defaultValue);
+				"Enter the 1 character property value for '%s' (%s), default [%s]: ",
+				panlParamProperty,
+				description,
+				defaultValue);
 
 		Scanner in = getSystemInput();
 		String temp = in.nextLine();

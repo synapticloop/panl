@@ -85,6 +85,7 @@ public class Main {
 	public static final String CMD_OPTION_PORT = "-port";
 	public static final String CMD_OPTION_PROPERTIES = "-properties";
 	public static final String CMD_OPTION_SCHEMA = "-schema";
+	public static final String CMD_OPTION_NO_PROMPT = "--no-prompt";
 
 	public static final String CMD_VALUE_SERVER = "server";
 	public static final String CMD_VALUE_GENERATE = "generate";
@@ -151,9 +152,14 @@ public class Main {
 		for (int i = 1; i < args.length; i++) {
 			String optionKey = args[i];
 			try {
-				String optionValue = args[i + 1];
-				OPTIONS_MAP.put(optionKey, optionValue);
-				i++;
+				if(optionKey.startsWith("--")) {
+					// there is no second argument for double hyphens
+					OPTIONS_MAP.put(optionKey, "");
+				} else {
+					String optionValue = args[i + 1];
+					OPTIONS_MAP.put(optionKey, optionValue);
+					i++;
+				}
 			} catch (ArrayIndexOutOfBoundsException e) {
 				usageAndException(String.format("Found a command line option of '%s' without a value", optionKey));
 			}
@@ -216,6 +222,7 @@ public class Main {
 		this.propertiesFileLocation = OPTIONS_MAP.getOrDefault(CMD_OPTION_PROPERTIES, DEFAULT_PANL_PROPERTIES);
 		String schemaFileLocations = OPTIONS_MAP.getOrDefault(CMD_OPTION_SCHEMA, null);
 		String shouldOverwriteString = OPTIONS_MAP.getOrDefault(CMD_OPTION_OVERWRITE, "false").toLowerCase();
+		boolean noPrompt = OPTIONS_MAP.containsKey(CMD_OPTION_NO_PROMPT);
 
 		if (shouldOverwriteString.compareTo("true") == 0) {
 			this.shouldOverwrite = true;
@@ -236,7 +243,8 @@ public class Main {
 		PanlGenerator panlGenerator = new PanlGenerator(
 				this.propertiesFileLocation,
 				schemaFileLocations,
-				this.shouldOverwrite);
+				this.shouldOverwrite,
+				noPrompt);
 
 		panlGenerator.generate();
 	}

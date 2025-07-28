@@ -6,7 +6,8 @@
       generate \
       [-properties panl_properties_file_location] \
       [-overwrite true_or_false] \
-      -schema solr_schema_location
+      -schema solr_schema_location \
+      [--no-prompt]
 
   [-properties panl_properties_file_location] (optional - default
     panl.properties) the base properties file to write the generated
@@ -28,6 +29,15 @@
 
   -schema solr_schema_location (mandatory) the managed-schema.xml
     configuration file to read and generate the panl.properties file from.
+
+  [--no-prompt] (optional) accept the in-built defaults for the Panl server
+    parameters as follows:
+      q - 'panl.param.query' (The search query parameter)
+      p - 'panl.param.page' (The page number)
+      n - 'panl.param.numrows' (The number of results to return per page)
+      s - 'panl.param.sort' (The results sorting parameter)
+      o - 'panl.param.query.operand' (The default query operand (q.op))
+      z - 'panl.param.passthrough' (The URI path passthrough)
 
                                  ~ ~ ~ * ~ ~ ~
 
