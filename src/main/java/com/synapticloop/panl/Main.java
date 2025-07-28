@@ -162,7 +162,11 @@ public class Main {
 		// now parse the rest of the commands
 		switch (command) {
 			case CMD_VALUE_SERVER:
-				parseAndExecuteServerCommands();
+				try {
+					parseAndExecuteServerCommands();
+				} catch(PanlServerException pex) {
+					usageAndException(pex.getMessage());
+				}
 				break;
 			case CMD_VALUE_GENERATE:
 				parseAndExecuteGenerateCommands();
@@ -255,7 +259,7 @@ public class Main {
 			boolean foundArgument = false;
 			boolean foundServer = false;
 			boolean foundGenerate = false;
-			System.out.println("[ERROR]: arguments were:");
+			System.out.println("[ERROR]: Command line argument" + (args.length > 1 ? "s were" : " was") + ":");
 			for (String arg : args) {
 				System.out.printf("[ERROR]:  %s\n", arg);
 				if(arg.equalsIgnoreCase("server")) {
@@ -284,7 +288,6 @@ public class Main {
 				}
 				outputUsageText("/usage-generate.txt");
 			}
-
 		}
 
 		throw new CommandLineOptionException("Invalid command line options.");

@@ -791,7 +791,8 @@ server (port 8983) so that it can be viewed:
 
 
 - **Code Changes**
-    - yelp! - something goes here
+  - Updated the usage text to be context specific
+
 
 - **Documentation Update**
   - Rewrote documentation to be a little clearer and removed extraneous information 
