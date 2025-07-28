@@ -768,7 +768,7 @@ And to run the container
 ### _ANY OS - WINDOWS/*NIX_
 
 ```shell
-docker run -p 8181:8181 -p 8983:8983 synapticloop:solr-panl-9-2.1.0
+docker run -p 8181:8181 -p 8983:8983 synapticloop:solr-panl-9-2.2.0
 ```
 
 _**NOTE:** You do not need to pass through the `-p 8983:8983` command line 
