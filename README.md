@@ -783,11 +783,11 @@ server (port 8983) so that it can be viewed:
 ## 2.2.0 Internal Harnesses (codename `bitter-shadow`) **UNDER DEVELOPMENT**
 
 - **New Features**
-  - yelp! - something goes here
+  - Changed the docker image to include all 
 
 
 - **Bug Fixes**
-    - yelp! - something goes here
+  - yelp! - something goes here
 
 
 - **Code Changes**
