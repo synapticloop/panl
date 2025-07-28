@@ -233,13 +233,13 @@ public class Main {
 			usageAndException("Mandatory command line option of '-schema' missing.");
 		}
 
-		LOGGER.info("  Starting Panl generation with properties:");
-		LOGGER.info("        -properties {}", this.propertiesFileLocation);
-		LOGGER.info("            -schema {}", schemaFileLocations);
-		LOGGER.info("         -overwrite {}", this.shouldOverwrite);
-		LOGGER.info("        --no-prompt {}", this.noPrompt);
+		LOGGER.info("     Starting Panl generation with properties:");
+		LOGGER.info("             -properties {}", this.propertiesFileLocation);
+		LOGGER.info("                 -schema {}", schemaFileLocations);
+		LOGGER.info("              -overwrite {}", this.shouldOverwrite);
+		LOGGER.info("             --no-prompt {}", this.noPrompt);
 		LOGGER.info("");
-		LOGGER.info("             ~ ~ ~ * ~ ~ ~");
+		LOGGER.info("                  ~ ~ ~ * ~ ~ ~");
 		LOGGER.info("");
 
 		PanlGenerator panlGenerator = new PanlGenerator(
