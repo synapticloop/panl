@@ -9,8 +9,7 @@
 Find a suitable name for the new version and branch - an example site is the 
 [Release name generator](https://codesandbox.io/p/sandbox/release-name-generator-5ow5w?file=%2Fsrc%2Findex.js) 
 which somehow (_sort-of_) relates to the release.  The next release may very 
-well be called `bitter-shadow` as there may be some boost terms added to 
-queries.
+well be called one of the following names:
 
 Other possible version names:
 
@@ -22,7 +21,7 @@ Other possible version names:
 
 ## 2. Create a branch 
 
-Create a branch from the `main` branch with the above name i.e. `bitter-shadow`.
+Create a branch from the `main` branch with the above name i.e. `raspy-pin`.
 
 ## 3. Work, work, work
 

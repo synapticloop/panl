@@ -25,7 +25,7 @@ The mention and references of any Apache projects, sub-projects, or resources in
 
 | Latest<br />Release                                                          | Latest Book Release                                                | Development Branch (version) | 
 |------------------------------------------------------------------------------|--------------------------------------------------------------------|------------------------------|
-| ![GitHub Release](https://img.shields.io/github/v/release/synapticloop/panl) | Synapticloop - Getting Started With Panl version 2.1.0 (release 1) | none yet :)                  |
+| ![GitHub Release](https://img.shields.io/github/v/release/synapticloop/panl) | Synapticloop - Getting Started With Panl version 2.1.0 (release 1) | `bitter-shadow`              |
 
 
 **Major branch release status:**
