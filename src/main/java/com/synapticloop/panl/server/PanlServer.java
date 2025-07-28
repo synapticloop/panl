@@ -41,6 +41,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.*;
@@ -128,6 +129,8 @@ public class PanlServer {
 		Properties properties = new Properties();
 		try {
 			properties.load(new FileReader(propertiesFileLocation));
+		} catch (FileNotFoundException fex) {
+			throw new PanlServerException("Could not find the file '" + propertiesFileLocation + "' - perhaps you wanted to pass through a '-properties' command line argument?");
 		} catch (IOException e) {
 			throw new PanlServerException(e.getMessage());
 		}

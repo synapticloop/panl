@@ -25,7 +25,6 @@ package com.synapticloop.panl;
  */
 
 //import com.synapticloop.panl.editor.PanlProjectLauncher;
-import com.synapticloop.panl.editor.PanlProjectLauncher;
 import com.synapticloop.panl.exception.CommandLineOptionException;
 import com.synapticloop.panl.exception.PanlGenerateException;
 import com.synapticloop.panl.exception.PanlServerException;
@@ -37,7 +36,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 //import javax.swing.*;
-import javax.swing.*;
 import java.io.*;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -90,14 +88,12 @@ public class Main {
 
 	public static final String CMD_VALUE_SERVER = "server";
 	public static final String CMD_VALUE_GENERATE = "generate";
-	public static final String CMD_VALUE_EDITOR = "editor";
 
 	private static final Set<String> ALLOWABLE_COMMANDS = new HashSet<>();
 
 	static {
 		ALLOWABLE_COMMANDS.add(CMD_VALUE_SERVER);
 		ALLOWABLE_COMMANDS.add(CMD_VALUE_GENERATE);
-//		ALLOWABLE_COMMANDS.add(CMD_VALUE_EDITOR);
 	}
 
 	public static String panlVersion = "Unknown - ¯\\_(ツ)_/¯";
@@ -143,14 +139,12 @@ public class Main {
 	 */
 	private void parseAndExecuteCommandLine() throws PanlServerException, CommandLineOptionException, PanlGenerateException {
 		if (args.length < 1) {
-//			usageAndException("Could not determine command, should be one of 'server', 'generate', or 'editor'");
 			usageAndException("Could not determine command, should be one of 'server' or 'generate'");
 		}
 
 		String command = args[0];
 		if (!ALLOWABLE_COMMANDS.contains(command)) {
 			usageAndException(String.format("Unknown command of '%s', expecting 'server' or 'generate'", command));
-//			usageAndException(String.format("Unknown command of '%s', expecting 'server', 'generate', or 'editor'", command));
 		}
 
 		// now go through the rest of the command line arguments
@@ -173,13 +167,6 @@ public class Main {
 			case CMD_VALUE_GENERATE:
 				parseAndExecuteGenerateCommands();
 				break;
-//			case CMD_VALUE_EDITOR:
-//				LOGGER.warn("THE EDITOR FUNCTIONALITY IS __NOT COMPLETE__...");
-//				LOGGER.warn("This can be considered an exercise in futility...");
-//				SwingUtilities.invokeLater(() -> {
-//					new PanlProjectLauncher().show();
-//				});
-//				break;
 		}
 	}
 
@@ -200,9 +187,9 @@ public class Main {
 			usageAndException(String.format("Could not parse port number of '%s'", portNumberString));
 		}
 
-		LOGGER.info("  Starting Panl server with properties:");
-		LOGGER.info("    -properties {}", this.propertiesFileLocation);
-		LOGGER.info("          -port {}", this.portNumber);
+		LOGGER.info("      Starting Panl server with properties:");
+		LOGGER.info("             -properties {}", this.propertiesFileLocation);
+		LOGGER.info("                   -port {}", this.portNumber);
 		LOGGER.info("");
 		LOGGER.info("                  ~ ~ ~ * ~ ~ ~");
 		LOGGER.info("");
@@ -261,17 +248,53 @@ public class Main {
 		System.out.printf("[ERROR]: %s\n", message);
 		if (args.length == 0) {
 			System.out.println("[ERROR]: No arguments provided.");
+			outputUsageText("/usage.txt");
+			outputUsageText("/usage-server.txt");
+			outputUsageText("/usage-generate.txt");
 		} else {
+			boolean foundArgument = false;
+			boolean foundServer = false;
+			boolean foundGenerate = false;
 			System.out.println("[ERROR]: arguments were:");
 			for (String arg : args) {
 				System.out.printf("[ERROR]:  %s\n", arg);
+				if(arg.equalsIgnoreCase("server")) {
+					foundServer = true;
+					foundArgument = true;
+				} else if (arg.equalsIgnoreCase("generate")) {
+					foundGenerate = true;
+					foundArgument = true;
+				}
 			}
+			
+			if(!foundArgument) {
+				System.out.println("[ERROR]: Couldn't determine what you were trying to do...");
+			}
+
+			if(foundServer || !foundArgument) {
+				if(foundServer) {
+					System.out.println("[ERROR]: Looks like you were trying to start the server...");
+				}
+				outputUsageText("/usage-server.txt");
+			}
+
+			if(foundGenerate || !foundArgument) {
+				if(foundGenerate) {
+					System.out.println("[ERROR]: Looks like you were trying to generate configuration...");
+				}
+				outputUsageText("/usage-generate.txt");
+			}
+
 		}
 
+		throw new CommandLineOptionException("Invalid command line options.");
+	}
+
+	private void outputUsageText(String textLocation) {
 		// now print the usage
-		try (InputStream inputStream = Main.class.getResourceAsStream("/usage.txt")) {
+		try (InputStream inputStream = Main.class.getResourceAsStream(textLocation)) {
 			if (null == inputStream) {
-				System.out.println("[FATAL]: Could not read the usage.txt file.");
+				System.out.println("[FATAL]: Could not read the " + textLocation + " file.");
 			} else {
 				System.out.println(
 						new BufferedReader(
@@ -281,9 +304,7 @@ public class Main {
 			}
 		} catch (IOException ignored) {
 		}
-		throw new CommandLineOptionException("Invalid command line options.");
 	}
-
 	/**
 	 * <p>Main starting point for the application, parsing the command line
 	 * options and executing the required component.  If there was an error when
