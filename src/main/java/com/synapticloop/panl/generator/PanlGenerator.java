@@ -240,7 +240,6 @@ public class PanlGenerator {
 		for (PanlCollection panlCollection : panlCollections) {
 			generateCollectionDotPanlDotProperties(panlCollection);
 		}
-
 	}
 
 	/**

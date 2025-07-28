@@ -155,6 +155,7 @@ public class PanlCollection {
 			if(EXISTING_SOLR_FIELD_LPSE_CODE_MAP.containsKey(fieldName)) {
 				String lookupCode = EXISTING_SOLR_FIELD_LPSE_CODE_MAP.get(fieldName);
 				if(lookupCode.length() == this.lpseLength) {
+					LOGGER.info("Found an existing LPS code for Solr field '{}' of '{}', reusing...", fieldName, lookupCode);
 					possibleCode = lookupCode;
 				}
 			}
