@@ -52,8 +52,8 @@ public class PanlGenerator {
 	public static final String TEMPLATE_LOCATION_COLLECTION_PANL_PROPERTIES = "/panl_collection_url.panl.properties.template";
 	public static final String TEMPLATE_LOCATION_PANL_PROPERTIES = "/panl.properties.template";
 
-	private final String propertiesFileLocation;
 	private final String schemaFileLocation;
+	private final String propertiesFileLocation;
 	private final String collectionPropertiesOutputDirectory;
 
 	/**
@@ -61,18 +61,22 @@ public class PanlGenerator {
 	 * will be output to the '$panl.panlCollections' property.</p>
 	 */
 	private File schemaToParse;
+
 	/**
 	 * <p>The list of panlCollections (parsed from the Solr schemas) to convert.</p>
 	 */
 	private final List<PanlCollection> panlCollections = new ArrayList<>();
+
 	/**
 	 * <p>A map of Panl params, keyed on param code:param property.</p>
 	 */
 	private final Map<String, String> panlParamMap = new HashMap<>();
+
 	/**
 	 * <p>A map of Panl params, keyed on param property:param code.</p>
 	 */
 	private final Map<String, String> panlReplacementPropertyMap = new LinkedHashMap<>();
+
 	/**
 	 * <p>A map of currently registered solr fields names and their Panl LPSE codes
 	 * (if a previous file was found)  key:value is solr_field_name:base_panl_field</p>
@@ -100,7 +104,6 @@ public class PanlGenerator {
 
 
 		// load up the defaults
-		// TODO - this should all be done either with a properties file or not...
 		panlReplacementPropertyMap.put(SOLRJ_CLIENT, "CloudSolrClient");
 		panlReplacementPropertyMap.put(SOLR_SEARCH_SERVER_URL, "http://localhost:8983/solr,http://localhost:7574/solr");
 		panlReplacementPropertyMap.put(PANL_RESULTS_TESTING_URLS, "true");
@@ -131,7 +134,7 @@ public class PanlGenerator {
 		}
 
 
-		// now override the properties
+		// now override the properties that have been already found
 		overrideDefaultProperty(properties, SOLRJ_CLIENT, "CloudSolrClient");
 		overrideDefaultProperty(properties, SOLR_SEARCH_SERVER_URL, "http://localhost:8983/solr,http://localhost:7574/solr");
 		overrideDefaultProperty(properties, PANL_RESULTS_TESTING_URLS, "true");
@@ -227,7 +230,7 @@ public class PanlGenerator {
 		getAndValidateParameterInput("The URI path passthrough", PANL_PARAM_PASSTHROUGH, "z", null);
 
 
-		panlCollections.add(new PanlCollection(schemaToParse, panlReplacementPropertyMap));
+		panlCollections.add(new PanlCollection(schemaToParse, panlReplacementPropertyMap, this.collectionPropertiesOutputDirectory));
 
 		// now we have all panlCollections parsed
 		// time to go through them and generate the panl.properties file
