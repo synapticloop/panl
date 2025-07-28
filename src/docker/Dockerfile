@@ -31,7 +31,7 @@ RUN mkdir /archives/
 #   Download the Solr server and the Panl server from the local disk
 # ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~
 ADD https://archive.apache.org/dist/lucene/solr/7.7.3/solr-7.7.3.tgz /archives/solr-7.7.3.tgz
-ADD build/distributions/${TAG}.tar /java-servers/
+ADD build/distributions/${TAG}.tgz /java-servers/
 
 
 # ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~
