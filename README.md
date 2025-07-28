@@ -788,7 +788,7 @@ server (port 8983) so that it can be viewed:
 
 
 - **Bug Fixes**
-  - yelp! - something goes here
+  - Fixed decoding of UTF-8 LPSE parameters
 
 
 - **Code Changes**
