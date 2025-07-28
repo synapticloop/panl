@@ -783,7 +783,8 @@ server (port 8983) so that it can be viewed:
 ## 2.2.0 Internal Harnesses (codename `bitter-shadow`) **UNDER DEVELOPMENT**
 
 - **New Features**
-  - Changed the docker image to include all 
+  - Changed the docker image to include all datasets
+  - Added in `--no-prompt` option to generator to accept in-built defaults
 
 
 - **Bug Fixes**
