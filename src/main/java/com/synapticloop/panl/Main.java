@@ -108,6 +108,7 @@ public class Main {
 	private int portNumber = 8181;
 	private String propertiesFileLocation = DEFAULT_PANL_PROPERTIES;
 	private boolean shouldOverwrite = false;
+	private boolean noPrompt = false;
 
 	private final String[] args;
 
@@ -222,7 +223,7 @@ public class Main {
 		this.propertiesFileLocation = OPTIONS_MAP.getOrDefault(CMD_OPTION_PROPERTIES, DEFAULT_PANL_PROPERTIES);
 		String schemaFileLocations = OPTIONS_MAP.getOrDefault(CMD_OPTION_SCHEMA, null);
 		String shouldOverwriteString = OPTIONS_MAP.getOrDefault(CMD_OPTION_OVERWRITE, "false").toLowerCase();
-		boolean noPrompt = OPTIONS_MAP.containsKey(CMD_OPTION_NO_PROMPT);
+		this.noPrompt = OPTIONS_MAP.containsKey(CMD_OPTION_NO_PROMPT);
 
 		if (shouldOverwriteString.compareTo("true") == 0) {
 			this.shouldOverwrite = true;
@@ -233,9 +234,10 @@ public class Main {
 		}
 
 		LOGGER.info("  Starting Panl generation with properties:");
-		LOGGER.info("    -properties {}", this.propertiesFileLocation);
-		LOGGER.info("        -schema {}", schemaFileLocations);
-		LOGGER.info("     -overwrite {}", this.shouldOverwrite);
+		LOGGER.info("        -properties {}", this.propertiesFileLocation);
+		LOGGER.info("            -schema {}", schemaFileLocations);
+		LOGGER.info("         -overwrite {}", this.shouldOverwrite);
+		LOGGER.info("        --no-prompt {}", this.noPrompt);
 		LOGGER.info("");
 		LOGGER.info("             ~ ~ ~ * ~ ~ ~");
 		LOGGER.info("");
@@ -244,7 +246,7 @@ public class Main {
 				this.propertiesFileLocation,
 				schemaFileLocations,
 				this.shouldOverwrite,
-				noPrompt);
+				this.noPrompt);
 
 		panlGenerator.generate();
 	}
