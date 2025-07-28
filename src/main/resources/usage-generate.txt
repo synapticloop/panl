@@ -40,5 +40,3 @@
       z - 'panl.param.passthrough' (The URI path passthrough)
 
                                  ~ ~ ~ * ~ ~ ~
-
-

@@ -15,7 +15,6 @@ Usage:
     [-overwrite true_or_false] \
     [-schema solr_schema_location]
 
-
 Where:
   [command] is one of:
       server - start the server, or
