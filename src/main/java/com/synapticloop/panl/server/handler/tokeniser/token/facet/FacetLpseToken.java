@@ -29,6 +29,8 @@ import com.synapticloop.panl.server.handler.fielderiser.field.BaseField;
 import com.synapticloop.panl.server.handler.tokeniser.LpseTokeniser;
 import com.synapticloop.panl.server.handler.tokeniser.token.LpseToken;
 
+import java.net.URLDecoder;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.StringTokenizer;
@@ -90,7 +92,7 @@ public class FacetLpseToken extends LpseToken {
 		int i = sb.length();
 		while (i < collectionProperties.getLpseLength()) {
 			if (lpseTokeniser.hasMoreTokens()) {
-				sb.append(lpseTokeniser.nextToken());
+				sb.append(URLDecoder.decode(lpseTokeniser.nextToken(), StandardCharsets.UTF_8));
 			}
 			i++;
 		}
