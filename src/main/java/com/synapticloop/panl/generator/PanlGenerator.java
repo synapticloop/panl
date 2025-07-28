@@ -158,7 +158,7 @@ public class PanlGenerator {
 	private void overrideDefaultProperty(Properties properties, String key, String defaultValue) {
 		String property = properties.getProperty(key, null);
 		if(null != property) {
-			System.out.println(
+			LOGGER.info(
 					"Found an existing property for key '" +
 							key +
 							"' with value '" +
@@ -170,7 +170,7 @@ public class PanlGenerator {
 					);
 			panlReplacementPropertyMap.put(key, properties.getProperty(key, defaultValue));
 		} else {
-			System.out.println("Could not find default property for key '" + key + "', using '" + defaultValue +"'.");
+			LOGGER.info("Could not find default property for key '" + key + "', using '" + defaultValue +"'.");
 		}
 	}
 	/**
@@ -273,7 +273,7 @@ public class PanlGenerator {
 			String errorPrompt) {
 
 		if(this.noPrompt) {
-			System.out.printf("Property '%s' set to default value of '%s'\n", panlParamProperty, defaultValue);
+			LOGGER.info("Property '{}' set to default value of '{}'", panlParamProperty, defaultValue);
 			panlParamMap.put(defaultValue, panlParamProperty);
 			panlReplacementPropertyMap.put(panlParamProperty, defaultValue);
 			return(defaultValue);
