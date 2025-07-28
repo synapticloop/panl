@@ -30,12 +30,13 @@ The mention and references of any Apache projects, sub-projects, or resources in
 
 **Major branch release status:**
 
-| BRANCH          | STATUS   | VERSION | TYPE                                    | LATEST SOLR<br />VERSION TESTED |
-|-----------------|----------|---------|-----------------------------------------|---------------------------------|
-| `MAIN`          | [![CircleCI](https://dl.circleci.com/status-badge/img/circleci/3Y1eqqe4mcvtSZuzJnQ3tJ/DyFKUm7c7AoLa1wHmRjAnf/tree/main.svg?style=shield)](https://dl.circleci.com/status-badge/redirect/circleci/3Y1eqqe4mcvtSZuzJnQ3tJ/DyFKUm7c7AoLa1wHmRjAnf/tree/main)           | `2.1.0` | Trunk - integration with Solr version 9 | `9.9.0`                         |
-| `SOLR PANL 9`   | [![CircleCI](https://dl.circleci.com/status-badge/img/circleci/3Y1eqqe4mcvtSZuzJnQ3tJ/DyFKUm7c7AoLa1wHmRjAnf/tree/solr-panl-9.svg?style=shield)](https://dl.circleci.com/status-badge/redirect/circleci/3Y1eqqe4mcvtSZuzJnQ3tJ/DyFKUm7c7AoLa1wHmRjAnf/tree/solr-panl-9)           | `2.1.0` | Panl integration with Solr version 9    | `9.9.0`                         |
-| `SOLR PANL 8`   | [![CircleCI](https://dl.circleci.com/status-badge/img/circleci/3Y1eqqe4mcvtSZuzJnQ3tJ/DyFKUm7c7AoLa1wHmRjAnf/tree/solr-panl-8.svg?style=shield)](https://dl.circleci.com/status-badge/redirect/circleci/3Y1eqqe4mcvtSZuzJnQ3tJ/DyFKUm7c7AoLa1wHmRjAnf/tree/solr-panl-8)           | `2.1.0` | Panl integration with Solr version 8    | `8.11.4`                        |
-| `SOLR PANL 7`   | [![CircleCI](https://dl.circleci.com/status-badge/img/circleci/3Y1eqqe4mcvtSZuzJnQ3tJ/DyFKUm7c7AoLa1wHmRjAnf/tree/solr-panl-7.svg?style=shield)](https://dl.circleci.com/status-badge/redirect/circleci/3Y1eqqe4mcvtSZuzJnQ3tJ/DyFKUm7c7AoLa1wHmRjAnf/tree/solr-panl-7)           | `2.1.0` | Panl integration with Solr version 7    | `7.7.3`                         |
+| BRANCH          | STATUS   | VERSION | TYPE                                                 | LATEST SOLR<br />VERSION TESTED |
+|-----------------|----------|---------|------------------------------------------------------|---------------------------------|
+| `bitter-shadow` | [![CircleCI](https://dl.circleci.com/status-badge/img/circleci/3Y1eqqe4mcvtSZuzJnQ3tJ/DyFKUm7c7AoLa1wHmRjAnf/tree/bitter-shadow.svg?style=svg)](https://dl.circleci.com/status-badge/redirect/circleci/3Y1eqqe4mcvtSZuzJnQ3tJ/DyFKUm7c7AoLa1wHmRjAnf/tree/bitter-shadow)           | `2.2.0` | Development branch - integration with Solr version 9 | `9.9.0`                         |
+| `MAIN`          | [![CircleCI](https://dl.circleci.com/status-badge/img/circleci/3Y1eqqe4mcvtSZuzJnQ3tJ/DyFKUm7c7AoLa1wHmRjAnf/tree/main.svg?style=shield)](https://dl.circleci.com/status-badge/redirect/circleci/3Y1eqqe4mcvtSZuzJnQ3tJ/DyFKUm7c7AoLa1wHmRjAnf/tree/main)           | `2.1.0` | Trunk - integration with Solr version 9              | `9.9.0`                         |
+| `SOLR PANL 9`   | [![CircleCI](https://dl.circleci.com/status-badge/img/circleci/3Y1eqqe4mcvtSZuzJnQ3tJ/DyFKUm7c7AoLa1wHmRjAnf/tree/solr-panl-9.svg?style=shield)](https://dl.circleci.com/status-badge/redirect/circleci/3Y1eqqe4mcvtSZuzJnQ3tJ/DyFKUm7c7AoLa1wHmRjAnf/tree/solr-panl-9)           | `2.1.0` | Panl integration with Solr version 9                 | `9.9.0`                         |
+| `SOLR PANL 8`   | [![CircleCI](https://dl.circleci.com/status-badge/img/circleci/3Y1eqqe4mcvtSZuzJnQ3tJ/DyFKUm7c7AoLa1wHmRjAnf/tree/solr-panl-8.svg?style=shield)](https://dl.circleci.com/status-badge/redirect/circleci/3Y1eqqe4mcvtSZuzJnQ3tJ/DyFKUm7c7AoLa1wHmRjAnf/tree/solr-panl-8)           | `2.1.0` | Panl integration with Solr version 8                 | `8.11.4`                        |
+| `SOLR PANL 7`   | [![CircleCI](https://dl.circleci.com/status-badge/img/circleci/3Y1eqqe4mcvtSZuzJnQ3tJ/DyFKUm7c7AoLa1wHmRjAnf/tree/solr-panl-7.svg?style=shield)](https://dl.circleci.com/status-badge/redirect/circleci/3Y1eqqe4mcvtSZuzJnQ3tJ/DyFKUm7c7AoLa1wHmRjAnf/tree/solr-panl-7)           | `2.1.0` | Panl integration with Solr version 7                 | `7.7.3`                         |
 
 > We _always_ recommend that you use the most recently available release which
 > contains bug fixes and new functionality and is _generally_ backwards
@@ -49,12 +50,14 @@ The mention and references of any Apache projects, sub-projects, or resources in
 
 This is for reference
 
-| BRANCH                                                 | TYPE     | VERSION | GITHUB                                                                                                        |
-|--------------------------------------------------------|----------|---------|---------------------------------------------------------------------------------------------------------------|
-| `MAIN`                                                 | `BRANCH` | `2.1.0` | [GitHub > MAIN](https://github.com/synapticloop/panl)                                                         |
-|                                                        |          |         |                                                                                                               |
-| `hidden-summer`                                        | `BRANCH` | `2.1.0` | [GitHub > `hidden-summer`](https://github.com/synapticloop/panl/tree/hidden-summer)             |
-| `billowing-feather`                                    | `BRANCH` | `2.0.0` | [GitHub > `billowing-feather`](https://github.com/synapticloop/panl/tree/billowing-feather) |
+| BRANCH              | TYPE     | VERSION | GITHUB                                                                                      |
+|---------------------|----------|---------|---------------------------------------------------------------------------------------------|
+| `bitter-shadow`     | `BRANCH` | `2.2.0` | [GitHub > `bitter-shadow`](https://github.com/synapticloop/panl/tree/bitter-shadow)         |
+|                     |          |         |                                                                                             |
+| `MAIN`              | `BRANCH` | `2.1.0` | [GitHub > MAIN](https://github.com/synapticloop/panl)                                       |
+|                     |          |         |                                                                                             |
+| `hidden-summer`     | `BRANCH` | `2.1.0` | [GitHub > `hidden-summer`](https://github.com/synapticloop/panl/tree/hidden-summer)         |
+| `billowing-feather` | `BRANCH` | `2.0.0` | [GitHub > `billowing-feather`](https://github.com/synapticloop/panl/tree/billowing-feather) |
 
 <strong>BREAKING CHANGE TO LPSE URL path part for versions below</strong>
 
@@ -780,81 +783,36 @@ server (port 8983) so that it can be viewed:
 
 # Version History
 
-## 2.1.0 Internal Niceties and Wanted Functionality (codename `hidden-summer`)
+## 2.2.0 Internal Harnesses (codename `bitter-shadow`) **UNDER DEVELOPMENT**
 
 - **New Features**
-  - Added in `is_multivalue` JSON key to the active facets
-  - Added in `panl.extra.<lpse_code>` to add a JSON object keyed on `extra` to
-    the returned active and available facets.
-  - Added in `panl.server.extra` to add a JSON object keyed on `extra` to 
-    the server with every response.
-  - Added in `panl.collection.extra` to add a JSON object keyed on `extra` to
-    every returned response for the collection (this will overwrite any 
-    duplicate keys in the server response above).
-  - Added `panl.remove.solr.json.keys` which will removed duplicated information
-    and un-needed information in the returned Solr response.
-  - Added `panl.lpse.facetorder` to the Panl response object so that the 
-    ordering may be different from the LPSE URL order.
-  - Added 'More Like This' Solr functionality, including handler and 
-    additional properties:
-    - `panl.mlt.enable` (default is '`false`')
-    - `panl.mlt.handler` (default is '`/mlt`')
-    - `panl.mlt.fields` (no default)
-  - Added property `solr.numrows.morelikethis` to the collection (default is 5)
-  - Ensured that duplicate collections are not registered and that Panl 
-    collections are not 
-  - Added `indexdesc` as a sorting option so that the facets can be sorted 
-    by index (ascending is the default) and now descending.
-  - Updated generator to:
-    - Include the uniquekey property for the correct Solr field
-    - Updated the commenting for Solr fields that are analysed with a 
-      warning that it probably shouldn't be a facet.
-    - Instead of using LPSE codes for the `panl.lpse.order`, 
-      `panl.lpse.facetorder`, `panl.lpse.ignore`, the Solr field name can be 
-      used which makes it easier to understand the ordering and ignore codes.
-  - Added in a docker build for testing
+  - yelp! - something goes here
 
 
 - **Bug Fixes**
-  - Fixed generator where it would leave an empty (and ignored) property of
-    `panl.lpse.fields` in the properties file 
-  - Fixed bug where BOOLEAN facets were allowed to have multiple values - which 
-    it shouldn't.
-  - Fixed passing through the LPSE code for the passthrough parameter if there 
-    wasn't a passthrough value sent through.
-  - Fixed bug with 'extra' JSON object not correctly overriding parent object
-  - Fixed connection reset when attempting to get the SolrJ client - now 
-    returns a 503 status message
-  - Removed unregistered fields that weren't defined in the field list
+    - yelp! - something goes here
 
 
 - **Code Changes**
-    - Fixed output formatting for explanation of tokens
-    - Refactored constants into single place
-
+    - yelp! - something goes here
 
 - **Documentation Update**
-  - Added in documentation for new features
-  - Larger documentation update for:
-    - 'More Like This' functionality
-    - Panl Cookbook
-  - Added in new keys and descriptions
-  - Spelling and grammar updates
-  - Added in more detail for the `TODO` tags
+  - Rewrote documentation to be a little clearer and removed extraneous information 
 
 !! The included PDF contains over **600** pages of documentation for every 
 part of the Panl server. !!
 
-[View the code for this release](https://github.com/synapticloop/panl/tree/2.1.0)
+[View the code for this release](https://github.com/synapticloop/panl/tree/2.2.0)
 
-[Download the release packages](https://github.com/synapticloop/panl/releases/tag/2.1.0)
+[Download the release packages](https://github.com/synapticloop/panl/releases/tag/2.2.0)
 
 [See all releases](https://github.com/synapticloop/panl/releases/)
 
 
 | Release<br />Number   | Short note           | Codename            | Release Date         | 
 |-----------------------|----------------------|---------------------|----------------------|
-| 2.1.0                 | niceties/want-it-ies | `hidden-summer`     | `TBA`                |
+| 2.2.0                 | mMm harnesses        | `bitter-shadow`     | `TBA`                |
+| 2.1.0                 | niceties/want-it-ies | `hidden-summer`     | `July      28, 2025` |
 | 2.0.0                 | fluffy stuff         | `billowing-feather` | `February  28, 2025` |
 | -- breaking change -- | -------------------- | ------------------- | `------------------` |
 | 1.2.0                 | more like this       | `needy-phanton`     | `October   30, 2024` |
