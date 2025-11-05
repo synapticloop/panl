@@ -854,16 +854,16 @@ part of the Panl server. !!
 [See all releases](https://github.com/synapticloop/panl/releases/)
 
 
-| Release<br />Number   | Short note           | Codename            | Release Date         | 
-|-----------------------|----------------------|---------------------|----------------------|
-| 2.2.0                 | mMm harnesses        | `bitter-shadow`     | `TBA`                |
-| 2.1.0                 | niceties/want-it-ies | `hidden-summer`     | `July      28, 2025` |
-| 2.0.0                 | fluffy stuff         | `billowing-feather` | `February  28, 2025` |
-| -- breaking change -- | -------------------- | ------------------- | `------------------` |
-| 1.2.0                 | more like this       | `needy-phanton`     | `October   30, 2024` |
-| 1.1.1                 | the fly spray        | `grizzled-pebble`   | `September 24, 2024` |
-| 1.1.0                 | the better update    | `broad-firefly`     | `September 19, 2024` |
-| 1.0.0                 | the initial release  | `bright-wildflower` | `September 04, 2024` |
+| Release<br />Number | Short note             | Codename              | Release Date         | 
+|---------------------|------------------------|-----------------------|----------------------|
+| 2.2.0               | mMm harnesses          | `bitter-shadow`       | `TBA`                |
+| 2.1.0               | niceties/want-it-ies   | `hidden-summer`       | `July      28, 2025` |
+| 2.0.0               | fluffy stuff           | `billowing-feather`   | `February  28, 2025` |
+| `breaking change`   | `--------------------` | `-------------------` | `------------------` |
+| 1.2.0               | more like this         | `needy-phanton`       | `October   30, 2024` |
+| 1.1.1               | the fly spray          | `grizzled-pebble`     | `September 24, 2024` |
+| 1.1.0               | the better update      | `broad-firefly`       | `September 19, 2024` |
+| 1.0.0               | the initial release    | `bright-wildflower`   | `September 04, 2024` |
 
 For full release notes for previous versions, see the [releases page](https://github.com/synapticloop/panl/releases/).
 
