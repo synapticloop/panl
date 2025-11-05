@@ -547,8 +547,6 @@ public class CollectionRequestHandler {
 			}
 		}
 
-		// TODO - add in query operand
-
 		if (lpseUriPath.length > 3) {
 			String lpseEncoding = URLDecoder.decode(lpseUriPath[lpseUriPath.length - 1], StandardCharsets.UTF_8).replaceAll(" ", "+");
 
