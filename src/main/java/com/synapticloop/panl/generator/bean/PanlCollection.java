@@ -354,15 +354,21 @@ public class PanlCollection {
 							SOLR_FIELD_NAME_TO_SOLR_FIELD_TYPE.put(name, type);
 
 							Iterator<Attribute> attributes = startElement.getAttributes();
+							List<Attribute> sortedAttributes = new ArrayList<>();
 							while (attributes.hasNext()) {
 								Attribute attribute = attributes.next();
+								sortedAttributes.add(attribute);
+							}
+
+							sortedAttributes.sort(Comparator.comparing(attribute -> attribute.getName().toString()));
+
+							for (Attribute attribute : sortedAttributes) {
 								String attributeName = attribute.getName().toString();
 								String attributeValue = attribute.getValue();
-								sb.append("\"")
-								  .append(attributeName)
-								  .append("\"=\"")
-								  .append(attributeValue)
-								  .append("\" ");
+								sb.append(attributeName)
+										.append("=\"")
+										.append(attributeValue)
+										.append("\" ");
 							}
 							sb.append("/>");
 							fieldXmlMap.put(name, sb.toString());
