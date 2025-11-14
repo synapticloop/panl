@@ -22,26 +22,30 @@ The mention and references of any Apache projects, sub-projects, or resources in
 
 | Latest<br />Release                                                          | Latest Book Release                                                | Development Branch (version) | 
 |------------------------------------------------------------------------------|--------------------------------------------------------------------|------------------------------|
-| ![GitHub Release](https://img.shields.io/github/v/release/synapticloop/panl) | Synapticloop - Getting Started With Panl version 2.1.0 (release 1) | `bitter-shadow`              |
+| ![GitHub Release](https://img.shields.io/github/v/release/synapticloop/panl) | Synapticloop - Getting Started With Panl version 2.2.0 (release 1) | `bitter-shadow`              |
 
 
 **Major branch release status:**
 
-| BRANCH          | STATUS                                                                                                                                                                                                                                                                      | VERSION | TYPE                                                 | LATEST SOLR<br />VERSION TESTED |
-|-----------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|---------|------------------------------------------------------|---------------------------------|
-| `bitter-shadow` | [![CircleCI](https://dl.circleci.com/status-badge/img/circleci/3Y1eqqe4mcvtSZuzJnQ3tJ/DyFKUm7c7AoLa1wHmRjAnf/tree/bitter-shadow.svg?style=shield)](https://dl.circleci.com/status-badge/redirect/circleci/3Y1eqqe4mcvtSZuzJnQ3tJ/DyFKUm7c7AoLa1wHmRjAnf/tree/bitter-shadow) | `2.2.0` | Development branch - integration with Solr version 9 | `9.9.0`                         |
-| `MAIN`          | [![CircleCI](https://dl.circleci.com/status-badge/img/circleci/3Y1eqqe4mcvtSZuzJnQ3tJ/DyFKUm7c7AoLa1wHmRjAnf/tree/main.svg?style=shield)](https://dl.circleci.com/status-badge/redirect/circleci/3Y1eqqe4mcvtSZuzJnQ3tJ/DyFKUm7c7AoLa1wHmRjAnf/tree/main)                   | `2.1.0` | Trunk - integration with Solr version 9              | `9.9.0`                         |
-| `SOLR PANL 9`   | [![CircleCI](https://dl.circleci.com/status-badge/img/circleci/3Y1eqqe4mcvtSZuzJnQ3tJ/DyFKUm7c7AoLa1wHmRjAnf/tree/solr-panl-9.svg?style=shield)](https://dl.circleci.com/status-badge/redirect/circleci/3Y1eqqe4mcvtSZuzJnQ3tJ/DyFKUm7c7AoLa1wHmRjAnf/tree/solr-panl-9)     | `2.1.0` | Panl integration with Solr version 9                 | `9.9.0`                         |
-| `SOLR PANL 8`   | [![CircleCI](https://dl.circleci.com/status-badge/img/circleci/3Y1eqqe4mcvtSZuzJnQ3tJ/DyFKUm7c7AoLa1wHmRjAnf/tree/solr-panl-8.svg?style=shield)](https://dl.circleci.com/status-badge/redirect/circleci/3Y1eqqe4mcvtSZuzJnQ3tJ/DyFKUm7c7AoLa1wHmRjAnf/tree/solr-panl-8)     | `2.1.0` | Panl integration with Solr version 8                 | `8.11.4`                        |
-| `SOLR PANL 7`   | [![CircleCI](https://dl.circleci.com/status-badge/img/circleci/3Y1eqqe4mcvtSZuzJnQ3tJ/DyFKUm7c7AoLa1wHmRjAnf/tree/solr-panl-7.svg?style=shield)](https://dl.circleci.com/status-badge/redirect/circleci/3Y1eqqe4mcvtSZuzJnQ3tJ/DyFKUm7c7AoLa1wHmRjAnf/tree/solr-panl-7)     | `2.1.0` | Panl integration with Solr version 7                 | `7.7.3`                         |
+| BRANCH          | STATUS                                                                                                                                                                                                                                                                      | VERSION | TYPE                                                                            | LATEST SOLR<br />VERSION TESTED | Solr Download                                                            |
+|-----------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|---------|---------------------------------------------------------------------------------|---------------------------------|--------------------------------------------------------------------------|
+| `bitter-shadow` | [![CircleCI](https://dl.circleci.com/status-badge/img/circleci/3Y1eqqe4mcvtSZuzJnQ3tJ/DyFKUm7c7AoLa1wHmRjAnf/tree/bitter-shadow.svg?style=shield)](https://dl.circleci.com/status-badge/redirect/circleci/3Y1eqqe4mcvtSZuzJnQ3tJ/DyFKUm7c7AoLa1wHmRjAnf/tree/bitter-shadow) | `2.2.0` | Development branch - integration with Solr version 9                            | `9.10.0`                        | [`Download Latest`](https://solr.apache.org/downloads.html)                                                                         |
+| `MAIN`          | [![CircleCI](https://dl.circleci.com/status-badge/img/circleci/3Y1eqqe4mcvtSZuzJnQ3tJ/DyFKUm7c7AoLa1wHmRjAnf/tree/main.svg?style=shield)](https://dl.circleci.com/status-badge/redirect/circleci/3Y1eqqe4mcvtSZuzJnQ3tJ/DyFKUm7c7AoLa1wHmRjAnf/tree/main)                   | `2.1.0` | Trunk - integration with Solr version 9                                         | `9.9.0`                         |  [`Download Latest`](https://solr.apache.org/downloads.html)                                                                        |
+| `SOLR PANL 9`   | [![CircleCI](https://dl.circleci.com/status-badge/img/circleci/3Y1eqqe4mcvtSZuzJnQ3tJ/DyFKUm7c7AoLa1wHmRjAnf/tree/solr-panl-9.svg?style=shield)](https://dl.circleci.com/status-badge/redirect/circleci/3Y1eqqe4mcvtSZuzJnQ3tJ/DyFKUm7c7AoLa1wHmRjAnf/tree/solr-panl-9)     | `2.1.0` | Panl integration with Solr version 9                                            | `9.9.0`                         | [`Download Latest`](https://solr.apache.org/downloads.html)              |
+| `SOLR PANL 8`   | [![CircleCI](https://dl.circleci.com/status-badge/img/circleci/3Y1eqqe4mcvtSZuzJnQ3tJ/DyFKUm7c7AoLa1wHmRjAnf/tree/solr-panl-8.svg?style=shield)](https://dl.circleci.com/status-badge/redirect/circleci/3Y1eqqe4mcvtSZuzJnQ3tJ/DyFKUm7c7AoLa1wHmRjAnf/tree/solr-panl-8)     | `2.1.0` | Panl integration with Solr version 8                 | `8.11.4`                        | [`Download 8.11.4`](https://archive.apache.org/dist/lucene/solr/8.11.4/) |
+| `SOLR PANL 7`   | [![CircleCI](https://dl.circleci.com/status-badge/img/circleci/3Y1eqqe4mcvtSZuzJnQ3tJ/DyFKUm7c7AoLa1wHmRjAnf/tree/solr-panl-7.svg?style=shield)](https://dl.circleci.com/status-badge/redirect/circleci/3Y1eqqe4mcvtSZuzJnQ3tJ/DyFKUm7c7AoLa1wHmRjAnf/tree/solr-panl-7)     | `2.1.0` | Panl integration with Solr version 7                                            | `7.7.3`                         | [`Download 7.7.3`](https://archive.apache.org/dist/lucene/solr/7.7.3/)   |
 
 > We _always_ recommend that you use the most recently available release which
 > contains bug fixes and new functionality and is _generally_ backwards
 > compatible.
 > 
 > We do not keep previous individual Panl branches available for Solr version 8 
-> and version 7 - i.e. there is no branch available for SOLR PANL 8 - which 
-> is not the 2.0.0 branch.
+> and version 7 - i.e. there is no branch available for SOLR PANL 8 which 
+> integrates with any Panl version that is not the latest Panl release 
+> version.
+> 
+> You could however, download a previous Panl version that integrates with your 
+> chosen Solr version from the releases page.
 
 **Branches/Release:**
 
@@ -58,12 +62,12 @@ This is for reference
 
 <strong>BREAKING CHANGE TO LPSE URL path part for versions below</strong>
 
-| BRANCH                                                 | TYPE     | VERSION | GITHUB                                                                                                        |
-|--------------------------------------------------------|----------|---------|---------------------------------------------------------------------------------------------------------------|
-| `needy-phantom`                                        | `BRANCH` | `1.2.0` | [GitHub > `needy-phanton`](https://github.com/synapticloop/panl/tree/needy-phanton)              |
-| `grizzled-pebble`                                      | `TAG`    | `1.1.1` | [GitHub > Tag 1.1.1](https://github.com/synapticloop/panl/tree/1.1.1)                                         |
-| `broad-firefly`                                        | `TAG`    | `1.1.0` | [GitHub > Tag 1.1.0](https://github.com/synapticloop/panl/tree/1.1.0)                                         |
-| `bright-wildflower`                                    | `TAG`    | `1.0.0` | [GitHub > Tag 1.1.0](https://github.com/synapticloop/panl/tree/1.0.0)                                         |
+| BRANCH              | TYPE     | VERSION | GITHUB                                                                              |
+|---------------------|----------|---------|-------------------------------------------------------------------------------------|
+| `needy-phantom`     | `BRANCH` | `1.2.0` | [GitHub > `needy-phanton`](https://github.com/synapticloop/panl/tree/needy-phanton) |
+| `grizzled-pebble`   | `TAG`    | `1.1.1` | [GitHub > Tag 1.1.1](https://github.com/synapticloop/panl/tree/1.1.1)               |
+| `broad-firefly`     | `TAG`    | `1.1.0` | [GitHub > Tag 1.1.0](https://github.com/synapticloop/panl/tree/1.1.0)               |
+| `bright-wildflower` | `TAG`    | `1.0.0` | [GitHub > Tag 1.1.0](https://github.com/synapticloop/panl/tree/1.0.0)               |
 
 
 The Synapticloop Panl project uses `major.minor.micro` versioning, the meaning
@@ -505,47 +509,26 @@ http://localhost:8181/panl-results-viewer/
 
 _**Image**: The In-Built Panl Results Viewer Web Application_
 
-## 0. Download Solr and Panl
+## 0. Download and Extract the Solr and Panl Packages
 
 Download the latest release of Synapticloop Panl
 
 [https://github.com/synapticloop/panl/releases](https://github.com/synapticloop/panl/releases)
 
-Download the latest version of Apache Solr - this book is using the `9.9.0-slim`
+Download the latest version of Apache Solr - this book is using the `9.10.0-slim`
 version
 
 [https://solr.apache.org/downloads.html](https://solr.apache.org/downloads.html)
 
-**A Note On Running The Commands**
+Extract both the packages, either through the command line, or with a GUI utility.  For the examples in this section, the Panl server was extracted to:
 
-*These are the commands for either Microsoft Windows or *NIX operating systems
-(Linux/Apple Macintosh). Should there be any errors - see the ‘Getting Started’
-section for a more in-depth explanation and approach.**
+`\java-servers\solr-panl-9-2.2.0\` (labeled as `PANL_INSTALL_DIRECTORY`)
 
----
+And
 
-> **WARNING:** The Solr Release version before `9.8.0` has different command 
-> line options for creating a new example cloud.  For these versions the 
-> command line option should be `-noprompt` rather than `--no-prompt`.
-> 
-> Additionally, when creating the collection, the options should be changed 
-> from `--shards` to `-s`.
->
-> All other commands remain the same
+`\java-servers\solr.10.0-slim\` (labeled as `SOLR_INSTALL_DIRECTORY`)
 
----
 
-```
-**IMPORTANT**: You will need to replace the
-
-SOLR_INSTALL_DIRECTORY
-
-  and
-
-PANL_INSTALL_DIRECTORY
-
-references in the commands for your particular setup.
-```
 
 # Windows Commands
 
@@ -808,16 +791,16 @@ part of the Panl server. !!
 [See all releases](https://github.com/synapticloop/panl/releases/)
 
 
-| Release<br />Number   | Short note           | Codename            | Release Date         | 
-|-----------------------|----------------------|---------------------|----------------------|
-| 2.2.0                 | mMm harnesses        | `bitter-shadow`     | `TBA`                |
-| 2.1.0                 | niceties/want-it-ies | `hidden-summer`     | `July      28, 2025` |
-| 2.0.0                 | fluffy stuff         | `billowing-feather` | `February  28, 2025` |
-| -- breaking change -- | -------------------- | ------------------- | `------------------` |
-| 1.2.0                 | more like this       | `needy-phanton`     | `October   30, 2024` |
-| 1.1.1                 | the fly spray        | `grizzled-pebble`   | `September 24, 2024` |
-| 1.1.0                 | the better update    | `broad-firefly`     | `September 19, 2024` |
-| 1.0.0                 | the initial release  | `bright-wildflower` | `September 04, 2024` |
+| Release<br />Number | Short note             | Codename              | Release Date         | 
+|---------------------|------------------------|-----------------------|----------------------|
+| 2.2.0               | mMm harnesses          | `bitter-shadow`       | `TBA`                |
+| 2.1.0               | niceties/want-it-ies   | `hidden-summer`       | `July      28, 2025` |
+| 2.0.0               | fluffy stuff           | `billowing-feather`   | `February  28, 2025` |
+| `-breaking-change-` | `--------------------` | `-------------------` | `------------------` |
+| 1.2.0               | more like this         | `needy-phanton`       | `October   30, 2024` |
+| 1.1.1               | the fly spray          | `grizzled-pebble`     | `September 24, 2024` |
+| 1.1.0               | the better update      | `broad-firefly`       | `September 19, 2024` |
+| 1.0.0               | the initial release    | `bright-wildflower`   | `September 04, 2024` |
 
 For full release notes for previous versions, see the [releases page](https://github.com/synapticloop/panl/releases/).
 

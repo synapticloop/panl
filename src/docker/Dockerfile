@@ -1,6 +1,21 @@
 FROM alpine:3.22.1
 
 # ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~
+#   The SOLR_VERSION argument is the Apache Solr server version that will be
+#   integrated with. It has a default value which is set the the latest version
+#   of Solr that was available when the code was last updated.  This value can
+#   be over-ridden by passing in a command line orgument of the form:
+#
+#     --build-arg SOLR_VERSION=<version_number_here>
+#
+#   For example, to build the Panl server to connect to the Solr version 9.8.1
+#   The command line argument would be
+#
+#     --build-arg SOLR_VERSION=9.8.1
+# ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~
+ARG SOLR_VERSION=9.9.0
+
+# ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~
 #   The TAG argument is the docker tag that will be used to build the docker
 #   image and will be of the form:
 #     synapticloop:${TAG}
@@ -28,9 +43,10 @@ RUN mkdir /archives/
 
 
 # ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~
-#   Download the Solr server and the Panl server from the local disk
+#   Download the Solr server from the apache archives and the Panl server from
+#   the local disk
 # ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~
-ADD https://dlcdn.apache.org/solr/solr/9.9.0/solr-9.9.0-slim.tgz /archives/
+ADD https://archive.apache.org/dist/solr/solr/$SOLR_VERSION/solr-$SOLR_VERSION-slim.tgz /archives/
 ADD build/distributions/${TAG}.tgz /java-servers/
 
 
@@ -38,7 +54,7 @@ ADD build/distributions/${TAG}.tgz /java-servers/
 #   Extract the Solr server (The Panl server is automatically extracted by
 #   the `ADD` command above)
 # ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~
-RUN tar -xzvf /archives/solr-9.9.0-slim.tgz -C /java-servers/
+RUN tar -xzvf /archives/solr-$SOLR_VERSION-slim.tgz -C /java-servers/
 
 # ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~
 #   1. Set up the linking for the Solr and Panl installation
@@ -48,7 +64,7 @@ RUN tar -xzvf /archives/solr-9.9.0-slim.tgz -C /java-servers/
 # ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~
 WORKDIR /java-servers/
 
-RUN ln -s solr-9.9.0-slim solr
+RUN ln -s solr-$SOLR_VERSION-slim solr
 RUN ln -s ${TAG} panl
 
 RUN mkdir /java-servers/solr/mechanical-pencils/
@@ -87,7 +103,9 @@ COPY src/docker/startup.sh /
 RUN chmod a+x /startup.sh
 
 # ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~
-#   Expose the Solr and Panl server ports
+#   Expose the Panl and Solr server ports
+#     8181 for the Panl server
+#     8983 for the Solr admin server
 # ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~
 EXPOSE 8181/tcp
 EXPOSE 8983/tcp
