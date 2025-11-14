@@ -43,29 +43,24 @@ RUN mkdir /archives/
 
 
 # ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~
-#   Download the Solr server from the apache archives and the Panl server from
-#   the local disk
+#   Download the Solr server from the apache archives and extract it
 # ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~
 ADD https://archive.apache.org/dist/solr/solr/$SOLR_VERSION/solr-$SOLR_VERSION-slim.tgz /archives/
-ADD build/distributions/${TAG}.tgz /java-servers/
-
 
 # ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~
-#   Extract the Solr server (The Panl server is automatically extracted by
-#   the `ADD` command above)
+#   Extract the Solr server
 # ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~
 RUN tar -xzvf /archives/solr-$SOLR_VERSION-slim.tgz -C /java-servers/
 
 # ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~
-#   1. Set up the linking for the Solr and Panl installation
+#   1. Set up the linking for the Solr installation
 #   2. Copy the Solr configuration files for the standalone Solr server
 #   3. Copy the override shell script so that Solr accepts all connections
-#   4. Copy over the Panl configuration for thge standalone connection
 # ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~
+
 WORKDIR /java-servers/
 
 RUN ln -s solr-$SOLR_VERSION-slim solr
-RUN ln -s ${TAG} panl
 
 RUN mkdir /java-servers/solr/mechanical-pencils/
 RUN mkdir /java-servers/solr/server/solr/mechanical-pencils/
@@ -79,8 +74,24 @@ RUN mkdir /java-servers/solr/server/solr/book-store/
 RUN cp -R /java-servers/panl/sample/solr/* /java-servers/solr/server/solr/
 
 WORKDIR /
+
 COPY src/docker/solr.in.sh /java-servers/solr/bin/
 RUN chmod a+x /java-servers/solr/bin/solr.in.sh
+
+
+# ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~
+#   Copy the Panl server from the local disk  (The Panl server is automatically
+#   extracted by the `ADD` command below)
+# ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~
+ADD build/distributions/${TAG}.tgz /java-servers/
+
+# ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~
+#   1. Set up the linking for the Panl installation
+#   2. Copy over the Panl configuration for thge standalone connection
+# ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~
+WORKDIR /java-servers/
+
+RUN ln -s ${TAG} panl
 
 COPY src/docker/panl.properties /java-servers/panl/
 
