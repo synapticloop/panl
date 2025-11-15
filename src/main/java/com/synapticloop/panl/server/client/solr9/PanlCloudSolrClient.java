@@ -1,4 +1,4 @@
-package com.synapticloop.panl.server.client.impl;
+package com.synapticloop.panl.server.client.solr9;
 
 /*
  * Copyright (c) 2008-2025 synapticloop.

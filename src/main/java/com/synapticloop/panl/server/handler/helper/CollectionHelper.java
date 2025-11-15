@@ -26,7 +26,7 @@ package com.synapticloop.panl.server.handler.helper;
 
 import com.synapticloop.panl.exception.PanlServerException;
 import com.synapticloop.panl.server.client.*;
-import com.synapticloop.panl.server.client.impl.*;
+import com.synapticloop.panl.server.client.solr9.*;
 import com.synapticloop.panl.server.handler.properties.CollectionProperties;
 import com.synapticloop.panl.server.handler.properties.PanlProperties;
 import org.slf4j.Logger;

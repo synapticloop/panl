@@ -1,4 +1,4 @@
-package com.synapticloop.panl.server.client.impl;
+package com.synapticloop.panl.server.client.solr9;
 
 /*
  * Copyright (c) 2008-2025 synapticloop.
@@ -53,15 +53,20 @@ import com.synapticloop.panl.server.client.PanlClient;
 import com.synapticloop.panl.server.handler.properties.PanlProperties;
 import com.synapticloop.panl.server.handler.properties.CollectionProperties;
 import org.apache.solr.client.solrj.SolrClient;
-import org.apache.solr.client.solrj.impl.HttpJdkSolrClient;
+import org.apache.solr.client.solrj.impl.Http2SolrClient;
+import org.apache.solr.client.solrj.impl.LBHttp2SolrClient;
 
-public class PanlHttpJdkSolrClient extends PanlClient {
-	public PanlHttpJdkSolrClient(String solrCollection, PanlProperties panlProperties, CollectionProperties collectionProperties) throws PanlServerException {
+public class PanlLBHttp2SolrClient extends PanlClient {
+	public PanlLBHttp2SolrClient(String solrCollection, PanlProperties panlProperties, CollectionProperties collectionProperties) throws PanlServerException {
 		super(solrCollection, panlProperties, collectionProperties);
 	}
 
 	@Override
 	public SolrClient getClient() {
-		return(new HttpJdkSolrClient.Builder(panlProperties.getSolrSearchServerUrl()).build());
+		return (new LBHttp2SolrClient(
+				new Http2SolrClient.Builder(
+						panlProperties.getSolrSearchServerUrl())
+						.build(),
+				panlProperties.getSolrSearchServerUrl()));
 	}
 }
