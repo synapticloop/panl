@@ -71,8 +71,6 @@ RUN mkdir /java-servers/solr/server/solr/simple-date/
 RUN mkdir /java-servers/solr/book-store/
 RUN mkdir /java-servers/solr/server/solr/book-store/
 
-RUN cp -R /java-servers/panl/sample/solr/* /java-servers/solr/server/solr/
-
 WORKDIR /
 
 COPY src/docker/solr.in.sh /java-servers/solr/bin/
@@ -94,6 +92,7 @@ WORKDIR /java-servers/
 RUN ln -s ${TAG} panl
 
 COPY src/docker/panl.properties /java-servers/panl/
+RUN cp -R /java-servers/panl/sample/solr/* /java-servers/solr/server/solr/
 
 # ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~
 #   Copy over the indexer shell script and execute it - this will:
