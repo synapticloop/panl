@@ -779,7 +779,8 @@ server (port 8983) so that it can be viewed:
 
 
 - **Documentation Update**
-  - Rewrote documentation to be a little clearer and removed extraneous information 
+  - Rewrote documentation to be a little clearer and removed extraneous 
+    information 
 
 !! The included PDF contains over **600** pages of documentation for every 
 part of the Panl server. !!
