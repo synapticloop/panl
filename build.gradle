@@ -156,9 +156,6 @@ distributions {
 					"com.fasterxml.jackson.core:jackson-databind:2.18.0",
 					"commons-codec:commons-codec:1.17.1",
 					"org.objenesis:objenesis:3.3"
-
-
-
 		}
 	}
 }

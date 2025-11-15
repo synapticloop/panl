@@ -576,6 +576,14 @@ public class CollectionRequestHandler {
 						continue;
 					}
 
+					// now check the query operand token
+					if(null != queryOperand) {
+						if (lpseToken instanceof QueryOperandLpseToken) {
+							lpseToken.setIsValid(false);
+							continue;
+						}
+					}
+
 					lpseTokens.add(lpseToken);
 
 					String equivalenceValue = lpseToken.getEquivalenceValue();

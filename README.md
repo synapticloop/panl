@@ -772,6 +772,8 @@ server (port 8983) so that it can be viewed:
 
 - **Bug Fixes**
   - Fixed decoding of UTF-8 LPSE codes
+  - Fixed bug with the query operand being passed through the URL not being 
+    picked up.
 
 
 - **Code Changes**
