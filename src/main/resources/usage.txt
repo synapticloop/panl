@@ -20,5 +20,8 @@ Where:
       server - start the server, or
     generate - generate an example panl.properties file from an existing Solr
                managed-schema.xml file
+        help - show this help message
 
+Each of the commands may have different arguments depending on the command
+invoked.
                                  ~ ~ ~ * ~ ~ ~

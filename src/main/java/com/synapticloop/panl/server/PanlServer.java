@@ -337,7 +337,7 @@ public class PanlServer {
 			Runtime.getRuntime().addShutdownHook(new Thread(httpServer::stop));
 			httpServer.awaitTermination(Long.MAX_VALUE, TimeUnit.DAYS);
 		} catch (Exception e) {
-			throw new PanlServerException("Could not start the server.", e);
+			throw new PanlServerException("Could not start the server, message was: " + e.getMessage(), e);
 		}
 	}
 

@@ -7,33 +7,38 @@
 > searchable, faceted search engine with an in-built, search page to test it all
 > out._**
 
+---
+
 > **_And, yes, there is full documentation available, over 600 pages, 
 > covering all aspects of the configuration of the Panl server so that you 
 > can get the most out of your Solr and Panl experience._**
 
 # IMPORTANT:
 
-Apache®, Solr® the names of Apache projects, and the multicolor feather logo are registered trademarks or trademarks of the Apache Software Foundation in the United States and/or other countries.  
+Apache®, Solr® the names of Apache projects, and the multicolor feather logo are 
+registered trademarks or trademarks of the Apache Software Foundation in the 
+United States and/or other countries.  
 
-The mention and references of any Apache projects, sub-projects, or resources in no way constitutes an endorsement for the Synapticloop Panl project.
+The mention and references of any Apache projects, sub-projects, or resources in 
+no way constitutes an endorsement for Synapticloop or the Panl project.
 
 
 # Development Information 
 
-| Latest<br />Release                                                          | Latest Book Release                                                | Development Branch (version) | 
-|------------------------------------------------------------------------------|--------------------------------------------------------------------|------------------------------|
-| ![GitHub Release](https://img.shields.io/github/v/release/synapticloop/panl) | Synapticloop - Getting Started With Panl version 2.2.0 (release 1) | `bitter-shadow`              |
+| Latest<br />Release                                                          | Latest Book Release                                                | Development Branch<br />(name / version) | 
+|------------------------------------------------------------------------------|--------------------------------------------------------------------|------------------------------------------|
+| ![GitHub Release](https://img.shields.io/github/v/release/synapticloop/panl) | Synapticloop - Getting Started With Panl version 2.2.0 (release 1) | `raspy-pine` / `3.0.0`                    |
 
 
 **Major branch release status:**
 
-| BRANCH          | STATUS                                                                                                                                                                                                                                                                      | VERSION | TYPE                                                                            | LATEST SOLR<br />VERSION TESTED | Solr Download                                                            |
-|-----------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|---------|---------------------------------------------------------------------------------|---------------------------------|--------------------------------------------------------------------------|
-| `bitter-shadow` | [![CircleCI](https://dl.circleci.com/status-badge/img/circleci/3Y1eqqe4mcvtSZuzJnQ3tJ/DyFKUm7c7AoLa1wHmRjAnf/tree/bitter-shadow.svg?style=shield)](https://dl.circleci.com/status-badge/redirect/circleci/3Y1eqqe4mcvtSZuzJnQ3tJ/DyFKUm7c7AoLa1wHmRjAnf/tree/bitter-shadow) | `2.2.0` | Development branch - integration with Solr version 9                            | `9.10.0`                        | [`Download Latest`](https://solr.apache.org/downloads.html)                                                                         |
-| `MAIN`          | [![CircleCI](https://dl.circleci.com/status-badge/img/circleci/3Y1eqqe4mcvtSZuzJnQ3tJ/DyFKUm7c7AoLa1wHmRjAnf/tree/main.svg?style=shield)](https://dl.circleci.com/status-badge/redirect/circleci/3Y1eqqe4mcvtSZuzJnQ3tJ/DyFKUm7c7AoLa1wHmRjAnf/tree/main)                   | `2.1.0` | Trunk - integration with Solr version 9                                         | `9.9.0`                         |  [`Download Latest`](https://solr.apache.org/downloads.html)                                                                        |
-| `SOLR PANL 9`   | [![CircleCI](https://dl.circleci.com/status-badge/img/circleci/3Y1eqqe4mcvtSZuzJnQ3tJ/DyFKUm7c7AoLa1wHmRjAnf/tree/solr-panl-9.svg?style=shield)](https://dl.circleci.com/status-badge/redirect/circleci/3Y1eqqe4mcvtSZuzJnQ3tJ/DyFKUm7c7AoLa1wHmRjAnf/tree/solr-panl-9)     | `2.1.0` | Panl integration with Solr version 9                                            | `9.9.0`                         | [`Download Latest`](https://solr.apache.org/downloads.html)              |
-| `SOLR PANL 8`   | [![CircleCI](https://dl.circleci.com/status-badge/img/circleci/3Y1eqqe4mcvtSZuzJnQ3tJ/DyFKUm7c7AoLa1wHmRjAnf/tree/solr-panl-8.svg?style=shield)](https://dl.circleci.com/status-badge/redirect/circleci/3Y1eqqe4mcvtSZuzJnQ3tJ/DyFKUm7c7AoLa1wHmRjAnf/tree/solr-panl-8)     | `2.1.0` | Panl integration with Solr version 8                 | `8.11.4`                        | [`Download 8.11.4`](https://archive.apache.org/dist/lucene/solr/8.11.4/) |
-| `SOLR PANL 7`   | [![CircleCI](https://dl.circleci.com/status-badge/img/circleci/3Y1eqqe4mcvtSZuzJnQ3tJ/DyFKUm7c7AoLa1wHmRjAnf/tree/solr-panl-7.svg?style=shield)](https://dl.circleci.com/status-badge/redirect/circleci/3Y1eqqe4mcvtSZuzJnQ3tJ/DyFKUm7c7AoLa1wHmRjAnf/tree/solr-panl-7)     | `2.1.0` | Panl integration with Solr version 7                                            | `7.7.3`                         | [`Download 7.7.3`](https://archive.apache.org/dist/lucene/solr/7.7.3/)   |
+| BRANCH        | STATUS                                                                                                                                                                                                                                                                  | VERSION | TYPE                                                                            | LATEST SOLR<br />VERSION TESTED | Solr Download                                                            |
+|---------------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|---------|---------------------------------------------------------------------------------|---------------------------------|--------------------------------------------------------------------------|
+| `raspy-pine`  | [![CircleCI](https://dl.circleci.com/status-badge/img/circleci/3Y1eqqe4mcvtSZuzJnQ3tJ/DyFKUm7c7AoLa1wHmRjAnf/tree/raspy-pine.svg?style=shield)](https://dl.circleci.com/status-badge/redirect/circleci/3Y1eqqe4mcvtSZuzJnQ3tJ/DyFKUm7c7AoLa1wHmRjAnf/tree/raspy-pine)   | `3.0.0` | Development branch - integration with Solr version 9                            | **`10.x.x`** _(unavailable)_    |                                                                          |
+| `MAIN`        | [![CircleCI](https://dl.circleci.com/status-badge/img/circleci/3Y1eqqe4mcvtSZuzJnQ3tJ/DyFKUm7c7AoLa1wHmRjAnf/tree/main.svg?style=shield)](https://dl.circleci.com/status-badge/redirect/circleci/3Y1eqqe4mcvtSZuzJnQ3tJ/DyFKUm7c7AoLa1wHmRjAnf/tree/main)               | `2.2.0` | Trunk - integration with Solr version 9                                         | `9.9.0`                         | [`Download Latest`](https://solr.apache.org/downloads.html)              |
+| `SOLR PANL 9` | [![CircleCI](https://dl.circleci.com/status-badge/img/circleci/3Y1eqqe4mcvtSZuzJnQ3tJ/DyFKUm7c7AoLa1wHmRjAnf/tree/solr-panl-9.svg?style=shield)](https://dl.circleci.com/status-badge/redirect/circleci/3Y1eqqe4mcvtSZuzJnQ3tJ/DyFKUm7c7AoLa1wHmRjAnf/tree/solr-panl-9) | `2.2.0` | Panl integration with Solr version 9                                            | `9.9.0`                         | [`Download Latest`](https://solr.apache.org/downloads.html)              |
+| `SOLR PANL 8` | [![CircleCI](https://dl.circleci.com/status-badge/img/circleci/3Y1eqqe4mcvtSZuzJnQ3tJ/DyFKUm7c7AoLa1wHmRjAnf/tree/solr-panl-8.svg?style=shield)](https://dl.circleci.com/status-badge/redirect/circleci/3Y1eqqe4mcvtSZuzJnQ3tJ/DyFKUm7c7AoLa1wHmRjAnf/tree/solr-panl-8) | `2.2.0` | Panl integration with Solr version 8                 | `8.11.4`                        | [`Download 8.11.4`](https://archive.apache.org/dist/lucene/solr/8.11.4/) |
+| `SOLR PANL 7` | [![CircleCI](https://dl.circleci.com/status-badge/img/circleci/3Y1eqqe4mcvtSZuzJnQ3tJ/DyFKUm7c7AoLa1wHmRjAnf/tree/solr-panl-7.svg?style=shield)](https://dl.circleci.com/status-badge/redirect/circleci/3Y1eqqe4mcvtSZuzJnQ3tJ/DyFKUm7c7AoLa1wHmRjAnf/tree/solr-panl-7) | `2.2.0` | Panl integration with Solr version 7                                            | `7.7.3`                         | [`Download 7.7.3`](https://archive.apache.org/dist/lucene/solr/7.7.3/)   |
 
 > We _always_ recommend that you use the most recently available release which
 > contains bug fixes and new functionality and is _generally_ backwards
@@ -53,10 +58,11 @@ This is for reference
 
 | BRANCH              | TYPE     | VERSION | GITHUB                                                                                      |
 |---------------------|----------|---------|---------------------------------------------------------------------------------------------|
+| `raspy-pine`        | `BRANCH` | `3.0.0` | [GitHub > `raspy-pine`](https://github.com/synapticloop/panl/tree/raspy-pine)               |
+|                     |          |         |                                                                                             |
+| `MAIN`              | `BRANCH` | `2.2.0` | [GitHub > MAIN](https://github.com/synapticloop/panl)                                       |
+|                     |          |         |                                                                                             |
 | `bitter-shadow`     | `BRANCH` | `2.2.0` | [GitHub > `bitter-shadow`](https://github.com/synapticloop/panl/tree/bitter-shadow)         |
-|                     |          |         |                                                                                             |
-| `MAIN`              | `BRANCH` | `2.1.0` | [GitHub > MAIN](https://github.com/synapticloop/panl)                                       |
-|                     |          |         |                                                                                             |
 | `hidden-summer`     | `BRANCH` | `2.1.0` | [GitHub > `hidden-summer`](https://github.com/synapticloop/panl/tree/hidden-summer)         |
 | `billowing-feather` | `BRANCH` | `2.0.0` | [GitHub > `billowing-feather`](https://github.com/synapticloop/panl/tree/billowing-feather) |
 
@@ -86,7 +92,7 @@ changes to the book without any changes to the codebase will be updated on the
 `main` branch and the `ghpages` based website will be updated.
 
 Any out-of-band book updates will not be reflected in the panl code release 
-updates.
+updates, however the PDF will be uploaded to the releases pages.
 
 
 # Why?
@@ -95,7 +101,7 @@ Because...
 
 `/Caran d'Ache/true/Black/bDW/`
 
-looks A LOT nicer than
+looks **A LOT** nicer than
 
 `q=*:*&facet.mincount=1&rows=10&facet.field=lead_size_indicator&facet.field=grip_material&facet.field=colours&facet.field=nib_shape&facet.field=diameter&facet.field=cap_shape&facet.field=brand&facet.field=mechanism_type&facet.field=length&facet.field=hardness_indicator&facet.field=grip_type&facet.field=cap_material&facet.field=lead_grade_indicator&facet.field=tubing_material&facet.field=in_built_sharpener&facet.field=disassemble&facet.field=category&facet.field=body_shape&facet.field=clip_material&facet.field=mechanism_material&facet.field=lead_length&facet.field=body_material&facet.field=in_built_eraser&facet.field=grip_shape&facet.field=relative_weight&facet.field=name&facet.field=nib_material&facet.field=weight&facet.field=variants&facet=true&fq=brand:"Caran+d'Ache"&fq=disassemble:"true"&fq=colours:"Black"&q.op=AND`
 
@@ -109,7 +115,7 @@ Working with a Solr schema, the Panl configuration files translate unwieldy URL
 parameters into concise and precise URL paths.
 
 - **Have SEO friendlier URL paths with much shorter URLs than traditional query
-  parameters (ll the way through the search journey)** - This was the primary
+  parameters (all the way through the search journey)** - This was the primary
   driver and the base functionality.
 
 - **Abstract away the complexities of the Solr query string** - Being able to
@@ -120,9 +126,10 @@ parameters into concise and precise URL paths.
 
 - **Be quick to start up and easy to configure** - During development of a
   solution, being able to iterate over a solution, or change the way that Panl
-  is configured is a must have. Additionally, being able to upgrade the Panl
+  is configured is a must-have. Additionally, being able to upgrade the Panl
   server and have the configuration files be automatically picked up and work
-  without any changes is a plus.
+  without any changes is a plus. (on the aging Windows development 
+  build machine, it takes less than a second to start..)
 
 - **Protect Solr from errant queries** - Hiding the Solr implementation details
   from the end user and parsing, decoding, and validating the URL before passing
@@ -158,24 +165,33 @@ parameters into concise and precise URL paths.
 
 1. **BOOLEAN value translations**, for any Solr field that is defined as a
    `solr.BoolField`, then an additional translation can be performed. ‘True’ and
-   ‘false’ values can be replaced with arbitrary text, which will be
+   ‘False’ values can be replaced with arbitrary text, which will be
    transparently converted between Panl and Solr. For the LPSE URI path of
 
    `/Caran d'Ache/true/Black/bDW/`
 
    the true value (which is defined as whether the mechanical pencil can be
-   disassembled could be changed to ‘`Able to be disassembled`’ for true values,
-   and ‘`Cannot be disassembled`’ for false values.
+   disassembled could be changed to ‘`Able to be disassembled`’ for `true` 
+   values, and ‘`Cannot be disassembled`’ for `false` values.
 
-   The above URI path would then become
+   The above URI paths would then become
 
    `/Caran d'Ache/Able to be disassembled/Black/bDW/`
 
+   and
+
+   `/Caran d'Ache/Cannot be disassembled/Black/bDW/`
+
 1. **BOOLEAN checkboxes** - Whilst this may seem obvious to have a checkbox for
    a true/false value, the checkboxes work in a subtly different way.  By
-   selecting the checkbox, the only one of facet values will be selected
-   when deselected, the BOOLEAN facet is in a don't care start - the facet value
-   can be either of the values.
+   selecting the checkbox, the only one of facet values will be selected when
+   deselected, the BOOLEAN facet is in a don't care start - the facet value can 
+   be either of the values.
+
+1. **OR Facets** - Where an item has only one facet value attached to it (for 
+   example a pencil will only be manufactured by one company), OR facets allow 
+   you to expand the selection to choose one or more of the single-valued 
+   facets.
 
 1. **CONDENSED multiple field values** - Rather than having a forward slash URL
    path separator for multiple values of the same facet (used in OR Facets and
@@ -196,10 +212,12 @@ parameters into concise and precise URL paths.
    are selected, the more URL space is saved (In the example, with 3 values 
    selected, the saving becomes 30 characters).
 
-1. **SEARCH ALL OR SPECIFIC SOLR FIELDS** - Any Solr field that is analysed can
-   be selected to be searched on, for example, in the Book Store Walkthrough,
-   the user can select to search within the title, the author, the description,
-   or all of them. **Also configure the query time boost.**
+1. **SEARCH ALL OR SPECIFIC SOLR FIELDS** - Any Solr field that is analysed can 
+   be selected to be searched on, for example, in the Bookstore Walkthrough, 
+   the user can select to search within the title, the author, the description, 
+   none (i.e. the default search) or all of them.  Additionally, you may choose 
+   to configure the Solr query time boost to put more weight on one (or more) 
+   of the fields.
 
 1. **MORE LIKE THIS** - Return 'More Like This' results from the Solr server 
    with your specific query, with the ability to configure the Solr query 
@@ -217,20 +235,20 @@ parameters into concise and precise URL paths.
    selected, allowing you to narrow down the facet results and lead users
    through the search journey.
 
-1. **UNLESS facets** - Continue to show a facet unless another specified facet is
-   selected.  This can be thought of as the inverse of a hierarchical facet  and 
-   is useful when a facet no longer becomes relevant as the user goes through 
-   the search journey.
+1. **UNLESS facets** - Continue to show a facet unless another specified facet 
+   is selected.  This can be thought of as the inverse of a hierarchical facet 
+   and is useful when a facet no longer becomes relevant as the user goes 
+   through the search journey.
 
 1. **SORTED facets** - Each facet can be individually configured to order 
    the facet results by either the facet count in descending order (which is 
    the default), or the facet value (e.g. alphabetic/numeric based on the 
-   value of the facet - in either ascending or descending).
+   value of the facet - in _either_ ascending or descending).
 
 1. **MORE facets** - Solr (and Panl) configures a limit for the maximum 
-   number of facet values that are returned, this functionality enables you 
-   to dynamically load additional facet values if they are available but 
-   weren't returned with the results by default.
+   number of facet values that are returned with any query, this functionality 
+   enables you  to dynamically load additional facet values if they are 
+   available but weren't returned with the results by default.
 
 1. **RESULTS SORTING options** - Sort by any of the Solr fields, either
    ascending, or descending and with multiple sub-sorting available - e.g.
@@ -261,7 +279,7 @@ parameters into concise and precise URL paths.
    restart.
 
 1. **CACHE-ABLE** - Unless the underlying Solr search document index changes,
-   each Solr request is able to be cached.
+   each Solr request can be cached.
 
 1. **100% TEXT CONFIGURATION** - All configuration for Panl is based on text 
    files (Java `.properties`) files so they can be stored in a source code 

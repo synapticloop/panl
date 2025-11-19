@@ -89,12 +89,14 @@ public class Main {
 
 	public static final String CMD_VALUE_SERVER = "server";
 	public static final String CMD_VALUE_GENERATE = "generate";
+	public static final String CMD_VALUE_HELP = "help";
 
 	private static final Set<String> ALLOWABLE_COMMANDS = new HashSet<>();
 
 	static {
 		ALLOWABLE_COMMANDS.add(CMD_VALUE_SERVER);
 		ALLOWABLE_COMMANDS.add(CMD_VALUE_GENERATE);
+		ALLOWABLE_COMMANDS.add(CMD_VALUE_HELP);
 	}
 
 	public static String panlVersion = "Unknown - ¯\\_(ツ)_/¯";
@@ -178,6 +180,11 @@ public class Main {
 			case CMD_VALUE_GENERATE:
 				parseAndExecuteGenerateCommands();
 				break;
+			case CMD_VALUE_HELP:
+				outputUsageText("/usage.txt");
+				outputUsageText("/usage-server.txt");
+				outputUsageText("/usage-generate.txt");
+				break;
 		}
 	}
 
@@ -259,7 +266,8 @@ public class Main {
 	 * @throws CommandLineOptionException Always throws this exception
 	 */
 	private void usageAndException(String message) throws CommandLineOptionException {
-		System.out.printf("[ERROR]: %s\n", message);
+		printIndentedError(message);
+
 		if (args.length == 0) {
 			System.out.println("[ERROR]: No arguments provided.");
 			outputUsageText("/usage.txt");
@@ -301,6 +309,24 @@ public class Main {
 		}
 
 		throw new CommandLineOptionException("Invalid command line options.");
+	}
+
+	private void printIndentedError(String error) {
+		System.out.println("[ERROR]: +-------------------------------------------------------------------+");
+		if (error == null || error.isEmpty()) {
+			System.out.println("[ERROR]: No error message provided.");
+		} else {
+
+			// Split the error message on ':'
+			String[] parts = error.split(":");
+
+			// Print each part with increasing indentation
+			for (int i = 0; i < parts.length; i++) {
+				String indent = " ".repeat(i * 4);
+				System.out.println("[ERROR]:   " + indent + parts[i].trim());
+			}
+		}
+		System.out.println("[ERROR]: +-------------------------------------------------------------------+");
 	}
 
 	private void outputUsageText(String textLocation) {

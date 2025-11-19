@@ -13,7 +13,7 @@ well be called one of the following names:
 
 Other possible version names:
 
-- `raspy-pine`
+- `raspy-pine` > Version `3.0.0`
 - `twilight-truth`
 - `quiet-paper`
 - `lucky-wave`
@@ -21,7 +21,7 @@ Other possible version names:
 
 ## 2. Create a branch 
 
-Create a branch from the `main` branch with the above name i.e. `raspy-pin`.
+Create a branch from the `main` branch with the above name i.e. `raspy-pine`.
 
 ## 3. Work, work, work
 

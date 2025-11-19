@@ -9,11 +9,10 @@
       -schema solr_schema_location \
       [--no-prompt]
 
-  [-properties panl_properties_file_location] (optional - default
-    panl.properties) the base properties file to write the generated
-    configuration out to. If this property is not included, the default
-    panl.properties filename will be used prepended with the Solr collection
-    name (from the managed schema file):
+  [-properties panl_properties_file_location] (optional) the base properties
+    file to write the generated configuration out to. If this property is not
+    included, the default panl.properties filename will be used prepended with
+    the Solr collection name (from the managed schema file):
 
       <panl_collection_url>.panl.properties
 
