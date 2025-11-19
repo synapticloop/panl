@@ -111,7 +111,7 @@ $                                ~ ~ ~ * ~ ~ ~
 # facet and normal field.  This length does not apply to the Panl parameter
 # LPSE codes which are __ALWAYS__ of length 1 (one).  The Panl parameters
 # are:
-#    panl.param.query
+#     panl.param.query
 #     panl.param.sort
 #     panl.param.page
 #     panl.param.numrows
@@ -160,6 +160,7 @@ $panl.lpse.length
 
 $panl.param.query
 $panl.param.sort
+
 $panl.param.page
 panl.param.page.prefix=
 panl.param.page.suffix=
