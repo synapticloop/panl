@@ -702,7 +702,7 @@ public abstract class BaseField {
 	 */
 	protected void logDetails() {
 		getLogger().info(
-				"[ Solr/Panl '{}/{}' ] Mapping Solr facet field name '{}' of type '{}' to panl type '{}', lpse code '{}', " +
+				"[ Solr/Panl '{}/{}' ] Mapping Solr facet field name '{}' of type '{}' to Panl type '{}', lpse code '{}', " +
 						"LPSE length {}",
 				solrCollection,
 				panlCollectionUri,

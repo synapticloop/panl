@@ -905,7 +905,10 @@ public class CollectionProperties {
 					!LPSE_FIELDS.contains(lpseCode) &&
 					!LPSE_METADATA.contains(lpseCode)) {
 				LOGGER.warn(
-						"Found a panl code of '{}' in the " + Constants.Property.Panl.PANL_LPSE_ORDER + " property, yet it is not a defined field.  This will be ignored...",
+						"[Solr/Panl '{}/{}'] Found a Panl code/name of '{}' in the " + Constants.Property.Panl.PANL_LPSE_ORDER + " property, yet it " +
+								"is not a defined facet.  This will be ignored...",
+						solrCollection,
+						panlCollectionUri,
 						lpseCode);
 			}
 
@@ -986,7 +989,7 @@ public class CollectionProperties {
 					if (!found) {
 						// maybe it is a field
 						if(!LPSE_CODE_TO_FIELD_MAP.containsKey(lpseCode)) {
-							LOGGER.warn("[Solr/Panl '{}/{}'] Could not find the LPSE code '{}' for the facet order, ignoring",
+							LOGGER.warn("[Solr/Panl '{}/{}'] Could not find the LPSE code '{}' for the facet order, ignoring...",
 									solrCollection,
 									panlCollectionUri,
 									lpseCode);
@@ -1043,7 +1046,7 @@ public class CollectionProperties {
 
 						if (!found) {
 							if(!LPSE_CODE_TO_FIELD_MAP.containsKey(lpseCode)) {
-								LOGGER.warn("[Solr/Panl '{}/{}'] Could not find the LPSE code '{}' for the facet order, ignoring",
+								LOGGER.warn("[Solr/Panl '{}/{}'] Could not find the LPSE code '{}' for the facet order, ignoring...",
 										solrCollection,
 										panlCollectionUri,
 										lpseCode);
@@ -1061,6 +1064,7 @@ public class CollectionProperties {
 							Constants.Property.Panl.PANL_LPSE_ORDER);
 				}
 			}
+
 			// now just add all other LPSE code
 			if (!allFacetLPSECodes.isEmpty()) {
 				LOGGER.warn(
@@ -1070,9 +1074,15 @@ public class CollectionProperties {
 						Constants.Property.Panl.PANL_LPSE_FACETORDER);
 
 				for (String remainingLpseCode : allFacetLPSECodes.toArray(new String[]{})) {
-					LOGGER.warn("Remaining LPSE code '{}' added to the '{}' property.",
+					LOGGER.warn(
+							"[Solr/Panl '{}/{}'] Remaining LPSE code '{}' ('{}') added to the '{}' property.",
+							solrCollection,
+							panlCollectionUri,
 							remainingLpseCode,
+							LPSE_CODE_TO_FIELD_MAP.get(remainingLpseCode),
 							Constants.Property.Panl.PANL_LPSE_FACETORDER);
+					// TODO now add it to the lpse.facetorder
+
 				}
 			}
 		}
