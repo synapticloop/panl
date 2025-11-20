@@ -23,8 +23,8 @@
 
     command line option present
 
-  [-overwrite true_or_false] (optional - default false) - whether to overwrite
-      the file if it exists
+  [-overwrite true_or_false] (optional - default false) - whether to
+      overwrite the file if it exists
 
   -schema solr_schema_location (mandatory) the managed-schema.xml
       configuration file to read and generate the panl.properties file from.

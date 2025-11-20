@@ -320,7 +320,8 @@ public class Main {
 		}
 
 		System.out.println("[ERROR]:");
-		System.out.println("[ERROR]: ====================================================================+");
+		System.out.println("[ERROR]: +====================================================================+");
+		System.out.println("[ERROR]:");
 
 		throw new CommandLineOptionException("Invalid command line options.");
 	}
