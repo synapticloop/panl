@@ -34,7 +34,7 @@ no way constitutes an endorsement for Synapticloop or the Panl project.
 
 | BRANCH        | STATUS                                                                                                                                                                                                                                                                  | VERSION | TYPE                                                                            | LATEST SOLR<br />VERSION TESTED | Solr Download                                                            |
 |---------------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|---------|---------------------------------------------------------------------------------|---------------------------------|--------------------------------------------------------------------------|
-| `raspy-pine`  | [![CircleCI](https://dl.circleci.com/status-badge/img/circleci/3Y1eqqe4mcvtSZuzJnQ3tJ/DyFKUm7c7AoLa1wHmRjAnf/tree/raspy-pine.svg?style=shield)](https://dl.circleci.com/status-badge/redirect/circleci/3Y1eqqe4mcvtSZuzJnQ3tJ/DyFKUm7c7AoLa1wHmRjAnf/tree/raspy-pine)   | `3.0.0` | Development branch - integration with Solr version 9                            | **`10.x.x`** _(unavailable)_    |                                                                          |
+| `raspy-pine`  | [![CircleCI](https://dl.circleci.com/status-badge/img/circleci/3Y1eqqe4mcvtSZuzJnQ3tJ/DyFKUm7c7AoLa1wHmRjAnf/tree/raspy-pine.svg?style=shield)](https://dl.circleci.com/status-badge/redirect/circleci/3Y1eqqe4mcvtSZuzJnQ3tJ/DyFKUm7c7AoLa1wHmRjAnf/tree/raspy-pine)   | `?.?.?` | Development branch - integration with Solr version 9                            | **`10.x.x`** _(unavailable)_    | _(unavailable)_                                                           |
 | `MAIN`        | [![CircleCI](https://dl.circleci.com/status-badge/img/circleci/3Y1eqqe4mcvtSZuzJnQ3tJ/DyFKUm7c7AoLa1wHmRjAnf/tree/main.svg?style=shield)](https://dl.circleci.com/status-badge/redirect/circleci/3Y1eqqe4mcvtSZuzJnQ3tJ/DyFKUm7c7AoLa1wHmRjAnf/tree/main)               | `2.2.0` | Trunk - integration with Solr version 9                                         | `9.9.0`                         | [`Download Latest`](https://solr.apache.org/downloads.html)              |
 | `SOLR PANL 9` | [![CircleCI](https://dl.circleci.com/status-badge/img/circleci/3Y1eqqe4mcvtSZuzJnQ3tJ/DyFKUm7c7AoLa1wHmRjAnf/tree/solr-panl-9.svg?style=shield)](https://dl.circleci.com/status-badge/redirect/circleci/3Y1eqqe4mcvtSZuzJnQ3tJ/DyFKUm7c7AoLa1wHmRjAnf/tree/solr-panl-9) | `2.2.0` | Panl integration with Solr version 9                                            | `9.9.0`                         | [`Download Latest`](https://solr.apache.org/downloads.html)              |
 | `SOLR PANL 8` | [![CircleCI](https://dl.circleci.com/status-badge/img/circleci/3Y1eqqe4mcvtSZuzJnQ3tJ/DyFKUm7c7AoLa1wHmRjAnf/tree/solr-panl-8.svg?style=shield)](https://dl.circleci.com/status-badge/redirect/circleci/3Y1eqqe4mcvtSZuzJnQ3tJ/DyFKUm7c7AoLa1wHmRjAnf/tree/solr-panl-8) | `2.2.0` | Panl integration with Solr version 8                 | `8.11.4`                        | [`Download 8.11.4`](https://archive.apache.org/dist/lucene/solr/8.11.4/) |
@@ -337,6 +337,15 @@ for setting up and running earlier versions of Solr.
 
 
 # Getting up to Speed... Fast!
+
+_If you have docker and want to look at Panl:_
+
+```
+docker pull synapticloop/solr-panl:9-2.2.0
+```
+
+Run the image and point your browser to 
+[http://localhost:8181/panl-results-viewer](http://localhost:8181/panl-results-viewer)
 
 The Solr Panl release package was designed to get you up and running as quickly
 as possible.

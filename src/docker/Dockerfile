@@ -1,19 +1,26 @@
 FROM alpine:3.22.1
 
 # ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~
-#   The SOLR_VERSION argument is the Apache Solr server version that will be
-#   integrated with. It has a default value which is set the the latest version
-#   of Solr that was available when the code was last updated.  This value can
-#   be over-ridden by passing in a command line orgument of the form:
+#   The SOLR_SERVER_VERSION argument is the Apache Solr server version that
+#   will be integrated with. It has a default value which is set the the latest
+#   version of Solr that was available when the code was last updated.  The
+#   value for the Solr server version can be found in the following location:
 #
-#     --build-arg SOLR_VERSION=<version_number_here>
+#     src/main/resources/gradle.properties
+#
+#   With the property of solr.server.version
+#
+#   This value can be over-ridden by passing in a command line orgument of the
+#   form:
+#
+#     --build-arg SOLR_SERVER_VERSION=<version_number_here>
 #
 #   For example, to build the Panl server to connect to the Solr version 9.8.1
 #   The command line argument would be
 #
-#     --build-arg SOLR_VERSION=9.8.1
+#     --build-arg SOLR_SERVER_VERSION=9.8.1
 # ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~
-ARG SOLR_VERSION=9.9.0
+ARG SOLR_SERVER_VERSION
 
 # ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~
 #   The TAG argument is the docker tag that will be used to build the docker
@@ -45,12 +52,12 @@ RUN mkdir /archives/
 # ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~
 #   Download the Solr server from the apache archives and extract it
 # ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~
-ADD https://archive.apache.org/dist/solr/solr/$SOLR_VERSION/solr-$SOLR_VERSION-slim.tgz /archives/
+ADD https://archive.apache.org/dist/solr/solr/$SOLR_SERVER_VERSION/solr-$SOLR_SERVER_VERSION-slim.tgz /archives/
 
 # ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~
 #   Extract the Solr server
 # ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~
-RUN tar -xzvf /archives/solr-$SOLR_VERSION-slim.tgz -C /java-servers/
+RUN tar -xzvf /archives/solr-SOLR_SERVER_VERSION-slim.tgz -C /java-servers/
 
 # ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~
 #   1. Set up the linking for the Solr installation
@@ -60,7 +67,7 @@ RUN tar -xzvf /archives/solr-$SOLR_VERSION-slim.tgz -C /java-servers/
 
 WORKDIR /java-servers/
 
-RUN ln -s solr-$SOLR_VERSION-slim solr
+RUN ln -s solr-$SOLR_SERVER_VERSION-slim solr
 
 RUN mkdir /java-servers/solr/mechanical-pencils/
 RUN mkdir /java-servers/solr/server/solr/mechanical-pencils/
