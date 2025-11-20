@@ -751,7 +751,10 @@ bin/solr start -cloud -p 7574 -s "example/cloud/node2/solr" -z localhost:9983
 
 ## Docker Building
 
-There is an in-built task to build a docker container in gradle
+There is an in-built task to build a docker container in gradle which will work
+with either Microsoft Windows and *NIX operating systems.  The docker image 
+contains all data (i.e. mechanical pencils, book store, and the simple date) 
+indexed in Solr and ready to go.  
 
 ### _ANY OS - WINDOWS/*NIX_
 
@@ -795,15 +798,19 @@ server (port 8983) so that it can be viewed:
 
 
 - **Code Changes**
-  - Updated the usage text to be context specific
+  - Updated the usage text to be context specific, made the look and feel of 
+    the output a little clearer
+  - Updated both the `panl.properties`  file and 
+    `<panl_collection_url>.panl.properties` template files and merged them with 
+    the associated sample files.
 
 
 - **Documentation Update**
   - Rewrote documentation to be a little clearer and removed extraneous 
     information 
 
-!! The included PDF contains over **600** pages of documentation for every 
-part of the Panl server. !!
+`!! The included PDF contains over **600** pages of documentation for every 
+part of the Panl server. !!`
 
 [View the code for this release](https://github.com/synapticloop/panl/tree/2.2.0)
 

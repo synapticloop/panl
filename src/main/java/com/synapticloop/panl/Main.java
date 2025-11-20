@@ -24,7 +24,6 @@ package com.synapticloop.panl;
  * IN THE SOFTWARE.
  */
 
-//import com.synapticloop.panl.editor.PanlProjectLauncher;
 import com.synapticloop.panl.exception.CommandLineOptionException;
 import com.synapticloop.panl.exception.PanlGenerateException;
 import com.synapticloop.panl.exception.PanlServerException;
@@ -35,7 +34,6 @@ import org.apache.logging.log4j.core.config.Configurator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-//import javax.swing.*;
 import java.io.*;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -46,6 +44,8 @@ import java.util.stream.Collectors;
  * @author synapticloop
  */
 public class Main {
+	public static final String UNKNOWN_SHRUG = "Unknown - ¯\\_(ツ)_/¯";
+
 	// We want to find the log4j.xml file, so we are doing it first.  If it cannot
 	// be found, then we hope that it will be on the classpath
 	static {
@@ -99,8 +99,8 @@ public class Main {
 		ALLOWABLE_COMMANDS.add(CMD_VALUE_HELP);
 	}
 
-	public static String panlVersion = "Unknown - ¯\\_(ツ)_/¯";
-	public static String solrVersion = "Unknown - ¯\\_(ツ)_/¯";
+	public static String panlVersion = UNKNOWN_SHRUG;
+	public static String solrVersion = UNKNOWN_SHRUG;
 
 	public static final String DEFAULT_PANL_PROPERTIES = "panl.properties";
 	public static final String DEFAULT_PORT_NUMBER = "8181";
@@ -259,7 +259,8 @@ public class Main {
 	}
 
 	/**
-	 * <p>Print a simple usage message.</p>
+	 * <p>Print a simple usage message depending on what command the Panl server
+	 * thinks what is meant, and then throw an exception.</p>
 	 *
 	 * @param message The message to prepend to the usage instructions
 	 *
@@ -277,9 +278,9 @@ public class Main {
 			boolean foundArgument = false;
 			boolean foundServer = false;
 			boolean foundGenerate = false;
-			System.out.println("[ERROR]: Command line argument" + (args.length > 1 ? "s were" : " was") + ":");
+			System.out.println("[ERROR]:   Command line argument" + (args.length > 1 ? "s were" : " was") + ":");
 			for (String arg : args) {
-				System.out.printf("[ERROR]:  %s\n", arg);
+				System.out.printf("[ERROR]:      %s\n", arg);
 				if(arg.equalsIgnoreCase("server")) {
 					foundServer = true;
 					foundArgument = true;
@@ -293,32 +294,99 @@ public class Main {
 				System.out.println("[ERROR]: Couldn't determine what you were trying to do...");
 			}
 
+			System.out.println("[ERROR]:");
+			System.out.println("[ERROR]: +-------------------------------------------------------------------+");
+			System.out.println("[ERROR]:");
+
 			if(foundServer || !foundArgument) {
 				if(foundServer) {
-					System.out.println("[ERROR]: Looks like you were trying to start the server...");
+					printErrorLines("Looks like you were trying to start the server, consequently printing out the Panl server " +
+							"usage instructions. (If 'server' was not what you meant to do, try the 'help' command line argument " +
+							"for a complete list of options.)");
 				}
 				outputUsageText("/usage-server.txt");
 			}
 
 			if(foundGenerate || !foundArgument) {
 				if(foundGenerate) {
-					System.out.println("[ERROR]: Looks like you were trying to generate configuration...");
+					printErrorLines("Looks like you were trying to generate configuration, consequently printing out the " +
+							"Panl generation usage  instructions. (If 'generate' was not what you meant to do, try the 'help' " +
+							"command line argument for a complete list of options.)");
 				}
+
 				outputUsageText("/usage-generate.txt");
 			}
+
 		}
+
+		System.out.println("[ERROR]:");
+		System.out.println("[ERROR]: ====================================================================+");
 
 		throw new CommandLineOptionException("Invalid command line options.");
 	}
 
-	private void printIndentedError(String error) {
-		System.out.println("[ERROR]: +-------------------------------------------------------------------+");
-		if (error == null || error.isEmpty()) {
-			System.out.println("[ERROR]: No error message provided.");
+	/**
+	 * <p>Print out the error lines, prefixed with <code>[ERROR]: </code> prefix,
+	 * splitting the error message between words so that the complete line will
+	 * not go over 80 characters.</p>
+	 *
+	 * @param errorMessage The message to print to standard out
+	 */
+	private void printErrorLines(String errorMessage) {
+		final String PREFIX = "[ERROR]: ";
+		final int MAX_WIDTH = 79 - PREFIX.length();   // max characters of actual text per line (less the prefix)
+
+		if (errorMessage == null || errorMessage.isEmpty()) {
+			System.out.println(PREFIX + "(empty message)");
+			return;
+		}
+
+		String[] words = errorMessage.split("\\s+");
+		StringBuilder line = new StringBuilder();
+
+		System.out.print(PREFIX);
+
+		for (String word : words) {
+
+			// If adding this word would exceed line width
+			if (line.length() + word.length() > MAX_WIDTH) {
+				// Print current line
+				System.out.println(line.toString());
+
+				// Start new line
+				System.out.print(PREFIX);
+				line.setLength(0); // clear builder
+			}
+
+			// Add word to line with space if needed
+			if (line.length() > 0) {
+				line.append(" ");
+			}
+			line.append(word);
+		}
+
+		// Print any remaining text
+		if (line.length() > 0) {
+			System.out.println(line.toString());
+		}
+		System.out.println("[ERROR]:");
+	}
+
+	/**
+	 * <p>Print out an error message which is indented by two spaces (and a new
+	 * line) for every colon ':' character found.</p>
+	 *
+	 * @param errorMessage The error message to print out.
+	 */
+	private void printIndentedError(String errorMessage) {
+		System.out.println("[ERROR]: +===================================================================+");
+		System.out.println("[ERROR]:");
+		if (errorMessage == null || errorMessage.isEmpty()) {
+			System.out.println("[ERROR]: No errorMessage message provided.");
 		} else {
 
-			// Split the error message on ':'
-			String[] parts = error.split(":");
+			// Split the errorMessage message on ':'
+			String[] parts = errorMessage.split(":");
 
 			// Print each part with increasing indentation
 			for (int i = 0; i < parts.length; i++) {
@@ -326,9 +394,21 @@ public class Main {
 				System.out.println("[ERROR]:   " + indent + parts[i].trim());
 			}
 		}
+		System.out.println("[ERROR]:");
 		System.out.println("[ERROR]: +-------------------------------------------------------------------+");
+		System.out.println("[ERROR]:");
 	}
 
+	/**
+	 * <p>Output the specific usage text to the standard out.  This will load the
+	 * passed in location from the classpath and print out the file line by line,
+	 * indented with two spaces.</p>
+	 *
+	 * <p>If the text file cannot be loaded from the classpath, then it will print
+	 * out a <code>FATAL</code> error message and continue.</p>
+	 *
+	 * @param textLocation The location in the classpath of the file to print out.
+	 */
 	private void outputUsageText(String textLocation) {
 		// now print the usage
 		try (InputStream inputStream = Main.class.getResourceAsStream(textLocation)) {
@@ -339,17 +419,19 @@ public class Main {
 						new BufferedReader(
 								new InputStreamReader(inputStream))
 								.lines()
-								.collect(Collectors.joining("\n")));
+								.collect(Collectors.joining("\n  ")));
+				System.out.println();
 			}
 		} catch (IOException ignored) {
 		}
 	}
+
 	/**
 	 * <p>Main starting point for the application, parsing the command line
 	 * options and executing the required component.  If there was an error when
 	 * parsing the options then it will print out an error message and exit.</p>
 	 *
-	 * @param args The arguments to parse
+	 * @param args The command line arguments to parse
 	 */
 	public static void main(String[] args) {
 		Main main = new Main(args);
@@ -357,8 +439,8 @@ public class Main {
 		Properties gradleProperties = new Properties();
 		try {
 			gradleProperties.load(Main.class.getResourceAsStream("/gradle.properties"));
-			Main.panlVersion = gradleProperties.getProperty("panl.version", "Unknown - ¯\\_(ツ)_/¯");
-			Main.solrVersion = gradleProperties.getProperty("panl.solr.version", "Unknown - ¯\\_(ツ)_/¯");
+			Main.panlVersion = gradleProperties.getProperty("panl.version", panlVersion);
+			Main.solrVersion = gradleProperties.getProperty("panl.solr.version", solrVersion);
 		} catch (IOException ignored) {
 		}
 
