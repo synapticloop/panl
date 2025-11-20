@@ -2,7 +2,7 @@
 
 IF "%~1"=="" GOTO NO_ARG
 
-docker build --progress=plain --build-arg TAG=%1 -f src/docker/Dockerfile -t synapticloop:%1 .
+docker build --progress=plain --build-arg TAG=%1 -f src/docker/Dockerfile -t synapticloop/solr-panl:%1 .
 
 GOTO END
 

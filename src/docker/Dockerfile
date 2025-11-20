@@ -18,7 +18,7 @@ ARG SOLR_VERSION=9.9.0
 # ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~
 #   The TAG argument is the docker tag that will be used to build the docker
 #   image and will be of the form:
-#     synapticloop:${TAG}
+#     synapticloop/solr-panl:${TAG}
 # ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~
 ARG TAG
 
@@ -81,7 +81,7 @@ RUN chmod a+x /java-servers/solr/bin/solr.in.sh
 #   Copy the Panl server from the local disk  (The Panl server is automatically
 #   extracted by the `ADD` command below)
 # ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~
-ADD build/distributions/${TAG}.tgz /java-servers/
+ADD build/distributions/solr-panl-${TAG}.tgz /java-servers/
 
 # ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~
 #   1. Set up the linking for the Panl installation
@@ -89,7 +89,7 @@ ADD build/distributions/${TAG}.tgz /java-servers/
 # ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~
 WORKDIR /java-servers/
 
-RUN ln -s ${TAG} panl
+RUN ln -s solr-panl-${TAG} panl
 
 COPY src/docker/panl.properties /java-servers/panl/
 RUN cp -R /java-servers/panl/sample/solr/* /java-servers/solr/server/solr/

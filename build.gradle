@@ -168,12 +168,12 @@ tasks.register('copyLoggingFile') {
 }
 
 tasks.register('dockerWindows', Exec) {
-	commandLine "cmd.exe", "/C", "build-docker", "solr-panl-" + properties.getProperty("panl.solr.version") + "-" + properties.getProperty("panl.version")
+	commandLine "cmd.exe", "/C", "build-docker", properties.getProperty("panl.solr.version") + "-" + properties.getProperty("panl.version")
 	dependsOn tasks.distTar
 }
 
 tasks.register('dockerLinux', Exec) {
-	commandLine "./build-docker.sh", "solr-panl-" + properties.getProperty("panl.solr.version") + "-" + properties.getProperty("panl.version")
+	commandLine "./build-docker.sh", properties.getProperty("panl.solr.version") + "-" + properties.getProperty("panl.version")
 	dependsOn tasks.distTar
 }
 
