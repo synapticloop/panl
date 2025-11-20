@@ -266,6 +266,10 @@ public class PanlCollection {
 		PANL_PROPERTIES.put("panl.lpse.facetorder", panlLpseFacetOrder.toString());
 		PANL_PROPERTIES.put("panl.lpse.fields", panlLpseFields.toString());
 
+		// if we have a unique key field - we are going to automatically add it to
+		// panl.lpse.ignore key
+		PANL_PROPERTIES.put("panl.lpse.ignore", (null != uniqueKeyField ? uniqueKeyField : ""));
+
 		StringBuilder panlResultsFieldsDefault = new StringBuilder();
 		StringBuilder panlResultsFieldsFirstFive = new StringBuilder();
 		int i = 0;
@@ -309,6 +313,14 @@ public class PanlCollection {
 		}
 	}
 
+	/**
+	 * <p>Parse the Solr schema file, extracting and collection the information
+	 * for the fields and the uniqueKey.</p>
+	 *
+	 * @param schema - the schema file
+	 *
+	 * @throws PanlGenerateException If there was an error parsing the schema file
+	 */
 	private void parseSchemaFile(File schema) throws PanlGenerateException {
 		XMLInputFactory xmlInputFactory = XMLInputFactory.newInstance();
 		try {
@@ -326,12 +338,14 @@ public class PanlCollection {
 								throw new PanlGenerateException("You CANNOT have a collection that starts with 'panl-'");
 							}
 							break;
+
 						case "fieldType":
 							String fieldTypeName = startElement.getAttributeByName(new QName("name")).getValue();
 							String fieldClass = startElement.getAttributeByName(new QName("class")).getValue();
 							SOLR_FIELD_TYPE_NAME_TO_SOLR_CLASS.put(fieldTypeName, fieldClass);
 							LOGGER.info("Mapping solr field type '{}' to solr class '{}'.", fieldTypeName, fieldClass);
 							break;
+
 						case "field":
 							StringBuilder sb = new StringBuilder("<field ");
 
@@ -397,6 +411,7 @@ public class PanlCollection {
 								LOGGER.info("NOT Adding field name '{}' as it is neither indexed nor stored.", name);
 							}
 							break;
+
 						case "uniqueKey":
 							StringBuilder uniqueKey = new StringBuilder();
 							while(true) {
@@ -416,7 +431,7 @@ public class PanlCollection {
 			}
 		} catch (XMLStreamException | FileNotFoundException e) {
 			throw new PanlGenerateException(
-					"Could not adequately parse the '" + schema.getAbsolutePath() + "' solr schema file, sorry...");
+					"Could not adequately parse the '" + schema.getAbsolutePath() + "' Solr managed-schema file, sorry...");
 		}
 	}
 

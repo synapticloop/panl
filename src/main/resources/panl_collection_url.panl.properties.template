@@ -777,7 +777,7 @@ $panl.lpse.facetorder
 #
 #                                ~ ~ ~ * ~ ~ ~
 
-$panl.lpse.ignore=
+$panl.lpse.ignore
 
 #                      Panl Results Field Configuration
 #                      ---- ------- ----- -------------

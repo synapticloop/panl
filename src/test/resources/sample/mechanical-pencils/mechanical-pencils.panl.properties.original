@@ -1264,7 +1264,7 @@ text
 #
 #                                ~ ~ ~ * ~ ~ ~
 
-#ERROR - Expecting key of 'panl.lpse.ignore=' but was not found.
+panl.lpse.ignore=id
 
 #                      Panl Results Field Configuration
 #                      ---- ------- ----- -------------

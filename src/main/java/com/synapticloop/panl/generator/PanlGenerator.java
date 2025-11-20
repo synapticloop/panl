@@ -87,12 +87,13 @@ public class PanlGenerator {
 	 * <p>Instantiate the Panl generator.</p>
 	 *
 	 * @param propertiesFileLocation The location of the output for the properties
-	 * 		file
+	 *    file
 	 * @param schemaFileLocation The comma separated list of Solr schema file
-	 * 		locations
+	 *    locations
 	 * @param shouldOverwrite If true, this will overwrite the panl.properties
-	 * 		file and the collection.panl.properties 	file
-	 * @param noPrompt
+	 *    file and the collection.panl.properties file
+	 * @param noPrompt If true, then no prompting will occur for the values, and
+	 *    will be set to the default values
 	 *
 	 * @throws PanlGenerateException If there was a problem finding the files to
 	 * 		parse, generating the files
@@ -397,6 +398,8 @@ public class PanlGenerator {
 			panlReplacementPropertyMap.put("panl.results.fields.default", panlCollection.getPanlProperty("panl.results.fields.default"));
 			panlReplacementPropertyMap.put("panl.results.fields.firstfive", panlCollection.getPanlProperty("panl.results.fields.firstfive"));
 			panlReplacementPropertyMap.put("panl.collections", panlCollection.getPanlProperty("panl.collections"));
+
+			panlReplacementPropertyMap.put("panl.lpse.ignore", panlCollection.getPanlProperty("panl.lpse.ignore"));
 
 			LOGGER.info("Writing out file {}.panl.properties", panlCollection.getCollectionName());
 
