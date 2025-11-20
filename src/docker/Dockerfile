@@ -57,7 +57,7 @@ ADD https://archive.apache.org/dist/solr/solr/$SOLR_SERVER_VERSION/solr-$SOLR_SE
 # ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~
 #   Extract the Solr server
 # ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~
-RUN tar -xzvf /archives/solr-SOLR_SERVER_VERSION-slim.tgz -C /java-servers/
+RUN tar -xzvf /archives/solr-$SOLR_SERVER_VERSION-slim.tgz -C /java-servers/
 
 # ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~
 #   1. Set up the linking for the Solr installation
