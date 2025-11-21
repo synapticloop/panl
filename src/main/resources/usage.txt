@@ -10,10 +10,23 @@ Usage:
   bin\panl \
     [command] \
     [-properties panl_properties_file_location] \
-    [-config solr_config_location] \
     [-port port_number] \
     [-overwrite true_or_false] \
-    [-schema solr_schema_location]
+    [-schema solr_schema_location] \
+    [--no-prompt]
+
+Allowable command line options:
+
+    +-------------+----------------------------------+-----------+
+    |             |           Panl command           | Argument  |
+    |             |   server   |  generate  |  help  |  Format   |
+    +-------------+------------+------------+--------+-----------+
+    | -properties | (optional) | (optional) |        | File path |
+    | -port       | (optional) |            |        | Number    |
+    | -overwrite  |            | (optional) |        | Boolean   |
+    | -schema     |            |  REQUIRED  |        | File path |
+    | --no-prompt |            | (optional) |        | None      |
+    +-------------+------------+------------+--------+-----------+
 
 Where:
   [command] is one of:

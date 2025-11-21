@@ -797,7 +797,9 @@ server (port 8983) so that it can be viewed:
 
 - **New Features**
   - Changed the docker image to include all datasets
+  - Pushed the docker impage to docker hub - this is a testing image only
   - Added in `--no-prompt` option to generator to accept in-built defaults
+  - Added in a `help` command line argument (which is not particularly needed)
 
 
 - **Bug Fixes**
@@ -812,11 +814,18 @@ server (port 8983) so that it can be viewed:
   - Updated both the `panl.properties`  file and 
     `<panl_collection_url>.panl.properties` template files and merged them with 
     the associated sample files.
+  - No longer request the unique key from Solr as a facet field unless it is 
+    specifically requested in the Panl LPSE URL path (this reduces the 
+    payload that is returned from Solr)
+  - Added `panl.lpse.ignore` replacement key in the template to 
+    automatically add in the Solr uniqueKey field.
+  - Minor error outputting formatting changes
 
 
 - **Documentation Update**
   - Rewrote documentation to be a little clearer and removed extraneous 
     information 
+  - Added in missed `panl.uniquekey.<lpse_code>` to the documentation
 
 `!! The included PDF contains over **600** pages of documentation for every 
 part of the Panl server. !!`
