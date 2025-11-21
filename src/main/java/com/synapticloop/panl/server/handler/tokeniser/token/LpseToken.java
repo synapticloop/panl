@@ -99,6 +99,11 @@ public abstract class LpseToken {
 	protected CollectionProperties collectionProperties;
 
 	/**
+	 * <p>Whether this token is also the uniqueKey</p>
+	 */
+	protected boolean isUniqueKey = false;
+
+	/**
 	 * <p>Factory method for getting the correct LPSE token for a particular
 	 * code.</p>
 	 *
@@ -284,5 +289,9 @@ public abstract class LpseToken {
 	 */
 	public boolean getCanHaveMultiple() {
 		return (false);
+	}
+
+	public boolean getIsUniqueKey() {
+		return(this.isUniqueKey);
 	}
 }

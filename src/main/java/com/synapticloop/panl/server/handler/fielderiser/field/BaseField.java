@@ -82,6 +82,7 @@ public abstract class BaseField {
 
 	protected final boolean panlIncludeSingleFacets;
 	protected final boolean panlIncludeSameNumberFacets;
+	protected final boolean isUniqueKey;
 
 	private int validationType;
 
@@ -142,6 +143,9 @@ public abstract class BaseField {
 		this.solrCollection = solrCollection;
 		this.panlCollectionUri = panlCollectionUri;
 		this.lpseLength = lpseLength;
+		this.isUniqueKey = properties
+				.getProperty(Constants.Property.Panl.PANL_UNIQUEKEY + this.lpseCode, "false")
+				.equals(Constants.BOOLEAN_TRUE_VALUE);
 
 		// now for the facet sorting (either normal or descending)
 		String facetSorting = properties
@@ -1094,4 +1098,8 @@ public abstract class BaseField {
 	 * @return The type of the Panl field or facet
 	 */
 	public abstract String getPanlFieldType();
+
+	public boolean getIsUniqueKey() {
+		return(this.isUniqueKey);
+	}
 }

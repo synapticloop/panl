@@ -374,6 +374,7 @@ public class CollectionRequestHandler {
 			if (null == lpseTokenList) {
 				lpseTokenList = new ArrayList<>();
 			}
+
 			lpseTokenList.add(lpseToken);
 			panlTokenMap.put(lpseCode, lpseTokenList);
 		}

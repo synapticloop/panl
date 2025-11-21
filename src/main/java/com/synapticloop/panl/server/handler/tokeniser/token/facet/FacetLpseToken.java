@@ -101,7 +101,9 @@ public class FacetLpseToken extends LpseToken {
 
 		BaseField lpseField = collectionProperties.getLpseField(this.lpseCode);
 
+
 		if (null != lpseField) {
+			this.isUniqueKey = lpseField.getIsUniqueKey();
 			if(!valueTokeniser.hasMoreTokens()) {
 				this.isValid = false;
 			} else {
@@ -131,6 +133,7 @@ public class FacetLpseToken extends LpseToken {
 		this.value = value;
 		this.isValid = originalFacetToken.isValid;
 		this.hasMultivalueSeparator = hasMultivalueSeparator;
+		this.isUniqueKey = originalFacetToken.isUniqueKey;
 	}
 
 	public static List<LpseToken> getSeparatedLpseTokens(
@@ -168,7 +171,8 @@ public class FacetLpseToken extends LpseToken {
 				value +
 				"', incoming value '" +
 				this.originalValue +
-				"'.");
+				"'." +
+				(this.isUniqueKey? " [UNIQUE_KEY]" : ""));
 	}
 
 	@Override public String getType() {
