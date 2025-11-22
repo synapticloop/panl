@@ -26,8 +26,9 @@
 #
 # - CloudHttp2SolrClient
 # - CloudSolrClient
+# - HttpSolrClient
 # - Http2SolrClient
-# - HttpJdkSolrClient
+# - LBHttpSolrClient
 # - LBHttp2SolrClient
 #
 # By default - Panl uses the CloudSolrClient as it works with the example
@@ -36,8 +37,9 @@
 #                                ~ ~ ~ * ~ ~ ~
 
 #solrj.client=CloudHttp2SolrClient
+#solrj.client=HttpSolrClient
 #solrj.client=Http2SolrClient
-#solrj.client=HttpJdkSolrClient
+#solrj.client=LBHttpSolrClient
 #solrj.client=LBHttp2SolrClient
 solrj.client=CloudSolrClient
 

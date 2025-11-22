@@ -2,6 +2,11 @@
 
 <img src="src/docs/synapticloop-panl-headline.png" alt="The Synapticloop Panl headline" />
 
+---
+
+# WARNING: This is the Solr Panl Release for integrating Panl with Solr version 8.x.x
+
+---
 
 > **_Rapidly get up and running with a fully featured, SEO friendly, keyword
 > searchable, faceted search engine with in-built search pages to test it all

@@ -26,7 +26,7 @@ package com.synapticloop.panl.server.handler.helper;
 
 import com.synapticloop.panl.exception.PanlServerException;
 import com.synapticloop.panl.server.client.*;
-import com.synapticloop.panl.server.client.solr9.*;
+import com.synapticloop.panl.server.client.solr8.*;
 import com.synapticloop.panl.server.handler.properties.CollectionProperties;
 import com.synapticloop.panl.server.handler.properties.PanlProperties;
 import org.slf4j.Logger;
@@ -56,24 +56,27 @@ public class CollectionHelper {
 		LOGGER.info("[ Solr collection '{}' ] Looking up solrjClient of '{}'", solrCollection, solrJClient);
 
 		switch (solrJClient) {
-			case "CloudHttp2SolrClient":
-				return (new PanlCloudHttp2SolrClient(solrCollection, panlProperties, collectionProperties));
-			case "CloudSolrClient":
-				return (new PanlCloudSolrClient(solrCollection, panlProperties, collectionProperties));
 			case "Http2SolrClient":
 				return (new PanlHttp2SolrClient(solrCollection, panlProperties, collectionProperties));
-			case "HttpJdkSolrClient":
-				return (new PanlHttpJdkSolrClient(solrCollection, panlProperties, collectionProperties));
+			case "HttpSolrClient":
+				return (new PanlHttpSolrClient(solrCollection, panlProperties, collectionProperties));
 			case "LBHttp2SolrClient":
 				return (new PanlLBHttp2SolrClient(solrCollection, panlProperties, collectionProperties));
+			case "LBHttpSolrClient":
+				return (new PanlLBHttpSolrClient(solrCollection, panlProperties, collectionProperties));
+			case "CloudSolrClient":
+				return (new PanlCloudSolrClient(solrCollection, panlProperties, collectionProperties));
+			case "CloudHttp2SolrClient":
+				return (new PanlCloudHttp2SolrClient(solrCollection, panlProperties, collectionProperties));
 			default:
 				throw new PanlServerException("Unknown property value for 'solrj.client' of '" +
 						solrJClient +
 						"', available values are " +
-						"'CloudHttp2SolrClient', " +
+						"'HttpSolrClient', " +
 						"'Http2SolrClient', " +
-						"'HttpJdkSolrClient', " +
-						"'LBHttp2SolrClient', or " +
+						"'LBHttpSolrClient', " +
+						"'LBHttp2SolrClient' " +
+						"'CloudHttp2SolrClient', or " +
 						"'CloudSolrClient'.");
 		}
 	}
