@@ -12,3 +12,4 @@ cd /java-servers/solr/ && bin/solr create -force -c book-store -d book-store
 cd /java-servers/solr/ && java -Dc=book-store -Dtype=application/json -jar example/exampledocs/post.jar /java-servers/panl/sample/data/book-store.json
 
 cd /java-servers/solr/ && bin/solr stop
+
