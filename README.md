@@ -824,7 +824,9 @@ server (port 8983) so that it can be viewed:
 
 # Version History
 
-## 2.2.0 Internal Harnesses (codename `bitter-shadow`) **UNDER DEVELOPMENT**
+## ?.?.? _Untitled_ (codename `raspy-pine` UNDER DEVELOPMENT)
+
+## 2.2.0 Internal Harnesses (codename `bitter-shadow`)
 
 - **New Features**
   - Changed the docker image to include all datasets
