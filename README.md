@@ -4,7 +4,7 @@
 
 
 > **_Rapidly get up and running with a fully featured, SEO friendly, keyword
-> searchable, faceted search engine with an in-built, search page to test it all
+> searchable, faceted search engine with in-built search pages to test it all
 > out._**
 
 ---
@@ -27,7 +27,7 @@ no way constitutes an endorsement for Synapticloop or the Panl project.
 
 | Latest<br />Release                                                          | Latest Book Release                                                | Development Branch<br />(name / version) | 
 |------------------------------------------------------------------------------|--------------------------------------------------------------------|------------------------------------------|
-| ![GitHub Release](https://img.shields.io/github/v/release/synapticloop/panl) | Synapticloop - Getting Started With Panl version 2.2.0 (release 1) | `raspy-pine` / `3.0.0`                    |
+| ![GitHub Release](https://img.shields.io/github/v/release/synapticloop/panl) | Synapticloop - Getting Started With Panl version 2.2.0 (release 1) | `raspy-pine` / `?.?.?`                   |
 
 
 **Major branch release status:**
@@ -35,8 +35,8 @@ no way constitutes an endorsement for Synapticloop or the Panl project.
 | BRANCH        | STATUS                                                                                                                                                                                                                                                                  | VERSION | TYPE                                                  | LATEST SOLR<br />VERSION TESTED | Solr Download                                                            |
 |---------------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|---------|-------------------------------------------------------|---------------------------------|--------------------------------------------------------------------------|
 | `raspy-pine`  | [![CircleCI](https://dl.circleci.com/status-badge/img/circleci/3Y1eqqe4mcvtSZuzJnQ3tJ/DyFKUm7c7AoLa1wHmRjAnf/tree/raspy-pine.svg?style=shield)](https://dl.circleci.com/status-badge/redirect/circleci/3Y1eqqe4mcvtSZuzJnQ3tJ/DyFKUm7c7AoLa1wHmRjAnf/tree/raspy-pine)   | `?.?.?` | Development branch - integration with Solr version 10 | **`10.x.x`** _(unavailable)_    | _(unavailable)_                                                          |
-| `MAIN`        | [![CircleCI](https://dl.circleci.com/status-badge/img/circleci/3Y1eqqe4mcvtSZuzJnQ3tJ/DyFKUm7c7AoLa1wHmRjAnf/tree/main.svg?style=shield)](https://dl.circleci.com/status-badge/redirect/circleci/3Y1eqqe4mcvtSZuzJnQ3tJ/DyFKUm7c7AoLa1wHmRjAnf/tree/main)               | `2.2.0` | Trunk - integration with Solr version 9               | `9.9.0`                         | [`Download Latest`](https://solr.apache.org/downloads.html)              |
-| `SOLR PANL 9` | [![CircleCI](https://dl.circleci.com/status-badge/img/circleci/3Y1eqqe4mcvtSZuzJnQ3tJ/DyFKUm7c7AoLa1wHmRjAnf/tree/solr-panl-9.svg?style=shield)](https://dl.circleci.com/status-badge/redirect/circleci/3Y1eqqe4mcvtSZuzJnQ3tJ/DyFKUm7c7AoLa1wHmRjAnf/tree/solr-panl-9) | `2.2.0` | Panl integration with Solr version 9                  | `9.9.0`                         | [`Download Latest`](https://solr.apache.org/downloads.html)              |
+| `MAIN`        | [![CircleCI](https://dl.circleci.com/status-badge/img/circleci/3Y1eqqe4mcvtSZuzJnQ3tJ/DyFKUm7c7AoLa1wHmRjAnf/tree/main.svg?style=shield)](https://dl.circleci.com/status-badge/redirect/circleci/3Y1eqqe4mcvtSZuzJnQ3tJ/DyFKUm7c7AoLa1wHmRjAnf/tree/main)               | `2.2.0` | Trunk - integration with Solr version 9               | `9.10.0`                        | [`Download Latest`](https://solr.apache.org/downloads.html)              |
+| `SOLR PANL 9` | [![CircleCI](https://dl.circleci.com/status-badge/img/circleci/3Y1eqqe4mcvtSZuzJnQ3tJ/DyFKUm7c7AoLa1wHmRjAnf/tree/solr-panl-9.svg?style=shield)](https://dl.circleci.com/status-badge/redirect/circleci/3Y1eqqe4mcvtSZuzJnQ3tJ/DyFKUm7c7AoLa1wHmRjAnf/tree/solr-panl-9) | `2.2.0` | Panl integration with Solr version 9                  | `9.10.0`                         | [`Download Latest`](https://solr.apache.org/downloads.html)              |
 | `SOLR PANL 8` | [![CircleCI](https://dl.circleci.com/status-badge/img/circleci/3Y1eqqe4mcvtSZuzJnQ3tJ/DyFKUm7c7AoLa1wHmRjAnf/tree/solr-panl-8.svg?style=shield)](https://dl.circleci.com/status-badge/redirect/circleci/3Y1eqqe4mcvtSZuzJnQ3tJ/DyFKUm7c7AoLa1wHmRjAnf/tree/solr-panl-8) | `2.2.0` | Panl integration with Solr version 8                  | `8.11.4`                        | [`Download 8.11.4`](https://archive.apache.org/dist/lucene/solr/8.11.4/) |
 | `SOLR PANL 7` | [![CircleCI](https://dl.circleci.com/status-badge/img/circleci/3Y1eqqe4mcvtSZuzJnQ3tJ/DyFKUm7c7AoLa1wHmRjAnf/tree/solr-panl-7.svg?style=shield)](https://dl.circleci.com/status-badge/redirect/circleci/3Y1eqqe4mcvtSZuzJnQ3tJ/DyFKUm7c7AoLa1wHmRjAnf/tree/solr-panl-7) | `2.2.0` | Panl integration with Solr version 7                  | `7.7.3`                         | [`Download 7.7.3`](https://archive.apache.org/dist/lucene/solr/7.7.3/)   |
 
@@ -58,7 +58,7 @@ This is for reference
 
 | BRANCH              | TYPE     | VERSION | GITHUB                                                                                      |
 |---------------------|----------|---------|---------------------------------------------------------------------------------------------|
-| `raspy-pine`        | `BRANCH` | `3.0.0` | [GitHub > `raspy-pine`](https://github.com/synapticloop/panl/tree/raspy-pine)               |
+| `raspy-pine`        | `BRANCH` | `?.?.?` | [GitHub > `raspy-pine`](https://github.com/synapticloop/panl/tree/raspy-pine)               |
 |                     |          |         |                                                                                             |
 | `MAIN`              | `BRANCH` | `2.2.0` | [GitHub > MAIN](https://github.com/synapticloop/panl)                                       |
 |                     |          |         |                                                                                             |
@@ -89,8 +89,8 @@ of which:
   micro number will be reset to 0 (zero).
 - `micro` - the micro version will increment for bug fixes only.
 
-The book version matches the version of the Synapticloop Project version. Any
-changes to the book without any changes to the codebase will be updated on the
+The book version matches the version of the latest Synapticloop Project version.
+Any changes to the book without any changes to the codebase will be updated on the
 `main` branch and the `ghpages` based website will be updated.
 
 Any out-of-band book updates will not be reflected in the panl code release 
@@ -117,21 +117,21 @@ Working with a Solr schema, the Panl configuration files translate unwieldy URL
 parameters into concise and precise URL paths.
 
 - **Have SEO friendlier URL paths with much shorter URLs than traditional query
-  parameters (all the way through the search journey)** - This was the primary
+  parameters _(throughout the complete search journey)_** - This was the primary
   driver and the base functionality.
 
 - **Abstract away the complexities of the Solr query string** - Being able to
-  have a simple interface through the URL which could generate complex queries.
-  Not having to fully understand how Solr works in the back-end abstracts away
-  the complexity of a front-end integrator and reduces the need to have the
-  back-end and front-end understand each-other.
+  have a simple interface through the URL which could generate complex queries,
+  without having to fully understand how Solr works in the back-end.  
+  Additionally, it abstracts away the complexity of a front-end integrator 
+  and reduces the need to have the back-end and front-end understand each-other.
 
 - **Be quick to start up and easy to configure** - During development of a
   solution, being able to iterate over a solution, or change the way that Panl
   is configured is a must-have. Additionally, being able to upgrade the Panl
   server and have the configuration files be automatically picked up and work
-  without any changes is a plus. (on the aging Windows development 
-  build machine, it takes less than a second to start..)
+  without any changes is a plus. (On the aging Windows development 
+  build machine, it takes less than a second to start...)
 
 - **Protect Solr from errant queries** - Hiding the Solr implementation details
   from the end user and parsing, decoding, and validating the URL before passing
@@ -841,7 +841,7 @@ part of the Panl server. !!`
 
 | Release<br />Number | Short note             | Codename              | Release Date         | 
 |---------------------|------------------------|-----------------------|----------------------|
-| 2.2.0               | mMm harnesses          | `bitter-shadow`       | `TBA`                |
+| 2.2.0               | mMm harnesses          | `bitter-shadow`       | `November  22, 2025` |
 | 2.1.0               | niceties/want-it-ies   | `hidden-summer`       | `July      28, 2025` |
 | 2.0.0               | fluffy stuff           | `billowing-feather`   | `February  28, 2025` |
 | `-breaking-change-` | `--------------------` | `-------------------` | `------------------` |
