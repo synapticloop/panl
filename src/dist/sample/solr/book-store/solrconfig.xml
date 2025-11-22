@@ -35,7 +35,7 @@
        that you fully re-index after changing this setting as it can
        affect both how text is indexed and queried.
   -->
-  <luceneMatchVersion>8.11.4</luceneMatchVersion>
+  <luceneMatchVersion>8.11.3</luceneMatchVersion>
 
   <!-- <lib/> directives can be used to instruct Solr to load any Jars
        identified and use them to resolve any "plugins" specified in
@@ -72,7 +72,7 @@
        The example below can be used to load a solr-contrib along
        with their external dependencies.
     -->
-  <!-- <lib dir="${solr.install.dir:../../../..}/dist/" regex="solr-ltr-\d.*\.jar" /> -->
+    <!-- <lib dir="${solr.install.dir:../../../..}/dist/" regex="solr-ltr-\d.*\.jar" /> -->
 
   <!-- an exact 'path' can be used instead of a 'dir' to specify a
        specific jar file.  This will cause a serious error to be logged
@@ -524,19 +524,19 @@
       -->
     <queryResultMaxDocsCached>200</queryResultMaxDocsCached>
 
-    <!-- Use Filter For Sorted Query
+  <!-- Use Filter For Sorted Query
 
-		 A possible optimization that attempts to use a filter to
-		 satisfy a search.  If the requested sort does not include
-		 score, then the filterCache will be checked for a filter
-		 matching the query. If found, the filter will be used as the
-		 source of document ids, and then the sort will be applied to
-		 that.
+   A possible optimization that attempts to use a filter to
+   satisfy a search.  If the requested sort does not include
+   score, then the filterCache will be checked for a filter
+   matching the query. If found, the filter will be used as the
+   source of document ids, and then the sort will be applied to
+   that.
 
-		 For most situations, this will not be useful unless you
-		 frequently get the same search repeatedly with different sort
-		 options, and none of them ever use "score"
-	-->
+   For most situations, this will not be useful unless you
+   frequently get the same search repeatedly with different sort
+   options, and none of them ever use "score"
+-->
     <!--
        <useFilterForSortedQuery>true</useFilterForSortedQuery>
       -->
@@ -594,18 +594,18 @@
      circuit breakers
      ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
 
-  <!-- Circuit Breakers
+    <!-- Circuit Breakers
 
-	 Circuit breakers are designed to allow stability and predictable query
-	 execution. They prevent operations that can take down the node and cause
-	 noisy neighbour issues.
+     Circuit breakers are designed to allow stability and predictable query
+     execution. They prevent operations that can take down the node and cause
+     noisy neighbour issues.
 
-	 This flag is the uber control switch which controls the activation/deactivation of all circuit
-	 breakers. If a circuit breaker wishes to be independently configurable,
-	 they are free to add their specific configuration but need to ensure that this flag is always
-	 respected - this should have veto over all independent configuration flags.
-	-->
-  <circuitBreakers enabled="true">
+     This flag is the uber control switch which controls the activation/deactivation of all circuit
+     breakers. If a circuit breaker wishes to be independently configurable,
+     they are free to add their specific configuration but need to ensure that this flag is always
+     respected - this should have veto over all independent configuration flags.
+    -->
+    <circuitBreakers enabled="true">
 
     <!-- Memory Circuit Breaker Configuration
 
@@ -631,19 +631,19 @@
    <memBreaker enabled="true" threshold="75"/>
     -->
 
-    <!-- CPU Circuit Breaker Configuration
+      <!-- CPU Circuit Breaker Configuration
 
-	 Specific configuration for CPU utilization based circuit breaker. This configuration defines whether the circuit breaker is enabled
-	 and the average load over the last minute at which the circuit breaker should start rejecting queries.
+     Specific configuration for CPU utilization based circuit breaker. This configuration defines whether the circuit breaker is enabled
+     and the average load over the last minute at which the circuit breaker should start rejecting queries.
 
-	 Consider a scenario where the max heap allocated is 4 GB and memoryCircuitBreakerThreshold is
-	 defined as 75. Threshold JVM usage will be 4 * 0.75 = 3 GB. Its generally a good idea to keep this value between 75 - 80% of maximum heap
-	 allocated.
-	-->
+     Consider a scenario where the max heap allocated is 4 GB and memoryCircuitBreakerThreshold is
+     defined as 75. Threshold JVM usage will be 4 * 0.75 = 3 GB. Its generally a good idea to keep this value between 75 - 80% of maximum heap
+     allocated.
+    -->
 
-    <!--
-		 <cpuBreaker enabled="true" threshold="75"/>
-		-->
+      <!--
+       <cpuBreaker enabled="true" threshold="75"/>
+      -->
 
   </circuitBreakers>
 
@@ -1179,7 +1179,7 @@
 
   <!-- The update.autoCreateFields property can be turned to false to disable schemaless mode -->
   <updateRequestProcessorChain name="add-unknown-fields-to-the-schema" default="${update.autoCreateFields:true}"
-                               processor="uuid,remove-blank,field-name-mutating,parse-boolean,parse-long,parse-double,parse-date,add-schema-fields">
+           processor="uuid,remove-blank,field-name-mutating,parse-boolean,parse-long,parse-double,parse-date,add-schema-fields">
     <processor class="solr.LogUpdateProcessorFactory"/>
     <processor class="solr.DistributedUpdateProcessorFactory"/>
     <processor class="solr.RunUpdateProcessorFactory"/>
