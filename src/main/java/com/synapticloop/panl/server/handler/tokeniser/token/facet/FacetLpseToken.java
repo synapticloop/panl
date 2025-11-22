@@ -29,6 +29,8 @@ import com.synapticloop.panl.server.handler.fielderiser.field.BaseField;
 import com.synapticloop.panl.server.handler.tokeniser.LpseTokeniser;
 import com.synapticloop.panl.server.handler.tokeniser.token.LpseToken;
 
+import java.net.URLDecoder;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.StringTokenizer;
@@ -90,7 +92,7 @@ public class FacetLpseToken extends LpseToken {
 		int i = sb.length();
 		while (i < collectionProperties.getLpseLength()) {
 			if (lpseTokeniser.hasMoreTokens()) {
-				sb.append(lpseTokeniser.nextToken());
+				sb.append(URLDecoder.decode(lpseTokeniser.nextToken(), StandardCharsets.UTF_8));
 			}
 			i++;
 		}
@@ -99,7 +101,9 @@ public class FacetLpseToken extends LpseToken {
 
 		BaseField lpseField = collectionProperties.getLpseField(this.lpseCode);
 
+
 		if (null != lpseField) {
+			this.isUniqueKey = lpseField.getIsUniqueKey();
 			if(!valueTokeniser.hasMoreTokens()) {
 				this.isValid = false;
 			} else {
@@ -129,6 +133,7 @@ public class FacetLpseToken extends LpseToken {
 		this.value = value;
 		this.isValid = originalFacetToken.isValid;
 		this.hasMultivalueSeparator = hasMultivalueSeparator;
+		this.isUniqueKey = originalFacetToken.isUniqueKey;
 	}
 
 	public static List<LpseToken> getSeparatedLpseTokens(
@@ -166,7 +171,8 @@ public class FacetLpseToken extends LpseToken {
 				value +
 				"', incoming value '" +
 				this.originalValue +
-				"'.");
+				"'." +
+				(this.isUniqueKey? " [UNIQUE_KEY]" : ""));
 	}
 
 	@Override public String getType() {

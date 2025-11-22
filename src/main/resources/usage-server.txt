@@ -1,0 +1,19 @@
+
+  [SERVER] To start the Panl server:
+
+    bin\panl \
+      server \
+      [-properties panl_properties_file_location] \
+      [-port port_number]
+
+  [-properties panl_properties_file_location] (optional) the properties file
+      to load.  If this property is not included, the file named
+      panl.properties in the directory from which the server start command
+      was invoked will be searched for and, if found, will be used.  If
+      this file cannot be found, then the server will fail to start.
+
+  [-port port_number] (optional) the port number to start the server on.
+      The default port number is 8181.
+
+                                 ~ ~ ~ * ~ ~ ~
+

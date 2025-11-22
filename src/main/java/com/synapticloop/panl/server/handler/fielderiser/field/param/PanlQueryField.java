@@ -141,6 +141,9 @@ public class PanlQueryField extends BaseField {
 	 * @return The list of keywords
 	 */
 	public static List<String> parseKeywords(String queryValue) {
+		if(null == queryValue) {
+			return(new ArrayList<>());
+		}
 		// TODO - this should be refactored somewhere else
 		List<String> keywordPhrases = new ArrayList<>();
 		StringTokenizer stringTokenizer = new StringTokenizer(queryValue, "\" ", true);

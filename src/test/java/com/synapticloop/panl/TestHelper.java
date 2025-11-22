@@ -1,8 +1,7 @@
 package com.synapticloop.panl;
 
 import com.synapticloop.panl.exception.PanlServerException;
-import com.synapticloop.panl.generator.bean.PanlCollection;
-import com.synapticloop.panl.server.client.PanlCloudSolrClient;
+import com.synapticloop.panl.server.client.solr9.PanlCloudSolrClient;
 import com.synapticloop.panl.server.handler.CollectionRequestHandler;
 import com.synapticloop.panl.server.handler.fielderiser.field.BaseField;
 import com.synapticloop.panl.server.handler.helper.CollectionHelper;

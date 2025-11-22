@@ -18,8 +18,8 @@
 $                                ~ ~ ~ * ~ ~ ~
 $
 $  NOTE: Any line in this file that starts with a dollar sign (and at least one
-$        character) is used by the panl generator for in-line replacement, and
-$        are __NOT__ replacement properties that can be set.
+$        non whitespace character) is used by the Panl generator for in-line
+$        replacement, and are __NOT__ replacement properties that can be set.
 $
 $        Any line that starts with a dollar sign then has a whitespace
 $        character are considered comments and will not appear in the output.
@@ -35,23 +35,21 @@ $                                ~ ~ ~ * ~ ~ ~
 # NOTE: What the solr.search.server.url will be will depend on the client that
 #       you choose.  The SolrJ client __MUST__ be one of
 #
-#  - Http2SolrClient
-#  - HttpSolrClient
-#  - LBHttp2SolrClient
-#  - LBHttpSolrClient
-#  - CloudSolrClient
-#  - CloudHttp2SolrClient
+# - CloudHttp2SolrClient
+# - CloudSolrClient
+# - Http2SolrClient
+# - HttpJdkSolrClient
+# - LBHttp2SolrClient
 #
-# By default - we will be using the CloudSolrClient as it works with the
-# example instructions for spinning up a test solr instance
+# By default - Panl uses the CloudSolrClient as it works with the example
+# instructions and documentation for spinning up a test Solr instance
 #
 #                                ~ ~ ~ * ~ ~ ~
 
-#solrj.client=HttpSolrClient
-#solrj.client=Http2SolrClient
-#solrj.client=LBHttpSolrClient
-#solrj.client=LBHttp2SolrClient
 #solrj.client=CloudHttp2SolrClient
+#solrj.client=Http2SolrClient
+#solrj.client=HttpJdkSolrClient
+#solrj.client=LBHttp2SolrClient
 solrj.client=CloudSolrClient
 
 #                        Which Solr URLs To Connect To
@@ -72,7 +70,7 @@ solrj.client=CloudSolrClient
 #
 #             zookeeper:
 #
-#           The below property would then become:
+#           The property would then become:
 #
 #             solr.search.server.url=zookeeper:localhost:9983
 #
@@ -87,13 +85,16 @@ $solr.search.server.url
 # generated, including fields, faceting, querying, sorting, and results.
 #
 # If this property does not exist, or if it is set to false, then no results
-# viewer /explainer will be available.  You may wish to remove this property
+# viewer/explainer will be available.  You may wish to remove this property
 # for production (or perhaps just disallow access to it).
 #
 # The URI paths are __ALWAYS__
 #     /panl-results-viewer/    - for testing the queries, facets, and results
 #     /panl-results-explainer/ - for explaining LPSE encoded URIs and describing
 #                                the configuration for the Panl server.
+#    /panl-single-page-search/ - A simple implementation of a very simple single
+#                                page search interface which integrates with the
+#                                Panl results viewer/
 #
 #                                ~ ~ ~ * ~ ~ ~
 
