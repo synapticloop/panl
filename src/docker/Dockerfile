@@ -52,12 +52,12 @@ RUN mkdir /archives/
 # ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~
 #   Download the Solr server from the apache archives and extract it
 # ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~
-ADD https://archive.apache.org/dist/solr/solr/$SOLR_SERVER_VERSION/solr-$SOLR_SERVER_VERSION-slim.tgz /archives/
+ADD https://archive.apache.org/dist/lucene/solr/$SOLR_SERVER_VERSION/solr-$SOLR_SERVER_VERSION.tgz /archives/
 
 # ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~
 #   Extract the Solr server
 # ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~
-RUN tar -xzvf /archives/solr-$SOLR_SERVER_VERSION-slim.tgz -C /java-servers/
+RUN tar -xzvf /archives/solr-$SOLR_SERVER_VERSION.tgz -C /java-servers/
 
 # ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~
 #   1. Set up the linking for the Solr installation
@@ -67,7 +67,7 @@ RUN tar -xzvf /archives/solr-$SOLR_SERVER_VERSION-slim.tgz -C /java-servers/
 
 WORKDIR /java-servers/
 
-RUN ln -s solr-$SOLR_SERVER_VERSION-slim solr
+RUN ln -s solr-$SOLR_SERVER_VERSION solr
 
 RUN mkdir /java-servers/solr/mechanical-pencils/
 RUN mkdir /java-servers/solr/server/solr/mechanical-pencils/
