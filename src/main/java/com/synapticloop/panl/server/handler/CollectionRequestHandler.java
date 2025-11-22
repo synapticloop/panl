@@ -53,6 +53,7 @@ import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.net.URLDecoder;
 import java.nio.charset.StandardCharsets;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
@@ -373,6 +374,7 @@ public class CollectionRequestHandler {
 			if (null == lpseTokenList) {
 				lpseTokenList = new ArrayList<>();
 			}
+
 			lpseTokenList.add(lpseToken);
 			panlTokenMap.put(lpseCode, lpseTokenList);
 		}
@@ -546,10 +548,8 @@ public class CollectionRequestHandler {
 			}
 		}
 
-		// TODO - add in query operand
-
 		if (lpseUriPath.length > 3) {
-			String lpseEncoding = lpseUriPath[lpseUriPath.length - 1];
+			String lpseEncoding = URLDecoder.decode(lpseUriPath[lpseUriPath.length - 1], StandardCharsets.UTF_8).replaceAll(" ", "+");
 
 			LpseTokeniser lpseTokeniser = new LpseTokeniser(lpseEncoding, CODES_AND_METADATA, true);
 
@@ -575,6 +575,14 @@ public class CollectionRequestHandler {
 						// which will override it.
 						lpseToken.setIsValid(false);
 						continue;
+					}
+
+					// now check the query operand token
+					if(null != queryOperand) {
+						if (lpseToken instanceof QueryOperandLpseToken) {
+							lpseToken.setIsValid(false);
+							continue;
+						}
 					}
 
 					lpseTokens.add(lpseToken);

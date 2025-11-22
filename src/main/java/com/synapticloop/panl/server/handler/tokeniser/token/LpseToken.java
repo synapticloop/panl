@@ -29,6 +29,8 @@ import com.synapticloop.panl.server.handler.properties.CollectionProperties;
 import com.synapticloop.panl.server.handler.tokeniser.LpseTokeniser;
 import com.synapticloop.panl.server.handler.tokeniser.token.facet.*;
 
+import java.net.URLDecoder;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -97,6 +99,11 @@ public abstract class LpseToken {
 	protected CollectionProperties collectionProperties;
 
 	/**
+	 * <p>Whether this token is also the uniqueKey</p>
+	 */
+	protected boolean isUniqueKey = false;
+
+	/**
 	 * <p>Factory method for getting the correct LPSE token for a particular
 	 * code.</p>
 	 *
@@ -127,7 +134,7 @@ public abstract class LpseToken {
 			// must be the length LPSE length
 			while (lpseCodeBuilder.length() < collectionProperties.getLpseLength()) {
 				if (lpseTokeniser.hasMoreTokens()) {
-					lpseCodeBuilder.append(lpseTokeniser.nextToken());
+					lpseCodeBuilder.append(URLDecoder.decode(lpseTokeniser.nextToken(), StandardCharsets.UTF_8));
 				} else {
 					break;
 				}
@@ -282,5 +289,9 @@ public abstract class LpseToken {
 	 */
 	public boolean getCanHaveMultiple() {
 		return (false);
+	}
+
+	public boolean getIsUniqueKey() {
+		return(this.isUniqueKey);
 	}
 }

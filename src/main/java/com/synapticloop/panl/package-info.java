@@ -19,7 +19,6 @@
  *     [command] \
  *     [-properties properties_file_location] \
  *     [-overwrite true_or_false] \
- *     [-config solr_config_location] \
  *     [-port port_number]
  *
  *   to start the panl server

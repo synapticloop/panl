@@ -1,9 +1,31 @@
 FROM alpine:3.22.1
 
 # ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~
+#   The SOLR_SERVER_VERSION argument is the Apache Solr server version that
+#   will be integrated with. It has a default value which is set the the latest
+#   version of Solr that was available when the code was last updated.  The
+#   value for the Solr server version can be found in the following location:
+#
+#     src/main/resources/gradle.properties
+#
+#   With the property of solr.server.version
+#
+#   This value can be over-ridden by passing in a command line orgument of the
+#   form:
+#
+#     --build-arg SOLR_SERVER_VERSION=<version_number_here>
+#
+#   For example, to build the Panl server to connect to the Solr version 9.8.1
+#   The command line argument would be
+#
+#     --build-arg SOLR_SERVER_VERSION=9.8.1
+# ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~
+ARG SOLR_SERVER_VERSION
+
+# ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~
 #   The TAG argument is the docker tag that will be used to build the docker
 #   image and will be of the form:
-#     synapticloop:${TAG}
+#     synapticloop/solr-panl:${TAG}
 # ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~
 ARG TAG
 
@@ -28,38 +50,56 @@ RUN mkdir /archives/
 
 
 # ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~
-#   Download the Solr server and the Panl server from the local disk
+#   Download the Solr server from the apache archives and extract it
 # ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~
-ADD https://dlcdn.apache.org/solr/solr/9.9.0/solr-9.9.0-slim.tgz /archives/
-ADD build/distributions/${TAG}.tgz /java-servers/
-
+ADD https://archive.apache.org/dist/solr/solr/$SOLR_SERVER_VERSION/solr-$SOLR_SERVER_VERSION-slim.tgz /archives/
 
 # ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~
-#   Extract the Solr server (The Panl server is automatically extracted by
-#   the `ADD` command above)
+#   Extract the Solr server
 # ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~
-RUN tar -xzvf /archives/solr-9.9.0-slim.tgz -C /java-servers/
+RUN tar -xzvf /archives/solr-$SOLR_SERVER_VERSION-slim.tgz -C /java-servers/
 
 # ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~
-#   1. Set up the linking for the Solr and Panl installation
+#   1. Set up the linking for the Solr installation
 #   2. Copy the Solr configuration files for the standalone Solr server
 #   3. Copy the override shell script so that Solr accepts all connections
-#   4. Copy over the Panl configuration for thge standalone connection
 # ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~
+
 WORKDIR /java-servers/
 
-RUN ln -s solr-9.9.0-slim solr
-RUN ln -s ${TAG} panl
+RUN ln -s solr-$SOLR_SERVER_VERSION-slim solr
 
 RUN mkdir /java-servers/solr/mechanical-pencils/
 RUN mkdir /java-servers/solr/server/solr/mechanical-pencils/
-RUN cp -R /java-servers/panl/sample/solr/mechanical-pencils/* /java-servers/solr/server/solr/mechanical-pencils/
+
+RUN mkdir /java-servers/solr/simple-date/
+RUN mkdir /java-servers/solr/server/solr/simple-date/
+
+RUN mkdir /java-servers/solr/book-store/
+RUN mkdir /java-servers/solr/server/solr/book-store/
 
 WORKDIR /
+
 COPY src/docker/solr.in.sh /java-servers/solr/bin/
 RUN chmod a+x /java-servers/solr/bin/solr.in.sh
 
-COPY src/docker/panl.properties /java-servers/panl/sample/panl/mechanical-pencils/panl.properties
+
+# ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~
+#   Copy the Panl server from the local disk  (The Panl server is automatically
+#   extracted by the `ADD` command below)
+# ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~
+ADD build/distributions/solr-panl-${TAG}.tgz /java-servers/
+
+# ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~
+#   1. Set up the linking for the Panl installation
+#   2. Copy over the Panl configuration for thge standalone connection
+# ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~
+WORKDIR /java-servers/
+
+RUN ln -s solr-panl-${TAG} panl
+
+COPY src/docker/panl.properties /java-servers/panl/
+RUN cp -R /java-servers/panl/sample/solr/* /java-servers/solr/server/solr/
 
 # ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~
 #   Copy over the indexer shell script and execute it - this will:
@@ -80,7 +120,9 @@ COPY src/docker/startup.sh /
 RUN chmod a+x /startup.sh
 
 # ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~
-#   Expose the Solr and Panl server ports
+#   Expose the Panl and Solr server ports
+#     8181 for the Panl server
+#     8983 for the Solr admin server
 # ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~
 EXPOSE 8181/tcp
 EXPOSE 8983/tcp

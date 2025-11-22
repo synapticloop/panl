@@ -25,7 +25,6 @@ package com.synapticloop.panl.generator.bean;
  */
 
 import com.synapticloop.panl.exception.PanlGenerateException;
-import com.synapticloop.panl.generator.PanlGenerator;
 import com.synapticloop.panl.generator.bean.field.BasePanlField;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -37,9 +36,7 @@ import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.events.Attribute;
 import javax.xml.stream.events.StartElement;
 import javax.xml.stream.events.XMLEvent;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
+import java.io.*;
 import java.util.*;
 
 import static com.synapticloop.panl.util.Constants.Property.Panl.*;
@@ -51,6 +48,7 @@ import static com.synapticloop.panl.util.Constants.Property.Panl.*;
  */
 public class PanlCollection {
 	private static final Logger LOGGER = LoggerFactory.getLogger(PanlCollection.class);
+	private final String collectionPropertiesOutputDirectory;
 
 	private String collectionName;
 	private final List<SolrField> solrFields = new ArrayList<>();
@@ -65,6 +63,8 @@ public class PanlCollection {
 	private static final Map<String, String> SOLR_FIELD_TYPE_NAME_TO_SOLR_CLASS = new HashMap<>();
 	private static final Map<String, String> SOLR_FIELD_NAME_TO_SOLR_FIELD_TYPE = new HashMap<>();
 	private static String uniqueKeyField = "";
+
+	private static final Map<String, String> EXISTING_SOLR_FIELD_LPSE_CODE_MAP = new HashMap<>();
 
 	private static final Set<String> SUPPORTED_SOLR_FIELD_TYPES = new HashSet<>();
 
@@ -88,8 +88,14 @@ public class PanlCollection {
 		SUPPORTED_SOLR_FIELD_TYPES.add("solr.DoublePointField");
 	}
 
-	public PanlCollection(File schema, Map<String, String> panlReplacementPropertyMap) throws PanlGenerateException {
+	public PanlCollection(File schema, Map<String, String> panlReplacementPropertyMap, String collectionPropertiesOutputDirectory) throws PanlGenerateException {
+		this.collectionPropertiesOutputDirectory = collectionPropertiesOutputDirectory;
 		parseSchemaFile(schema);
+
+
+		// now parse the current <panl_collection_url>.panl.properties file (if it
+		// exists) so we can pre-populate the LPSE codes
+		parseExistingPanlCollectionUrlFile();
 
 		int numSupported = 0;
 		// now that we have parsed the Solr fields, go through and mark the fields
@@ -138,14 +144,23 @@ public class PanlCollection {
 		List<SolrField> unassignedSolrFields = new ArrayList<>();
 		for (SolrField solrField : solrFields) {
 			if (!solrField.getIsSupported()) {
+				// unlikely as we checked previously
 				continue;
 			}
 
 			String fieldName = solrField.getName();
 			String cleanedName = fieldName.replaceAll("[^A-Za-z0-9]", "");
 			String possibleCode = cleanedName.substring(0, this.lpseLength);
-			if (CODES_AVAILABLE.contains(possibleCode)) {
+			// now we need to look up the
+			if(EXISTING_SOLR_FIELD_LPSE_CODE_MAP.containsKey(fieldName)) {
+				String lookupCode = EXISTING_SOLR_FIELD_LPSE_CODE_MAP.get(fieldName);
+				if(lookupCode.length() == this.lpseLength) {
+					LOGGER.info("Found an existing LPS code for Solr field '{}' of '{}', reusing...", fieldName, lookupCode);
+					possibleCode = lookupCode;
+				}
+			}
 
+			if (CODES_AVAILABLE.contains(possibleCode)) {
 				basePanlFields.add(BasePanlField.getPanlField(
 						possibleCode,
 						fieldName,
@@ -234,7 +249,7 @@ public class PanlCollection {
 
 		panlLpseFacetOrder.delete(panlLpseFacetOrder.length() -3, panlLpseFacetOrder.length());
 
-		// put in the other parameters (query etc)
+		// put in the other parameters (query etc.)
 
 		for (String key : LPSE_ORDER_PARAMS) {
 			panlLpseOrder.append(panlReplacementPropertyMap.get(key))
@@ -250,6 +265,10 @@ public class PanlCollection {
 		PANL_PROPERTIES.put("panl.lpse.order", panlLpseOrder.toString());
 		PANL_PROPERTIES.put("panl.lpse.facetorder", panlLpseFacetOrder.toString());
 		PANL_PROPERTIES.put("panl.lpse.fields", panlLpseFields.toString());
+
+		// if we have a unique key field - we are going to automatically add it to
+		// panl.lpse.ignore key
+		PANL_PROPERTIES.put("panl.lpse.ignore", (null != uniqueKeyField ? uniqueKeyField : ""));
 
 		StringBuilder panlResultsFieldsDefault = new StringBuilder();
 		StringBuilder panlResultsFieldsFirstFive = new StringBuilder();
@@ -294,6 +313,14 @@ public class PanlCollection {
 		}
 	}
 
+	/**
+	 * <p>Parse the Solr schema file, extracting and collection the information
+	 * for the fields and the uniqueKey.</p>
+	 *
+	 * @param schema - the schema file
+	 *
+	 * @throws PanlGenerateException If there was an error parsing the schema file
+	 */
 	private void parseSchemaFile(File schema) throws PanlGenerateException {
 		XMLInputFactory xmlInputFactory = XMLInputFactory.newInstance();
 		try {
@@ -311,12 +338,14 @@ public class PanlCollection {
 								throw new PanlGenerateException("You CANNOT have a collection that starts with 'panl-'");
 							}
 							break;
+
 						case "fieldType":
 							String fieldTypeName = startElement.getAttributeByName(new QName("name")).getValue();
 							String fieldClass = startElement.getAttributeByName(new QName("class")).getValue();
 							SOLR_FIELD_TYPE_NAME_TO_SOLR_CLASS.put(fieldTypeName, fieldClass);
 							LOGGER.info("Mapping solr field type '{}' to solr class '{}'.", fieldTypeName, fieldClass);
 							break;
+
 						case "field":
 							StringBuilder sb = new StringBuilder("<field ");
 
@@ -339,15 +368,21 @@ public class PanlCollection {
 							SOLR_FIELD_NAME_TO_SOLR_FIELD_TYPE.put(name, type);
 
 							Iterator<Attribute> attributes = startElement.getAttributes();
+							List<Attribute> sortedAttributes = new ArrayList<>();
 							while (attributes.hasNext()) {
 								Attribute attribute = attributes.next();
+								sortedAttributes.add(attribute);
+							}
+
+							sortedAttributes.sort(Comparator.comparing(attribute -> attribute.getName().toString()));
+
+							for (Attribute attribute : sortedAttributes) {
 								String attributeName = attribute.getName().toString();
 								String attributeValue = attribute.getValue();
-								sb.append("\"")
-								  .append(attributeName)
-								  .append("\"=\"")
-								  .append(attributeValue)
-								  .append("\" ");
+								sb.append(attributeName)
+										.append("=\"")
+										.append(attributeValue)
+										.append("\" ");
 							}
 							sb.append("/>");
 							fieldXmlMap.put(name, sb.toString());
@@ -376,6 +411,7 @@ public class PanlCollection {
 								LOGGER.info("NOT Adding field name '{}' as it is neither indexed nor stored.", name);
 							}
 							break;
+
 						case "uniqueKey":
 							StringBuilder uniqueKey = new StringBuilder();
 							while(true) {
@@ -395,10 +431,34 @@ public class PanlCollection {
 			}
 		} catch (XMLStreamException | FileNotFoundException e) {
 			throw new PanlGenerateException(
-					"Could not adequately parse the '" + schema.getAbsolutePath() + "' solr schema file, sorry...");
+					"Could not adequately parse the '" + schema.getAbsolutePath() + "' Solr managed-schema file, sorry...");
 		}
 	}
 
+	private void parseExistingPanlCollectionUrlFile() {
+		String collectionPropertiesFile = this.collectionPropertiesOutputDirectory + File.separator + this.collectionName + ".panl.properties";
+		Properties props = new Properties();
+		try {
+			props.load(new FileReader(collectionPropertiesFile));
+		} catch (IOException ignored) {
+			// no previous defaults - ignore
+			return;
+		}
+
+		// now find all properties that have currently been registered
+		props.forEach((key, value) -> {
+			String thisKey = (String)key;
+			String thisValue = (String)value;
+
+			if(thisKey.startsWith("panl.facet.")) {
+				String lpseCode = thisKey.substring("panl.facet.".length());
+				EXISTING_SOLR_FIELD_LPSE_CODE_MAP.put(thisValue, lpseCode);
+			} else if(thisKey.startsWith("panl.field.")) {
+				String lpseCode = thisKey.substring("panl.field.".length());
+				EXISTING_SOLR_FIELD_LPSE_CODE_MAP.put(thisValue, lpseCode);
+			}
+		});
+	}
 	/**
 	 * <p>Get the panl property value (if it exists), otherwise return an empty
 	 * string.</p>

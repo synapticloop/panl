@@ -3,6 +3,7 @@ plugins {
 	id 'application'
 	id 'jacoco'
 	id "synapticloop.copyrightr" version "1.3.1"
+	id "com.github.ben-manes.versions" version "0.53.0"
 }
 
 // load the properties for versioning - not that this is also used by the Panl
@@ -55,11 +56,7 @@ configurations {
 
 dependencies {
 	// solrj
-	implementation 'org.apache.solr:solr-solrj:8.11.3'
-
-	// HTTP server
-//	implementation 'org.eclipse.jetty:jetty-http:9.4.53.v20231009'
-//	implementation 'org.eclipse.jetty:jetty-http:9.4.53.v20231009'
+	implementation 'org.apache.solr:solr-solrj:9.10.0'
 
 	// logging
 	implementation 'org.slf4j:slf4j-api:2.0.13'
@@ -74,7 +71,7 @@ dependencies {
 	implementation 'net.harawata:appdirs:1.2.2'
 
 	// testing
-	testImplementation 'org.apache.solr:solr-solrj:8.11.3'
+	testImplementation 'org.apache.solr:solr-solrj:9.10.0'
 	testImplementation platform('org.junit:junit-bom:5.9.1')
 	testImplementation 'org.junit.jupiter:junit-jupiter'
 	testImplementation 'org.mockito:mockito-core:5.14.2'
@@ -92,16 +89,13 @@ dependencies {
 	// integration testing
 	//
 	// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-	testIntegrationImplementation 'org.apache.solr:solr-solrj:8.11.3'
+	testIntegrationImplementation 'org.apache.solr:solr-solrj:9.10.0'
 	testIntegrationImplementation platform('org.junit:junit-bom:5.9.1')
 	testIntegrationImplementation 'org.junit.jupiter:junit-jupiter'
 	testIntegrationImplementation 'org.mockito:mockito-core:5.12.0'
 	testIntegrationImplementation 'com.fasterxml.jackson.core:jackson-databind:2.17.1'
 	testIntegrationImplementation 'commons-io:commons-io:2.16.1'
 	testIntegrationImplementation 'org.json:json:20240303'
-	// HTTP server
-//	testIntegrationImplementation 'org.eclipse.jetty:jetty.http:9.4.53.v20231009'
-//	testIntegrationImplementation 'org.eclipse.jetty:jetty-client:9.4.53.v20231009'
 
 	// logging
 	testIntegrationImplementation 'org.slf4j:slf4j-api:2.0.13'
@@ -119,17 +113,13 @@ dependencies {
 	// Site Spidering
 	//
 	// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-	testIntegrationSpiderImplementation 'org.apache.solr:solr-solrj:8.11.3'
+	testIntegrationSpiderImplementation 'org.apache.solr:solr-solrj:9.10.0'
 	testIntegrationSpiderImplementation platform('org.junit:junit-bom:5.9.1')
 	testIntegrationSpiderImplementation 'org.junit.jupiter:junit-jupiter'
 	testIntegrationSpiderImplementation 'org.mockito:mockito-core:5.12.0'
 	testIntegrationSpiderImplementation 'com.fasterxml.jackson.core:jackson-databind:2.17.1'
 	testIntegrationSpiderImplementation 'commons-io:commons-io:2.16.1'
 	testIntegrationSpiderImplementation 'org.json:json:20240303'
-
-	// HTTP server
-//	testIntegrationSpiderImplementation 'org.eclipse.jetty.http:9.4.53.v20231009'
-//	testIntegrationSpiderImplementation 'org.eclipse.jetty:jetty-servlet:9.4.53.v20231009'
 
 	// logging
 	testIntegrationSpiderImplementation 'org.slf4j:slf4j-api:2.0.13'
@@ -159,24 +149,13 @@ distributions {
 		resolutionStrategy {
 			failOnVersionConflict()
 			force "org.slf4j:slf4j-api:2.0.13",
-					"commons-io:commons-io:2.16.1",
-					"com.fasterxml.jackson.core:jackson-databind:2.17.1",
-					"com.fasterxml.jackson.core:jackson-annotations:2.17.1",
+					"commons-io:commons-io:2.17.0",
 					"org.mockito:mockito-core:5.14.2",
 					"net.bytebuddy:byte-buddy:1.15.4",
 					"net.bytebuddy:byte-buddy-agent:1.15.4",
-					"org.objenesis:objenesis:3.3",
+					"com.fasterxml.jackson.core:jackson-databind:2.18.0",
 					"commons-codec:commons-codec:1.17.1",
-					'org.eclipse.jetty:jetty-alpn-client:9.4.53.v20231009',
-					'org.eclipse.jetty:jetty-alpn-java-client:9.4.53.v20231009',
-					'org.eclipse.jetty:jetty-client:9.4.53.v20231009',
-					'org.eclipse.jetty:jetty-http:9.4.53.v20231009',
-					'org.eclipse.jetty:jetty-io:9.4.53.v20231009',
-					'org.eclipse.jetty:jetty-util:9.4.53.v20231009',
-					'org.eclipse.jetty.http2:http2-client:9.4.53.v20231009',
-					'org.eclipse.jetty.http2:http2-common:9.4.53.v20231009',
-					'org.eclipse.jetty.http2:http2-hpack:9.4.53.v20231009',
-					'org.eclipse.jetty.http2:http2-http-client-transport:9.4.53.v20231009'
+					"org.objenesis:objenesis:3.3"
 		}
 	}
 }
@@ -189,12 +168,12 @@ tasks.register('copyLoggingFile') {
 }
 
 tasks.register('dockerWindows', Exec) {
-	commandLine "cmd.exe", "/C", "build-docker", "solr-panl-" + properties.getProperty("panl.solr.version") + "-" + properties.getProperty("panl.version")
+	commandLine "cmd.exe", "/C", "build-docker", properties.getProperty("panl.solr.version") + "-" + properties.getProperty("panl.version"), properties.getProperty("solr.server.version")
 	dependsOn tasks.distTar
 }
 
 tasks.register('dockerLinux', Exec) {
-	commandLine "./build-docker.sh", "solr-panl-" + properties.getProperty("panl.solr.version") + "-" + properties.getProperty("panl.version")
+	commandLine "./build-docker.sh", properties.getProperty("panl.solr.version") + "-" + properties.getProperty("panl.version"), properties.getProperty("solr.server.version")
 	dependsOn tasks.distTar
 }
 
