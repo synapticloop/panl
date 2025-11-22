@@ -52,27 +52,32 @@ public class PanlGenerator {
 	public static final String TEMPLATE_LOCATION_COLLECTION_PANL_PROPERTIES = "/panl_collection_url.panl.properties.template";
 	public static final String TEMPLATE_LOCATION_PANL_PROPERTIES = "/panl.properties.template";
 
-	private final String propertiesFileLocation;
 	private final String schemaFileLocation;
+	private final String propertiesFileLocation;
 	private final String collectionPropertiesOutputDirectory;
+	private final boolean noPrompt;
 
 	/**
 	 * <p>The list of schemas to parse and add to the panl.properties file which
 	 * will be output to the '$panl.panlCollections' property.</p>
 	 */
 	private File schemaToParse;
+
 	/**
 	 * <p>The list of panlCollections (parsed from the Solr schemas) to convert.</p>
 	 */
 	private final List<PanlCollection> panlCollections = new ArrayList<>();
+
 	/**
 	 * <p>A map of Panl params, keyed on param code:param property.</p>
 	 */
 	private final Map<String, String> panlParamMap = new HashMap<>();
+
 	/**
 	 * <p>A map of Panl params, keyed on param property:param code.</p>
 	 */
 	private final Map<String, String> panlReplacementPropertyMap = new LinkedHashMap<>();
+
 	/**
 	 * <p>A map of currently registered solr fields names and their Panl LPSE codes
 	 * (if a previous file was found)  key:value is solr_field_name:base_panl_field</p>
@@ -82,25 +87,29 @@ public class PanlGenerator {
 	 * <p>Instantiate the Panl generator.</p>
 	 *
 	 * @param propertiesFileLocation The location of the output for the properties
-	 *   file
+	 *    file
 	 * @param schemaFileLocation The comma separated list of Solr schema file
-	 *   locations
+	 *    locations
 	 * @param shouldOverwrite If true, this will overwrite the panl.properties
-	 *   file and the collection.panl.properties 	file
+	 *    file and the collection.panl.properties file
+	 * @param noPrompt If true, then no prompting will occur for the values, and
+	 *    will be set to the default values
 	 *
 	 * @throws PanlGenerateException If there was a problem finding the files to
-	 *   parse, generating the files
+	 * 		parse, generating the files
 	 */
 	public PanlGenerator(
-		String propertiesFileLocation,
-		String schemaFileLocation,
-		boolean shouldOverwrite) throws PanlGenerateException {
+			String propertiesFileLocation,
+			String schemaFileLocation,
+			boolean shouldOverwrite,
+			boolean noPrompt) throws PanlGenerateException {
+
 		this.propertiesFileLocation = propertiesFileLocation;
 		this.schemaFileLocation = schemaFileLocation;
+		this.noPrompt = noPrompt;
 
 
 		// load up the defaults
-		// TODO - this should all be done either with a properties file or not...
 		panlReplacementPropertyMap.put(SOLRJ_CLIENT, "CloudSolrClient");
 		panlReplacementPropertyMap.put(SOLR_SEARCH_SERVER_URL, "http://localhost:8983/solr,http://localhost:7574/solr");
 		panlReplacementPropertyMap.put(PANL_RESULTS_TESTING_URLS, "true");
@@ -131,7 +140,7 @@ public class PanlGenerator {
 		}
 
 
-		// now override the properties
+		// now override the properties that have been already found
 		overrideDefaultProperty(properties, SOLRJ_CLIENT, "CloudSolrClient");
 		overrideDefaultProperty(properties, SOLR_SEARCH_SERVER_URL, "http://localhost:8983/solr,http://localhost:7574/solr");
 		overrideDefaultProperty(properties, PANL_RESULTS_TESTING_URLS, "true");
@@ -150,8 +159,8 @@ public class PanlGenerator {
 	private void overrideDefaultProperty(Properties properties, String key, String defaultValue) {
 		String property = properties.getProperty(key, null);
 		if(null != property) {
-			System.out.println(
-					"Found an existing property for  key '" +
+			LOGGER.info(
+					"Found an existing property for key '" +
 							key +
 							"' with value '" +
 							property +
@@ -162,7 +171,7 @@ public class PanlGenerator {
 					);
 			panlReplacementPropertyMap.put(key, properties.getProperty(key, defaultValue));
 		} else {
-			System.out.println("Could not find default property for key '" + key + "', using '" + defaultValue +"'.");
+			LOGGER.info("Could not find default property for key '" + key + "', using '" + defaultValue +"'.");
 		}
 	}
 	/**
@@ -227,7 +236,7 @@ public class PanlGenerator {
 		getAndValidateParameterInput("The URI path passthrough", PANL_PARAM_PASSTHROUGH, "z", null);
 
 
-		panlCollections.add(new PanlCollection(schemaToParse, panlReplacementPropertyMap));
+		panlCollections.add(new PanlCollection(schemaToParse, panlReplacementPropertyMap, this.collectionPropertiesOutputDirectory));
 
 		// now we have all panlCollections parsed
 		// time to go through them and generate the panl.properties file
@@ -237,7 +246,6 @@ public class PanlGenerator {
 		for (PanlCollection panlCollection : panlCollections) {
 			generateCollectionDotPanlDotProperties(panlCollection);
 		}
-
 	}
 
 	/**
@@ -265,15 +273,22 @@ public class PanlGenerator {
 			String defaultValue,
 			String errorPrompt) {
 
+		if(this.noPrompt) {
+			LOGGER.info("Property '{}' set to default value of '{}'", panlParamProperty, defaultValue);
+			panlParamMap.put(defaultValue, panlParamProperty);
+			panlReplacementPropertyMap.put(panlParamProperty, defaultValue);
+			return(defaultValue);
+		}
+
 		if (null != errorPrompt) {
 			System.out.printf("Invalid value. %s Please try again.\n", errorPrompt);
 		}
 
 		System.out.printf(
-			"Enter the 1 character property value for '%s' (%s), default [%s]: ",
-			panlParamProperty,
-			description,
-			defaultValue);
+				"Enter the 1 character property value for '%s' (%s), default [%s]: ",
+				panlParamProperty,
+				description,
+				defaultValue);
 
 		Scanner in = getSystemInput();
 		String temp = in.nextLine();
@@ -383,6 +398,8 @@ public class PanlGenerator {
 			panlReplacementPropertyMap.put("panl.results.fields.default", panlCollection.getPanlProperty("panl.results.fields.default"));
 			panlReplacementPropertyMap.put("panl.results.fields.firstfive", panlCollection.getPanlProperty("panl.results.fields.firstfive"));
 			panlReplacementPropertyMap.put("panl.collections", panlCollection.getPanlProperty("panl.collections"));
+
+			panlReplacementPropertyMap.put("panl.lpse.ignore", panlCollection.getPanlProperty("panl.lpse.ignore"));
 
 			LOGGER.info("Writing out file {}.panl.properties", panlCollection.getCollectionName());
 

@@ -50,7 +50,11 @@ public class QueryOperandLpseToken extends LpseToken {
 			String value) {
 		super(lpseCode, collectionProperties);
 
-		this.queryOperand = collectionProperties.getDefaultQueryOperand();
+		if(null != value) {
+			this.queryOperand = value;
+		} else {
+			this.queryOperand = collectionProperties.getDefaultQueryOperand();
+		}
 
 		if (!(value.equals(QUERY_OPERAND_URI_KEY_AND) || value.equals(QUERY_OPERAND_URI_KEY_OR))) {
 			isValid = false;
