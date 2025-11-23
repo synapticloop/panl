@@ -22,6 +22,34 @@ United States and/or other countries.
 The mention and references of any Apache projects, sub-projects, or resources in 
 no way constitutes an endorsement for Synapticloop or the Panl project.
 
+# Want to See What it in Action?
+
+There are now Docker images for integration between the Panl server and various 
+Solr server versions, just pull the correct version and then run the image:
+
+## Solr version 9.10.0
+
+```shell
+docker pull synapticloop/solr-panl:9-2.2.0
+docker run -p 8181:8181 -p 8983:8983 synapticloop/solr-panl:9-2.2.0
+```
+
+## Solr version 8.11.4
+
+```shell
+docker pull synapticloop/solr-panl:8-2.2.0
+docker run -p 8181:8181 -p 8983:8983 synapticloop/solr-panl:8-2.2.0
+```
+
+## Solr version 7.7.3
+
+```shell
+docker pull synapticloop/solr-panl:7-2.2.0
+docker run -p 8181:8181 -p 8983:8983 synapticloop/solr-panl:9-2.2.0
+```
+
+_(**Note:** You don't actually need to map the `8983` port - this just makes the 
+Solr administration console available if you are interested.)_
 
 # Development Information 
 
@@ -809,7 +837,7 @@ And to run the container
 ### _ANY OS - WINDOWS/*NIX_
 
 ```shell
-docker run -p 8181:8181 -p 8983:8983 synapticloop:solr-panl-9-2.2.0
+docker run -p 8181:8181 -p 8983:8983 synapticloop/solr-panl:9-2.2.0
 ```
 
 _**NOTE:** You do not need to pass through the `-p 8983:8983` command line 
@@ -830,7 +858,8 @@ server (port 8983) so that it can be viewed:
 
 - **New Features**
   - Changed the docker image to include all datasets
-  - Pushed the docker impage to docker hub - this is a testing image only
+  - Pushed the docker image to docker hub - this is a testing image only - i.e. 
+    it contains all test data indexed and ready to be browsed.
   - Added in `--no-prompt` option to generator to accept in-built defaults
   - Added in a `help` command line argument (which is not particularly needed)
 
