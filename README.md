@@ -901,7 +901,7 @@ part of the Panl server. !!`
 
 | Release<br />Number | Short note             | Codename              | Release Date         | 
 |---------------------|------------------------|-----------------------|----------------------|
-| 2.2.0               | mMm harnesses          | `bitter-shadow`       | `November  22, 2025` |
+| 2.2.0               | mMm harnesses          | `bitter-shadow`       | `November  23, 2025` |
 | 2.1.0               | niceties/want-it-ies   | `hidden-summer`       | `July      28, 2025` |
 | 2.0.0               | fluffy stuff           | `billowing-feather`   | `February  28, 2025` |
 | `-breaking-change-` | `--------------------` | `-------------------` | `------------------` |
