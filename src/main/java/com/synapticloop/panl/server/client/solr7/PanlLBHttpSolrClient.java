@@ -1,4 +1,4 @@
-package com.synapticloop.panl.server.client.solr9;
+package com.synapticloop.panl.server.client.solr7;
 
 /*
  * Copyright (c) 2008-2025 synapticloop.
@@ -45,23 +45,23 @@ package com.synapticloop.panl.server.client.solr9;
  * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
  * FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
- * IN THE SOFTWARE.
+ *  IN THE SOFTWARE.
  */
 
 import com.synapticloop.panl.exception.PanlServerException;
 import com.synapticloop.panl.server.client.PanlClient;
-import com.synapticloop.panl.server.handler.properties.PanlProperties;
 import com.synapticloop.panl.server.handler.properties.CollectionProperties;
+import com.synapticloop.panl.server.handler.properties.PanlProperties;
 import org.apache.solr.client.solrj.SolrClient;
-import org.apache.solr.client.solrj.impl.HttpJdkSolrClient;
+import org.apache.solr.client.solrj.impl.LBHttpSolrClient;
 
-public class PanlHttpJdkSolrClient extends PanlClient {
-	public PanlHttpJdkSolrClient(String solrCollection, PanlProperties panlProperties, CollectionProperties collectionProperties) throws PanlServerException {
+public class PanlLBHttpSolrClient extends PanlClient {
+	public PanlLBHttpSolrClient(String solrCollection, PanlProperties panlProperties, CollectionProperties collectionProperties) throws PanlServerException {
 		super(solrCollection, panlProperties, collectionProperties);
 	}
 
 	@Override
 	public SolrClient getClient() {
-		return(new HttpJdkSolrClient.Builder(panlProperties.getSolrSearchServerUrl()).build());
+		return(new LBHttpSolrClient.Builder().withBaseSolrUrls(panlProperties.getSolrSearchServerUrl()).build());
 	}
 }
