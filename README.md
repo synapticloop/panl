@@ -45,7 +45,7 @@ docker run -p 8181:8181 -p 8983:8983 synapticloop/solr-panl:8-2.2.0
 
 ```shell
 docker pull synapticloop/solr-panl:7-2.2.0
-docker run -p 8181:8181 -p 8983:8983 synapticloop/solr-panl:9-2.2.0
+docker run -p 8181:8181 -p 8983:8983 synapticloop/solr-panl:7-2.2.0
 ```
 
 _(**Note:** You don't actually need to map the `8983` port - this just makes the 
