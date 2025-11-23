@@ -64,7 +64,6 @@ RUN tar -xzvf /archives/solr-$SOLR_SERVER_VERSION.tgz -C /java-servers/
 #   2. Copy the Solr configuration files for the standalone Solr server
 #   3. Copy the override shell script so that Solr accepts all connections
 # ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~
-
 WORKDIR /java-servers/
 
 RUN ln -s solr-$SOLR_SERVER_VERSION solr
@@ -79,7 +78,6 @@ RUN mkdir /java-servers/solr/book-store/
 RUN mkdir /java-servers/solr/server/solr/book-store/
 
 WORKDIR /
-
 COPY src/docker/solr.in.sh /java-servers/solr/bin/
 RUN chmod a+x /java-servers/solr/bin/solr.in.sh
 
