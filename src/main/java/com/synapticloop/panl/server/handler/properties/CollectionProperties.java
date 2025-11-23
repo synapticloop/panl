@@ -285,6 +285,15 @@ public class CollectionProperties {
 	 */
 	private String[] solrFacetFields;
 
+	/**
+	 * <p>The list of all the named Solr facet fields apart from the uniqueKey
+	 * facet field (which may or may not exist) - Note that this is not used as a
+	 * FieldSet - it is all Solr fields (apart from the unique key) that will be
+	 * faceted on.</p>
+	 */
+	private String[] solrFacetFieldsNoUnique;
+	private String uniqueKeyLpseCode = "";
+
 	private final List<String> lpseCodeSortFields = new ArrayList<>();
 
 	private final JSONObject solrFieldToPanlNameLookup = new JSONObject();
@@ -766,15 +775,22 @@ public class CollectionProperties {
 		}
 
 		List<String> temp = new ArrayList<>();
+		List<String> notUniqueTemp = new ArrayList<>();
 		for (PanlFacetField facetField : FACET_FIELDS) {
 			// we do not ever return the Date facet - no point in enlarging the
 			// response object for no purpose
 			if (!(facetField instanceof PanlDateRangeFacetField)) {
 				temp.add(facetField.getSolrFieldName());
+				if(!facetField.getIsUniqueKey()) {
+					notUniqueTemp.add(facetField.getSolrFieldName());
+				} else {
+					this.uniqueKeyLpseCode = facetField.getLpseCode();
+				}
 			}
 		}
 
 		this.solrFacetFields = temp.toArray(new String[0]);
+		this.solrFacetFieldsNoUnique = notUniqueTemp.toArray(new String[0]);
 	}
 
 	/**
@@ -905,7 +921,10 @@ public class CollectionProperties {
 					!LPSE_FIELDS.contains(lpseCode) &&
 					!LPSE_METADATA.contains(lpseCode)) {
 				LOGGER.warn(
-						"Found a panl code of '{}' in the " + Constants.Property.Panl.PANL_LPSE_ORDER + " property, yet it is not a defined field.  This will be ignored...",
+						"[Solr/Panl '{}/{}'] Found a Panl code/name of '{}' in the " + Constants.Property.Panl.PANL_LPSE_ORDER + " property, yet it " +
+								"is not a defined facet.  This will be ignored...",
+						solrCollection,
+						panlCollectionUri,
 						lpseCode);
 			}
 
@@ -986,7 +1005,7 @@ public class CollectionProperties {
 					if (!found) {
 						// maybe it is a field
 						if(!LPSE_CODE_TO_FIELD_MAP.containsKey(lpseCode)) {
-							LOGGER.warn("[Solr/Panl '{}/{}'] Could not find the LPSE code '{}' for the facet order, ignoring",
+							LOGGER.warn("[Solr/Panl '{}/{}'] Could not find the LPSE code '{}' for the facet order, ignoring...",
 									solrCollection,
 									panlCollectionUri,
 									lpseCode);
@@ -1043,7 +1062,7 @@ public class CollectionProperties {
 
 						if (!found) {
 							if(!LPSE_CODE_TO_FIELD_MAP.containsKey(lpseCode)) {
-								LOGGER.warn("[Solr/Panl '{}/{}'] Could not find the LPSE code '{}' for the facet order, ignoring",
+								LOGGER.warn("[Solr/Panl '{}/{}'] Could not find the LPSE code '{}' for the facet order, ignoring...",
 										solrCollection,
 										panlCollectionUri,
 										lpseCode);
@@ -1061,6 +1080,7 @@ public class CollectionProperties {
 							Constants.Property.Panl.PANL_LPSE_ORDER);
 				}
 			}
+
 			// now just add all other LPSE code
 			if (!allFacetLPSECodes.isEmpty()) {
 				LOGGER.warn(
@@ -1070,9 +1090,15 @@ public class CollectionProperties {
 						Constants.Property.Panl.PANL_LPSE_FACETORDER);
 
 				for (String remainingLpseCode : allFacetLPSECodes.toArray(new String[]{})) {
-					LOGGER.warn("Remaining LPSE code '{}' added to the '{}' property.",
+					LOGGER.warn(
+							"[Solr/Panl '{}/{}'] Remaining LPSE code '{}' ('{}') added to the '{}' property.",
+							solrCollection,
+							panlCollectionUri,
 							remainingLpseCode,
+							LPSE_CODE_TO_FIELD_MAP.get(remainingLpseCode),
 							Constants.Property.Panl.PANL_LPSE_FACETORDER);
+					// TODO now add it to the lpse.facetorder
+
 				}
 			}
 		}
@@ -1321,29 +1347,45 @@ public class CollectionProperties {
 
 	/**
 	 * <p>Get the facet fields that should be passed through to Solr, ensuring
-	 * that any hierarchical (i.e. <code>panl.when.&lt;lpse_code&gt;</code>) lpse codes are not returned, and unless lpse
-	 * codes (i.e. <code>panl.when.&lt;lpse_code&gt;</code>) are returned unless it shouldn't be.</p>
+	 * that any hierarchical (i.e. <code>panl.when.&lt;lpse_code&gt;</code>) lpse
+	 * codes are not returned, and unless lpse codes (i.e.
+	 * <code>panl.when.&lt;lpse_code&gt;</code>) are returned unless it shouldn't
+	 * be.</p>
 	 *
 	 * @param lpseTokens The current active LPSE tokens
 	 *
 	 * @return The array of solr fields to facet on including when codes and excluding unless lpse codes
 	 */
 	public String[] getWhenUnlessSolrFacetFields(List<LpseToken> lpseTokens) {
-		// if there are no conditions on the retrieval of facets, then continue
-		if (LPSE_CODE_WHEN_MAP.isEmpty() && LPSE_CODE_UNLESS_MAP.isEmpty()) {
-			// return all of the facet fields
-			return (solrFacetFields);
-		}
-
+		boolean shouldRequestUniqueKeyFacet = false;
 		Set<String> activeLpseCodes = new HashSet<>();
 		for (LpseToken lpseToken : lpseTokens) {
+			if(lpseToken.getIsUniqueKey()) {
+				shouldRequestUniqueKeyFacet = true;
+			}
 			activeLpseCodes.add(lpseToken.getLpseCode());
+		}
+
+		// if there are no conditions on the retrieval of facets, then continue
+		if (LPSE_CODE_WHEN_MAP.isEmpty() && LPSE_CODE_UNLESS_MAP.isEmpty()) {
+			// if there are no lpse tokens - return all facet fields -
+			// (apart from the uniqueKey)
+			if(lpseTokens.isEmpty()) {
+				// we are not going to return the id with the facet fields...
+				return (solrFacetFieldsNoUnique);
+			} else {
+				if(shouldRequestUniqueKeyFacet) {
+					return(solrFacetFields);
+				} else {
+					return(solrFacetFieldsNoUnique);
+				}
+			}
 		}
 
 		// now go through the facet fields and add them all - in some cases there
 		// will be a
-		//   - when facet - so we don't add it until another facet in the when list
-		//     has been added
+		//   - when facet - so we don't add it until another facet in the 'when'
+		//     list has been added
 		//   - unless facet - we will add it unless a previous facet has been chosen
 		//     from the unless list
 		List<String> returnedFacetFields = new ArrayList<>();
@@ -1368,10 +1410,14 @@ public class CollectionProperties {
 								Set<String> lookupUnless = new HashSet<>(activeLpseCodes);
 								lookupUnless.retainAll(LPSE_CODE_UNLESS_MAP.get(lpseCode));
 								if (lookupUnless.isEmpty()) {
-									returnedFacetFields.add(solrFacetFieldName);
+									if(!(lpseCode.equals(uniqueKeyLpseCode) && !shouldRequestUniqueKeyFacet)) {
+										returnedFacetFields.add(solrFacetFieldName);
+									}
 								}
 							} else {
-								returnedFacetFields.add(solrFacetFieldName);
+								if(!(lpseCode.equals(uniqueKeyLpseCode) && !shouldRequestUniqueKeyFacet)) {
+									returnedFacetFields.add(solrFacetFieldName);
+								}
 							}
 							break;
 						}
@@ -1382,10 +1428,14 @@ public class CollectionProperties {
 						Set<String> lookupUnless = new HashSet<>(activeLpseCodes);
 						lookupUnless.retainAll(LPSE_CODE_UNLESS_MAP.get(lpseCode));
 						if (lookupUnless.isEmpty()) {
-							returnedFacetFields.add(solrFacetFieldName);
+							if(!(lpseCode.equals(uniqueKeyLpseCode) && !shouldRequestUniqueKeyFacet)) {
+								returnedFacetFields.add(solrFacetFieldName);
+							}
 						}
 					} else {
-						returnedFacetFields.add(solrFacetFieldName);
+						if(!(lpseCode.equals(uniqueKeyLpseCode) && !shouldRequestUniqueKeyFacet)) {
+							returnedFacetFields.add(solrFacetFieldName);
+						}
 					}
 				}
 			}

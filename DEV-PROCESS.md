@@ -9,12 +9,11 @@
 Find a suitable name for the new version and branch - an example site is the 
 [Release name generator](https://codesandbox.io/p/sandbox/release-name-generator-5ow5w?file=%2Fsrc%2Findex.js) 
 which somehow (_sort-of_) relates to the release.  The next release may very 
-well be called `bitter-shadow` as there may be some boost terms added to 
-queries.
+well be called one of the following names:
 
 Other possible version names:
 
-- `raspy-pine`
+- `raspy-pine` > Version `3.0.0`
 - `twilight-truth`
 - `quiet-paper`
 - `lucky-wave`
@@ -22,7 +21,7 @@ Other possible version names:
 
 ## 2. Create a branch 
 
-Create a branch from the `main` branch with the above name i.e. `bitter-shadow`.
+Create a branch from the `main` branch with the above name i.e. `raspy-pine`.
 
 ## 3. Work, work, work
 
@@ -37,7 +36,8 @@ with.
 The two properties are:
 
 - `panl.version` - the release version
-- `panl.solr.version` - the Solr version for integration
+- `panl.solr.version` - the Solr major version for integration
+- `solr.server.version` - the Solr server version to download
 
 Both of these properties are used to generate the distributable file versions
 and are used within the code when generating startup output.
@@ -45,9 +45,10 @@ and are used within the code when generating startup output.
 The Synapticloop Panl project uses `major.minor.micro` versioning, the meaning 
 of which:
 
-- `major` - the major version will increment when there is a breaking change 
-  to the Panl LPSE URL.  Upon increment of the major version, both the minor 
-  and micro version number will be reset to 0 (zero).
+- `major` - the major version will increment when there is a BREAKING CHANGE to 
+  the Panl LPSE URL generation, a BREAKING CHANGE to the Panl response JSON 
+  Object, or a MAJOR UPDATE TO SOLR.  Upon increment of the major version, 
+  both the minor and micro version number will be reset to 0 (zero).
 - `minor` - the minor  version will increment when there is additional 
   functionality added to the release.  Upon increment of the minor version, the 
   micro number will be reset to 0 (zero).
@@ -86,7 +87,7 @@ The following parts need to be updated:
 1. The table of branch release status
    1. remove old branches (leave `MAIN`, `SOLR PANL 9`, `SOLR PANL 8`, 
       `SOLR PANL 7`)
-   2. add new branch `hidden-summer` and get the circle-ci badges for the build
+   2. add new branch `raspy-pint` and get the circle-ci badges for the build
 2. Ensure that the Section "_Why Synapticloop Panl?_" is up-to-date 
 2. Ensure that the Section "_Additional Panl Niceties_" is up-to-date 
 3. Update the In-built Panl web app images (see `src/main/docs` for images) and 
@@ -290,5 +291,10 @@ There **__MAY__** be new SolrJ connectors (or ones that have dropped off)
 > released in 2019 - that should be enough time...)
 >
 >                               ~ ~ ~ * ~ ~ ~
+
+
+# Docker updates
+
+Don't forget to update the Docker images. :)
 
 ---

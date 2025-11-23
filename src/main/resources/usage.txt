@@ -10,74 +10,31 @@ Usage:
   bin\panl \
     [command] \
     [-properties panl_properties_file_location] \
-    [-config solr_config_location] \
     [-port port_number] \
     [-overwrite true_or_false] \
-    [-schema solr_schema_location]
+    [-schema solr_schema_location] \
+    [--no-prompt]
 
+Allowable command line options:
+
+    +-------------+----------------------------------+-----------+
+    |             |           Panl command           | Argument  |
+    |             |   server   |  generate  |  help  |  Format   |
+    +-------------+------------+------------+--------+-----------+
+    | -properties | (optional) | (optional) |        | File path |
+    | -port       | (optional) |            |        | Number    |
+    | -overwrite  |            | (optional) |        | Boolean   |
+    | -schema     |            |  REQUIRED  |        | File path |
+    | --no-prompt |            | (optional) |        | None      |
+    +-------------+------------+------------+--------+-----------+
 
 Where:
   [command] is one of:
       server - start the server, or
     generate - generate an example panl.properties file from an existing Solr
                managed-schema.xml file
+        help - show this help message
 
-                                 ~ ~ ~ * ~ ~ ~
-
-  [SERVER] To start the Panl server:
-
-    bin\panl \
-      server \
-      [-properties panl_properties_file_location] \
-      [-port port_number]
-
-                                 ~ ~ ~ * ~ ~ ~
-
-  [GENERATE] To generate the panl.properties file from a Solr schema
-
-    bin\panl \
-      generate \
-      [-properties panl_properties_file_location] \
-      [-overwrite true_or_false] \
-      -schema solr_schema_location
-
-                                 ~ ~ ~ * ~ ~ ~
-
-If you choose the 'server' command, the following command line options are
-available:
-
-  [-properties panl_properties_file_location] (optional - default
-    panl.properties) the properties file to load, if this property is not
-    included, the default panl.properties file will be used which __MUST__
-    reside in the same directory as the server start command
-
-  [-port port_number] (optional) the port number to start the server on.  The
-    default port number is 8181
-
-                                 ~ ~ ~ * ~ ~ ~
-
-If you choose the 'generate' command, the following command line options are
-available:
-
-  [-properties panl_properties_file_location] (optional - default
-    panl.properties) the base properties file to write the generated
-    configuration out to. If this property is not included, the default
-    panl.properties filename will be used prepended with the Solr collection
-    name (from the managed schema file):
-
-      <panl_collection_url>.panl.properties
-
-    NOTE: If the files exist, the generation will TERMINATE, you will need to
-    remove those files before the generation - unless you have the
-
-      -overwrite true
-
-    command line option present
-
-  [-overwrite true_or_false] (optional - default false) - whether to overwrite
-    the file if it exists
-
-  -schema solr_schema_location (mandatory) the managed-schema.xml
-    configuration file to read and generate the panl.properties file from.
-
+Each of the commands may have different arguments depending on the command
+invoked.
                                  ~ ~ ~ * ~ ~ ~

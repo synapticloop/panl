@@ -48,7 +48,8 @@ public class PanlGeneratorMechanicalPencilTest {
 		PanlGenerator spy = Mockito.spy(new PanlGenerator(
 			GENERATED_PANL_PROPERTIES,
 			"./src/test/resources/sample/mechanical-pencils/managed-schema.xml",
-			true));
+			true,
+				false));
 
 		// mock the input from the command line
 		Mockito.when(spy.getSystemInput()).thenReturn(new Scanner(new ByteArrayInputStream("\n\n\n\n\n\n".getBytes())));

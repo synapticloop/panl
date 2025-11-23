@@ -26,6 +26,7 @@ package com.synapticloop.panl.server.handler.helper;
 
 import com.synapticloop.panl.exception.PanlServerException;
 import com.synapticloop.panl.server.client.*;
+import com.synapticloop.panl.server.client.solr7.*;
 import com.synapticloop.panl.server.handler.properties.CollectionProperties;
 import com.synapticloop.panl.server.handler.properties.PanlProperties;
 import org.slf4j.Logger;
@@ -62,7 +63,12 @@ public class CollectionHelper {
 			case "CloudSolrClient":
 				return (new PanlCloudSolrClient(solrCollection, panlProperties, collectionProperties));
 			default:
-				throw new PanlServerException("Unknown property value for 'solrj.client' of '" + solrJClient + "', available values are 'HttpSolrClient', 'LBHttpSolrClient', or 'CloudSolrClient'.");
+				throw new PanlServerException("Unknown property value for 'solrj.client' of '" +
+						solrJClient +
+						"', available values are " +
+						"'HttpSolrClient', " +
+						"'LBHttpSolrClient', or " +
+						"'CloudSolrClient'.");
 		}
 	}
 }
